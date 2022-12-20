@@ -38,19 +38,6 @@ let rec pp pp_e ppf = function
         Fmt.(pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e |> brackets)
         (st, expr)
 
-let collect_exprs st =
-  let rec aux accu = function
-    | SInt | SReal | SComplex -> List.rev accu
-    | SVector (_, e)
-     |SRowVector (_, e)
-     |SComplexVector e
-     |SComplexRowVector e ->
-        List.rev @@ (e :: accu)
-    | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
-        List.rev @@ (e1 :: e2 :: accu)
-    | SArray (inner, e) -> aux (e :: accu) inner in
-  aux [] st
-
 let rec to_unsized = function
   | SInt -> UnsizedType.UInt
   | SReal -> UReal
@@ -63,24 +50,11 @@ let rec to_unsized = function
   | SComplexMatrix _ -> UComplexMatrix
   | SArray (t, _) -> UArray (to_unsized t)
 
-let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
-
 let rec contains_complex st =
   match st with
   | SComplex | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ -> true
   | SArray (t, _) -> contains_complex t
   | _ -> false
-
-let rec dims_of st =
-  match st with
-  | SArray (t, _) -> dims_of t
-  | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> [d1; d2]
-  | SRowVector (_, dim)
-   |SVector (_, dim)
-   |SComplexRowVector dim
-   |SComplexVector dim ->
-      [dim]
-  | SInt | SReal | SComplex -> []
 
 (**
  Get the dimensions with respect to sizes needed for IO.
@@ -150,17 +124,6 @@ let%expect_test "dims" =
   |> print_endline ;
   [%expect {| z, x, y |}]
 
-(**
- * Return true if SizedType contains an Eigen type
- *)
-let rec contains_eigen_type st =
-  match st with
-  | SInt | SReal | SComplex -> false
-  | SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
-   |SComplexRowVector _ | SComplexMatrix _ ->
-      true
-  | SArray (t, _) -> contains_eigen_type t
-
 let is_complex_type st = UnsizedType.is_complex_type (to_unsized st)
 
 (**
@@ -173,11 +136,6 @@ let rec get_mem_pattern st =
       Mem_pattern.AoS
   | SVector (mem, _) | SRowVector (mem, _) | SMatrix (mem, _, _) -> mem
   | SArray (t, _) -> get_mem_pattern t
-
-(**
- * Return true if SizedType contains a type tagged SoA
- *)
-let contains_soa st = Mem_pattern.compare (get_mem_pattern st) SoA = 0
 
 (*Given a sizedtype, demote it's mem pattern from SoA to AoS*)
 let rec demote_sizedtype_mem st =

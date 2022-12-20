@@ -1,5 +1,6 @@
 data {
   int d_int;
+  real d_real;
   array[d_int] int d_int_array;
   array[d_int] real d_real_array;
   matrix[d_int, d_int] d_matrix;
@@ -23,6 +24,7 @@ data {
   array[3, 4, 5] matrix[2, 3] x5w;
 }
 transformed data {
+  real transformed_data_real;
   matrix[d_int, d_int] transformed_data_matrix;
   vector[d_int] transformed_data_vector;
   row_vector[d_int] transformed_data_row_vector;
@@ -41,6 +43,8 @@ transformed data {
   array[3, 4, 5] row_vector[2] trans_x4w;
   array[3, 4, 5] matrix[2, 3] trans_x5w;
   
+  transformed_data_real = inv_Phi(d_int);
+  transformed_data_real = inv_Phi(d_real);
   transformed_data_matrix = inv_Phi(d_matrix);
   transformed_data_vector = inv_Phi(d_vector);
   transformed_data_row_vector = inv_Phi(d_row_vector);
@@ -83,6 +87,8 @@ parameters {
   array[3, 4, 5] matrix[2, 3] p_x5w;
 }
 transformed parameters {
+  real transformed_param_real;
+  
   matrix[d_int, d_int] transformed_param_matrix;
   vector[d_int] transformed_param_vector;
   row_vector[d_int] transformed_param_row_vector;
@@ -99,6 +105,10 @@ transformed parameters {
   array[3, 4, 5] vector[2] trans_p_x3w;
   array[3, 4, 5] row_vector[2] trans_p_x4w;
   array[3, 4, 5] matrix[2, 3] trans_p_x5w;
+  
+  transformed_param_real = inv_Phi(d_int);
+  transformed_param_real = inv_Phi(d_real);
+  transformed_param_real = inv_Phi(p_real);
   
   transformed_param_matrix = inv_Phi(d_matrix);
   transformed_param_vector = inv_Phi(d_vector);
@@ -124,4 +134,3 @@ transformed parameters {
 model {
   y_p ~ normal(0, 1);
 }
-

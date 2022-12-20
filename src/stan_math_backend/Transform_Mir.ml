@@ -420,30 +420,6 @@ let rec contains_var_expr is_vident accum Expr.Fixed.{pattern; _} =
   | pattern ->
       Expr.Fixed.Pattern.fold (contains_var_expr is_vident) false pattern
 
-let fn_name_map =
-  String.Map.of_alist_exn [("integrate_ode", "integrate_ode_rk45")]
-
-let rec map_fn_names s =
-  let rec map_fn_names_expr e =
-    let pattern =
-      Expr.Fixed.(
-        match e.pattern with
-        | FunApp (StanLib (f, sfx, mem_pattern), a) when Map.mem fn_name_map f
-          ->
-            Pattern.FunApp
-              (StanLib (Map.find_exn fn_name_map f, sfx, mem_pattern), a)
-        | expr -> Pattern.map map_fn_names_expr expr) in
-    {e with pattern} in
-  let stmt =
-    Stmt.Fixed.(
-      match s.pattern with
-      | NRFunApp (StanLib (f, sfx, mem_pattern), a) when Map.mem fn_name_map f
-        ->
-          Pattern.NRFunApp
-            (StanLib (Map.find_exn fn_name_map f, sfx, mem_pattern), a)
-      | stmt -> Pattern.map map_fn_names_expr map_fn_names stmt) in
-  {s with pattern= stmt}
-
 let rec insert_before f to_insert = function
   | [] -> to_insert
   | hd :: tl ->
@@ -509,7 +485,6 @@ let trans_prog (p : Program.Typed.t) =
       ; functions_block= List.map ~f:rename_func p.functions_block }
       |> map translate_funapps_and_kwrds map_stmt
       |> map Fn.id change_kwrds_stmts) in
-  let p = Program.map Fn.id map_fn_names p in
   (* Eval indexed eigen types in UDF calls to prevent
      infinite template expansion if the call is recursive
   *)

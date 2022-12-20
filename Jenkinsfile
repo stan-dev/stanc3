@@ -209,12 +209,30 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash "Stanc3Setup"
-                        runShell("""
-                            eval \$(opam env)
-                            dune runtest
-                        """)
+                        dir("${env.WORKSPACE}/dune-tests"){
+                            unstash "Stanc3Setup"
+                            runShell("""
+                                eval \$(opam env)
+                                BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
+                            """)
+
+                            sh """
+                                eval \$(opam env)
+                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/
+                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/
+                            """
+
+                            withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
+                                sh """
+                                    curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
+
+                                    chmod +x codecov
+                                    ./codecov -v -C \$(git rev-parse HEAD)
+                                """
+                            }
+                        }
                     }
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
                 }
                 stage("stancjs tests") {
                     agent {
@@ -225,12 +243,15 @@ pipeline {
                         }
                     }
                     steps {
-                        unstash "Stanc3Setup"
-                        runShell("""
-                            eval \$(opam env)
-                            dune build @runjstest
-                        """)
+                        dir("${env.WORKSPACE}/stancjs-tests"){
+                            unstash "Stanc3Setup"
+                            runShell("""
+                                eval \$(opam env)
+                                dune build @runjstest --root=.
+                            """)
+                        }
                     }
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/stancjs-tests/*") }}
                 }
             }
         }
@@ -430,12 +451,12 @@ pipeline {
 
                             archiveArtifacts 'performance-tests-cmdstan/performance.xml'
 
-                            perfReport modePerformancePerTestCase: true,
-                                sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                                modeThroughput: false,
-                                excludeResponseTime: true,
-                                errorFailedThreshold: 100,
-                                errorUnstableThreshold: 100
+//                             perfReport modePerformancePerTestCase: true,
+//                                 sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+//                                 modeThroughput: false,
+//                                 excludeResponseTime: true,
+//                                 errorFailedThreshold: 100,
+//                                 errorUnstableThreshold: 100
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
@@ -500,12 +521,12 @@ pipeline {
 
                             archiveArtifacts 'performance-tests-cmdstan/performance.xml'
 
-                            perfReport modePerformancePerTestCase: true,
-                                sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                                modeThroughput: false,
-                                excludeResponseTime: true,
-                                errorFailedThreshold: 100,
-                                errorUnstableThreshold: 100
+//                             perfReport modePerformancePerTestCase: true,
+//                                 sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+//                                 modeThroughput: false,
+//                                 excludeResponseTime: true,
+//                                 errorFailedThreshold: 100,
+//                                 errorUnstableThreshold: 100
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}

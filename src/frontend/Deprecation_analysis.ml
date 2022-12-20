@@ -45,13 +45,6 @@ let is_deprecated_distribution name =
 let rename_deprecated map name =
   Map.find map name |> Option.map ~f:fst |> Option.value ~default:name
 
-let distribution_suffix name =
-  let open String in
-  is_suffix ~suffix:"_lpdf" name
-  || is_suffix ~suffix:"_lpmf" name
-  || is_suffix ~suffix:"_lcdf" name
-  || is_suffix ~suffix:"_lccdf" name
-
 let userdef_distributions stmts =
   let open String in
   List.filter_map

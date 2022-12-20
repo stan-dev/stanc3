@@ -3,14 +3,17 @@
  (deps
   (package stanc)
   (:stanfiles
-   (glob_files *.stan)))
+   (glob_files *.stan))
+  (:stanfiles-no-include-path stanc_helper_with_good_include.stan))
  (action
   (with-stdout-to
    %{targets}
-   (run
-    %{bin:run_bin_on_args}
-    "%{bin:stanc} --include-paths=\"../included\" "
-    %{stanfiles}))))
+   (progn
+    (run
+     %{bin:run_bin_on_args}
+     "%{bin:stanc} --include-paths=\"../included\" "
+     %{stanfiles})
+    (run %{bin:run_bin_on_args} "%{bin:stanc}" %{stanfiles-no-include-path})))))
 
 (rule
  (alias runtest)

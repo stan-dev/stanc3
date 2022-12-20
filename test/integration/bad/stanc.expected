@@ -1836,27 +1836,6 @@ Ill-typed arguments supplied to infix operator \. Available signatures:
 (matrix, vector) => vector
 (matrix, matrix) => matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
-  $ ../../../../install/default/bin/stanc op_minus_bad.stan
-Semantic error in 'op_minus_bad.stan', line 7, column 6 to column 8:
-   -------------------------------------------------
-     5:    array[4] int b;
-     6:    matrix[3,3] c;
-     7:    c = -b;
-               ^
-     8:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to prefix operator -. Available signatures: 
-(int) => int
-(real) => real
-(vector) => vector
-(complex) => complex
-(row_vector) => row_vector
-(matrix) => matrix
-(complex_vector) => complex_vector
-(complex_row_vector) => complex_row_vector
-(complex_matrix) => complex_matrix
-Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_modulus_bad.stan
 Semantic error in 'op_modulus_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
@@ -1958,6 +1937,17 @@ Ill-typed arguments supplied to postfix operator '. Available signatures:
 (complex_vector) => complex_row_vector
 (complex_matrix) => complex_matrix
 Instead supplied argument of incompatible type: array[] int.
+  $ ../../../../install/default/bin/stanc print-bad.stan
+Semantic error in 'print-bad.stan', line 8, column 8 to column 11:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:    print(foo);
+                 ^
+     9:  }
+   -------------------------------------------------
+
+Functions cannot be printed.
   $ ../../../../install/default/bin/stanc print-void.stan
 Semantic error in 'print-void.stan', line 8, column 8 to column 14:
    -------------------------------------------------
@@ -1992,6 +1982,8 @@ Semantic error in 'prob-poisson_log-trunc-both.stan', line 11, column 2 to colum
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+No matching signature for arguments: 
+(data int, real)
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-high.stan
 Semantic error in 'prob-poisson_log-trunc-high.stan', line 11, column 2 to column 32:
    -------------------------------------------------
@@ -2003,6 +1995,8 @@ Semantic error in 'prob-poisson_log-trunc-high.stan', line 11, column 2 to colum
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+No matching signature for arguments: 
+(data int, real)
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-low.stan
 Semantic error in 'prob-poisson_log-trunc-low.stan', line 11, column 2 to column 32:
    -------------------------------------------------
@@ -2014,6 +2008,8 @@ Semantic error in 'prob-poisson_log-trunc-low.stan', line 11, column 2 to column
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+No matching signature for arguments: 
+(data int, real)
   $ ../../../../install/default/bin/stanc real-pdf.stan
 Semantic error in 'real-pdf.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
@@ -2310,6 +2306,17 @@ Semantic error in 'target-reserved.stan', line 2, column 7 to column 13:
    -------------------------------------------------
 
 Identifier 'target' clashes with reserved keyword.
+  $ ../../../../install/default/bin/stanc target_pe_bad.stan
+Semantic error in 'target_pe_bad.stan', line 8, column 2 to column 16:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:    target += foo;
+           ^
+     9:  }
+   -------------------------------------------------
+
+A (container of) real or int was expected. Instead found type () => real.
   $ ../../../../install/default/bin/stanc ternaryif-fntype.stan
 Semantic error in 'ternaryif-fntype.stan', line 13, column 6 to column 28:
    -------------------------------------------------
@@ -2353,6 +2360,8 @@ Semantic error in 'truncation-bad-type1.stan', line 1, column 8 to column 37:
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+No matching signature for arguments: 
+(data real, data real)
   $ ../../../../install/default/bin/stanc truncation-bad-type2.stan
 Semantic error in 'truncation-bad-type2.stan', line 1, column 8 to column 37:
    -------------------------------------------------
@@ -2361,6 +2370,8 @@ Semantic error in 'truncation-bad-type2.stan', line 1, column 8 to column 37:
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+No matching signature for arguments: 
+(data real, data real)
   $ ../../../../install/default/bin/stanc truncation-bad-type3.stan
 Semantic error in 'truncation-bad-type3.stan', line 1, column 8 to column 36:
    -------------------------------------------------
@@ -2369,6 +2380,8 @@ Semantic error in 'truncation-bad-type3.stan', line 1, column 8 to column 36:
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+No matching signature for arguments: 
+(data real, data real)
   $ ../../../../install/default/bin/stanc truncation-bad-type4.stan
 Semantic error in 'truncation-bad-type4.stan', line 1, column 8 to column 36:
    -------------------------------------------------
@@ -2377,6 +2390,21 @@ Semantic error in 'truncation-bad-type4.stan', line 1, column 8 to column 36:
    -------------------------------------------------
 
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+No matching signature for arguments: 
+(data real, data real)
+  $ ../../../../install/default/bin/stanc truncation_missing_overloads.stan
+Semantic error in 'truncation_missing_overloads.stan', line 28, column 2 to column 28:
+   -------------------------------------------------
+    26:  model {
+    27:    X ~ foo(alpha, beta) T[0, ]; // does not fail
+    28:    X ~ foo(mu, sigma) T[0, ]; // this does
+           ^
+    29:  }
+   -------------------------------------------------
+
+Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
+No matching signature for arguments: 
+(data int, vector, vector)
   $ ../../../../install/default/bin/stanc typo.stan
 Semantic error in 'typo.stan', line 2, column 17 to column 34:
    -------------------------------------------------

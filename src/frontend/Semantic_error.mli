@@ -50,22 +50,6 @@ val illtyped_reduce_sum :
   -> SignatureMismatch.function_mismatch
   -> t
 
-val illtyped_reduce_sum_generic :
-     Location_span.t
-  -> string
-  -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> SignatureMismatch.function_mismatch
-  -> t
-
-val illtyped_variadic_ode :
-     Location_span.t
-  -> string
-  -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> SignatureMismatch.function_mismatch
-  -> t
-
 val ambiguous_function_promotion :
      Location_span.t
   -> string
@@ -74,11 +58,12 @@ val ambiguous_function_promotion :
      list
   -> t
 
-val illtyped_variadic_dae :
+val illtyped_variadic :
      Location_span.t
   -> string
   -> UnsizedType.t list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> UnsizedType.t
   -> SignatureMismatch.function_mismatch
   -> t
 
@@ -106,7 +91,6 @@ val ident_is_model_name : Location_span.t -> string -> t
 val ident_is_stanmath_name : Location_span.t -> string -> t
 val ident_in_use : Location_span.t -> string -> t
 val ident_not_in_scope : Location_span.t -> string -> string option -> t
-val invalid_map_rect_fn : Location_span.t -> string -> t
 val invalid_decl_rng_fn : Location_span.t -> t
 val invalid_rng_fn : Location_span.t -> t
 val invalid_unnormalized_fn : Location_span.t -> t
@@ -125,8 +109,10 @@ val invalid_sampling_pdf_or_pmf : Location_span.t -> t
 val invalid_sampling_cdf_or_ccdf : Location_span.t -> string -> t
 val invalid_sampling_no_such_dist : Location_span.t -> string -> t
 val target_plusequals_invalid_location : Location_span.t -> t
-val invalid_truncation_cdf_or_ccdf : Location_span.t -> t
-val multivariate_truncation : Location_span.t -> t
+
+val invalid_truncation_cdf_or_ccdf :
+  Location_span.t -> (UnsizedType.autodifftype * UnsizedType.t) list -> t
+
 val break_outside_loop : Location_span.t -> t
 val continue_outside_loop : Location_span.t -> t
 val expression_return_outside_returning_fn : Location_span.t -> t

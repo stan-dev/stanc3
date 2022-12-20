@@ -21,12 +21,7 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
-    | IllTypedReduceSumGeneric of
-        string
-        * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
-        * SignatureMismatch.function_mismatch
-    | IllTypedVariadicDE of
+    | IllTypedVariadic of
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
@@ -128,10 +123,7 @@ module TypeError = struct
     | IllTypedReduceSum (name, arg_tys, expected_args, error) ->
         SignatureMismatch.pp_signature_mismatch ppf
           (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
-    | IllTypedReduceSumGeneric (name, arg_tys, expected_args, error) ->
-        SignatureMismatch.pp_signature_mismatch ppf
-          (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
-    | IllTypedVariadicDE (name, arg_tys, args, error, return_type) ->
+    | IllTypedVariadic (name, arg_tys, args, error, return_type) ->
         SignatureMismatch.pp_signature_mismatch ppf
           ( name
           , arg_tys
@@ -286,7 +278,6 @@ end
 
 module ExpressionError = struct
   type t =
-    | InvalidMapRectFn of string
     | InvalidSizeDeclRng
     | InvalidRngFunction
     | InvalidUnnormalizedFunction
@@ -298,11 +289,6 @@ module ExpressionError = struct
     | IntTooLarge
 
   let pp ppf = function
-    | InvalidMapRectFn fn_name ->
-        Fmt.pf ppf
-          "Mapped function cannot be an _rng or _lp function, found function \
-           name: %s"
-          fn_name
     | InvalidSizeDeclRng ->
         Fmt.pf ppf
           "Random number generators are not allowed in top level size \
@@ -350,8 +336,8 @@ module StatementError = struct
     | InvalidSamplingCDForCCDF of string
     | InvalidSamplingNoSuchDistribution of string
     | TargetPlusEqualsOutsideModelOrLogProb
-    | InvalidTruncationCDForCCDF
-    | MultivariateTruncation
+    | InvalidTruncationCDForCCDF of
+        (UnsizedType.autodifftype * UnsizedType.t) list
     | BreakOutsideLoop
     | ContinueOutsideLoop
     | ExpressionReturnOutsideReturningFn
@@ -407,12 +393,13 @@ module StatementError = struct
           "Ill-typed arguments to '~' statement. No distribution '%s' was \
            found."
           name
-    | InvalidTruncationCDForCCDF ->
+    | InvalidTruncationCDForCCDF args ->
         Fmt.pf ppf
           "Truncation is only defined if distribution has _lcdf and _lccdf \
-           functions implemented with appropriate signature."
-    | MultivariateTruncation ->
-        Fmt.pf ppf "Outcomes in truncated distributions must be univariate."
+           functions implemented with appropriate signature.\n\
+           No matching signature for arguments: @[(%a)@]"
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+          args
     | BreakOutsideLoop ->
         Fmt.pf ppf "Break statements may only be used in loops."
     | ContinueOutsideLoop ->
@@ -545,31 +532,8 @@ let returning_fn_expected_nonreturning_found loc name =
 let illtyped_reduce_sum loc name arg_tys args error =
   TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args, error))
 
-let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
-  TypeError
-    ( loc
-    , TypeError.IllTypedReduceSumGeneric (name, arg_tys, expected_args, error)
-    )
-
-let illtyped_variadic_ode loc name arg_tys args error =
-  TypeError
-    ( loc
-    , TypeError.IllTypedVariadicDE
-        ( name
-        , arg_tys
-        , args
-        , error
-        , Stan_math_signatures.variadic_ode_fun_return_type ) )
-
-let illtyped_variadic_dae loc name arg_tys args error =
-  TypeError
-    ( loc
-    , TypeError.IllTypedVariadicDE
-        ( name
-        , arg_tys
-        , args
-        , error
-        , Stan_math_signatures.variadic_dae_fun_return_type ) )
+let illtyped_variadic loc name arg_tys args fn_rt error =
+  TypeError (loc, TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError
@@ -632,9 +596,6 @@ let ident_not_in_scope loc name sug =
 let ident_has_unnormalized_suffix loc name =
   IdentifierError (loc, IdentifierError.UnnormalizedSuffix name)
 
-let invalid_map_rect_fn loc name =
-  ExpressionError (loc, ExpressionError.InvalidMapRectFn name)
-
 let invalid_decl_rng_fn loc =
   ExpressionError (loc, ExpressionError.InvalidSizeDeclRng)
 
@@ -681,11 +642,8 @@ let invalid_sampling_no_such_dist loc name =
 let target_plusequals_invalid_location loc =
   StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
 
-let invalid_truncation_cdf_or_ccdf loc =
-  StatementError (loc, StatementError.InvalidTruncationCDForCCDF)
-
-let multivariate_truncation loc =
-  StatementError (loc, StatementError.MultivariateTruncation)
+let invalid_truncation_cdf_or_ccdf loc args =
+  StatementError (loc, StatementError.InvalidTruncationCDForCCDF args)
 
 let break_outside_loop loc =
   StatementError (loc, StatementError.BreakOutsideLoop)
