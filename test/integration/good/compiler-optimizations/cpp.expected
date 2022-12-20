@@ -2486,7 +2486,7 @@ stan::math::profile_map& get_stan_profile_data() {
 }
 #endif
 Warning in 'ad-level-failing.stan', line 46, column 8: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --O --print-cpp copy_fail.stan
@@ -5215,7 +5215,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     // suppress unused var warning
     (void) function__;
     try {
-
+      
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5504,7 +5504,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     // suppress unused var warning
     (void) function__;
     try {
-
+      
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -16258,7 +16258,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
                    1; inline_summer_inline_do_something_iterator_sym6___sym12__
                  <=
                  1; ++inline_summer_inline_do_something_iterator_sym6___sym12__) {
-              inline_summer_inline_do_something_return_sym4___sym10__ =
+              inline_summer_inline_do_something_return_sym4___sym10__ = 
                 stan::model::rvalue(lcm_sym25__, "lcm_sym25__",
                   stan::model::index_uni(1));
               break;
@@ -16584,7 +16584,7 @@ multi_ret_fun_functor__::operator()(const T0__& A, std::ostream* pstream__) cons
 }
 class inline_functions_varmat_model final : public model_base_crtp<inline_functions_varmat_model> {
  private:
-
+  
  public:
   ~inline_functions_varmat_model() {}
   inline_functions_varmat_model(stan::io::var_context& context__,
@@ -20999,7 +20999,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     // suppress unused var warning
     (void) function__;
     try {
-
+      
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -21207,7 +21207,7 @@ static constexpr std::array<const char*, 8> locations_array__ =
   " (in 'lcm-experiment2.stan', line 11, column 2 to column 14)"};
 class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model> {
  private:
-
+  
  public:
   ~lcm_experiment2_model() {}
   lcm_experiment2_model(stan::io::var_context& context__, unsigned int
@@ -25438,7 +25438,7 @@ rfun_lp_functor__::operator()(T_lp__& lp__, T_lp_accum__& lp_accum__,
 }
 class optimizations_model final : public model_base_crtp<optimizations_model> {
  private:
-
+  
  public:
   ~optimizations_model() {}
   optimizations_model(stan::io::var_context& context__, unsigned int
@@ -26410,7 +26410,7 @@ dumb_functor__::operator()(const int& x, std::ostream* pstream__) const {
 }
 class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
  private:
-
+  
  public:
   ~overloaded_fn_model() {}
   overloaded_fn_model(stan::io::var_context& context__, unsigned int
@@ -31151,7 +31151,7 @@ static constexpr std::array<const char*, 12> locations_array__ =
   " (in 'unenforce-initialize.stan', line 14, column 2 to line 16, column 3)"};
 class unenforce_initialize_model final : public model_base_crtp<unenforce_initialize_model> {
  private:
-
+  
  public:
   ~unenforce_initialize_model() {}
   unenforce_initialize_model(stan::io::var_context& context__, unsigned int
@@ -31575,7 +31575,7 @@ static constexpr std::array<const char*, 14> locations_array__ =
   " (in 'unroll-limit.stan', line 15, column 2 to line 17, column 3)"};
 class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
  private:
-
+  
  public:
   ~unroll_limit_model() {}
   unroll_limit_model(stan::io::var_context& context__, unsigned int
@@ -31629,7 +31629,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     // suppress unused var warning
     (void) function__;
     try {
-
+      
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
