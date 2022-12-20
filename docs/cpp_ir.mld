@@ -1,0 +1,43 @@
+{0 C++ Code Generation}
+
+The main backend of the compiler is the "Stan Math" (C++) backend.
+We represent C++ code with a data types and functions found in
+{!module-Stan_math_backend.Cpp}.
+
+We also define a sort of miniature embedded domain specific language (DSL)
+for using these types. These helper functions and operators are all in sub-modules
+of {!module-Stan_math_backend.Cpp}, for example {!module-Stan_math_backend.Cpp.Expression_syntax}.
+
+These allow writing OCaml code which looks or feels more like the C++ it will generate. These
+constructs should be used when they improve clarity, and avoided when they make the code harder to
+read. When combined with good variable names, this can lead to code like
+[ lp_accum__.@?(("add", [Var "lp__"])) ], which hopefully reads quite clearly as equivalent to
+the C++ [lp_accum__.add(lp__)].
+
+
+After a Stan program is lowered to this type, it can be printed to C++ using
+{!module-Stan_math_backend.Cpp.Printing}. This module uses [Fmt], but keeps
+the question of how C++ should be formatted separate from the question of what
+the generated C++ {e is}.
+
+
+{1 DSL Example}
+For example, lets say one wanted to generate the expression
+{[
+(Eigen::Matrix<double,1,-1>(3) << 1, a, 3).finished()
+]}
+
+This could be written down as the literal OCaml type it is:
+{[
+(MethodCall (Parens (StreamInsertion (Constructor (Matrix (Double, 1, -1), [Literal "3"]), [Literal "1"; Var "a"; Literal "3"]), "finished", [], [])
+]}
+
+Or, using the DSL constructs, the same expression could be written
+
+{[
+let open Expression_syntax in
+let open Types in
+let vector = Constructor (row_vector Double, [Literal "3"]) in
+let values = [Literal "1"; Var "a"; Literal "3"] in
+(vector << values).@!("finished")
+]}
