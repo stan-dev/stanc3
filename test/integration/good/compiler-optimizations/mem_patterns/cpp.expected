@@ -11,7 +11,7 @@ static constexpr std::array<const char*, 3> locations_array__ =
   " (in 'complex-fails.stan', line 6, column 3 to column 45)"};
 class complex_fails_model final : public model_base_crtp<complex_fails_model> {
  private:
-  
+
  public:
   ~complex_fails_model() {}
   complex_fails_model(stan::io::var_context& context__, unsigned int
@@ -2084,7 +2084,7 @@ static constexpr std::array<const char*, 14> locations_array__ =
   " (in 'deep_dependence.stan', line 17, column 4 to line 21, column 5)"};
 class deep_dependence_model final : public model_base_crtp<deep_dependence_model> {
  private:
-  
+
  public:
   ~deep_dependence_model() {}
   deep_dependence_model(stan::io::var_context& context__, unsigned int
@@ -4946,7 +4946,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
                                                                  stan::math::add(
                                                                    aos_x,
                                                                    aos_y),
-                                                                 pstream__)) : 
+                                                                 pstream__)) :
         stan::math::eval(aos_y)), "assigning variable tp_matrix_aos_from_mix");
       Eigen::Matrix<local_scalar_t__,-1,-1> tp_matrix_from_udf_reduced_soa =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
@@ -5034,7 +5034,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
                                                                  stan::math::add(
                                                                    aos_x,
                                                                    aos_y),
-                                                                 pstream__)) : 
+                                                                 pstream__)) :
         stan::math::eval(aos_y)), "assigning variable tp_matrix_aos_from_mix");
       current_statement__ = 6;
       stan::model::assign(tp_matrix_from_udf_reduced_soa,
@@ -5386,7 +5386,7 @@ mat_ret_user_func_functor__::operator()(const T0__& A, std::ostream*
 }
 class return_types_and_udfs_demotes_model final : public model_base_crtp<return_types_and_udfs_demotes_model> {
  private:
-  
+
  public:
   ~return_types_and_udfs_demotes_model() {}
   return_types_and_udfs_demotes_model(stan::io::var_context& context__,
@@ -5879,7 +5879,7 @@ static constexpr std::array<const char*, 8> locations_array__ =
   " (in 'single_indexing.stan', line 12, column 5 to line 17, column 6)"};
 class single_indexing_model final : public model_base_crtp<single_indexing_model> {
  private:
-  
+
  public:
   ~single_indexing_model() {}
   single_indexing_model(stan::io::var_context& context__, unsigned int
