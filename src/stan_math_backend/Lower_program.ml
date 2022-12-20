@@ -65,7 +65,7 @@ let lower_map_decl (vident, ut) : defn =
          ~type_:(TypeTrait ("Eigen::Map", [t]))
          ~name:vident
          ~init:
-           (InitalizerList
+           (InitializerList
               (Literal "nullptr" :: List.init ndims ~f:(fun _ -> Literal "0"))
            )
          () ) in
@@ -626,7 +626,7 @@ let gen_transform_inits {Program.output_vars; _} =
          ~type_:(Types.const_char_array list_len)
          ~name:"names__"
          ~init:
-           (InitalizerList
+           (InitializerList
               (List.map
                  ~f:(Fn.compose Exprs.literal_string Mangle.remove_prefix)
                  param_names ) )
@@ -636,7 +636,7 @@ let gen_transform_inits {Program.output_vars; _} =
       (make_variable_defn
          ~type_:(Const (Array (TypeLiteral "Eigen::Index", list_len)))
          ~name:"constrain_param_sizes__"
-         ~init:(InitalizerList (List.map ~f:lower_num_param constrained_params))
+         ~init:(InitializerList (List.map ~f:lower_num_param constrained_params))
          () ) in
   let num_constrained_param_size =
     let constrain_param_sizes = Var "constrain_param_sizes__" in
