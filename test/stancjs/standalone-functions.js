@@ -6,12 +6,12 @@ functions {
     real my_log1p_exp(real x) {
         return log1p_exp(x);
     }
-	
+
 	real array_fun(real[] a)
 	{
 		return sum(a);
 	}
-  
+
 	real int_array_fun(int[] a)
 	{
 		return sum(a);
@@ -48,7 +48,7 @@ functions {
 
 let basic = stanc.stanc("basic_stanfuncs", basic_stanfuncs, ["standalone-functions"]);
 utils.print_error(basic)
-var ind = basic.result.search("auto int_only_multiplication");
+var ind = basic.result.search(/auto[\n\s]+int_only_multiplication/g);
 if (ind == -1) {
 	console.log("ERROR: standalone-functions!")
 }

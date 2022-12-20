@@ -33,7 +33,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
   Typechecking.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
   Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
-  Stan_math_code_gen.standalone_functions :=
+  Lower_program.standalone_functions :=
     is_flag_set "standalone-functions" || is_flag_set "functions-only" ;
   With_return.with_return (fun r ->
       if is_flag_set "version" then
@@ -136,7 +136,8 @@ let stan2cpp model_name model_string is_flag_set flag_val =
         if is_flag_set "debug-transformed-mir-pretty" then
           r.return
             (Result.Ok (Fmt.str "%a" Program.Typed.pp tx_mir), warnings, []) ;
-        let cpp = Fmt.str "%a" Stan_math_code_gen.pp_prog opt_mir in
+        let cpp = Lower_program.lower_program opt_mir in
+        let cpp_str = Fmt.(to_to_string Cpp.Printing.pp_program) cpp in
         let uninit_warnings =
           if is_flag_set "warn-uninitialized" then
             Pedantic_analysis.warn_uninitialized mir
@@ -145,7 +146,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           if is_flag_set "warn-pedantic" then
             Pedantic_analysis.warn_pedantic mir
           else [] in
-        (cpp, warnings, uninit_warnings @ pedantic_warnings) in
+        (cpp_str, warnings, uninit_warnings @ pedantic_warnings) in
       match result with
       | Result.Ok (cpp, warnings, pedantic_mode_warnings) ->
           (Result.Ok cpp, warnings, pedantic_mode_warnings)
@@ -199,7 +200,7 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
     |> List.filter ~f:sans_model_and_hpp_paths
     |> List.map ~f:(fun o -> "--" ^ o)
     |> String.concat ~sep:" " in
-  Stan_math_code_gen.stanc_args_to_print := stanc_args_to_print ;
+  Lower_program.stanc_args_to_print := stanc_args_to_print ;
   let result, warnings, pedantic_mode_warnings =
     stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val in
   let warnings =
