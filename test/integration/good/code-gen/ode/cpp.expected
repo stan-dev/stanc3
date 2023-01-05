@@ -665,8 +665,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
     constexpr std::array<const char*, 4> names__{"y", "y0", "t0", "times"};
-    const std::array<Eigen::Index, 4> constrain_param_sizes__{1, N, 1, (N *
-                                                               1)};
+    const std::array<Eigen::Index, 4>
+      constrain_param_sizes__{1, N, 1, (N * 1)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -1519,8 +1519,8 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 4> names__{"beta", "gamma", "xi",
-                                                  "delta"};
+    constexpr std::array<const char*, 4>
+      names__{"beta", "gamma", "xi", "delta"};
     const std::array<Eigen::Index, 4> constrain_param_sizes__{1, 1, 1, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),

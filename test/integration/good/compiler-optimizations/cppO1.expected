@@ -1065,8 +1065,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 4> names__{"beta", "gamma", "xi",
-                                                  "delta"};
+    constexpr std::array<const char*, 4>
+      names__{"beta", "gamma", "xi", "delta"};
     const std::array<Eigen::Index, 4> constrain_param_sizes__{1, 1, 1, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
@@ -1594,14 +1594,16 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
       }
-      Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_return_sym8__;
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        inline_prob_uncaptured_return_sym8__;
       {
         current_statement__ = 16;
         stan::math::validate_non_negative_index("chi", "nind", nind);
         current_statement__ = 17;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym9__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym9__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 26;
@@ -1677,8 +1679,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
             current_statement__ = 31;
             for (int t =
                    (stan::model::rvalue(first, "first",
-                      stan::model::index_uni(i))
-                   + 1); t <=
+                      stan::model::index_uni(i)) + 1); t <=
                  stan::model::rvalue(last, "last", stan::model::index_uni(i)); ++t) {
               current_statement__ = 28;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
@@ -1802,7 +1803,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         current_statement__ = 17;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym2__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym2__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 26;
@@ -2925,24 +2927,14 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 16> names__{"sigma", "sigma_age",
-                                                   "sigma_edu",
-                                                   "sigma_state",
-                                                   "sigma_region",
-                                                   "sigma_age_edu", "b_0",
-                                                   "b_female", "b_black",
-                                                   "b_female_black",
-                                                   "b_v_prev", "b_age",
-                                                   "b_edu", "b_region",
-                                                   "b_age_edu", "b_hat"};
-    const std::array<Eigen::Index, 16> constrain_param_sizes__{1, 1, 1, 1, 1,
-                                                                1, 1, 1, 1,
-                                                                1, 1, n_age,
-                                                                n_edu,
-                                                                n_region,
-                                                                (n_age *
-                                                                n_edu),
-                                                                n_state};
+    constexpr std::array<const char*, 16>
+      names__{"sigma", "sigma_age", "sigma_edu", "sigma_state",
+              "sigma_region", "sigma_age_edu", "b_0", "b_female", "b_black",
+              "b_female_black", "b_v_prev", "b_age", "b_edu", "b_region",
+              "b_age_edu", "b_hat"};
+    const std::array<Eigen::Index, 16>
+      constrain_param_sizes__{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, n_age, n_edu,
+                              n_region, (n_age * n_edu), n_state};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -5141,16 +5133,12 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 11> names__{"a", "b", "c", "d", "e",
-                                                   "beta", "sigma_a",
-                                                   "sigma_b", "sigma_c",
-                                                   "sigma_d", "sigma_e"};
-    const std::array<Eigen::Index, 11> constrain_param_sizes__{n_age, n_edu,
-                                                                n_age_edu,
-                                                                n_state,
-                                                                n_region_full,
-                                                                5, 1, 1, 1,
-                                                                1, 1};
+    constexpr std::array<const char*, 11>
+      names__{"a", "b", "c", "d", "e", "beta", "sigma_a", "sigma_b",
+              "sigma_c", "sigma_d", "sigma_e"};
+    const std::array<Eigen::Index, 11>
+      constrain_param_sizes__{n_age, n_edu, n_age_edu, n_state,
+                              n_region_full, 5, 1, 1, 1, 1, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -5774,8 +5762,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
     constexpr std::array<const char*, 2> names__{"tau_phi", "phi_std_raw"};
-    const std::array<Eigen::Index, 2> constrain_param_sizes__{1,
-                                                               phi_std_raw_1dim__};
+    const std::array<Eigen::Index, 2>
+      constrain_param_sizes__{1, phi_std_raw_1dim__};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -6267,14 +6255,16 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
       }
-      Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_return_sym8__;
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        inline_prob_uncaptured_return_sym8__;
       {
         current_statement__ = 20;
         stan::math::validate_non_negative_index("chi", "nind", nind);
         current_statement__ = 21;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym9__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym9__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 32;
@@ -6354,8 +6344,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             current_statement__ = 40;
             for (int t =
                    (stan::model::rvalue(first, "first",
-                      stan::model::index_uni(i))
-                   + 1); t <=
+                      stan::model::index_uni(i)) + 1); t <=
                  stan::model::rvalue(last, "last", stan::model::index_uni(i)); ++t) {
               current_statement__ = 37;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
@@ -6490,7 +6479,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         current_statement__ = 21;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym2__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym2__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 32;
@@ -6626,8 +6616,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                 std::vector<size_t>{static_cast<size_t>(nind),
                   static_cast<size_t>(n_occ_minus_1)},
                 std::vector<size_t>{static_cast<size_t>(nind),
-                  static_cast<size_t>(n_occasions)},
-                std::vector<size_t>{}, std::vector<size_t>{}};
+                  static_cast<size_t>(n_occasions)}, std::vector<size_t>{},
+                std::vector<size_t>{}};
   }
   inline void
   constrained_param_names(std::vector<std::string>& param_names__, bool
@@ -6767,8 +6757,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 4> names__{"mean_phi", "mean_p",
-                                                  "epsilon", "sigma"};
+    constexpr std::array<const char*, 4>
+      names__{"mean_phi", "mean_p", "epsilon", "sigma"};
     const std::array<Eigen::Index, 4> constrain_param_sizes__{1, 1, nind, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
@@ -7653,7 +7643,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         stan::model::assign(nu, 1.0, "assigning variable nu",
           stan::model::index_uni(n_occasions));
       }
-      Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_return_sym14__;
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        inline_prob_uncaptured_return_sym14__;
       {
         int inline_prob_uncaptured_n_ind_sym15__;
         current_statement__ = 24;
@@ -7667,7 +7658,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 27;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           inline_prob_uncaptured_n_occasions_sym16__);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym17__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym17__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym15__,
             inline_prob_uncaptured_n_occasions_sym16__, DUMMY_VAR__);
         current_statement__ = 36;
@@ -7774,7 +7766,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             current_statement__ = 87;
             stan::math::validate_non_negative_index("qp", "n_occasions",
               inline_js_super_lp_n_occasions_sym24__);
-            Eigen::Matrix<local_scalar_t__,-1,1> inline_js_super_lp_qp_sym26__;
+            Eigen::Matrix<local_scalar_t__,-1,1>
+              inline_js_super_lp_qp_sym26__;
             current_statement__ = 88;
             stan::model::assign(inline_js_super_lp_qp_sym26__,
               stan::math::subtract(1.0,
@@ -7801,7 +7794,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                 current_statement__ = 98;
                 stan::math::validate_non_negative_index("lp", "first[i]",
                   first[(inline_js_super_lp_i_sym29__ - 1)]);
-                Eigen::Matrix<local_scalar_t__,-1,1> inline_js_super_lp_lp_sym27__ =
+                Eigen::Matrix<local_scalar_t__,-1,1>
+                  inline_js_super_lp_lp_sym27__ =
                   Eigen::Matrix<local_scalar_t__,-1,1>::Constant(first[(inline_js_super_lp_i_sym29__
                     - 1)], DUMMY_VAR__);
                 current_statement__ = 100;
@@ -7928,7 +7922,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               stan::math::validate_non_negative_index("lp",
                 "n_occasions + 1", (inline_js_super_lp_n_occasions_sym24__ +
                 1));
-              Eigen::Matrix<local_scalar_t__,-1,1> inline_js_super_lp_lp_sym27__ =
+              Eigen::Matrix<local_scalar_t__,-1,1>
+                inline_js_super_lp_lp_sym27__ =
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant((inline_js_super_lp_n_occasions_sym24__
                   + 1), DUMMY_VAR__);
               current_statement__ = 91;
@@ -8126,7 +8121,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 27;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           inline_prob_uncaptured_n_occasions_sym3__);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym4__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym4__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym2__,
             inline_prob_uncaptured_n_occasions_sym3__, DUMMY_VAR__);
         current_statement__ = 36;
@@ -8434,8 +8430,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                 std::vector<size_t>{static_cast<size_t>(n_occasions)},
                 std::vector<size_t>{static_cast<size_t>(n_occasions)},
                 std::vector<size_t>{static_cast<size_t>(M),
-                  static_cast<size_t>(n_occasions)},
-                std::vector<size_t>{}, std::vector<size_t>{},
+                  static_cast<size_t>(n_occasions)}, std::vector<size_t>{},
+                std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(n_occasions)},
                 std::vector<size_t>{static_cast<size_t>(n_occasions)},
                 std::vector<size_t>{static_cast<size_t>(M),
@@ -8637,11 +8633,10 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 6> names__{"mean_phi", "mean_p", "psi",
-                                                  "beta", "epsilon", "sigma"};
-    const std::array<Eigen::Index, 6> constrain_param_sizes__{1, 1, 1,
-                                                               n_occasions,
-                                                               M, 1};
+    constexpr std::array<const char*, 6>
+      names__{"mean_phi", "mean_p", "psi", "beta", "epsilon", "sigma"};
+    const std::array<Eigen::Index, 6>
+      constrain_param_sizes__{1, 1, 1, n_occasions, M, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -9238,8 +9233,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
     constexpr std::array<const char*, 2> names__{"pi", "theta"};
-    const std::array<Eigen::Index, 2> constrain_param_sizes__{K, (J * (K *
-                                                               K))};
+    const std::array<Eigen::Index, 2>
+      constrain_param_sizes__{K, (J * (K * K))};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -9766,11 +9761,11 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 6> names__{"beta0", "beta1",
-                                                  "tau_theta", "tau_phi",
-                                                  "theta_std", "phi_std_raw"};
-    const std::array<Eigen::Index, 6> constrain_param_sizes__{1, 1, 1, 1, N,
-                                                               N};
+    constexpr std::array<const char*, 6>
+      names__{"beta0", "beta1", "tau_theta", "tau_phi", "theta_std",
+              "phi_std_raw"};
+    const std::array<Eigen::Index, 6>
+      constrain_param_sizes__{1, 1, 1, 1, N, N};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -10293,14 +10288,16 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
       }
-      Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_return_sym8__;
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        inline_prob_uncaptured_return_sym8__;
       {
         current_statement__ = 16;
         stan::math::validate_non_negative_index("chi", "nind", nind);
         current_statement__ = 17;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym9__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym9__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 26;
@@ -10376,8 +10373,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             current_statement__ = 31;
             for (int t =
                    (stan::model::rvalue(first, "first",
-                      stan::model::index_uni(i))
-                   + 1); t <=
+                      stan::model::index_uni(i)) + 1); t <=
                  stan::model::rvalue(last, "last", stan::model::index_uni(i)); ++t) {
               current_statement__ = 28;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
@@ -10501,7 +10497,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         current_statement__ = 17;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym2__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym2__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 26;
@@ -10966,10 +10963,13 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         current_statement__ = 9;
         for (int inline_summer_n_sym13__ = 1; inline_summer_n_sym13__ <=
              inline_summer_N_sym8__; ++inline_summer_n_sym13__) {
-          local_scalar_t__ inline_summer_inline_do_something_return_sym4___sym10__;
-          int inline_summer_inline_do_something_early_ret_check_sym5___sym11__ =
+          local_scalar_t__
+            inline_summer_inline_do_something_return_sym4___sym10__;
+          int
+            inline_summer_inline_do_something_early_ret_check_sym5___sym11__ =
             std::numeric_limits<int>::min();
-          for (int inline_summer_inline_do_something_iterator_sym6___sym12__ =
+          for (int
+                 inline_summer_inline_do_something_iterator_sym6___sym12__ =
                  1; inline_summer_inline_do_something_iterator_sym6___sym12__
                <=
                1; ++inline_summer_inline_do_something_iterator_sym6___sym12__) {
@@ -11348,7 +11348,8 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
                                                   std::numeric_limits<double>::quiet_NaN(
                                                     )));
       stan::conditional_var_value_t<local_scalar_t__,
-        Eigen::Matrix<local_scalar_t__,-1,1>> inline_single_ret_fun_return_sym7__;
+        Eigen::Matrix<local_scalar_t__,-1,1>>
+        inline_single_ret_fun_return_sym7__;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       stan::conditional_var_value_t<local_scalar_t__,
@@ -11358,13 +11359,15 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
                                                   std::numeric_limits<double>::quiet_NaN(
                                                     )));
       stan::conditional_var_value_t<local_scalar_t__,
-        Eigen::Matrix<local_scalar_t__,-1,1>> inline_multi_ret_fun_return_sym9__;
+        Eigen::Matrix<local_scalar_t__,-1,1>>
+        inline_multi_ret_fun_return_sym9__;
       int inline_multi_ret_fun_early_ret_check_sym11__ =
         std::numeric_limits<int>::min();
       for (int inline_multi_ret_fun_iterator_sym12__ = 1; inline_multi_ret_fun_iterator_sym12__
            <= 1; ++inline_multi_ret_fun_iterator_sym12__) {
         stan::conditional_var_value_t<local_scalar_t__,
-          Eigen::Matrix<local_scalar_t__,-1,1>> inline_multi_ret_fun_B_sym10__ =
+          Eigen::Matrix<local_scalar_t__,-1,1>>
+          inline_multi_ret_fun_B_sym10__ =
           stan::conditional_var_value_t<local_scalar_t__,
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(5,
                                                     std::numeric_limits<double>::quiet_NaN(
@@ -11643,8 +11646,8 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 2> names__{"p_single_ret_vec",
-                                                  "p_multi_ret_vec"};
+    constexpr std::array<const char*, 2>
+      names__{"p_single_ret_vec", "p_multi_ret_vec"};
     const std::array<Eigen::Index, 2> constrain_param_sizes__{5, 5};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
@@ -13267,7 +13270,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 12;
       stan::model::assign(p, stan::math::rep_matrix(mean_p, M, n_occasions),
         "assigning variable p");
-      Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_return_sym20__;
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        inline_prob_uncaptured_return_sym20__;
       {
         int inline_prob_uncaptured_n_ind_sym21__;
         current_statement__ = 13;
@@ -13281,7 +13285,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 16;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           inline_prob_uncaptured_n_occasions_sym22__);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym23__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym23__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym21__,
             inline_prob_uncaptured_n_occasions_sym22__, DUMMY_VAR__);
         current_statement__ = 25;
@@ -13369,7 +13374,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           current_statement__ = 86;
           stan::math::validate_non_negative_index("qgamma", "n_occasions",
             inline_jolly_seber_lp_n_occasions_sym30__);
-          Eigen::Matrix<local_scalar_t__,-1,1> inline_jolly_seber_lp_qgamma_sym31__;
+          Eigen::Matrix<local_scalar_t__,-1,1>
+            inline_jolly_seber_lp_qgamma_sym31__;
           current_statement__ = 87;
           stan::model::assign(inline_jolly_seber_lp_qgamma_sym31__,
             stan::math::subtract(1.0, gamma),
@@ -13381,7 +13387,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             current_statement__ = 88;
             stan::math::validate_non_negative_index("qp", "n_occasions",
               inline_jolly_seber_lp_n_occasions_sym30__);
-            Eigen::Matrix<local_scalar_t__,-1,1> inline_jolly_seber_lp_qp_sym32__;
+            Eigen::Matrix<local_scalar_t__,-1,1>
+              inline_jolly_seber_lp_qp_sym32__;
             current_statement__ = 89;
             stan::model::assign(inline_jolly_seber_lp_qp_sym32__,
               stan::math::subtract(1.0,
@@ -13406,7 +13413,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 current_statement__ = 98;
                 stan::math::validate_non_negative_index("lp", "first[i]",
                   first[(inline_jolly_seber_lp_i_sym35__ - 1)]);
-                Eigen::Matrix<local_scalar_t__,-1,1> inline_jolly_seber_lp_lp_sym33__ =
+                Eigen::Matrix<local_scalar_t__,-1,1>
+                  inline_jolly_seber_lp_lp_sym33__ =
                   Eigen::Matrix<local_scalar_t__,-1,1>::Constant(first[(inline_jolly_seber_lp_i_sym35__
                     - 1)], DUMMY_VAR__);
                 current_statement__ = 100;
@@ -13538,7 +13546,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               stan::math::validate_non_negative_index("lp",
                 "n_occasions + 1", (inline_jolly_seber_lp_n_occasions_sym30__
                 + 1));
-              Eigen::Matrix<local_scalar_t__,-1,1> inline_jolly_seber_lp_lp_sym33__ =
+              Eigen::Matrix<local_scalar_t__,-1,1>
+                inline_jolly_seber_lp_lp_sym33__ =
                 Eigen::Matrix<local_scalar_t__,-1,1>::Constant((inline_jolly_seber_lp_n_occasions_sym30__
                   + 1), DUMMY_VAR__);
               current_statement__ = 92;
@@ -13703,7 +13712,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 16;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           inline_prob_uncaptured_n_occasions_sym3__);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym4__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym4__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(inline_prob_uncaptured_n_ind_sym2__,
             inline_prob_uncaptured_n_occasions_sym3__, DUMMY_VAR__);
         current_statement__ = 25;
@@ -13837,7 +13847,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           current_statement__ = 47;
           stan::math::validate_non_negative_index("log_cprob", "N",
             inline_seq_cprob_N_sym11__);
-          Eigen::Matrix<local_scalar_t__,-1,1> inline_seq_cprob_log_cprob_sym12__ =
+          Eigen::Matrix<local_scalar_t__,-1,1>
+            inline_seq_cprob_log_cprob_sym12__ =
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(inline_seq_cprob_N_sym11__,
               DUMMY_VAR__);
           local_scalar_t__ inline_seq_cprob_log_residual_prob_sym13__;
@@ -14031,8 +14042,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 std::vector<size_t>{static_cast<size_t>(M),
                   static_cast<size_t>(n_occasions)},
                 std::vector<size_t>{static_cast<size_t>(M),
-                  static_cast<size_t>(n_occasions)},
-                std::vector<size_t>{}, std::vector<size_t>{},
+                  static_cast<size_t>(n_occasions)}, std::vector<size_t>{},
+                std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(n_occasions)},
                 std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(n_occasions)},
@@ -14230,12 +14241,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 5> names__{"mean_phi", "mean_p",
-                                                  "gamma", "epsilon", "sigma"};
-    const std::array<Eigen::Index, 5> constrain_param_sizes__{1, 1,
-                                                               n_occasions,
-                                                               epsilon_1dim__,
-                                                               1};
+    constexpr std::array<const char*, 5>
+      names__{"mean_phi", "mean_p", "gamma", "epsilon", "sigma"};
+    const std::array<Eigen::Index, 5>
+      constrain_param_sizes__{1, 1, n_occasions, epsilon_1dim__, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -15579,14 +15588,16 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
       }
-      Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_return_sym8__;
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        inline_prob_uncaptured_return_sym8__;
       {
         current_statement__ = 16;
         stan::math::validate_non_negative_index("chi", "nind", nind);
         current_statement__ = 17;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym9__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym9__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 26;
@@ -15662,8 +15673,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
             current_statement__ = 31;
             for (int t =
                    (stan::model::rvalue(first, "first",
-                      stan::model::index_uni(i))
-                   + 1); t <=
+                      stan::model::index_uni(i)) + 1); t <=
                  stan::model::rvalue(last, "last", stan::model::index_uni(i)); ++t) {
               current_statement__ = 28;
               lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(1,
@@ -15782,7 +15792,8 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
         current_statement__ = 17;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1> inline_prob_uncaptured_chi_sym2__ =
+        Eigen::Matrix<local_scalar_t__,-1,-1>
+          inline_prob_uncaptured_chi_sym2__ =
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
             DUMMY_VAR__);
         current_statement__ = 26;
@@ -16240,7 +16251,8 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       {
         local_scalar_t__ inline_baz_lpdf_return_sym18__;
         {
-          local_scalar_t__ inline_baz_lpdf_inline_foo_lpdf_return_sym7___sym19__;
+          local_scalar_t__
+            inline_baz_lpdf_inline_foo_lpdf_return_sym7___sym19__;
           {
             current_statement__ = 3;
             inline_baz_lpdf_inline_foo_lpdf_return_sym7___sym19__ = stan::math::normal_lpdf<
@@ -16967,8 +16979,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                 std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(R)},
                 std::vector<size_t>{static_cast<size_t>(R),
-                  static_cast<size_t>(T)},
-                std::vector<size_t>{},
+                  static_cast<size_t>(T)}, std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(R)},
                 std::vector<size_t>{static_cast<size_t>(R)}};
   }
@@ -17104,8 +17115,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 4> names__{"alpha_occ", "beta_occ",
-                                                  "alpha_p", "beta_p"};
+    constexpr std::array<const char*, 4>
+      names__{"alpha_occ", "beta_occ", "alpha_p", "beta_p"};
     const std::array<Eigen::Index, 4> constrain_param_sizes__{1, 1, 1, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
@@ -17760,12 +17771,11 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 8> names__{"beta", "eta1", "eta2",
-                                                  "mu_a1", "mu_a2",
-                                                  "sigma_a1", "sigma_a2",
-                                                  "sigma_y"};
-    const std::array<Eigen::Index, 8> constrain_param_sizes__{1, J, J, 1, 1,
-                                                               1, 1, 1};
+    constexpr std::array<const char*, 8>
+      names__{"beta", "eta1", "eta2", "mu_a1", "mu_a2", "sigma_a1",
+              "sigma_a2", "sigma_y"};
+    const std::array<Eigen::Index, 8>
+      constrain_param_sizes__{1, J, J, 1, 1, 1, 1, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -18610,10 +18620,10 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 5> names__{"theta", "phi", "x_matrix",
-                                                  "x_vector", "x_cov"};
-    const std::array<Eigen::Index, 5> constrain_param_sizes__{1, 1, (3 * 2),
-                                                               2, (2 * 2)};
+    constexpr std::array<const char*, 5>
+      names__{"theta", "phi", "x_matrix", "x_vector", "x_cov"};
+    const std::array<Eigen::Index, 5>
+      constrain_param_sizes__{1, 1, (3 * 2), 2, (2 * 2)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -19174,10 +19184,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 5> names__{"a", "beta", "mu_a",
-                                                  "sigma_a", "sigma_y"};
-    const std::array<Eigen::Index, 5> constrain_param_sizes__{n_pair, 2, 1,
-                                                               1, 1};
+    constexpr std::array<const char*, 5>
+      names__{"a", "beta", "mu_a", "sigma_a", "sigma_y"};
+    const std::array<Eigen::Index, 5>
+      constrain_param_sizes__{n_pair, 2, 1, 1, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -19602,8 +19612,8 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
     constexpr std::array<const char*, 2> names__{"m2", "m3"};
-    const std::array<Eigen::Index, 2> constrain_param_sizes__{(10 * 10), (10
-                                                               * 10)};
+    const std::array<Eigen::Index, 2>
+      constrain_param_sizes__{(10 * 10), (10 * 10)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -20039,8 +20049,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
                 std::vector<size_t>{}, std::vector<size_t>{},
                 std::vector<size_t>{}, std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(I),
-                  static_cast<size_t>(K)},
-                std::vector<size_t>{}};
+                  static_cast<size_t>(K)}, std::vector<size_t>{}};
   }
   inline void
   constrained_param_names(std::vector<std::string>& param_names__, bool
@@ -20146,11 +20155,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 6> names__{"alpha0", "alpha1",
-                                                  "alpha2", "alpha12", "tau",
-                                                  "b"};
-    const std::array<Eigen::Index, 6> constrain_param_sizes__{1, 1, 1, 1, 1,
-                                                               (I * K)};
+    constexpr std::array<const char*, 6>
+      names__{"alpha0", "alpha1", "alpha2", "alpha12", "tau", "b"};
+    const std::array<Eigen::Index, 6>
+      constrain_param_sizes__{1, 1, 1, 1, 1, (I * K)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
