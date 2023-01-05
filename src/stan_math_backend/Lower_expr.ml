@@ -147,9 +147,6 @@ let lower_unsizedtype_local adtype ut =
   let s = local_scalar ut adtype in
   lower_type ut s
 
-let lower_expr_type e =
-  Expr.Typed.(lower_unsizedtype_local (adlevel_of e) (type_of e))
-
 let rec lower_possibly_var_decl adtype ut mem_pattern =
   let scalar = local_scalar ut adtype in
   let var_decl p_ut =
@@ -605,4 +602,15 @@ module Testing = struct
             ( UserDefined ("poisson_rng", FnRng)
             , [dummy_locate (Lit (Int, "123"))] ) ) ) ;
     [%expect {| poisson_rng(123, base_rng__, pstream__) |}]
+
+  let%expect_test "pp_expr12" =
+    printf "%s\n"
+      (Fmt.str "%a" Cpp.Printing.pp_expr (vector_literal Cpp.Double [])) ;
+    printf "%s"
+      (Fmt.str "%a" Cpp.Printing.pp_expr
+         (vector_literal ~column:true Cpp.Double []) ) ;
+    [%expect
+      {|
+      Eigen::Matrix<double,1,-1>(0)
+      Eigen::Matrix<double,-1,1>(0) |}]
 end

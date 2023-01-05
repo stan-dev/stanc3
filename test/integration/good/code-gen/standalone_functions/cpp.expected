@@ -7,26 +7,26 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 21> locations_array__ =
   {" (found before start of program)",
-  " (in 'basic.stan', line 3, column 4 to column 24)",
-  " (in 'basic.stan', line 2, column 28 to line 4, column 3)",
-  " (in 'basic.stan', line 7, column 4 to column 18)",
-  " (in 'basic.stan', line 6, column 33 to line 8, column 3)",
-  " (in 'basic.stan', line 11, column 4 to column 18)",
-  " (in 'basic.stan', line 10, column 36 to line 12, column 3)",
-  " (in 'basic.stan', line 15, column 11 to column 26)",
-  " (in 'basic.stan', line 15, column 4 to column 45)",
-  " (in 'basic.stan', line 16, column 4 to column 18)",
-  " (in 'basic.stan', line 14, column 38 to line 17, column 3)",
-  " (in 'basic.stan', line 20, column 4 to column 17)",
-  " (in 'basic.stan', line 19, column 44 to line 21, column 3)",
-  " (in 'basic.stan', line 24, column 4 to column 21)",
-  " (in 'basic.stan', line 23, column 27 to line 25, column 3)",
-  " (in 'basic.stan', line 29, column 4 to column 21)",
-  " (in 'basic.stan', line 28, column 23 to line 30, column 3)",
-  " (in 'basic.stan', line 33, column 4 to column 28)",
-  " (in 'basic.stan', line 32, column 24 to line 34, column 3)",
-  " (in 'basic.stan', line 37, column 4 to column 33)",
-  " (in 'basic.stan', line 36, column 33 to line 38, column 3)"};
+  " (in 'basic.stan', line 5, column 4 to column 24)",
+  " (in 'basic.stan', line 4, column 28 to line 6, column 3)",
+  " (in 'basic.stan', line 9, column 4 to column 18)",
+  " (in 'basic.stan', line 8, column 33 to line 10, column 3)",
+  " (in 'basic.stan', line 13, column 4 to column 18)",
+  " (in 'basic.stan', line 12, column 36 to line 14, column 3)",
+  " (in 'basic.stan', line 17, column 11 to column 26)",
+  " (in 'basic.stan', line 17, column 4 to column 45)",
+  " (in 'basic.stan', line 18, column 4 to column 18)",
+  " (in 'basic.stan', line 16, column 38 to line 19, column 3)",
+  " (in 'basic.stan', line 22, column 4 to column 17)",
+  " (in 'basic.stan', line 21, column 44 to line 23, column 3)",
+  " (in 'basic.stan', line 26, column 4 to column 21)",
+  " (in 'basic.stan', line 25, column 27 to line 27, column 3)",
+  " (in 'basic.stan', line 31, column 4 to column 21)",
+  " (in 'basic.stan', line 30, column 23 to line 32, column 3)",
+  " (in 'basic.stan', line 35, column 4 to column 28)",
+  " (in 'basic.stan', line 34, column 24 to line 36, column 3)",
+  " (in 'basic.stan', line 39, column 4 to column 33)",
+  " (in 'basic.stan', line 38, column 33 to line 40, column 3)"};
 struct test_rng_functor__ {
   template <typename T0__, typename RNG,
             stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
@@ -82,6 +82,10 @@ struct int_only_multiplication_functor__ {
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
+array_fun(const std::vector<T0__>& a, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+stan::promote_args_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
@@ -103,8 +107,7 @@ stan::promote_args_t<T0__>
 my_log1p_exp_functor__::operator()(const T0__& x, std::ostream* pstream__) const {
   return my_log1p_exp(x, pstream__);
 }
-template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;

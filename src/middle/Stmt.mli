@@ -128,13 +128,6 @@ module Helpers : sig
     -> Location_span.t
     -> Located.t
 
-  val for_eigen :
-       Expr.Typed.t SizedType.t
-    -> (Expr.Typed.t -> Located.t)
-    -> Expr.Typed.t
-    -> Location_span.t
-    -> Located.t
-
   val assign_indexed :
        UnsizedType.t
     -> string
