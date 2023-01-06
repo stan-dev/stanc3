@@ -180,7 +180,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         }
         current_statement__ = 13;
         {
-          stan::math::profile<local_scalar_t__> profile__("cholesky_decompose",
+          stan::math::profile<local_scalar_t__>
+            profile__("cholesky_decompose",
             const_cast<stan::math::profile_map&>(profiles__));
           current_statement__ = 12;
           stan::model::assign(L_cov, stan::math::cholesky_decompose(cov),
@@ -203,7 +204,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           }
           current_statement__ = 19;
           {
-            stan::math::profile<local_scalar_t__> profile__("multi_normal_cholesky",
+            stan::math::profile<local_scalar_t__>
+              profile__("multi_normal_cholesky",
               const_cast<stan::math::profile_map&>(profiles__));
             current_statement__ = 18;
             lp_accum__.add(stan::math::multi_normal_cholesky_lpdf<propto__>(

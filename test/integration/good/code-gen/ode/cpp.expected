@@ -562,9 +562,9 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
                 std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(N)}};
     if (emit_transformed_parameters__) {
-      std::vector<std::vector<size_t>> temp{std::vector<size_t>{static_cast<
-                                                                  size_t>(M),
-                                              static_cast<size_t>(N)}};
+      std::vector<std::vector<size_t>>
+        temp{std::vector<size_t>{static_cast<size_t>(M),
+               static_cast<size_t>(N)}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
@@ -1429,13 +1429,11 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
                 std::vector<size_t>{}, std::vector<size_t>{},
                 std::vector<size_t>{}};
     if (emit_transformed_parameters__) {
-      std::vector<std::vector<size_t>> temp{std::vector<size_t>{static_cast<
-                                                                  size_t>(N_t),
-                                              static_cast<size_t>(4)},
-                                             std::vector<size_t>{static_cast<
-                                                                   size_t>(
-                                                                   N_t),
-                                               static_cast<size_t>(4)}};
+      std::vector<std::vector<size_t>>
+        temp{std::vector<size_t>{static_cast<size_t>(N_t),
+               static_cast<size_t>(4)},
+             std::vector<size_t>{static_cast<size_t>(N_t),
+               static_cast<size_t>(4)}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
@@ -1555,8 +1553,8 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 4> names__{"beta", "gamma", "xi",
-                                                  "delta"};
+    constexpr std::array<const char*, 4>
+      names__{"beta", "gamma", "xi", "delta"};
     const std::array<Eigen::Index, 4> constrain_param_sizes__{1, 1, 1, 1};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
