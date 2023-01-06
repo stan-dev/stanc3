@@ -364,7 +364,7 @@ let lower_standalone_fun_def namespace_fun
     | _ -> (Auto, fun e -> Return (Some e)) in
   let fn_sig = make_fun_defn ~name:fdname ~return_type ~args:all_args in
   match fdbody with
-  | None -> [FunDef (fn_sig ())]
+  | None -> []
   | Some _ ->
       let internal_fname = namespace_fun ^ "::" ^ fdname in
       let template =
