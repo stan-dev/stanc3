@@ -15,6 +15,21 @@
   (diff cpp.expected cpp.output)))
 
 (rule
+ (targets lir.output)
+ (deps
+  (package stanc)
+  (:stanfiles mother.stan))
+ (action
+  (with-stdout-to
+   %{targets}
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --debug-lir" %{stanfiles}))))
+
+(rule
+ (alias runtest)
+ (action
+  (diff lir.expected lir.output)))
+
+(rule
  (targets mir.output)
  (deps
   (package stanc)

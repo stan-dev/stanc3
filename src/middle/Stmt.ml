@@ -239,26 +239,6 @@ module Helpers = struct
             ~g:aux in
     aux init stmt
 
-  (** [for_eigen unsizedtype...] generates a For statement that loops
-    over the eigen types in the underlying [unsizedtype]; i.e. just iterating
-    overarrays and running bodyfn on any eign types found within.
-
-    We can call [bodyfn] directly on scalars and Eigen types;
-    for Arrays we call mk_for_iteratee but insert a
-    recursive call into the [bodyfn] that will operate on the nested
-    type. In this way we recursively create for loops that loop over
-    the outermost layers first.
-*)
-  let rec for_eigen st bodyfn var smeta =
-    match st with
-    | SizedType.SInt | SReal | SComplex | SVector _ | SRowVector _ | SMatrix _
-     |SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ ->
-        bodyfn st var
-    | SArray (t, d) ->
-        mk_for_iteratee d (fun e -> for_eigen t bodyfn e smeta) var smeta
-    | STuple ts ->
-        for_each_tuple (fun t e -> for_eigen t bodyfn e smeta) var ts smeta
-
   (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
 
