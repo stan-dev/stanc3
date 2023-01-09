@@ -561,6 +561,15 @@ static constexpr std::array<const char*, 37> locations_array__ =
   " (in 'ad-level-failing.stan', line 17, column 4 to column 48)",
   " (in 'ad-level-failing.stan', line 19, column 4 to column 16)",
   " (in 'ad-level-failing.stan', line 11, column 61 to line 20, column 3)"};
+template <typename T0__, typename T1__, typename T2__, typename T3__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T1__>,
+                              stan::is_stan_scalar<T2__>,
+                              stan::is_stan_scalar<T3__>>* = nullptr>
+std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
+simple_SIR(const T0__& t, const std::vector<T1__>& y,
+           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+           const std::vector<int>& x_i, std::ostream* pstream__);
 struct simple_SIR_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -570,13 +579,15 @@ struct simple_SIR_functor__ {
   std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
   operator()(const T0__& t, const std::vector<T1__>& y,
              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-             const std::vector<int>& x_i, std::ostream* pstream__) const;
+             const std::vector<int>& x_i, std::ostream* pstream__) const {
+    return simple_SIR(t, y, theta, x_r, x_i, pstream__);
+  }
 };
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T1__>,
                               stan::is_stan_scalar<T2__>,
-                              stan::is_stan_scalar<T3__>>* = nullptr>
+                              stan::is_stan_scalar<T3__>>*>
 std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
 simple_SIR(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
@@ -627,19 +638,6 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_stan_scalar<T1__>,
-                              stan::is_stan_scalar<T2__>,
-                              stan::is_stan_scalar<T3__>>*>
-std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
-simple_SIR_functor__::operator()(const T0__& t, const std::vector<T1__>& y,
-                                 const std::vector<T2__>& theta,
-                                 const std::vector<T3__>& x_r,
-                                 const std::vector<int>& x_i, std::ostream*
-                                 pstream__) const {
-  return simple_SIR(t, y, theta, x_r, x_i, pstream__);
 }
 class ad_level_failing_model final : public model_base_crtp<ad_level_failing_model> {
  private:
@@ -1569,23 +1567,17 @@ static constexpr std::array<const char*, 76> locations_array__ =
   " (in 'copy_fail.stan', line 27, column 4 to line 44, column 5)",
   " (in 'copy_fail.stan', line 45, column 4 to column 15)",
   " (in 'copy_fail.stan', line 24, column 74 to line 46, column 3)"};
-struct last_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
-struct prob_uncaptured_functor__ {
-  template <typename T2__, typename T3__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
-                                stan::is_vt_not_complex<T2__>,
-                                stan::is_eigen_matrix_dynamic<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
-                  stan::base_type_t<T3__>>,-1,-1>
-  operator()(const int& nind, const int& n_occasions, const T2__& p,
-             const T3__& phi, std::ostream* pstream__) const;
-};
-struct first_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
+int first_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+template <typename T2__, typename T3__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
+                              stan::is_vt_not_complex<T2__>,
+                              stan::is_eigen_matrix_dynamic<T3__>,
+                              stan::is_vt_not_complex<T3__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
+                stan::base_type_t<T3__>>,-1,-1>
+prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
+                const T3__& phi_arg__, std::ostream* pstream__);
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -1609,11 +1601,6 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-int
-first_capture_functor__::operator()(const std::vector<int>& y_i,
-                                    std::ostream* pstream__) const {
-  return first_capture(y_i, pstream__);
 }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1642,16 +1629,11 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-int
-last_capture_functor__::operator()(const std::vector<int>& y_i, std::ostream*
-                                   pstream__) const {
-  return last_capture(y_i, pstream__);
-}
 template <typename T2__, typename T3__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
                               stan::is_vt_not_complex<T2__>,
                               stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>>* = nullptr>
+                              stan::is_vt_not_complex<T3__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
                 stan::base_type_t<T3__>>,-1,-1>
 prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
@@ -1706,18 +1688,6 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T2__, typename T3__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
-                              stan::is_vt_not_complex<T2__>,
-                              stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
-                stan::base_type_t<T3__>>,-1,-1>
-prob_uncaptured_functor__::operator()(const int& nind, const int&
-                                      n_occasions, const T2__& p, const T3__&
-                                      phi, std::ostream* pstream__) const {
-  return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
 class copy_fail_model final : public model_base_crtp<copy_fail_model> {
  private:
@@ -6167,23 +6137,17 @@ static constexpr std::array<const char*, 81> locations_array__ =
   " (in 'expr-prop-fail5.stan', line 27, column 4 to line 46, column 5)",
   " (in 'expr-prop-fail5.stan', line 47, column 4 to column 15)",
   " (in 'expr-prop-fail5.stan', line 24, column 74 to line 48, column 3)"};
-struct last_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
-struct prob_uncaptured_functor__ {
-  template <typename T2__, typename T3__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
-                                stan::is_vt_not_complex<T2__>,
-                                stan::is_eigen_matrix_dynamic<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
-                  stan::base_type_t<T3__>>,-1,-1>
-  operator()(const int& nind, const int& n_occasions, const T2__& p,
-             const T3__& phi, std::ostream* pstream__) const;
-};
-struct first_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
+int first_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+template <typename T2__, typename T3__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
+                              stan::is_vt_not_complex<T2__>,
+                              stan::is_eigen_matrix_dynamic<T3__>,
+                              stan::is_vt_not_complex<T3__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
+                stan::base_type_t<T3__>>,-1,-1>
+prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
+                const T3__& phi_arg__, std::ostream* pstream__);
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -6207,11 +6171,6 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-int
-first_capture_functor__::operator()(const std::vector<int>& y_i,
-                                    std::ostream* pstream__) const {
-  return first_capture(y_i, pstream__);
 }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -6240,16 +6199,11 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-int
-last_capture_functor__::operator()(const std::vector<int>& y_i, std::ostream*
-                                   pstream__) const {
-  return last_capture(y_i, pstream__);
-}
 template <typename T2__, typename T3__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
                               stan::is_vt_not_complex<T2__>,
                               stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>>* = nullptr>
+                              stan::is_vt_not_complex<T3__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
                 stan::base_type_t<T3__>>,-1,-1>
 prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
@@ -6308,18 +6262,6 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T2__, typename T3__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
-                              stan::is_vt_not_complex<T2__>,
-                              stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
-                stan::base_type_t<T3__>>,-1,-1>
-prob_uncaptured_functor__::operator()(const int& nind, const int&
-                                      n_occasions, const T2__& p, const T3__&
-                                      phi, std::ostream* pstream__) const {
-  return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
 class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model> {
  private:
@@ -7127,41 +7069,35 @@ static constexpr std::array<const char*, 158> locations_array__ =
   " (in 'expr-prop-fail6.stan', line 86, column 25 to line 142, column 5)",
   " (in 'expr-prop-fail6.stan', line 86, column 4 to line 142, column 5)",
   " (in 'expr-prop-fail6.stan', line 81, column 74 to line 143, column 3)"};
-struct js_super_lp_functor__ {
-  template <bool propto__, typename T3__, typename T4__, typename T5__,
-            typename T6__, typename T7__, typename T_lp__,
-            typename T_lp_accum__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T3__>,
-                                stan::is_vt_not_complex<T3__>,
-                                stan::is_eigen_matrix_dynamic<T4__>,
-                                stan::is_vt_not_complex<T4__>,
-                                stan::is_stan_scalar<T5__>,
-                                stan::is_col_vector<T6__>,
-                                stan::is_vt_not_complex<T6__>,
-                                stan::is_eigen_matrix_dynamic<T7__>,
-                                stan::is_vt_not_complex<T7__>>* = nullptr>
-  void
-  operator()(const std::vector<std::vector<int>>& y, const std::vector<int>&
-             first, const std::vector<int>& last, const T3__& p, const T4__&
-             phi, const T5__& psi, const T6__& nu, const T7__& chi, T_lp__&
-             lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) const;
-};
-struct last_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
-struct prob_uncaptured_functor__ {
-  template <typename T0__, typename T1__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                                stan::is_vt_not_complex<T0__>,
-                                stan::is_eigen_matrix_dynamic<T1__>,
-                                stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
-                  stan::base_type_t<T1__>>,-1,-1>
-  operator()(const T0__& p, const T1__& phi, std::ostream* pstream__) const;
-};
-struct first_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
+int first_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>,
+                              stan::is_eigen_matrix_dynamic<T1__>,
+                              stan::is_vt_not_complex<T1__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+                stan::base_type_t<T1__>>,-1,-1>
+prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
+                pstream__);
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+          typename T6__, typename T7__, typename T_lp__,
+          typename T_lp_accum__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T3__>,
+                              stan::is_vt_not_complex<T3__>,
+                              stan::is_eigen_matrix_dynamic<T4__>,
+                              stan::is_vt_not_complex<T4__>,
+                              stan::is_stan_scalar<T5__>,
+                              stan::is_col_vector<T6__>,
+                              stan::is_vt_not_complex<T6__>,
+                              stan::is_eigen_matrix_dynamic<T7__>,
+                              stan::is_vt_not_complex<T7__>>* = nullptr>
+void
+js_super_lp(const std::vector<std::vector<int>>& y, const std::vector<int>&
+            first, const std::vector<int>& last, const T3__& p_arg__,
+            const T4__& phi_arg__, const T5__& psi, const T6__& nu_arg__,
+            const T7__& chi_arg__, T_lp__& lp__, T_lp_accum__& lp_accum__,
+            std::ostream* pstream__);
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -7185,11 +7121,6 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-int
-first_capture_functor__::operator()(const std::vector<int>& y_i,
-                                    std::ostream* pstream__) const {
-  return first_capture(y_i, pstream__);
 }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -7218,16 +7149,11 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-int
-last_capture_functor__::operator()(const std::vector<int>& y_i, std::ostream*
-                                   pstream__) const {
-  return last_capture(y_i, pstream__);
-}
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>,
                               stan::is_eigen_matrix_dynamic<T1__>,
-                              stan::is_vt_not_complex<T1__>>* = nullptr>
+                              stan::is_vt_not_complex<T1__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
                 stan::base_type_t<T1__>>,-1,-1>
 prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
@@ -7289,17 +7215,6 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, typename T1__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                              stan::is_vt_not_complex<T0__>,
-                              stan::is_eigen_matrix_dynamic<T1__>,
-                              stan::is_vt_not_complex<T1__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
-                stan::base_type_t<T1__>>,-1,-1>
-prob_uncaptured_functor__::operator()(const T0__& p, const T1__& phi,
-                                      std::ostream* pstream__) const {
-  return prob_uncaptured(p, phi, pstream__);
-}
 template <bool propto__, typename T3__, typename T4__, typename T5__,
           typename T6__, typename T7__, typename T_lp__,
           typename T_lp_accum__,
@@ -7311,7 +7226,7 @@ template <bool propto__, typename T3__, typename T4__, typename T5__,
                               stan::is_col_vector<T6__>,
                               stan::is_vt_not_complex<T6__>,
                               stan::is_eigen_matrix_dynamic<T7__>,
-                              stan::is_vt_not_complex<T7__>>* = nullptr>
+                              stan::is_vt_not_complex<T7__>>*>
 void
 js_super_lp(const std::vector<std::vector<int>>& y, const std::vector<int>&
             first, const std::vector<int>& last, const T3__& p_arg__,
@@ -7536,29 +7451,6 @@ js_super_lp(const std::vector<std::vector<int>>& y, const std::vector<int>&
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <bool propto__, typename T3__, typename T4__, typename T5__,
-          typename T6__, typename T7__, typename T_lp__,
-          typename T_lp_accum__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>,
-                              stan::is_eigen_matrix_dynamic<T4__>,
-                              stan::is_vt_not_complex<T4__>,
-                              stan::is_stan_scalar<T5__>,
-                              stan::is_col_vector<T6__>,
-                              stan::is_vt_not_complex<T6__>,
-                              stan::is_eigen_matrix_dynamic<T7__>,
-                              stan::is_vt_not_complex<T7__>>*>
-void
-js_super_lp_functor__::operator()(const std::vector<std::vector<int>>& y,
-                                  const std::vector<int>& first,
-                                  const std::vector<int>& last, const T3__&
-                                  p, const T4__& phi, const T5__& psi,
-                                  const T6__& nu, const T7__& chi, T_lp__&
-                                  lp__, T_lp_accum__& lp_accum__,
-                                  std::ostream* pstream__) const {
-  return js_super_lp<propto__>(y, first, last, p, phi, psi, nu, chi, lp__,
-           lp_accum__, pstream__);
 }
 class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model> {
  private:
@@ -9671,23 +9563,17 @@ static constexpr std::array<const char*, 76> locations_array__ =
   " (in 'fails-test.stan', line 27, column 4 to line 44, column 5)",
   " (in 'fails-test.stan', line 45, column 4 to column 15)",
   " (in 'fails-test.stan', line 24, column 74 to line 46, column 3)"};
-struct last_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
-struct prob_uncaptured_functor__ {
-  template <typename T2__, typename T3__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
-                                stan::is_vt_not_complex<T2__>,
-                                stan::is_eigen_matrix_dynamic<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
-                  stan::base_type_t<T3__>>,-1,-1>
-  operator()(const int& nind, const int& n_occasions, const T2__& p,
-             const T3__& phi, std::ostream* pstream__) const;
-};
-struct first_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
+int first_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+template <typename T2__, typename T3__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
+                              stan::is_vt_not_complex<T2__>,
+                              stan::is_eigen_matrix_dynamic<T3__>,
+                              stan::is_vt_not_complex<T3__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
+                stan::base_type_t<T3__>>,-1,-1>
+prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
+                const T3__& phi_arg__, std::ostream* pstream__);
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -9711,11 +9597,6 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-int
-first_capture_functor__::operator()(const std::vector<int>& y_i,
-                                    std::ostream* pstream__) const {
-  return first_capture(y_i, pstream__);
 }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -9744,16 +9625,11 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-int
-last_capture_functor__::operator()(const std::vector<int>& y_i, std::ostream*
-                                   pstream__) const {
-  return last_capture(y_i, pstream__);
-}
 template <typename T2__, typename T3__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
                               stan::is_vt_not_complex<T2__>,
                               stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>>* = nullptr>
+                              stan::is_vt_not_complex<T3__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
                 stan::base_type_t<T3__>>,-1,-1>
 prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
@@ -9808,18 +9684,6 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T2__, typename T3__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
-                              stan::is_vt_not_complex<T2__>,
-                              stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
-                stan::base_type_t<T3__>>,-1,-1>
-prob_uncaptured_functor__::operator()(const int& nind, const int&
-                                      n_occasions, const T2__& p, const T3__&
-                                      phi, std::ostream* pstream__) const {
-  return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
 class fails_test_model final : public model_base_crtp<fails_test_model> {
  private:
@@ -10472,23 +10336,19 @@ static constexpr std::array<const char*, 8> locations_array__ =
   " (in 'function-in-function-inline.stan', line 2, column 30 to line 4, column 3)",
   " (in 'function-in-function-inline.stan', line 7, column 4 to column 27)",
   " (in 'function-in-function-inline.stan', line 6, column 30 to line 8, column 3)"};
-struct inner_lpdf_functor__ {
-  template <bool propto__, typename T0__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  stan::promote_args_t<stan::base_type_t<T0__>>
-  operator()(const T0__& phi, std::ostream* pstream__) const;
-};
-struct outer_lpdf_functor__ {
-  template <bool propto__, typename T0__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  stan::promote_args_t<stan::base_type_t<T0__>>
-  operator()(const T0__& phi, std::ostream* pstream__) const;
-};
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
+stan::promote_args_t<stan::base_type_t<T0__>>
+inner_lpdf(const T0__& phi_arg__, std::ostream* pstream__);
+template <bool propto__, typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+stan::promote_args_t<stan::base_type_t<T0__>>
+outer_lpdf(const T0__& phi_arg__, std::ostream* pstream__);
+template <bool propto__, typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 stan::promote_args_t<stan::base_type_t<T0__>>
 inner_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -10508,13 +10368,6 @@ template <bool propto__, typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
 stan::promote_args_t<stan::base_type_t<T0__>>
-inner_lpdf_functor__::operator()(const T0__& phi, std::ostream* pstream__) const {
-  return inner_lpdf<propto__>(phi, pstream__);
-}
-template <bool propto__, typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>* = nullptr>
-stan::promote_args_t<stan::base_type_t<T0__>>
 outer_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
@@ -10528,13 +10381,6 @@ outer_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <bool propto__, typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-stan::promote_args_t<stan::base_type_t<T0__>>
-outer_lpdf_functor__::operator()(const T0__& phi, std::ostream* pstream__) const {
-  return outer_lpdf<propto__>(phi, pstream__);
 }
 class function_in_function_inline_model final : public model_base_crtp<function_in_function_inline_model> {
  private:
@@ -10833,21 +10679,16 @@ static constexpr std::array<const char*, 17> locations_array__ =
   " (in 'function-in-function-loops.stan', line 12, column 4 to line 14, column 5)",
   " (in 'function-in-function-loops.stan', line 15, column 4 to column 23)",
   " (in 'function-in-function-loops.stan', line 9, column 24 to line 16, column 3)"};
-struct summer_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  stan::promote_args_t<stan::base_type_t<T0__>>
-  operator()(const T0__& et, std::ostream* pstream__) const;
-};
-struct do_something_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const T0__& x, std::ostream* pstream__) const;
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+stan::promote_args_t<T0__>
+do_something(const T0__& x, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+stan::promote_args_t<stan::base_type_t<T0__>>
+summer(const T0__& et_arg__, std::ostream* pstream__);
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 do_something(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
@@ -10871,14 +10712,9 @@ do_something(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-stan::promote_args_t<T0__>
-do_something_functor__::operator()(const T0__& x, std::ostream* pstream__) const {
-  return do_something(x, pstream__);
-}
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>* = nullptr>
+                              stan::is_vt_not_complex<T0__>>*>
 stan::promote_args_t<stan::base_type_t<T0__>>
 summer(const T0__& et_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -10909,13 +10745,6 @@ summer(const T0__& et_arg__, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-stan::promote_args_t<stan::base_type_t<T0__>>
-summer_functor__::operator()(const T0__& et, std::ostream* pstream__) const {
-  return summer(et, pstream__);
 }
 class function_in_function_loops_model final : public model_base_crtp<function_in_function_loops_model> {
  private:
@@ -11201,23 +11030,19 @@ static constexpr std::array<const char*, 14> locations_array__ =
   " (in 'inline-functions-varmat.stan', line 7, column 20 to line 9, column 5)",
   " (in 'inline-functions-varmat.stan', line 7, column 4 to line 11, column 5)",
   " (in 'inline-functions-varmat.stan', line 5, column 33 to line 12, column 3)"};
-struct single_ret_fun_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-  operator()(const T0__& A, std::ostream* pstream__) const;
-};
-struct multi_ret_fun_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-  operator()(const T0__& A, std::ostream* pstream__) const;
-};
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
+single_ret_fun(const T0__& A_arg__, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
+multi_ret_fun(const T0__& A_arg__, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 single_ret_fun(const T0__& A_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -11239,13 +11064,6 @@ single_ret_fun(const T0__& A_arg__, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-single_ret_fun_functor__::operator()(const T0__& A, std::ostream* pstream__) const {
-  return single_ret_fun(A, pstream__);
-}
-template <typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>* = nullptr>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 multi_ret_fun(const T0__& A_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -11272,13 +11090,6 @@ multi_ret_fun(const T0__& A_arg__, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-multi_ret_fun_functor__::operator()(const T0__& A, std::ostream* pstream__) const {
-  return multi_ret_fun(A, pstream__);
 }
 class inline_functions_varmat_model final : public model_base_crtp<inline_functions_varmat_model> {
  private:
@@ -11651,10 +11462,8 @@ static constexpr std::array<const char*, 10> locations_array__ =
   " (in 'inline-tdata.stan', line 10, column 3 to column 31)",
   " (in 'inline-tdata.stan', line 3, column 4 to column 31)",
   " (in 'inline-tdata.stan', line 2, column 26 to line 4, column 3)"};
-struct foo_functor__ {
-  Eigen::Matrix<double,-1,-1>
-  operator()(const int& N, const int& M, std::ostream* pstream__) const;
-};
+Eigen::Matrix<double,-1,-1>
+foo(const int& N, const int& M, std::ostream* pstream__);
 Eigen::Matrix<double,-1,-1>
 foo(const int& N, const int& M, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -11671,10 +11480,6 @@ foo(const int& N, const int& M, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-Eigen::Matrix<double,-1,-1>
-foo_functor__::operator()(const int& N, const int& M, std::ostream* pstream__) const {
-  return foo(N, M, pstream__);
 }
 class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
  private:
@@ -11978,16 +11783,14 @@ static constexpr std::array<const char*, 12> locations_array__ =
   " (in 'inliner-same-names.stan', line 7, column 4 to column 22)",
   " (in 'inliner-same-names.stan', line 9, column 4 to column 15)",
   " (in 'inliner-same-names.stan', line 2, column 24 to line 10, column 3)"};
-struct foo_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-  operator()(const T0__& oR, std::ostream* pstream__) const;
-};
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
+foo(const T0__& oR_arg__, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 foo(const T0__& oR_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -12014,13 +11817,6 @@ foo(const T0__& oR_arg__, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-foo_functor__::operator()(const T0__& oR, std::ostream* pstream__) const {
-  return foo(oR, pstream__);
 }
 class inliner_same_names_model final : public model_base_crtp<inliner_same_names_model> {
  private:
@@ -12479,46 +12275,38 @@ static constexpr std::array<const char*, 158> locations_array__ =
   " (in 'inlining-fail2.stan', line 153, column 4 to line 156, column 5)",
   " (in 'inlining-fail2.stan', line 157, column 4 to column 26)",
   " (in 'inlining-fail2.stan', line 148, column 33 to line 158, column 3)"};
-struct prob_uncaptured_functor__ {
-  template <typename T0__, typename T1__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                                stan::is_vt_not_complex<T0__>,
-                                stan::is_eigen_matrix_dynamic<T1__>,
-                                stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
-                  stan::base_type_t<T1__>>,-1,-1>
-  operator()(const T0__& p, const T1__& phi, std::ostream* pstream__) const;
-};
-struct first_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
-struct seq_cprob_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-  operator()(const T0__& gamma, std::ostream* pstream__) const;
-};
-struct last_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
-struct jolly_seber_lp_functor__ {
-  template <bool propto__, typename T3__, typename T4__, typename T5__,
-            typename T6__, typename T_lp__, typename T_lp_accum__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T3__>,
-                                stan::is_vt_not_complex<T3__>,
-                                stan::is_eigen_matrix_dynamic<T4__>,
-                                stan::is_vt_not_complex<T4__>,
-                                stan::is_col_vector<T5__>,
-                                stan::is_vt_not_complex<T5__>,
-                                stan::is_eigen_matrix_dynamic<T6__>,
-                                stan::is_vt_not_complex<T6__>>* = nullptr>
-  void
-  operator()(const std::vector<std::vector<int>>& y, const std::vector<int>&
-             first, const std::vector<int>& last, const T3__& p, const T4__&
-             phi, const T5__& gamma, const T6__& chi, T_lp__& lp__,
-             T_lp_accum__& lp_accum__, std::ostream* pstream__) const;
-};
+int first_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>,
+                              stan::is_eigen_matrix_dynamic<T1__>,
+                              stan::is_vt_not_complex<T1__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+                stan::base_type_t<T1__>>,-1,-1>
+prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
+                pstream__);
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+          typename T6__, typename T_lp__, typename T_lp_accum__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T3__>,
+                              stan::is_vt_not_complex<T3__>,
+                              stan::is_eigen_matrix_dynamic<T4__>,
+                              stan::is_vt_not_complex<T4__>,
+                              stan::is_col_vector<T5__>,
+                              stan::is_vt_not_complex<T5__>,
+                              stan::is_eigen_matrix_dynamic<T6__>,
+                              stan::is_vt_not_complex<T6__>>* = nullptr>
+void
+jolly_seber_lp(const std::vector<std::vector<int>>& y,
+               const std::vector<int>& first, const std::vector<int>& last,
+               const T3__& p_arg__, const T4__& phi_arg__, const T5__&
+               gamma_arg__, const T6__& chi_arg__, T_lp__& lp__,
+               T_lp_accum__& lp_accum__, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
+seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__);
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -12542,11 +12330,6 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-int
-first_capture_functor__::operator()(const std::vector<int>& y_i,
-                                    std::ostream* pstream__) const {
-  return first_capture(y_i, pstream__);
 }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -12575,16 +12358,11 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-int
-last_capture_functor__::operator()(const std::vector<int>& y_i, std::ostream*
-                                   pstream__) const {
-  return last_capture(y_i, pstream__);
-}
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>,
                               stan::is_eigen_matrix_dynamic<T1__>,
-                              stan::is_vt_not_complex<T1__>>* = nullptr>
+                              stan::is_vt_not_complex<T1__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
                 stan::base_type_t<T1__>>,-1,-1>
 prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
@@ -12646,17 +12424,6 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, typename T1__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                              stan::is_vt_not_complex<T0__>,
-                              stan::is_eigen_matrix_dynamic<T1__>,
-                              stan::is_vt_not_complex<T1__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
-                stan::base_type_t<T1__>>,-1,-1>
-prob_uncaptured_functor__::operator()(const T0__& p, const T1__& phi,
-                                      std::ostream* pstream__) const {
-  return prob_uncaptured(p, phi, pstream__);
-}
 template <bool propto__, typename T3__, typename T4__, typename T5__,
           typename T6__, typename T_lp__, typename T_lp_accum__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T3__>,
@@ -12666,7 +12433,7 @@ template <bool propto__, typename T3__, typename T4__, typename T5__,
                               stan::is_col_vector<T5__>,
                               stan::is_vt_not_complex<T5__>,
                               stan::is_eigen_matrix_dynamic<T6__>,
-                              stan::is_vt_not_complex<T6__>>* = nullptr>
+                              stan::is_vt_not_complex<T6__>>*>
 void
 jolly_seber_lp(const std::vector<std::vector<int>>& y,
                const std::vector<int>& first, const std::vector<int>& last,
@@ -12894,30 +12661,9 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <bool propto__, typename T3__, typename T4__, typename T5__,
-          typename T6__, typename T_lp__, typename T_lp_accum__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>,
-                              stan::is_eigen_matrix_dynamic<T4__>,
-                              stan::is_vt_not_complex<T4__>,
-                              stan::is_col_vector<T5__>,
-                              stan::is_vt_not_complex<T5__>,
-                              stan::is_eigen_matrix_dynamic<T6__>,
-                              stan::is_vt_not_complex<T6__>>*>
-void
-jolly_seber_lp_functor__::operator()(const std::vector<std::vector<int>>& y,
-                                     const std::vector<int>& first,
-                                     const std::vector<int>& last,
-                                     const T3__& p, const T4__& phi,
-                                     const T5__& gamma, const T6__& chi,
-                                     T_lp__& lp__, T_lp_accum__& lp_accum__,
-                                     std::ostream* pstream__) const {
-  return jolly_seber_lp<propto__>(y, first, last, p, phi, gamma, chi, lp__,
-           lp_accum__, pstream__);
-}
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>* = nullptr>
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -12958,13 +12704,6 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-seq_cprob_functor__::operator()(const T0__& gamma, std::ostream* pstream__) const {
-  return seq_cprob(gamma, pstream__);
 }
 class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> {
  private:
@@ -14736,23 +14475,17 @@ static constexpr std::array<const char*, 71> locations_array__ =
   " (in 'lcm-fails2.stan', line 27, column 4 to line 44, column 5)",
   " (in 'lcm-fails2.stan', line 45, column 4 to column 15)",
   " (in 'lcm-fails2.stan', line 24, column 74 to line 46, column 3)"};
-struct last_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
-struct prob_uncaptured_functor__ {
-  template <typename T2__, typename T3__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
-                                stan::is_vt_not_complex<T2__>,
-                                stan::is_eigen_matrix_dynamic<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
-                  stan::base_type_t<T3__>>,-1,-1>
-  operator()(const int& nind, const int& n_occasions, const T2__& p,
-             const T3__& phi, std::ostream* pstream__) const;
-};
-struct first_capture_functor__ {
-  int operator()(const std::vector<int>& y_i, std::ostream* pstream__) const;
-};
+int first_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+int last_capture(const std::vector<int>& y_i, std::ostream* pstream__);
+template <typename T2__, typename T3__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
+                              stan::is_vt_not_complex<T2__>,
+                              stan::is_eigen_matrix_dynamic<T3__>,
+                              stan::is_vt_not_complex<T3__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
+                stan::base_type_t<T3__>>,-1,-1>
+prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
+                const T3__& phi_arg__, std::ostream* pstream__);
 int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -14776,11 +14509,6 @@ int first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-int
-first_capture_functor__::operator()(const std::vector<int>& y_i,
-                                    std::ostream* pstream__) const {
-  return first_capture(y_i, pstream__);
 }
 int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -14809,16 +14537,11 @@ int last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-int
-last_capture_functor__::operator()(const std::vector<int>& y_i, std::ostream*
-                                   pstream__) const {
-  return last_capture(y_i, pstream__);
-}
 template <typename T2__, typename T3__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
                               stan::is_vt_not_complex<T2__>,
                               stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>>* = nullptr>
+                              stan::is_vt_not_complex<T3__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
                 stan::base_type_t<T3__>>,-1,-1>
 prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
@@ -14873,18 +14596,6 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T2__, typename T3__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T2__>,
-                              stan::is_vt_not_complex<T2__>,
-                              stan::is_eigen_matrix_dynamic<T3__>,
-                              stan::is_vt_not_complex<T3__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T2__>,
-                stan::base_type_t<T3__>>,-1,-1>
-prob_uncaptured_functor__::operator()(const int& nind, const int&
-                                      n_occasions, const T2__& p, const T3__&
-                                      phi, std::ostream* pstream__) const {
-  return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
 class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
  private:
@@ -15474,28 +15185,21 @@ static constexpr std::array<const char*, 14> locations_array__ =
   " (in 'lupdf-inlining.stan', line 5, column 34 to line 7, column 5)",
   " (in 'lupdf-inlining.stan', line 9, column 8 to column 32)",
   " (in 'lupdf-inlining.stan', line 8, column 26 to line 10, column 5)"};
-struct foo_lpdf_functor__ {
-  template <bool propto__, typename T0__, typename T1__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T1__>>* = nullptr>
-  stan::promote_args_t<T0__, T1__>
-  operator()(const T0__& x, const T1__& mu, std::ostream* pstream__) const;
-};
-struct bar_lpmf_functor__ {
-  template <bool propto__, typename T1__,
-            stan::require_all_t<stan::is_stan_scalar<T1__>>* = nullptr>
-  stan::promote_args_t<T1__>
-  operator()(const int& n, const T1__& mu, std::ostream* pstream__) const;
-};
-struct baz_lpdf_functor__ {
-  template <bool propto__, typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const T0__& x, std::ostream* pstream__) const;
-};
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T1__>>* = nullptr>
+stan::promote_args_t<T0__, T1__>
+foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__);
+template <bool propto__, typename T1__,
+          stan::require_all_t<stan::is_stan_scalar<T1__>>* = nullptr>
+stan::promote_args_t<T1__>
+bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__);
+template <bool propto__, typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+stan::promote_args_t<T0__> baz_lpdf(const T0__& x, std::ostream* pstream__);
+template <bool propto__, typename T0__, typename T1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T1__>>*>
 stan::promote_args_t<T0__, T1__>
 foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
@@ -15510,16 +15214,8 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <bool propto__, typename T0__, typename T1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_stan_scalar<T1__>>*>
-stan::promote_args_t<T0__, T1__>
-foo_lpdf_functor__::operator()(const T0__& x, const T1__& mu, std::ostream*
-                               pstream__) const {
-  return foo_lpdf<propto__>(x, mu, pstream__);
-}
 template <bool propto__, typename T1__,
-          stan::require_all_t<stan::is_stan_scalar<T1__>>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T1__>>*>
 stan::promote_args_t<T1__>
 bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T1__>;
@@ -15534,15 +15230,8 @@ bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <bool propto__, typename T1__,
-          stan::require_all_t<stan::is_stan_scalar<T1__>>*>
-stan::promote_args_t<T1__>
-bar_lpmf_functor__::operator()(const int& n, const T1__& mu, std::ostream*
-                               pstream__) const {
-  return bar_lpmf<propto__>(n, mu, pstream__);
-}
 template <bool propto__, typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__> baz_lpdf(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
@@ -15555,12 +15244,6 @@ stan::promote_args_t<T0__> baz_lpdf(const T0__& x, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <bool propto__, typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-stan::promote_args_t<T0__>
-baz_lpdf_functor__::operator()(const T0__& x, std::ostream* pstream__) const {
-  return baz_lpdf<propto__>(x, pstream__);
 }
 class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> {
  private:
@@ -17314,24 +16997,18 @@ static constexpr std::array<const char*, 146> locations_array__ =
   " (in 'optimizations.stan', line 15, column 8 to column 20)",
   " (in 'optimizations.stan', line 16, column 8 to column 18)",
   " (in 'optimizations.stan', line 14, column 18 to line 17, column 5)"};
-struct nrfun_lp_functor__ {
-  template <bool propto__, typename T0__, typename T_lp__,
-            typename T_lp_accum__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  void
-  operator()(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__&
-             lp_accum__, std::ostream* pstream__) const;
-};
-struct rfun_lp_functor__ {
-  template <bool propto__, typename T_lp__, typename T_lp_accum__> int
-  operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) const;
-};
-struct rfun_functor__ {
-  int operator()(const int& y, std::ostream* pstream__) const;
-};
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+void
+nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
+         std::ostream* pstream__);
+int rfun(const int& y, std::ostream* pstream__);
+template <bool propto__, typename T_lp__, typename T_lp_accum__> int
+rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__);
+template <bool propto__, typename T0__, typename T_lp__,
+          typename T_lp_accum__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 void
 nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) {
@@ -17351,15 +17028,6 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <bool propto__, typename T0__, typename T_lp__,
-          typename T_lp_accum__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-void
-nrfun_lp_functor__::operator()(const T0__& x, const int& y, T_lp__& lp__,
-                               T_lp_accum__& lp_accum__, std::ostream*
-                               pstream__) const {
-  return nrfun_lp<propto__>(x, y, lp__, lp_accum__, pstream__);
 }
 int rfun(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -17382,9 +17050,6 @@ int rfun(const int& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-int rfun_functor__::operator()(const int& y, std::ostream* pstream__) const {
-  return rfun(y, pstream__);
-}
 template <bool propto__, typename T_lp__, typename T_lp_accum__> int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -17400,11 +17065,6 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <bool propto__, typename T_lp__, typename T_lp_accum__> int
-rfun_lp_functor__::operator()(T_lp__& lp__, T_lp_accum__& lp_accum__,
-                              std::ostream* pstream__) const {
-  return rfun_lp<propto__>(lp__, lp_accum__, pstream__);
 }
 class optimizations_model final : public model_base_crtp<optimizations_model> {
  private:
@@ -18053,15 +17713,11 @@ static constexpr std::array<const char*, 6> locations_array__ =
   " (in 'overloaded-fn.stan', line 2, column 20 to line 4, column 4)",
   " (in 'overloaded-fn.stan', line 7, column 5 to column 20)",
   " (in 'overloaded-fn.stan', line 6, column 19 to line 8, column 4)"};
-struct dumb_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const T0__& x, std::ostream* pstream__) const;
-  double operator()(const int& x, std::ostream* pstream__) const;
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+stan::promote_args_t<T0__> dumb(const T0__& x, std::ostream* pstream__);
+double dumb(const int& x, std::ostream* pstream__);
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__> dumb(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
@@ -18078,11 +17734,6 @@ stan::promote_args_t<T0__> dumb(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-stan::promote_args_t<T0__>
-dumb_functor__::operator()(const T0__& x, std::ostream* pstream__) const {
-  return dumb(x, pstream__);
-}
 double dumb(const int& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -18098,10 +17749,6 @@ double dumb(const int& x, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-double
-dumb_functor__::operator()(const int& x, std::ostream* pstream__) const {
-  return dumb(x, pstream__);
 }
 class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
  private:

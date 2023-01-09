@@ -309,6 +309,10 @@ type fun_defn =
   ; body: stmt list option }
 [@@deriving make, sexp]
 
+let split_fun_decl_defn (fn : fun_defn) =
+  ( {fn with body= None}
+  , {fn with templates_init= (fst fn.templates_init, false)} )
+
 type constructor =
   { args: (type_ * string) list
   ; init_list: (identifier * expr list) list

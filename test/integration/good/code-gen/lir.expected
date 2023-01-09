@@ -1069,543 +1069,892 @@
          (Literal "\" (in 'mother.stan', line 348, column 4 to column 16)\"")
          (Literal
           "\" (in 'mother.stan', line 345, column 41 to line 349, column 3)\"")))))))
-   (Struct
-    ((param ()) (struct_name foo_functor__)
-     (body
-      ((FunDef
-        ((templates_init ((()) true)) (inline false) (return_type Int)
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) n)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f1_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false) (return_type Int) (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_bar1_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
-         (inline false)
-         (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) x)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name binomialf_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (Typename T1__)
-             (RequireIs stan::is_col_vector T0__)
-             (RequireIs stan::is_vt_not_complex T0__)
-             (RequireIs stan::is_col_vector T1__)
-             (RequireIs stan::is_vt_not_complex T1__)))
-           true))
-         (inline false)
-         (return_type
-          (Matrix
-           (TypeTrait stan::promote_args_t
-            ((TemplateType stan::base_type_t<T0__>)
-             (TemplateType stan::base_type_t<T1__>)))
-           -1 1))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) phi)
-           ((Const (Ref (TemplateType T1__))) theta)
-           ((Const (Ref (StdVector Double))) x_r)
-           ((Const (Ref (StdVector Int))) x_i)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_6_functor__)
-     (body
-      ((FunDef
-        ((templates_init ((()) true)) (inline false) (return_type Void)
-         (name "operator()")
-         (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_3_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
-         (inline false)
-         (return_type
-          (StdVector (TypeTrait stan::promote_args_t ((TemplateType T0__)))))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) t) ((Const (Ref Int)) n)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_lp_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Bool propto__) (Typename T0__) (Typename T_lp__)
-             (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)))
-           true))
-         (inline false)
-         (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) x)
-           ((Ref (TemplateType T_lp__)) lp__)
-           ((Ref (TemplateType T_lp_accum__)) lp_accum__)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name vecmufoo_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
-         (inline false)
-         (return_type
-          (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1
-           1))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) mu)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_lccdf_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) true))
-         (inline false)
-         (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f8_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false)
-         (return_type
-          (StdVector
-           (Matrix
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-              (TypeTrait stan::promote_args_t
-               ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-                (TemplateType T10__) (TemplateType T11__)))))
-            -1 1)))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f9_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false)
-         (return_type
-          (StdVector
-           (StdVector
-            (Matrix
-             (TypeTrait stan::promote_args_t
-              ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-               (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-               (TypeTrait stan::promote_args_t
-                ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-                 (TemplateType T10__) (TemplateType T11__)))))
-             -1 1))))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f2_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false) (return_type (StdVector Int)) (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f10_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false)
-         (return_type
-          (Matrix
-           (TypeTrait stan::promote_args_t
-            ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-             (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-             (TypeTrait stan::promote_args_t
-              ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-               (TemplateType T10__) (TemplateType T11__)))))
-           -1 -1))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f4_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false)
-         (return_type
+   (FunDef
+    ((templates_init ((()) true)) (inline false) (return_type Int) (name foo)
+     (args
+      (((Const (Ref Int)) n)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (Typename T1__) (Typename T2__)
+         (RequireIs stan::is_stan_scalar T0__)
+         (RequireIs stan::is_stan_scalar T1__)
+         (RequireIs stan::is_stan_scalar T2__)))
+       true))
+     (inline false)
+     (return_type
+      (StdVector
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))
+     (name sho)
+     (args
+      (((Const (Ref (TemplateType T0__))) t)
+       ((Const (Ref (StdVector (TemplateType T1__)))) y)
+       ((Const (Ref (StdVector (TemplateType T2__)))) theta)
+       ((Const (Ref (StdVector Double))) x)
+       ((Const (Ref (StdVector Int))) x_int)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init ((()) true)) (inline false) (return_type Double)
+     (name foo_bar0)
+     (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+     (inline false)
+     (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
+     (name foo_bar1)
+     (args
+      (((Const (Ref (TemplateType T0__))) x)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_stan_scalar T0__)
+         (RequireIs stan::is_stan_scalar T1__)))
+       true))
+     (inline false)
+     (return_type
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__))))
+     (name foo_bar2)
+     (args
+      (((Const (Ref (TemplateType T0__))) x)
+       ((Const (Ref (TemplateType T1__))) y)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Bool propto__) (Typename T1__)
+         (RequireIs stan::is_stan_scalar T1__)))
+       true))
+     (inline false)
+     (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
+     (name foo_lpmf)
+     (args
+      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) true))
+     (inline false)
+     (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
+     (name foo_lcdf)
+     (args
+      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) true))
+     (inline false)
+     (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
+     (name foo_lccdf)
+     (args
+      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (Typename T1__) (Typename RNG)
+         (RequireIs stan::is_stan_scalar T0__)
+         (RequireIs stan::is_stan_scalar T1__)))
+       true))
+     (inline false)
+     (return_type
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__))))
+     (name foo_rng)
+     (args
+      (((Const (Ref (TemplateType T0__))) mu)
+       ((Const (Ref (TemplateType T1__))) sigma)
+       ((Ref (TemplateType RNG)) base_rng__)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Bool propto__) (Typename T0__) (Typename T_lp__)
+         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)))
+       true))
+     (inline false) (return_type Void) (name unit_normal_lp)
+     (args
+      (((Const (Ref (TemplateType T0__))) u)
+       ((Ref (TemplateType T_lp__)) lp__)
+       ((Ref (TemplateType T_lp_accum__)) lp_accum__)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init ((()) true)) (inline false) (return_type Int)
+     (name foo_1)
+     (args
+      (((Const (Ref Int)) a)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init ((()) true)) (inline false) (return_type Int)
+     (name foo_2)
+     (args
+      (((Const (Ref Int)) a)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+     (inline false)
+     (return_type
+      (StdVector (TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+     (name foo_3)
+     (args
+      (((Const (Ref (TemplateType T0__))) t) ((Const (Ref Int)) n)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Bool propto__) (Typename T0__) (Typename T_lp__)
+         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)))
+       true))
+     (inline false)
+     (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
+     (name foo_lp)
+     (args
+      (((Const (Ref (TemplateType T0__))) x)
+       ((Ref (TemplateType T_lp__)) lp__)
+       ((Ref (TemplateType T_lp_accum__)) lp_accum__)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+     (inline false) (return_type Void) (name foo_4)
+     (args
+      (((Const (Ref (StdVector (TemplateType T0__)))) x)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
+         (RequireIs stan::is_stan_scalar T0__)
+         (RequireIs stan::is_stan_scalar T1__)
+         (RequireIs stan::is_stan_scalar T2__)
+         (RequireIs stan::is_stan_scalar T3__)))
+       true))
+     (inline false)
+     (return_type
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+        (TemplateType T3__))))
+     (name relative_diff)
+     (args
+      (((Const (Ref (TemplateType T0__))) x)
+       ((Const (Ref (TemplateType T1__))) y)
+       ((Const (Ref (TemplateType T2__))) max_)
+       ((Const (Ref (TemplateType T3__))) min_)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
+         (RequireIs stan::is_vt_not_complex T0__)
+         (RequireIs stan::is_col_vector T1__)
+         (RequireIs stan::is_vt_not_complex T1__)))
+       true))
+     (inline false)
+     (return_type
+      (Matrix
+       (TypeTrait stan::promote_args_t
+        ((TemplateType stan::base_type_t<T0__>)
+         (TemplateType stan::base_type_t<T1__>)))
+       -1 1))
+     (name foo_5)
+     (args
+      (((Const (Ref (TemplateType T0__))) shared_params_arg__)
+       ((Const (Ref (TemplateType T1__))) job_params_arg__)
+       ((Const (Ref (StdVector Double))) data_r)
+       ((Const (Ref (StdVector Int))) data_i)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
+         (Typename T4__) (RequireIs stan::is_stan_scalar T0__)
+         (RequireIs stan::is_stan_scalar T1__)
+         (RequireIs stan::is_stan_scalar T2__)
+         (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)))
+       true))
+     (inline false)
+     (return_type
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+        (TemplateType T3__) (TemplateType T4__))))
+     (name foo_five_args)
+     (args
+      (((Const (Ref (TemplateType T0__))) x1)
+       ((Const (Ref (TemplateType T1__))) x2)
+       ((Const (Ref (TemplateType T2__))) x3)
+       ((Const (Ref (TemplateType T3__))) x4)
+       ((Const (Ref (TemplateType T4__))) x5)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Bool propto__) (Typename T0__) (Typename T1__) (Typename T2__)
+         (Typename T3__) (Typename T4__) (Typename T5__) (Typename T_lp__)
+         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)
+         (RequireIs stan::is_stan_scalar T1__)
+         (RequireIs stan::is_stan_scalar T2__)
+         (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)))
+       true))
+     (inline false)
+     (return_type
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+        (TemplateType T3__) (TemplateType T4__)
+        (TypeTrait stan::promote_args_t ((TemplateType T5__))))))
+     (name foo_five_args_lp)
+     (args
+      (((Const (Ref (TemplateType T0__))) x1)
+       ((Const (Ref (TemplateType T1__))) x2)
+       ((Const (Ref (TemplateType T2__))) x3)
+       ((Const (Ref (TemplateType T3__))) x4)
+       ((Const (Ref (TemplateType T4__))) x5)
+       ((Const (Ref (TemplateType T5__))) x6)
+       ((Ref (TemplateType T_lp__)) lp__)
+       ((Ref (TemplateType T_lp_accum__)) lp_accum__)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_eigen_matrix_dynamic T0__)
+         (RequireIs stan::is_vt_not_complex T0__)))
+       true))
+     (inline false)
+     (return_type
+      (Matrix
+       (TypeTrait stan::promote_args_t
+        ((TemplateType stan::base_type_t<T0__>)))
+       -1 -1))
+     (name covsqrt2corsqrt)
+     (args
+      (((Const (Ref (TemplateType T0__))) mat_arg__)
+       ((Const (Ref Int)) invert)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false) (return_type Void) (name f0)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false) (return_type Int) (name f1)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false) (return_type (StdVector Int)) (name f2)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false) (return_type (StdVector (StdVector Int))) (name f3)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false)
+     (return_type
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+        (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+          (TemplateType T10__) (TemplateType T11__))))))
+     (name f4)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false)
+     (return_type
+      (StdVector
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+         (TypeTrait stan::promote_args_t
+          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+           (TemplateType T10__) (TemplateType T11__)))))))
+     (name f5)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false)
+     (return_type
+      (StdVector
+       (StdVector
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
           (TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__))))))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_5_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (Typename T1__)
-             (RequireIs stan::is_col_vector T0__)
-             (RequireIs stan::is_vt_not_complex T0__)
-             (RequireIs stan::is_col_vector T1__)
-             (RequireIs stan::is_vt_not_complex T1__)))
-           true))
-         (inline false)
-         (return_type
-          (Matrix
+           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+            (TemplateType T10__) (TemplateType T11__))))))))
+     (name f6)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false)
+     (return_type
+      (Matrix
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+         (TypeTrait stan::promote_args_t
+          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+           (TemplateType T10__) (TemplateType T11__)))))
+       -1 1))
+     (name f7)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false)
+     (return_type
+      (StdVector
+       (Matrix
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+          (TypeTrait stan::promote_args_t
+           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+            (TemplateType T10__) (TemplateType T11__)))))
+        -1 1)))
+     (name f8)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false)
+     (return_type
+      (StdVector
+       (StdVector
+        (Matrix
+         (TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
            (TypeTrait stan::promote_args_t
-            ((TemplateType stan::base_type_t<T0__>)
-             (TemplateType stan::base_type_t<T1__>)))
-           -1 1))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) shared_params)
-           ((Const (Ref (TemplateType T1__))) job_params)
-           ((Const (Ref (StdVector Double))) data_r)
-           ((Const (Ref (StdVector Int))) data_i)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_lpmf_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Bool propto__) (Typename T1__)
-             (RequireIs stan::is_stan_scalar T1__)))
-           true))
-         (inline false)
-         (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f0_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false) (return_type Void) (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name vecmubar_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
-         (inline false)
-         (return_type
-          (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1
-           1))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) mu)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name relative_diff_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-             (RequireIs stan::is_stan_scalar T0__)
-             (RequireIs stan::is_stan_scalar T1__)
-             (RequireIs stan::is_stan_scalar T2__)
-             (RequireIs stan::is_stan_scalar T3__)))
-           true))
-         (inline false)
-         (return_type
+            ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+             (TemplateType T10__) (TemplateType T11__)))))
+         -1 1))))
+     (name f9)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false)
+     (return_type
+      (Matrix
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+         (TypeTrait stan::promote_args_t
+          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+           (TemplateType T10__) (TemplateType T11__)))))
+       -1 -1))
+     (name f10)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false)
+     (return_type
+      (StdVector
+       (Matrix
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
           (TypeTrait stan::promote_args_t
-           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-            (TemplateType T3__))))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) x)
-           ((Const (Ref (TemplateType T1__))) y)
-           ((Const (Ref (TemplateType T2__))) max_)
-           ((Const (Ref (TemplateType T3__))) min_)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_rng_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (Typename T1__) (Typename RNG)
-             (RequireIs stan::is_stan_scalar T0__)
-             (RequireIs stan::is_stan_scalar T1__)))
-           true))
-         (inline false)
-         (return_type
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T0__) (TemplateType T1__))))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) mu)
-           ((Const (Ref (TemplateType T1__))) sigma)
-           ((Ref (TemplateType RNG)) base_rng__)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
+           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+            (TemplateType T10__) (TemplateType T11__)))))
+        -1 -1)))
+     (name f11)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
+         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
+         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
+         (RequireIs stan::is_stan_scalar T4__)
+         (RequireIs stan::is_stan_scalar T5__)
+         (RequireIs stan::is_col_vector T6__)
+         (RequireIs stan::is_vt_not_complex T6__)
+         (RequireIs stan::is_stan_scalar T7__)
+         (RequireIs stan::is_stan_scalar T8__)
+         (RequireIs stan::is_eigen_matrix_dynamic T9__)
+         (RequireIs stan::is_vt_not_complex T9__)
+         (RequireIs stan::is_stan_scalar T10__)
+         (RequireIs stan::is_stan_scalar T11__)))
+       true))
+     (inline false)
+     (return_type
+      (StdVector
+       (StdVector
+        (Matrix
+         (TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+           (TypeTrait stan::promote_args_t
+            ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+             (TemplateType T10__) (TemplateType T11__)))))
+         -1 -1))))
+     (name f12)
+     (args
+      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+       ((Const (Ref (StdVector (StdVector Int)))) a3)
+       ((Const (Ref (TemplateType T3__))) a4)
+       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
+       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
+       ((Const (Ref (TemplateType T6__))) a7_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
+        a9)
+       ((Const (Ref (TemplateType T9__))) a10_arg__)
+       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
+       ((Const
+         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
+        a12)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init ((()) true)) (inline false) (return_type Void)
+     (name foo_6) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init ((()) true)) (inline false)
+     (return_type (Matrix Double -1 -1)) (name matfoo)
+     (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init ((()) true)) (inline false)
+     (return_type (Matrix Double -1 1)) (name vecfoo)
+     (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+     (inline false)
+     (return_type
+      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
+     (name vecmufoo)
+     (args
+      (((Const (Ref (TemplateType T0__))) mu)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+     (inline false)
+     (return_type
+      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
+     (name vecmubar)
+     (args
+      (((Const (Ref (TemplateType T0__))) mu)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (Typename T1__) (Typename T2__)
+         (RequireIs stan::is_col_vector T0__)
+         (RequireIs stan::is_vt_not_complex T0__)
+         (RequireIs stan::is_col_vector T1__)
+         (RequireIs stan::is_vt_not_complex T1__)
+         (RequireIs stan::is_stan_scalar T2__)))
+       true))
+     (inline false)
+     (return_type
+      (Matrix
+       (TypeTrait stan::promote_args_t
+        ((TemplateType stan::base_type_t<T0__>)
+         (TemplateType stan::base_type_t<T1__>) (TemplateType T2__)))
+       -1 1))
+     (name algebra_system)
+     (args
+      (((Const (Ref (TemplateType T0__))) x_arg__)
+       ((Const (Ref (TemplateType T1__))) y_arg__)
+       ((Const (Ref (StdVector (TemplateType T2__)))) dat)
+       ((Const (Ref (StdVector Int))) dat_int)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
    (Struct
     ((param ()) (struct_name algebra_system_functor__)
      (body
@@ -1632,510 +1981,63 @@
            ((Const (Ref (StdVector (TemplateType T2__)))) dat)
            ((Const (Ref (StdVector Int))) dat_int)
            ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
+         (cv_qualifiers (Const))
+         (body
+          (((Return
+             ((FunCall algebra_system ()
+               ((Var x) (Var y) (Var dat) (Var dat_int) (Var pstream__))))))))))))))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
+         (RequireIs stan::is_vt_not_complex T0__)
+         (RequireIs stan::is_col_vector T1__)
+         (RequireIs stan::is_vt_not_complex T1__)))
+       true))
+     (inline false)
+     (return_type
+      (Matrix
+       (TypeTrait stan::promote_args_t
+        ((TemplateType stan::base_type_t<T0__>)
+         (TemplateType stan::base_type_t<T1__>)))
+       -1 1))
+     (name binomialf)
+     (args
+      (((Const (Ref (TemplateType T0__))) phi_arg__)
+       ((Const (Ref (TemplateType T1__))) theta_arg__)
+       ((Const (Ref (StdVector Double))) x_r)
+       ((Const (Ref (StdVector Int))) x_i)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
    (Struct
-    ((param ()) (struct_name matfoo_functor__)
-     (body
-      ((FunDef
-        ((templates_init ((()) true)) (inline false)
-         (return_type (Matrix Double -1 -1)) (name "operator()")
-         (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_bar2_functor__)
+    ((param ()) (struct_name binomialf_functor__)
      (body
       ((FunDef
         ((templates_init
           ((((Typename T0__) (Typename T1__)
-             (RequireIs stan::is_stan_scalar T0__)
-             (RequireIs stan::is_stan_scalar T1__)))
-           true))
-         (inline false)
-         (return_type
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T0__) (TemplateType T1__))))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) x)
-           ((Const (Ref (TemplateType T1__))) y)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name sho_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (Typename T1__) (Typename T2__)
-             (RequireIs stan::is_stan_scalar T0__)
-             (RequireIs stan::is_stan_scalar T1__)
-             (RequireIs stan::is_stan_scalar T2__)))
-           true))
-         (inline false)
-         (return_type
-          (StdVector
-           (TypeTrait stan::promote_args_t
-            ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) t)
-           ((Const (Ref (StdVector (TemplateType T1__)))) y)
-           ((Const (Ref (StdVector (TemplateType T2__)))) theta)
-           ((Const (Ref (StdVector Double))) x)
-           ((Const (Ref (StdVector Int))) x_int)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f12_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false)
-         (return_type
-          (StdVector
-           (StdVector
-            (Matrix
-             (TypeTrait stan::promote_args_t
-              ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-               (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-               (TypeTrait stan::promote_args_t
-                ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-                 (TemplateType T10__) (TemplateType T11__)))))
-             -1 -1))))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f11_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false)
-         (return_type
-          (StdVector
-           (Matrix
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-              (TypeTrait stan::promote_args_t
-               ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-                (TemplateType T10__) (TemplateType T11__)))))
-            -1 -1)))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f7_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
+             (RequireIs stan::is_col_vector T0__)
+             (RequireIs stan::is_vt_not_complex T0__)
+             (RequireIs stan::is_col_vector T1__)
+             (RequireIs stan::is_vt_not_complex T1__)))
            true))
          (inline false)
          (return_type
           (Matrix
            (TypeTrait stan::promote_args_t
-            ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-             (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-             (TypeTrait stan::promote_args_t
-              ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-               (TemplateType T10__) (TemplateType T11__)))))
+            ((TemplateType stan::base_type_t<T0__>)
+             (TemplateType stan::base_type_t<T1__>)))
            -1 1))
          (name "operator()")
          (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
+          (((Const (Ref (TemplateType T0__))) phi)
+           ((Const (Ref (TemplateType T1__))) theta)
+           ((Const (Ref (StdVector Double))) x_r)
+           ((Const (Ref (StdVector Int))) x_i)
            ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_4_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
-         (inline false) (return_type Void) (name "operator()")
-         (args
-          (((Const (Ref (StdVector (TemplateType T0__)))) x)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f3_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false) (return_type (StdVector (StdVector Int)))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_2_functor__)
-     (body
-      ((FunDef
-        ((templates_init ((()) true)) (inline false) (return_type Int)
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_five_args_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-             (Typename T4__) (RequireIs stan::is_stan_scalar T0__)
-             (RequireIs stan::is_stan_scalar T1__)
-             (RequireIs stan::is_stan_scalar T2__)
-             (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)))
-           true))
-         (inline false)
-         (return_type
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-            (TemplateType T3__) (TemplateType T4__))))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) x1)
-           ((Const (Ref (TemplateType T1__))) x2)
-           ((Const (Ref (TemplateType T2__))) x3)
-           ((Const (Ref (TemplateType T3__))) x4)
-           ((Const (Ref (TemplateType T4__))) x5)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f6_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false)
-         (return_type
-          (StdVector
-           (StdVector
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-              (TypeTrait stan::promote_args_t
-               ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-                (TemplateType T10__) (TemplateType T11__))))))))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name vecfoo_functor__)
-     (body
-      ((FunDef
-        ((templates_init ((()) true)) (inline false)
-         (return_type (Matrix Double -1 1)) (name "operator()")
-         (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_bar0_functor__)
-     (body
-      ((FunDef
-        ((templates_init ((()) true)) (inline false) (return_type Double)
-         (name "operator()")
-         (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name unit_normal_lp_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Bool propto__) (Typename T0__) (Typename T_lp__)
-             (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)))
-           true))
-         (inline false) (return_type Void) (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) u)
-           ((Ref (TemplateType T_lp__)) lp__)
-           ((Ref (TemplateType T_lp_accum__)) lp_accum__)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_1_functor__)
-     (body
-      ((FunDef
-        ((templates_init ((()) true)) (inline false) (return_type Int)
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name covsqrt2corsqrt_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T0__) (RequireIs stan::is_eigen_matrix_dynamic T0__)
-             (RequireIs stan::is_vt_not_complex T0__)))
-           true))
-         (inline false)
-         (return_type
-          (Matrix
-           (TypeTrait stan::promote_args_t
-            ((TemplateType stan::base_type_t<T0__>)))
-           -1 -1))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) mat) ((Const (Ref Int)) invert)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_lcdf_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) true))
-         (inline false)
-         (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name f5_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-             (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-             (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)
-             (RequireIs stan::is_col_vector T6__)
-             (RequireIs stan::is_vt_not_complex T6__)
-             (RequireIs stan::is_stan_scalar T7__)
-             (RequireIs stan::is_stan_scalar T8__)
-             (RequireIs stan::is_eigen_matrix_dynamic T9__)
-             (RequireIs stan::is_vt_not_complex T9__)
-             (RequireIs stan::is_stan_scalar T10__)
-             (RequireIs stan::is_stan_scalar T11__)))
-           true))
-         (inline false)
-         (return_type
-          (StdVector
-           (TypeTrait stan::promote_args_t
-            ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-             (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-             (TypeTrait stan::promote_args_t
-              ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-               (TemplateType T10__) (TemplateType T11__)))))))
-         (name "operator()")
-         (args
-          (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-           ((Const (Ref (StdVector (StdVector Int)))) a3)
-           ((Const (Ref (TemplateType T3__))) a4)
-           ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-           ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-           ((Const (Ref (TemplateType T6__))) a7)
-           ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-           ((Const
-             (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-            a9)
-           ((Const (Ref (TemplateType T9__))) a10)
-           ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1))))
-            a11)
-           ((Const
-             (Ref
-              (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-            a12)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (Struct
-    ((param ()) (struct_name foo_five_args_lp_functor__)
-     (body
-      ((FunDef
-        ((templates_init
-          ((((Bool propto__) (Typename T0__) (Typename T1__) (Typename T2__)
-             (Typename T3__) (Typename T4__) (Typename T5__)
-             (Typename T_lp__) (Typename T_lp_accum__)
-             (RequireIs stan::is_stan_scalar T0__)
-             (RequireIs stan::is_stan_scalar T1__)
-             (RequireIs stan::is_stan_scalar T2__)
-             (RequireIs stan::is_stan_scalar T3__)
-             (RequireIs stan::is_stan_scalar T4__)
-             (RequireIs stan::is_stan_scalar T5__)))
-           true))
-         (inline false)
-         (return_type
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-            (TemplateType T3__) (TemplateType T4__)
-            (TypeTrait stan::promote_args_t ((TemplateType T5__))))))
-         (name "operator()")
-         (args
-          (((Const (Ref (TemplateType T0__))) x1)
-           ((Const (Ref (TemplateType T1__))) x2)
-           ((Const (Ref (TemplateType T2__))) x3)
-           ((Const (Ref (TemplateType T3__))) x4)
-           ((Const (Ref (TemplateType T4__))) x5)
-           ((Const (Ref (TemplateType T5__))) x6)
-           ((Ref (TemplateType T_lp__)) lp__)
-           ((Ref (TemplateType T_lp_accum__)) lp_accum__)
-           ((Pointer (TypeLiteral std::ostream)) pstream__)))
-         (cv_qualifiers (Const)) (body ())))))))
-   (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type Int) (name foo)
-     (args
-      (((Const (Ref Int)) n)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers ()) (body ())))
+         (cv_qualifiers (Const))
+         (body
+          (((Return
+             ((FunCall binomialf ()
+               ((Var phi) (Var theta) (Var x_r) (Var x_i) (Var pstream__))))))))))))))
    (FunDef
     ((templates_init ((()) false)) (inline false) (return_type Int)
      (name foo)
@@ -2180,35 +2082,6 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
-   (FunDef
-    ((templates_init ((() ()) false)) (inline false) (return_type Int)
-     (name "foo_functor__::operator()")
-     (args
-      (((Const (Ref Int)) n)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall foo () ((Var n) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
-      ((((Typename T0__) (Typename T1__) (Typename T2__)
-         (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__)
-         (RequireIs stan::is_stan_scalar T2__)))
-       true))
-     (inline false)
-     (return_type
-      (StdVector
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))
-     (name sho)
-     (args
-      (((Const (Ref (TemplateType T0__))) t)
-       ((Const (Ref (StdVector (TemplateType T1__)))) y)
-       ((Const (Ref (StdVector (TemplateType T2__)))) theta)
-       ((Const (Ref (StdVector Double))) x)
-       ((Const (Ref (StdVector Int))) x_int)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__)
@@ -2297,33 +2170,7 @@
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init
-      ((()
-        ((Typename T0__) (Typename T1__) (Typename T2__)
-         (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__)
-         (RequireIs stan::is_stan_scalar T2__)))
-       false))
-     (inline false)
-     (return_type
-      (StdVector
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))
-     (name "sho_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) t)
-       ((Const (Ref (StdVector (TemplateType T1__)))) y)
-       ((Const (Ref (StdVector (TemplateType T2__)))) theta)
-       ((Const (Ref (StdVector Double))) x)
-       ((Const (Ref (StdVector Int))) x_int)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall sho ()
-           ((Var t) (Var y) (Var theta) (Var x) (Var x_int) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type Double)
+    ((templates_init ((()) false)) (inline false) (return_type Double)
      (name foo_bar0)
      (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
@@ -2354,14 +2201,8 @@
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((() ()) false)) (inline false) (return_type Double)
-     (name "foo_bar0_functor__::operator()")
-     (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall foo_bar0 () ((Var pstream__))))))))))
-   (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
      (inline false)
      (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
      (name foo_bar1)
@@ -2398,21 +2239,10 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((() ((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
-     (inline false)
-     (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
-     (name "foo_bar1_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) x)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall foo_bar1 () ((Var x) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T0__) (Typename T1__)
          (RequireIs stan::is_stan_scalar T0__)
          (RequireIs stan::is_stan_scalar T1__)))
-       true))
+       false))
      (inline false)
      (return_type
       (TypeTrait stan::promote_args_t
@@ -2453,28 +2283,9 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__)))
-       false))
-     (inline false)
-     (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__))))
-     (name "foo_bar2_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) x)
-       ((Const (Ref (TemplateType T1__))) y)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return ((FunCall foo_bar2 () ((Var x) (Var y) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Bool propto__) (Typename T1__)
          (RequireIs stan::is_stan_scalar T1__)))
-       true))
+       false))
      (inline false)
      (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
      (name foo_lpmf)
@@ -2506,24 +2317,7 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Bool propto__) (Typename T1__)
-         (RequireIs stan::is_stan_scalar T1__)))
-       false))
-     (inline false)
-     (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
-     (name "foo_lpmf_functor__::operator()")
-     (args
-      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall foo_lpmf ((TemplateType propto__))
-           ((Var y) (Var lambda) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
-      ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) true))
+      ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) false))
      (inline false)
      (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
      (name foo_lcdf)
@@ -2560,20 +2354,7 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((() ((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) false))
-     (inline false)
-     (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
-     (name "foo_lcdf_functor__::operator()")
-     (args
-      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall foo_lcdf () ((Var y) (Var lambda) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
-      ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) true))
+      ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) false))
      (inline false)
      (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
      (name foo_lccdf)
@@ -2610,23 +2391,10 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((() ((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) false))
-     (inline false)
-     (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
-     (name "foo_lccdf_functor__::operator()")
-     (args
-      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall foo_lccdf () ((Var y) (Var lambda) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename RNG)
          (RequireIs stan::is_stan_scalar T0__)
          (RequireIs stan::is_stan_scalar T1__)))
-       true))
+       false))
      (inline false)
      (return_type
       (TypeTrait stan::promote_args_t
@@ -2670,31 +2438,9 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T0__) (Typename T1__) (Typename RNG)
-         (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__)))
-       false))
-     (inline false)
-     (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__))))
-     (name "foo_rng_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) mu)
-       ((Const (Ref (TemplateType T1__))) sigma)
-       ((Ref (TemplateType RNG)) base_rng__)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall foo_rng ()
-           ((Var mu) (Var sigma) (Var base_rng__) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__)
          (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)))
-       true))
+       false))
      (inline false) (return_type Void) (name unit_normal_lp)
      (args
       (((Const (Ref (TemplateType T0__))) u)
@@ -2733,25 +2479,7 @@
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init
-      ((()
-        ((Bool propto__) (Typename T0__) (Typename T_lp__)
-         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)))
-       false))
-     (inline false) (return_type Void)
-     (name "unit_normal_lp_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) u)
-       ((Ref (TemplateType T_lp__)) lp__)
-       ((Ref (TemplateType T_lp_accum__)) lp_accum__)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall unit_normal_lp ((TemplateType propto__))
-           ((Var u) (Var lp__) (Var lp_accum__) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type Int)
+    ((templates_init ((()) false)) (inline false) (return_type Int)
      (name foo_1)
      (args
       (((Const (Ref Int)) a)
@@ -3135,15 +2863,7 @@
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((() ()) false)) (inline false) (return_type Int)
-     (name "foo_1_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall foo_1 () ((Var a) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type Int)
+    ((templates_init ((()) false)) (inline false) (return_type Int)
      (name foo_2)
      (args
       (((Const (Ref Int)) a)
@@ -3203,16 +2923,8 @@
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((() ()) false)) (inline false) (return_type Int)
-     (name "foo_2_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall foo_2 () ((Var a) (Var pstream__))))))))))
-   (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
      (inline false)
      (return_type
       (StdVector (TypeTrait stan::promote_args_t ((TemplateType T0__)))))
@@ -3250,22 +2962,9 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((() ((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
-     (inline false)
-     (return_type
-      (StdVector (TypeTrait stan::promote_args_t ((TemplateType T0__)))))
-     (name "foo_3_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) t) ((Const (Ref Int)) n)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return ((FunCall foo_3 () ((Var t) (Var n) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__)
          (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)))
-       true))
+       false))
      (inline false)
      (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
      (name foo_lp)
@@ -3302,26 +3001,7 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Bool propto__) (Typename T0__) (Typename T_lp__)
-         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)))
-       false))
-     (inline false)
-     (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
-     (name "foo_lp_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) x)
-       ((Ref (TemplateType T_lp__)) lp__)
-       ((Ref (TemplateType T_lp_accum__)) lp_accum__)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall foo_lp ((TemplateType propto__))
-           ((Var x) (Var lp__) (Var lp_accum__) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
      (inline false) (return_type Void) (name foo_4)
      (args
       (((Const (Ref (StdVector (TemplateType T0__)))) x)
@@ -3378,21 +3058,12 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((() ((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
-     (inline false) (return_type Void) (name "foo_4_functor__::operator()")
-     (args
-      (((Const (Ref (StdVector (TemplateType T0__)))) x)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall foo_4 () ((Var x) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
          (RequireIs stan::is_stan_scalar T0__)
          (RequireIs stan::is_stan_scalar T1__)
          (RequireIs stan::is_stan_scalar T2__)
          (RequireIs stan::is_stan_scalar T3__)))
-       true))
+       false))
      (inline false)
      (return_type
       (TypeTrait stan::promote_args_t
@@ -3527,37 +3198,11 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-         (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__)
-         (RequireIs stan::is_stan_scalar T2__)
-         (RequireIs stan::is_stan_scalar T3__)))
-       false))
-     (inline false)
-     (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-        (TemplateType T3__))))
-     (name "relative_diff_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) x)
-       ((Const (Ref (TemplateType T1__))) y)
-       ((Const (Ref (TemplateType T2__))) max_)
-       ((Const (Ref (TemplateType T3__))) min_)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall relative_diff ()
-           ((Var x) (Var y) (Var max_) (Var min_) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
          (RequireIs stan::is_vt_not_complex T0__)
          (RequireIs stan::is_col_vector T1__)
          (RequireIs stan::is_vt_not_complex T1__)))
-       true))
+       false))
      (inline false)
      (return_type
       (Matrix
@@ -3622,41 +3267,13 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
-         (RequireIs stan::is_vt_not_complex T0__)
-         (RequireIs stan::is_col_vector T1__)
-         (RequireIs stan::is_vt_not_complex T1__)))
-       false))
-     (inline false)
-     (return_type
-      (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>)
-         (TemplateType stan::base_type_t<T1__>)))
-       -1 1))
-     (name "foo_5_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) shared_params)
-       ((Const (Ref (TemplateType T1__))) job_params)
-       ((Const (Ref (StdVector Double))) data_r)
-       ((Const (Ref (StdVector Int))) data_i)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall foo_5 ()
-           ((Var shared_params) (Var job_params) (Var data_r) (Var data_i)
-            (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
          (Typename T4__) (RequireIs stan::is_stan_scalar T0__)
          (RequireIs stan::is_stan_scalar T1__)
          (RequireIs stan::is_stan_scalar T2__)
          (RequireIs stan::is_stan_scalar T3__)
          (RequireIs stan::is_stan_scalar T4__)))
-       true))
+       false))
      (inline false)
      (return_type
       (TypeTrait stan::promote_args_t
@@ -3702,34 +3319,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-         (Typename T4__) (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__)
-         (RequireIs stan::is_stan_scalar T2__)
-         (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)))
-       false))
-     (inline false)
-     (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-        (TemplateType T3__) (TemplateType T4__))))
-     (name "foo_five_args_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) x1)
-       ((Const (Ref (TemplateType T1__))) x2)
-       ((Const (Ref (TemplateType T2__))) x3)
-       ((Const (Ref (TemplateType T3__))) x4)
-       ((Const (Ref (TemplateType T4__))) x5)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall foo_five_args ()
-           ((Var x1) (Var x2) (Var x3) (Var x4) (Var x5) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T1__) (Typename T2__)
          (Typename T3__) (Typename T4__) (Typename T5__) (Typename T_lp__)
          (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)
@@ -3738,7 +3327,7 @@
          (RequireIs stan::is_stan_scalar T3__)
          (RequireIs stan::is_stan_scalar T4__)
          (RequireIs stan::is_stan_scalar T5__)))
-       true))
+       false))
      (inline false)
      (return_type
       (TypeTrait stan::promote_args_t
@@ -3784,44 +3373,9 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Bool propto__) (Typename T0__) (Typename T1__) (Typename T2__)
-         (Typename T3__) (Typename T4__) (Typename T5__) (Typename T_lp__)
-         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__)
-         (RequireIs stan::is_stan_scalar T2__)
-         (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)))
-       false))
-     (inline false)
-     (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-        (TemplateType T3__) (TemplateType T4__)
-        (TypeTrait stan::promote_args_t ((TemplateType T5__))))))
-     (name "foo_five_args_lp_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) x1)
-       ((Const (Ref (TemplateType T1__))) x2)
-       ((Const (Ref (TemplateType T2__))) x3)
-       ((Const (Ref (TemplateType T3__))) x4)
-       ((Const (Ref (TemplateType T4__))) x5)
-       ((Const (Ref (TemplateType T5__))) x6)
-       ((Ref (TemplateType T_lp__)) lp__)
-       ((Ref (TemplateType T_lp_accum__)) lp_accum__)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall foo_five_args_lp ((TemplateType propto__))
-           ((Var x1) (Var x2) (Var x3) (Var x4) (Var x5) (Var x6) (Var lp__)
-            (Var lp_accum__) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T0__) (RequireIs stan::is_eigen_matrix_dynamic T0__)
          (RequireIs stan::is_vt_not_complex T0__)))
-       true))
+       false))
      (inline false)
      (return_type
       (Matrix
@@ -3914,27 +3468,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T0__) (RequireIs stan::is_eigen_matrix_dynamic T0__)
-         (RequireIs stan::is_vt_not_complex T0__)))
-       false))
-     (inline false)
-     (return_type
-      (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>)))
-       -1 -1))
-     (name "covsqrt2corsqrt_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) mat) ((Const (Ref Int)) invert)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall covsqrt2corsqrt ()
-           ((Var mat) (Var invert) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -3948,7 +3481,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false) (return_type Void) (name f0)
      (args
       (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
@@ -4020,47 +3553,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false) (return_type Void) (name "f0_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f0 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -4074,7 +3566,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false) (return_type Int) (name f1)
      (args
       (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
@@ -4138,47 +3630,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false) (return_type Int) (name "f1_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f1 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -4192,7 +3643,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false) (return_type (StdVector Int)) (name f2)
      (args
       (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
@@ -4256,48 +3707,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false) (return_type (StdVector Int))
-     (name "f2_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f2 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -4311,7 +3720,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false) (return_type (StdVector (StdVector Int))) (name f3)
      (args
       (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
@@ -4375,48 +3784,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false) (return_type (StdVector (StdVector Int)))
-     (name "f3_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f3 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -4430,7 +3797,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false)
      (return_type
       (TypeTrait stan::promote_args_t
@@ -4502,55 +3869,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false)
-     (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-        (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-          (TemplateType T10__) (TemplateType T11__))))))
-     (name "f4_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f4 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -4564,7 +3882,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false)
      (return_type
       (StdVector
@@ -4637,56 +3955,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false)
-     (return_type
-      (StdVector
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-           (TemplateType T10__) (TemplateType T11__)))))))
-     (name "f5_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f5 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -4700,7 +3968,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false)
      (return_type
       (StdVector
@@ -4774,57 +4042,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false)
-     (return_type
-      (StdVector
-       (StdVector
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-            (TemplateType T10__) (TemplateType T11__))))))))
-     (name "f6_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f6 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -4838,7 +4055,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false)
      (return_type
       (Matrix
@@ -4912,57 +4129,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false)
-     (return_type
-      (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-           (TemplateType T10__) (TemplateType T11__)))))
-       -1 1))
-     (name "f7_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f7 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -4976,7 +4142,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false)
      (return_type
       (StdVector
@@ -5051,58 +4217,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false)
-     (return_type
-      (StdVector
-       (Matrix
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-            (TemplateType T10__) (TemplateType T11__)))))
-        -1 1)))
-     (name "f8_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f8 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -5116,7 +4230,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false)
      (return_type
       (StdVector
@@ -5192,59 +4306,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false)
-     (return_type
-      (StdVector
-       (StdVector
-        (Matrix
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-           (TypeTrait stan::promote_args_t
-            ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-             (TemplateType T10__) (TemplateType T11__)))))
-         -1 1))))
-     (name "f9_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f9 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -5258,7 +4319,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false)
      (return_type
       (Matrix
@@ -5332,57 +4393,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false)
-     (return_type
-      (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-           (TemplateType T10__) (TemplateType T11__)))))
-       -1 -1))
-     (name "f10_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f10 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -5396,7 +4406,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false)
      (return_type
       (StdVector
@@ -5471,58 +4481,6 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false)
-     (return_type
-      (StdVector
-       (Matrix
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-            (TemplateType T10__) (TemplateType T11__)))))
-        -1 -1)))
-     (name "f11_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f11 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
          (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
          (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
@@ -5536,7 +4494,7 @@
          (RequireIs stan::is_vt_not_complex T9__)
          (RequireIs stan::is_stan_scalar T10__)
          (RequireIs stan::is_stan_scalar T11__)))
-       true))
+       false))
      (inline false)
      (return_type
       (StdVector
@@ -5611,60 +4569,7 @@
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init
-      ((()
-        ((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__)
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__)
-         (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__)
-         (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__)
-         (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
-       false))
-     (inline false)
-     (return_type
-      (StdVector
-       (StdVector
-        (Matrix
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-           (TypeTrait stan::promote_args_t
-            ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-             (TemplateType T10__) (TemplateType T11__)))))
-         -1 -1))))
-     (name "f12_functor__::operator()")
-     (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
-       ((Const (Ref (StdVector (StdVector Int)))) a3)
-       ((Const (Ref (TemplateType T3__))) a4)
-       ((Const (Ref (StdVector (TemplateType T4__)))) a5)
-       ((Const (Ref (StdVector (StdVector (TemplateType T5__))))) a6)
-       ((Const (Ref (TemplateType T6__))) a7)
-       ((Const (Ref (StdVector (Matrix (TemplateType T7__) -1 1)))) a8)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T8__) -1 1)))))
-        a9)
-       ((Const (Ref (TemplateType T9__))) a10)
-       ((Const (Ref (StdVector (Matrix (TemplateType T10__) -1 -1)))) a11)
-       ((Const
-         (Ref (StdVector (StdVector (Matrix (TemplateType T11__) -1 -1)))))
-        a12)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall f12 ()
-           ((Var a1) (Var a2) (Var a3) (Var a4) (Var a5) (Var a6) (Var a7)
-            (Var a8) (Var a9) (Var a10) (Var a11) (Var a12) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type Void)
+    ((templates_init ((()) false)) (inline false) (return_type Void)
      (name foo_6) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
@@ -5736,13 +4641,7 @@
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((() ()) false)) (inline false) (return_type Void)
-     (name "foo_6_functor__::operator()")
-     (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall foo_6 () ((Var pstream__))))))))))
-   (FunDef
-    ((templates_init ((()) true)) (inline false)
+    ((templates_init ((()) false)) (inline false)
      (return_type (Matrix Double -1 -1)) (name matfoo)
      (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
@@ -5799,14 +4698,7 @@
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((() ()) false)) (inline false)
-     (return_type (Matrix Double -1 -1))
-     (name "matfoo_functor__::operator()")
-     (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall matfoo () ((Var pstream__))))))))))
-   (FunDef
-    ((templates_init ((()) true)) (inline false)
+    ((templates_init ((()) false)) (inline false)
      (return_type (Matrix Double -1 1)) (name vecfoo)
      (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
@@ -5844,14 +4736,8 @@
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((() ()) false)) (inline false)
-     (return_type (Matrix Double -1 1)) (name "vecfoo_functor__::operator()")
-     (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall vecfoo () ((Var pstream__))))))))))
-   (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
      (inline false)
      (return_type
       (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
@@ -5903,19 +4789,7 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((() ((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
-     (inline false)
-     (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
-     (name "vecmufoo_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) mu)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall vecmufoo () ((Var mu) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
      (inline false)
      (return_type
       (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
@@ -5981,25 +4855,13 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((() ((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
-     (inline false)
-     (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
-     (name "vecmubar_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) mu)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body (((Return ((FunCall vecmubar () ((Var mu) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__)
          (RequireIs stan::is_col_vector T0__)
          (RequireIs stan::is_vt_not_complex T0__)
          (RequireIs stan::is_col_vector T1__)
          (RequireIs stan::is_vt_not_complex T1__)
          (RequireIs stan::is_stan_scalar T2__)))
-       true))
+       false))
      (inline false)
      (return_type
       (Matrix
@@ -6091,40 +4953,11 @@
              (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((()
-        ((Typename T0__) (Typename T1__) (Typename T2__)
-         (RequireIs stan::is_col_vector T0__)
-         (RequireIs stan::is_vt_not_complex T0__)
-         (RequireIs stan::is_col_vector T1__)
-         (RequireIs stan::is_vt_not_complex T1__)
-         (RequireIs stan::is_stan_scalar T2__)))
-       false))
-     (inline false)
-     (return_type
-      (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>)
-         (TemplateType stan::base_type_t<T1__>) (TemplateType T2__)))
-       -1 1))
-     (name "algebra_system_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) x)
-       ((Const (Ref (TemplateType T1__))) y)
-       ((Const (Ref (StdVector (TemplateType T2__)))) dat)
-       ((Const (Ref (StdVector Int))) dat_int)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall algebra_system ()
-           ((Var x) (Var y) (Var dat) (Var dat_int) (Var pstream__))))))))))
-   (FunDef
-    ((templates_init
       ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
          (RequireIs stan::is_vt_not_complex T0__)
          (RequireIs stan::is_col_vector T1__)
          (RequireIs stan::is_vt_not_complex T1__)))
-       true))
+       false))
      (inline false)
      (return_type
       (Matrix
@@ -6191,33 +5024,6 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e)
              (Index (Var locations_array__) (Var current_statement__))))))))))))
-   (FunDef
-    ((templates_init
-      ((()
-        ((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
-         (RequireIs stan::is_vt_not_complex T0__)
-         (RequireIs stan::is_col_vector T1__)
-         (RequireIs stan::is_vt_not_complex T1__)))
-       false))
-     (inline false)
-     (return_type
-      (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>)
-         (TemplateType stan::base_type_t<T1__>)))
-       -1 1))
-     (name "binomialf_functor__::operator()")
-     (args
-      (((Const (Ref (TemplateType T0__))) phi)
-       ((Const (Ref (TemplateType T1__))) theta)
-       ((Const (Ref (StdVector Double))) x_r)
-       ((Const (Ref (StdVector Int))) x_i)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers (Const))
-     (body
-      (((Return
-         ((FunCall binomialf ()
-           ((Var phi) (Var theta) (Var x_r) (Var x_i) (Var pstream__))))))))))
    (Class
     ((class_name mother_model) (final true)
      (public_base (TypeTrait model_base_crtp ((TypeLiteral mother_model))))
