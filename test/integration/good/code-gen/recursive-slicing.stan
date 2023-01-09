@@ -1,6 +1,5 @@
 functions {
 // reported in stanc3#1224
-vector test2(vector gamma);
  vector test2(vector gamma) {
    int D = num_elements(gamma);
 
@@ -10,7 +9,6 @@ vector test2(vector gamma);
       return test2(gamma[1:D - 1]);
  }
 // reported in cmdstan#1109
-matrix matrix_pow(matrix a, int n);
 matrix matrix_pow(matrix a, int n) {
   if (n == 0) {
     return diag_matrix(rep_vector(1, rows(a)));
@@ -47,7 +45,6 @@ vector test3(vector gamma) {
 }
 
 // non-returning fun app
-void test6(vector alpha);
 void test6(vector alpha){
    int D = num_elements(alpha);
 
@@ -57,7 +54,6 @@ void test6(vector alpha){
       test6(alpha[1:D - 1]);
 }
 
- vector test7(vector gamma) ;
  vector test7(vector gamma) {
    int D = num_elements(gamma);
 

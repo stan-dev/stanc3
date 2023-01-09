@@ -39,27 +39,6 @@ let eigen_block_expr_fns =
   ["head"; "tail"; "segment"; "col"; "row"; "block"; "sub_row"; "sub_col"]
   |> String.Set.of_list
 
-let eval_eigen_blocks e =
-  let open Expr.Fixed in
-  let f ({pattern; meta} as expr) =
-    match (pattern, UnsizedType.is_eigen_type (Expr.Typed.type_of expr)) with
-    | Indexed _, true ->
-        {meta; pattern= FunApp (StanLib ("eval", FnPlain, AoS), [expr])}
-    | FunApp (StanLib (fname, _, _), _), true
-      when Set.mem eigen_block_expr_fns fname ->
-        {meta; pattern= FunApp (StanLib ("eval", FnPlain, AoS), [expr])}
-    | _ -> expr in
-  rewrite_bottom_up ~f e
-
-let eval_udf_indexed_calls e =
-  let open Expr.Fixed in
-  let f ({pattern; _} as expr) =
-    match pattern with
-    | FunApp ((UserDefined (_, _) as kind), args) ->
-        {expr with pattern= FunApp (kind, List.map ~f:eval_eigen_blocks args)}
-    | _ -> expr in
-  rewrite_bottom_up ~f e
-
 let opencl_trigger_restrictions =
   String.Map.of_alist_exn
     [ ( "bernoulli_lpmf"
@@ -488,30 +467,59 @@ let trans_prog (p : Program.Typed.t) =
   (* Eval indexed eigen types in UDF calls to prevent
      infinite template expansion if the call is recursive
   *)
-  let possibly_recursive_fns =
-    List.filter_map
-      ~f:(function
-        | {fdname; fdargs; fdbody= None; _} -> Some (fdname, fdargs) | _ -> None
-        )
-      p.functions_block
-    |> Set.Poly.of_list in
-  let rec map_stmt {Stmt.Fixed.pattern; meta} =
-    match pattern with
-    | NRFunApp ((UserDefined _ as kind), args) ->
-        { Stmt.Fixed.meta
-        ; pattern= NRFunApp (kind, List.map ~f:eval_eigen_blocks args) }
-    | _ ->
-        { Stmt.Fixed.pattern=
-            Stmt.Fixed.Pattern.map eval_udf_indexed_calls map_stmt pattern
-        ; meta } in
-  let eval_udf_indexed_stmts (s : 'a Program.fun_def) =
-    if Set.mem possibly_recursive_fns (s.fdname, s.fdargs) then
-      {s with fdbody= Option.map ~f:map_stmt s.fdbody}
-    else s in
-  let p =
-    { p with
-      functions_block= List.map ~f:eval_udf_indexed_stmts p.functions_block }
-  in
+  let callmap = Hashtbl.create (module String) in
+  let eval_eigen_cycles fun_args calls (f : _ Program.fun_def) =
+    let check_recursive name =
+      name = f.fdname
+      || Hashtbl.find callmap name
+         |> Option.value_map ~default:false ~f:(fun x -> Set.mem x f.fdname)
+    in
+    let open Expr.Fixed in
+    let rec eigen_expr = function
+      | {pattern= Var name; _} -> Set.mem fun_args name
+      | {pattern= Pattern.Indexed (e, _); _} -> eigen_expr e
+      | {pattern= FunApp (StanLib (fname, _, _), e :: _); _} ->
+          Set.mem eigen_block_expr_fns fname && eigen_expr e
+      | _ -> false in
+    let rec map_args name args =
+      let is_rec = check_recursive name in
+      List.map args ~f:(fun e ->
+          let e = rewrite_expr e in
+          if not (eigen_expr e) then e
+          else if is_rec then
+            {e with pattern= FunApp (StanLib ("eval", FnPlain, AoS), [e])}
+          else (Hash_set.add calls name ; e) )
+    and rewrite_expr = function
+      | {pattern= FunApp ((UserDefined (name, _) as kind), args); _} as e ->
+          {e with pattern= FunApp (kind, map_args name args)}
+      | e -> {e with pattern= Pattern.map rewrite_expr e.pattern} in
+    let open Stmt.Fixed in
+    let rec rewrite_stmt = function
+      | {pattern= Pattern.NRFunApp ((UserDefined (name, _) as kind), args); _}
+        as s ->
+          {s with pattern= NRFunApp (kind, map_args name args)}
+      | s -> {s with pattern= Pattern.map rewrite_expr rewrite_stmt s.pattern}
+    in
+    Program.map_fun_def rewrite_stmt f in
+  let break_cycles (Program.{fdname; fdargs; _} as fd) =
+    let fun_args =
+      List.filter_map
+        ~f:(fun (_, n, t) ->
+          if UnsizedType.is_eigen_type t then Some n else None )
+        fdargs
+      |> String.Set.of_list in
+    if Set.is_empty fun_args then fd
+    else
+      let calls = Hash_set.create (module String) in
+      let fndef = eval_eigen_cycles fun_args calls fd in
+      if not (Hash_set.is_empty calls) then (
+        let calls = Hash_set.to_list calls |> String.Set.of_list in
+        Hashtbl.map_inplace callmap ~f:(fun x ->
+            if Set.mem x fdname then Set.union calls x else x ) ;
+        Hashtbl.update callmap fdname
+          ~f:(Option.value_map ~f:(Set.union calls) ~default:calls) ) ;
+      fndef in
+  let p = {p with functions_block= List.map ~f:break_cycles p.functions_block} in
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
         { decl_adtype= DataOnly

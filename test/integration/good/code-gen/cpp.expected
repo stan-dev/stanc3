@@ -21496,45 +21496,45 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 40> locations_array__ =
   {" (found before start of program)",
-  " (in 'recursive-slicing.stan', line 76, column 2 to column 22)",
-  " (in 'recursive-slicing.stan', line 79, column 2 to column 33)",
-  " (in 'recursive-slicing.stan', line 72, column 2 to column 8)",
-  " (in 'recursive-slicing.stan', line 73, column 2 to column 12)",
-  " (in 'recursive-slicing.stan', line 76, column 9 to column 14)",
-  " (in 'recursive-slicing.stan', line 79, column 9 to column 10)",
-  " (in 'recursive-slicing.stan', line 5, column 3 to column 31)",
-  " (in 'recursive-slicing.stan', line 10, column 6 to column 35)",
-  " (in 'recursive-slicing.stan', line 8, column 6 to column 30)",
-  " (in 'recursive-slicing.stan', line 7, column 3 to line 10, column 35)",
-  " (in 'recursive-slicing.stan', line 4, column 28 to line 11, column 2)",
-  " (in 'recursive-slicing.stan', line 18, column 4 to column 59)",
-  " (in 'recursive-slicing.stan', line 17, column 9 to line 19, column 3)",
-  " (in 'recursive-slicing.stan', line 16, column 4 to column 47)",
-  " (in 'recursive-slicing.stan', line 15, column 14 to line 17, column 3)",
-  " (in 'recursive-slicing.stan', line 15, column 2 to line 19, column 3)",
-  " (in 'recursive-slicing.stan', line 14, column 35 to line 20, column 1)",
-  " (in 'recursive-slicing.stan', line 24, column 2 to column 11)",
-  " (in 'recursive-slicing.stan', line 23, column 18 to line 25, column 1)",
-  " (in 'recursive-slicing.stan', line 28, column 2 to column 40)",
-  " (in 'recursive-slicing.stan', line 29, column 2 to column 23)",
-  " (in 'recursive-slicing.stan', line 27, column 16 to line 30, column 1)",
-  " (in 'recursive-slicing.stan', line 38, column 3 to column 31)",
-  " (in 'recursive-slicing.stan', line 43, column 6 to column 35)",
-  " (in 'recursive-slicing.stan', line 41, column 6 to column 30)",
-  " (in 'recursive-slicing.stan', line 40, column 3 to line 43, column 35)",
-  " (in 'recursive-slicing.stan', line 37, column 27 to line 44, column 3)",
-  " (in 'recursive-slicing.stan', line 46, column 2 to column 22)",
-  " (in 'recursive-slicing.stan', line 45, column 27 to line 47, column 1)",
-  " (in 'recursive-slicing.stan', line 52, column 3 to column 31)",
-  " (in 'recursive-slicing.stan', line 57, column 6 to column 28)",
-  " (in 'recursive-slicing.stan', line 55, column 6 to column 22)",
-  " (in 'recursive-slicing.stan', line 54, column 3 to line 57, column 28)",
-  " (in 'recursive-slicing.stan', line 51, column 24 to line 58, column 1)",
-  " (in 'recursive-slicing.stan', line 62, column 3 to column 31)",
-  " (in 'recursive-slicing.stan', line 67, column 6 to column 38)",
-  " (in 'recursive-slicing.stan', line 65, column 6 to column 30)",
-  " (in 'recursive-slicing.stan', line 64, column 3 to line 67, column 38)",
-  " (in 'recursive-slicing.stan', line 61, column 28 to line 68, column 3)"};
+  " (in 'recursive-slicing.stan', line 72, column 2 to column 22)",
+  " (in 'recursive-slicing.stan', line 75, column 2 to column 33)",
+  " (in 'recursive-slicing.stan', line 68, column 2 to column 8)",
+  " (in 'recursive-slicing.stan', line 69, column 2 to column 12)",
+  " (in 'recursive-slicing.stan', line 72, column 9 to column 14)",
+  " (in 'recursive-slicing.stan', line 75, column 9 to column 10)",
+  " (in 'recursive-slicing.stan', line 4, column 3 to column 31)",
+  " (in 'recursive-slicing.stan', line 9, column 6 to column 35)",
+  " (in 'recursive-slicing.stan', line 7, column 6 to column 30)",
+  " (in 'recursive-slicing.stan', line 6, column 3 to line 9, column 35)",
+  " (in 'recursive-slicing.stan', line 3, column 28 to line 10, column 2)",
+  " (in 'recursive-slicing.stan', line 16, column 4 to column 59)",
+  " (in 'recursive-slicing.stan', line 15, column 9 to line 17, column 3)",
+  " (in 'recursive-slicing.stan', line 14, column 4 to column 47)",
+  " (in 'recursive-slicing.stan', line 13, column 14 to line 15, column 3)",
+  " (in 'recursive-slicing.stan', line 13, column 2 to line 17, column 3)",
+  " (in 'recursive-slicing.stan', line 12, column 35 to line 18, column 1)",
+  " (in 'recursive-slicing.stan', line 22, column 2 to column 11)",
+  " (in 'recursive-slicing.stan', line 21, column 18 to line 23, column 1)",
+  " (in 'recursive-slicing.stan', line 26, column 2 to column 40)",
+  " (in 'recursive-slicing.stan', line 27, column 2 to column 23)",
+  " (in 'recursive-slicing.stan', line 25, column 16 to line 28, column 1)",
+  " (in 'recursive-slicing.stan', line 36, column 3 to column 31)",
+  " (in 'recursive-slicing.stan', line 41, column 6 to column 35)",
+  " (in 'recursive-slicing.stan', line 39, column 6 to column 30)",
+  " (in 'recursive-slicing.stan', line 38, column 3 to line 41, column 35)",
+  " (in 'recursive-slicing.stan', line 35, column 27 to line 42, column 3)",
+  " (in 'recursive-slicing.stan', line 44, column 2 to column 22)",
+  " (in 'recursive-slicing.stan', line 43, column 27 to line 45, column 1)",
+  " (in 'recursive-slicing.stan', line 49, column 3 to column 31)",
+  " (in 'recursive-slicing.stan', line 54, column 6 to column 28)",
+  " (in 'recursive-slicing.stan', line 52, column 6 to column 22)",
+  " (in 'recursive-slicing.stan', line 51, column 3 to line 54, column 28)",
+  " (in 'recursive-slicing.stan', line 48, column 24 to line 55, column 1)",
+  " (in 'recursive-slicing.stan', line 58, column 3 to column 31)",
+  " (in 'recursive-slicing.stan', line 63, column 6 to column 38)",
+  " (in 'recursive-slicing.stan', line 61, column 6 to column 30)",
+  " (in 'recursive-slicing.stan', line 60, column 3 to line 63, column 38)",
+  " (in 'recursive-slicing.stan', line 57, column 28 to line 64, column 3)"};
 struct test3_functor__ {
   template <typename T0__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -21591,11 +21591,6 @@ template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-test2(const T0__& gamma_arg__, std::ostream* pstream__);
-template <typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 test2(const T0__& gamma_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
@@ -21635,11 +21630,6 @@ test2_functor__::operator()(const T0__& gamma, std::ostream* pstream__) const {
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-matrix_pow(const T0__& a_arg__, const int& n, std::ostream* pstream__);
-template <typename T0__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
 matrix_pow(const T0__& a_arg__, const int& n, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -21772,9 +21762,8 @@ test4(const T0__& gamma_arg__, std::ostream* pstream__) {
     } else {
       current_statement__ = 24;
       return test3(
-               stan::math::eval(
-                 stan::model::rvalue(gamma, "gamma",
-                   stan::model::index_min_max(1, (D - 1)))), pstream__);
+               stan::model::rvalue(gamma, "gamma",
+                 stan::model::index_min_max(1, (D - 1))), pstream__);
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -21803,7 +21792,7 @@ test3(const T0__& gamma_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 28;
-    return test4(gamma, pstream__);
+    return test4(stan::math::eval(gamma), pstream__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -21818,10 +21807,6 @@ test3_functor__::operator()(const T0__& gamma, std::ostream* pstream__) const {
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
-void test6(const T0__& alpha_arg__, std::ostream* pstream__);
-template <typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
 void test6(const T0__& alpha_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
@@ -21865,11 +21850,6 @@ test6_functor__::operator()(const T0__& alpha, std::ostream* pstream__) const {
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-test7(const T0__& gamma_arg__, std::ostream* pstream__);
-template <typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 test7(const T0__& gamma_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
