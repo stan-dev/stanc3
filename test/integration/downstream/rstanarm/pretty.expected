@@ -200,6 +200,9 @@ generated quantities {
   }
 }
 
+Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
+'bernoulli.stan', line 7, column 2: Forward
+    declarations are deprecated and not needed for recursion.
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined binomial.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
@@ -711,6 +714,36 @@ generated quantities {
   }
 }
 
+Warning in './/functions/SSfunctions.stan', line 1, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
+Warning in './/functions/SSfunctions.stan', line 2, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
+Warning in './/functions/SSfunctions.stan', line 3, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
+Warning in './/functions/SSfunctions.stan', line 4, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
+Warning in './/functions/SSfunctions.stan', line 5, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
+Warning in './/functions/SSfunctions.stan', line 6, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
+Warning in './/functions/SSfunctions.stan', line 7, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
+Warning in './/functions/SSfunctions.stan', line 8, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
+Warning in './/functions/SSfunctions.stan', line 9, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
+Warning in './/functions/SSfunctions.stan', line 10, column 7, included from
+'continuous.stan', line 9, column 2: Forward
+    declarations are deprecated and not needed for recursion.
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined count.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
@@ -1080,6 +1113,9 @@ generated quantities {
               - dot_product(a_xbar, a_beta);
 }
 
+Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
+'jm.stan', line 8, column 0: Forward
+    declarations are deprecated and not needed for recursion.
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined lm.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
@@ -1276,6 +1312,9 @@ generated quantities {
   #include /gqs/gen_quantities_mvmer.stan
 }
 
+Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
+'mvmer.stan', line 8, column 0: Forward
+    declarations are deprecated and not needed for recursion.
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined polr.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan

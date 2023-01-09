@@ -1682,7 +1682,7 @@ let add_userdefined_functions tenv stmts_opt =
       let f tenv (s : Ast.untyped_statement) =
         match s with
         | {stmt= FunDef {returntype; funname; arguments; body}; smeta= {loc}} ->
-            let arg_types = List.map arguments ~f:(fun (a, t, _) -> (a, t)) in
+            let arg_types = Ast.type_of_arguments arguments in
             verify_fundef_overloaded loc tenv funname arg_types returntype ;
             let defined =
               get_fn_decl_or_defn loc tenv funname arg_types returntype body

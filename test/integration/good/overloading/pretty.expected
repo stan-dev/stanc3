@@ -68,6 +68,10 @@ transformed data {
   }
 }
 
+Warning in 'forward_decl.stan', line 2, column 6: Forward declarations are
+    deprecated and not needed for recursion.
+Warning in 'forward_decl.stan', line 3, column 6: Forward declarations are
+    deprecated and not needed for recursion.
   $ ../../../../../install/default/bin/stanc --auto-format is_real.stan
 functions {
   int is_real(real x) {
