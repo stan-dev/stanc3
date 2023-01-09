@@ -1,7 +1,4 @@
 functions {
-  real my_fun(real x);
-  real my_fun2(real x, real y);
-  real my_fun3(data real x);
   real my_fun(real x) {
     return 2 * x;
   }

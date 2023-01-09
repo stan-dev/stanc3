@@ -7,15 +7,11 @@
 
 functions {
 
-
   int foo(int n) {
     if (n == 0)
       return 1;
     return n * foo(n - 1);
   }
-
-
-
 
   array[] real sho(real t, array[] real y, array[] real theta,
                    data array[] real x, data array[] int x_int) {

@@ -49,29 +49,6 @@ model {
     y[t] ~ normal(y_hat[t], sigma); // independent normal noise
 }
 
-  $ ../../../../../install/default/bin/stanc --auto-format forward_decl.stan
-functions {
-  int is_real(int x);
-  int is_real(real x);
-  
-  int is_real(real x) {
-    return 1;
-  }
-  
-  int is_real(int x) {
-    return 0;
-  }
-}
-transformed data {
-  if (is_real(1.5)) {
-    print(is_real(0));
-  }
-}
-
-Warning in 'forward_decl.stan', line 2, column 6: Forward declarations are
-    deprecated and not needed for recursion.
-Warning in 'forward_decl.stan', line 3, column 6: Forward declarations are
-    deprecated and not needed for recursion.
   $ ../../../../../install/default/bin/stanc --auto-format is_real.stan
 functions {
   int is_real(real x) {

@@ -30,8 +30,8 @@ real foo(real b){
 
 // mutual recursion
 
-vector test3(vector gamma);
-vector test4(vector gamma);
+
+
 vector test4(vector gamma) {
    int D = num_elements(gamma);
 

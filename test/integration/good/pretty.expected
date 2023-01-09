@@ -2900,48 +2900,6 @@ model {
   foo_lp();
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_log_forward_decl.stan
-/**
- * this one's for issue #1768, where there was a duplicate fun decl
- * because of the <false> instantiation of propto
- */
-functions {
-  real n_lpdf(real y);
-  
-  real n_lpdf(real y) {
-    return -0.5 * square(y);
-  }
-}
-parameters {
-  real mu;
-}
-model {
-  mu ~ n();
-  target += n_lpdf(mu /*check*/// both instantiations
-            );
-}
-
-Warning in 'fun_log_forward_decl.stan', line 6, column 7: Forward
-    declarations are deprecated and not needed for recursion.
-  $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
-functions {
-  int foo(int n);
-  
-  int foo(int n) {
-    if (n == 0) 
-      return 1;
-    return n * foo(n - 1);
-  }
-}
-parameters {
-  real y;
-}
-model {
-  y ~ normal(0, 1);
-}
-
-Warning in 'functions-fwd-ref.stan', line 3, column 6: Forward declarations
-    are deprecated and not needed for recursion.
   $ ../../../../install/default/bin/stanc --auto-format functions-good-void.stan
 functions {
   void linear_regression_lp(vector x, vector y, real alpha, real beta,
@@ -4056,7 +4014,6 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format multiple_funs.stan
 functions {
-  int foo(int a);
   int foo(int a) {
     return a;
   }
@@ -4071,8 +4028,6 @@ model {
   theta ~ normal(0, 1);
 }
 
-Warning in 'multiple_funs.stan', line 2, column 6: Forward declarations are
-    deprecated and not needed for recursion.
   $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_old_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -5546,9 +5501,6 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format validate_functions.stan
 functions {
-  real my_fun(real x);
-  real my_fun2(real x, real y);
-  real my_fun3(data real x);
   real my_fun(real x) {
     return 2 * x;
   }
@@ -5578,12 +5530,6 @@ generated quantities {
   gq_d2 = my_fun3(gq_d1);
 }
 
-Warning in 'validate_functions.stan', line 2, column 7: Forward declarations
-    are deprecated and not needed for recursion.
-Warning in 'validate_functions.stan', line 3, column 7: Forward declarations
-    are deprecated and not needed for recursion.
-Warning in 'validate_functions.stan', line 4, column 7: Forward declarations
-    are deprecated and not needed for recursion.
   $ ../../../../install/default/bin/stanc --auto-format validate_int_divide_good.stan
 data {
   int i;
