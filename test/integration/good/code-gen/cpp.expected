@@ -3642,6 +3642,16 @@ Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
 algebra_system(const T0__& x_arg__, const T1__& y_arg__,
                const std::vector<T2__>& dat, const std::vector<int>& dat_int,
                std::ostream* pstream__);
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>,
+                              stan::is_col_vector<T1__>,
+                              stan::is_vt_not_complex<T1__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+                stan::base_type_t<T1__>>,-1,1>
+binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
+          const std::vector<double>& x_r, const std::vector<int>& x_i,
+          std::ostream* pstream__);
 struct algebra_system_functor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -3656,16 +3666,6 @@ struct algebra_system_functor__ {
     return algebra_system(x, y, dat, dat_int, pstream__);
   }
 };
-template <typename T0__, typename T1__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>,
-                              stan::is_col_vector<T1__>,
-                              stan::is_vt_not_complex<T1__>>* = nullptr>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
-                stan::base_type_t<T1__>>,-1,1>
-binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
-          const std::vector<double>& x_r, const std::vector<int>& x_i,
-          std::ostream* pstream__);
 struct binomialf_functor__ {
   template <typename T0__, typename T1__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -10760,19 +10760,6 @@ std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
 sho(const T0__& t, const std::vector<T1__>& y, const std::vector<T2__>&
     theta, const std::vector<T3__>& x, const std::vector<int>& x_int,
     std::ostream* pstream__);
-struct sho_functor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T1__>,
-                                stan::is_stan_scalar<T2__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
-  operator()(const T0__& t, const std::vector<T1__>& y,
-             const std::vector<T2__>& theta, const std::vector<T3__>& x,
-             const std::vector<int>& x_int, std::ostream* pstream__) const {
-    return sho(t, y, theta, x, x_int, pstream__);
-  }
-};
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T1__>,
@@ -10782,19 +10769,6 @@ stan::promote_args_t<T0__, T1__, T2__, T3__>
 integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
           const std::vector<T3__>& x_r, const std::vector<int>& x_i,
           std::ostream* pstream__);
-struct integrand_functor__ {
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T1__>,
-                                stan::is_stan_scalar<T2__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T1__, T2__, T3__>
-  operator()(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
-             const std::vector<T3__>& x_r, const std::vector<int>& x_i,
-             std::ostream* pstream__) const {
-    return integrand(x, xc, theta, x_r, x_i, pstream__);
-  }
-};
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -10806,21 +10780,6 @@ Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
 foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
     const std::vector<T2__>& data_r, const std::vector<int>& data_i,
     std::ostream* pstream__);
-struct foo_functor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>,
-                                stan::is_col_vector<T1__>,
-                                stan::is_vt_not_complex<T1__>,
-                                stan::is_stan_scalar<T2__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
-                  stan::base_type_t<T1__>, T2__>,-1,1>
-  operator()(const T0__& shared_params, const T1__& job_params,
-             const std::vector<T2__>& data_r, const std::vector<int>& data_i,
-             std::ostream* pstream__) const {
-    return foo(shared_params, job_params, data_r, data_i, pstream__);
-  }
-};
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -10832,21 +10791,6 @@ Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
 goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
     const std::vector<T2__>& data_r, const std::vector<int>& data_i,
     std::ostream* pstream__);
-struct goo_functor__ {
-  template <typename T0__, typename T1__, typename T2__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>,
-                                stan::is_col_vector<T1__>,
-                                stan::is_vt_not_complex<T1__>,
-                                stan::is_stan_scalar<T2__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
-                  stan::base_type_t<T1__>, T2__>,-1,1>
-  operator()(const T0__& shared_params, const T1__& job_params,
-             const std::vector<T2__>& data_r, const std::vector<int>& data_i,
-             std::ostream* pstream__) const {
-    return goo(shared_params, job_params, data_r, data_i, pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
@@ -10862,6 +10806,49 @@ Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
 algebra_system(const T0__& x_arg__, const T1__& y_arg__,
                const std::vector<T2__>& dat, const std::vector<int>& dat_int,
                std::ostream* pstream__);
+struct goo_functor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T2__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+                  stan::base_type_t<T1__>, T2__>,-1,1>
+  operator()(const T0__& shared_params, const T1__& job_params,
+             const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+             std::ostream* pstream__) const {
+    return goo(shared_params, job_params, data_r, data_i, pstream__);
+  }
+};
+struct foo_functor__ {
+  template <typename T0__, typename T1__, typename T2__,
+            stan::require_all_t<stan::is_col_vector<T0__>,
+                                stan::is_vt_not_complex<T0__>,
+                                stan::is_col_vector<T1__>,
+                                stan::is_vt_not_complex<T1__>,
+                                stan::is_stan_scalar<T2__>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+                  stan::base_type_t<T1__>, T2__>,-1,1>
+  operator()(const T0__& shared_params, const T1__& job_params,
+             const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+             std::ostream* pstream__) const {
+    return foo(shared_params, job_params, data_r, data_i, pstream__);
+  }
+};
+struct integrand_functor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T1__>,
+                                stan::is_stan_scalar<T2__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T1__, T2__, T3__>
+  operator()(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
+             const std::vector<T3__>& x_r, const std::vector<int>& x_i,
+             std::ostream* pstream__) const {
+    return integrand(x, xc, theta, x_r, x_i, pstream__);
+  }
+};
 struct algebra_system_functor__ {
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -10874,6 +10861,19 @@ struct algebra_system_functor__ {
   operator()(const T0__& x, const T1__& y, const std::vector<T2__>& dat,
              const std::vector<int>& dat_int, std::ostream* pstream__) const {
     return algebra_system(x, y, dat, dat_int, pstream__);
+  }
+};
+struct sho_functor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T1__>,
+                                stan::is_stan_scalar<T2__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
+  operator()(const T0__& t, const std::vector<T1__>& y,
+             const std::vector<T2__>& theta, const std::vector<T3__>& x,
+             const std::vector<int>& x_int, std::ostream* pstream__) const {
+    return sho(t, y, theta, x, x_int, pstream__);
   }
 };
 template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -21235,21 +21235,17 @@ template <typename T0__,
 stan::promote_args_t<T0__>
 g(const std::vector<T0__>& y_slice, const int& start, const int& end,
   std::ostream* pstream__);
-struct g_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__) const {
-    return g(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 h(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const std::vector<T3__>& a, std::ostream* pstream__);
+template <bool propto__, typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+stan::promote_args_t<T0__>
+foo_lpdf(const std::vector<T0__>& y_slice, const int& start, const int& end,
+         std::ostream* pstream__);
 struct h_rsfunctor__ {
   template <typename T0__, typename T3__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -21260,11 +21256,15 @@ struct h_rsfunctor__ {
     return h(y_slice, (start + 1), (end + 1), a, pstream__);
   }
 };
-template <bool propto__, typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-stan::promote_args_t<T0__>
-foo_lpdf(const std::vector<T0__>& y_slice, const int& start, const int& end,
-         std::ostream* pstream__);
+struct g_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__) const {
+    return g(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
 template <bool propto__>
 struct foo_lpdf_rsfunctor__ {
   template <typename T0__,
@@ -21877,189 +21877,92 @@ template <typename T0__,
 stan::promote_args_t<T0__>
 g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
    std::ostream* pstream__);
-struct g1_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__) const {
-    return g1(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 g2(const std::vector<Eigen::Matrix<T0__,-1,1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__);
-struct g2_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<Eigen::Matrix<T0__,-1,1>>& y_slice, const int&
-             start, const int& end, std::ostream* pstream__) const {
-    return g2(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 g3(const std::vector<Eigen::Matrix<T0__,1,-1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__);
-struct g3_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<Eigen::Matrix<T0__,1,-1>>& y_slice, const int&
-             start, const int& end, std::ostream* pstream__) const {
-    return g3(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 g4(const std::vector<Eigen::Matrix<T0__,-1,-1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__);
-struct g4_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<Eigen::Matrix<T0__,-1,-1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__) const {
-    return g4(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__);
-struct g5_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
-             const int& end, std::ostream* pstream__) const {
-    return g5(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 g6(const std::vector<std::vector<Eigen::Matrix<T0__,-1,1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__);
-struct g6_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,-1,1>>>&
-             y_slice, const int& start, const int& end, std::ostream*
-             pstream__) const {
-    return g6(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 g7(const std::vector<std::vector<Eigen::Matrix<T0__,1,-1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__);
-struct g7_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,1,-1>>>&
-             y_slice, const int& start, const int& end, std::ostream*
-             pstream__) const {
-    return g7(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 g8(const std::vector<std::vector<Eigen::Matrix<T0__,-1,-1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__);
-struct g8_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,-1,-1>>>&
-             y_slice, const int& start, const int& end, std::ostream*
-             pstream__) const {
-    return g8(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 h1(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<T3__>& a, std::ostream* pstream__);
-struct h1_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y, const int& start, const int& end,
-             std::ostream* pstream__, const std::vector<T3__>& a) const {
-    return h1(y, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 h2(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__,-1,1>>& a, std::ostream* pstream__);
-struct h2_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y, const int& start, const int& end,
-             std::ostream* pstream__,
-             const std::vector<Eigen::Matrix<T3__,-1,1>>& a) const {
-    return h2(y, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 h3(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__,1,-1>>& a, std::ostream* pstream__);
-struct h3_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y, const int& start, const int& end,
-             std::ostream* pstream__,
-             const std::vector<Eigen::Matrix<T3__,1,-1>>& a) const {
-    return h3(y, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 h4(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__,-1,-1>>& a, std::ostream* pstream__);
-struct h4_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y, const int& start, const int& end,
-             std::ostream* pstream__,
-             const std::vector<Eigen::Matrix<T3__,-1,-1>>& a) const {
-    return h4(y, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 h5(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<std::vector<T3__>>& a, std::ostream* pstream__);
+template <typename T0__, typename T3__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T3__>>* = nullptr>
+stan::promote_args_t<T0__, T3__>
+h6(const std::vector<T0__>& y, const int& start, const int& end,
+   const std::vector<std::vector<Eigen::Matrix<T3__,-1,1>>>& a, std::ostream*
+   pstream__);
+template <typename T0__, typename T3__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T3__>>* = nullptr>
+stan::promote_args_t<T0__, T3__>
+h7(const std::vector<T0__>& y, const int& start, const int& end,
+   const std::vector<std::vector<Eigen::Matrix<T3__,1,-1>>>& a, std::ostream*
+   pstream__);
+template <typename T0__, typename T3__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_stan_scalar<T3__>>* = nullptr>
+stan::promote_args_t<T0__, T3__>
+h8(const std::vector<T0__>& y, const int& start, const int& end,
+   const std::vector<std::vector<Eigen::Matrix<T3__,-1,-1>>>& a,
+   std::ostream* pstream__);
 struct h5_rsfunctor__ {
   template <typename T0__, typename T3__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -22070,31 +21973,25 @@ struct h5_rsfunctor__ {
     return h5(y, (start + 1), (end + 1), a, pstream__);
   }
 };
-template <typename T0__, typename T3__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_stan_scalar<T3__>>* = nullptr>
-stan::promote_args_t<T0__, T3__>
-h6(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T3__,-1,1>>>& a, std::ostream*
-   pstream__);
-struct h6_rsfunctor__ {
+struct h1_rsfunctor__ {
   template <typename T0__, typename T3__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
                                 stan::is_stan_scalar<T3__>>* = nullptr>
   stan::promote_args_t<T0__, T3__>
   operator()(const std::vector<T0__>& y, const int& start, const int& end,
-             std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__,-1,1>>>& a) const {
-    return h6(y, (start + 1), (end + 1), a, pstream__);
+             std::ostream* pstream__, const std::vector<T3__>& a) const {
+    return h1(y, (start + 1), (end + 1), a, pstream__);
   }
 };
-template <typename T0__, typename T3__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_stan_scalar<T3__>>* = nullptr>
-stan::promote_args_t<T0__, T3__>
-h7(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T3__,1,-1>>>& a, std::ostream*
-   pstream__);
+struct g3_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<Eigen::Matrix<T0__,1,-1>>& y_slice, const int&
+             start, const int& end, std::ostream* pstream__) const {
+    return g3(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
 struct h7_rsfunctor__ {
   template <typename T0__, typename T3__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -22106,13 +22003,47 @@ struct h7_rsfunctor__ {
     return h7(y, (start + 1), (end + 1), a, pstream__);
   }
 };
-template <typename T0__, typename T3__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_stan_scalar<T3__>>* = nullptr>
-stan::promote_args_t<T0__, T3__>
-h8(const std::vector<T0__>& y, const int& start, const int& end,
-   const std::vector<std::vector<Eigen::Matrix<T3__,-1,-1>>>& a,
-   std::ostream* pstream__);
+struct h3_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y, const int& start, const int& end,
+             std::ostream* pstream__,
+             const std::vector<Eigen::Matrix<T3__,1,-1>>& a) const {
+    return h3(y, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g2_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<Eigen::Matrix<T0__,-1,1>>& y_slice, const int&
+             start, const int& end, std::ostream* pstream__) const {
+    return g2(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g8_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,-1,-1>>>&
+             y_slice, const int& start, const int& end, std::ostream*
+             pstream__) const {
+    return g8(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct h2_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y, const int& start, const int& end,
+             std::ostream* pstream__,
+             const std::vector<Eigen::Matrix<T3__,-1,1>>& a) const {
+    return h2(y, (start + 1), (end + 1), a, pstream__);
+  }
+};
 struct h8_rsfunctor__ {
   template <typename T0__, typename T3__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -22122,6 +22053,75 @@ struct h8_rsfunctor__ {
              std::ostream* pstream__,
              const std::vector<std::vector<Eigen::Matrix<T3__,-1,-1>>>& a) const {
     return h8(y, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g7_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,1,-1>>>&
+             y_slice, const int& start, const int& end, std::ostream*
+             pstream__) const {
+    return g7(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g4_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<Eigen::Matrix<T0__,-1,-1>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const {
+    return g4(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct h4_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y, const int& start, const int& end,
+             std::ostream* pstream__,
+             const std::vector<Eigen::Matrix<T3__,-1,-1>>& a) const {
+    return h4(y, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g6_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,-1,1>>>&
+             y_slice, const int& start, const int& end, std::ostream*
+             pstream__) const {
+    return g6(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g5_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
+             const int& end, std::ostream* pstream__) const {
+    return g5(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct h6_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y, const int& start, const int& end,
+             std::ostream* pstream__,
+             const std::vector<std::vector<Eigen::Matrix<T3__,-1,1>>>& a) const {
+    return h6(y, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g1_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__) const {
+    return g1(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
 template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
@@ -24199,190 +24199,66 @@ template <typename T0__,
 stan::promote_args_t<T0__>
 f1(const std::vector<T0__>& y_slice, const int& start, const int& end,
    std::ostream* pstream__);
-struct f1_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__) const {
-    return f1(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 f1a(const std::vector<T0__>& y_slice, const int& start, const int& end,
     std::ostream* pstream__);
-struct f1a_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__) const {
-    return f1a(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 f2(const std::vector<Eigen::Matrix<T0__,-1,1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__);
-struct f2_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<Eigen::Matrix<T0__,-1,1>>& y_slice, const int&
-             start, const int& end, std::ostream* pstream__) const {
-    return f2(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 f3(const std::vector<Eigen::Matrix<T0__,1,-1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__);
-struct f3_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<Eigen::Matrix<T0__,1,-1>>& y_slice, const int&
-             start, const int& end, std::ostream* pstream__) const {
-    return f3(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 f4(const std::vector<Eigen::Matrix<T0__,-1,-1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__);
-struct f4_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<Eigen::Matrix<T0__,-1,-1>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__) const {
-    return f4(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 f5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__);
-struct f5_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
-             const int& end, std::ostream* pstream__) const {
-    return f5(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 f6(const std::vector<std::vector<Eigen::Matrix<T0__,-1,1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__);
-struct f6_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,-1,1>>>&
-             y_slice, const int& start, const int& end, std::ostream*
-             pstream__) const {
-    return f6(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 f7(const std::vector<std::vector<Eigen::Matrix<T0__,1,-1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__);
-struct f7_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,1,-1>>>&
-             y_slice, const int& start, const int& end, std::ostream*
-             pstream__) const {
-    return f7(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 f8(const std::vector<std::vector<Eigen::Matrix<T0__,-1,-1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__);
-struct f8_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,-1,-1>>>&
-             y_slice, const int& start, const int& end, std::ostream*
-             pstream__) const {
-    return f8(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 double
 f9(const std::vector<int>& y_slice, const int& start, const int& end,
    std::ostream* pstream__);
-struct f9_rsfunctor__ {
-  double
-  operator()(const std::vector<int>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__) const {
-    return f9(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 double
 f10(const std::vector<std::vector<int>>& y_slice, const int& start,
     const int& end, std::ostream* pstream__);
-struct f10_rsfunctor__ {
-  double
-  operator()(const std::vector<std::vector<int>>& y_slice, const int& start,
-             const int& end, std::ostream* pstream__) const {
-    return f10(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 double
 f11(const std::vector<std::vector<std::vector<int>>>& y_slice, const int&
     start, const int& end, std::ostream* pstream__);
-struct f11_rsfunctor__ {
-  double
-  operator()(const std::vector<std::vector<std::vector<int>>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__) const {
-    return f11(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
 f12(const std::vector<std::vector<std::vector<T0__>>>& y_slice, const int&
     start, const int& end, std::ostream* pstream__);
-struct f12_rsfunctor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-  stan::promote_args_t<T0__>
-  operator()(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
-             const int& start, const int& end, std::ostream* pstream__) const {
-    return f12(y_slice, (start + 1), (end + 1), pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const T3__& a, std::ostream* pstream__);
-struct g1_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__, const T3__& a) const {
-    return g1(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_col_vector<T3__>,
@@ -24390,17 +24266,6 @@ template <typename T0__, typename T3__,
 stan::promote_args_t<T0__, stan::base_type_t<T3__>>
 g2(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const T3__& a_arg__, std::ostream* pstream__);
-struct g2_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_col_vector<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, stan::base_type_t<T3__>>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__, const T3__& a) const {
-    return g2(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_row_vector<T3__>,
@@ -24408,17 +24273,6 @@ template <typename T0__, typename T3__,
 stan::promote_args_t<T0__, stan::base_type_t<T3__>>
 g3(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const T3__& a_arg__, std::ostream* pstream__);
-struct g3_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_row_vector<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, stan::base_type_t<T3__>>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__, const T3__& a) const {
-    return g3(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_eigen_matrix_dynamic<T3__>,
@@ -24426,101 +24280,36 @@ template <typename T0__, typename T3__,
 stan::promote_args_t<T0__, stan::base_type_t<T3__>>
 g4(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const T3__& a_arg__, std::ostream* pstream__);
-struct g4_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_eigen_matrix_dynamic<T3__>,
-                                stan::is_vt_not_complex<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, stan::base_type_t<T3__>>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__, const T3__& a) const {
-    return g4(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 g5(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<T3__>& a, std::ostream* pstream__);
-struct g5_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__, const std::vector<T3__>& a) const {
-    return g5(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 g6(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__,-1,1>>& a, std::ostream* pstream__);
-struct g6_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__,
-             const std::vector<Eigen::Matrix<T3__,-1,1>>& a) const {
-    return g6(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 g7(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__,1,-1>>& a, std::ostream* pstream__);
-struct g7_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__,
-             const std::vector<Eigen::Matrix<T3__,1,-1>>& a) const {
-    return g7(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 g8(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__,-1,-1>>& a, std::ostream* pstream__);
-struct g8_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__,
-             const std::vector<Eigen::Matrix<T3__,-1,-1>>& a) const {
-    return g8(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
 stan::promote_args_t<T0__, T3__>
 g9(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<std::vector<T3__>>& a, std::ostream* pstream__);
-struct g9_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__,
-             const std::vector<std::vector<T3__>>& a) const {
-    return g9(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
@@ -24528,17 +24317,6 @@ stan::promote_args_t<T0__, T3__>
 g10(const std::vector<T0__>& y_slice, const int& start, const int& end,
     const std::vector<std::vector<Eigen::Matrix<T3__,-1,1>>>& a,
     std::ostream* pstream__);
-struct g10_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__,-1,1>>>& a) const {
-    return g10(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
@@ -24546,17 +24324,6 @@ stan::promote_args_t<T0__, T3__>
 g11(const std::vector<T0__>& y_slice, const int& start, const int& end,
     const std::vector<std::vector<Eigen::Matrix<T3__,1,-1>>>& a,
     std::ostream* pstream__);
-struct g11_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__,1,-1>>>& a) const {
-    return g11(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T3__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_stan_scalar<T3__>>* = nullptr>
@@ -24564,17 +24331,6 @@ stan::promote_args_t<T0__, T3__>
 g12(const std::vector<T0__>& y_slice, const int& start, const int& end,
     const std::vector<std::vector<Eigen::Matrix<T3__,-1,-1>>>& a,
     std::ostream* pstream__);
-struct g12_rsfunctor__ {
-  template <typename T0__, typename T3__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__,
-             const std::vector<std::vector<Eigen::Matrix<T3__,-1,-1>>>& a) const {
-    return g12(y_slice, (start + 1), (end + 1), a, pstream__);
-  }
-};
 template <typename T0__, typename T4__, typename T5__, typename T6__,
           typename T7__, typename T9__, typename T10__, typename T11__,
           typename T12__, typename T14__, typename T15__, typename T16__,
@@ -24614,6 +24370,232 @@ s(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const std::vector<std::vector<std::vector<int>>>& p,
   const std::vector<std::vector<std::vector<T19__>>>& q, std::ostream*
   pstream__);
+double r(std::ostream* pstream__);
+struct f11_rsfunctor__ {
+  double
+  operator()(const std::vector<std::vector<std::vector<int>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const {
+    return f11(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f10_rsfunctor__ {
+  double
+  operator()(const std::vector<std::vector<int>>& y_slice, const int& start,
+             const int& end, std::ostream* pstream__) const {
+    return f10(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g8_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__,
+             const std::vector<Eigen::Matrix<T3__,-1,-1>>& a) const {
+    return g8(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g7_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__,
+             const std::vector<Eigen::Matrix<T3__,1,-1>>& a) const {
+    return g7(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g4_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_eigen_matrix_dynamic<T3__>,
+                                stan::is_vt_not_complex<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, stan::base_type_t<T3__>>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__, const T3__& a) const {
+    return g4(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g6_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__,
+             const std::vector<Eigen::Matrix<T3__,-1,1>>& a) const {
+    return g6(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g11_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__,
+             const std::vector<std::vector<Eigen::Matrix<T3__,1,-1>>>& a) const {
+    return g11(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct f5_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<T0__>>& y_slice, const int& start,
+             const int& end, std::ostream* pstream__) const {
+    return f5(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f1_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__) const {
+    return f1(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g5_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__, const std::vector<T3__>& a) const {
+    return g5(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g9_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__,
+             const std::vector<std::vector<T3__>>& a) const {
+    return g9(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g1_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__, const T3__& a) const {
+    return g1(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct f12_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const {
+    return f12(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g3_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_row_vector<T3__>,
+                                stan::is_vt_not_complex<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, stan::base_type_t<T3__>>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__, const T3__& a) const {
+    return g3(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct f3_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<Eigen::Matrix<T0__,1,-1>>& y_slice, const int&
+             start, const int& end, std::ostream* pstream__) const {
+    return f3(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f2_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<Eigen::Matrix<T0__,-1,1>>& y_slice, const int&
+             start, const int& end, std::ostream* pstream__) const {
+    return f2(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f6_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,-1,1>>>&
+             y_slice, const int& start, const int& end, std::ostream*
+             pstream__) const {
+    return f6(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g2_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_col_vector<T3__>,
+                                stan::is_vt_not_complex<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, stan::base_type_t<T3__>>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__, const T3__& a) const {
+    return g2(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct g10_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__,
+             const std::vector<std::vector<Eigen::Matrix<T3__,-1,1>>>& a) const {
+    return g10(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct f8_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,-1,-1>>>&
+             y_slice, const int& start, const int& end, std::ostream*
+             pstream__) const {
+    return f8(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct g12_rsfunctor__ {
+  template <typename T0__, typename T3__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>,
+                                stan::is_stan_scalar<T3__>>* = nullptr>
+  stan::promote_args_t<T0__, T3__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__,
+             const std::vector<std::vector<Eigen::Matrix<T3__,-1,-1>>>& a) const {
+    return g12(y_slice, (start + 1), (end + 1), a, pstream__);
+  }
+};
+struct f9_rsfunctor__ {
+  double
+  operator()(const std::vector<int>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__) const {
+    return f9(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f4_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<Eigen::Matrix<T0__,-1,-1>>& y_slice,
+             const int& start, const int& end, std::ostream* pstream__) const {
+    return f4(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
 struct s_rsfunctor__ {
   template <typename T0__, typename T4__, typename T5__, typename T6__,
             typename T7__, typename T9__, typename T10__, typename T11__,
@@ -24658,7 +24640,25 @@ struct s_rsfunctor__ {
              k, l, m, n, o, p, q, pstream__);
   }
 };
-double r(std::ostream* pstream__);
+struct f7_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<std::vector<Eigen::Matrix<T0__,1,-1>>>&
+             y_slice, const int& start, const int& end, std::ostream*
+             pstream__) const {
+    return f7(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
+struct f1a_rsfunctor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
+             end, std::ostream* pstream__) const {
+    return f1a(y_slice, (start + 1), (end + 1), pstream__);
+  }
+};
 template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 f1(const std::vector<T0__>& y_slice, const int& start, const int& end,

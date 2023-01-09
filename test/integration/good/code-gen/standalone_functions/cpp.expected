@@ -599,6 +599,7 @@ std::vector<stan::promote_args_t<T0__, T1__, T2__, T3__>>
 integrand_ode(const T0__& r, const std::vector<T1__>& f,
               const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
               const std::vector<int>& x_i, std::ostream* pstream__);
+double ode_integrate(std::ostream* pstream__);
 struct integrand_ode_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -612,7 +613,6 @@ struct integrand_ode_functor__ {
     return integrand_ode(r, f, theta, x_r, x_i, pstream__);
   }
 };
-double ode_integrate(std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>

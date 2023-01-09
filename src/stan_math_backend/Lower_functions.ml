@@ -246,11 +246,12 @@ let get_functor_requirements (p : Program.Numbered.t) =
   let rec find_functors_expr init = function
     | {pattern= FunApp (StanLib (hof, FnPlain, _), args); _} ->
         let f accum = function
-          | {pattern= Var name; _} as e
-            when UnsizedType.is_fun_type (Expr.Typed.type_of e) ->
+          | { pattern= Var name
+            ; meta= {Expr.Typed.Meta.type_= UnsizedType.UFun (args, _, _, _); _}
+            } ->
               Map.add_multi accum
                 ~key:(Utils.stdlib_distribution_name name)
-                ~data:(Lower_expr.functor_type hof)
+                ~data:(Lower_expr.functor_type hof, List.map ~f:snd args)
           | e -> find_functors_expr accum e in
         List.fold ~init ~f args
     | {pattern; _} -> Pattern.fold find_functors_expr init pattern in
@@ -267,20 +268,31 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
       | {fdname; fdbody= Some _; _} -> Some fdname
       | _ -> None )
     |> String.Set.of_list in
+  let structs = String.Table.create () in
   let fun_decls, fun_defns =
     p.functions_block
     |> List.filter_map ~f:(fun d ->
            if Set.mem fun_has_def d.fdname && Option.is_none d.fdbody then None
            else
              let functors =
-               Map.find_multi functor_required d.fdname |> List.stable_dedup
-             in
+               Map.find_multi functor_required d.fdname
+               |> List.stable_dedup
+               |> List.filter_map ~f:(fun (x, ts) ->
+                      if
+                        List.equal UnsizedType.equal ts
+                          (List.map ~f:(fun (_, _, t) -> t) d.fdargs)
+                      then Some x
+                      else None ) in
              let fn, st = lower_fun_def functors d in
+             List.iter st ~f:(fun s ->
+                 Hashtbl.update structs s.struct_name ~f:(function
+                   | Some x -> {x with body= x.body @ s.body}
+                   | None -> s ) ) ;
              let decl, defn = Cpp.split_fun_decl_defn fn in
-             Some
-               (FunDef decl :: List.map ~f:(fun s -> Struct s) st, FunDef defn) )
+             Some (FunDef decl, FunDef defn) )
     |> List.unzip in
-  List.concat fun_decls @ fun_defns
+  let structs = Hashtbl.data structs |> List.map ~f:(fun s -> Struct s) in
+  fun_decls @ structs @ fun_defns
 
 let lower_standalone_fun_def namespace_fun
     Program.{fdname; fdsuffix; fdargs; fdbody; fdrt; _} =

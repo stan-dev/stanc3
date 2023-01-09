@@ -1955,6 +1955,28 @@
        ((Const (Ref (StdVector Int))) dat_int)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
+   (FunDef
+    ((templates_init
+      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
+         (RequireIs stan::is_vt_not_complex T0__)
+         (RequireIs stan::is_col_vector T1__)
+         (RequireIs stan::is_vt_not_complex T1__)))
+       true))
+     (inline false)
+     (return_type
+      (Matrix
+       (TypeTrait stan::promote_args_t
+        ((TemplateType stan::base_type_t<T0__>)
+         (TemplateType stan::base_type_t<T1__>)))
+       -1 1))
+     (name binomialf)
+     (args
+      (((Const (Ref (TemplateType T0__))) phi_arg__)
+       ((Const (Ref (TemplateType T1__))) theta_arg__)
+       ((Const (Ref (StdVector Double))) x_r)
+       ((Const (Ref (StdVector Int))) x_i)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
+     (cv_qualifiers ()) (body ())))
    (Struct
     ((param ()) (struct_name algebra_system_functor__)
      (body
@@ -1986,28 +2008,6 @@
           (((Return
              ((FunCall algebra_system ()
                ((Var x) (Var y) (Var dat) (Var dat_int) (Var pstream__))))))))))))))
-   (FunDef
-    ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
-         (RequireIs stan::is_vt_not_complex T0__)
-         (RequireIs stan::is_col_vector T1__)
-         (RequireIs stan::is_vt_not_complex T1__)))
-       true))
-     (inline false)
-     (return_type
-      (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>)
-         (TemplateType stan::base_type_t<T1__>)))
-       -1 1))
-     (name binomialf)
-     (args
-      (((Const (Ref (TemplateType T0__))) phi_arg__)
-       ((Const (Ref (TemplateType T1__))) theta_arg__)
-       ((Const (Ref (StdVector Double))) x_r)
-       ((Const (Ref (StdVector Int))) x_i)
-       ((Pointer (TypeLiteral std::ostream)) pstream__)))
-     (cv_qualifiers ()) (body ())))
    (Struct
     ((param ()) (struct_name binomialf_functor__)
      (body
