@@ -1693,8 +1693,9 @@ model {
             );
 }
 
-Warning in 'fun_log_forward_decl.stan', line 6, column 7: Forward
-    declarations are deprecated and not needed for recursion.
+Warning in 'fun_log_forward_decl.stan', line 6, column 7: Functions do not
+    need to be declared before definition; all user defined function names
+    are always in scope regardless of defintion order.
   $ ../../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
@@ -1712,8 +1713,9 @@ model {
   y ~ normal(0, 1);
 }
 
-Warning in 'functions-fwd-ref.stan', line 3, column 6: Forward declarations
-    are deprecated and not needed for recursion.
+Warning in 'functions-fwd-ref.stan', line 3, column 6: Functions do not need
+    to be declared before definition; all user defined function names are
+    always in scope regardless of defintion order.
   $ ../../../../../install/default/bin/stanc --auto-format get-lp-deprecate.stan
 parameters {
   real<lower=0> y;
@@ -2634,10 +2636,12 @@ transformed data {
   }
 }
 
-Warning in 'overloaded_forward_decl.stan', line 2, column 6: Forward
-    declarations are deprecated and not needed for recursion.
-Warning in 'overloaded_forward_decl.stan', line 3, column 6: Forward
-    declarations are deprecated and not needed for recursion.
+Warning in 'overloaded_forward_decl.stan', line 2, column 6: Functions do not
+    need to be declared before definition; all user defined function names
+    are always in scope regardless of defintion order.
+Warning in 'overloaded_forward_decl.stan', line 3, column 6: Functions do not
+    need to be declared before definition; all user defined function names
+    are always in scope regardless of defintion order.
   $ ../../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
 data {
   // hey, this is the old way to do things, should raise warning

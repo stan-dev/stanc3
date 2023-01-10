@@ -178,8 +178,9 @@ let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
     when is_redundant_forwarddecl fundefs funname arguments ->
       acc
       @ [ ( funname.id_loc
-          , "Forward declarations are deprecated and not needed for recursion."
-          ) ]
+          , "Functions do not need to be declared before definition; all user \
+             defined function names are always in scope regardless of \
+             defintion order." ) ]
   | FunDef
       { body
       ; funname= {name; id_loc}
