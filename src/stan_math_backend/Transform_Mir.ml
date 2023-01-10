@@ -466,35 +466,48 @@ let trans_prog (p : Program.Typed.t) =
       |> map Fn.id change_kwrds_stmts) in
   (* Eval indexed eigen types in UDF calls to prevent
      infinite template expansion if the call is recursive
+
+     All relevant function calls are recorded transitively in `callgraph`,
+     meaning if `A` calls `B` and `B` calls `C` then `callgraph[A] = {B,C}`.
   *)
-  let callmap = Hashtbl.create (module String) in
+  let callgraph = String.Table.create () in
   let eval_eigen_cycles fun_args calls (f : _ Program.fun_def) =
-    let check_recursive name =
-      name = f.fdname
-      || Hashtbl.find callmap name
-         |> Option.value_map ~default:false ~f:(fun x -> Set.mem x f.fdname)
-    in
     let open Expr.Fixed in
-    let rec eigen_expr = function
+    let rec is_potentially_recursive = function
       | {pattern= Var name; _} -> Set.mem fun_args name
-      | {pattern= Pattern.Indexed (e, _); _} -> eigen_expr e
+      | {pattern= Indexed (e, _); _} -> is_potentially_recursive e
       | {pattern= FunApp (StanLib (fname, _, _), e :: _); _} ->
-          Set.mem eigen_block_expr_fns fname && eigen_expr e
+          Set.mem eigen_block_expr_fns fname && is_potentially_recursive e
       | _ -> false in
     let rec map_args name args =
-      let is_rec = check_recursive name in
-      List.map args ~f:(fun e ->
-          let e = rewrite_expr e in
-          if not (eigen_expr e) then e
-          else if is_rec then
-            {e with pattern= FunApp (StanLib ("eval", FnPlain, AoS), [e])}
-          else (Hash_set.add calls name ; e) )
+      let args = List.map ~f:rewrite_expr args in
+      let can_recurse, eval_args =
+        List.fold_map ~init:false
+          ~f:(fun is_rec e ->
+            if is_potentially_recursive e then
+              ( true
+              , {e with pattern= FunApp (StanLib ("eval", FnPlain, AoS), [e])}
+              )
+            else (is_rec, e) )
+          args in
+      if not can_recurse then args
+      else if name = f.fdname then eval_args
+      else
+        match Hashtbl.find callgraph name with
+        | Some nested when Hash_set.mem nested f.fdname -> eval_args
+        | Some nested ->
+            (* `calls` records all functions reachable from the current function *)
+            Hash_set.add calls name ;
+            Hash_set.iter nested ~f:(Hash_set.add calls) ;
+            args
+        | None -> Hash_set.add calls name ; args
     and rewrite_expr = function
       | {pattern= FunApp ((UserDefined (name, _) as kind), args); _} as e ->
           {e with pattern= FunApp (kind, map_args name args)}
       | e -> {e with pattern= Pattern.map rewrite_expr e.pattern} in
-    let open Stmt.Fixed in
-    let rec rewrite_stmt = function
+    let rec rewrite_stmt s =
+      let open Stmt.Fixed in
+      match s with
       | {pattern= Pattern.NRFunApp ((UserDefined (name, _) as kind), args); _}
         as s ->
           {s with pattern= NRFunApp (kind, map_args name args)}
@@ -503,21 +516,18 @@ let trans_prog (p : Program.Typed.t) =
     Program.map_fun_def rewrite_stmt f in
   let break_cycles (Program.{fdname; fdargs; _} as fd) =
     let fun_args =
-      List.filter_map
-        ~f:(fun (_, n, t) ->
+      List.filter_map fdargs ~f:(fun (_, n, t) ->
           if UnsizedType.is_eigen_type t then Some n else None )
-        fdargs
       |> String.Set.of_list in
     if Set.is_empty fun_args then fd
     else
-      let calls = Hash_set.create (module String) in
+      let calls =
+        Hashtbl.find_or_add callgraph fdname ~default:String.Hash_set.create
+      in
       let fndef = eval_eigen_cycles fun_args calls fd in
-      if not (Hash_set.is_empty calls) then (
-        let calls = Hash_set.to_list calls |> String.Set.of_list in
-        Hashtbl.map_inplace callmap ~f:(fun x ->
-            if Set.mem x fdname then Set.union calls x else x ) ;
-        Hashtbl.update callmap fdname
-          ~f:(Option.value_map ~f:(Set.union calls) ~default:calls) ) ;
+      (* update `callgraph` with the call paths going through the current function *)
+      Hashtbl.map_inplace callgraph ~f:(fun x ->
+          if Hash_set.mem x fdname then Hash_set.union calls x else x ) ;
       fndef in
   let p = {p with functions_block= List.map ~f:break_cycles p.functions_block} in
   let init_pos =
