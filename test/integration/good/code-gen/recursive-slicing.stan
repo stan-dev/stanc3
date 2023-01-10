@@ -27,11 +27,7 @@ real foo(real b){
   return foo(B[:,2:4]);
 }
 
-
 // mutual recursion
-
-
-
 vector test4(vector gamma) {
    int D = num_elements(gamma);
 
@@ -63,6 +59,11 @@ void test6(vector alpha){
       return test7(head(gamma,D - 1));
   }
 
+  // recursion through higher-order function
+  vector foo(real x, vector s, matrix y) {
+    return ode_rk45(foo, [1]', 0.0, {1.0}, y[2:])[1];
+  }
+
 }
 data {
   int N;
@@ -73,4 +74,5 @@ parameters {
 }
 transformed parameters {
   vector[N] z_hat = test2(gamma);
+  vector[3] z = foo(1.0, gamma, diag_matrix(gamma));
 }

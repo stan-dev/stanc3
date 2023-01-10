@@ -263,23 +263,18 @@ let get_functor_requirements (p : Program.Numbered.t) =
 
 let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let functor_required = get_functor_requirements p in
-  let fun_has_def =
-    List.filter_map p.functions_block ~f:(function
-      | {fdname; fdbody= Some _; _} -> Some fdname
-      | _ -> None )
-    |> String.Set.of_list in
   (* overloaded functions generate only one functor struct per name *)
   let structs = String.Table.create () in
-  let is_overload (d : _ Program.fun_def) arg_types =
+  let matching_argtypes Program.{fdargs; _} arg_types =
     List.equal UnsizedType.equal
-      (List.map ~f:(fun (_, _, t) -> t) d.fdargs)
+      (List.map ~f:(fun (_, _, t) -> t) fdargs)
       arg_types in
   let declare_and_define (d : _ Program.fun_def) =
     let functors =
       Map.find_multi functor_required d.fdname
       |> List.stable_dedup
       |> List.filter_map ~f:(fun (hof, ts) ->
-             if is_overload d ts then Some hof else None ) in
+             if matching_argtypes d ts then Some hof else None ) in
     let fn, st = lower_fun_def functors d in
     List.iter st ~f:(fun s ->
         (* Side effecting, collates functor structs *)
@@ -291,8 +286,9 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let fun_decls, fun_defns =
     p.functions_block
     |> List.filter_map ~f:(fun d ->
-           if Set.mem fun_has_def d.fdname && Option.is_none d.fdbody then None
-           else Some (declare_and_define d) )
+           (* FIXME: external functions don't need decls
+              but they do need structs (when used in HOF) *)
+           if Option.is_none d.fdbody then None else Some (declare_and_define d) )
     |> List.unzip in
   let structs = Hashtbl.data structs |> List.map ~f:(fun s -> Struct s) in
   fun_decls @ structs @ fun_defns

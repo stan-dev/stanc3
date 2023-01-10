@@ -467,8 +467,16 @@ let trans_prog (p : Program.Typed.t) =
   (* Eval indexed eigen types in UDF calls to prevent
      infinite template expansion if the call is recursive
 
+     Infinite expansion can happen only when the call graph is cyclic.
+     The strategy here is to build the call graph one edge at the time
+     and check if adding that edge creates a cycle. If it does, insert
+     an `eval()` to stop template expansion.
+
      All relevant function calls are recorded transitively in `callgraph`,
      meaning if `A` calls `B` and `B` calls `C` then `callgraph[A] = {B,C}`.
+     In the worst case every function calls every other, `callgraph` has
+     size O(n²) and this algorithm is O(n³) so it's important to include
+     only the function calls that really can propagate eigen templates.
   *)
   let callgraph = String.Table.create () in
   let eval_eigen_cycles fun_args calls (f : _ Program.fun_def) =
@@ -501,9 +509,16 @@ let trans_prog (p : Program.Typed.t) =
             Hash_set.iter nested ~f:(Hash_set.add calls) ;
             args
         | None -> Hash_set.add calls name ; args
-    and rewrite_expr = function
+    and rewrite_expr : Expr.Typed.t -> Expr.Typed.t = function
       | {pattern= FunApp ((UserDefined (name, _) as kind), args); _} as e ->
           {e with pattern= FunApp (kind, map_args name args)}
+      | { pattern=
+            FunApp
+              ( (StanLib (_, _, _) as kind)
+              , ({pattern= Var name; meta= {type_= UFun _; _}} as f) :: args )
+        ; _ } as e ->
+          (* higher-order function -- just pretend it's a direct call *)
+          {e with pattern= FunApp (kind, f :: map_args name args)}
       | e -> {e with pattern= Pattern.map rewrite_expr e.pattern} in
     let rec rewrite_stmt s =
       let open Stmt.Fixed in
