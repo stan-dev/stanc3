@@ -30,6 +30,7 @@
    ad-level-failing.stan
    ad-level-deep-dependence.stan
    overloaded-fn.stan
+   overloaded-fn2.stan
    lupdf-inlining.stan
    unenforce-initialize.stan
    partial_eval_multiply.stan
@@ -74,6 +75,8 @@
    fails-test.stan
    off-small.stan
    off-dce.stan
+   overloaded-fn.stan
+   overloaded-fn2.stan
    stalled1-failure.stan
    expr-prop-fail.stan
    ad-level-failing.stan
