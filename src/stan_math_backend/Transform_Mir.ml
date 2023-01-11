@@ -475,7 +475,7 @@ let trans_prog (p : Program.Typed.t) =
      All relevant function calls are recorded transitively in `callgraph`,
      meaning if `A` calls `B` and `B` calls `C` then `callgraph[A] = {B,C}`.
      In the worst case every function calls every other, `callgraph` has
-     size O(n²) and this algorithm is O(n³) so it's important to include
+     size O(n^2) and this algorithm is O(n^3) so it's important to track
      only the function calls that really can propagate eigen templates.
   *)
   let callgraph = String.Table.create () in
@@ -536,13 +536,14 @@ let trans_prog (p : Program.Typed.t) =
       |> String.Set.of_list in
     if Set.is_empty fun_args then fd
     else
-      let calls =
-        Hashtbl.find_or_add callgraph fdname ~default:String.Hash_set.create
-      in
+      let calls = String.Hash_set.create () in
       let fndef = eval_eigen_cycles fun_args calls fd in
-      (* update `callgraph` with the call paths going through the current function *)
-      Hashtbl.map_inplace callgraph ~f:(fun x ->
-          if Hash_set.mem x fdname then Hash_set.union calls x else x ) ;
+      if not (Hash_set.is_empty calls) then (
+        (* update `callgraph` with the call paths going through the current function *)
+        Hashtbl.map_inplace callgraph ~f:(fun x ->
+            if Hash_set.mem x fdname then Hash_set.union calls x else x ) ;
+        Hashtbl.update callgraph fdname
+          ~f:(Option.value_map ~f:(Hash_set.union calls) ~default:calls) ) ;
       fndef in
   let p = {p with functions_block= List.map ~f:break_cycles p.functions_block} in
   let init_pos =
