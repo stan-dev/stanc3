@@ -3,41 +3,7 @@
  (deps
   (package stanc)
   (:stanfiles
-   optimizations.stan
-   expr-prop-fail8.stan
-   lcm-experiment2.stan
-   expr-prop-fail7.stan
-   expr-prop-experiment2.stan
-   lcm-experiment.stan
-   expr-prop-fail6.stan
-   expr-prop-experiment.stan
-   expr-prop-fail5.stan
-   expr-prop-fail4.stan
-   lcm-fails2.stan
-   lcm-fails.stan
-   unroll-limit.stan
-   expr-prop-fail3.stan
-   expr-prop-fail2.stan
-   inlining-fail2.stan
-   dce-fail.stan
-   partial-eval.stan
-   copy_fail.stan
-   fails-test.stan
-   off-small.stan
-   off-dce.stan
-   stalled1-failure.stan
-   expr-prop-fail.stan
-   ad-level-failing.stan
-   ad-level-deep-dependence.stan
-   overloaded-fn.stan
-   overloaded-fn2.stan
-   lupdf-inlining.stan
-   unenforce-initialize.stan
-   partial_eval_multiply.stan
-   inline-functions-varmat.stan
-   inliner-same-names.stan
-   inline-tdata.stan
-   function-in-function-loops.stan))
+   (glob_files *.stan)))
  (action
   (with-stdout-to
    %{targets}
@@ -53,42 +19,7 @@
  (deps
   (package stanc)
   (:stanfiles
-   optimizations.stan
-   expr-prop-fail8.stan
-   lcm-experiment2.stan
-   expr-prop-fail7.stan
-   expr-prop-experiment2.stan
-   lcm-experiment.stan
-   expr-prop-fail6.stan
-   expr-prop-experiment.stan
-   expr-prop-fail5.stan
-   expr-prop-fail4.stan
-   lcm-fails2.stan
-   lcm-fails.stan
-   unroll-limit.stan
-   expr-prop-fail3.stan
-   expr-prop-fail2.stan
-   inlining-fail2.stan
-   dce-fail.stan
-   partial-eval.stan
-   copy_fail.stan
-   fails-test.stan
-   off-small.stan
-   off-dce.stan
-   overloaded-fn.stan
-   overloaded-fn2.stan
-   stalled1-failure.stan
-   expr-prop-fail.stan
-   ad-level-failing.stan
-   ad-level-deep-dependence.stan
-   lupdf-inlining.stan
-   unenforce-initialize.stan
-   unenforce-initialize-should-fail.stan
-   partial_eval_multiply.stan
-   inline-functions-varmat.stan
-   inliner-same-names.stan
-   inline-tdata.stan
-   function-in-function-loops.stan))
+   (glob_files *.stan)))
  (action
   (with-stdout-to
    %{targets}
