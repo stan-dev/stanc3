@@ -1,5 +1,4 @@
 functions {
-  real array_fun(array[] real a);
 
   real my_log1p_exp(real x) {
     return log1p_exp(x);

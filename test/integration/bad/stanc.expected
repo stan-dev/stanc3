@@ -1196,17 +1196,16 @@ Semantic error in 'functions-bad17.stan', line 2, column 2 to line 4, column 3:
 
 Real return type required for probability functions ending in _log, _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.
   $ ../../../../install/default/bin/stanc functions-bad18.stan
-Semantic error in 'functions-bad18.stan', line 7, column 7 to column 10:
+Semantic error in 'functions-bad18.stan', line 11, column 2 to column 8:
    -------------------------------------------------
-     5:  }
-     6:  parameters {
-     7:    real foo;  // should be name conflict here
-                ^
-     8:  }
      9:  model {
+    10:    foo ~ normal(0.0, 1.0);
+    11:    foo();  // the function has been shadowed, this `foo` is a number
+           ^
+    12:  }
    -------------------------------------------------
 
-Identifier 'foo' is already in use.
+A non-returning function was expected but a non-function value 'foo' was supplied.
   $ ../../../../install/default/bin/stanc functions-bad19.stan
 Semantic error in 'functions-bad19.stan', line 4, column 2 to line 6, column 3:
    -------------------------------------------------

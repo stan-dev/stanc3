@@ -946,6 +946,10 @@ generated quantities {
   }
 }
 
+Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
+'bernoulli.stan', line 7, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined binomial.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -3298,6 +3302,46 @@ generated quantities {
   }
 }
 
+Warning in './/functions/SSfunctions.stan', line 1, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
+Warning in './/functions/SSfunctions.stan', line 2, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
+Warning in './/functions/SSfunctions.stan', line 3, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
+Warning in './/functions/SSfunctions.stan', line 4, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
+Warning in './/functions/SSfunctions.stan', line 5, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
+Warning in './/functions/SSfunctions.stan', line 6, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
+Warning in './/functions/SSfunctions.stan', line 7, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
+Warning in './/functions/SSfunctions.stan', line 8, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
+Warning in './/functions/SSfunctions.stan', line 9, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
+Warning in './/functions/SSfunctions.stan', line 10, column 7, included from
+'continuous.stan', line 9, column 2: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined count.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -7211,6 +7255,10 @@ generated quantities {
               - dot_product(a_xbar, a_beta);
 }
 
+Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
+'jm.stan', line 8, column 0: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined lm.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -9270,6 +9318,10 @@ generated quantities {
   }
 }
 
+Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, included from
+'mvmer.stan', line 8, column 0: Functions
+    do not need to be declared before definition; all user defined function
+    names are always in scope regardless of defintion order.
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined polr.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University

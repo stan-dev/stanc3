@@ -1857,14 +1857,11 @@ static constexpr std::array<const char*, 6> locations_array__ =
   " (in 'onepl.stan', line 11, column 2 to column 9)",
   " (in 'onepl.stan', line 3, column 4 to column 11)",
   " (in 'onepl.stan', line 2, column 27 to line 4, column 3)"};
-struct foo_functor__ {
-  template <typename T0__0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__0__>>* = nullptr>
-  void
-  operator()(const std::tuple<T0__0__>& x, std::ostream* pstream__) const;
-};
 template <typename T0__0__,
           stan::require_all_t<stan::is_stan_scalar<T0__0__>>* = nullptr>
+void foo(const std::tuple<T0__0__>& x, std::ostream* pstream__);
+template <typename T0__0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>>*>
 void foo(const std::tuple<T0__0__>& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__0__>;
   int current_statement__ = 0;
@@ -1880,13 +1877,6 @@ void foo(const std::tuple<T0__0__>& x, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>>*>
-void
-foo_functor__::operator()(const std::tuple<T0__0__>& x, std::ostream*
-                          pstream__) const {
-  return foo(x, pstream__);
 }
 class onepl_model final : public model_base_crtp<onepl_model> {
  private:
@@ -3811,10 +3801,7 @@ static constexpr std::array<const char*, 5> locations_array__ =
   " (in 'tuple-dataonly.stan', line 7, column 2 to column 22)",
   " (in 'tuple-dataonly.stan', line 3, column 4 to column 15)",
   " (in 'tuple-dataonly.stan', line 2, column 37 to line 4, column 3)"};
-struct foo_functor__ {
-  double
-  operator()(const std::tuple<double, double>& x, std::ostream* pstream__) const;
-};
+double foo(const std::tuple<double, double>& x, std::ostream* pstream__);
 double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -3830,11 +3817,6 @@ double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-double
-foo_functor__::operator()(const std::tuple<double, double>& x, std::ostream*
-                          pstream__) const {
-  return foo(x, pstream__);
 }
 class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> {
  private:
@@ -6141,17 +6123,15 @@ static constexpr std::array<const char*, 22> locations_array__ =
   " (in 'tuple-promotion.stan', line 21, column 2 to column 20)",
   " (in 'tuple-promotion.stan', line 3, column 4 to column 37)",
   " (in 'tuple-promotion.stan', line 2, column 53 to line 4, column 3)"};
-struct dummy_functor__ {
-  template <typename T0__0__, typename T0__1__,
-            stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                                stan::is_stan_scalar<T0__1__>>* = nullptr>
-  stan::promote_args_t<T0__0__, T0__1__>
-  operator()(const std::tuple<std::vector<T0__0__>, std::vector<T0__1__>>&
-             test, std::ostream* pstream__) const;
-};
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_stan_scalar<T0__0__>,
                               stan::is_stan_scalar<T0__1__>>* = nullptr>
+stan::promote_args_t<T0__0__, T0__1__>
+dummy(const std::tuple<std::vector<T0__0__>, std::vector<T0__1__>>& test,
+      std::ostream* pstream__);
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+                              stan::is_stan_scalar<T0__1__>>*>
 stan::promote_args_t<T0__0__, T0__1__>
 dummy(const std::tuple<std::vector<T0__0__>, std::vector<T0__1__>>& test,
       std::ostream* pstream__) {
@@ -6170,15 +6150,6 @@ dummy(const std::tuple<std::vector<T0__0__>, std::vector<T0__1__>>& test,
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                              stan::is_stan_scalar<T0__1__>>*>
-stan::promote_args_t<T0__0__, T0__1__>
-dummy_functor__::operator()(const std::tuple<std::vector<T0__0__>,
-                                    std::vector<T0__1__>>& test,
-                            std::ostream* pstream__) const {
-  return dummy(test, pstream__);
 }
 class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model> {
  private:
@@ -6963,53 +6934,40 @@ static constexpr std::array<const char*, 26> locations_array__ =
   " (in 'tuple-templating.stan', line 14, column 38 to line 16, column 3)",
   " (in 'tuple-templating.stan', line 20, column 4 to column 18)",
   " (in 'tuple-templating.stan', line 19, column 57 to line 21, column 3)"};
-struct foo_functor__ {
-  template <typename T0__0__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                                stan::is_vt_not_complex<T0__0__>>* = nullptr>
-  void
-  operator()(const std::tuple<T0__0__>& test, std::ostream* pstream__) const;
-};
-struct overly_complicated_functor__ {
-  template <typename T0__0__, typename T0__1__1__, typename T1__1__,
-            stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                                stan::is_eigen_matrix_dynamic<T0__1__1__>,
-                                stan::is_vt_not_complex<T0__1__1__>,
-                                stan::is_eigen_matrix_dynamic<T1__1__>,
-                                stan::is_vt_not_complex<T1__1__>>* = nullptr>
-  void
-  operator()(const std::tuple<std::vector<Eigen::Matrix<T0__0__,-1,-1>>,
-                     std::tuple<int, T0__1__1__>>& t1,
-             const std::vector<std::tuple<int, T1__1__>>& t2, std::ostream*
-             pstream__) const;
-};
-struct foo3_functor__ {
-  template <typename T0__0__, typename T0__1__,
-            stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                                stan::is_eigen_matrix_dynamic<T0__1__>,
-                                stan::is_vt_not_complex<T0__1__>>* = nullptr>
-  void
-  operator()(const std::tuple<T0__0__, T0__1__>& test, std::ostream*
-             pstream__) const;
-};
-struct foo2_functor__ {
-  template <typename T0__0__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                                stan::is_vt_not_complex<T0__0__>>* = nullptr>
-  void
-  operator()(const std::vector<std::tuple<T0__0__>>& test, std::ostream*
-             pstream__) const;
-};
-struct tsum_functor__ {
-  template <typename T0__1__,
-            stan::require_all_t<stan::is_stan_scalar<T0__1__>>* = nullptr>
-  stan::promote_args_t<T0__1__>
-  operator()(const std::tuple<std::vector<int>, std::vector<T0__1__>>& s,
-             std::ostream* pstream__) const;
-};
 template <typename T0__0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
                               stan::is_vt_not_complex<T0__0__>>* = nullptr>
+void foo(const std::tuple<T0__0__>& test, std::ostream* pstream__);
+template <typename T0__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__1__>>* = nullptr>
+stan::promote_args_t<T0__1__>
+tsum(const std::tuple<std::vector<int>, std::vector<T0__1__>>& s,
+     std::ostream* pstream__);
+template <typename T0__0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>>* = nullptr>
+void
+foo2(const std::vector<std::tuple<T0__0__>>& test, std::ostream* pstream__);
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<T0__1__>,
+                              stan::is_vt_not_complex<T0__1__>>* = nullptr>
+void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__);
+template <typename T0__0__, typename T0__1__1__, typename T1__1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<T0__1__1__>,
+                              stan::is_vt_not_complex<T0__1__1__>,
+                              stan::is_eigen_matrix_dynamic<T1__1__>,
+                              stan::is_vt_not_complex<T1__1__>>* = nullptr>
+void
+overly_complicated(const std::tuple<
+                           std::vector<Eigen::Matrix<T0__0__,-1,-1>>,
+                           std::tuple<int, T0__1__1__>>& t1,
+                   const std::vector<std::tuple<int, T1__1__>>& t2,
+                   std::ostream* pstream__);
+template <typename T0__0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>>*>
 void foo(const std::tuple<T0__0__>& test, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__0__>>;
   int current_statement__ = 0;
@@ -7029,16 +6987,8 @@ void foo(const std::tuple<T0__0__>& test, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__0__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>>*>
-void
-foo_functor__::operator()(const std::tuple<T0__0__>& test, std::ostream*
-                          pstream__) const {
-  return foo(test, pstream__);
-}
 template <typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__1__>>* = nullptr>
+          stan::require_all_t<stan::is_stan_scalar<T0__1__>>*>
 stan::promote_args_t<T0__1__>
 tsum(const std::tuple<std::vector<int>, std::vector<T0__1__>>& s,
      std::ostream* pstream__) {
@@ -7057,17 +7007,9 @@ tsum(const std::tuple<std::vector<int>, std::vector<T0__1__>>& s,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__1__>>*>
-stan::promote_args_t<T0__1__>
-tsum_functor__::operator()(const std::tuple<std::vector<int>,
-                                   std::vector<T0__1__>>& s, std::ostream*
-                           pstream__) const {
-  return tsum(s, pstream__);
-}
 template <typename T0__0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>>* = nullptr>
+                              stan::is_vt_not_complex<T0__0__>>*>
 void
 foo2(const std::vector<std::tuple<T0__0__>>& test, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__0__>>;
@@ -7090,18 +7032,10 @@ foo2(const std::vector<std::tuple<T0__0__>>& test, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__0__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>>*>
-void
-foo2_functor__::operator()(const std::vector<std::tuple<T0__0__>>& test,
-                           std::ostream* pstream__) const {
-  return foo2(test, pstream__);
-}
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_stan_scalar<T0__0__>,
                               stan::is_eigen_matrix_dynamic<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>>* = nullptr>
+                              stan::is_vt_not_complex<T0__1__>>*>
 void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__0__,
                              stan::base_type_t<T0__1__>>;
@@ -7122,21 +7056,12 @@ void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                              stan::is_eigen_matrix_dynamic<T0__1__>,
-                              stan::is_vt_not_complex<T0__1__>>*>
-void
-foo3_functor__::operator()(const std::tuple<T0__0__, T0__1__>& test,
-                           std::ostream* pstream__) const {
-  return foo3(test, pstream__);
-}
 template <typename T0__0__, typename T0__1__1__, typename T1__1__,
           stan::require_all_t<stan::is_stan_scalar<T0__0__>,
                               stan::is_eigen_matrix_dynamic<T0__1__1__>,
                               stan::is_vt_not_complex<T0__1__1__>,
                               stan::is_eigen_matrix_dynamic<T1__1__>,
-                              stan::is_vt_not_complex<T1__1__>>* = nullptr>
+                              stan::is_vt_not_complex<T1__1__>>*>
 void
 overly_complicated(const std::tuple<
                            std::vector<Eigen::Matrix<T0__0__,-1,-1>>,
@@ -7162,23 +7087,6 @@ overly_complicated(const std::tuple<
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__0__, typename T0__1__1__, typename T1__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                              stan::is_eigen_matrix_dynamic<T0__1__1__>,
-                              stan::is_vt_not_complex<T0__1__1__>,
-                              stan::is_eigen_matrix_dynamic<T1__1__>,
-                              stan::is_vt_not_complex<T1__1__>>*>
-void
-overly_complicated_functor__::operator()(const std::tuple<
-                                                 std::vector<
-                                                   Eigen::Matrix<T0__0__,-1,-1>>,
-                                                 std::tuple<int, T0__1__1__>>&
-                                         t1,
-                                         const std::vector<
-                                                 std::tuple<int, T1__1__>>&
-                                         t2, std::ostream* pstream__) const {
-  return overly_complicated(t1, t2, pstream__);
 }
 class tuple_templating_model final : public model_base_crtp<tuple_templating_model> {
  private:

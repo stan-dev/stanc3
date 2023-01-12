@@ -1,8 +1,6 @@
   $ ../../../../../install/default/bin/stanc --debug-mir mother.stan
 ((functions_block
   (((fdrt (UInt)) (fdname foo) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable n UInt))) (fdbody ()) (fdloc <opaque>))
-   ((fdrt (UInt)) (fdname foo) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable n UInt)))
     (fdbody
      (((pattern
@@ -46,12 +44,6 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray UReal))) (fdname sho) (fdsuffix FnPlain)
-    (fdargs
-     ((AutoDiffable t UReal) (AutoDiffable y (UArray UReal))
-      (AutoDiffable theta (UArray UReal)) (DataOnly x (UArray UReal))
-      (DataOnly x_int (UArray UInt))))
-    (fdbody ()) (fdloc <opaque>))
    ((fdrt ((UArray UReal))) (fdname sho) (fdsuffix FnPlain)
     (fdargs
      ((AutoDiffable t UReal) (AutoDiffable y (UArray UReal))

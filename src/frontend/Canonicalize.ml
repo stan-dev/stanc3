@@ -267,7 +267,16 @@ let repair_syntax program settings =
 let canonicalize_program program settings : typed_program =
   let program =
     if settings.deprecations then
-      program
+      let fundefs = userdef_functions program in
+      let drop_forwarddecl = function
+        | {stmt= FunDef {body= {stmt= Skip; _}; funname; arguments; _}; _}
+          when is_redundant_forwarddecl fundefs funname arguments ->
+            false
+        | _ -> true in
+      { program with
+        functionblock=
+          Option.map program.functionblock ~f:(fun x ->
+              {x with stmts= List.filter ~f:drop_forwarddecl x.stmts} ) }
       |> map_program
            (replace_deprecated_stmt (collect_userdef_distributions program))
     else program in

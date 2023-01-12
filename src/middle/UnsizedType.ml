@@ -15,18 +15,17 @@ type t =
   | UComplexMatrix
   | UArray of t
   | UTuple of t list
-  | UFun of
-      (autodifftype * t) list
-      * returntype
-      * bool Fun_kind.suffix
-      * Mem_pattern.t
+  | UFun of argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
   | UMathLibraryFunction
 [@@deriving compare, hash, sexp]
 
 and autodifftype = DataOnly | AutoDiffable | TupleAD of autodifftype list
 [@@deriving compare, hash, sexp]
 
-and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
+and argumentlist = (autodifftype * t) list
+
+and returntype = Void | ReturnType of t
+[@@deriving compare, hash, sexp, equal]
 
 let rec pp_tuple_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data"

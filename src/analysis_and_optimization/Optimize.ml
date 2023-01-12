@@ -460,47 +460,42 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
     ; meta }
 
 let create_function_inline_map adt l =
-  (* We only add the first definition for each function to the inline map.
-     This will make sure we do not inline recursive functions.
-     We also don't want to add any function declaration (as opposed to
-     definitions), because that would replace the function call with a Skip.
-  *)
-  let f (accum, visited) Program.{fdname; fdargs; fdbody; fdrt; _} =
-    (* If we see a function more than once,
-       remove it to prevent inlining of overloaded functions
-    *)
-    if Set.mem visited fdname then (Map.remove accum fdname, visited)
-    else
-      let accum' =
-        match fdbody with
-        | None -> accum
-        | Some fdbody -> (
-            let create_data propto =
-              ( Option.map ~f:(fun x -> Type.Unsized x) fdrt
-              , List.map ~f:(fun (_, name, _) -> name) fdargs
-              , inline_function_statement propto adt accum fdbody ) in
-            match Middle.Utils.with_unnormalized_suffix fdname with
-            | None -> (
-                let data = create_data true in
-                match Map.add accum ~key:fdname ~data with
-                | `Ok m -> m
-                | `Duplicate -> accum )
-            | Some fdname' ->
-                let data = create_data false in
-                let data' = create_data true in
-                let m =
-                  Map.Poly.of_alist_exn [(fdname, data); (fdname', data')] in
-                Map.merge_skewed accum m ~combine:(fun ~key:_ f _ -> f) ) in
-      let visited' = Set.add visited fdname in
-      (accum', visited') in
-  let accum, _ = List.fold l ~init:(Map.Poly.empty, Set.Poly.empty) ~f in
-  accum
+  let f accum Program.{fdname; fdargs; fdbody; fdrt; _} =
+    match fdbody with
+    | None -> accum
+    | Some fdbody -> (
+        let create_data propto =
+          ( Option.map ~f:(fun x -> Type.Unsized x) fdrt
+          , List.map ~f:(fun (_, name, _) -> name) fdargs
+          , inline_function_statement propto adt accum fdbody ) in
+        match Middle.Utils.with_unnormalized_suffix fdname with
+        | None -> (
+            let data = create_data true in
+            match Map.add accum ~key:fdname ~data with
+            | `Ok m -> m
+            | `Duplicate -> accum )
+        | Some fdname' ->
+            let data = create_data false in
+            let data' = create_data true in
+            let m = Map.Poly.of_alist_exn [(fdname, data); (fdname', data')] in
+            Map.merge_skewed accum m ~combine:(fun ~key:_ f _ -> f) ) in
+  List.fold l ~init:Map.Poly.empty ~f
 
 let function_inlining (mir : Program.Typed.t) =
+  (* We add only the functions with a single definition to the inline map.
+     Overloaded functions cannot be inlined. *)
+  let can_inline =
+    List.fold mir.functions_block ~init:String.Map.empty
+      ~f:(fun accum Program.{fdname; _} ->
+        Map.update accum fdname
+          ~f:(Option.value_map ~default:true ~f:(fun _ -> false)) ) in
+  let inlineable_functions =
+    List.filter mir.functions_block ~f:(fun Program.{fdname; _} ->
+        Map.find_exn can_inline fdname ) in
   let dataonly_inline_map =
-    create_function_inline_map UnsizedType.DataOnly mir.functions_block in
+    create_function_inline_map UnsizedType.DataOnly inlineable_functions in
   let autodiff_inline_map =
-    create_function_inline_map UnsizedType.AutoDiffable mir.functions_block
+    create_function_inline_map UnsizedType.AutoDiffable inlineable_functions
   in
   let dataonly_inline_function_statements =
     List.map
