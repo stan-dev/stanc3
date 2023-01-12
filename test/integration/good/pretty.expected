@@ -2900,44 +2900,6 @@ model {
   foo_lp();
 }
 
-  $ ../../../../install/default/bin/stanc --auto-format fun_log_forward_decl.stan
-/**
- * this one's for issue #1768, where there was a duplicate fun decl
- * because of the <false> instantiation of propto
- */
-functions {
-  real n_lpdf(real y);
-  
-  real n_lpdf(real y) {
-    return -0.5 * square(y);
-  }
-}
-parameters {
-  real mu;
-}
-model {
-  mu ~ n();
-  target += n_lpdf(mu /*check*/// both instantiations
-            );
-}
-
-  $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
-functions {
-  int foo(int n);
-  
-  int foo(int n) {
-    if (n == 0) 
-      return 1;
-    return n * foo(n - 1);
-  }
-}
-parameters {
-  real y;
-}
-model {
-  y ~ normal(0, 1);
-}
-
   $ ../../../../install/default/bin/stanc --auto-format functions-good-void.stan
 functions {
   void linear_regression_lp(vector x, vector y, real alpha, real beta,
@@ -4052,7 +4014,6 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format multiple_funs.stan
 functions {
-  int foo(int a);
   int foo(int a) {
     return a;
   }
@@ -4503,6 +4464,23 @@ model {
   $ ../../../../install/default/bin/stanc --auto-format propto-good.stan
 model {
   target += normal_lupdf(1 | 0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format recursive-functions.stan
+functions {
+  // no forward declarations
+  real foo(real baz) {
+    return bar(baz);
+  }
+  real bar(real bar) {
+    return foo(bar);
+  }
+  real baz(real foo) {
+    return baz(foo);
+  }
+}
+model {
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format rng_loc.stan
@@ -5540,9 +5518,6 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format validate_functions.stan
 functions {
-  real my_fun(real x);
-  real my_fun2(real x, real y);
-  real my_fun3(data real x);
   real my_fun(real x) {
     return 2 * x;
   }

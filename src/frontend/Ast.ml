@@ -302,6 +302,11 @@ let rec lvalue_of_expr {expr; emeta} =
 let rec id_of_lvalue {lval; _} =
   match lval with LVariable s -> s | LIndexed (l, _) -> id_of_lvalue l
 
+let type_of_arguments :
+       (UnsizedType.autodifftype * UnsizedType.t * 'a) list
+    -> UnsizedType.argumentlist =
+  List.map ~f:(fun (a, t, _) -> (a, t))
+
 (* XXX: the parser produces inaccurate locations: smeta.loc.begin_loc is the last
         token before the current statement and all the whitespace between two statements
         appears as if it were part of the second statement.

@@ -4,9 +4,9 @@ functions {
   }
 }
 parameters {
-  real foo;  // should be name conflict here
+  real foo;
 }
 model {
   foo ~ normal(0.0, 1.0);
-  foo();
+  foo();  // the function has been shadowed, this `foo` is a number
 }
