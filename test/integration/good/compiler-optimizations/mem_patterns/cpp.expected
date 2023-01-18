@@ -1693,8 +1693,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                 std::vector<size_t>{static_cast<size_t>(K),
                   static_cast<size_t>(K)},
                 std::vector<size_t>{static_cast<size_t>(K),
-                  static_cast<size_t>(K)},
-                std::vector<size_t>{}, std::vector<size_t>{},
+                  static_cast<size_t>(K)}, std::vector<size_t>{},
+                std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(N)},
                 std::vector<size_t>{static_cast<size_t>(Nr)},
                 std::vector<size_t>{static_cast<size_t>(Nr)},
@@ -2004,30 +2004,16 @@ class constraints_model final : public model_base_crtp<constraints_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 22> names__{"high_low_est", "b", "h",
-                                                   "ar", "ma", "phi_beta",
-                                                   "sigma2", "Intercept",
-                                                   "mean_price",
-                                                   "sigma_price", "theta",
-                                                   "upper_test",
-                                                   "lower_upper_test",
-                                                   "row_vec_lower_upper_test",
-                                                   "offset_mult_test",
-                                                   "ordered_test",
-                                                   "unit_vec_test",
-                                                   "pos_ordered_test",
-                                                   "corr_matrix_test",
-                                                   "cov_matrix_test",
-                                                   "chol_fac_cov_test",
-                                                   "chol_fac_corr_test"};
-    const std::array<Eigen::Index, 22> constrain_param_sizes__{N, K, Nr, 2,
-                                                                1, 1, 1, 1,
-                                                                N, N, 1, N,
-                                                                N, N, N, N,
-                                                                N, N, (N *
-                                                                N), (N * N),
-                                                                (K * K), (K *
-                                                                K)};
+    constexpr std::array<const char*, 22>
+      names__{"high_low_est", "b", "h", "ar", "ma", "phi_beta", "sigma2",
+              "Intercept", "mean_price", "sigma_price", "theta",
+              "upper_test", "lower_upper_test", "row_vec_lower_upper_test",
+              "offset_mult_test", "ordered_test", "unit_vec_test",
+              "pos_ordered_test", "corr_matrix_test", "cov_matrix_test",
+              "chol_fac_cov_test", "chol_fac_corr_test"};
+    const std::array<Eigen::Index, 22>
+      constrain_param_sizes__{N, K, Nr, 2, 1, 1, 1, 1, N, N, 1, N, N, N, N,
+                              N, N, N, (N * N), (N * N), (K * K), (K * K)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -2699,16 +2685,12 @@ static constexpr std::array<const char*, 116> locations_array__ =
   " (in 'indexing.stan', line 2, column 22 to line 4, column 3)",
   " (in 'indexing.stan', line 6, column 4 to column 13)",
   " (in 'indexing.stan', line 5, column 27 to line 7, column 3)"};
-struct udf_fun_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_col_vector<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-  operator()(const T0__& A, std::ostream* pstream__) const;
-};
-struct mask_fun_functor__ {
-  int operator()(const int& i, std::ostream* pstream__) const;
-};
+int mask_fun(const int& i, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_col_vector<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
+udf_fun(const T0__& A_arg__, std::ostream* pstream__);
 int mask_fun(const int& i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -2725,13 +2707,9 @@ int mask_fun(const int& i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-int
-mask_fun_functor__::operator()(const int& i, std::ostream* pstream__) const {
-  return mask_fun(i, pstream__);
-}
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>* = nullptr>
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 udf_fun(const T0__& A_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -2749,13 +2727,6 @@ udf_fun(const T0__& A_arg__, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__,
-          stan::require_all_t<stan::is_col_vector<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
-udf_fun_functor__::operator()(const T0__& A, std::ostream* pstream__) const {
-  return udf_fun(A, pstream__);
 }
 class indexing_model final : public model_base_crtp<indexing_model> {
  private:
@@ -3078,7 +3049,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                              stan::conditional_var_value_t<local_scalar_t__,
                                Eigen::Matrix<local_scalar_t__,-1,1>>>(N);
       stan::conditional_var_value_t<local_scalar_t__,
-        Eigen::Matrix<local_scalar_t__,-1,1>> p_soa_used_with_aos_in_excluded_fun =
+        Eigen::Matrix<local_scalar_t__,-1,1>>
+        p_soa_used_with_aos_in_excluded_fun =
         stan::conditional_var_value_t<local_scalar_t__,
           Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                   std::numeric_limits<double>::quiet_NaN(
@@ -3088,7 +3060,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                               stan::conditional_var_value_t<local_scalar_t__,
                                                 Eigen::Matrix<local_scalar_t__,-1,1>>>(N);
       stan::conditional_var_value_t<local_scalar_t__,
-        Eigen::Matrix<local_scalar_t__,-1,-1>> p_soa_loop_mat_multi_uni_uni_idx =
+        Eigen::Matrix<local_scalar_t__,-1,-1>>
+        p_soa_loop_mat_multi_uni_uni_idx =
         stan::conditional_var_value_t<local_scalar_t__,
           Eigen::Matrix<local_scalar_t__,-1,-1>>(Eigen::Matrix<double,-1,-1>::Constant(N,
                                                    M,
@@ -3130,13 +3103,15 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       current_statement__ = 17;
       p_aos_mat = in__.template read<
                     Eigen::Matrix<local_scalar_t__,-1,-1>>(N, M);
-      Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_mat_pass_func_outer_single_indexed1 =
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        p_aos_mat_pass_func_outer_single_indexed1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
       current_statement__ = 18;
       p_aos_mat_pass_func_outer_single_indexed1 = in__.template read<
                                                     Eigen::Matrix<local_scalar_t__,-1,-1>>(N,
                                                     M);
-      Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_mat_pass_func_outer_single_indexed2 =
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        p_aos_mat_pass_func_outer_single_indexed2 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
       current_statement__ = 19;
       p_aos_mat_pass_func_outer_single_indexed2 = in__.template read<
@@ -3205,7 +3180,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         stan::math::validate_non_negative_index(
           "tp_soa_used_with_aos_in_excluded_fun", "N", N);
         stan::conditional_var_value_t<local_scalar_t__,
-          Eigen::Matrix<local_scalar_t__,-1,1>> tp_soa_used_with_aos_in_excluded_fun =
+          Eigen::Matrix<local_scalar_t__,-1,1>>
+          tp_soa_used_with_aos_in_excluded_fun =
           stan::conditional_var_value_t<local_scalar_t__,
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                     std::numeric_limits<double>::quiet_NaN(
@@ -3284,7 +3260,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         stan::math::validate_non_negative_index(
           "tp_soa_single_assign_from_soa", "N", N);
         stan::conditional_var_value_t<local_scalar_t__,
-          Eigen::Matrix<local_scalar_t__,-1,1>> tp_soa_single_assign_from_soa =
+          Eigen::Matrix<local_scalar_t__,-1,1>>
+          tp_soa_single_assign_from_soa =
           stan::conditional_var_value_t<local_scalar_t__,
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                     std::numeric_limits<double>::quiet_NaN(
@@ -3390,7 +3367,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         current_statement__ = 60;
         stan::math::validate_non_negative_index(
           "tp_aos_loop_vec_v_multi_uni_idx", "N", N);
-        Eigen::Matrix<local_scalar_t__,-1,1> tp_aos_loop_vec_v_multi_uni_idx =
+        Eigen::Matrix<local_scalar_t__,-1,1>
+          tp_aos_loop_vec_v_multi_uni_idx =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
         current_statement__ = 68;
         for (int i = 1; i <= N; ++i) {
@@ -3792,7 +3770,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
           stan::model::index_uni(sym1__));
       }
       out__.write(p_soa_rhs_loop_mul);
-      Eigen::Matrix<local_scalar_t__,-1,1> p_soa_used_with_aos_in_excluded_fun =
+      Eigen::Matrix<local_scalar_t__,-1,1>
+        p_soa_used_with_aos_in_excluded_fun =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         stan::model::assign(p_soa_used_with_aos_in_excluded_fun,
@@ -3801,7 +3780,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
           stan::model::index_uni(sym1__));
       }
       out__.write(p_soa_used_with_aos_in_excluded_fun);
-      Eigen::Matrix<local_scalar_t__,-1,-1> p_soa_loop_mat_multi_uni_uni_idx =
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        p_soa_loop_mat_multi_uni_uni_idx =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -3869,7 +3849,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_aos_mat);
-      Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_mat_pass_func_outer_single_indexed1 =
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        p_aos_mat_pass_func_outer_single_indexed1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -3880,7 +3861,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_aos_mat_pass_func_outer_single_indexed1);
-      Eigen::Matrix<local_scalar_t__,-1,-1> p_aos_mat_pass_func_outer_single_indexed2 =
+      Eigen::Matrix<local_scalar_t__,-1,-1>
+        p_aos_mat_pass_func_outer_single_indexed2 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -3966,8 +3948,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                 std::vector<size_t>{static_cast<size_t>(N),
                   static_cast<size_t>(M)},
                 std::vector<size_t>{static_cast<size_t>(N),
-                  static_cast<size_t>(M)},
-                std::vector<size_t>{},
+                  static_cast<size_t>(M)}, std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(M)},
                 std::vector<size_t>{static_cast<size_t>(M)},
                 std::vector<size_t>{static_cast<size_t>(M)},
@@ -4313,36 +4294,22 @@ class indexing_model final : public model_base_crtp<indexing_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 21> names__{"alpha", "p_soa_vec_v",
-                                                   "p_soa_mat",
-                                                   "p_soa_arr_vec_v",
-                                                   "p_soa_mat_uni_col_idx",
-                                                   "p_soa_vec_uni_idx",
-                                                   "p_soa_loop_mat_uni_col_idx",
-                                                   "p_soa_lhs_loop_mul",
-                                                   "p_soa_rhs_loop_mul",
-                                                   "p_soa_used_with_aos_in_excluded_fun",
-                                                   "p_soa_loop_mat_multi_uni_uni_idx",
-                                                   "p_aos_vec_v_assign_to_aos",
-                                                   "p_aos_vec_v_tp_fails_func",
-                                                   "p_aos_loop_vec_v_uni_idx",
-                                                   "p_aos_fail_assign_from_top_idx",
-                                                   "p_aos_loop_mat_uni_uni_idx",
-                                                   "p_aos_mat",
-                                                   "p_aos_mat_pass_func_outer_single_indexed1",
-                                                   "p_aos_mat_pass_func_outer_single_indexed2",
-                                                   "p_aos_mat_fail_uni_uni_idx1",
-                                                   "p_aos_mat_fail_uni_uni_idx2"};
-    const std::array<Eigen::Index, 21> constrain_param_sizes__{1, M, (N * M),
-                                                                (10 * N), (N
-                                                                * M), N, (N *
-                                                                M), N, N, N,
-                                                                (N * M), M,
-                                                                M, M, M, (N *
-                                                                M), (N * M),
-                                                                (N * M), (N *
-                                                                M), (N * M),
-                                                                (N * M)};
+    constexpr std::array<const char*, 21>
+      names__{"alpha", "p_soa_vec_v", "p_soa_mat", "p_soa_arr_vec_v",
+              "p_soa_mat_uni_col_idx", "p_soa_vec_uni_idx",
+              "p_soa_loop_mat_uni_col_idx", "p_soa_lhs_loop_mul",
+              "p_soa_rhs_loop_mul", "p_soa_used_with_aos_in_excluded_fun",
+              "p_soa_loop_mat_multi_uni_uni_idx",
+              "p_aos_vec_v_assign_to_aos", "p_aos_vec_v_tp_fails_func",
+              "p_aos_loop_vec_v_uni_idx", "p_aos_fail_assign_from_top_idx",
+              "p_aos_loop_mat_uni_uni_idx", "p_aos_mat",
+              "p_aos_mat_pass_func_outer_single_indexed1",
+              "p_aos_mat_pass_func_outer_single_indexed2",
+              "p_aos_mat_fail_uni_uni_idx1", "p_aos_mat_fail_uni_uni_idx2"};
+    const std::array<Eigen::Index, 21>
+      constrain_param_sizes__{1, M, (N * M), (10 * N), (N * M), N, (N * M),
+                              N, N, N, (N * M), M, M, M, M, (N * M), (N * M),
+                              (N * M), (N * M), (N * M), (N * M)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -4491,7 +4458,8 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
         stan::math::validate_non_negative_index(
           "tp_soa_multi_idx_assign_in_loop", "N", N);
         stan::conditional_var_value_t<local_scalar_t__,
-          Eigen::Matrix<local_scalar_t__,-1,1>> tp_soa_multi_idx_assign_in_loop =
+          Eigen::Matrix<local_scalar_t__,-1,1>>
+          tp_soa_multi_idx_assign_in_loop =
           stan::conditional_var_value_t<local_scalar_t__,
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                     std::numeric_limits<double>::quiet_NaN(
@@ -4516,7 +4484,8 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
         stan::math::validate_non_negative_index(
           "tp_soa_single_idx_in_upfrom_idx", "N", N);
         stan::conditional_var_value_t<local_scalar_t__,
-          Eigen::Matrix<local_scalar_t__,-1,1>> tp_soa_single_idx_in_upfrom_idx =
+          Eigen::Matrix<local_scalar_t__,-1,1>>
+          tp_soa_single_idx_in_upfrom_idx =
           stan::conditional_var_value_t<local_scalar_t__,
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                     std::numeric_limits<double>::quiet_NaN(
@@ -4719,8 +4688,8 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 2> names__{"alpha",
-                                                  "p_aos_loop_single_idx"};
+    constexpr std::array<const char*, 2>
+      names__{"alpha", "p_aos_loop_single_idx"};
     const std::array<Eigen::Index, 2> constrain_param_sizes__{1, 10};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
@@ -4774,24 +4743,21 @@ static constexpr std::array<const char*, 12> locations_array__ =
   " (in 'reductions_allowed.stan', line 2, column 31 to line 4, column 5)",
   " (in 'reductions_allowed.stan', line 7, column 8 to column 25)",
   " (in 'reductions_allowed.stan', line 6, column 48 to line 8, column 5)"};
-struct nono_func_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-  operator()(const T0__& x, std::ostream* pstream__) const;
-};
-struct okay_reduction_functor__ {
-  template <typename T0__, typename T1__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_eigen_matrix_dynamic<T1__>,
-                                stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
-  operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
-};
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
+nono_func(const T0__& x_arg__, std::ostream* pstream__);
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_eigen_matrix_dynamic<T1__>,
+                              stan::is_vt_not_complex<T1__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
+okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
+               pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
 nono_func(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -4810,17 +4776,10 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) const {
-  return nono_func(x, pstream__);
-}
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_eigen_matrix_dynamic<T1__>,
-                              stan::is_vt_not_complex<T1__>>* = nullptr>
+                              stan::is_vt_not_complex<T1__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
 okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
                pstream__) {
@@ -4840,15 +4799,6 @@ okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__, typename T1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_eigen_matrix_dynamic<T1__>,
-                              stan::is_vt_not_complex<T1__>>*>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
-okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
-                                     std::ostream* pstream__) const {
-  return okay_reduction(sum_x, y, pstream__);
 }
 class reductions_allowed_model final : public model_base_crtp<reductions_allowed_model> {
  private:
@@ -5114,8 +5064,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
                 std::vector<size_t>{static_cast<size_t>(5),
                   static_cast<size_t>(10)},
                 std::vector<size_t>{static_cast<size_t>(5),
-                  static_cast<size_t>(10)},
-                std::vector<size_t>{},
+                  static_cast<size_t>(10)}, std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(5),
                   static_cast<size_t>(10)},
                 std::vector<size_t>{static_cast<size_t>(5),
@@ -5268,8 +5217,8 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
     constexpr std::array<const char*, 3> names__{"soa_x", "aos_x", "aos_y"};
-    const std::array<Eigen::Index, 3> constrain_param_sizes__{(5 * 10), (5 *
-                                                               10), (5 * 10)};
+    const std::array<Eigen::Index, 3>
+      constrain_param_sizes__{(5 * 10), (5 * 10), (5 * 10)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -5323,16 +5272,12 @@ static constexpr std::array<const char*, 13> locations_array__ =
   " (in 'return_types_and_udfs_demotes.stan', line 10, column 29 to line 13, column 5)",
   " (in 'return_types_and_udfs_demotes.stan', line 15, column 8 to column 17)",
   " (in 'return_types_and_udfs_demotes.stan', line 14, column 39 to line 16, column 5)"};
-struct mat_ret_user_func_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-  operator()(const T0__& A, std::ostream* pstream__) const;
-};
-struct empty_user_func_functor__ {
-  Eigen::Matrix<double,-1,-1> operator()(std::ostream* pstream__) const;
-};
+Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
+mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__);
 Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -5351,13 +5296,9 @@ Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-Eigen::Matrix<double,-1,-1>
-empty_user_func_functor__::operator()(std::ostream* pstream__) const {
-  return empty_user_func(pstream__);
-}
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                              stan::is_vt_not_complex<T0__>>* = nullptr>
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
 mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -5375,14 +5316,6 @@ mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-mat_ret_user_func_functor__::operator()(const T0__& A, std::ostream*
-                                        pstream__) const {
-  return mat_ret_user_func(A, pstream__);
 }
 class return_types_and_udfs_demotes_model final : public model_base_crtp<return_types_and_udfs_demotes_model> {
  private:
@@ -5827,8 +5760,8 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
     constexpr std::array<const char*, 2> names__{"row_soa", "udf_input_aos"};
-    const std::array<Eigen::Index, 2> constrain_param_sizes__{(10 * 10), (10
-                                                               * 10)};
+    const std::array<Eigen::Index, 2>
+      constrain_param_sizes__{(10 * 10), (10 * 10)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -6121,8 +6054,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
                                                                     10),
                                                  static_cast<size_t>(10)},
                 std::vector<size_t>{static_cast<size_t>(10),
-                  static_cast<size_t>(10)},
-                std::vector<size_t>{}};
+                  static_cast<size_t>(10)}, std::vector<size_t>{}};
   }
   inline void
   constrained_param_names(std::vector<std::string>& param_names__, bool
@@ -6231,8 +6163,8 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
     constexpr std::array<const char*, 2> names__{"aos_p", "soa_p"};
-    const std::array<Eigen::Index, 2> constrain_param_sizes__{(10 * 10), (10
-                                                               * 10)};
+    const std::array<Eigen::Index, 2>
+      constrain_param_sizes__{(10 * 10), (10 * 10)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);
@@ -6283,24 +6215,21 @@ static constexpr std::array<const char*, 10> locations_array__ =
   " (in 'tp_reused.stan', line 2, column 31 to line 4, column 5)",
   " (in 'tp_reused.stan', line 7, column 8 to column 25)",
   " (in 'tp_reused.stan', line 6, column 48 to line 8, column 5)"};
-struct nono_func_functor__ {
-  template <typename T0__,
-            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                                stan::is_vt_not_complex<T0__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-  operator()(const T0__& x, std::ostream* pstream__) const;
-};
-struct okay_reduction_functor__ {
-  template <typename T0__, typename T1__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_eigen_matrix_dynamic<T1__>,
-                                stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
-  operator()(const T0__& sum_x, const T1__& y, std::ostream* pstream__) const;
-};
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
+nono_func(const T0__& x_arg__, std::ostream* pstream__);
+template <typename T0__, typename T1__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>,
+                              stan::is_eigen_matrix_dynamic<T1__>,
+                              stan::is_vt_not_complex<T1__>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
+okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
+               pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_not_complex<T0__>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
 nono_func(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
@@ -6319,17 +6248,10 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__,
-          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
-                              stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
-nono_func_functor__::operator()(const T0__& x, std::ostream* pstream__) const {
-  return nono_func(x, pstream__);
-}
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               stan::is_eigen_matrix_dynamic<T1__>,
-                              stan::is_vt_not_complex<T1__>>* = nullptr>
+                              stan::is_vt_not_complex<T1__>>*>
 Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
 okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
                pstream__) {
@@ -6349,15 +6271,6 @@ okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
-}
-template <typename T0__, typename T1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_eigen_matrix_dynamic<T1__>,
-                              stan::is_vt_not_complex<T1__>>*>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,-1>
-okay_reduction_functor__::operator()(const T0__& sum_x, const T1__& y,
-                                     std::ostream* pstream__) const {
-  return okay_reduction(sum_x, y, pstream__);
 }
 class tp_reused_model final : public model_base_crtp<tp_reused_model> {
  private:
@@ -6685,8 +6598,8 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
     constexpr std::array<const char*, 2> names__{"first_pass_soa_x", "aos_x"};
-    const std::array<Eigen::Index, 2> constrain_param_sizes__{(5 * 10), (5 *
-                                                               10)};
+    const std::array<Eigen::Index, 2>
+      constrain_param_sizes__{(5 * 10), (5 * 10)};
     const auto num_constrained_params__ =
       std::accumulate(constrain_param_sizes__.begin(),
         constrain_param_sizes__.end(), 0);

@@ -1,8 +1,8 @@
 functions {
 
-  // test some forward decls
-  real foo(vector p);
-  real foo(int p);
+
+
+
 
   real foo(int p){
     return p + 1.0;

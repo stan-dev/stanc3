@@ -15,6 +15,17 @@ module type DEPRECATION_ANALYZER = sig
   val is_deprecated_distribution : string -> bool
   val rename_deprecated_distribution : string -> string
   val rename_deprecated_function : string -> string
+
+  val userdef_functions :
+       ('a, 'b, 'c, 'd) statement_with program
+    -> (string * Middle.UnsizedType.argumentlist) list
+
+  val is_redundant_forwarddecl :
+       (string * Middle.UnsizedType.argumentlist) list
+    -> identifier
+    -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * 'a) list
+    -> bool
+
   val userdef_distributions : untyped_statement block option -> string list
   val collect_warnings : typed_program -> Warnings.t list
 end
@@ -40,6 +51,21 @@ struct
          ~f:(fun Std_library_utils.{replacement; canonicalize_away; _} ->
            if canonicalize_away then replacement else name )
     |> Option.value ~default:name
+
+  let userdef_functions program =
+    match program.functionblock with
+    | None -> []
+    | Some {stmts; _} ->
+        List.filter_map stmts ~f:(function
+          | {stmt= FunDef {body= {stmt= Skip; _}; _}; _} -> None
+          | {stmt= FunDef {funname; arguments; _}; _} ->
+              Some (funname.name, Ast.type_of_arguments arguments)
+          | _ -> None )
+
+  let is_redundant_forwarddecl fundefs funname arguments =
+    let equal (id1, a1) (id2, a2) =
+      String.equal id1 id2 && UnsizedType.equal_argumentlist a1 a2 in
+    List.mem ~equal fundefs (funname.name, Ast.type_of_arguments arguments)
 
   let rename_deprecated_distribution =
     rename_deprecated StdLibrary.deprecated_distributions
@@ -140,9 +166,17 @@ struct
   let collect_deprecated_lval acc l =
     fold_lval_with collect_deprecated_expr (fun x _ -> x) acc l
 
-  let rec collect_deprecated_stmt (acc : (Location_span.t * string) list)
-      {stmt; _} : (Location_span.t * string) list =
+  let rec collect_deprecated_stmt fundefs
+      (acc : (Location_span.t * string) list) {stmt; _} :
+      (Location_span.t * string) list =
     match stmt with
+    | FunDef {body= {stmt= Skip; _}; funname; arguments; _}
+      when is_redundant_forwarddecl fundefs funname arguments ->
+        acc
+        @ [ ( funname.id_loc
+            , "Functions do not need to be declared before definition; all \
+               user defined function names are always in scope regardless of \
+               defintion order." ) ]
     | FunDef
         { body
         ; funname= {name; id_loc}
@@ -158,8 +192,8 @@ struct
                 ^ "' instead if you intend on using this function in ~ \
                    statements or calling unnormalized probability functions \
                    inside of it." ) ] in
-        collect_deprecated_stmt acc body
-    | FunDef {body; _} -> collect_deprecated_stmt acc body
+        collect_deprecated_stmt fundefs acc body
+    | FunDef {body; _} -> collect_deprecated_stmt fundefs acc body
     | IfThenElse ({emeta= {type_= UReal; loc; _}; _}, ifb, elseb) ->
         let acc =
           acc
@@ -168,8 +202,10 @@ struct
                  in Stan 2.34. Use an explicit != 0 comparison instead. This \
                  can be automatically changed using the canonicalize flag for \
                  stanc" ) ] in
-        let acc = collect_deprecated_stmt acc ifb in
-        Option.value_map ~default:acc ~f:(collect_deprecated_stmt acc) elseb
+        let acc = collect_deprecated_stmt fundefs acc ifb in
+        Option.value_map ~default:acc
+          ~f:(collect_deprecated_stmt fundefs acc)
+          elseb
     | While ({emeta= {type_= UReal; loc; _}; _}, body) ->
         let acc =
           acc
@@ -178,9 +214,10 @@ struct
                  in Stan 2.34. Use an explicit != 0 comparison instead. This \
                  can be automatically changed using the canonicalize flag for \
                  stanc" ) ] in
-        collect_deprecated_stmt acc body
+        collect_deprecated_stmt fundefs acc body
     | _ ->
-        fold_statement collect_deprecated_expr collect_deprecated_stmt
+        fold_statement collect_deprecated_expr
+          (collect_deprecated_stmt fundefs)
           collect_deprecated_lval
           (fun l _ -> l)
           acc stmt
@@ -192,5 +229,6 @@ struct
     |> String.Map.of_alist_exn
 
   let collect_warnings (program : typed_program) =
-    fold_program collect_deprecated_stmt [] program
+    let fundefs = userdef_functions program in
+    fold_program (collect_deprecated_stmt fundefs) [] program
 end

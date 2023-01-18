@@ -220,7 +220,7 @@ generated quantities {
                                                      x_r, x_i);
 }
 
-Warning in 'deprecated.stan', line 36, column 2: Nested multi-indexing on the
+Warning in 'deprecated.stan', line 37, column 2: Nested multi-indexing on the
     left hand side of assignment does not behave the same as nested indexing
     in expressions. This is considered a bug and will be disallowed in Stan
     2.32.0. The indexing can be automatically fixed using the canonicalize

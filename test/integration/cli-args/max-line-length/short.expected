@@ -7,20 +7,12 @@
 //      generate_transform_inits_method(prog.parameter_decl_, o);
 
 functions {
-  int foo(int n);
-  
   int foo(int n) {
     if (n == 0) {
       return 1;
     }
     return n * foo(n - 1);
   }
-  
-  array[] real sho(real t,
-                   array[] real y,
-                   array[] real theta,
-                   data array[] real x,
-                   data array[] int x_int);
   
   array[] real sho(real t,
                    array[] real y,

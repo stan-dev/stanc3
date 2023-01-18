@@ -1,5 +1,4 @@
 open Core_kernel
-open Core_kernel.Poly
 open Frontend
 open Middle
 open Analysis_and_optimization
@@ -15,17 +14,6 @@ module Ast2Mir = Ast_to_Mir.Make (Stan_math_library)
 module Optimizer = Optimize.Make (Stan_math_library)
 
 let version = "%%NAME%% %%VERSION%%"
-
-let warn_uninitialized_msgs (uninit_vars : (Location_span.t * string) Set.Poly.t)
-    =
-  let show_var_info (span, var_name) =
-    Location_span.to_string span
-    ^ ":\n" ^ "  Warning: The variable '" ^ var_name
-    ^ "' may not have been initialized.\n" in
-  let filtered_uninit_vars =
-    Set.filter ~f:(fun (span, _) -> span <> Location_span.empty) uninit_vars
-  in
-  Set.Poly.(to_list (map filtered_uninit_vars ~f:show_var_info))
 
 let stan2cpp model_name model_string is_flag_set flag_val =
   Common.Gensym.reset_danger_use_cautiously () ;
@@ -137,6 +125,11 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           r.return
             (Result.Ok (Fmt.str "%a" Program.Typed.pp tx_mir), warnings, []) ;
         let cpp = Lower_program.lower_program opt_mir in
+        if is_flag_set "debug-lir" then
+          r.return
+            ( Result.Ok (Sexp.to_string_hum [%sexp (cpp : Cpp.program)])
+            , warnings
+            , [] ) ;
         let cpp_str = Fmt.(to_to_string Cpp.Printing.pp_program) cpp in
         let uninit_warnings =
           if is_flag_set "warn-uninitialized" then

@@ -1,5 +1,4 @@
 functions {
-  int foo(int a);
   int foo(int a) {
     return a;
   }

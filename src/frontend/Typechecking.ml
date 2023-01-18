@@ -137,9 +137,8 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
       Semantic_error.ident_has_unnormalized_suffix loc name |> error
     else if
       List.exists (Env.find tenv name) ~f:(function
-        | {kind= `StanMath; _} ->
-            false (* user variables can shadow library names *)
-        | _ -> true )
+        | {kind= `Variable _; _} -> true
+        | _ -> false (* user variables can shadow function names *) )
     then Semantic_error.ident_in_use loc name |> error
 
   (** verify that the variable being declared is previous unused. *)
@@ -1529,15 +1528,9 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
     let arg_types = List.map ~f:(fun (w, y, _) -> (w, y)) args in
     let arg_identifiers = List.map ~f:(fun (_, _, z) -> z) args in
     let arg_names = List.map ~f:(fun x -> x.name) arg_identifiers in
-    verify_fundef_overloaded loc tenv id arg_types return_ty ;
-    let defined = get_fn_decl_or_defn loc tenv id arg_types return_ty body in
     verify_fundef_dist_rt loc id return_ty ;
     verify_pdf_fundef_first_arg_ty loc id arg_types ;
     verify_pmf_fundef_first_arg_ty loc id arg_types ;
-    let tenv =
-      add_function tenv id.name
-        (UFun (arg_types, return_ty, Fun_kind.suffix_from_name id.name, AoS))
-        defined in
     List.iter
       ~f:(fun id -> verify_name_fresh tenv id ~is_udf:false)
       arg_identifiers ;
@@ -1633,6 +1626,29 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
     | Some {stmts= []; _} | None -> ()
     | Some {stmts= ls; _} -> List.iter ~f:verify_fun_def_body_in_block ls
 
+  let add_userdefined_functions tenv stmts_opt =
+    match stmts_opt with
+    | None -> tenv
+    | Some {stmts; _} ->
+        let f tenv (s : Ast.untyped_statement) =
+          match s with
+          | {stmt= FunDef {returntype; funname; arguments; body}; smeta= {loc}}
+            ->
+              let arg_types = Ast.type_of_arguments arguments in
+              verify_fundef_overloaded loc tenv funname arg_types returntype ;
+              let defined =
+                get_fn_decl_or_defn loc tenv funname arg_types returntype body
+              in
+              add_function tenv funname.name
+                (UFun
+                   ( arg_types
+                   , returntype
+                   , Fun_kind.suffix_from_name funname.name
+                   , AoS ) )
+                defined
+          | _ -> tenv in
+        List.fold ~init:tenv ~f stmts
+
   let check_toplevel_block block tenv stmts_opt =
     let cf = context block in
     match stmts_opt with
@@ -1665,6 +1681,7 @@ module Make (StdLibrary : Std_library_utils.Library) : TYPECHECKER = struct
     warnings := [] ;
     (* create a new type environment which has only stan-math functions *)
     let tenv = std_library_tenv in
+    let tenv = add_userdefined_functions tenv fb in
     let tenv, typed_fb = check_toplevel_block Functions tenv fb in
     verify_functions_have_defn tenv typed_fb ;
     let tenv, typed_db = check_toplevel_block Data tenv db in

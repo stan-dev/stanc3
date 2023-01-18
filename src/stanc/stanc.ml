@@ -36,6 +36,7 @@ let dump_tx_mir = ref false
 let dump_tx_mir_pretty = ref false
 let dump_opt_mir = ref false
 let dump_opt_mir_pretty = ref false
+let dump_lir = ref false
 let dump_mem_pattern = ref false
 let dump_stan_math_sigs = ref false
 let dump_stan_math_distributions = ref false
@@ -98,6 +99,10 @@ let options =
       , Arg.Set dump_opt_mir_pretty
       , " For debugging purposes: pretty print the MIR after it's been \
          optimized. Only has an effect when optimizations are turned on." )
+    ; ( "--debug-lir"
+      , Arg.Set dump_lir
+      , " For debugging purposes: print the C++ LIR as a s-expression. Mainly \
+         for comparison with --print-cpp" )
     ; ( "--debug-mem-patterns"
       , Arg.Set dump_mem_pattern
       , " For debugging purposes: print a list of matrix variables and their \
@@ -345,6 +350,8 @@ let use_file filename =
     if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt_mir ;
     if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
     let cpp = Lower_program.lower_program opt_mir in
+    if !dump_lir then
+      Sexp.pp_hum Format.std_formatter [%sexp (cpp : Cpp.program)] ;
     let cpp_str = Fmt.(to_to_string Cpp.Printing.pp_program) cpp in
     Out_channel.write_all !output_file ~data:cpp_str ;
     if !print_model_cpp then print_endline cpp_str )

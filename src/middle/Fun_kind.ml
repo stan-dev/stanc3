@@ -6,7 +6,7 @@ open Core_kernel
 open Core_kernel.Poly
 
 type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
-[@@deriving compare, sexp, hash, map]
+[@@deriving compare, sexp, hash, map, equal]
 
 let without_propto = map_suffix (function true | false -> ())
 

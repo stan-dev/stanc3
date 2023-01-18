@@ -1,4 +1,5 @@
 functions {
+  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int);
   real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
     real dydt[2];
     dydt[1] <- y[2];
