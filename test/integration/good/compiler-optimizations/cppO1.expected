@@ -1530,7 +1530,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
+      pos__ = 1;
       current_statement__ = 16;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
@@ -1581,12 +1582,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       {
         current_statement__ = 2;
         stan::math::validate_non_negative_index("vec", "N", N);
-        stan::conditional_var_value_t<local_scalar_t__,
-          Eigen::Matrix<local_scalar_t__,1,-1>> vec =
-          stan::conditional_var_value_t<local_scalar_t__,
-            Eigen::Matrix<local_scalar_t__,1,-1>>(Eigen::Matrix<double,1,-1>::Constant(N,
-                                                    std::numeric_limits<double>::quiet_NaN(
-                                                      )));
+        Eigen::Matrix<local_scalar_t__,1,-1> vec =
+          Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
         current_statement__ = 7;
         {
           stan::math::profile<local_scalar_t__> profile__("test",
@@ -1604,12 +1601,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
         lp_accum__.add(stan::math::sum(vec));
         current_statement__ = 9;
         stan::math::validate_non_negative_index("vec3", "N", N);
-        stan::conditional_var_value_t<local_scalar_t__,
-          Eigen::Matrix<local_scalar_t__,1,-1>> vec3 =
-          stan::conditional_var_value_t<local_scalar_t__,
-            Eigen::Matrix<local_scalar_t__,1,-1>>(Eigen::Matrix<double,1,-1>::Constant(N,
-                                                    std::numeric_limits<double>::quiet_NaN(
-                                                      )));
+        Eigen::Matrix<local_scalar_t__,1,-1> vec3 =
+          Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
         {
           current_statement__ = 11;
           stan::math::validate_non_negative_index("vec4", "N", N);
@@ -1690,7 +1683,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
+      int pos__;
+      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {

@@ -137,7 +137,7 @@ let build_cf_graphs ?(flatten_loops = false) ?(blocks_after_body = true)
        is visited after substatements *)
     let substmt_preds =
       match stmt with
-      | Block _ when blocks_after_body -> in_state.exits
+      | (Block _ | Profile _) when blocks_after_body -> in_state.exits
       | _ -> Set.Poly.singleton label in
     (* The accumulated state after traversing substatements *)
     let substmt_state_unlooped, substmt_map =
