@@ -109,7 +109,7 @@ let rec var_declarations Stmt.Fixed.{pattern; _} : string Set.Poly.t =
   | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
   | IfElse (_, s1, Some s2) ->
       Set.Poly.union (var_declarations s1) (var_declarations s2)
-  | Block slist | SList slist ->
+  | Block slist | SList slist | Profile (_, slist) ->
       Set.Poly.union_list (List.map ~f:var_declarations slist)
   | _ -> Set.Poly.empty
 
@@ -431,6 +431,7 @@ let cleanup_empty_stmts stmts =
   let is_decl = function {pattern= Decl _; _} -> true | _ -> false in
   let flatten_block s =
     match s.pattern with
+    (* NB: Does not include Profile since we don't want to remove those blocks *)
     | SList ls | Block ls ->
         if List.for_all ~f:(Fn.non is_decl) ls then ls else [s]
     | _ -> [s] in
