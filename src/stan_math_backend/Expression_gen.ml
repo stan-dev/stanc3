@@ -472,8 +472,8 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
           pf ppf "stan::math::eval(%a)" pp_expr a
         else pf ppf "%a" pp_expr a
       in
-      if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
-      else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
+      if types_match et ef then tform ppf pp_expr ec eval_pp et eval_pp ef
+      else tform ppf eval_pp ec promoted (e, et) promoted (e, ef)
   | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
     match e.pattern with
