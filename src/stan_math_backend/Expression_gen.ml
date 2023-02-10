@@ -467,6 +467,11 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
           pp_expr e
       in
       let tform ppf = pf ppf "(@[<hov 2>@,%a@ ?@ %a@ :@ %a@])" in
+      let eval_pp ppf a =
+        if UnsizedType.is_eigen_type meta.type_ then
+          pf ppf "stan::math::eval(%a)" pp_expr a
+        else pf ppf "%a" pp_expr a
+      in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
       else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
   | Indexed (e, []) -> pp_expr ppf e
