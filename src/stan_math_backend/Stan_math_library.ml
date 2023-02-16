@@ -1190,6 +1190,10 @@ let () =
   add_nullary "e" ;
   add_unqualified ("eigenvalues", ReturnType UComplexVector, [UMatrix], AoS) ;
   add_unqualified ("eigenvectors", ReturnType UComplexMatrix, [UMatrix], AoS) ;
+  add_unqualified
+    ("eigenvalues", ReturnType UComplexVector, [UComplexMatrix], AoS) ;
+  add_unqualified
+    ("eigenvectors", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
   add_unqualified
     ("eigenvalues_sym", ReturnType UComplexVector, [UComplexMatrix], AoS) ;

@@ -51,8 +51,10 @@ module Fixed = struct
       | For {loopvar; lower; upper; body} ->
           Fmt.pf ppf "for(%s in %a:%a) %a" loopvar pp_e lower pp_e upper pp_s
             body
-      | Profile (_, stmts) ->
-          Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
+      | Profile (name, stmts) ->
+          Fmt.pf ppf "profile(%s){@;<1 2>@[<v>%a@]@;}" name
+            Fmt.(list pp_s ~sep:cut)
+            stmts
       | Block stmts ->
           Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
       | SList stmts -> Fmt.(list pp_s ~sep:cut |> vbox) ppf stmts
