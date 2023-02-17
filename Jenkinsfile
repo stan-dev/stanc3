@@ -592,7 +592,7 @@ pipeline {
                         beforeAgent true
                         expression { !skipRebuildingBinaries }
                     }
-                    agent { label 'osx' }
+                    agent { label 'osx && !m1' }
                     steps {
                         dir("${env.WORKSPACE}/osx"){
                             unstash "Stanc3Setup"
