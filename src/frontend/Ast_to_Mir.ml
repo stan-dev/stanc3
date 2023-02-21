@@ -373,11 +373,11 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
           (FnCheck {trans= decl_trans; var_name; var= id})
           args smeta in
       [check_id var]
-  (* TUPLE TODO: transform checks
-     This does not do the right thing:
-     need to apply check to only part of tuple. Will be messey with Arrays of Tuples
-
-      | TupleTransformation ts ->
+      (* TUPLE TODO: transform checks
+         This does not do the right thing:
+         need to apply check to only part of tuple via projection.
+         Will be messey with Arrays of Tuples *)
+      (* | TupleTransformation ts ->
          List.concat_map
            ~f:(fun decl_trans ->
              check_decl var decl_type' decl_id decl_trans smeta adlevel )

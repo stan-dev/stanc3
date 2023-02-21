@@ -424,7 +424,6 @@ let gen_param_names_fn name (paramvars, tparamvars, gqvars) =
        ~cv_qualifiers:[Const; Final] () )
 
 let gen_constrained_param_names {Program.output_vars; _} =
-  (* print_s [%sexp (snd (List.hd_exn output_vars) : Expr.Typed.t Program.outvar)] ; *)
   gen_param_names_fn "constrained_param_names"
     (List.partition3_map
        ~f:(function
