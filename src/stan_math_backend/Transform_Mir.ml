@@ -167,9 +167,10 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
           type_= origin_type
         ; adlevel= UnsizedType.fill_adtype_for_type DataOnly origin_type } }
   in
-  let end_position =
+  let type_size =
     Expr.Helpers.(
       binop (variable enclosing_tuple_pos) Plus (SizedType.io_size st)) in
+  let end_position = Expr.Helpers.(binop type_size Minus loop_bottom) in
   let origin =
     match unsized with
     | UInt | UReal | UComplex ->
@@ -182,7 +183,7 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
              (Expr.Helpers.variable enclosing_tuple_pos, end_position) ) in
   let incr_tuple_pos =
     Stmt.Fixed.Pattern.Assignment
-      (LVariable enclosing_tuple_pos, UInt, end_position)
+      (LVariable enclosing_tuple_pos, UInt, type_size)
     |> swrap in
   match unsized with
   | UInt | UReal | UComplex ->
@@ -224,7 +225,7 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= false }
+              ; initialize= true }
             |> swrap )
           tuple_component_names tuple_types in
       let loop =
@@ -274,7 +275,7 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
-            ; initialize= false }
+            ; initialize= true }
           |> swrap
         , Assignment
             (Stmt.Fixed.Pattern.LVariable decl_id_flat, flat_type, origin)
@@ -381,7 +382,7 @@ let rec data_read ?origin ?name smeta
                 { decl_adtype= AutoDiffable
                 ; decl_id= variable_name
                 ; decl_type= Unsized array_type
-                ; initialize= false }
+                ; initialize= true }
               |> swrap
             ; Assignment
                 ( Stmt.Fixed.Pattern.LVariable variable_name
@@ -392,7 +393,7 @@ let rec data_read ?origin ?name smeta
                 { decl_adtype= DataOnly
                 ; decl_id= variable_name ^ "pos__"
                 ; decl_type= Unsized UInt
-                ; initialize= false }
+                ; initialize= true }
               |> swrap
             ; Stmt.Fixed.Pattern.Assignment
                 ( LVariable (variable_name ^ "pos__")
@@ -418,7 +419,7 @@ let rec data_read ?origin ?name smeta
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= false }
+              ; initialize= true }
             |> swrap )
           tuple_component_names tuple_types in
       let loop =

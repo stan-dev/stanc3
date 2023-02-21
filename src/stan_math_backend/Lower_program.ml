@@ -352,7 +352,8 @@ let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
       Stmts.fori loopvar
         (lower_expr Expr.Helpers.loop_bottom)
         d
-        (Stmts.block @@ gen_body iteratee (loopvar :: index_ids)) in
+        (Stmts.block @@ gen_body iteratee ((`Array, loopvar) :: index_ids))
+    in
     gensym_exit () ; forloop in
   match dims with
   | [] -> gen_body iteratee index_ids
@@ -362,7 +363,7 @@ let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
 
 let emplace_name_stmt name idcs =
   let null_string = Constructor (Types.string, []) in
-  let dot = Literal "'.'" in
+  let sep = function `Array -> Literal "'.'" | `Tuple -> Literal "':'" in
   let to_string e =
     match e with Literal _ -> e | _ -> Exprs.fun_call "std::to_string" [e] in
   let open Expression_syntax in
@@ -371,25 +372,35 @@ let emplace_name_stmt name idcs =
     param_names__.@?(( "emplace_back"
                      , [ null_string
                          + List.fold ~init:(literal_string name)
-                             ~f:(fun acc idx -> acc + dot + to_string idx)
+                             ~f:(fun acc (typ, idx) ->
+                               acc + sep typ + to_string idx )
                              idcs ] ))
 
-let rec gen_param_names (decl_id, st) =
+let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
   let gen_name name idcs =
+    let idcs = outer_idcs @ idcs in
+    let idcs_vars = List.map ~f:(fun (t, i) -> (t, Exprs.to_var i)) idcs in
     match st with
     | SizedType.STuple sts ->
-        let subtypes =
+        let idxes_subtypes =
           List.mapi
-            ~f:(fun i typ -> (name ^ ":" ^ string_of_int (i + 1), typ))
+            ~f:(fun i typ -> ((`Tuple, string_of_int (i + 1)), (name, typ)))
             sts in
-        List.concat_map ~f:gen_param_names subtypes
+        List.concat_map
+          ~f:(fun (idx, sub) -> gen_param_names ~outer_idcs:(idcs @ [idx]) sub)
+          idxes_subtypes
+    (* same name, different idcs going forward. would also cover the above case but generate worse code? *)
+    | SizedType.SArray _ when SizedType.contains_tuple st ->
+        gen_param_names ~outer_idcs:idcs
+          (name, fst (SizedType.get_container_dims st))
     | _ when SizedType.is_complex_type st ->
-        let idcs_vars = List.map ~f:Exprs.to_var idcs in
-        [ emplace_name_stmt name (idcs_vars @ [Exprs.literal_string "real"])
-        ; emplace_name_stmt name (idcs_vars @ [Exprs.literal_string "imag"]) ]
+        [ emplace_name_stmt name
+            (idcs_vars @ [(`Array, Exprs.literal_string "real")])
+        ; emplace_name_stmt name
+            (idcs_vars @ [(`Array, Exprs.literal_string "imag")]) ]
     | _ ->
         let name = Mangle.remove_prefix name in
-        [emplace_name_stmt name (List.map ~f:Exprs.to_var idcs)] in
+        [emplace_name_stmt name idcs_vars] in
   let dims = lower_exprs (List.rev (SizedType.get_dims st)) in
   gen_indexing_loop decl_id dims gen_name
 
@@ -413,6 +424,7 @@ let gen_param_names_fn name (paramvars, tparamvars, gqvars) =
        ~cv_qualifiers:[Const; Final] () )
 
 let gen_constrained_param_names {Program.output_vars; _} =
+  (* print_s [%sexp (snd (List.hd_exn output_vars) : Expr.Typed.t Program.outvar)] ; *)
   gen_param_names_fn "constrained_param_names"
     (List.partition3_map
        ~f:(function
@@ -866,4 +878,42 @@ module Testing = struct
             param_names__.emplace_back(std::string() + "foo" + '.' +
               std::to_string(sym1__) + '.' + "imag");
           } |}]
+
+  let%expect_test "tuple names" =
+    gen_param_names
+      ( "tuple"
+      , SizedType.(
+          STuple [SInt; SArray (SReal, Middle.Expr.Helpers.variable "nested")])
+      )
+    |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
+    |> print_endline ;
+    [%expect
+      {|
+      param_names__.emplace_back(std::string() + "tuple" + ':' + std::to_string(1));
+      for (int sym1__ = 1; sym1__ <= nested; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tuple" + ':' +
+          std::to_string(2) + '.' + std::to_string(sym1__));
+      } |}]
+
+  let%expect_test "array of tuple names" =
+    gen_param_names
+      ( "arr_tuple"
+      , SizedType.(
+          SArray
+            ( STuple
+                [SInt; SArray (SReal, Middle.Expr.Helpers.variable "nested")]
+            , Middle.Expr.Helpers.variable "N" )) )
+    |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
+    |> print_endline ;
+    [%expect
+      {|
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          param_names__.emplace_back(std::string() + "arr_tuple" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(1));
+          for (int sym2__ = 1; sym2__ <= nested; ++sym2__) {
+            param_names__.emplace_back(std::string() + "arr_tuple" + '.' +
+              std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+              std::to_string(sym2__));
+          }
+        } |}]
 end

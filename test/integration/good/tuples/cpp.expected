@@ -151,9 +151,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         int arr_tuple_dot_3_flat__pos__;
         current_statement__ = 10;
         arr_tuple_dot_3_flat__pos__ = 1;
-        int arr_tuple_dot_1_temp__;
-        std::vector<double> arr_tuple_dot_2_temp__;
-        Eigen::Matrix<double,-1,1> arr_tuple_dot_3_temp__;
+        int arr_tuple_dot_1_temp__ = std::numeric_limits<int>::min();
+        std::vector<double> arr_tuple_dot_2_temp__ =
+          std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double,-1,1> arr_tuple_dot_3_temp__ =
+          Eigen::Matrix<double,-1,1>::Constant(3,
+            std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 10;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           current_statement__ = 10;
@@ -166,7 +169,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             stan::model::rvalue(arr_tuple_dot_2_flat__,
               "arr_tuple_dot_2_flat__",
               stan::model::index_min_max(arr_tuple_dot_2_flat__pos__,
-                (arr_tuple_dot_2_flat__pos__ + (4 * 1)))),
+                ((arr_tuple_dot_2_flat__pos__ + (4 * 1)) - 1))),
             "assigning variable arr_tuple_dot_2_temp__");
           current_statement__ = 10;
           arr_tuple_dot_2_flat__pos__ = (arr_tuple_dot_2_flat__pos__ + (4 *
@@ -178,7 +181,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               stan::model::rvalue(arr_tuple_dot_3_flat__,
                 "arr_tuple_dot_3_flat__",
                 stan::model::index_min_max(arr_tuple_dot_3_flat__pos__,
-                  (arr_tuple_dot_3_flat__pos__ + 3))),
+                  ((arr_tuple_dot_3_flat__pos__ + 3) - 1))),
               "assigning variable arr_tuple_dot_3_temp___flat__");
             current_statement__ = 10;
             pos__ = 1;
@@ -240,8 +243,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         int tuple_arr_tuple_dot_3_dot_2_flat__pos__;
         current_statement__ = 11;
         tuple_arr_tuple_dot_3_dot_2_flat__pos__ = 1;
-        double tuple_arr_tuple_dot_3_dot_1_temp__;
-        std::vector<int> tuple_arr_tuple_dot_3_dot_2_temp__;
+        double tuple_arr_tuple_dot_3_dot_1_temp__ =
+          std::numeric_limits<double>::quiet_NaN();
+        std::vector<int> tuple_arr_tuple_dot_3_dot_2_temp__ =
+          std::vector<int>(4, std::numeric_limits<int>::min());
         current_statement__ = 11;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           current_statement__ = 11;
@@ -256,7 +261,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               "tuple_arr_tuple_dot_3_dot_2_flat__",
               stan::model::index_min_max(
                 tuple_arr_tuple_dot_3_dot_2_flat__pos__,
-                (tuple_arr_tuple_dot_3_dot_2_flat__pos__ + (4 * 1)))),
+                ((tuple_arr_tuple_dot_3_dot_2_flat__pos__ + (4 * 1)) - 1))),
             "assigning variable tuple_arr_tuple_dot_3_dot_2_temp__");
           current_statement__ = 11;
           tuple_arr_tuple_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_dot_3_dot_2_flat__pos__
@@ -329,10 +334,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         int arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__;
         current_statement__ = 12;
         arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__ = 1;
-        double arr_tuple_tuple_dot_1_temp__;
-        int arr_tuple_tuple_dot_2_temp__;
+        double arr_tuple_tuple_dot_1_temp__ =
+          std::numeric_limits<double>::quiet_NaN();
+        int arr_tuple_tuple_dot_2_temp__ = std::numeric_limits<int>::min();
         std::tuple<double, std::tuple<int, Eigen::Matrix<double,-1,1>>>
-          arr_tuple_tuple_dot_3_temp__;
+          arr_tuple_tuple_dot_3_temp__ =
+          std::tuple<double, std::tuple<int, Eigen::Matrix<double,-1,1>>>{
+            std::numeric_limits<double>::quiet_NaN(),
+            std::tuple<int, Eigen::Matrix<double,-1,1>>{std::numeric_limits<int>::min(
+                                                          ),
+              Eigen::Matrix<double,-1,1>::Constant(4,
+                std::numeric_limits<double>::quiet_NaN())}};
         current_statement__ = 12;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           current_statement__ = 12;
@@ -372,7 +384,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 "arr_tuple_tuple_dot_3_dot_2_dot_2_flat__",
                 stan::model::index_min_max(
                   arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__,
-                  (arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__ + 4))),
+                  ((arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__ + 4) - 1))),
               "assigning variable arr_tuple_tuple_dot_3_temp___dot_2_dot_2_flat__");
             current_statement__ = 12;
             pos__ = 1;
@@ -447,9 +459,15 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         int arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__;
         current_statement__ = 13;
         arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__ = 1;
-        int arr_tuple_arr_tuple_dot_1_temp__;
+        int arr_tuple_arr_tuple_dot_1_temp__ =
+          std::numeric_limits<int>::min();
         std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>
-          arr_tuple_arr_tuple_dot_2_temp__;
+          arr_tuple_arr_tuple_dot_2_temp__ =
+          std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>(4,
+            std::tuple<double, Eigen::Matrix<double,-1,1>>{std::numeric_limits<double>::quiet_NaN(
+                                                             ),
+              Eigen::Matrix<double,-1,1>::Constant(5,
+                std::numeric_limits<double>::quiet_NaN())});
         current_statement__ = 13;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           current_statement__ = 13;
@@ -459,8 +477,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           arr_tuple_arr_tuple_dot_1_flat__pos__ = (arr_tuple_arr_tuple_dot_1_flat__pos__
             + 1);
           {
-            double arr_tuple_arr_tuple_dot_2_dot_1_temp__;
-            Eigen::Matrix<double,-1,1> arr_tuple_arr_tuple_dot_2_dot_2_temp__;
+            double arr_tuple_arr_tuple_dot_2_dot_1_temp__ =
+              std::numeric_limits<double>::quiet_NaN();
+            Eigen::Matrix<double,-1,1>
+              arr_tuple_arr_tuple_dot_2_dot_2_temp__ =
+              Eigen::Matrix<double,-1,1>::Constant(5,
+                std::numeric_limits<double>::quiet_NaN());
             current_statement__ = 13;
             for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
               current_statement__ = 13;
@@ -479,7 +501,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                     "arr_tuple_arr_tuple_dot_2_dot_2_flat__",
                     stan::model::index_min_max(
                       arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__,
-                      (arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__ + 5))),
+                      ((arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__ + 5) - 1))),
                   "assigning variable arr_tuple_arr_tuple_dot_2_dot_2_temp___flat__");
                 current_statement__ = 13;
                 pos__ = 1;
@@ -591,12 +613,27 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         int very_deep_dot_2_dot_2_dot_2_flat__pos__;
         current_statement__ = 14;
         very_deep_dot_2_dot_2_dot_2_flat__pos__ = 1;
-        int very_deep_dot_1_temp__;
+        int very_deep_dot_1_temp__ = std::numeric_limits<int>::min();
         std::vector<
           std::tuple<double,
             std::vector<
               std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>>>
-          very_deep_dot_2_temp__;
+          very_deep_dot_2_temp__ =
+          std::vector<
+            std::tuple<double,
+              std::vector<
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>>>(4,
+            std::tuple<double,
+              std::vector<
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>>{
+              std::numeric_limits<double>::quiet_NaN(),
+              std::vector<
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>(5,
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>{
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN()),
+                  Eigen::Matrix<double,-1,-1>::Constant(6, 7,
+                    std::numeric_limits<double>::quiet_NaN())})});
         current_statement__ = 14;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           current_statement__ = 14;
@@ -605,10 +642,18 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           current_statement__ = 14;
           very_deep_dot_1_flat__pos__ = (very_deep_dot_1_flat__pos__ + 1);
           {
-            double very_deep_dot_2_dot_1_temp__;
+            double very_deep_dot_2_dot_1_temp__ =
+              std::numeric_limits<double>::quiet_NaN();
             std::vector<
               std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>
-              very_deep_dot_2_dot_2_temp__;
+              very_deep_dot_2_dot_2_temp__ =
+              std::vector<
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>(5,
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>{
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN()),
+                  Eigen::Matrix<double,-1,-1>::Constant(6, 7,
+                    std::numeric_limits<double>::quiet_NaN())});
             current_statement__ = 14;
             for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
               current_statement__ = 14;
@@ -618,9 +663,13 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               very_deep_dot_2_dot_1_flat__pos__ = (very_deep_dot_2_dot_1_flat__pos__
                 + 1);
               {
-                std::complex<double> very_deep_dot_2_dot_2_dot_1_temp__;
+                std::complex<double> very_deep_dot_2_dot_2_dot_1_temp__ =
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN());
                 Eigen::Matrix<double,-1,-1>
-                  very_deep_dot_2_dot_2_dot_2_temp__;
+                  very_deep_dot_2_dot_2_dot_2_temp__ =
+                  Eigen::Matrix<double,-1,-1>::Constant(6, 7,
+                    std::numeric_limits<double>::quiet_NaN());
                 current_statement__ = 14;
                 for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
                   current_statement__ = 14;
@@ -639,7 +688,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                         "very_deep_dot_2_dot_2_dot_2_flat__",
                         stan::model::index_min_max(
                           very_deep_dot_2_dot_2_dot_2_flat__pos__,
-                          (very_deep_dot_2_dot_2_dot_2_flat__pos__ + (6 * 7)))),
+                          ((very_deep_dot_2_dot_2_dot_2_flat__pos__ + (6 *
+                          7)) - 1))),
                       "assigning variable very_deep_dot_2_dot_2_dot_2_temp___flat__");
                     current_statement__ = 14;
                     pos__ = 1;
@@ -698,9 +748,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = ((10 * 1) + 1) + (1 + (1 + 2)) + ((2 + (4 * 1)) + 3) +
-      (((2 * 1) + 1) + (1 + (4 * 1))) + ((1 + 1) + (1 + (2 + 4))) + (1 + (1 +
-      5)) + (1 + (1 + (2 + (6 * 7))));
+    num_params_r__ = ((10 * 1) + 1) + (1 + (1 + 2)) + (3 * ((2 + (4 * 1)) +
+      3)) + (((2 * 1) + 1) + (3 * (1 + (4 * 1)))) + (2 * ((1 + 1) + (1 + (2 +
+      4)))) + (3 * (1 + (4 * (1 + 5)))) + (3 * (1 + (4 * (1 + (5 * (2 + (6 *
+      7)))))));
   }
   inline std::string model_name() const final {
     return "arrays_tuples_nested_model";
@@ -1625,40 +1676,115 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      param_names__.emplace_back(std::string() + "basic_p:1" + '.' +
-        std::to_string(sym1__));
+      param_names__.emplace_back(std::string() + "basic_p" + ':' +
+        std::to_string(1) + '.' + std::to_string(sym1__));
     }
-    param_names__.emplace_back(std::string() + "basic_p:2");
-    param_names__.emplace_back(std::string() + "tuple_tuple_p:1");
-    param_names__.emplace_back(std::string() + "tuple_tuple_p:2:1");
+    param_names__.emplace_back(std::string() + "basic_p" + ':' +
+      std::to_string(2));
+    param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
+      std::to_string(2) + ':' + std::to_string(1));
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      param_names__.emplace_back(std::string() + "tuple_tuple_p:2:2" + '.' +
+      param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
+        std::to_string(2) + ':' + std::to_string(2) + '.' +
         std::to_string(sym1__));
     }
     for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
       param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
-        std::to_string(sym1__));
+        std::to_string(sym1__) + ':' + std::to_string(1) + '.' + "real");
+      param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(1) + '.' + "imag");
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
+          std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__));
+      }
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
+          std::to_string(sym1__) + ':' + std::to_string(3) + '.' +
+          std::to_string(sym2__));
+      }
     }
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:1" + '.'
-        + std::to_string(sym1__));
+      param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
+        std::to_string(1) + '.' + std::to_string(sym1__));
     }
-    param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:2");
+    param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
+      std::to_string(2));
     for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:3" + '.'
-        + std::to_string(sym1__));
+      param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
+        std::to_string(3) + '.' + std::to_string(sym1__) + ':' +
+        std::to_string(1));
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':'
+          + std::to_string(3) + '.' + std::to_string(sym1__) + ':' +
+          std::to_string(2) + '.' + std::to_string(sym2__));
+      }
     }
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
-        std::to_string(sym1__));
+        std::to_string(sym1__) + ':' + std::to_string(1));
+      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(2));
+      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(1));
+      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(2) + ':' + std::to_string(1) + '.' + "real");
+      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(2) + ':' + std::to_string(1) + '.' + "imag");
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.'
+          + std::to_string(sym1__) + ':' + std::to_string(3) + ':' +
+          std::to_string(2) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__));
+      }
     }
     for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
       param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p" +
-        '.' + std::to_string(sym1__));
+        '.' + std::to_string(sym1__) + ':' + std::to_string(1));
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p" +
+          '.' + std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__) + ':' + std::to_string(1));
+        for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+          param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p"
+            + '.' + std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym3__));
+        }
+      }
     }
     for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
       param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
-        std::to_string(sym1__));
+        std::to_string(sym1__) + ':' + std::to_string(1));
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
+          std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__) + ':' + std::to_string(1));
+        for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+          param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym3__) + ':' + std::to_string(1) + '.' + "real");
+          param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym3__) + ':' + std::to_string(1) + '.' + "imag");
+          for (int sym4__ = 1; sym4__ <= 7; ++sym4__) {
+            for (int sym5__ = 1; sym5__ <= 6; ++sym5__) {
+              param_names__.emplace_back(std::string() + "very_deep_p" + '.'
+                + std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+                std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+                std::to_string(sym3__) + ':' + std::to_string(2) + '.' +
+                std::to_string(sym5__) + '.' + std::to_string(sym4__));
+            }
+          }
+        }
+      }
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -1668,65 +1794,114 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      param_names__.emplace_back(std::string() + "basic_p:1" + '.' +
-        std::to_string(sym1__));
+      param_names__.emplace_back(std::string() + "basic_p" + ':' +
+        std::to_string(1) + '.' + std::to_string(sym1__));
     }
-    param_names__.emplace_back(std::string() + "basic_p:2");
-    param_names__.emplace_back(std::string() + "tuple_tuple_p:1");
-    param_names__.emplace_back(std::string() + "tuple_tuple_p:2:1");
+    param_names__.emplace_back(std::string() + "basic_p" + ':' +
+      std::to_string(2));
+    param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
+      std::to_string(2) + ':' + std::to_string(1));
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      param_names__.emplace_back(std::string() + "tuple_tuple_p:2:2" + '.' +
-        std::to_string(sym1__));
-    }
-    param_names__.emplace_back(std::string() + "arr_tuple_p:1" + '.' +
-      "real");
-    param_names__.emplace_back(std::string() + "arr_tuple_p:1" + '.' +
-      "imag");
-    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-      param_names__.emplace_back(std::string() + "arr_tuple_p:2" + '.' +
+      param_names__.emplace_back(std::string() + "tuple_tuple_p" + ':' +
+        std::to_string(2) + ':' + std::to_string(2) + '.' +
         std::to_string(sym1__));
     }
     for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-      param_names__.emplace_back(std::string() + "arr_tuple_p:3" + '.' +
-        std::to_string(sym1__));
+      param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(1) + '.' + "real");
+      param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(1) + '.' + "imag");
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
+          std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__));
+      }
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        param_names__.emplace_back(std::string() + "arr_tuple_p" + '.' +
+          std::to_string(sym1__) + ':' + std::to_string(3) + '.' +
+          std::to_string(sym2__));
+      }
     }
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-      param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:1" + '.'
-        + std::to_string(sym1__));
+      param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
+        std::to_string(1) + '.' + std::to_string(sym1__));
     }
-    param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:2");
-    param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:3:1");
-    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-      param_names__.emplace_back(std::string() + "tuple_arr_tuple_p:3:2" +
-        '.' + std::to_string(sym1__));
+    param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
+      std::to_string(2));
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':' +
+        std::to_string(3) + '.' + std::to_string(sym1__) + ':' +
+        std::to_string(1));
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "tuple_arr_tuple_p" + ':'
+          + std::to_string(3) + '.' + std::to_string(sym1__) + ':' +
+          std::to_string(2) + '.' + std::to_string(sym2__));
+      }
     }
-    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:1");
-    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:2");
-    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:3:1");
-    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:3:2:1" +
-      '.' + "real");
-    param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:3:2:1" +
-      '.' + "imag");
-    for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p:3:2:2" +
-        '.' + std::to_string(sym1__));
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(1));
+      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(2));
+      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(1));
+      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(2) + ':' + std::to_string(1) + '.' + "real");
+      param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(3) + ':' +
+        std::to_string(2) + ':' + std::to_string(1) + '.' + "imag");
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "arr_tuple_tuple_p" + '.'
+          + std::to_string(sym1__) + ':' + std::to_string(3) + ':' +
+          std::to_string(2) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__));
+      }
     }
-    param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p:1");
-    param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p:2:1");
-    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-      param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p:2:2"
-        + '.' + std::to_string(sym1__));
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p" +
+        '.' + std::to_string(sym1__) + ':' + std::to_string(1));
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p" +
+          '.' + std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__) + ':' + std::to_string(1));
+        for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+          param_names__.emplace_back(std::string() + "arr_tuple_arr_tuple_p"
+            + '.' + std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym3__));
+        }
+      }
     }
-    param_names__.emplace_back(std::string() + "very_deep_p:1");
-    param_names__.emplace_back(std::string() + "very_deep_p:2:1");
-    param_names__.emplace_back(std::string() + "very_deep_p:2:2:1" + '.' +
-      "real");
-    param_names__.emplace_back(std::string() + "very_deep_p:2:2:1" + '.' +
-      "imag");
-    for (int sym1__ = 1; sym1__ <= 7; ++sym1__) {
-      for (int sym2__ = 1; sym2__ <= 6; ++sym2__) {
-        param_names__.emplace_back(std::string() + "very_deep_p:2:2:2" + '.'
-          + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
+        std::to_string(sym1__) + ':' + std::to_string(1));
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
+          std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__) + ':' + std::to_string(1));
+        for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+          param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym3__) + ':' + std::to_string(1) + '.' + "real");
+          param_names__.emplace_back(std::string() + "very_deep_p" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym3__) + ':' + std::to_string(1) + '.' + "imag");
+          for (int sym4__ = 1; sym4__ <= 7; ++sym4__) {
+            for (int sym5__ = 1; sym5__ <= 6; ++sym5__) {
+              param_names__.emplace_back(std::string() + "very_deep_p" + '.'
+                + std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+                std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+                std::to_string(sym3__) + ':' + std::to_string(2) + '.' +
+                std::to_string(sym5__) + '.' + std::to_string(sym4__));
+            }
+          }
+        }
       }
     }
     if (emit_transformed_parameters__) {}
@@ -1736,7 +1911,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]}},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]}},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}}]}},\"block\":\"parameters\"},{\"name\":\"very_deep_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(6) + ",\"cols\":" + std::to_string(7) + "}]}}]}}]}},\"block\":\"parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}]},\"block\":\"parameters\"},{\"name\":\"very_deep_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(6) + ",\"cols\":" + std::to_string(7) + "}]}]}]},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"basic_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"tuple_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}]}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"vector\",\"length\":" + std::to_string(3) + "}]}},\"block\":\"parameters\"},{\"name\":\"tuple_arr_tuple_p\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}},{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"real\"}}]}}]},\"block\":\"parameters\"},{\"name\":\"arr_tuple_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}]}]}},\"block\":\"parameters\"},{\"name\":\"arr_tuple_arr_tuple_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "}]}}]}},\"block\":\"parameters\"},{\"name\":\"very_deep_p\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(6) + ",\"cols\":" + std::to_string(7) + "}]}}]}}]}},\"block\":\"parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -2959,12 +3134,14 @@ namespace tuple_constraints_data2_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 2> locations_array__ =
+static constexpr std::array<const char*, 3> locations_array__ =
   {" (found before start of program)",
-  " (in 'tuple-constraints-data2.stan', line 2, column 2 to column 60)"};
+  " (in 'tuple-constraints-data2.stan', line 2, column 2 to column 60)",
+  " (in 'tuple-constraints-data2.stan', line 3, column 2 to column 51)"};
 class tuple_constraints_data2_model final : public model_base_crtp<tuple_constraints_data2_model> {
  private:
   std::tuple<int, std::tuple<double, int>> y;
+  std::tuple<int, double, Eigen::Matrix<double,-1,1>> x;
  public:
   ~tuple_constraints_data2_model() {}
   tuple_constraints_data2_model(stan::io::var_context& context__,
@@ -3011,6 +3188,43 @@ class tuple_constraints_data2_model final : public model_base_crtp<tuple_constra
       current_statement__ = 1;
       stan::math::check_less_or_equal(function__, "y.2.2",
         std::get<1>(std::get<1>(y)), 2);
+      current_statement__ = 2;
+      context__.validate_dims("data initialization", "x.1", "int",
+        std::vector<size_t>{});
+      context__.validate_dims("data initialization", "x.2", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("data initialization", "x.3", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      x = std::tuple<int, double, Eigen::Matrix<double,-1,1>>{std::numeric_limits<int>::min(
+                                                                ),
+            std::numeric_limits<double>::quiet_NaN(),
+            Eigen::Matrix<double,-1,1>::Constant(2,
+              std::numeric_limits<double>::quiet_NaN())};
+      current_statement__ = 2;
+      std::get<0>(x) = context__.vals_i("x.1")[(1 - 1)];
+      current_statement__ = 2;
+      std::get<1>(x) = context__.vals_r("x.2")[(1 - 1)];
+      {
+        std::vector<local_scalar_t__> x_dot_3_flat__;
+        current_statement__ = 2;
+        x_dot_3_flat__ = context__.vals_r("x.3");
+        current_statement__ = 2;
+        pos__ = 1;
+        current_statement__ = 2;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 2;
+          stan::model::assign(std::get<2>(x), x_dot_3_flat__[(pos__ - 1)],
+            "assigning variable x.3", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
+          pos__ = (pos__ + 1);
+        }
+      }
+      current_statement__ = 2;
+      stan::math::check_greater_or_equal(function__, "x.1", std::get<0>(x), 0);
+      current_statement__ = 2;
+      stan::math::check_greater_or_equal(function__, "x.2", std::get<1>(x), 1);
+      current_statement__ = 2;
+      stan::math::check_simplex(function__, "x.3", std::get<2>(x));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -3407,8 +3621,10 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "ps:1");
-    param_names__.emplace_back(std::string() + "ps:2");
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(2));
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -3416,8 +3632,10 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "ps:1");
-    param_names__.emplace_back(std::string() + "ps:2");
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(2));
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -3517,275 +3735,6 @@ new_model(stan::io::var_context& data_context, unsigned int seed,
 }
 stan::math::profile_map& get_stan_profile_data() {
   return tuple_constraints_params_model_namespace::profiles__;
-}
-#endif
-  $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuple-constraints.stan
-// Code generated by %%NAME%% %%VERSION%%
-#include <stan/model/model_header.hpp>
-namespace tuple_constraints_model_namespace {
-using stan::model::model_base_crtp;
-using namespace stan::math;
-stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 2> locations_array__ =
-  {" (found before start of program)",
-  " (in 'tuple-constraints.stan', line 2, column 2 to column 39)"};
-class tuple_constraints_model final : public model_base_crtp<tuple_constraints_model> {
- private:
-  std::tuple<int, double> y;
- public:
-  ~tuple_constraints_model() {}
-  tuple_constraints_model(stan::io::var_context& context__, unsigned int
-                          random_seed__ = 0, std::ostream*
-                          pstream__ = nullptr) : model_base_crtp(0) {
-    int current_statement__ = 0;
-    using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
-    // suppress unused var warning
-    (void) base_rng__;
-    static constexpr const char* function__ =
-      "tuple_constraints_model_namespace::tuple_constraints_model";
-    // suppress unused var warning
-    (void) function__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-      current_statement__ = 1;
-      context__.validate_dims("data initialization", "y.1", "int",
-        std::vector<size_t>{});
-      context__.validate_dims("data initialization", "y.2", "double",
-        std::vector<size_t>{});
-      y = std::tuple<int, double>{std::numeric_limits<int>::min(),
-            std::numeric_limits<double>::quiet_NaN()};
-      current_statement__ = 1;
-      std::get<0>(y) = context__.vals_i("y.1")[(1 - 1)];
-      current_statement__ = 1;
-      std::get<1>(y) = context__.vals_r("y.2")[(1 - 1)];
-      current_statement__ = 1;
-      stan::math::check_greater_or_equal(function__, "y.1", std::get<0>(y), 0);
-      current_statement__ = 1;
-      stan::math::check_greater_or_equal(function__, "y.2", std::get<1>(y), 1);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    num_params_r__ = 0U;
-  }
-  inline std::string model_name() const final {
-    return "tuple_constraints_model";
-  }
-  inline std::vector<std::string> model_compile_info() const noexcept {
-    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
-             "stancflags = -fsoa --print-cpp"};
-  }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
-            stan::require_vector_like_t<VecR>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
-  inline stan::scalar_type_t<VecR>
-  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    int current_statement__ = 0;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    static constexpr const char* function__ =
-      "tuple_constraints_model_namespace::log_prob";
-    // suppress unused var warning
-    (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    lp_accum__.add(lp__);
-    return lp_accum__.sum();
-  }
-  template <typename RNG, typename VecR, typename VecI, typename VecVar,
-            stan::require_vector_like_vt<std::is_floating_point,
-            VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral,
-            VecI>* = nullptr, stan::require_vector_vt<std::is_floating_point,
-            VecVar>* = nullptr>
-  inline void
-  write_array_impl(RNG& base_rng__, VecR& params_r__, VecI& params_i__,
-                   VecVar& vars__, const bool
-                   emit_transformed_parameters__ = true, const bool
-                   emit_generated_quantities__ = true, std::ostream*
-                   pstream__ = nullptr) const {
-    using local_scalar_t__ = double;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> out__(vars__);
-    static constexpr bool propto__ = true;
-    // suppress unused var warning
-    (void) propto__;
-    double lp__ = 0.0;
-    // suppress unused var warning
-    (void) lp__;
-    int current_statement__ = 0;
-    stan::math::accumulator<double> lp_accum__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    constexpr bool jacobian__ = false;
-    static constexpr const char* function__ =
-      "tuple_constraints_model_namespace::write_array";
-    // suppress unused var warning
-    (void) function__;
-    try {
-      if (stan::math::logical_negation(
-            (stan::math::primitive_value(emit_transformed_parameters__) ||
-            stan::math::primitive_value(emit_generated_quantities__)))) {
-        return ;
-      }
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-  }
-  template <typename VecVar, typename VecI,
-            stan::require_vector_t<VecVar>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
-  inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
-    using local_scalar_t__ = double;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> out__(vars__);
-    int current_statement__ = 0;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-  }
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    names__ = std::vector<std::string>{};
-  }
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__ = std::vector<std::vector<size_t>>{};
-  }
-  inline void
-  constrained_param_names(std::vector<std::string>& param_names__, bool
-                          emit_transformed_parameters__ = true, bool
-                          emit_generated_quantities__ = true) const final {
-    if (emit_transformed_parameters__) {}
-    if (emit_generated_quantities__) {}
-  }
-  inline void
-  unconstrained_param_names(std::vector<std::string>& param_names__, bool
-                            emit_transformed_parameters__ = true, bool
-                            emit_generated_quantities__ = true) const final {
-    if (emit_transformed_parameters__) {}
-    if (emit_generated_quantities__) {}
-  }
-  inline std::string get_constrained_sizedtypes() const {
-    return std::string("[]");
-  }
-  inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[]");
-  }
-  // Begin method overload boilerplate
-  template <typename RNG> inline void
-  write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
-              Eigen::Matrix<double,-1,1>& vars, const bool
-              emit_transformed_parameters = true, const bool
-              emit_generated_quantities = true, std::ostream*
-              pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
-    const size_t num_to_write = num_params__ + num_transformed +
-      num_gen_quantities;
-    std::vector<int> params_i;
-    vars = Eigen::Matrix<double,-1,1>::Constant(num_to_write,
-             std::numeric_limits<double>::quiet_NaN());
-    write_array_impl(base_rng, params_r, params_i, vars,
-      emit_transformed_parameters, emit_generated_quantities, pstream);
-  }
-  template <typename RNG> inline void
-  write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
-              params_i, std::vector<double>& vars, bool
-              emit_transformed_parameters = true, bool
-              emit_generated_quantities = true, std::ostream*
-              pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
-    const size_t num_to_write = num_params__ + num_transformed +
-      num_gen_quantities;
-    vars = std::vector<double>(num_to_write,
-             std::numeric_limits<double>::quiet_NaN());
-    write_array_impl(base_rng, params_r, params_i, vars,
-      emit_transformed_parameters, emit_generated_quantities, pstream);
-  }
-  template <bool propto__, bool jacobian__, typename T_> inline T_
-  log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream* pstream = nullptr) const {
-    Eigen::Matrix<int,-1,1> params_i;
-    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
-  }
-  template <bool propto__, bool jacobian__, typename T_> inline T_
-  log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-           std::ostream* pstream = nullptr) const {
-    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
-  }
-  inline void
-  transform_inits(const stan::io::var_context& context,
-                  Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                  pstream = nullptr) const final {
-    std::vector<double> params_r_vec(params_r.size());
-    std::vector<int> params_i;
-    transform_inits(context, params_i, params_r_vec, pstream);
-    params_r = Eigen::Map<Eigen::Matrix<double,-1,1>>(params_r_vec.data(),
-                 params_r_vec.size());
-  }
-  inline void
-  transform_inits(const stan::io::var_context& context, std::vector<int>&
-                  params_i, std::vector<double>& vars, std::ostream*
-                  pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
-    vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
-  }
-};
-}
-using stan_model = tuple_constraints_model_namespace::tuple_constraints_model;
-#ifndef USING_R
-// Boilerplate
-stan::model::model_base&
-new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream) {
-  stan_model* m = new stan_model(data_context, seed, msg_stream);
-  return *m;
-}
-stan::math::profile_map& get_stan_profile_data() {
-  return tuple_constraints_model_namespace::profiles__;
 }
 #endif
   $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuple-dataonly.stan
@@ -4287,8 +4236,10 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "ps:1");
-    param_names__.emplace_back(std::string() + "ps:2");
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(2));
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -4296,8 +4247,10 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "ps:1");
-    param_names__.emplace_back(std::string() + "ps:2");
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(2));
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -5679,13 +5632,18 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "ps:1");
-    param_names__.emplace_back(std::string() + "ps:2");
-    param_names__.emplace_back(std::string() + "ps2:1");
-    param_names__.emplace_back(std::string() + "ps2:2:1");
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(2));
+    param_names__.emplace_back(std::string() + "ps2" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps2" + ':' +
+      std::to_string(2) + ':' + std::to_string(1));
     for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
       for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-        param_names__.emplace_back(std::string() + "ps2:2:2" + '.' +
+        param_names__.emplace_back(std::string() + "ps2" + ':' +
+          std::to_string(2) + ':' + std::to_string(2) + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
@@ -5696,13 +5654,18 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "ps:1");
-    param_names__.emplace_back(std::string() + "ps:2");
-    param_names__.emplace_back(std::string() + "ps2:1");
-    param_names__.emplace_back(std::string() + "ps2:2:1");
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(2));
+    param_names__.emplace_back(std::string() + "ps2" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps2" + ':' +
+      std::to_string(2) + ':' + std::to_string(1));
     for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
       for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-        param_names__.emplace_back(std::string() + "ps2:2:2" + '.' +
+        param_names__.emplace_back(std::string() + "ps2" + ':' +
+          std::to_string(2) + ':' + std::to_string(2) + '.' +
           std::to_string(sym2__) + '.' + std::to_string(sym1__));
       }
     }
@@ -5981,8 +5944,10 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "ps:1");
-    param_names__.emplace_back(std::string() + "ps:2");
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(2));
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -5990,8 +5955,10 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    param_names__.emplace_back(std::string() + "ps:1");
-    param_names__.emplace_back(std::string() + "ps:2");
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(1));
+    param_names__.emplace_back(std::string() + "ps" + ':' +
+      std::to_string(2));
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -6669,63 +6636,92 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                           emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "d2:1" + '.' +
-          std::to_string(sym1__) + '.' + "real");
-        param_names__.emplace_back(std::string() + "d2:1" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+        param_names__.emplace_back(std::string() + "d2" + ':' +
+          std::to_string(1) + '.' + std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "d2" + ':' +
+          std::to_string(1) + '.' + std::to_string(sym1__) + '.' + "imag");
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "d2:2" + '.' +
-          std::to_string(sym1__) + '.' + "real");
-        param_names__.emplace_back(std::string() + "d2:2" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+        param_names__.emplace_back(std::string() + "d2" + ':' +
+          std::to_string(2) + '.' + std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "d2" + ':' +
+          std::to_string(2) + '.' + std::to_string(sym1__) + '.' + "imag");
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "V3:1" + '.' +
-          std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "V3" + ':' +
+          std::to_string(1) + '.' + std::to_string(sym1__));
       }
-      param_names__.emplace_back(std::string() + "V3:2");
+      param_names__.emplace_back(std::string() + "V3" + ':' +
+        std::to_string(2));
       for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
         param_names__.emplace_back(std::string() + "arrs2" + '.' +
-          std::to_string(sym1__));
+          std::to_string(sym1__) + ':' + std::to_string(1));
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "arrs2" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "arrs2" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + '.' + "imag");
+        }
       }
-      param_names__.emplace_back(std::string() + "nested2:1:1");
+      param_names__.emplace_back(std::string() + "nested2" + ':' +
+        std::to_string(1) + ':' + std::to_string(1));
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        param_names__.emplace_back(std::string() + "nested2:1:2" + '.' +
+        param_names__.emplace_back(std::string() + "nested2" + ':' +
+          std::to_string(1) + ':' + std::to_string(2) + '.' +
           std::to_string(sym1__) + '.' + "real");
-        param_names__.emplace_back(std::string() + "nested2:1:2" + '.' +
+        param_names__.emplace_back(std::string() + "nested2" + ':' +
+          std::to_string(1) + ':' + std::to_string(2) + '.' +
           std::to_string(sym1__) + '.' + "imag");
       }
-      param_names__.emplace_back(std::string() + "nested2:2");
+      param_names__.emplace_back(std::string() + "nested2" + ':' +
+        std::to_string(2));
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "nested2:3:1" + '.' +
+        param_names__.emplace_back(std::string() + "nested2" + ':' +
+          std::to_string(3) + ':' + std::to_string(1) + '.' +
           std::to_string(sym1__));
       }
-      param_names__.emplace_back(std::string() + "nested2:3:2");
-      param_names__.emplace_back(std::string() + "nested3:1:1");
+      param_names__.emplace_back(std::string() + "nested2" + ':' +
+        std::to_string(3) + ':' + std::to_string(2));
+      param_names__.emplace_back(std::string() + "nested3" + ':' +
+        std::to_string(1) + ':' + std::to_string(1));
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        param_names__.emplace_back(std::string() + "nested3:1:2" + '.' +
+        param_names__.emplace_back(std::string() + "nested3" + ':' +
+          std::to_string(1) + ':' + std::to_string(2) + '.' +
           std::to_string(sym1__) + '.' + "real");
-        param_names__.emplace_back(std::string() + "nested3:1:2" + '.' +
+        param_names__.emplace_back(std::string() + "nested3" + ':' +
+          std::to_string(1) + ':' + std::to_string(2) + '.' +
           std::to_string(sym1__) + '.' + "imag");
       }
-      param_names__.emplace_back(std::string() + "nested3:2");
+      param_names__.emplace_back(std::string() + "nested3" + ':' +
+        std::to_string(2));
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "nested3:3:1" + '.' +
+        param_names__.emplace_back(std::string() + "nested3" + ':' +
+          std::to_string(3) + ':' + std::to_string(1) + '.' +
           std::to_string(sym1__));
       }
-      param_names__.emplace_back(std::string() + "nested3:3:2");
+      param_names__.emplace_back(std::string() + "nested3" + ':' +
+        std::to_string(3) + ':' + std::to_string(2));
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "y");
-      param_names__.emplace_back(std::string() + "x:1");
-      param_names__.emplace_back(std::string() + "x:2");
-      param_names__.emplace_back(std::string() + "z:1" + '.' + "real");
-      param_names__.emplace_back(std::string() + "z:1" + '.' + "imag");
-      param_names__.emplace_back(std::string() + "z:2");
-      param_names__.emplace_back(std::string() + "z2:1" + '.' + "real");
-      param_names__.emplace_back(std::string() + "z2:1" + '.' + "imag");
-      param_names__.emplace_back(std::string() + "z2:2");
+      param_names__.emplace_back(std::string() + "x" + ':' +
+        std::to_string(1));
+      param_names__.emplace_back(std::string() + "x" + ':' +
+        std::to_string(2));
+      param_names__.emplace_back(std::string() + "z" + ':' +
+        std::to_string(1) + '.' + "real");
+      param_names__.emplace_back(std::string() + "z" + ':' +
+        std::to_string(1) + '.' + "imag");
+      param_names__.emplace_back(std::string() + "z" + ':' +
+        std::to_string(2));
+      param_names__.emplace_back(std::string() + "z2" + ':' +
+        std::to_string(1) + '.' + "real");
+      param_names__.emplace_back(std::string() + "z2" + ':' +
+        std::to_string(1) + '.' + "imag");
+      param_names__.emplace_back(std::string() + "z2" + ':' +
+        std::to_string(2));
     }
   }
   inline void
@@ -6734,73 +6730,99 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                             emit_generated_quantities__ = true) const final {
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "d2:1" + '.' +
-          std::to_string(sym1__) + '.' + "real");
-        param_names__.emplace_back(std::string() + "d2:1" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+        param_names__.emplace_back(std::string() + "d2" + ':' +
+          std::to_string(1) + '.' + std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "d2" + ':' +
+          std::to_string(1) + '.' + std::to_string(sym1__) + '.' + "imag");
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "d2:2" + '.' +
-          std::to_string(sym1__) + '.' + "real");
-        param_names__.emplace_back(std::string() + "d2:2" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
+        param_names__.emplace_back(std::string() + "d2" + ':' +
+          std::to_string(2) + '.' + std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "d2" + ':' +
+          std::to_string(2) + '.' + std::to_string(sym1__) + '.' + "imag");
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "V3:1" + '.' +
+        param_names__.emplace_back(std::string() + "V3" + ':' +
+          std::to_string(1) + '.' + std::to_string(sym1__));
+      }
+      param_names__.emplace_back(std::string() + "V3" + ':' +
+        std::to_string(2));
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        param_names__.emplace_back(std::string() + "arrs2" + '.' +
+          std::to_string(sym1__) + ':' + std::to_string(1));
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "arrs2" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + '.' + "real");
+          param_names__.emplace_back(std::string() + "arrs2" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + '.' + "imag");
+        }
+      }
+      param_names__.emplace_back(std::string() + "nested2" + ':' +
+        std::to_string(1) + ':' + std::to_string(1));
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        param_names__.emplace_back(std::string() + "nested2" + ':' +
+          std::to_string(1) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym1__) + '.' + "real");
+        param_names__.emplace_back(std::string() + "nested2" + ':' +
+          std::to_string(1) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym1__) + '.' + "imag");
+      }
+      param_names__.emplace_back(std::string() + "nested2" + ':' +
+        std::to_string(2));
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        param_names__.emplace_back(std::string() + "nested2" + ':' +
+          std::to_string(3) + ':' + std::to_string(1) + '.' +
           std::to_string(sym1__));
       }
-      param_names__.emplace_back(std::string() + "V3:2");
-      param_names__.emplace_back(std::string() + "arrs2:1");
+      param_names__.emplace_back(std::string() + "nested2" + ':' +
+        std::to_string(3) + ':' + std::to_string(2));
+      param_names__.emplace_back(std::string() + "nested3" + ':' +
+        std::to_string(1) + ':' + std::to_string(1));
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        param_names__.emplace_back(std::string() + "arrs2:2" + '.' +
+        param_names__.emplace_back(std::string() + "nested3" + ':' +
+          std::to_string(1) + ':' + std::to_string(2) + '.' +
           std::to_string(sym1__) + '.' + "real");
-        param_names__.emplace_back(std::string() + "arrs2:2" + '.' +
+        param_names__.emplace_back(std::string() + "nested3" + ':' +
+          std::to_string(1) + ':' + std::to_string(2) + '.' +
           std::to_string(sym1__) + '.' + "imag");
       }
-      param_names__.emplace_back(std::string() + "nested2:1:1");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        param_names__.emplace_back(std::string() + "nested2:1:2" + '.' +
-          std::to_string(sym1__) + '.' + "real");
-        param_names__.emplace_back(std::string() + "nested2:1:2" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
-      }
-      param_names__.emplace_back(std::string() + "nested2:2");
+      param_names__.emplace_back(std::string() + "nested3" + ':' +
+        std::to_string(2));
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "nested2:3:1" + '.' +
+        param_names__.emplace_back(std::string() + "nested3" + ':' +
+          std::to_string(3) + ':' + std::to_string(1) + '.' +
           std::to_string(sym1__));
       }
-      param_names__.emplace_back(std::string() + "nested2:3:2");
-      param_names__.emplace_back(std::string() + "nested3:1:1");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        param_names__.emplace_back(std::string() + "nested3:1:2" + '.' +
-          std::to_string(sym1__) + '.' + "real");
-        param_names__.emplace_back(std::string() + "nested3:1:2" + '.' +
-          std::to_string(sym1__) + '.' + "imag");
-      }
-      param_names__.emplace_back(std::string() + "nested3:2");
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        param_names__.emplace_back(std::string() + "nested3:3:1" + '.' +
-          std::to_string(sym1__));
-      }
-      param_names__.emplace_back(std::string() + "nested3:3:2");
+      param_names__.emplace_back(std::string() + "nested3" + ':' +
+        std::to_string(3) + ':' + std::to_string(2));
     }
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "y");
-      param_names__.emplace_back(std::string() + "x:1");
-      param_names__.emplace_back(std::string() + "x:2");
-      param_names__.emplace_back(std::string() + "z:1" + '.' + "real");
-      param_names__.emplace_back(std::string() + "z:1" + '.' + "imag");
-      param_names__.emplace_back(std::string() + "z:2");
-      param_names__.emplace_back(std::string() + "z2:1" + '.' + "real");
-      param_names__.emplace_back(std::string() + "z2:1" + '.' + "imag");
-      param_names__.emplace_back(std::string() + "z2:2");
+      param_names__.emplace_back(std::string() + "x" + ':' +
+        std::to_string(1));
+      param_names__.emplace_back(std::string() + "x" + ':' +
+        std::to_string(2));
+      param_names__.emplace_back(std::string() + "z" + ':' +
+        std::to_string(1) + '.' + "real");
+      param_names__.emplace_back(std::string() + "z" + ':' +
+        std::to_string(1) + '.' + "imag");
+      param_names__.emplace_back(std::string() + "z" + ':' +
+        std::to_string(2));
+      param_names__.emplace_back(std::string() + "z2" + ':' +
+        std::to_string(1) + '.' + "real");
+      param_names__.emplace_back(std::string() + "z2" + ':' +
+        std::to_string(1) + '.' + "imag");
+      param_names__.emplace_back(std::string() + "z2" + ':' +
+        std::to_string(2));
     }
   }
   inline std::string get_constrained_sizedtypes() const {
     return std::string("[{\"name\":\"d2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"V3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]},\"block\":\"transformed_parameters\"},{\"name\":\"arrs2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]}},\"block\":\"transformed_parameters\"},{\"name\":\"nested2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"d2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"V3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]},\"block\":\"transformed_parameters\"},{\"name\":\"arrs2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"d2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}]},\"block\":\"transformed_parameters\"},{\"name\":\"V3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]},\"block\":\"transformed_parameters\"},{\"name\":\"arrs2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]}},\"block\":\"transformed_parameters\"},{\"name\":\"nested2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"nested3\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}}]},{\"name\":\"real\"},{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"vector\",\"length\":" + std::to_string(3) + "},{\"name\":\"real\"}]}]},\"block\":\"transformed_parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"},{\"name\":\"z2\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"complex\"},{\"name\":\"real\"}]},\"block\":\"generated_quantities\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -7450,274 +7472,5 @@ new_model(stan::io::var_context& data_context, unsigned int seed,
 }
 stan::math::profile_map& get_stan_profile_data() {
   return tuple_templating_model_namespace::profiles__;
-}
-#endif
-  $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuples-constraints-data.stan
-// Code generated by %%NAME%% %%VERSION%%
-#include <stan/model/model_header.hpp>
-namespace tuples_constraints_data_model_namespace {
-using stan::model::model_base_crtp;
-using namespace stan::math;
-stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 2> locations_array__ =
-  {" (found before start of program)",
-  " (in 'tuples-constraints-data.stan', line 2, column 2 to column 39)"};
-class tuples_constraints_data_model final : public model_base_crtp<tuples_constraints_data_model> {
- private:
-  std::tuple<int, double> x;
- public:
-  ~tuples_constraints_data_model() {}
-  tuples_constraints_data_model(stan::io::var_context& context__,
-                                unsigned int random_seed__ = 0, std::ostream*
-                                pstream__ = nullptr) : model_base_crtp(0) {
-    int current_statement__ = 0;
-    using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
-    // suppress unused var warning
-    (void) base_rng__;
-    static constexpr const char* function__ =
-      "tuples_constraints_data_model_namespace::tuples_constraints_data_model";
-    // suppress unused var warning
-    (void) function__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-      current_statement__ = 1;
-      context__.validate_dims("data initialization", "x.1", "int",
-        std::vector<size_t>{});
-      context__.validate_dims("data initialization", "x.2", "double",
-        std::vector<size_t>{});
-      x = std::tuple<int, double>{std::numeric_limits<int>::min(),
-            std::numeric_limits<double>::quiet_NaN()};
-      current_statement__ = 1;
-      std::get<0>(x) = context__.vals_i("x.1")[(1 - 1)];
-      current_statement__ = 1;
-      std::get<1>(x) = context__.vals_r("x.2")[(1 - 1)];
-      current_statement__ = 1;
-      stan::math::check_greater_or_equal(function__, "x.1", std::get<0>(x), 0);
-      current_statement__ = 1;
-      stan::math::check_greater_or_equal(function__, "x.2", std::get<1>(x), 1);
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    num_params_r__ = 0U;
-  }
-  inline std::string model_name() const final {
-    return "tuples_constraints_data_model";
-  }
-  inline std::vector<std::string> model_compile_info() const noexcept {
-    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
-             "stancflags = -fsoa --print-cpp"};
-  }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
-            stan::require_vector_like_t<VecR>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
-  inline stan::scalar_type_t<VecR>
-  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
-                pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    int current_statement__ = 0;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    static constexpr const char* function__ =
-      "tuples_constraints_data_model_namespace::log_prob";
-    // suppress unused var warning
-    (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-    lp_accum__.add(lp__);
-    return lp_accum__.sum();
-  }
-  template <typename RNG, typename VecR, typename VecI, typename VecVar,
-            stan::require_vector_like_vt<std::is_floating_point,
-            VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral,
-            VecI>* = nullptr, stan::require_vector_vt<std::is_floating_point,
-            VecVar>* = nullptr>
-  inline void
-  write_array_impl(RNG& base_rng__, VecR& params_r__, VecI& params_i__,
-                   VecVar& vars__, const bool
-                   emit_transformed_parameters__ = true, const bool
-                   emit_generated_quantities__ = true, std::ostream*
-                   pstream__ = nullptr) const {
-    using local_scalar_t__ = double;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> out__(vars__);
-    static constexpr bool propto__ = true;
-    // suppress unused var warning
-    (void) propto__;
-    double lp__ = 0.0;
-    // suppress unused var warning
-    (void) lp__;
-    int current_statement__ = 0;
-    stan::math::accumulator<double> lp_accum__;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    constexpr bool jacobian__ = false;
-    static constexpr const char* function__ =
-      "tuples_constraints_data_model_namespace::write_array";
-    // suppress unused var warning
-    (void) function__;
-    try {
-      if (stan::math::logical_negation(
-            (stan::math::primitive_value(emit_transformed_parameters__) ||
-            stan::math::primitive_value(emit_generated_quantities__)))) {
-        return ;
-      }
-      if (stan::math::logical_negation(emit_generated_quantities__)) {
-        return ;
-      }
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-  }
-  template <typename VecVar, typename VecI,
-            stan::require_vector_t<VecVar>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
-  inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
-    using local_scalar_t__ = double;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> out__(vars__);
-    int current_statement__ = 0;
-    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    // suppress unused var warning
-    (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
-  }
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    names__ = std::vector<std::string>{};
-  }
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__ = std::vector<std::vector<size_t>>{};
-  }
-  inline void
-  constrained_param_names(std::vector<std::string>& param_names__, bool
-                          emit_transformed_parameters__ = true, bool
-                          emit_generated_quantities__ = true) const final {
-    if (emit_transformed_parameters__) {}
-    if (emit_generated_quantities__) {}
-  }
-  inline void
-  unconstrained_param_names(std::vector<std::string>& param_names__, bool
-                            emit_transformed_parameters__ = true, bool
-                            emit_generated_quantities__ = true) const final {
-    if (emit_transformed_parameters__) {}
-    if (emit_generated_quantities__) {}
-  }
-  inline std::string get_constrained_sizedtypes() const {
-    return std::string("[]");
-  }
-  inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[]");
-  }
-  // Begin method overload boilerplate
-  template <typename RNG> inline void
-  write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
-              Eigen::Matrix<double,-1,1>& vars, const bool
-              emit_transformed_parameters = true, const bool
-              emit_generated_quantities = true, std::ostream*
-              pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
-    const size_t num_to_write = num_params__ + num_transformed +
-      num_gen_quantities;
-    std::vector<int> params_i;
-    vars = Eigen::Matrix<double,-1,1>::Constant(num_to_write,
-             std::numeric_limits<double>::quiet_NaN());
-    write_array_impl(base_rng, params_r, params_i, vars,
-      emit_transformed_parameters, emit_generated_quantities, pstream);
-  }
-  template <typename RNG> inline void
-  write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
-              params_i, std::vector<double>& vars, bool
-              emit_transformed_parameters = true, bool
-              emit_generated_quantities = true, std::ostream*
-              pstream = nullptr) const {
-    const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
-    const size_t num_to_write = num_params__ + num_transformed +
-      num_gen_quantities;
-    vars = std::vector<double>(num_to_write,
-             std::numeric_limits<double>::quiet_NaN());
-    write_array_impl(base_rng, params_r, params_i, vars,
-      emit_transformed_parameters, emit_generated_quantities, pstream);
-  }
-  template <bool propto__, bool jacobian__, typename T_> inline T_
-  log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream* pstream = nullptr) const {
-    Eigen::Matrix<int,-1,1> params_i;
-    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
-  }
-  template <bool propto__, bool jacobian__, typename T_> inline T_
-  log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
-           std::ostream* pstream = nullptr) const {
-    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
-  }
-  inline void
-  transform_inits(const stan::io::var_context& context,
-                  Eigen::Matrix<double,-1,1>& params_r, std::ostream*
-                  pstream = nullptr) const final {
-    std::vector<double> params_r_vec(params_r.size());
-    std::vector<int> params_i;
-    transform_inits(context, params_i, params_r_vec, pstream);
-    params_r = Eigen::Map<Eigen::Matrix<double,-1,1>>(params_r_vec.data(),
-                 params_r_vec.size());
-  }
-  inline void
-  transform_inits(const stan::io::var_context& context, std::vector<int>&
-                  params_i, std::vector<double>& vars, std::ostream*
-                  pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
-    vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
-  }
-};
-}
-using stan_model = tuples_constraints_data_model_namespace::tuples_constraints_data_model;
-#ifndef USING_R
-// Boilerplate
-stan::model::model_base&
-new_model(stan::io::var_context& data_context, unsigned int seed,
-          std::ostream* msg_stream) {
-  stan_model* m = new stan_model(data_context, seed, msg_stream);
-  return *m;
-}
-stan::math::profile_map& get_stan_profile_data() {
-  return tuples_constraints_data_model_namespace::profiles__;
 }
 #endif

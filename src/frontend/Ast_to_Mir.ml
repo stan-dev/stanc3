@@ -324,11 +324,24 @@ let rec param_size transform sizedtype =
    |OffsetMultiplier (_, _)
    |Ordered | PositiveOrdered | UnitVector ->
       sizedtype
-  | TupleTransformation _ as trans ->
-      (* Call recursively for tuples *)
-      SizedType.STuple
-        (List.map (Utils.zip_stuple_trans_exn sizedtype trans)
-           ~f:(fun (st, trans) -> param_size trans st) )
+  | TupleTransformation _ as trans -> (
+    match sizedtype with
+    (* Call recursively for tuples and arrays of tuples *)
+    | SizedType.SArray _ when SizedType.contains_tuple sizedtype ->
+        let st, dims = SizedType.get_container_dims sizedtype in
+        SizedType.build_sarray dims
+          (SizedType.STuple
+             (List.map (Utils.zip_stuple_trans_exn st trans)
+                ~f:(fun (st, trans) -> param_size trans st) ) )
+    | STuple _ ->
+        SizedType.STuple
+          (List.map (Utils.zip_stuple_trans_exn sizedtype trans)
+             ~f:(fun (st, trans) -> param_size trans st) )
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message
+            "Tuple transform on bad type" (sizedtype : Expr.Typed.t SizedType.t)]
+    )
   | Simplex ->
       shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
@@ -360,11 +373,15 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
           (FnCheck {trans= decl_trans; var_name; var= id})
           args smeta in
       [check_id var]
-  | TupleTransformation ts ->
-      List.concat_map
-        ~f:(fun decl_trans ->
-          check_decl var decl_type' decl_id decl_trans smeta adlevel )
-        ts
+  (* TUPLE TODO: transform checks
+     This does not do the right thing:
+     need to apply check to only part of tuple. Will be messey with Arrays of Tuples
+
+      | TupleTransformation ts ->
+         List.concat_map
+           ~f:(fun decl_trans ->
+             check_decl var decl_type' decl_id decl_trans smeta adlevel )
+           ts *)
   | _ -> []
 
 let check_sizedtype name st =
