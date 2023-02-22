@@ -376,8 +376,7 @@ let rec data_read ?origin ?name smeta
           ~f:(fun variable_name io_name st ->
             let typ = SizedType.to_unsized st in
             let scalar_type = UnsizedType.internal_scalar typ in
-            let array_type =
-              UnsizedType.wind_array_type (scalar_type, List.length dims) in
+            let array_type = UnsizedType.UArray scalar_type in
             [ Stmt.Fixed.Pattern.Decl
                 { decl_adtype= AutoDiffable
                 ; decl_id= variable_name
