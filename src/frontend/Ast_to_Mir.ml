@@ -360,11 +360,36 @@ let rec param_size transform sizedtype =
         (fun k -> Expr.Helpers.(binop k Plus (k_choose_2 k)))
         sizedtype
 
-let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
+let rec check_decl var decl_type' decl_trans smeta adlevel =
+  let check_tuple var trans_subtypes =
+    List.concat_mapi
+      ~f:(fun i (decl_type', decl_trans) ->
+        let var = Expr.Helpers.add_tuple_index var (i + 1) in
+        check_decl var decl_type' decl_trans smeta adlevel )
+      trans_subtypes in
   match decl_trans with
   | Transformation.LowerUpper (lb, ub) ->
-      check_decl var decl_type' decl_id (Lower lb) smeta adlevel
-      @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
+      check_decl var decl_type' (Lower lb) smeta adlevel
+      @ check_decl var decl_type' (Upper ub) smeta adlevel
+  | TupleTransformation ts when List.exists ~f:Transformation.has_check ts ->
+      let t =
+        match decl_type' with
+        | Type.Sized t -> t
+        | _ ->
+            Common.FatalError.fatal_error_msg
+              [%message "Unsized Decl for tuple transformation"] in
+      let _, dims = SizedType.get_container_dims t in
+      let sts = Utils.zip_tuple_trans_exn decl_type' decl_trans in
+      if List.is_empty dims then check_tuple var sts
+      else
+        [ Stmt.Helpers.mk_nested_for (List.rev dims)
+            (fun loopvars ->
+              let var =
+                List.fold ~f:Expr.Helpers.add_int_index ~init:var
+                  (List.map ~f:(fun e -> Index.Single e) (List.rev loopvars))
+              in
+              Stmt.Fixed.{meta= smeta; pattern= Block (check_tuple var sts)} )
+            smeta ]
   | _ when Transformation.has_check decl_trans ->
       let check_id id =
         let var_name = Fmt.str "%a" Expr.Typed.pp id in
@@ -373,15 +398,6 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
           (FnCheck {trans= decl_trans; var_name; var= id})
           args smeta in
       [check_id var]
-      (* TUPLE TODO: transform checks
-         This does not do the right thing:
-         need to apply check to only part of tuple via projection.
-         Will be messey with Arrays of Tuples *)
-      (* | TupleTransformation ts ->
-         List.concat_map
-           ~f:(fun decl_trans ->
-             check_decl var decl_type' decl_id decl_trans smeta adlevel )
-           ts *)
   | _ -> []
 
 let check_sizedtype name st =
@@ -426,30 +442,15 @@ let check_sizedtype name st =
   (ll, Type.Sized st)
 
 (* The statements that constrain and check a variable, given its context *)
-let rec var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
+let var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
     type_ =
-  match type_ with
-  | Type.Sized (STuple _) | Type.Unsized (UTuple _) ->
-      (* If the variable is a tuple, constrain each element in turn *)
-      let transTypes = Utils.zip_tuple_trans_exn type_ trans in
-      List.concat_mapi transTypes ~f:(fun ix (pst, trans) ->
-          let elem = Expr.Helpers.add_tuple_index decl_var (ix + 1) in
-          let elem_decl_id =
-            decl_id ^ "_tupix" ^ string_of_int (ix + 1) ^ "__" in
-          var_constrain_check_stmts dconstrain loc adlevel elem_decl_id elem
-            trans pst )
-  | _ -> (
-    match (dconstrain, type_) with
-    | (Some Constrain | Some Unconstrain), Type.Sized _ ->
-        check_transform_shape decl_id decl_var loc trans
-        (* TUPLE TODO - this function fell very out of date and the function
-           it calls no longer exists. Ask rybern
-        *)
-        (* @ check_decl st dconstrain trans decl_id decl_var loc *)
-    | Some Check, _ ->
-        check_transform_shape decl_id decl_var loc trans
-        @ check_decl decl_var type_ decl_id trans loc adlevel
-    | _ -> [] )
+  match (dconstrain, type_) with
+  | (Some Constrain | Some Unconstrain), Type.Sized _ ->
+      check_transform_shape decl_id decl_var loc trans
+  | Some Check, Type.Sized _ ->
+      check_transform_shape decl_id decl_var loc trans
+      @ check_decl decl_var type_ trans loc adlevel
+  | _ -> []
 
 let trans_decl {transform_action; dadlevel} smeta decl_type transform identifier
     initial_value =

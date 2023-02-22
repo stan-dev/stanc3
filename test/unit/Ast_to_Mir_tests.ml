@@ -216,4 +216,47 @@ let%expect_test "read data - tuple" =
            ((pattern (Lit Int 5))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (initialize true)))
+      (meta <opaque>))
+     ((pattern
+       (For (loopvar sym1__)
+        (lower
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        (upper
+         ((pattern (Lit Int 5))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        (body
+         ((pattern
+           (Block
+            (((pattern
+               (Block
+                (((pattern
+                   (NRFunApp
+                    (CompilerInternal
+                     (FnCheck (trans Simplex) (var_name x[sym1__].2)
+                      (var
+                       ((pattern
+                         (TupleProjection
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var x))
+                              (meta
+                               ((type_ (UArray (UTuple (UReal UVector))))
+                                (loc <opaque>)
+                                (adlevel (TupleAD (DataOnly DataOnly))))))
+                             ((Single
+                               ((pattern (Var sym1__))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta
+                            ((type_ (UTuple (UReal UVector))) (loc <opaque>)
+                             (adlevel (TupleAD (DataOnly DataOnly))))))
+                          2))
+                        (meta
+                         ((type_ UVector) (loc <opaque>)
+                          (adlevel (TupleAD (DataOnly DataOnly)))))))))
+                    ()))
+                  (meta <opaque>)))))
+              (meta <opaque>)))))
+          (meta <opaque>)))))
       (meta <opaque>))) |}]

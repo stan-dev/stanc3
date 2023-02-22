@@ -23,10 +23,7 @@ type 'e t =
   | TupleTransformation of 'e t list
 [@@deriving sexp, compare, map, hash, fold]
 
-let has_check = function
-  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _
-   |TupleTransformation _ ->
-      (* NB: TupleTransform does not have a check on its own,
-         but could generate multiple checks *)
-      false
+let rec has_check = function
+  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false
+  | TupleTransformation ts -> List.exists ~f:has_check ts
   | _ -> true
