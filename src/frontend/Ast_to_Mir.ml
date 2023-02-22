@@ -324,24 +324,14 @@ let rec param_size transform sizedtype =
    |OffsetMultiplier (_, _)
    |Ordered | PositiveOrdered | UnitVector ->
       sizedtype
-  | TupleTransformation _ as trans -> (
-    match sizedtype with
-    (* Call recursively for tuples and arrays of tuples *)
-    | SizedType.SArray _ when SizedType.contains_tuple sizedtype ->
-        let st, dims = SizedType.get_container_dims sizedtype in
-        SizedType.build_sarray dims
-          (SizedType.STuple
-             (List.map (Utils.zip_stuple_trans_exn st trans)
-                ~f:(fun (st, trans) -> param_size trans st) ) )
-    | STuple _ ->
-        SizedType.STuple
-          (List.map (Utils.zip_stuple_trans_exn sizedtype trans)
-             ~f:(fun (st, trans) -> param_size trans st) )
-    | _ ->
-        Common.FatalError.fatal_error_msg
-          [%message
-            "Tuple transform on bad type" (sizedtype : Expr.Typed.t SizedType.t)]
-    )
+  | TupleTransformation _ ->
+      let _, dims = SizedType.get_container_dims sizedtype in
+      let subtypes_transforms = Utils.zip_stuple_trans_exn sizedtype transform in
+      (* NB: [build_sarray] is a no-op if this was not originally an array *)
+      SizedType.build_sarray dims
+        (SizedType.STuple
+           (List.map subtypes_transforms ~f:(fun (st, trans) ->
+                param_size trans st ) ) )
   | Simplex ->
       shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
@@ -372,14 +362,8 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
       check_decl var decl_type' (Lower lb) smeta adlevel
       @ check_decl var decl_type' (Upper ub) smeta adlevel
   | TupleTransformation ts when List.exists ~f:Transformation.has_check ts ->
-      let t =
-        match decl_type' with
-        | Type.Sized t -> t
-        | _ ->
-            Common.FatalError.fatal_error_msg
-              [%message "Unsized Decl for tuple transformation"] in
-      let _, dims = SizedType.get_container_dims t in
-      let sts = Utils.zip_tuple_trans_exn decl_type' decl_trans in
+      let _, dims = SizedType.get_container_dims decl_type' in
+      let sts = Utils.zip_stuple_trans_exn decl_type' decl_trans in
       if List.is_empty dims then check_tuple var sts
       else
         [ Stmt.Helpers.mk_nested_for (List.rev dims)
@@ -447,9 +431,9 @@ let var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
   match (dconstrain, type_) with
   | (Some Constrain | Some Unconstrain), Type.Sized _ ->
       check_transform_shape decl_id decl_var loc trans
-  | Some Check, Type.Sized _ ->
+  | Some Check, Type.Sized st ->
       check_transform_shape decl_id decl_var loc trans
-      @ check_decl decl_var type_ trans loc adlevel
+      @ check_decl decl_var st trans loc adlevel
   | _ -> []
 
 let trans_decl {transform_action; dadlevel} smeta decl_type transform identifier

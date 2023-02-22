@@ -821,25 +821,6 @@ let data_unconstrain_transform smeta (decl_id, outvar) : Stmt.Located.t list =
   (decl :: read (LVariable decl_id, outvar.Program.out_constrained_st))
   @ gen_write ~unconstrain:true (decl_id, outvar)
 
-(* let%expect_test "data unconstrain transform" =
-   let mkoutvar (name, st, t) =
-     ( name
-     , Program.
-         { out_unconstrained_st= st
-         ; out_constrained_st= st
-         ; out_block= Parameters
-         ; out_trans= t } ) in
-   let outs =
-     List.map ~f:mkoutvar
-       [ ( "y"
-         , SizedType.SArray (STuple [SReal; SReal], Expr.Helpers.int 3)
-         , Transformation.TupleTransformation [Identity; Identity] ) ] in
-   outs
-   |> List.concat_map ~f:(data_unconstrain_transform Location_span.empty)
-   |> List.sexp_of_t Stmt.Located.sexp_of_t
-   |> print_s ;
-   [%expect {| |}] *)
-
 let rec contains_var_expr is_vident accum Expr.Fixed.{pattern; _} =
   accum
   ||
