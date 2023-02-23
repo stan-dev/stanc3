@@ -592,7 +592,7 @@ pipeline {
                         beforeAgent true
                         expression { !skipRebuildingBinaries }
                     }
-                    agent { label 'osx' }
+                    agent { label 'osx && !m1' }
                     steps {
                         dir("${env.WORKSPACE}/osx"){
                             unstash "Stanc3Setup"
@@ -898,7 +898,7 @@ pipeline {
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                     tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                    ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/
+                    ./ghr_v0.12.1_linux_amd64/ghr -u stan-buildbot -recreate ${tagName()} bin/
                 """)
             }
         }
