@@ -12,7 +12,6 @@ let rec lower_type_eigen_expr (t : UnsizedType.t) (scalar : type_) : type_ =
       scalar
   | UComplex -> Types.complex scalar
   | UArray t when UnsizedType.contains_tuple t ->
-      (* TUPLE MAYBE: still not sure about these, need to print with scalar *)
       StdVector (lower_type_eigen_expr t scalar)
   | UTuple _ -> scalar
   | UArray t ->

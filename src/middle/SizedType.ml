@@ -166,7 +166,7 @@ let rec get_mem_pattern st =
   match st with
   | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _
    |SComplexMatrix _ | STuple _ ->
-      (* TUPLE MAYBE *) Mem_pattern.AoS
+      Mem_pattern.AoS
   | SVector (mem, _) | SRowVector (mem, _) | SMatrix (mem, _, _) -> mem
   | SArray (t, _) -> get_mem_pattern t
 

@@ -156,7 +156,6 @@ let rec lower_unsizedtype_local adtype ut =
           "Tuple and Tuple AD type not matching!"
             (ut : UnsizedType.t)
             (adtype : UnsizedType.autodifftype)]
-      (* TUPLE MAYBE handle tupleAD, Array here? *)
   | UnsizedType.TupleAD _, UnsizedType.UArray t ->
       Types.std_vector (lower_unsizedtype_local adtype t)
   | _, _ ->

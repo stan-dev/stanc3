@@ -290,7 +290,6 @@ let extract_transform_args var = function
       [copy_indices var a1; copy_indices var a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
-      (* TUPLE MAYBE *)
       []
 
 let rec param_size transform sizedtype =
@@ -518,7 +517,6 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
             Middle.Stmt.Fixed.Pattern.LIndexed
               (trans_lvalue lv, List.map ~f:trans_idx idcs) in
       let lhs = trans_lvalue grouped_lhs in
-      (* TUPLE MAYBE assignment type variable *)
       (* The type of the assignee if it weren't indexed
          e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
       *)
@@ -530,9 +528,6 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         match assign_op with
         | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
         | Ast.OperatorAssign op ->
-            (* TUPLE MAYBE assignee
-               I think this is what the old code was getting at?
-            *)
             let assignee = Ast.expr_of_lvalue grouped_lhs in
             op_to_funapp op [assignee; assign_rhs] assignee.emeta.type_ in
       Assignment (lhs, unindexed_type, rhs) |> swrap
