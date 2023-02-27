@@ -327,7 +327,7 @@ let rec param_size transform sizedtype =
       let _, dims = SizedType.get_container_dims sizedtype in
       let subtypes_transforms = Utils.zip_stuple_trans_exn sizedtype transform in
       (* NB: [build_sarray] is a no-op if this was not originally an array *)
-      SizedType.build_sarray dims
+      SizedType.build_sarray (List.rev dims)
         (SizedType.STuple
            (List.map subtypes_transforms ~f:(fun (st, trans) ->
                 param_size trans st ) ) )

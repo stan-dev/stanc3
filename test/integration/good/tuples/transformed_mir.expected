@@ -8838,9 +8838,9 @@
                ((pattern (Lit Int 1))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        ((pattern (Lit Int 3))
+        ((pattern (Lit Int 2))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-       ((pattern (Lit Int 2))
+       ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray

@@ -266,38 +266,12 @@ let enumerate_tuple_names_io name (ut : t) =
     | _ -> [base] in
   loop name ut
 
-(** "Unzip" tuples into their parallel types. This creates
-    a list of the same size and ordering as [enumerate_tuple_names_io]
-
-    E.g, the decl
-    [array[2] (int, real) foo;]
-    should yield the list [[array[2] int; array[2] real]].
-  *)
-let flatten_tuple_io (ut : t) =
-  let rec loop ut =
-    match ut with
-    | UTuple ts -> List.concat_map ~f:loop ts
-    | UArray _ when contains_tuple ut ->
-        let scalar, depth = unwind_array_type ut in
-        List.map ~f:(fun t -> wind_array_type (t, depth)) (loop scalar)
-    | _ -> [ut] in
-  loop ut
-
 let%expect_test "tuple names" =
   let t = UArray (UTuple [UInt; UArray (UTuple [UReal; UComplex]); UVector]) in
   let res = enumerate_tuple_names_io "foo" t in
   [%sexp (res : string list)] |> print_s ;
   [%expect {|
       (foo.1 foo.2.1 foo.2.2 foo.3) |}]
-
-let%expect_test "tuple flattened types" =
-  let t = UArray (UTuple [UInt; UArray (UTuple [UReal; UComplex]); UVector]) in
-  let res = flatten_tuple_io t in
-  [%sexp (res : t list)] |> print_s ;
-  [%expect
-    {|
-        ((UArray UInt) (UArray (UArray UReal)) (UArray (UArray UComplex))
-         (UArray UVector)) |}]
 
 module Comparator = Comparator.Make (struct
   type nonrec t = t

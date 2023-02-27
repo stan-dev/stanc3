@@ -209,6 +209,9 @@ let rec has_mem_pattern = function
   | SArray (t, _) -> has_mem_pattern t
   | STuple ts -> List.exists ~f:has_mem_pattern ts
 
+(** NB: This is not quite the inverse of [get_container_dims]
+    you need to reverse [dims] first.
+*)
 let rec build_sarray dims st =
   match dims with [] -> st | d :: dims -> build_sarray dims (SArray (st, d))
 
@@ -218,6 +221,15 @@ let flatten_tuple_io st =
     | STuple ts -> List.concat_map ~f:loop ts
     | SArray _ when contains_tuple st ->
         let scalar, dims = get_container_dims st in
-        List.map ~f:(fun t -> build_sarray dims t) (loop scalar)
+        List.map ~f:(fun t -> build_sarray (List.rev dims) t) (loop scalar)
     | _ -> [st] in
   loop st
+
+let%expect_test "dims" =
+  let st : Expr.Typed.t t =
+    SArray (SArray (SReal, Expr.Helpers.variable "N"), Expr.Helpers.one) in
+  let sclr, dims = get_container_dims st in
+  let st2 = build_sarray (List.rev dims) sclr in
+  let open Fmt in
+  pf stdout "%a = %a" (pp Expr.Typed.pp) st (pp Expr.Typed.pp) st2 ;
+  [%expect {| array[array[real, N], 1] = array[array[real, N], 1] |}]
