@@ -37,8 +37,7 @@ class operators_model final : public model_base_crtp<operators_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -630,8 +629,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -928,8 +926,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =

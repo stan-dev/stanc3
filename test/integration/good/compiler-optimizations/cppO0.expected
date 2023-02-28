@@ -29,8 +29,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -657,8 +656,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -1127,8 +1125,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -1520,8 +1517,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
                           pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -2061,8 +2057,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -2776,8 +2771,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -3604,8 +3598,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
                              pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -3891,8 +3884,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
                               pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -4180,8 +4172,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -4572,8 +4563,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -4978,8 +4968,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -5853,8 +5842,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -6633,8 +6621,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -7822,8 +7809,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -8762,8 +8748,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -9355,8 +9340,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -10057,8 +10041,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -10749,8 +10732,7 @@ class function_in_function_inline_model final : public model_base_crtp<function_
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -11112,8 +11094,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -11456,8 +11437,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
                                 pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -11849,8 +11829,7 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -12183,8 +12162,7 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
                            pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -13076,8 +13054,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -13899,8 +13876,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -14184,8 +14160,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -14472,8 +14447,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -14967,8 +14941,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -15610,8 +15583,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -15975,8 +15947,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -16601,8 +16572,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -17431,8 +17401,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -18115,8 +18084,7 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -18441,8 +18409,7 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -18731,8 +18698,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -19275,8 +19241,7 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                               pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -19733,8 +19698,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -20244,8 +20208,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -20589,8 +20552,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
                              pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -20942,8 +20904,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
       : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =

@@ -15000,8 +15000,7 @@
            (name current_statement__) (init (Assignment (Literal 0)))))
          (Using local_scalar_t__ (Double))
          (VariableDefn
-          ((static false) (constexpr false)
-           (type_ (TypeLiteral boost::ecuyer1988)) (name base_rng__)
+          ((static false) (constexpr false) (type_ Auto) (name base_rng__)
            (init
             (Assignment
              (FunCall stan::services::util::create_rng ()

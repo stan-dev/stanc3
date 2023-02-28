@@ -272,7 +272,7 @@ test_lp(const double& a, double& lp__, stan::math::accumulator<double>&
 }
 // [[stan::function]]
 auto
-test_rng(const double& a, boost::ecuyer1988& base_rng__, std::ostream*
+test_rng(const double& a, boost::random::mixmax& base_rng__, std::ostream*
          pstream__ = nullptr) {
   return basic_model_namespace::test_rng(a, base_rng__, pstream__);
 }
@@ -555,7 +555,7 @@ test_lp(const double& a, double& lp__, stan::math::accumulator<double>&
 }
 // [[stan::function]]
 auto
-test_rng(const double& a, boost::ecuyer1988& base_rng__, std::ostream*
+test_rng(const double& a, boost::random::mixmax& base_rng__, std::ostream*
          pstream__ = nullptr) {
   return basic_model_namespace::test_rng(a, base_rng__, pstream__);
 }
