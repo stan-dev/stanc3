@@ -41,13 +41,19 @@ let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
 let variadic_functor_suffix x = sprintf "_variadic%d_functor__" x
 
-let functor_suffix_select hof =
+type variadic = FixedArgs | ReduceSum | VariadicHOF of int
+[@@deriving compare, hash]
+
+let functor_type hof =
   match Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures hof with
-  | Some {required_fn_args; _} ->
-      variadic_functor_suffix (List.length required_fn_args)
-  | None when Stan_math_signatures.is_reduce_sum_fn hof ->
-      reduce_sum_functor_suffix
-  | None -> functor_suffix
+  | Some {required_fn_args; _} -> VariadicHOF (List.length required_fn_args)
+  | None when Stan_math_signatures.is_reduce_sum_fn hof -> ReduceSum
+  | None -> FixedArgs
+
+let functor_suffix_select = function
+  | VariadicHOF n -> variadic_functor_suffix n
+  | ReduceSum -> reduce_sum_functor_suffix
+  | FixedArgs -> functor_suffix
 
 (* retun true if the type of the expression
    is integer, real, or complex (e.g. not a container) *)
@@ -292,7 +298,9 @@ and lower_functionals fname suffix es mem_pattern =
               pattern=
                 FunApp
                   ( StanLib
-                      (name ^ functor_suffix_select fname, FnPlain, mem_pattern)
+                      ( name ^ functor_suffix_select (functor_type fname)
+                      , FnPlain
+                      , mem_pattern )
                   , [] ) }
         | e -> e in
       let converted_es = List.map ~f:convert_hof_vars es in

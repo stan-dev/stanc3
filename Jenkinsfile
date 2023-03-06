@@ -78,6 +78,10 @@ pipeline {
     environment {
         CXX = 'clang++-6.0'
         PARALLEL = 4
+        GIT_AUTHOR_NAME = 'Stan Jenkins'
+        GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
+        GIT_COMMITTER_NAME = 'Stan Jenkins'
+        GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
     }
     stages {
         stage('Kill previous builds') {
@@ -588,7 +592,7 @@ pipeline {
                         beforeAgent true
                         expression { !skipRebuildingBinaries }
                     }
-                    agent { label 'osx' }
+                    agent { label 'osx && !m1' }
                     steps {
                         dir("${env.WORKSPACE}/osx"){
                             unstash "Stanc3Setup"
@@ -894,7 +898,7 @@ pipeline {
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                     tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                    ./ghr_v0.12.1_linux_amd64/ghr -recreate ${tagName()} bin/
+                    ./ghr_v0.12.1_linux_amd64/ghr -u stan-buildbot -recreate ${tagName()} bin/
                 """)
             }
         }
@@ -948,9 +952,6 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                     sh """#!/bin/bash
                         set -e
-
-                        git config --global user.email "mc.stanislaw@gmail.com"
-                        git config --global user.name "Stan Jenkins"
 
                         git checkout --detach
                         git branch -D gh-pages

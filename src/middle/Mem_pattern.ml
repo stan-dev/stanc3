@@ -11,7 +11,7 @@ open Core_kernel.Poly
   * (fyi a var in the C++ code is an alias for var_value<double>)
   *
  **)
-type t = AoS | SoA [@@deriving sexp, compare, map, hash, fold]
+type t = AoS | SoA [@@deriving sexp, compare, map, hash, fold, equal]
 
 let pp ppf = function
   | AoS -> Fmt.string ppf "AoS"

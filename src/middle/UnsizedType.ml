@@ -14,16 +14,15 @@ type t =
   | UComplexRowVector
   | UComplexMatrix
   | UArray of t
-  | UFun of
-      (autodifftype * t) list
-      * returntype
-      * bool Fun_kind.suffix
-      * Mem_pattern.t
+  | UFun of argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
   | UMathLibraryFunction
+
+and argumentlist = (autodifftype * t) list
 
 and autodifftype = DataOnly | AutoDiffable
 
-and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
+and returntype = Void | ReturnType of t
+[@@deriving compare, hash, sexp, equal]
 
 let pp_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data "
