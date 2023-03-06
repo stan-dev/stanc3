@@ -16,6 +16,11 @@
     update_start_positions lexbuf.lex_curr_p
 
 
+  let note_deprecated_comment pos =
+    let loc_span = Middle.Location_span.of_positions_exn (pos, pos) in
+    Deprecation_removals.pound_comment_usages := loc_span :: !Deprecation_removals.pound_comment_usages
+
+
   let comments : Ast.comment_type list ref = ref []
 
   (* Store comments *)
@@ -78,14 +83,7 @@ rule token = parse
                                   try_get_new_lexbuf fname in
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
-                                Input_warnings.deprecated "#"
-                                  (lexbuf.lex_curr_p, "Comments beginning with \
-                                                       # are deprecated and this \
-                                                       syntax will be removed in \
-                                                       Stan 2.32.0. Use // to begin \
-                                                       line comments; this can be \
-                                                       done automatically using the \
-                                                       auto-format flag to stanc") ;
+                                note_deprecated_comment lexbuf.lex_curr_p ;
                                 singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf;
                                 token lexbuf } (* deprecated *)
 (* Program blocks *)
@@ -189,26 +187,8 @@ rule token = parse
   | ".*="                     { lexer_logger ".*=" ; Parser.ELTTIMESASSIGN }
   | "./="                     { lexer_logger "./=" ; Parser.ELTDIVIDEASSIGN }
   | "<-"                      { lexer_logger "<-" ;
-                                Input_warnings.deprecated "<-"
-                                  (lexbuf.lex_curr_p, "assignment operator <- \
-                                                       is deprecated in the \
-                                                       Stan language and will \
-                                                       be removed in Stan 2.32.0; \
-                                                       use = instead. This \
-                                                       can be done automatically \
-                                                       with the canonicalize flag \
-                                                       for stanc") ;
                                 Parser.ARROWASSIGN } (* deprecated *)
   | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
-                                Input_warnings.deprecated "increment_log_prob"
-                                  (lexbuf.lex_curr_p, "increment_log_prob(...)\
-                                                       ; is deprecated and \
-                                                       will be removed in Stan \
-                                                       2.32.0. Use target \
-                                                       += ...; instead. This \
-                                                       can be done automatically \
-                                                       with the canonicalize flag \
-                                                       for stanc") ;
                                 Parser.INCREMENTLOGPROB } (* deprecated *)
 (* Effects *)
   | "print"                   { lexer_logger "print" ; Parser.PRINT }
@@ -223,14 +203,6 @@ rule token = parse
                                 Parser.IMAGNUMERAL (lexeme lexbuf) }
   | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
   | "get_lp"                  { lexer_logger "get_lp" ;
-                                Input_warnings.deprecated "get_lp"
-                                  (lexbuf.lex_curr_p, "get_lp() function is \
-                                                       deprecated. It will be \
-                                                       removed in Stan 2.32.0. \
-                                                       Use target() instead. \
-                                                       This can be done automatically \
-                                                       with the canonicalize flag for \
-                                                       stanc") ;
                                 Parser.GETLP } (* deprecated *)
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }

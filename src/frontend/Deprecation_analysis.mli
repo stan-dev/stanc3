@@ -13,11 +13,13 @@ val update_suffix : string -> Middle.UnsizedType.t -> string
 val collect_userdef_distributions :
   typed_program -> Middle.UnsizedType.t String.Map.t
 
+val expired : int * int -> bool
 val without_suffix : string list -> string -> string
 val is_deprecated_distribution : string -> bool
-val deprecated_distributions : (string * string) String.Map.t
-val deprecated_functions : (string * string) String.Map.t
-val rename_deprecated : (string * string) String.Map.t -> string -> string
+val deprecated_distributions : (string * (int * int)) String.Map.t
+val deprecated_functions : (string * (int * int)) String.Map.t
+val rename_deprecated : (string * (int * int)) String.Map.t -> string -> string
+val stan_lib_deprecations : (string * (int * int)) String.Map.t
 
 val userdef_functions :
      ('a, 'b, 'c, 'd) statement_with program

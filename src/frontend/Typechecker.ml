@@ -81,7 +81,7 @@ let reserved_keywords =
   ; "functions"; "model"; "data"; "parameters"; "quantities"; "transformed"
   ; "generated"; "profile"; "return"; "break"; "continue"; "increment_log_prob"
   ; "get_lp"; "print"; "reject"; "typedef"; "struct"; "var"; "export"; "extern"
-  ; "static"; "auto" ]
+  ; "static"; "auto"; "offset"; "multiplier"; "lower"; "upper"; "array" ]
 
 let verify_identifier id : unit =
   if id.name = !model_name then

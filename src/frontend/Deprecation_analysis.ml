@@ -2,24 +2,30 @@ open Core_kernel
 open Ast
 open Middle
 
+let current_removal_version = (2, 32)
+
+let expired (major, minor) =
+  let removal_major, removal_minor = current_removal_version in
+  removal_major > major || (removal_major = major && removal_minor >= minor)
+
 let deprecated_functions =
   String.Map.of_alist_exn
-    [ ("multiply_log", ("lmultiply", "2.32.0"))
-    ; ("binomial_coefficient_log", ("lchoose", "2.32.0"))
-    ; ("cov_exp_quad", ("gp_exp_quad_cov", "2.32.0"))
-    ; ("fabs", ("abs", "2.33.0")) ]
+    [ ("multiply_log", ("lmultiply", (2, 32)))
+    ; ("binomial_coefficient_log", ("lchoose", (2, 32)))
+    ; ("cov_exp_quad", ("gp_exp_quad_cov", (2, 32))); ("fabs", ("abs", (2, 33)))
+    ]
 
 let deprecated_odes =
   String.Map.of_alist_exn
-    [ ("integrate_ode", ("ode_rk45", "3.0"))
-    ; ("integrate_ode_rk45", ("ode_rk45", "3.0"))
-    ; ("integrate_ode_bdf", ("ode_bdf", "3.0"))
-    ; ("integrate_ode_adams", ("ode_adams", "3.0")) ]
+    [ ("integrate_ode", ("ode_rk45", (3, 0)))
+    ; ("integrate_ode_rk45", ("ode_rk45", (3, 0)))
+    ; ("integrate_ode_bdf", ("ode_bdf", (3, 0)))
+    ; ("integrate_ode_adams", ("ode_adams", (3, 0))) ]
 
 let deprecated_distributions =
   String.Map.of_alist_exn
     (List.map
-       ~f:(fun (x, y) -> (x, (y, "2.32.0")))
+       ~f:(fun (x, y) -> (x, (y, (2, 32))))
        (List.concat_map Middle.Stan_math_signatures.distributions
           ~f:(fun (fnkinds, name, _, _) ->
             List.filter_map fnkinds ~f:(function
@@ -36,8 +42,8 @@ let stan_lib_deprecations =
         [%message
           "Common key in deprecation map"
             (key : string)
-            (x : string * string)
-            (y : string * string)] )
+            (x : string * (int * int))
+            (y : string * (int * int))] )
 
 let is_deprecated_distribution name =
   Option.is_some (Map.find deprecated_distributions name)
@@ -109,33 +115,22 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
   match expr with
-  | FunApp (StanLib FnPlain, {name= "if_else"; _}, l) ->
-      acc
-      @ [ ( emeta.loc
-          , "The function `if_else` is deprecated and will be removed in Stan \
-             2.32.0. Use the conditional operator (x ? y : z) instead; this \
-             can be automatically changed using the canonicalize flag for \
-             stanc" ) ]
-      @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
   | FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
       let w =
         match Map.find stan_lib_deprecations name with
-        | Some (rename, version) ->
-            [ ( emeta.loc
-              , name ^ " is deprecated and will be removed in Stan " ^ version
-                ^ ". Use " ^ rename
-                ^ " instead. This can be automatically changed using the \
-                   canonicalize flag for stanc" ) ]
-        | _ when String.is_suffix name ~suffix:"_cdf" ->
-            [ ( emeta.loc
-              , "Use of " ^ name
-                ^ " without a vertical bar (|) between the first two arguments \
-                   of a CDF is deprecated and will be removed in Stan 2.32.0. \
-                   This can be automatically changed using the canonicalize \
-                   flag for stanc" ) ]
+        | Some (rename, (major, minor)) ->
+            if expired (major, minor) then []
+            else
+              let version = string_of_int major ^ "." ^ string_of_int minor in
+              [ ( emeta.loc
+                , name ^ " is deprecated and will be removed in Stan " ^ version
+                  ^ ". Use " ^ rename
+                  ^ " instead. This can be automatically changed using the \
+                     canonicalize flag for stanc" ) ]
         | _ -> (
           match Map.find deprecated_odes name with
-          | Some (rename, version) ->
+          | Some (rename, (major, minor)) ->
+              let version = string_of_int major ^ "." ^ string_of_int minor in
               [ ( emeta.loc
                 , name ^ " is deprecated and will be removed in Stan " ^ version
                   ^ ". Use " ^ rename

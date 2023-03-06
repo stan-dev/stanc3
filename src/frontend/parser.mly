@@ -21,6 +21,11 @@ let rec iterate_n f x = function
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 
+let note_deprecated_array ?(unsized = false) (pos1, pos2) =
+  let loc_span = Middle.Location_span.of_positions_exn (pos1, pos2) in
+  Deprecation_removals.old_array_usages := (loc_span, unsized) :: !Deprecation_removals.old_array_usages
+
+
 (* $sloc and $symbolstartpos generates code using !=, which
     Core_kernel considers to be an error.
  *)
@@ -175,20 +180,17 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
-  | id_and_v = future_keyword
-    {
-      let id, v = id_and_v in
-      Input_warnings.future_keyword id.name v $loc;
-      id
-    }
+  | id = new_reserved_words
+    { id }
 
-future_keyword:
-  | OFFSET { build_id "offset" $loc, "2.32.0" }
-  | MULTIPLIER { build_id "multiplier" $loc, "2.32.0" }
-  | LOWER { build_id "lower" $loc, "2.32.0" }
-  | UPPER { build_id "upper" $loc, "2.32.0" }
+(* TEMP: move to reserved_words for 2.33 *)
+new_reserved_words:
+  | OFFSET { build_id "offset" $loc }
+  | MULTIPLIER { build_id "multiplier" $loc }
+  | LOWER { build_id "lower" $loc }
+  | UPPER { build_id "upper" $loc }
   | ARRAY
-    { build_id "array" $loc, "2.32.0" }
+    { build_id "array" $loc }
 
 decl_identifier:
   | id=identifier { id }
@@ -263,7 +265,7 @@ unsized_type:
   | bt=basic_type n_opt=option(unsized_dims)
     {  grammar_logger "unsized_type";
        if Option.is_some n_opt then
-        Input_warnings.array_syntax ~unsized:true $loc;
+         note_deprecated_array ~unsized:true $loc;
        nest_unsized_array bt (Option.value n_opt ~default:0)
     }
 
@@ -332,7 +334,7 @@ decl(type_rule, rhs):
    *)
   | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
       SEMICOLON
-    { Input_warnings.array_syntax $loc;
+    { note_deprecated_array $loc;
       (fun ~is_global ->
       { stmt=
           VarDecl {
