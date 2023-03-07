@@ -49,8 +49,6 @@ model {
   c ~ poisson_log_log(3.0);
   if (b) {
     x ~ normal(0, 1);
-    x ~ normal_log(0, 1);
-    x ~ normal_log_log(0, 1);
     target += normal_log_log(x,1,2);
     increment_log_prob(std_normal_lpdf(x));
   } else {
@@ -59,7 +57,7 @@ model {
     increment_log_prob(foo_cdf_log(x, 1));
   }
   while (0.0) {
-    
+
   }
 
   int bool = !b < 2 && d || x;

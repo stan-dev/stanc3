@@ -1,8 +1,4 @@
 functions {
-    real foo_log(real alpha, real beta){
-     return 1.0;
-   }
-
    real foo_t_log(real alpha, real beta){
      return 1.0;
    }
@@ -53,7 +49,6 @@ model {
 
   // _log UDFs
   target += foo_t_log(1,3);
-  1 ~ foo(3);
 
   if (1 < 2 < 3 < 4) {
     // multiple comparisons

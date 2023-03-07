@@ -15,6 +15,8 @@ let deprecated_functions =
     ; ("cov_exp_quad", ("gp_exp_quad_cov", (2, 32))); ("fabs", ("abs", (2, 33)))
     ]
 
+(* TODO need to mark lkj_cov as deprecated *)
+
 let deprecated_odes =
   String.Map.of_alist_exn
     [ ("integrate_ode", ("ode_rk45", (3, 0)))
@@ -115,7 +117,8 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
   match expr with
-  | FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
+  | CondDistApp ((StanLib _ | UserDefined _), {name; _}, l)
+   |FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
       let w =
         match Map.find stan_lib_deprecations name with
         | Some (rename, (major, minor)) ->
@@ -176,22 +179,6 @@ let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
           , "Functions do not need to be declared before definition; all user \
              defined function names are always in scope regardless of \
              defintion order." ) ]
-  | FunDef
-      { body
-      ; funname= {name; id_loc}
-      ; arguments= (_, ((UReal | UInt) as type_), _) :: _
-      ; _ }
-    when String.is_suffix ~suffix:"_log" name ->
-      let acc =
-        acc
-        @ [ ( id_loc
-            , "Use of the _log suffix in user defined probability functions is \
-               deprecated and will be removed in Stan 2.32.0, use name '"
-              ^ update_suffix name type_
-              ^ "' instead if you intend on using this function in ~ \
-                 statements or calling unnormalized probability functions \
-                 inside of it." ) ] in
-      collect_deprecated_stmt fundefs acc body
   | FunDef {body; _} -> collect_deprecated_stmt fundefs acc body
   | IfThenElse ({emeta= {type_= UReal; loc; _}; _}, ifb, elseb) ->
       let acc =

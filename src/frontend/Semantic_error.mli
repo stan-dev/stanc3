@@ -107,7 +107,10 @@ val cannot_assign_function : Location_span.t -> UnsizedType.t -> string -> t
 val cannot_assign_to_multiindex : Location_span.t -> t
 val invalid_sampling_pdf_or_pmf : Location_span.t -> t
 val invalid_sampling_cdf_or_ccdf : Location_span.t -> string -> t
-val invalid_sampling_no_such_dist : Location_span.t -> string -> t
+
+val invalid_sampling_no_such_dist :
+  Location_span.t -> string -> UnsizedType.t option -> t
+
 val target_plusequals_outside_model_or_logprob : Location_span.t -> t
 
 val invalid_truncation_cdf_or_ccdf :

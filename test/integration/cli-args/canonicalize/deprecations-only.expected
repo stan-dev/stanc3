@@ -180,8 +180,6 @@ model {
   c ~ poisson_log(3.0);
   if (b != 0.0) {
     x ~ normal(0, 1);
-    x ~ normal_log(0, 1);
-    x ~ normal_log(0, 1);
     target += normal_log_lpdf(x | 1, 2);
     target += std_normal_lpdf(x);
   } else {

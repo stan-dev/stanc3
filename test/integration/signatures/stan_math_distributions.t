@@ -30,6 +30,7 @@ Display all Stan math distributions exposed in the language
   inv_wishart: lpdf, log (deprecated)
   lkj_corr: lpdf, log (deprecated)
   lkj_corr_cholesky: lpdf, log (deprecated)
+  lkj_cov: lpdf, log (deprecated)
   logistic: lpdf, rng, ccdf, cdf, log (deprecated)
   loglogistic: lpdf, rng, cdf, log (deprecated)
   lognormal: lpdf, rng, ccdf, cdf, log (deprecated)

@@ -1071,13 +1071,11 @@ let verify_sampling_distribution loc tenv id arguments =
     SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
   let sampling_dists =
     List.map ~f:name_w_suffix_sampling_dist Utils.distribution_suffices in
-  let is_sampling_dist_defined =
+  if
     List.exists
       ~f:(function UniqueMatch (ReturnType UReal, _, _) -> true | _ -> false)
       sampling_dists
-    && name <> "binomial_coefficient"
-    && name <> "multiply" in
-  if is_sampling_dist_defined then ()
+  then ()
   else
     match
       List.max_elt sampling_dists
@@ -1086,7 +1084,10 @@ let verify_sampling_distribution loc tenv id arguments =
     | None | Some (UniqueMatch _) | Some (SignatureErrors ([], _)) ->
         (* Either non-existant or a very odd case,
            output the old non-informative error *)
-        Semantic_error.invalid_sampling_no_such_dist loc name |> error
+        Semantic_error.invalid_sampling_no_such_dist loc name
+          ( List.hd argumenttypes
+          |> Option.map ~f:(fun (_, t) -> UnsizedType.internal_scalar t) )
+        |> error
     | Some (AmbiguousMatch sigs) ->
         Semantic_error.ambiguous_function_promotion loc id.name
           (Some (List.map ~f:type_of_expr_typed arguments))
@@ -1524,7 +1525,7 @@ and verify_fundef_dist_rt loc id return_ty =
   let is_dist =
     List.exists
       ~f:(fun x -> String.is_suffix id.name ~suffix:x)
-      Utils.conditioning_suffices_w_log in
+      Utils.conditioning_suffices in
   if is_dist then
     match return_ty with
     | UnsizedType.ReturnType UReal -> ()

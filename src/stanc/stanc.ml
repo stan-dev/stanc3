@@ -297,14 +297,14 @@ let use_file filename =
   if !print_info_json then (
     print_endline (Info.info canonical_ast) ;
     exit 0 ) ;
+  if not !canonicalize_settings.deprecations then
+    Warnings.pp_warnings Fmt.stderr ?printed_filename
+      (Deprecation_analysis.collect_warnings typed_ast) ;
   ( if not !canonicalize_settings.deprecations then
     let removals = Deprecation_removals.collect_removals typed_ast in
     if not (List.is_empty removals) then (
       Deprecation_removals.pp_removals Fmt.stderr ?printed_filename removals ;
       exit 69 (* EX_UNAVAILABLE in sysexits.h*) ) ) ;
-  if not !canonicalize_settings.deprecations then
-    Warnings.pp_warnings Fmt.stderr ?printed_filename
-      (Deprecation_analysis.collect_warnings typed_ast) ;
   if !generate_data then
     print_endline
       (Debug_data_generation.print_data_prog

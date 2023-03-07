@@ -59,22 +59,6 @@ let collect_removed_lval acc l =
 let rec collect_removed_stmt (acc : (Location_span.t * string) list)
     ({stmt; _} : Ast.typed_statement) : (Location_span.t * string) list =
   match stmt with
-  | FunDef
-      { body
-      ; funname= {name; id_loc}
-      ; arguments= (_, ((UReal | UInt) as type_), _) :: _
-      ; _ }
-    when String.is_suffix ~suffix:"_log" name ->
-      let acc =
-        acc
-        @ [ ( id_loc
-            , "Use of the _log suffix in user defined probability functions is \
-               deprecated and will be removed in Stan 2.32.0, use name '"
-              ^ update_suffix name type_
-              ^ "' instead if you intend on using this function in ~ \
-                 statements or calling unnormalized probability functions \
-                 inside of it." ) ] in
-      collect_removed_stmt acc body
   | Assignment {assign_lhs; assign_op= ArrowAssign; assign_rhs} ->
       let acc =
         acc
