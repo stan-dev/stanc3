@@ -33,9 +33,7 @@ Show help
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
-    --allow_undefined               Deprecated. Same as --allow-undefined. Will be removed in Stan 2.32.0
     --include-paths                 Takes a comma-separated list of directories that may contain a file in an #include directive (default = "")
-    --include_paths                 Deprecated. Same as --include-paths. Will be removed in Stan 2.32.0
     --use-opencl                    If set, try to use matrix_cl signatures.
     --standalone-functions          If set, the generated C++ will be the standalone functions C++ code.
     --filename-in-msg               Sets the filename used in compiler errors. Uses actual filename by default.
@@ -81,9 +79,7 @@ Error when no file passed
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
-    --allow_undefined               Deprecated. Same as --allow-undefined. Will be removed in Stan 2.32.0
     --include-paths                 Takes a comma-separated list of directories that may contain a file in an #include directive (default = "")
-    --include_paths                 Deprecated. Same as --include-paths. Will be removed in Stan 2.32.0
     --use-opencl                    If set, try to use matrix_cl signatures.
     --standalone-functions          If set, the generated C++ will be the standalone functions C++ code.
     --filename-in-msg               Sets the filename used in compiler errors. Uses actual filename by default.
@@ -127,9 +123,7 @@ Error when multiple files passed
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
-    --allow_undefined               Deprecated. Same as --allow-undefined. Will be removed in Stan 2.32.0
     --include-paths                 Takes a comma-separated list of directories that may contain a file in an #include directive (default = "")
-    --include_paths                 Deprecated. Same as --include-paths. Will be removed in Stan 2.32.0
     --use-opencl                    If set, try to use matrix_cl signatures.
     --standalone-functions          If set, the generated C++ will be the standalone functions C++ code.
     --filename-in-msg               Sets the filename used in compiler errors. Uses actual filename by default.

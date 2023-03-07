@@ -30,6 +30,7 @@ parameters {
   real add;
   real sub;
   real multiply;
+  real lchoose;
   real binomial_coefficient_log;
 
   // try to break internal functions
@@ -64,7 +65,7 @@ transformed parameters {
 
   mu = add + add - sub;
 
-  mu += binomial_coefficient_log * lchoose(3,4) * binomial_coefficient_log(3,4);
+  mu += lchoose * lchoose(3,4) * binomial_coefficient_log;
 
   array[1] vector[4] called = ode_bdf(rhs, segment, 1.0, {3.0}, 3.5);
 
