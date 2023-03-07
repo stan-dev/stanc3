@@ -74,7 +74,6 @@ let rec collect_removed_stmt (acc : (Location_span.t * string) list)
               ^ "' instead if you intend on using this function in ~ \
                  statements or calling unnormalized probability functions \
                  inside of it." ) ] in
-      (* TODO error here *)
       collect_removed_stmt acc body
   | Assignment {assign_lhs; assign_op= ArrowAssign; assign_rhs} ->
       let acc =
@@ -110,9 +109,9 @@ let collect_removals (program : typed_program) =
         let placement = if unsized then "a type" else "a variable name" in
         ( loc
         , "Declaration of arrays by placing brackets after " ^ placement
-          ^ " is deprecated and will be removed in Stan 2.32.0. Instead use \
-             the array keyword before the type. This can be changed \
-             automatically using the auto-format flag to stanc" ) ) in
+          ^ " was removed in Stan 2.32.0. Instead use the array keyword before \
+             the type. This can be changed automatically using the auto-format \
+             flag to stanc" ) ) in
   fold_program collect_removed_stmt (pounds @ arrs) program
 
 let pp ?printed_filename ppf (span, message) =

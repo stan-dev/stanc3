@@ -42,9 +42,7 @@ model {
   real x = get_lp();
   // old array syntax
   real xyz[5];
-  // future reserved words
-  int offset;
-  int array;
+
   // deprecated functions
   real z = multiply_log(3.4,3.5);
 
