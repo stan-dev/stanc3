@@ -306,12 +306,22 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
-  inline void get_param_names(std::vector<std::string>& names__) const {
+  inline void
+  get_param_names(std::vector<std::string>& names__, const bool
+                  emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
     names__ = std::vector<std::string>{"rho", "alpha", "sigma"};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void
+  get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
+           emit_transformed_parameters__ = true, const bool
+           emit_generated_quantities__ = true) const {
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
                 std::vector<size_t>{}, std::vector<size_t>{}};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline void
   constrained_param_names(std::vector<std::string>& param_names__, bool
