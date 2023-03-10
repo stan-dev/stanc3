@@ -261,19 +261,37 @@ class operators_model final : public model_base_crtp<operators_model> {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    names__ = std::vector<std::string>{"v", "rv", "A", "i", "x", "b", "drv",
-                "dv"};
+  inline void
+  get_param_names(std::vector<std::string>& names__, const bool
+                  emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    names__ = std::vector<std::string>{"v", "rv", "A"};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp{"i", "x", "b", "drv", "dv"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+    }
   }
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void
+  get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
+           emit_transformed_parameters__ = true, const bool
+           emit_generated_quantities__ = true) const {
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
                                                                     size_t>(N)},
                 std::vector<size_t>{static_cast<size_t>(N)},
                 std::vector<size_t>{static_cast<size_t>(N),
-                  static_cast<size_t>(N)}, std::vector<size_t>{},
-                std::vector<size_t>{}, std::vector<size_t>{},
-                std::vector<size_t>{static_cast<size_t>(N)},
-                std::vector<size_t>{static_cast<size_t>(N)}};
+                  static_cast<size_t>(N)}};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {
+      std::vector<std::vector<size_t>>
+        temp{std::vector<size_t>{}, std::vector<size_t>{},
+             std::vector<size_t>{},
+             std::vector<size_t>{static_cast<size_t>(N)},
+             std::vector<size_t>{static_cast<size_t>(N)}};
+      dimss__.reserve(dimss__.size() + temp.size());
+      dimss__.insert(dimss__.end(), temp.begin(), temp.end());
+    }
   }
   inline void
   constrained_param_names(std::vector<std::string>& param_names__, bool
@@ -781,11 +799,21 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
-  inline void get_param_names(std::vector<std::string>& names__) const {
+  inline void
+  get_param_names(std::vector<std::string>& names__, const bool
+                  emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
     names__ = std::vector<std::string>{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void
+  get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
+           emit_transformed_parameters__ = true, const bool
+           emit_generated_quantities__ = true) const {
     dimss__ = std::vector<std::vector<size_t>>{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
   }
   inline void
   constrained_param_names(std::vector<std::string>& param_names__, bool
@@ -1171,18 +1199,36 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
   }
-  inline void get_param_names(std::vector<std::string>& names__) const {
-    names__ = std::vector<std::string>{"a", "b", "r", "zp", "c", "d", "z"};
+  inline void
+  get_param_names(std::vector<std::string>& names__, const bool
+                  emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    names__ = std::vector<std::string>{"a", "b", "r", "zp"};
+    if (emit_transformed_parameters__) {
+      std::vector<std::string> temp{"c", "d", "z"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
   }
-  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+  inline void
+  get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
+           emit_transformed_parameters__ = true, const bool
+           emit_generated_quantities__ = true) const {
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
                                                                     size_t>(2)},
                 std::vector<size_t>{static_cast<size_t>(2)},
                 std::vector<size_t>{},
-                std::vector<size_t>{static_cast<size_t>(2)},
-                std::vector<size_t>{static_cast<size_t>(2)},
-                std::vector<size_t>{static_cast<size_t>(2)},
                 std::vector<size_t>{static_cast<size_t>(2)}};
+    if (emit_transformed_parameters__) {
+      std::vector<std::vector<size_t>>
+        temp{std::vector<size_t>{static_cast<size_t>(2)},
+             std::vector<size_t>{static_cast<size_t>(2)},
+             std::vector<size_t>{static_cast<size_t>(2)}};
+      dimss__.reserve(dimss__.size() + temp.size());
+      dimss__.insert(dimss__.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
   }
   inline void
   constrained_param_names(std::vector<std::string>& param_names__, bool

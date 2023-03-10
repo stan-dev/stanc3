@@ -306,15 +306,44 @@ let gen_transform_inits_impl {Program.transform_inits; _} =
        ~body:(intro @ [Stmts.rethrow_located (lower_statements transform_inits)])
        ~cv_qualifiers:[Const] () )
 
+let gen_extend_vector name type_ elts =
+  let open Expression_syntax in
+  if List.is_empty elts then []
+  else
+    let temp = Var "temp" in
+    [ VariableDefn
+        (make_variable_defn ~type_ ~name:"temp" ~init:(InitializerList elts) ())
+    ; Expression name.@?(("reserve", [name.@!("size") + temp.@!("size")]))
+    ; Expression
+        name.@?(("insert", [name.@!("end"); temp.@!("begin"); temp.@!("end")]))
+    ]
+
 let gen_get_param_names {Program.output_vars; _} =
-  let extract_name var = Exprs.literal_string (Mangle.remove_prefix (fst var)) in
-  let args = [(Ref (Types.std_vector Types.string), "names__")] in
+  let params, tparams, gqs =
+    List.partition3_map output_vars ~f:(function
+      | id, {Program.out_block= Parameters; _} ->
+          `Fst (Exprs.literal_string (Mangle.remove_prefix id))
+      | id, {out_block= TransformedParameters; _} ->
+          `Snd (Exprs.literal_string (Mangle.remove_prefix id))
+      | id, {out_block= GeneratedQuantities; _} ->
+          `Trd (Exprs.literal_string (Mangle.remove_prefix id)) ) in
+  let args =
+    [ (Ref (Types.std_vector Types.string), "names__")
+    ; (Const Types.bool, "emit_transformed_parameters__ = true")
+    ; (Const Types.bool, "emit_generated_quantities__ = true") ] in
+  let names = Var "names__" in
   let body =
-    [ Expression
-        (Assign
-           ( Var "names__"
-           , Exprs.std_vector_init_expr Types.string
-               (List.map ~f:extract_name output_vars) ) ) ] in
+    [Expression (Assign (names, Exprs.std_vector_init_expr Types.string params))]
+    @ [ IfElse
+          ( Var "emit_transformed_parameters__"
+          , Stmts.block
+              (gen_extend_vector names (Types.std_vector Types.string) tparams)
+          , None )
+      ; IfElse
+          ( Var "emit_generated_quantities__"
+          , Stmts.block
+              (gen_extend_vector names (Types.std_vector Types.string) gqs)
+          , None ) ] in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Void ~name:"get_param_names" ~args
        ~body ~cv_qualifiers:[Const] () )
@@ -330,19 +359,43 @@ let gen_get_dims {Program.output_vars; _} =
   let pack inner_dims =
     Exprs.std_vector_init_expr Types.size_t
       (List.map ~f:cast (SizedType.get_dims_io inner_dims)) in
-  let dim_list =
-    List.(
-      map ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st) output_vars)
-  in
-  let result_vector =
-    Exprs.std_vector_init_expr
-      (Types.std_vector Types.size_t)
-      (List.map ~f:pack dim_list) in
+  let params, tparams, gqs =
+    List.partition3_map output_vars ~f:(function
+      | _, {Program.out_block= Parameters; Program.out_constrained_st= st; _} ->
+          `Fst (pack st)
+      | _, {out_block= TransformedParameters; Program.out_constrained_st= st; _}
+        ->
+          `Snd (pack st)
+      | _, {out_block= GeneratedQuantities; Program.out_constrained_st= st; _}
+        ->
+          `Trd (pack st) ) in
+  let args =
+    [ (Ref (Types.std_vector (Types.std_vector Types.size_t)), "dimss__")
+    ; (Const Types.bool, "emit_transformed_parameters__ = true")
+    ; (Const Types.bool, "emit_generated_quantities__ = true") ] in
+  let dimss = Var "dimss__" in
+  let body =
+    [ Expression
+        (Assign
+           ( dimss
+           , Exprs.std_vector_init_expr (Types.std_vector Types.size_t) params
+           ) )
+    ; IfElse
+        ( Var "emit_transformed_parameters__"
+        , Stmts.block
+            (gen_extend_vector dimss
+               (Types.std_vector (Types.std_vector Types.size_t))
+               tparams )
+        , None )
+    ; IfElse
+        ( Var "emit_generated_quantities__"
+        , Stmts.block
+            (gen_extend_vector dimss
+               (Types.std_vector (Types.std_vector Types.size_t))
+               gqs )
+        , None ) ] in
   FunDef
-    (make_fun_defn ~inline:true ~return_type:Void ~name:"get_dims"
-       ~args:
-         [(Ref (Types.std_vector (Types.std_vector Types.size_t)), "dimss__")]
-       ~body:[Expression (Assign (Var "dimss__", result_vector))]
+    (make_fun_defn ~inline:true ~return_type:Void ~name:"get_dims" ~args ~body
        ~cv_qualifiers:[Const] () )
 
 let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
