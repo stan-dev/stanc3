@@ -47,33 +47,35 @@ Semantic error in 'string', line 6, column 4 to column 5:
 Identifier 'z' not in scope.
 
 $ node canonical.js
-transformed data {
-  real a = lmultiply(4, 5);
-}
 parameters {
   real y;
 }
 model {
+  if (y != 0.0) {
+    print("y is nonzero ");
+  }
+  
   y ~ normal(0, 1);
 }
 
-transformed data {
-  real a = lmultiply(4, 5);
-}
 parameters {
   real y;
 }
 model {
+  if (y != 0.0) 
+    print("y is nonzero ");
+  
   y ~ normal(((((((((0)))))))), 1);
 }
 
-transformed data {
-  real a = multiply_log(4, 5);
-}
 parameters {
   real y;
 }
 model {
+  if (y) {
+    print("y is nonzero ");
+  }
+  
   y ~ normal(0, 1);
 }
 
@@ -249,6 +251,22 @@ $ node pedantic.js
 []
 ["Warning in 'string', line 4, column 9: The variable tt may not have been\n    assigned a value before its use."]
 []
+$ node removed.js
+Error in 'string', line 3, column 1: Declaration of arrays by placing
+    brackets after a variable name was removed in Stan 2.32.0. Instead use
+    the array keyword before the type. This can be changed automatically
+    using the auto-format flag to stanc
+Error in 'string', line 6, column 14: std_normal_log was removed in Stan
+    2.32. Use std_normal_lpdf instead. This can be automatically changed
+    using the canonicalize flag for stanc
+
+parameters {
+  array[10] real y;
+}
+model {
+  target += std_normal_lpdf(y);
+}
+
 $ node standalone-functions.js
 
 $ node version.js

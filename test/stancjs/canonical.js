@@ -2,13 +2,13 @@ var stanc = require('../../src/stancjs/stancjs.bc.js');
 var utils = require("./utils/utils.js");
 
 let basic_model = `
-transformed data {
-    real a = multiply_log(4,5);
-}
 parameters {
 	real y;
 }
 model {
+    if (y)
+        print("y is nonzero ");
+
     y ~ normal(((((((((0)))))))),1);
 }
 `
