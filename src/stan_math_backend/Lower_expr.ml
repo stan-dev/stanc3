@@ -18,7 +18,6 @@ let fn_renames =
     ; (FnNaN, "std::numeric_limits<double>::quiet_NaN") ]
   @ [ ("lmultiply", "stan::math::multiply_log")
     ; ("lchoose", "stan::math::binomial_coefficient_log")
-    ; ("lkj_cov_lpdf", "stan::math::lkj_cov_log")
     ; ("std_normal_qf", "stan::math::inv_Phi")
     ; ("integrate_ode", "stan::math::integrate_ode_rk45") ]
   |> String.Map.of_alist_exn

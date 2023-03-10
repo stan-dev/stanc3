@@ -86,6 +86,7 @@ type ('unique, 'error) generic_match_result =
       (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
       list
   | SignatureErrors of 'error
+[@@deriving sexp]
 
 type match_result =
   ( UnsizedType.returntype
@@ -126,15 +127,28 @@ let rec compare_errors e1 e2 =
       | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
 
 let compare_match_results e1 e2 =
-  (* Prefer informative errors *)
+  (* Sort more informative errors towards the front of lists *)
   match (e1, e2) with
-  | AmbiguousMatch _, _ -> 1
-  | _, AmbiguousMatch _ -> -1
   | SignatureErrors (l1, _), SignatureErrors (l2, _) ->
-      Int.compare (List.length l1) (List.length l2)
+      Int.compare (List.length l2) (List.length l1)
   | SignatureErrors _, _ -> 1
   | _, SignatureErrors _ -> -1
+  | AmbiguousMatch _, AmbiguousMatch _ -> 0
+  | AmbiguousMatch _, _ -> 1
+  | _, AmbiguousMatch _ -> -1
   | UniqueMatch _, UniqueMatch _ -> 0
+
+let%expect_test "compare_matches" =
+  let matches =
+    [ UniqueMatch (); AmbiguousMatch []; SignatureErrors ([], ()); UniqueMatch ()
+    ; AmbiguousMatch []; SignatureErrors ([()], ()) ] in
+  let matches = List.sort matches ~compare:compare_match_results in
+  print_s [%sexp (matches : (unit, unit list * unit) generic_match_result list)] ;
+  [%expect
+    "\n\
+    \    ((UniqueMatch ()) (UniqueMatch ()) (AmbiguousMatch ()) \
+     (AmbiguousMatch ())\n\
+    \     (SignatureErrors ((()) ())) (SignatureErrors (() ())))"]
 
 let rec check_same_type depth t1 t2 =
   let wrap_func = Result.map_error ~f:(fun e -> TypeMismatch (t1, t2, Some e)) in

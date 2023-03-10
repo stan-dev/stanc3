@@ -334,7 +334,7 @@ module StatementError = struct
     | LValueMultiIndexing
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
-    | InvalidSamplingNoSuchDistribution of string * UnsizedType.t option
+    | InvalidSamplingNoSuchDistribution of string * bool
     | TargetPlusEqualsOutsideModelOrLogProb
     | InvalidTruncationCDForCCDF of
         (UnsizedType.autodifftype * UnsizedType.t) list
@@ -387,21 +387,16 @@ module StatementError = struct
           "CDF and CCDF functions may not be used with sampling notation. Use \
            target += %s_log(...) instead."
           name
-    | InvalidSamplingNoSuchDistribution (name, Some UnsizedType.UInt) ->
+    | InvalidSamplingNoSuchDistribution (name, true) ->
         Fmt.pf ppf
-          "Ill-typed arguments to '~' statement. No function '%s_lpmf' was \
-           found when looking for distribution '%s'."
-          name name
-    | InvalidSamplingNoSuchDistribution (name, Some UnsizedType.UReal) ->
+          "Ill-typed arguments to '~' statement. No function '%s_lpmf' or \
+           '%s_lpdf' was found when looking for distribution '%s'."
+          name name name
+    | InvalidSamplingNoSuchDistribution (name, false) ->
         Fmt.pf ppf
           "Ill-typed arguments to '~' statement. No function '%s_lpdf' was \
            found when looking for distribution '%s'."
           name name
-    | InvalidSamplingNoSuchDistribution (name, _) ->
-        Fmt.pf ppf
-          "Ill-typed arguments to '~' statement. No distribution '%s' was \
-           found."
-          name
     | InvalidTruncationCDForCCDF args ->
         Fmt.pf ppf
           "Truncation is only defined if distribution has _lcdf and _lccdf \
@@ -452,7 +447,7 @@ module StatementError = struct
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
         Fmt.pf ppf
-          "Real return type required for probability functions ending in _log, \
+          "Real return type required for probability functions ending in \
            _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf."
     | ProbDensityNonRealVariate (Some ut) ->
         Fmt.pf ppf
@@ -645,9 +640,9 @@ let invalid_sampling_pdf_or_pmf loc =
 let invalid_sampling_cdf_or_ccdf loc name =
   StatementError (loc, StatementError.InvalidSamplingCDForCCDF name)
 
-let invalid_sampling_no_such_dist loc name first_arg_ty =
+let invalid_sampling_no_such_dist loc name is_int =
   StatementError
-    (loc, StatementError.InvalidSamplingNoSuchDistribution (name, first_arg_ty))
+    (loc, StatementError.InvalidSamplingNoSuchDistribution (name, is_int))
 
 let target_plusequals_outside_model_or_logprob loc =
   StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)

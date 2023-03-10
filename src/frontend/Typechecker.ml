@@ -1071,33 +1071,26 @@ let verify_sampling_distribution loc tenv id arguments =
     SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
   let sampling_dists =
     List.map ~f:name_w_suffix_sampling_dist Utils.distribution_suffices in
-  if
-    List.exists
-      ~f:(function UniqueMatch (ReturnType UReal, _, _) -> true | _ -> false)
-      sampling_dists
-  then ()
-  else
-    match
-      List.max_elt sampling_dists
-        ~compare:SignatureMismatch.compare_match_results
-    with
-    | None | Some (UniqueMatch _) | Some (SignatureErrors ([], _)) ->
-        (* Either non-existant or a very odd case,
-           output the old non-informative error *)
-        Semantic_error.invalid_sampling_no_such_dist loc name
-          ( List.hd argumenttypes
-          |> Option.map ~f:(fun (_, t) -> UnsizedType.internal_scalar t) )
-        |> error
-    | Some (AmbiguousMatch sigs) ->
-        Semantic_error.ambiguous_function_promotion loc id.name
-          (Some (List.map ~f:type_of_expr_typed arguments))
-          sigs
-        |> error
-    | Some (SignatureErrors (l, b)) ->
-        arguments
-        |> List.map ~f:(fun e -> e.emeta.type_)
-        |> Semantic_error.illtyped_fn_app loc id.name (l, b)
-        |> error
+  match
+    List.min_elt sampling_dists ~compare:SignatureMismatch.compare_match_results
+  with
+  | Some (UniqueMatch _) ->
+      (* real return type is enforced by [verify_fundef_dist_rt] *) ()
+  | None | Some (SignatureErrors ([], _)) ->
+      (* Function is non existent *)
+      Semantic_error.invalid_sampling_no_such_dist loc name
+        (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
+      |> error
+  | Some (AmbiguousMatch sigs) ->
+      Semantic_error.ambiguous_function_promotion loc id.name
+        (Some (List.map ~f:type_of_expr_typed arguments))
+        sigs
+      |> error
+  | Some (SignatureErrors (l, b)) ->
+      arguments
+      |> List.map ~f:(fun e -> e.emeta.type_)
+      |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+      |> error
 
 let is_cumulative_density_defined tenv id arguments =
   let name = id.name in

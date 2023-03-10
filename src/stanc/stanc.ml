@@ -221,11 +221,11 @@ let removed_arg_errors =
     eprintf
       "--allow_undefined was removed in Stan 2.32.0. Please use \
        --allow-undefined.\n" ;
-    exit 69 (* EX_UNAVAILABLE in sysexits.h*) ) ;
+    exit 65 (* EX_DATAERR in sysexits.h*) ) ;
   if arg_is_used "--include_paths" then (
     eprintf
       "--include_paths was removed in Stan 2.32.0. Please use --include-paths.\n" ;
-    exit 69 (* EX_UNAVAILABLE in sysexits.h*) )
+    exit 65 (* EX_DATAERR in sysexits.h*) )
 
 let model_file_err () =
   Arg.usage options ("Please specify a model_file.\n" ^ usage) ;
@@ -304,7 +304,7 @@ let use_file filename =
     let removals = Deprecation_removals.collect_removals typed_ast in
     if not (List.is_empty removals) then (
       Deprecation_removals.pp_removals Fmt.stderr ?printed_filename removals ;
-      exit 69 (* EX_UNAVAILABLE in sysexits.h*) ) ) ;
+      exit 65 (* EX_DATAERR in sysexits.h*) ) ) ;
   if !generate_data then
     print_endline
       (Debug_data_generation.print_data_prog
