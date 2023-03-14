@@ -53,8 +53,31 @@ let rec collect_removed_expr (acc : (Location_span.t * string) list)
       acc @ w @ List.concat_map l ~f:(fun e -> collect_removed_expr [] e)
   | _ -> fold_expression collect_removed_expr (fun l _ -> l) acc expr
 
-let collect_removed_lval acc l =
-  fold_lval_with collect_removed_expr (fun x _ -> x) acc l
+let collect_removed_lval acc (l : Ast.typed_lval) =
+  match l.lval with
+  | LIndexed (l, _) ->
+      let rec flatten = function
+        | {lval= LVariable _; _} -> []
+        | {lval= LIndexed (l, idxs); _} ->
+            let flat = flatten l in
+            flat @ idxs in
+      if
+        not
+          (List.for_all
+             ~f:(function
+               | Single {emeta= {type_= UnsizedType.UInt; _}; _} -> true
+               | _ -> false )
+             (flatten l) )
+      then
+        acc
+        @ [ ( l.lmeta.loc
+            , "Nested multi-indexing on the left hand side of assignment does \
+               not behave the same as nested indexing in expressions. This is \
+               considered a bug and has been disallowed in Stan 2.32.0. The \
+               indexing can be automatically fixed using the canonicalize flag \
+               for stanc." ) ]
+      else fold_lval_with collect_removed_expr (fun x _ -> x) acc l
+  | _ -> fold_lval_with collect_removed_expr (fun x _ -> x) acc l
 
 let rec collect_removed_stmt (acc : (Location_span.t * string) list)
     ({stmt; _} : Ast.typed_statement) : (Location_span.t * string) list =

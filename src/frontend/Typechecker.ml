@@ -977,13 +977,8 @@ let check_lvalue cf tenv = function
       let idcs = List.map ~f:(check_index cf tenv) idcs in
       let ad_level = inferred_ad_type_of_indexed lval.lmeta.ad_level idcs in
       let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
-      if List.exists ~f:is_multiindex flat then (
-        add_warning loc
-          "Nested multi-indexing on the left hand side of assignment does not \
-           behave the same as nested indexing in expressions. This is \
-           considered a bug and will be disallowed in Stan 2.32.0. The \
-           indexing can be automatically fixed using the canonicalize flag for \
-           stanc." ;
+      ( if List.exists ~f:is_multiindex flat then
+        (* TODO: prevent in 2.33 *)
         let lvalue_rvalue_types_differ =
           try
             let flat_type =
