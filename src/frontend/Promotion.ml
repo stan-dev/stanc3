@@ -52,7 +52,10 @@ let rec promote (exp : Ast.typed_expression) prom =
   | ArrayExpr es ->
       let pes = List.map ~f:(fun e -> promote e prom) es in
       let fst = List.hd_exn pes in
-      let type_, ad_level = (fst.emeta.type_, fst.emeta.ad_level) in
+      let type_ = fst.emeta.type_ in
+      let ad_level =
+        UnsizedType.lub_ad_type (List.map ~f:(fun e -> e.emeta.ad_level) pes)
+      in
       { expr= ArrayExpr pes
       ; emeta=
           { exp.emeta with
@@ -61,7 +64,9 @@ let rec promote (exp : Ast.typed_expression) prom =
   | RowVectorExpr (_ :: _ as es) ->
       let pes = List.map ~f:(fun e -> promote e prom) es in
       let fst = List.hd_exn pes in
-      let ad_level = fst.emeta.ad_level in
+      let ad_level =
+        UnsizedType.lub_ad_type (List.map ~f:(fun e -> e.emeta.ad_level) pes)
+      in
       let type_ =
         (* "RowVectorExpr" can also be a matrix expr, depends on what is inside *)
         match fst.emeta.type_ with
