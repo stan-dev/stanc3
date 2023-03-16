@@ -108,11 +108,27 @@ let rec autodifftype_can_convert at1 at2 =
       List.for_all ts ~f:(autodifftype_can_convert DataOnly)
   | _, _ -> true
 
-let rec lub_ad_type = function
-  | [] -> DataOnly
-  | x :: xs ->
-      let y = lub_ad_type xs in
-      if compare_autodifftype x y < 0 then y else x
+let lub_ad_type xs =
+  List.max_elt ~compare:compare_autodifftype xs
+  |> Option.value ~default:DataOnly
+
+let%expect_test "lub_ad_type1" =
+  let ads = [DataOnly; DataOnly; DataOnly; AutoDiffable] in
+  let lub = lub_ad_type ads in
+  print_s [%sexp (lub : autodifftype)] ;
+  [%expect "AutoDiffable"]
+
+let%expect_test "lub_ad_type2" =
+  let ads = [DataOnly; DataOnly; DataOnly] in
+  let lub = lub_ad_type ads in
+  print_s [%sexp (lub : autodifftype)] ;
+  [%expect "DataOnly"]
+
+let%expect_test "lub_ad_type3" =
+  let ads = [AutoDiffable; DataOnly; DataOnly; DataOnly] in
+  let lub = lub_ad_type ads in
+  print_s [%sexp (lub : autodifftype)] ;
+  [%expect "AutoDiffable"]
 
 (** Given two types find the minimal type both can convert to *)
 let rec common_type = function

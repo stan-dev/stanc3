@@ -298,10 +298,9 @@ let check_variable cf loc tenv id =
   let ad_level, type_ = check_id cf loc tenv id in
   mk_typed_expression ~expr:(Variable id) ~ad_level ~type_ ~loc
 
-let get_consistent_types ad_level type_ es =
+let get_consistent_types type_ es =
   let ad =
-    UnsizedType.lub_ad_type
-      (ad_level :: List.map ~f:(fun e -> e.emeta.ad_level) es) in
+    UnsizedType.lub_ad_type (List.map ~f:(fun e -> e.emeta.ad_level) es) in
   let f state e =
     Result.bind state ~f:(fun ty ->
         match UnsizedType.common_type (ty, e.emeta.type_) with
@@ -319,8 +318,8 @@ let check_array_expr loc es =
   | [] ->
       (* NB: This is actually disallowed by parser *)
       Semantic_error.empty_array loc |> error
-  | {emeta= {ad_level; type_; _}; _} :: _ -> (
-    match get_consistent_types ad_level type_ es with
+  | {emeta= {type_; _}; _} :: _ -> (
+    match get_consistent_types type_ es with
     | Error (ty, meta) ->
         Semantic_error.mismatched_array_types meta.loc ty meta.type_ |> error
     | Ok (ad_level, type_, promotions) ->
@@ -331,18 +330,18 @@ let check_array_expr loc es =
 
 let check_rowvector loc es =
   match es with
-  | {emeta= {ad_level; type_= UnsizedType.URowVector; _}; _} :: _ -> (
-    match get_consistent_types ad_level URowVector es with
+  | {emeta= {type_= UnsizedType.URowVector; _}; _} :: _ -> (
+    match get_consistent_types URowVector es with
     | Ok (ad_level, typ, promotions) ->
         mk_typed_expression
           ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
           ~ad_level
-          ~type_:(if typ = UComplex then UComplexMatrix else UMatrix)
+          ~type_:(if typ = UComplexRowVector then UComplexMatrix else UMatrix)
           ~loc
     | Error (_, meta) ->
         Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
-  | {emeta= {ad_level; type_= UnsizedType.UComplexRowVector; _}; _} :: _ -> (
-    match get_consistent_types ad_level UComplexRowVector es with
+  | {emeta= {type_= UnsizedType.UComplexRowVector; _}; _} :: _ -> (
+    match get_consistent_types UComplexRowVector es with
     | Ok (ad_level, _, promotions) ->
         mk_typed_expression
           ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
@@ -350,7 +349,7 @@ let check_rowvector loc es =
     | Error (_, meta) ->
         Semantic_error.invalid_matrix_types meta.loc meta.type_ |> error )
   | _ -> (
-    match get_consistent_types DataOnly UReal es with
+    match get_consistent_types UReal es with
     | Ok (ad_level, typ, promotions) ->
         mk_typed_expression
           ~expr:(RowVectorExpr (Promotion.promote_list es promotions))
