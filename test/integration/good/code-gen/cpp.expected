@@ -697,21 +697,23 @@ namespace container_promotion_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 14> locations_array__ =
+static constexpr std::array<const char*, 16> locations_array__ =
   {" (found before start of program)",
-  " (in 'container-promotion.stan', line 8, column 2 to column 9)",
-  " (in 'container-promotion.stan', line 11, column 2 to column 14)",
+  " (in 'container-promotion.stan', line 6, column 2 to column 9)",
+  " (in 'container-promotion.stan', line 9, column 2 to column 14)",
+  " (in 'container-promotion.stan', line 12, column 2 to column 30)",
   " (in 'container-promotion.stan', line 15, column 2 to column 23)",
   " (in 'container-promotion.stan', line 18, column 2 to column 17)",
   " (in 'container-promotion.stan', line 21, column 2 to column 31)",
   " (in 'container-promotion.stan', line 24, column 2 to column 31)",
-  " (in 'container-promotion.stan', line 12, column 2 to column 14)",
+  " (in 'container-promotion.stan', line 10, column 2 to column 14)",
+  " (in 'container-promotion.stan', line 13, column 2 to column 26)",
   " (in 'container-promotion.stan', line 16, column 2 to column 25)",
   " (in 'container-promotion.stan', line 19, column 2 to column 23)",
-  " (in 'container-promotion.stan', line 22, column 2 to column 48)",
-  " (in 'container-promotion.stan', line 25, column 2 to column 46)",
-  " (in 'container-promotion.stan', line 3, column 3 to column 23)",
-  " (in 'container-promotion.stan', line 4, column 3 to column 26)"};
+  " (in 'container-promotion.stan', line 22, column 2 to column 50)",
+  " (in 'container-promotion.stan', line 25, column 2 to column 48)",
+  " (in 'container-promotion.stan', line 2, column 2 to column 23)",
+  " (in 'container-promotion.stan', line 3, column 2 to column 27)"};
 class container_promotion_model final : public model_base_crtp<container_promotion_model> {
  private:
   std::vector<std::vector<double>> Arr;
@@ -736,11 +738,11 @@ class container_promotion_model final : public model_base_crtp<container_promoti
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 12;
+      current_statement__ = 14;
       Arr = std::vector<std::vector<double>>(2,
               std::vector<double>(2,
                 std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 13;
+      current_statement__ = 15;
       stan::model::assign(Arr,
         std::vector<std::vector<double>>{std::vector<double>{1, 2},
           std::vector<double>{3, 4.5}}, "assigning variable Arr");
@@ -781,24 +783,33 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       y = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> V =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      current_statement__ = 7;
+      current_statement__ = 8;
       stan::model::assign(V,
         (Eigen::Matrix<local_scalar_t__,-1,1>(2) << 1, y).finished(),
         "assigning variable V");
+      std::vector<Eigen::Matrix<local_scalar_t__,1,-1>> arRV =
+        std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>(2,
+          Eigen::Matrix<local_scalar_t__,1,-1>::Constant(2, DUMMY_VAR__));
+      current_statement__ = 9;
+      stan::model::assign(arRV,
+        std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
+                                                             1, 2).finished(),
+          (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()},
+        "assigning variable arRV");
       std::vector<std::vector<local_scalar_t__>> Mar =
         std::vector<std::vector<local_scalar_t__>>(2,
           std::vector<local_scalar_t__>(2, DUMMY_VAR__));
-      current_statement__ = 8;
+      current_statement__ = 10;
       stan::model::assign(Mar,
         std::vector<std::vector<local_scalar_t__>>{std::vector<
                                                      local_scalar_t__>{1, 2},
           std::vector<local_scalar_t__>{3, y}}, "assigning variable Mar");
       Eigen::Matrix<local_scalar_t__,-1,-1> M =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__);
-      current_statement__ = 9;
+      current_statement__ = 11;
       stan::model::assign(M,
         stan::math::to_matrix(
-          std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<double,1,-1>(2) <<
+          std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
                                                                1, 2).finished(),
             (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()}),
         "assigning variable M");
@@ -806,7 +817,7 @@ class container_promotion_model final : public model_base_crtp<container_promoti
         std::vector<std::vector<std::vector<local_scalar_t__>>>(2,
           std::vector<std::vector<local_scalar_t__>>(2,
             std::vector<local_scalar_t__>(2, DUMMY_VAR__)));
-      current_statement__ = 10;
+      current_statement__ = 12;
       stan::model::assign(deep_Mar,
         std::vector<std::vector<std::vector<local_scalar_t__>>>{std::vector<
                                                                   std::vector<
@@ -825,7 +836,7 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>> deep_M =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(2,
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__));
-      current_statement__ = 11;
+      current_statement__ = 13;
       stan::model::assign(deep_M,
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>{stan::math::to_matrix(
                                                              std::vector<
@@ -835,7 +846,7 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                                                                (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
                                                                   0, 0).finished()}),
           stan::math::to_matrix(
-            std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<double,1,-1>(2) <<
+            std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
                                                                  1, 2).finished(),
               (Eigen::Matrix<local_scalar_t__,1,-1>(2) << y, 4).finished()})},
         "assigning variable deep_M");
@@ -882,6 +893,10 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       Eigen::Matrix<double,-1,1> V =
         Eigen::Matrix<double,-1,1>::Constant(2,
           std::numeric_limits<double>::quiet_NaN());
+      std::vector<Eigen::Matrix<double,1,-1>> arRV =
+        std::vector<Eigen::Matrix<double,1,-1>>(2,
+          Eigen::Matrix<double,1,-1>::Constant(2,
+            std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<double>> Mar =
         std::vector<std::vector<double>>(2,
           std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
@@ -902,23 +917,29 @@ class container_promotion_model final : public model_base_crtp<container_promoti
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 7;
+      current_statement__ = 8;
       stan::model::assign(V,
         (Eigen::Matrix<local_scalar_t__,-1,1>(2) << 1, y).finished(),
         "assigning variable V");
-      current_statement__ = 8;
+      current_statement__ = 9;
+      stan::model::assign(arRV,
+        std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
+                                                             1, 2).finished(),
+          (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()},
+        "assigning variable arRV");
+      current_statement__ = 10;
       stan::model::assign(Mar,
         std::vector<std::vector<local_scalar_t__>>{std::vector<
                                                      local_scalar_t__>{1, 2},
           std::vector<local_scalar_t__>{3, y}}, "assigning variable Mar");
-      current_statement__ = 9;
+      current_statement__ = 11;
       stan::model::assign(M,
         stan::math::to_matrix(
-          std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<double,1,-1>(2) <<
+          std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
                                                                1, 2).finished(),
             (Eigen::Matrix<local_scalar_t__,1,-1>(2) << 3, y).finished()}),
         "assigning variable M");
-      current_statement__ = 10;
+      current_statement__ = 12;
       stan::model::assign(deep_Mar,
         std::vector<std::vector<std::vector<local_scalar_t__>>>{std::vector<
                                                                   std::vector<
@@ -934,7 +955,7 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                                                        2},
             std::vector<local_scalar_t__>{3, y}}},
         "assigning variable deep_Mar");
-      current_statement__ = 11;
+      current_statement__ = 13;
       stan::model::assign(deep_M,
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>{stan::math::to_matrix(
                                                              std::vector<
@@ -944,12 +965,17 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                                                                (Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
                                                                   0, 0).finished()}),
           stan::math::to_matrix(
-            std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<double,1,-1>(2) <<
+            std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(2) <<
                                                                  1, 2).finished(),
               (Eigen::Matrix<local_scalar_t__,1,-1>(2) << y, 4).finished()})},
         "assigning variable deep_M");
       if (emit_transformed_parameters__) {
         out__.write(V);
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            out__.write(arRV[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
             out__.write(Mar[(sym2__ - 1)][(sym1__ - 1)]);
@@ -1010,7 +1036,8 @@ class container_promotion_model final : public model_base_crtp<container_promoti
                   emit_generated_quantities__ = true) const {
     names__ = std::vector<std::string>{"y"};
     if (emit_transformed_parameters__) {
-      std::vector<std::string> temp{"V", "Mar", "M", "deep_Mar", "deep_M"};
+      std::vector<std::string>
+        temp{"V", "arRV", "Mar", "M", "deep_Mar", "deep_M"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
@@ -1024,6 +1051,8 @@ class container_promotion_model final : public model_base_crtp<container_promoti
     if (emit_transformed_parameters__) {
       std::vector<std::vector<size_t>>
         temp{std::vector<size_t>{static_cast<size_t>(2)},
+             std::vector<size_t>{static_cast<size_t>(2),
+               static_cast<size_t>(2)},
              std::vector<size_t>{static_cast<size_t>(2),
                static_cast<size_t>(2)},
              std::vector<size_t>{static_cast<size_t>(2),
@@ -1046,6 +1075,12 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         param_names__.emplace_back(std::string() + "V" + '.' +
           std::to_string(sym1__));
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "arRV" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
@@ -1092,6 +1127,12 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "arRV" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           param_names__.emplace_back(std::string() + "Mar" + '.' +
             std::to_string(sym2__) + '.' + std::to_string(sym1__));
         }
@@ -1124,10 +1165,10 @@ class container_promotion_model final : public model_base_crtp<container_promoti
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"V\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"M\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"deep_Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"deep_M\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"V\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"arRV\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"M\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"deep_Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"deep_M\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"V\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"M\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"deep_Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"deep_M\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"V\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"arRV\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"M\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"deep_Mar\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"deep_M\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -1137,8 +1178,8 @@ class container_promotion_model final : public model_base_crtp<container_promoti
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * (((((2 + (2
-      * 2)) + (2 * 2)) + ((2 * 2) * 2)) + ((2 * 2) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((2 + (2
+      * 2)) + (2 * 2)) + (2 * 2)) + ((2 * 2) * 2)) + ((2 * 2) * 2)));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -1155,8 +1196,8 @@ class container_promotion_model final : public model_base_crtp<container_promoti
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 1;
-    const size_t num_transformed = emit_transformed_parameters * (((((2 + (2
-      * 2)) + (2 * 2)) + ((2 * 2) * 2)) + ((2 * 2) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((2 + (2
+      * 2)) + (2 * 2)) + (2 * 2)) + ((2 * 2) * 2)) + ((2 * 2) * 2)));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;

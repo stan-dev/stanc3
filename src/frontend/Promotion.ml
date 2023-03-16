@@ -84,7 +84,11 @@ let promote_list es promotions = List.map2_exn es promotions ~f:promote
 *)
 let rec get_type_promotion_exn (ad_orig, ty_orig) (ad_expect, ty_expect) =
   match (ty_orig, ty_expect) with
-  | UnsizedType.(UReal, (UReal | UInt) | UVector, UVector | UMatrix, UMatrix)
+  | UnsizedType.(
+      ( UReal, (UReal | UInt)
+      | UVector, UVector
+      | URowVector, URowVector
+      | UMatrix, UMatrix ))
     when ad_orig <> ad_expect ->
       ToVar
   | UComplex, (UReal | UInt | UComplex)
