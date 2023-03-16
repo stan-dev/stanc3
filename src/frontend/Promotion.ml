@@ -52,12 +52,10 @@ let rec promote (exp : Ast.typed_expression) prom =
   | ArrayExpr es ->
       let pes = List.map ~f:(fun e -> promote e prom) es in
       let fst = List.hd_exn pes in
-      let type_, ad_level = (fst.emeta.type_, fst.emeta.ad_level) in
-      { expr= ArrayExpr pes
-      ; emeta=
-          { exp.emeta with
-            type_= UnsizedType.promote_container exp.emeta.type_ type_
-          ; ad_level } }
+      let type_, ad_level =
+        ( UnsizedType.promote_container exp.emeta.type_ fst.emeta.type_
+        , fst.emeta.ad_level ) in
+      {expr= ArrayExpr pes; emeta= {exp.emeta with type_; ad_level}}
   | RowVectorExpr (_ :: _ as es) ->
       let pes = List.map ~f:(fun e -> promote e prom) es in
       let fst = List.hd_exn pes in
@@ -79,7 +77,11 @@ let promote_list es promotions = List.map2_exn es promotions ~f:promote
 *)
 let rec get_type_promotion_exn (ad_orig, ty_orig) (ad_expect, ty_expect) =
   match (ty_orig, ty_expect) with
-  | UnsizedType.(UReal, (UReal | UInt) | UVector, UVector | UMatrix, UMatrix)
+  | UnsizedType.(
+      ( UReal, (UReal | UInt)
+      | UVector, UVector
+      | URowVector, URowVector
+      | UMatrix, UMatrix ))
     when ad_orig <> ad_expect ->
       ToVar
   | UComplex, (UReal | UInt | UComplex)
