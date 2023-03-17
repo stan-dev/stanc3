@@ -5,4 +5,6 @@ transformed parameters {
    complex_matrix[2,2] zs = [[1,2],[3,4]];
    row_vector[2] x = [1,2];
    complex_row_vector[2] zx = x;
+
+   complex_matrix[2,2] cm = [[1,2], [3,4i]];
 }
