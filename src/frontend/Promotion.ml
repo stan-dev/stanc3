@@ -75,20 +75,20 @@ let promote_list es promotions = List.map2_exn es promotions ~f:promote
 (** Get the promotion needed to make the second type into the first.
   Types NEED to have previously been checked to be promotable
 *)
-let rec get_type_promotion_exn (ad_orig, ty_orig) (ad_expect, ty_expect) =
-  match (ty_orig, ty_expect) with
+let rec get_type_promotion_exn (ad_expect, ty_expect) (ad_orig, ty_orig) =
+  match (ty_expect, ty_orig) with
   | UnsizedType.(
       ( UReal, (UReal | UInt)
       | UVector, UVector
       | URowVector, URowVector
       | UMatrix, UMatrix ))
-    when ad_orig <> ad_expect ->
+    when ad_orig <> ad_expect && ad_expect = UnsizedType.AutoDiffable ->
       ToVar
   | UComplex, (UReal | UInt | UComplex)
    |UComplexMatrix, (UMatrix | UComplexMatrix)
    |UComplexVector, (UVector | UComplexVector)
    |UComplexRowVector, (URowVector | UComplexRowVector)
-    when ad_orig <> ad_expect ->
+    when ad_orig <> ad_expect && ad_expect = UnsizedType.AutoDiffable ->
       ToComplexVar
   | UReal, UInt -> IntToReal
   | UComplex, UInt -> IntToComplex
@@ -98,8 +98,9 @@ let rec get_type_promotion_exn (ad_orig, ty_orig) (ad_expect, ty_expect) =
    |UComplexRowVector, URowVector ->
       RealToComplex
   | UArray nt1, UArray nt2 ->
-      get_type_promotion_exn (ad_orig, nt1) (ad_expect, nt2)
-  | t1, t2 when t1 = t2 -> NoPromotion
+      get_type_promotion_exn (ad_expect, nt1) (ad_orig, nt2)
+  | UInt, UInt -> NoPromotion
+  | t1, t2 when t1 = t2 && ad_expect = ad_orig -> NoPromotion
   | _, _ ->
       Common.FatalError.fatal_error_msg
         [%message
