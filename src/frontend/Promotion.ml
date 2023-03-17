@@ -76,21 +76,22 @@ let promote_list es promotions = List.map2_exn es promotions ~f:promote
     Types NEED to have previously been checked to be promotable or
     else a fatal error will be thrown.
 *)
-let rec get_type_promotion_exn (ad_expect, ty_expect) (ad_orig, ty_orig) =
-  if UnsizedType.autodifftype_can_convert ad_expect ad_orig then
-    match (ty_expect, ty_orig) with
+let rec get_type_promotion_exn (ad_requested, ty_requested)
+    (ad_current, ty_current) =
+  if UnsizedType.autodifftype_can_convert ad_requested ad_current then
+    match (ty_requested, ty_current) with
     | UnsizedType.(
         ( UReal, (UReal | UInt)
         | UVector, UVector
         | URowVector, URowVector
         | UMatrix, UMatrix ))
-      when ad_orig <> ad_expect ->
+      when ad_current <> ad_requested ->
         ToVar
     | UComplex, (UReal | UInt | UComplex)
      |UComplexMatrix, (UMatrix | UComplexMatrix)
      |UComplexVector, (UVector | UComplexVector)
      |UComplexRowVector, (URowVector | UComplexRowVector)
-      when ad_orig <> ad_expect ->
+      when ad_current <> ad_requested ->
         ToComplexVar
     | UReal, UInt -> IntToReal
     | UComplex, UInt -> IntToComplex
@@ -100,25 +101,25 @@ let rec get_type_promotion_exn (ad_expect, ty_expect) (ad_orig, ty_orig) =
      |UComplexRowVector, URowVector ->
         RealToComplex
     | UArray nt1, UArray nt2 ->
-        get_type_promotion_exn (ad_expect, nt1) (ad_orig, nt2)
+        get_type_promotion_exn (ad_requested, nt1) (ad_current, nt2)
     | UInt, UInt -> NoPromotion
-    | t1, t2 when t1 = t2 && ad_expect = ad_orig -> NoPromotion
+    | t1, t2 when t1 = t2 && ad_requested = ad_current -> NoPromotion
     | _, _ ->
         Common.FatalError.fatal_error_msg
           [%message
             "Tried to get promotion of mismatched types!"
-              (ty_orig : UnsizedType.t)
-              (ad_orig : UnsizedType.autodifftype)
+              (ty_current : UnsizedType.t)
+              (ad_current : UnsizedType.autodifftype)
               "cannot be promoted to "
-              (ty_expect : UnsizedType.t)
-              (ad_expect : UnsizedType.autodifftype)]
+              (ty_requested : UnsizedType.t)
+              (ad_requested : UnsizedType.autodifftype)]
   else
     Common.FatalError.fatal_error_msg
       [%message
         "Tried to get promotion incompatible autodifftypes!"
-          (ad_orig : UnsizedType.autodifftype)
+          (ad_current : UnsizedType.autodifftype)
           "cannot be promoted to "
-          (ad_expect : UnsizedType.autodifftype)]
+          (ad_requested : UnsizedType.autodifftype)]
 
 (** Calculate the "cost"/number of promotions performed.
     Used to disambiguate function signatures
