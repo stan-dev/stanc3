@@ -105,9 +105,7 @@ let gen_validate_data name st =
   if String.is_suffix ~suffix:"__" name then []
   else
     let vector args =
-      let cast x =
-        Exprs.templated_fun_call "static_cast" [Types.size_t] [lower_expr x]
-      in
+      let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
       InitializerExpr (Types.std_vector Types.size_t, List.map ~f:cast args)
     in
     let open Expression_syntax in
@@ -344,8 +342,7 @@ let gen_get_param_names {Program.output_vars; _} =
        ~body ~cv_qualifiers:[Const] () )
 
 let gen_get_dims {Program.output_vars; _} =
-  let cast x =
-    Exprs.templated_fun_call "static_cast" [Types.size_t] [lower_expr x] in
+  let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
   let pack inner_dims =
     Exprs.std_vector_init_expr Types.size_t
       (List.map ~f:cast (SizedType.get_dims_io inner_dims)) in
