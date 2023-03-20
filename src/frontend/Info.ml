@@ -5,7 +5,14 @@ open Yojson.Basic
 
 let rec unsized_basetype_json t =
   match t with
-  | UnsizedType.UTuple ts -> `List (List.map ~f:unsized_basetype_json ts)
+  | t when UnsizedType.contains_tuple t ->
+      let internal, dims = UnsizedType.unwind_array_type t in
+      let internals =
+        match internal with UnsizedType.UTuple ts -> ts | _ -> assert false
+      in
+      `Assoc
+        [ ("type", `List (List.map ~f:unsized_basetype_json internals))
+        ; ("dimensions", `Int dims) ]
   | _ ->
       let rec type_dims t =
         match t with

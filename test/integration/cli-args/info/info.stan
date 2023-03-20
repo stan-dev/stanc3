@@ -25,7 +25,7 @@ data {
   array[2] matrix[2,2] i;
   array[3,1,3] int j;
 
-  tuple(int, real, tuple(real, array[10] int)) tuples;
+  array[2] tuple(int, real, tuple(real, array[10] int)) tuples;
 }
 
 transformed data {
