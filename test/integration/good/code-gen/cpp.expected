@@ -2729,7 +2729,7 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
       current_statement__ = 4;
       x = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
-      x = foo(1, 2, pstream__);
+      x = foo(static_cast<double>(1), static_cast<double>(2), pstream__);
       current_statement__ = 5;
       if (pstream__) {
         stan::math::stan_print(pstream__, "x = ");
@@ -2737,7 +2737,7 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
         stan::math::stan_print(pstream__, "\n");
       }
       current_statement__ = 6;
-      bar(1, 2, pstream__);
+      bar(static_cast<double>(1), static_cast<double>(2), pstream__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2772,7 +2772,7 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
     try {
       local_scalar_t__ x2 = DUMMY_VAR__;
       current_statement__ = 1;
-      x2 = foo(1, 2, pstream__);
+      x2 = foo(static_cast<double>(1), static_cast<double>(2), pstream__);
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__, "x2 = ");
@@ -2780,7 +2780,7 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
         stan::math::stan_print(pstream__, "\n");
       }
       current_statement__ = 3;
-      bar(1, 2, pstream__);
+      bar(static_cast<double>(1), static_cast<double>(2), pstream__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -12353,7 +12353,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       abc2_p = map_rectfake(abc1_p, pstream__);
       local_scalar_t__ abc3_p = DUMMY_VAR__;
       current_statement__ = 10;
-      abc3_p = map_rectfake(12, pstream__);
+      abc3_p = map_rectfake(static_cast<double>(12), pstream__);
       Eigen::Matrix<local_scalar_t__,-1,1> y_hat_tp1 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__);
       current_statement__ = 11;
@@ -12717,7 +12717,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 9;
       abc2_p = map_rectfake(abc1_p, pstream__);
       current_statement__ = 10;
-      abc3_p = map_rectfake(12, pstream__);
+      abc3_p = map_rectfake(static_cast<double>(12), pstream__);
       current_statement__ = 11;
       stan::model::assign(y_hat_tp1,
         stan::math::map_rect<1, foo_functor__>(shared_params_p, job_params_d,
@@ -12924,7 +12924,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
                x_d_r, x_d_i, pstream__, 1e-8);
       double abc1_gq = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 61;
-      abc1_gq = map_rectfake(12, pstream__);
+      abc1_gq = map_rectfake(static_cast<double>(12), pstream__);
       double abc2_gq = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 62;
       abc2_gq = map_rectfake(abc1_p, pstream__);
