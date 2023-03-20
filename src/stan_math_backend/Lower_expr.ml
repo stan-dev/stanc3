@@ -496,7 +496,7 @@ and lower_expr ?(promote_reals = false)
       if promote_reals then
         (* this can be important for e.g. templated function calls
            where we might generate an incorrect specification for int *)
-        static_cast Cpp.Double ((lower_expr ~promote_reals:true) expr)
+        static_cast Cpp.Double (lower_expr expr)
       else lower_expr expr
   | Promotion (expr, UComplex, DataOnly) when is_scalar expr ->
       (* this is in principle a little better than promote_scalar since it is constexpr *)
