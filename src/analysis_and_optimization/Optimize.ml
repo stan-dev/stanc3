@@ -800,16 +800,19 @@ let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
 and unenforce_initialize (lst : Stmt.Located.t list) =
   let rec unenforce_initialize_patt (Stmt.Fixed.{pattern; _} as stmt) sub_lst =
     match pattern with
-    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as decl_pat) -> (
-      match List.hd sub_lst with
-      | Some next_stmt -> (
-        match find_assignment_idx decl_id next_stmt with
-        | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
-            { stmt with
-              pattern= Stmt.Fixed.Pattern.Decl {decl_pat with initialize= false}
-            }
-        | None | Some _ -> stmt )
-      | None -> stmt )
+    | Stmt.Fixed.Pattern.Decl ({decl_id; decl_type; _} as decl_pat) -> (
+      match decl_type with
+      | Type.Sized t when SizedType.get_mem_pattern t = Mem_pattern.SoA -> stmt
+      | _ -> (
+        match List.hd sub_lst with
+        | Some next_stmt -> (
+          match find_assignment_idx decl_id next_stmt with
+          | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
+              { stmt with
+                pattern=
+                  Stmt.Fixed.Pattern.Decl {decl_pat with initialize= false} }
+          | None | Some _ -> stmt )
+        | None -> stmt ) )
     | Block block_lst ->
         {stmt with pattern= Block (unenforce_initialize block_lst)}
     | SList s_lst -> {stmt with pattern= SList (unenforce_initialize s_lst)}
@@ -1309,12 +1312,12 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (list_collapsing, settings.list_collapsing)
       (* Book: Machine idioms and instruction combining *)
     ; (optimize_ad_levels, settings.optimize_ad_levels)
+    ; (optimize_soa, settings.optimize_soa)
       (*Remove decls immediately assigned to*)
     ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Machine idioms and instruction combining *)
       (* Matthijs: Everything < block_fixing *)
-    ; (block_fixing, settings.block_fixing)
-    ; (optimize_soa, settings.optimize_soa) ] in
+    ; (block_fixing, settings.block_fixing) ] in
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
         if flag then Some fn else None ) in
