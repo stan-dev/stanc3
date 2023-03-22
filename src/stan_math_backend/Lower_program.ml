@@ -319,46 +319,59 @@ let gen_extend_vector name type_ elts =
     ]
 
 let gen_get_param_names {Program.output_vars; _} =
+  let param_to_names name st =
+    List.map
+      ~f:(fun id -> Exprs.literal_string (Mangle.remove_prefix id))
+      (UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st))
+  in
   let params, tparams, gqs =
     List.partition3_map output_vars ~f:(function
-      | id, {Program.out_block= Parameters; _} ->
-          `Fst (Exprs.literal_string (Mangle.remove_prefix id))
-      | id, {out_block= TransformedParameters; _} ->
-          `Snd (Exprs.literal_string (Mangle.remove_prefix id))
-      | id, {out_block= GeneratedQuantities; _} ->
-          `Trd (Exprs.literal_string (Mangle.remove_prefix id)) ) in
+      | id, {Program.out_block= Parameters; out_constrained_st= st; _} ->
+          `Fst (param_to_names id st)
+      | id, {out_block= TransformedParameters; out_constrained_st= st; _} ->
+          `Snd (param_to_names id st)
+      | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
+          `Trd (param_to_names id st) ) in
   let args =
     [ (Ref (Types.std_vector Types.string), "names__")
     ; (Const Types.bool, "emit_transformed_parameters__ = true")
     ; (Const Types.bool, "emit_generated_quantities__ = true") ] in
   let names = Var "names__" in
   let body =
-    [Expression (Assign (names, Exprs.std_vector_init_expr Types.string params))]
+    [ Expression
+        (Assign
+           (names, Exprs.std_vector_init_expr Types.string (List.concat params))
+        ) ]
     @ [ IfElse
           ( Var "emit_transformed_parameters__"
           , Stmts.block
-              (gen_extend_vector names (Types.std_vector Types.string) tparams)
+              (gen_extend_vector names
+                 (Types.std_vector Types.string)
+                 (List.concat tparams) )
           , None )
       ; IfElse
           ( Var "emit_generated_quantities__"
           , Stmts.block
-              (gen_extend_vector names (Types.std_vector Types.string) gqs)
+              (gen_extend_vector names
+                 (Types.std_vector Types.string)
+                 (List.concat gqs) )
           , None ) ] in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Void ~name:"get_param_names" ~args
        ~body ~cv_qualifiers:[Const] () )
 
 let gen_get_dims {Program.output_vars; _} =
-  (* TUPLE TODO: This needs to be adapted for tuples
-
-     Option 1 - Deprecate, remove - only used 2 places in cmdstan
-     Option 2 - Treat as mirror of how we give dims in var context??
+  (* TUPLE MAYBE: this is a mirror of how we give dims in var context.
+      This won't generalize to ragged arrays, I don't think.
   *)
   let cast x =
     Exprs.templated_fun_call "static_cast" [Types.size_t] [lower_expr x] in
   let pack inner_dims =
-    Exprs.std_vector_init_expr Types.size_t
-      (List.map ~f:cast (SizedType.get_dims_io inner_dims)) in
+    List.map
+      ~f:(fun x -> Exprs.std_vector_init_expr Types.size_t x)
+      (List.map
+         ~f:(fun dim -> SizedType.get_dims_io dim |> List.map ~f:cast)
+         (SizedType.flatten_tuple_io inner_dims) ) in
   let params, tparams, gqs =
     List.partition3_map output_vars ~f:(function
       | _, {Program.out_block= Parameters; Program.out_constrained_st= st; _} ->
@@ -378,21 +391,22 @@ let gen_get_dims {Program.output_vars; _} =
     [ Expression
         (Assign
            ( dimss
-           , Exprs.std_vector_init_expr (Types.std_vector Types.size_t) params
-           ) )
+           , Exprs.std_vector_init_expr
+               (Types.std_vector Types.size_t)
+               (List.concat params) ) )
     ; IfElse
         ( Var "emit_transformed_parameters__"
         , Stmts.block
             (gen_extend_vector dimss
                (Types.std_vector (Types.std_vector Types.size_t))
-               tparams )
+               (List.concat tparams) )
         , None )
     ; IfElse
         ( Var "emit_generated_quantities__"
         , Stmts.block
             (gen_extend_vector dimss
                (Types.std_vector (Types.std_vector Types.size_t))
-               gqs )
+               (List.concat gqs) )
         , None ) ] in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Void ~name:"get_dims" ~args ~body

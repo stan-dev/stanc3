@@ -734,6 +734,10 @@ let gen_write ?(unconstrain = false)
   need to write them in "column major order"
  *)
 let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
+  (* TUPLE MAYBE: to make things like standalone GQ/unconstraining from a row of draws easier,
+     we may need to do something where we change the order tuples are printed to group
+     indicies better
+  *)
   let smeta = Stmt.Located.Meta.empty in
   let rec write (var, st) =
     match st with

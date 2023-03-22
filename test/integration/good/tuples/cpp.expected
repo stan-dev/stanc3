@@ -1645,9 +1645,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"basic_p", "tuple_tuple_p",
-                "arr_tuple_p", "tuple_arr_tuple_p", "arr_tuple_tuple_p",
-                "arr_tuple_arr_tuple_p", "very_deep_p"};
+    names__ = std::vector<std::string>{"basic_p.1", "basic_p.2",
+                "tuple_tuple_p.1", "tuple_tuple_p.2.1", "tuple_tuple_p.2.2",
+                "arr_tuple_p.1", "arr_tuple_p.2", "arr_tuple_p.3",
+                "tuple_arr_tuple_p.1", "tuple_arr_tuple_p.2",
+                "tuple_arr_tuple_p.3.1", "tuple_arr_tuple_p.3.2",
+                "arr_tuple_tuple_p.1", "arr_tuple_tuple_p.2",
+                "arr_tuple_tuple_p.3.1", "arr_tuple_tuple_p.3.2.1",
+                "arr_tuple_tuple_p.3.2.2", "arr_tuple_arr_tuple_p.1",
+                "arr_tuple_arr_tuple_p.2.1", "arr_tuple_arr_tuple_p.2.2",
+                "very_deep_p.1", "very_deep_p.2.1", "very_deep_p.2.2.1",
+                "very_deep_p.2.2.2"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -1656,27 +1664,42 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
-                                                                    size_t>(2),
-                                                 static_cast<size_t>(10)},
-                std::vector<size_t>{static_cast<size_t>(2),
-                  static_cast<size_t>(2), static_cast<size_t>(2)},
+                                                                    size_t>(
+                                                                    10)},
+                std::vector<size_t>{}, std::vector<size_t>{},
+                std::vector<size_t>{},
+                std::vector<size_t>{static_cast<size_t>(2)},
                 std::vector<size_t>{static_cast<size_t>(3),
-                  static_cast<size_t>(3), static_cast<size_t>(2),
-                  static_cast<size_t>(4), static_cast<size_t>(3)},
+                  static_cast<size_t>(2)},
                 std::vector<size_t>{static_cast<size_t>(3),
-                  static_cast<size_t>(2), static_cast<size_t>(3),
-                  static_cast<size_t>(2), static_cast<size_t>(4)},
-                std::vector<size_t>{static_cast<size_t>(2),
-                  static_cast<size_t>(3), static_cast<size_t>(2),
-                  static_cast<size_t>(2), static_cast<size_t>(2),
                   static_cast<size_t>(4)},
                 std::vector<size_t>{static_cast<size_t>(3),
-                  static_cast<size_t>(2), static_cast<size_t>(4),
-                  static_cast<size_t>(2), static_cast<size_t>(5)},
+                  static_cast<size_t>(3)},
+                std::vector<size_t>{static_cast<size_t>(2)},
+                std::vector<size_t>{},
+                std::vector<size_t>{static_cast<size_t>(3)},
                 std::vector<size_t>{static_cast<size_t>(3),
-                  static_cast<size_t>(2), static_cast<size_t>(4),
-                  static_cast<size_t>(2), static_cast<size_t>(5),
-                  static_cast<size_t>(2), static_cast<size_t>(2),
+                  static_cast<size_t>(4)},
+                std::vector<size_t>{static_cast<size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(2),
+                  static_cast<size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(2),
+                  static_cast<size_t>(4)},
+                std::vector<size_t>{static_cast<size_t>(3)},
+                std::vector<size_t>{static_cast<size_t>(3),
+                  static_cast<size_t>(4)},
+                std::vector<size_t>{static_cast<size_t>(3),
+                  static_cast<size_t>(4), static_cast<size_t>(5)},
+                std::vector<size_t>{static_cast<size_t>(3)},
+                std::vector<size_t>{static_cast<size_t>(3),
+                  static_cast<size_t>(4)},
+                std::vector<size_t>{static_cast<size_t>(3),
+                  static_cast<size_t>(4), static_cast<size_t>(5),
+                  static_cast<size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(3),
+                  static_cast<size_t>(4), static_cast<size_t>(5),
                   static_cast<size_t>(6), static_cast<size_t>(7)}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -3855,7 +3878,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"ps", "ps2"};
+    names__ = std::vector<std::string>{"ps.1", "ps.2", "ps2.1", "ps2.2"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -3863,11 +3886,12 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
-                                                                    size_t>(2)},
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+                std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(3),
-                  static_cast<size_t>(2), static_cast<size_t>(2),
-                  static_cast<size_t>(4)}};
+                  static_cast<size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(3),
+                  static_cast<size_t>(2), static_cast<size_t>(4)}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -4518,7 +4542,7 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"ps"};
+    names__ = std::vector<std::string>{"ps.1", "ps.2"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -4526,8 +4550,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
-                                                                    size_t>(2)}};
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+                std::vector<size_t>{}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -5961,7 +5985,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"ps", "ps2"};
+    names__ = std::vector<std::string>{"ps.1", "ps.2", "ps2.1", "ps2.2.1",
+                "ps2.2.2"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -5969,10 +5994,10 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
-                                                                    size_t>(2)},
-                std::vector<size_t>{static_cast<size_t>(2),
-                  static_cast<size_t>(2), static_cast<size_t>(10),
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+                std::vector<size_t>{}, std::vector<size_t>{},
+                std::vector<size_t>{},
+                std::vector<size_t>{static_cast<size_t>(10),
                   static_cast<size_t>(10)}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -6286,7 +6311,7 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"ps"};
+    names__ = std::vector<std::string>{"ps.1", "ps.2"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -6294,8 +6319,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
-                                                                    size_t>(2)}};
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+                std::vector<size_t>{}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -6966,12 +6991,16 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     names__ = std::vector<std::string>{};
     if (emit_transformed_parameters__) {
       std::vector<std::string>
-        temp{"d2", "V3", "arrs2", "nested2", "nested3"};
+        temp{"d2.1", "d2.2", "V3.1", "V3.2", "arrs2.1", "arrs2.2",
+             "nested2.1.1", "nested2.1.2", "nested2.2", "nested2.3.1",
+             "nested2.3.2", "nested3.1.1", "nested3.1.2", "nested3.2",
+             "nested3.3.1", "nested3.3.2"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {
-      std::vector<std::string> temp{"y", "x", "z", "z2"};
+      std::vector<std::string>
+        temp{"y", "x.1", "x.2", "z.1", "z.2", "z2.1", "z2.2"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
@@ -6983,33 +7012,35 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     dimss__ = std::vector<std::vector<size_t>>{};
     if (emit_transformed_parameters__) {
       std::vector<std::vector<size_t>>
-        temp{std::vector<size_t>{static_cast<size_t>(2),
-               static_cast<size_t>(3), static_cast<size_t>(2),
-               static_cast<size_t>(3), static_cast<size_t>(2)},
-             std::vector<size_t>{static_cast<size_t>(2),
-               static_cast<size_t>(3)},
-             std::vector<size_t>{static_cast<size_t>(4),
-               static_cast<size_t>(2), static_cast<size_t>(2),
+        temp{std::vector<size_t>{static_cast<size_t>(3),
                static_cast<size_t>(2)},
              std::vector<size_t>{static_cast<size_t>(3),
-               static_cast<size_t>(2), static_cast<size_t>(2),
-               static_cast<size_t>(2), static_cast<size_t>(2),
-               static_cast<size_t>(3)},
-             std::vector<size_t>{static_cast<size_t>(3),
-               static_cast<size_t>(2), static_cast<size_t>(2),
-               static_cast<size_t>(2), static_cast<size_t>(2),
-               static_cast<size_t>(3)}};
+               static_cast<size_t>(2)},
+             std::vector<size_t>{static_cast<size_t>(3)},
+             std::vector<size_t>{},
+             std::vector<size_t>{static_cast<size_t>(4)},
+             std::vector<size_t>{static_cast<size_t>(4),
+               static_cast<size_t>(2), static_cast<size_t>(2)},
+             std::vector<size_t>{},
+             std::vector<size_t>{static_cast<size_t>(2),
+               static_cast<size_t>(2)}, std::vector<size_t>{},
+             std::vector<size_t>{static_cast<size_t>(3)},
+             std::vector<size_t>{}, std::vector<size_t>{},
+             std::vector<size_t>{static_cast<size_t>(2),
+               static_cast<size_t>(2)}, std::vector<size_t>{},
+             std::vector<size_t>{static_cast<size_t>(3)},
+             std::vector<size_t>{}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {
       std::vector<std::vector<size_t>>
-        temp{std::vector<size_t>{},
+        temp{std::vector<size_t>{}, std::vector<size_t>{},
+             std::vector<size_t>{},
              std::vector<size_t>{static_cast<size_t>(2)},
-             std::vector<size_t>{static_cast<size_t>(2),
-               static_cast<size_t>(2)},
-             std::vector<size_t>{static_cast<size_t>(2),
-               static_cast<size_t>(2)}};
+             std::vector<size_t>{},
+             std::vector<size_t>{static_cast<size_t>(2)},
+             std::vector<size_t>{}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
