@@ -9,7 +9,7 @@
    %{targets}
    (run
     %{bin:run_bin_on_args}
-    "%{bin:stanc} --standalone-functions --print-cpp"
+    "%{bin:stanc} --standalone-functions --allow-undefined --print-cpp"
     %{stanfiles}))))
 
 (rule

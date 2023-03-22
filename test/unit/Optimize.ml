@@ -403,9 +403,6 @@ let%expect_test "do not inline recursive functions" =
     {|
       functions {
         real g(int z) {
-          ;
-        }
-        real g(int z) {
           {
             return (z ^ 2);
           }
@@ -416,7 +413,11 @@ let%expect_test "do not inline recursive functions" =
 
       log_prob {
         {
-          FnReject__(g(53));
+          real inline_g_return_sym1__;
+          {
+            inline_g_return_sym1__ = (53 ^ 2);
+          }
+          FnReject__(inline_g_return_sym1__);
         }
       }
 
