@@ -235,3 +235,15 @@ let collect_userdef_distributions program =
 let collect_warnings (program : typed_program) =
   let fundefs = userdef_functions program in
   fold_program (collect_deprecated_stmt fundefs) [] program
+
+let remove_unneeded_forward_decls program =
+  let fundefs = userdef_functions program in
+  let drop_forwarddecl = function
+    | {stmt= FunDef {body= {stmt= Skip; _}; funname; arguments; _}; _}
+      when is_redundant_forwarddecl fundefs funname arguments ->
+        false
+    | _ -> true in
+  { program with
+    functionblock=
+      Option.map program.functionblock ~f:(fun x ->
+          {x with stmts= List.filter ~f:drop_forwarddecl x.stmts} ) }

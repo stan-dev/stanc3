@@ -31,3 +31,4 @@ val is_redundant_forwarddecl :
 
 val userdef_distributions : untyped_statement block option -> string list
 val collect_warnings : typed_program -> Warnings.t list
+val remove_unneeded_forward_decls : typed_program -> typed_program

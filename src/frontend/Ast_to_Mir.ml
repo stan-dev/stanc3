@@ -785,7 +785,8 @@ let gather_data (p : Ast.typed_program) =
     | _ -> [] )
 
 let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
-  let {Ast.functionblock; datablock; transformeddatablock; modelblock; _} = p in
+  let {Ast.functionblock; datablock; transformeddatablock; modelblock; _} =
+    Deprecation_analysis.remove_unneeded_forward_decls p in
   let map f list_op =
     Option.value_map ~default:[]
       ~f:(fun {Ast.stmts; _} -> List.concat_map ~f stmts)
