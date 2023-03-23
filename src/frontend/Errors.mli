@@ -21,13 +21,23 @@ exception FatalError of string
 val fatal_error : ?msg:string -> unit -> 'a
 (** Throw a fatal error reported by the toplevel *)
 
-val pp_syntax_error : Format.formatter -> syntax_error -> unit
+val pp_syntax_error :
+     ?printed_filename:string
+  -> ?code:string
+  -> Format.formatter
+  -> syntax_error
+  -> unit
 (** A syntax error message used when handling a SyntaxError *)
 
-val pp_semantic_error : Format.formatter -> string * Location_span.t -> unit
+val pp_semantic_error :
+     ?printed_filename:string
+  -> ?code:string
+  -> Format.formatter
+  -> string * Location_span.t
+  -> unit
 (** A semantic error message used when handling a SemanticError *)
 
 val pp_context_and_message :
-  Format.formatter -> string * Middle.Location.t -> unit
+  ?code:string -> Format.formatter -> string * Middle.Location.t -> unit
 (** Return two lines before and after the specified location
     and print a message *)

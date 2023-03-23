@@ -27,29 +27,38 @@ let fatal_error ?(msg = "") _ =
 
 (** Return two lines before and after the specified location
     and print a message *)
-let pp_context_and_message ppf (message, loc) =
-  Fmt.pf ppf "@[<v>%a@,%s@,@]" (Fmt.option Fmt.string)
-    (Location.context_to_string loc)
+let pp_context_and_message ?code ppf (message, loc) =
+  let open Middle.Location in
+  let context_callback =
+    match code with
+    | Some s -> fun () -> String.split_lines s
+    | None -> fun () -> In_channel.read_lines loc.filename
+  in
+  Fmt.pf ppf "%a@,%s" (Fmt.option Fmt.string)
+    (context_to_string context_callback loc)
     message
 
-let pp_semantic_error ppf (message, loc_span) =
+let pp_semantic_error ?printed_filename ?code ppf (message, loc_span) =
   Fmt.pf ppf "@[<v>@;Semantic error in %s:@;%a@]@."
-    (Location_span.to_string loc_span)
-    pp_context_and_message
+    (Location_span.to_string ?printed_filename loc_span)
+    (pp_context_and_message ?code)
     (message, loc_span.begin_loc)
 
 (** A syntax error message used when handling a SyntaxError *)
-let pp_syntax_error ppf = function
+let pp_syntax_error ?printed_filename ?code ppf = function
   | Parsing (message, loc_span) ->
       Fmt.pf ppf "@[<v>@,Syntax error in %s, parsing error:@,%a@]@."
-        (Location_span.to_string loc_span)
-        pp_context_and_message
+        (Location_span.to_string ?printed_filename loc_span)
+        (pp_context_and_message ?code)
         (message, loc_span.begin_loc)
   | Lexing (_, loc) ->
       Fmt.pf ppf "@[<v>@,Syntax error in %s, lexing error:@,%a@]@."
-        (Location.to_string {loc with col_num= loc.col_num - 1})
-        pp_context_and_message
+        (Location.to_string ?printed_filename
+           {loc with col_num= loc.col_num - 1})
+        (pp_context_and_message ?code)
         ("Invalid character found.", loc)
   | Include (message, loc) ->
       Fmt.pf ppf "@[<v>@,Syntax error in %s, include error:@,%a@]@."
-        (Location.to_string loc) pp_context_and_message (message, loc)
+        (Location.to_string ?printed_filename loc)
+        (pp_context_and_message ?code)
+        (message, loc)

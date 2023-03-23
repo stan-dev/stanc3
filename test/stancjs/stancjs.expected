@@ -1,9 +1,16 @@
 $ node allow-undefined.js
 
-Semantic error in 'string', line 3, column 4 to column 20:
+Semantic error in 'undefined-test.stan', line 3, column 4 to column 20:
+   -------------------------------------------------
+     1:  
+     2:  functions {
+     3:      int foo(real a);
+             ^
+     4:  }
+     5:  transformed data {
+   -------------------------------------------------
 
 Some function is declared without specifying a definition.
-
 
 $ node auto-format.js
 parameters {
@@ -15,10 +22,16 @@ model {
 
 $ node basic.js
 
-Semantic error in 'string', line 6, column 4 to column 5:
+Semantic error in 'basic_err.stan', line 6, column 4 to column 5:
+   -------------------------------------------------
+     4:  }
+     5:  model {
+     6:      z ~ std_normal();
+             ^
+     7:  }
+   -------------------------------------------------
 
 Identifier 'z' not in scope.
-
 
 $ node canonical.js
 transformed data {
@@ -33,10 +46,17 @@ model {
 
 $ node optimization.js
 
-Semantic error in 'string', line 3, column 4 to column 20:
+Semantic error in 'opencl.stan', line 3, column 4 to column 20:
+   -------------------------------------------------
+     1:  
+     2:  functions {
+     3:      int foo(real a);
+             ^
+     4:  }
+     5:  
+   -------------------------------------------------
 
 Some function is declared without specifying a definition.
-
 
 $ node pedantic.js
 ["Warning:\n  The parameter k was declared but was not used in the density calculation.\nWarning at 'string', line 7, column 17 to column 22:\n  Argument 10000 suggests there may be parameters that are not unit scale;\n  consider rescaling with a multiplier (see manual section 22.12).\n"]
@@ -50,4 +70,4 @@ $ node version.js
 %%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%
 $ node warnings.js
-["\nWarning: deprecated language construct used in 'string', line 4, column 4:\n\nComments beginning with # are deprecated. Please use // in place of # for line comments.\n\n"]
+["Warning in 'string', line 4, column 4: Comments beginning with # are\n    deprecated and this syntax will be removed in Stan 2.32.0. Use // to\n    begin line comments; this can be done automatically using the auto-format\n    flag to stanc","Warning in 'string', line 3, column 4: Declaration of arrays by placing\n    brackets after a variable name is deprecated and will be removed in Stan\n    2.32.0. Instead use the array keyword before the type. This can be\n    changed automatically using the auto-format flag to stanc"]

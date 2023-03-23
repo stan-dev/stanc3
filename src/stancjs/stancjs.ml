@@ -50,7 +50,10 @@ let stan2cpp model_name model_string flags =
         | error :: _ ->
             let loc = Semantic_error.location error
             and msg = (Fmt.to_to_string Semantic_error.pp) error in
-            Fmt.strf "%a" Errors.pp_semantic_error (msg, loc)
+            Fmt.strf "%a"
+              (Errors.pp_semantic_error
+                 ~printed_filename:(model_name ^ ".stan") ~code:model_string)
+              (msg, loc)
         | [] ->
             "Semantic check failed but reported no errors. This should never \
              happen."

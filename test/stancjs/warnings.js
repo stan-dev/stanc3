@@ -3,7 +3,7 @@ var utils = require("./utils/utils.js");
 
 var deprecated_model = `
 parameters {
-    real y;
+    real y[10];
     # hash comment is deprecated
 }
 model {

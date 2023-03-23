@@ -5,7 +5,7 @@ open Core_kernel
 open Middle
 
 let parse parse_fun lexbuf =
-  Warnings.init () ;
+  Input_warnings.init () ;
   (* see the Menhir manual for the description of
      error messages support *)
   let module Interp = Parser.MenhirInterpreter in
@@ -55,7 +55,7 @@ let parse parse_fun lexbuf =
     parse_fun lexbuf.Lexing.lex_curr_p
     |> Interp.loop_handle success failure input
   in
-  (result, Warnings.collect ())
+  (result, Input_warnings.collect ())
 
 let parse_string parse_fun str =
   let lexbuf =
