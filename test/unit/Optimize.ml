@@ -382,18 +382,20 @@ let%expect_test "list collapsing" =
  (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
     |}]
 
-let%expect_test "do not inline recursive functions" =
+let%expect_test "recursive functions" =
   let mir =
     reset_and_mir_of_string
       {|
       functions {
-        real g(int z);
-        real g(int z) {
-          return z^2;
+        int fib(int n) {
+          if (n == 0 || n == 1) {
+            return n;
+          }
+          return fib(n - 1) + fib(n - 2);
         }
       }
       model {
-        reject(g(53));
+        reject(fib(5));
       }
       |}
   in
@@ -402,9 +404,12 @@ let%expect_test "do not inline recursive functions" =
   [%expect
     {|
       functions {
-        real g(int z) {
+        int fib(int n) {
           {
-            return (z ^ 2);
+            if((n == 0) || (n == 1)) {
+              return n;
+            }
+            return (fib((n - 1)) + fib((n - 2)));
           }
         }
       }
@@ -413,11 +418,23 @@ let%expect_test "do not inline recursive functions" =
 
       log_prob {
         {
-          real inline_g_return_sym1__;
-          {
-            inline_g_return_sym1__ = (53 ^ 2);
+          int inline_fib_return_sym1__;
+          data int inline_fib_early_ret_check_sym2__;
+          inline_fib_early_ret_check_sym2__ = 0;
+          for(inline_fib_iterator_sym3__ in 1:1) {
+            if((5 == 0)) ; else {
+
+            }
+            if((5 == 0) || (5 == 1)) {
+              inline_fib_early_ret_check_sym2__ = 1;
+              inline_fib_return_sym1__ = 5;
+              break;
+            }
+            inline_fib_early_ret_check_sym2__ = 1;
+            inline_fib_return_sym1__ = (fib((5 - 1)) + fib((5 - 2)));
+            break;
           }
-          FnReject__(inline_g_return_sym1__);
+          FnReject__(inline_fib_return_sym1__);
         }
       }
 
@@ -428,6 +445,47 @@ let%expect_test "do not inline recursive functions" =
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
+
+let%expect_test "do not try to inline extern functions" =
+  let before = !Frontend.Typechecker.check_that_all_functions_have_definition in
+  Frontend.Typechecker.check_that_all_functions_have_definition := false ;
+  let mir =
+    reset_and_mir_of_string
+      {|
+            functions {
+              int fib(int n);
+            }
+            model {
+              reject(fib(5));
+            }
+            |}
+  in
+  Frontend.Typechecker.check_that_all_functions_have_definition := before ;
+  let mir = function_inlining mir in
+  Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
+  [%expect
+    {|
+            functions {
+              int fib(int n) {
+                ;
+              }
+            }
+
+
+
+            log_prob {
+              {
+                FnReject__(fib(5));
+              }
+            }
+
+            generate_quantities {
+              if(emit_transformed_parameters__) ; else {
+
+              }
+              if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+              if(PNot__(emit_generated_quantities__)) return;
+            } |}]
 
 let%expect_test "inline function in for loop" =
   let mir =

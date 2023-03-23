@@ -53,7 +53,7 @@ let eigen_block_expr_fns =
    size O(n^2) and this algorithm is O(n^3) so it's important to track
    only the function calls that really can propagate eigen templates.
 *)
-let break_eval_cycles functions_block =
+let break_eigen_cycles functions_block =
   let callgraph = String.Table.create () in
   let eval_eigen_cycles fun_args calls (f : _ Program.fun_def) =
     let open Expr.Fixed in
@@ -548,7 +548,7 @@ let trans_prog (p : Program.Typed.t) =
       ; functions_block= List.map ~f:rename_func p.functions_block }
       |> map translate_funapps_and_kwrds map_stmt
       |> map Fn.id change_kwrds_stmts) in
-  let p = {p with functions_block= break_eval_cycles p.functions_block} in
+  let p = {p with functions_block= break_eigen_cycles p.functions_block} in
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
         { decl_adtype= DataOnly

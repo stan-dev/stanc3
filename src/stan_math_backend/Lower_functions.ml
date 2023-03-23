@@ -282,19 +282,14 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
           | Some x -> {x with body= x.body @ s.body}
           | None -> s ) ) ;
     fn in
-  let declare_and_define (d : _ Program.fun_def) =
-    let fn = register_functors d in
-    let decl, defn = Cpp.split_fun_decl_defn fn in
-    (FunDef decl, FunDef defn) in
   let fun_decls, fun_defns =
     p.functions_block
     |> List.filter_map ~f:(fun d ->
-           (* external functions don't need decls
-              but they do need structs when used in HOF *)
-           if Option.is_none d.fdbody then (
-             ignore (register_functors d : fun_defn) ;
-             None )
-           else Some (declare_and_define d) )
+           let fn = register_functors d in
+           if Option.is_none d.fdbody then None
+           else
+             let decl, defn = Cpp.split_fun_decl_defn fn in
+             Some (FunDef decl, FunDef defn) )
     |> List.unzip in
   let structs = Hashtbl.data structs |> List.map ~f:(fun s -> Struct s) in
   fun_decls @ structs @ fun_defns
