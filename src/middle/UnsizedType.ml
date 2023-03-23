@@ -24,6 +24,8 @@ and autodifftype = DataOnly | AutoDiffable
 and returntype = Void | ReturnType of t
 [@@deriving compare, hash, sexp, equal]
 
+let returntype_to_type_opt = function Void -> None | ReturnType t -> Some t
+
 let pp_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data "
   | AutoDiffable -> ()
