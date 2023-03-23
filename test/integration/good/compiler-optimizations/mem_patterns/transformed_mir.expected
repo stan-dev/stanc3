@@ -6194,7 +6194,7 @@ vector[N] tp_soa_single_assign_from_soa: SoA
 vector[N] tp_aos_loop_vec_v_uni_idx: AoS
 vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
 ((functions_block
-  (((fdrt (UInt)) (fdname mask_fun) (fdsuffix FnPlain)
+  (((fdrt (ReturnType UInt)) (fdname mask_fun) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable i UInt)))
     (fdbody
      (((pattern
@@ -6206,7 +6206,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UVector)) (fdname udf_fun) (fdsuffix FnPlain)
+   ((fdrt (ReturnType UVector)) (fdname udf_fun) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable A UVector)))
     (fdbody
      (((pattern
@@ -11368,7 +11368,7 @@ matrix[5, 10] aos_y: AoS
 matrix[5, 10] tp_matrix_aos_from_mix: AoS
 matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
 ((functions_block
-  (((fdrt (UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
+  (((fdrt (ReturnType UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable x UMatrix)))
     (fdbody
      (((pattern
@@ -11380,7 +11380,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UMatrix)) (fdname okay_reduction) (fdsuffix FnPlain)
+   ((fdrt (ReturnType UMatrix)) (fdname okay_reduction) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable sum_x UReal) (AutoDiffable y UMatrix)))
     (fdbody
      (((pattern
@@ -12166,7 +12166,8 @@ matrix[10, 10] inner_empty_user_func_aos: AoS
 matrix[10, 10] int_aos_mul_aos: AoS
 matrix[10, 10] mul_two_aos: AoS
 ((functions_block
-  (((fdrt (UMatrix)) (fdname empty_user_func) (fdsuffix FnPlain) (fdargs ())
+  (((fdrt (ReturnType UMatrix)) (fdname empty_user_func) (fdsuffix FnPlain)
+    (fdargs ())
     (fdbody
      (((pattern
         (Block
@@ -12188,7 +12189,7 @@ matrix[10, 10] mul_two_aos: AoS
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UMatrix)) (fdname mat_ret_user_func) (fdsuffix FnPlain)
+   ((fdrt (ReturnType UMatrix)) (fdname mat_ret_user_func) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable A UMatrix)))
     (fdbody
      (((pattern
@@ -13485,7 +13486,7 @@ matrix[5, 10] first_pass_soa_x: AoS
 matrix[5, 10] aos_x: AoS
 matrix[5, 10] tp_matrix_aos: AoS
 ((functions_block
-  (((fdrt (UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
+  (((fdrt (ReturnType UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable x UMatrix)))
     (fdbody
      (((pattern
@@ -13497,7 +13498,7 @@ matrix[5, 10] tp_matrix_aos: AoS
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UMatrix)) (fdname okay_reduction) (fdsuffix FnPlain)
+   ((fdrt (ReturnType UMatrix)) (fdname okay_reduction) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable sum_x UReal) (AutoDiffable y UMatrix)))
     (fdbody
      (((pattern

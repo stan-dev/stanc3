@@ -88,9 +88,10 @@ promotion.*)
 let lower_returntype arg_types rt =
   let scalar = lower_promoted_scalar arg_types in
   match rt with
-  | Some ut when UnsizedType.is_int_type ut -> lower_type ut Int
-  | Some ut -> lower_type ut scalar
-  | None -> Void
+  | UnsizedType.ReturnType ut when UnsizedType.is_int_type ut ->
+      lower_type ut Int
+  | ReturnType ut -> lower_type ut scalar
+  | Void -> Void
 
 let lower_eigen_args_to_ref arg_types =
   let lower_ref name =
@@ -314,7 +315,7 @@ let lower_standalone_fun_def namespace_fun
   let mark_function_comment = GlobalComment "[[stan::function]]" in
   let return_type, return_stmt =
     match fdrt with
-    | None -> (Void, fun e -> Expression e)
+    | Void -> (Void, fun e -> Expression e)
     | _ -> (Auto, fun e -> Return (Some e)) in
   let fn_sig = make_fun_defn ~name:fdname ~return_type ~args:all_args in
   let internal_fname = namespace_fun ^ "::" ^ fdname in
@@ -345,7 +346,7 @@ module Testing = struct
     let with_no_loc stmt =
       Stmt.Fixed.{pattern= stmt; meta= Numbering.no_span_num} in
     let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-    { fdrt= None
+    { fdrt= Void
     ; fdname= "sars"
     ; fdsuffix= FnPlain
     ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
@@ -402,7 +403,7 @@ module Testing = struct
     let with_no_loc stmt =
       Stmt.Fixed.{pattern= stmt; meta= Numbering.no_span_num} in
     let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-    { fdrt= Some UMatrix
+    { fdrt= ReturnType UMatrix
     ; fdname= "sars"
     ; fdsuffix= FnPlain
     ; fdargs=

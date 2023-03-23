@@ -233,7 +233,7 @@ let%expect_test "list collapsing" =
   [%expect
     {|
 ((functions_block
-  (((fdrt ()) (fdname f) (fdsuffix FnPlain)
+  (((fdrt Void) (fdname f) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
     (fdbody
      (((pattern
@@ -250,7 +250,7 @@ let%expect_test "list collapsing" =
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname g) (fdsuffix FnPlain)
+   ((fdrt (ReturnType UReal)) (fdname g) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable z UInt)))
     (fdbody
      (((pattern
@@ -466,9 +466,7 @@ let%expect_test "do not try to inline extern functions" =
   [%expect
     {|
             functions {
-              int fib(int n) {
-                ;
-              }
+              extern int fib(int n);
             }
 
 

@@ -6,7 +6,7 @@ type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 [@@deriving sexp, hash, map]
 
 type 'a fun_def =
-  { fdrt: UnsizedType.t option
+  { fdrt: UnsizedType.returntype
   ; fdname: string
   ; fdsuffix: unit Fun_kind.suffix
   ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
@@ -50,20 +50,17 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
   Fmt.pf ppf "%a%a %s" UnsizedType.pp_autodifftype autodifftype UnsizedType.pp
     unsizedtype name
 
-let pp_fun_def pp_s ppf = function
-  | {fdrt; fdname; fdargs; fdbody; _} -> (
-      let pp_body_opt ppf = function
-        | None -> Fmt.pf ppf ";"
-        | Some body -> pp_s ppf body in
-      match fdrt with
-      | Some rt ->
-          Fmt.pf ppf "@[<v2>%a %s%a {@ %a@]@ }" UnsizedType.pp rt fdname
-            Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-            fdargs pp_body_opt fdbody
-      | None ->
-          Fmt.pf ppf "@[<v2>void %s%a {@ %a@]@ }" fdname
-            Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-            fdargs pp_body_opt fdbody )
+let pp_fun_def pp_s ppf {fdrt; fdname; fdargs; fdbody; _} =
+  match fdbody with
+  | None ->
+      Fmt.pf ppf "@[<v2>extern %a %s%a;@]" UnsizedType.pp_returntype fdrt fdname
+        Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+        fdargs
+  | Some s ->
+      Fmt.pf ppf "@[<v2>%a %s%a {@ %a@]@ }" UnsizedType.pp_returntype fdrt
+        fdname
+        Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+        fdargs pp_s s
 
 let pp_io_block ppf = function
   | Parameters -> Fmt.string ppf "parameters"
