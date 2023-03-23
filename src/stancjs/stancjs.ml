@@ -25,6 +25,7 @@ let stan2cpp model_name model_string flags =
     | Some flags -> fun flag -> Array.mem ~equal:String.equal flags flag
     | None -> fun _ -> false
   in
+  let printed_filename = model_name ^ ".stan" in
   Semantic_check.model_name := model_name ;
   Semantic_check.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
@@ -37,9 +38,14 @@ let stan2cpp model_name model_string flags =
         try Parse.parse_string Parser.Incremental.program model_string
         with Errors.SyntaxError err -> (Result.Error err, [])
       in
-      let warnings = List.map ~f:(Fmt.to_to_string Warnings.pp) warnings in
+      let warnings =
+        List.map ~f:(Fmt.to_to_string (Warnings.pp ~printed_filename)) warnings
+      in
       let ast =
-        Result.map_error ast ~f:(Fmt.to_to_string Errors.pp_syntax_error)
+        Result.map_error ast
+          ~f:
+            (Fmt.to_to_string
+               (Errors.pp_syntax_error ~printed_filename ~code:model_string))
       in
       let open Result.Monad_infix in
       if is_flag_set "auto-format" then
@@ -51,8 +57,7 @@ let stan2cpp model_name model_string flags =
             let loc = Semantic_error.location error
             and msg = (Fmt.to_to_string Semantic_error.pp) error in
             Fmt.strf "%a"
-              (Errors.pp_semantic_error
-                 ~printed_filename:(model_name ^ ".stan") ~code:model_string)
+              (Errors.pp_semantic_error ~printed_filename ~code:model_string)
               (msg, loc)
         | [] ->
             "Semantic check failed but reported no errors. This should never \

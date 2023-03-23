@@ -44,6 +44,31 @@ model {
   y ~ normal(0, 1);
 }
 
+$ node error.js
+
+Syntax error in 'undefined-test.stan', line 5, column 0 to column 0, parsing error:
+   -------------------------------------------------
+     3:      int foo(real a) {;
+     4:  }
+         ^
+   -------------------------------------------------
+
+A "}" or a function definition/declaration is expected.
+
+
+
+Semantic error in 'undefined-test.stan', line 3, column 4 to line 5, column 5:
+   -------------------------------------------------
+     1:  
+     2:  functions {
+     3:      int foo(real a) {
+             ^
+     4:          return 3.5;
+     5:      }
+   -------------------------------------------------
+
+Function bodies must contain a return statement of correct type in every branch.
+
 $ node optimization.js
 
 Semantic error in 'opencl.stan', line 3, column 4 to column 20:
@@ -70,4 +95,4 @@ $ node version.js
 %%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%
 $ node warnings.js
-["Warning in 'string', line 4, column 4: Comments beginning with # are\n    deprecated and this syntax will be removed in Stan 2.32.0. Use // to\n    begin line comments; this can be done automatically using the auto-format\n    flag to stanc","Warning in 'string', line 3, column 4: Declaration of arrays by placing\n    brackets after a variable name is deprecated and will be removed in Stan\n    2.32.0. Instead use the array keyword before the type. This can be\n    changed automatically using the auto-format flag to stanc"]
+["Warning in 'deprecated.stan', line 4, column 4: Comments beginning with # are\n    deprecated and this syntax will be removed in Stan 2.32.0. Use // to\n    begin line comments; this can be done automatically using the auto-format\n    flag to stanc","Warning in 'deprecated.stan', line 3, column 4: Declaration of arrays by\n    placing brackets after a variable name is deprecated and will be removed\n    in Stan 2.32.0. Instead use the array keyword before the type. This can\n    be changed automatically using the auto-format flag to stanc"]
