@@ -10,8 +10,9 @@ type 'a fun_def =
   ; fdname: string
   ; fdsuffix: unit Fun_kind.suffix
   ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
-        (* If fdbody is None, this is a function declaration without body. *)
   ; fdbody: 'a option
+        (* If fdbody is None, this is an external function declaration
+           (forward decls are removed during AST lowering) *)
   ; fdloc: (Location_span.t[@sexp.opaque] [@compare.ignore]) }
 [@@deriving compare, hash, sexp, map, fold]
 
