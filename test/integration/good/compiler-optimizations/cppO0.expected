@@ -17991,14 +17991,14 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 8;
         if (pstream__) {
           stan::math::stan_print(pstream__, rfun(3, pstream__));
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
         current_statement__ = 10;
         if (rfun(4, pstream__)) {
           current_statement__ = 9;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
         current_statement__ = 14;
@@ -18215,7 +18215,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 117;
           if (pstream__) {
             stan::math::stan_print(pstream__, "hello");
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
         current_statement__ = 120;
@@ -19455,7 +19455,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         current_statement__ = 14;
         if (pstream__) {
           stan::math::stan_print(pstream__, z);
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
         current_statement__ = 15;
         z = (stan::math::to_complex(0, 4) + 5);

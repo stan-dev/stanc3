@@ -81,6 +81,7 @@ type expr =
   | TernaryIf of expr * expr * expr
   | Cast of type_ * expr
   | Index of expr * expr
+  | Deref of expr
   | AllocNew of type_ * expr list
   | OperatorNew of identifier * type_ * expr list
       (** See {{:https://en.cppreference.com/w/cpp/memory/new/operator_new}operator new} for distinctions between
@@ -473,6 +474,7 @@ module Printing = struct
     | TernaryIf (e1, e2, e3) ->
         pf ppf "%a ? %a : %a" pp_expr e1 pp_expr e2 pp_expr e3
     | Index (e1, e2) -> pf ppf "%a[%a]" pp_expr e1 pp_expr e2
+    | Deref e -> pf ppf "*(%a)" pp_expr e
     | Assign (e1, e2) -> pf ppf "%a = %a" pp_expr e1 pp_expr e2
     | PMinus e -> pf ppf "-%a" pp_expr e
     | Increment e -> pf ppf "++%a" pp_expr e

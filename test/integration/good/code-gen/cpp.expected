@@ -2696,7 +2696,7 @@ void bar(const T0__& x, const T1__& y, std::ostream* pstream__) {
     current_statement__ = 9;
     if (pstream__) {
       stan::math::stan_print(pstream__, (x / y));
-      stan::math::stan_print(pstream__, "\n");
+      *(pstream__) << std::endl;
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2734,7 +2734,7 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
       if (pstream__) {
         stan::math::stan_print(pstream__, "x = ");
         stan::math::stan_print(pstream__, x);
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
       current_statement__ = 6;
       bar(static_cast<double>(1), static_cast<double>(2), pstream__);
@@ -2777,7 +2777,7 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
       if (pstream__) {
         stan::math::stan_print(pstream__, "x2 = ");
         stan::math::stan_print(pstream__, x2);
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
       current_statement__ = 3;
       bar(static_cast<double>(1), static_cast<double>(2), pstream__);
@@ -5392,7 +5392,7 @@ f0(const int& a1, const std::vector<int>& a2,
     current_statement__ = 737;
     if (pstream__) {
       stan::math::stan_print(pstream__, "hi");
-      stan::math::stan_print(pstream__, "\n");
+      *(pstream__) << std::endl;
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7638,7 +7638,7 @@ class mother_model final : public model_base_crtp<mother_model> {
             stan::math::stan_print(pstream__, j);
             stan::math::stan_print(pstream__, " matrix: ");
             stan::math::stan_print(pstream__, l_mat);
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
       }
@@ -21111,13 +21111,13 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
       current_statement__ = 1;
       if (pstream__) {
         stan::math::stan_print(pstream__, "test: \320\211\360\237\230\203");
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__,
           "\316\273 \316\262 \316\266 \317\200");
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -22016,7 +22016,7 @@ void test6(const T0__& alpha_arg__, std::ostream* pstream__) {
       if (pstream__) {
         stan::math::stan_print(pstream__,
           stan::model::rvalue(alpha, "alpha", stan::model::index_uni(1)));
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
     } else {
       current_statement__ = 32;
@@ -28908,7 +28908,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
         current_statement__ = 45;
         if (pstream__) {
           stan::math::stan_print(pstream__, "hello world");
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
       }
     } catch (const std::exception& e) {
