@@ -20,16 +20,6 @@ val deprecated_distributions : (string * (int * int)) String.Map.t
 val deprecated_functions : (string * (int * int)) String.Map.t
 val rename_deprecated : (string * (int * int)) String.Map.t -> string -> string
 val stan_lib_deprecations : (string * (int * int)) String.Map.t
-
-val userdef_functions :
-     ('a, 'b, 'c, 'd) statement_with program
-  -> (string * Middle.UnsizedType.argumentlist) list
-
-val is_redundant_forwarddecl :
-     (string * Middle.UnsizedType.argumentlist) list
-  -> identifier
-  -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * 'a) list
-  -> bool
-
 val userdef_distributions : untyped_statement block option -> string list
 val collect_warnings : typed_program -> Warnings.t list
+val remove_unneeded_forward_decls : typed_program -> typed_program

@@ -119,6 +119,8 @@ module Exprs = struct
 
   (** Helper for [std::numeric_limits<int>::min()] *)
   let int_min = fun_call "std::numeric_limits<int>::min" []
+
+  let static_cast type_ expr = FunCall ("static_cast", [type_], [expr])
 end
 
 module Expression_syntax = struct

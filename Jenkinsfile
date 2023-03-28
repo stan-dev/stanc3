@@ -901,6 +901,11 @@ pipeline {
                     ./ghr_v0.12.1_linux_amd64/ghr -u stan-dev -recreate ${tagName()} bin/
                 """)
             }
+            post {
+                failure {
+                    archiveArtifacts 'bin/*'
+                }
+            }
         }
 
         stage('Upload odoc') {

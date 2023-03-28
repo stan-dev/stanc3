@@ -382,7 +382,7 @@ and lower_user_defined_fun f suffix es =
   let extra_args =
     suffix_args suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
   Exprs.templated_fun_call f (templates true suffix)
-    (lower_exprs es @ extra_args)
+    ((lower_exprs ~promote_reals:true) es @ extra_args)
 
 and lower_compiler_internal ad ut f es =
   let open Expression_syntax in
@@ -483,7 +483,8 @@ and lower_indexed_simple e idcs =
   List.fold idcs ~init:(lower_expr e) ~f:(fun e id ->
       Index (e, idx_minus_one id) )
 
-and lower_expr (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
+and lower_expr ?(promote_reals = false)
+    (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
   let open Exprs in
   match pattern with
   | Var s -> Var s
@@ -491,7 +492,12 @@ and lower_expr (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
   | Lit (Imaginary, s) ->
       fun_call "stan::math::to_complex" [Literal "0"; Literal s]
   | Lit ((Real | Int), s) -> Literal s
-  | Promotion (expr, UReal, _) when is_scalar expr -> lower_expr expr
+  | Promotion (expr, UReal, _) when is_scalar expr ->
+      if promote_reals then
+        (* this can be important for e.g. templated function calls
+           where we might generate an incorrect specification for int *)
+        static_cast Cpp.Double (lower_expr expr)
+      else lower_expr expr
   | Promotion (expr, UComplex, DataOnly) when is_scalar expr ->
       (* this is in principle a little better than promote_scalar since it is constexpr *)
       fun_call "stan::math::to_complex" [lower_expr expr; Literal "0"]
@@ -538,7 +544,8 @@ and lower_expr (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
         lower_indexed_simple e idx
     | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e) )
 
-and lower_exprs = List.map ~f:lower_expr
+and lower_exprs ?(promote_reals = false) =
+  List.map ~f:(lower_expr ~promote_reals)
 
 module Testing = struct
   (* these functions are just for testing *)

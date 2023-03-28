@@ -51,7 +51,7 @@ jobs:
       - run: mv _build/default/src/stanc/stanc.exe ${{ matrix.os }}-stanc
 
       - name: Upload ${{ matrix.os }} stanc
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}-stanc
           path: ${{ matrix.os }}-stanc
@@ -85,7 +85,7 @@ jobs:
       - run: mv _build/default.windows/src/stanc/stanc.exe windows-stanc
 
       - name: Upload Windows stanc
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: windows-stanc
           path: windows-stanc
@@ -97,7 +97,7 @@ jobs:
       - run: mv _build/default/src/stancjs/stancjs.bc.js stanc.js
 
       - name: Upload stanc.js
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: stanc.js
           path: stanc.js

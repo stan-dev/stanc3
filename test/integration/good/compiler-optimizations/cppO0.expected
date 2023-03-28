@@ -17986,7 +17986,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       {
         local_scalar_t__ x = DUMMY_VAR__;
         current_statement__ = 7;
-        nrfun_lp<propto__>(4, 3, lp__, lp_accum__, pstream__);
+        nrfun_lp<propto__>(static_cast<double>(4), 3, lp__, lp_accum__,
+          pstream__);
         current_statement__ = 8;
         if (pstream__) {
           stan::math::stan_print(pstream__, rfun(3, pstream__));
@@ -18005,7 +18006,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 11;
           lp_accum__.add(rfun(8, pstream__));
           current_statement__ = 12;
-          nrfun_lp<propto__>(34, 3, lp__, lp_accum__, pstream__);
+          nrfun_lp<propto__>(static_cast<double>(34), 3, lp__, lp_accum__,
+            pstream__);
         }
         current_statement__ = 17;
         for (int i = 1; i <= 5; ++i) {
