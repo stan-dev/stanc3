@@ -4,6 +4,8 @@
  (libraries core_kernel re menhirLib fmt middle common yojson)
  (instrumentation
   (backend bisect_ppx))
+ (instrumentation
+  (backend landmarks --auto))
  (inline_tests)
  (preprocess
   (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))

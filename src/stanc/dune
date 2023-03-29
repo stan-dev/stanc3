@@ -6,6 +6,8 @@
  (libraries frontend middle stan_math_backend analysis_and_optimization)
  (instrumentation
   (backend bisect_ppx))
+ (instrumentation
+  (backend landmarks --auto))
  (modules Stanc)
  (public_name stanc)
  (preprocess

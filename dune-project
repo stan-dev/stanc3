@@ -15,6 +15,7 @@
   (yojson (= 1.7.0))
   (ocamlformat (and :with-test (= 0.19.0)))
   (bisect_ppx :with-test)
+  (landmarks-ppx :with-test)
   (merlin :with-test)
   (utop :with-test)
   (ocp-indent :with-test)
