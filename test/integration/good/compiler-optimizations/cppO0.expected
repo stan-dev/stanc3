@@ -17989,18 +17989,19 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       {
         local_scalar_t__ x = DUMMY_VAR__;
         current_statement__ = 7;
-        nrfun_lp<propto__>(4, 3, lp__, lp_accum__, pstream__);
+        nrfun_lp<propto__>(static_cast<double>(4), 3, lp__, lp_accum__,
+          pstream__);
         current_statement__ = 8;
         if (pstream__) {
           stan::math::stan_print(pstream__, rfun(3, pstream__));
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
         current_statement__ = 10;
         if (rfun(4, pstream__)) {
           current_statement__ = 9;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
         current_statement__ = 14;
@@ -18008,7 +18009,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 11;
           lp_accum__.add(rfun(8, pstream__));
           current_statement__ = 12;
-          nrfun_lp<propto__>(34, 3, lp__, lp_accum__, pstream__);
+          nrfun_lp<propto__>(static_cast<double>(34), 3, lp__, lp_accum__,
+            pstream__);
         }
         current_statement__ = 17;
         for (int i = 1; i <= 5; ++i) {
@@ -18216,7 +18218,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 117;
           if (pstream__) {
             stan::math::stan_print(pstream__, "hello");
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
         current_statement__ = 120;
@@ -19456,7 +19458,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         current_statement__ = 14;
         if (pstream__) {
           stan::math::stan_print(pstream__, z);
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
         current_statement__ = 15;
         z = (stan::math::to_complex(0, 4) + 5);

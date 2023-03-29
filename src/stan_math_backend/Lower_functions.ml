@@ -186,9 +186,10 @@ promotion.*)
 let lower_returntype arg_types rt =
   let scalar = lower_promoted_scalar arg_types in
   match rt with
-  | Some ut when UnsizedType.is_int_type ut -> lower_type ut Int
-  | Some ut -> lower_type ut scalar
-  | None -> Void
+  | UnsizedType.ReturnType ut when UnsizedType.is_int_type ut ->
+      lower_type ut Int
+  | ReturnType ut -> lower_type ut scalar
+  | Void -> Void
 
 let lower_eigen_args_to_ref arg_types =
   let lower_ref name =
@@ -355,7 +356,7 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
     List.equal UnsizedType.equal
       (List.map ~f:(fun (_, _, t) -> t) fdargs)
       arg_types in
-  let declare_and_define (d : _ Program.fun_def) =
+  let register_functors (d : _ Program.fun_def) =
     let functors =
       Map.find_multi functor_required d.fdname
       |> List.stable_dedup
@@ -367,20 +368,21 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
         Hashtbl.update structs s.struct_name ~f:(function
           | Some x -> {x with body= x.body @ s.body}
           | None -> s ) ) ;
-    let decl, defn = Cpp.split_fun_decl_defn fn in
-    (FunDef decl, FunDef defn) in
+    fn in
   let fun_decls, fun_defns =
     p.functions_block
     |> List.filter_map ~f:(fun d ->
-           (* FIXME: external functions don't need decls
-              but they do need structs (when used in HOF) *)
-           if Option.is_none d.fdbody then None else Some (declare_and_define d) )
+           let fn = register_functors d in
+           if Option.is_none d.fdbody then None
+           else
+             let decl, defn = Cpp.split_fun_decl_defn fn in
+             Some (FunDef decl, FunDef defn) )
     |> List.unzip in
   let structs = Hashtbl.data structs |> List.map ~f:(fun s -> Struct s) in
   fun_decls @ structs @ fun_defns
 
 let lower_standalone_fun_def namespace_fun
-    Program.{fdname; fdsuffix; fdargs; fdbody; fdrt; _} =
+    Program.{fdname; fdsuffix; fdargs; fdrt; _} =
   let extra, extra_templates =
     match fdsuffix with
     | Fun_kind.FnTarget ->
@@ -399,24 +401,21 @@ let lower_standalone_fun_def namespace_fun
   let mark_function_comment = GlobalComment "[[stan::function]]" in
   let return_type, return_stmt =
     match fdrt with
-    | None -> (Void, fun e -> Expression e)
+    | Void -> (Void, fun e -> Expression e)
     | _ -> (Auto, fun e -> Return (Some e)) in
   let fn_sig = make_fun_defn ~name:fdname ~return_type ~args:all_args in
-  match fdbody with
-  | None -> []
-  | Some _ ->
-      let internal_fname = namespace_fun ^ "::" ^ fdname in
-      let template =
-        match fdsuffix with
-        | FnLpdf _ | FnTarget -> [TypeLiteral "false"]
-        | FnRng | FnPlain -> [] in
-      let call_args =
-        List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
-        |> List.map ~f:Exprs.to_var in
-      let ret =
-        return_stmt (Exprs.templated_fun_call internal_fname template call_args)
-      in
-      [mark_function_comment; FunDef (fn_sig ~body:[ret] ())]
+  let internal_fname = namespace_fun ^ "::" ^ fdname in
+  let template =
+    match fdsuffix with
+    | FnLpdf _ | FnTarget -> [TypeLiteral "false"]
+    | FnRng | FnPlain -> [] in
+  let call_args =
+    List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
+    |> List.map ~f:Exprs.to_var in
+  let ret =
+    return_stmt (Exprs.templated_fun_call internal_fname template call_args)
+  in
+  [mark_function_comment; FunDef (fn_sig ~body:[ret] ())]
 
 module Testing = struct
   (* Testing code *)
@@ -433,7 +432,7 @@ module Testing = struct
     let with_no_loc stmt =
       Stmt.Fixed.{pattern= stmt; meta= Numbering.no_span_num} in
     let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-    { fdrt= None
+    { fdrt= Void
     ; fdname= "sars"
     ; fdsuffix= FnPlain
     ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
@@ -490,7 +489,7 @@ module Testing = struct
     let with_no_loc stmt =
       Stmt.Fixed.{pattern= stmt; meta= Numbering.no_span_num} in
     let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-    { fdrt= Some UMatrix
+    { fdrt= ReturnType UMatrix
     ; fdname= "sars"
     ; fdsuffix= FnPlain
     ; fdargs=

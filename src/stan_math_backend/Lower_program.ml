@@ -106,9 +106,7 @@ let rec gen_validate_data name st =
     List.map2_exn ~f:gen_validate_data names sts |> List.concat
   else
     let vector args =
-      let cast x =
-        Exprs.templated_fun_call "static_cast" [Types.size_t] [lower_expr x]
-      in
+      let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
       InitializerExpr (Types.std_vector Types.size_t, List.map ~f:cast args)
     in
     let open Expression_syntax in
@@ -364,8 +362,7 @@ let gen_get_dims {Program.output_vars; _} =
   (* TUPLE MAYBE: this is a mirror of how we give dims in var context.
       This won't generalize to ragged arrays, I don't think.
   *)
-  let cast x =
-    Exprs.templated_fun_call "static_cast" [Types.size_t] [lower_expr x] in
+  let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
   let pack inner_dims =
     List.map
       ~f:(fun x -> Exprs.std_vector_init_expr Types.size_t x)

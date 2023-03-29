@@ -19345,7 +19345,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         if (pstream__) {
           stan::math::stan_print(pstream__, inline_rfun_return_sym2__);
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
         int inline_rfun_return_sym5__;
         int inline_rfun_early_ret_check_sym6__ =
@@ -19363,7 +19363,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 11;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
         int inline_rfun_return_sym8__;
@@ -19585,7 +19585,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 78;
           if (pstream__) {
             stan::math::stan_print(pstream__, "hello");
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
         local_scalar_t__ temp2 = DUMMY_VAR__;
@@ -20808,7 +20808,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         current_statement__ = 14;
         if (pstream__) {
           stan::math::stan_print(pstream__, z);
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
         current_statement__ = 15;
         z = stan::math::to_complex(5, 4);

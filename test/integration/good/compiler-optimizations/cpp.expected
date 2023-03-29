@@ -28205,7 +28205,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         if (pstream__) {
           stan::math::stan_print(pstream__, inline_rfun_return_sym2__);
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
         int inline_rfun_return_sym5__;
         int inline_rfun_early_ret_check_sym6__ =
@@ -28223,7 +28223,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 11;
           if (pstream__) {
             stan::math::stan_print(pstream__, "a");
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
         int inline_rfun_return_sym8__;
@@ -28624,7 +28624,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 74;
           if (pstream__) {
             stan::math::stan_print(pstream__, "hello");
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
         double temp2 = std::numeric_limits<double>::quiet_NaN();
@@ -29983,7 +29983,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         current_statement__ = 14;
         if (pstream__) {
           stan::math::stan_print(pstream__, lcm_sym16__);
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
         lcm_sym15__ = stan::math::to_complex(5, 4);
         current_statement__ = 15;

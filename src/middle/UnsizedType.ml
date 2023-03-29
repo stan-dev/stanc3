@@ -35,6 +35,8 @@ let rec pp_tuple_autodifftype ppf = function
         Fmt.(list ~sep:comma pp_tuple_autodifftype)
         ad
 
+let returntype_to_type_opt = function Void -> None | ReturnType t -> Some t
+
 let pp_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data "
   | AutoDiffable -> ()

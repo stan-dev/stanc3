@@ -47,18 +47,17 @@ let rename_deprecated map name =
 
 let userdef_functions program =
   match program.functionblock with
-  | None -> []
+  | None -> Hash_set.Poly.create ()
   | Some {stmts; _} ->
       List.filter_map stmts ~f:(function
         | {stmt= FunDef {body= {stmt= Skip; _}; _}; _} -> None
         | {stmt= FunDef {funname; arguments; _}; _} ->
             Some (funname.name, Ast.type_of_arguments arguments)
         | _ -> None )
+      |> Hash_set.Poly.of_list
 
 let is_redundant_forwarddecl fundefs funname arguments =
-  let equal (id1, a1) (id2, a2) =
-    String.equal id1 id2 && UnsizedType.equal_argumentlist a1 a2 in
-  List.mem ~equal fundefs (funname.name, Ast.type_of_arguments arguments)
+  Hash_set.mem fundefs (funname.name, Ast.type_of_arguments arguments)
 
 let userdef_distributions stmts =
   let open String in
@@ -235,3 +234,15 @@ let collect_userdef_distributions program =
 let collect_warnings (program : typed_program) =
   let fundefs = userdef_functions program in
   fold_program (collect_deprecated_stmt fundefs) [] program
+
+let remove_unneeded_forward_decls program =
+  let fundefs = userdef_functions program in
+  let drop_forwarddecl = function
+    | {stmt= FunDef {body= {stmt= Skip; _}; funname; arguments; _}; _}
+      when is_redundant_forwarddecl fundefs funname arguments ->
+        false
+    | _ -> true in
+  { program with
+    functionblock=
+      Option.map program.functionblock ~f:(fun x ->
+          {x with stmts= List.filter ~f:drop_forwarddecl x.stmts} ) }

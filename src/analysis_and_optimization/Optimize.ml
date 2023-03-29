@@ -465,7 +465,9 @@ let create_function_inline_map adt l =
     | None -> accum
     | Some fdbody -> (
         let create_data propto =
-          ( Option.map ~f:(fun x -> Type.Unsized x) fdrt
+          ( Option.map
+              ~f:(fun x -> Type.Unsized x)
+              (UnsizedType.returntype_to_type_opt fdrt)
           , List.map ~f:(fun (_, name, _) -> name) fdargs
           , inline_function_statement propto adt accum fdbody ) in
         match Middle.Utils.with_unnormalized_suffix fdname with
