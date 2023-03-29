@@ -2391,7 +2391,7 @@ class simple_model final : public model_base_crtp<simple_model> {
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__, std::get<0>(x));
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2672,7 +2672,7 @@ class simple2_model final : public model_base_crtp<simple2_model> {
         stan::math::stan_print(pstream__,
           stan::model::rvalue(std::get<0>(x), "x.1",
             stan::model::index_uni(2)));
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2968,7 +2968,7 @@ class simple3_model final : public model_base_crtp<simple3_model> {
         stan::math::stan_print(pstream__,
           stan::model::rvalue(std::get<0>(x), "x.1",
             stan::model::index_uni(2)));
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7418,7 +7418,7 @@ void foo(const std::tuple<T0__0__>& test, std::ostream* pstream__) {
     current_statement__ = 16;
     if (pstream__) {
       stan::math::stan_print(pstream__, std::get<0>(test));
-      stan::math::stan_print(pstream__, "\n");
+      *(pstream__) << std::endl;
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7463,7 +7463,7 @@ foo2(const std::vector<std::tuple<T0__0__>>& test, std::ostream* pstream__) {
       stan::math::stan_print(pstream__,
         std::get<0>(
           stan::model::rvalue(test, "test", stan::model::index_uni(1))));
-      stan::math::stan_print(pstream__, "\n");
+      *(pstream__) << std::endl;
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7487,7 +7487,7 @@ void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
     current_statement__ = 22;
     if (pstream__) {
       stan::math::stan_print(pstream__, std::get<0>(test));
-      stan::math::stan_print(pstream__, "\n");
+      *(pstream__) << std::endl;
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7519,7 +7519,7 @@ overly_complicated(const std::tuple<
     current_statement__ = 24;
     if (pstream__) {
       stan::math::stan_print(pstream__, std::get<1>(std::get<1>(t1)));
-      stan::math::stan_print(pstream__, "\n");
+      *(pstream__) << std::endl;
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);

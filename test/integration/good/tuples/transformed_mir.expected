@@ -6980,7 +6980,7 @@
  (prog_path arrays-tuples-nested.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir onepl.stan
 ((functions_block
-  (((fdrt ()) (fdname foo) (fdsuffix FnPlain)
+  (((fdrt Void) (fdname foo) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable x (UTuple (UReal)))))
     (fdbody
      (((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
@@ -8865,7 +8865,7 @@
  (prog_path tuple-constraints-params.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-dataonly.stan
 ((functions_block
-  (((fdrt (UReal)) (fdname foo) (fdsuffix FnPlain)
+  (((fdrt (ReturnType UReal)) (fdname foo) (fdsuffix FnPlain)
     (fdargs ((DataOnly x (UTuple (UReal UReal)))))
     (fdbody
      (((pattern
@@ -10413,7 +10413,7 @@
  (prog_name tuple_params_model) (prog_path tuple-params.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-promotion.stan
 ((functions_block
-  (((fdrt (UReal)) (fdname dummy) (fdsuffix FnPlain)
+  (((fdrt (ReturnType UReal)) (fdname dummy) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable test (UTuple ((UArray UReal) (UArray UReal))))))
     (fdbody
      (((pattern
@@ -11958,7 +11958,7 @@
  (prog_name tuple_promotion_model) (prog_path tuple-promotion.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-templating.stan
 ((functions_block
-  (((fdrt ()) (fdname foo) (fdsuffix FnPlain)
+  (((fdrt Void) (fdname foo) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable test (UTuple (UMatrix)))))
     (fdbody
      (((pattern
@@ -11976,7 +11976,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname tsum) (fdsuffix FnPlain)
+   ((fdrt (ReturnType UReal)) (fdname tsum) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable s (UTuple ((UArray UInt) (UArray UReal))))))
     (fdbody
      (((pattern
@@ -12000,7 +12000,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ()) (fdname foo2) (fdsuffix FnPlain)
+   ((fdrt Void) (fdname foo2) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable test (UArray (UTuple (UMatrix))))))
     (fdbody
      (((pattern
@@ -12027,7 +12027,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ()) (fdname foo3) (fdsuffix FnPlain)
+   ((fdrt Void) (fdname foo3) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable test (UTuple (UReal UMatrix)))))
     (fdbody
      (((pattern
@@ -12045,7 +12045,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ()) (fdname overly_complicated) (fdsuffix FnPlain)
+   ((fdrt Void) (fdname overly_complicated) (fdsuffix FnPlain)
     (fdargs
      ((AutoDiffable t1 (UTuple ((UArray UMatrix) (UTuple (UInt UMatrix)))))
       (AutoDiffable t2 (UArray (UTuple (UInt UMatrix))))))
