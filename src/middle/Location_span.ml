@@ -1,7 +1,6 @@
 (** Delimited locations in source code *)
 
 open Core_kernel
-open Core_kernel.Poly
 
 type t = {begin_loc: Location.t; end_loc: Location.t}
 [@@deriving sexp, hash, compare]
@@ -16,7 +15,7 @@ let to_string ?printed_filename {begin_loc; end_loc} =
     | None ->
         " to "
         ^ Location.to_string
-            ~print_file:(begin_loc.filename <> end_loc.filename)
+            ~print_file:(not @@ String.equal begin_loc.filename end_loc.filename)
             ~print_line:(begin_loc.line_num <> end_loc.line_num)
             end_loc
     | Some _ -> "" in
