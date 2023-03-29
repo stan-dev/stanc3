@@ -218,12 +218,16 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       let accum = Var "lp_accum__" in
       accum.@?(("add", [lower_expr e])) |> wrap_e
   | NRFunApp (CompilerInternal FnPrint, args) ->
-      let lower_arg a =
+      let open Expression_syntax in
+      let pstream = Var "pstream__" in
+      let print a =
         Expression
-          (Exprs.fun_call "stan::math::stan_print"
-             [Var "pstream__"; lower_expr a] ) in
-      let args = args @ [Expr.Helpers.str "\n"] in
-      [Stmts.if_block (Var "pstream__") (List.map ~f:lower_arg args)]
+          (Exprs.fun_call "stan::math::stan_print" [pstream; lower_expr a])
+      in
+      let body =
+        List.map ~f:print args
+        @ [Expression (Deref pstream << [Cpp.Literal "std::endl"])] in
+      [Stmts.if_block pstream body]
   | NRFunApp (CompilerInternal FnReject, args) ->
       let err_strm_name = "errmsg_stream__" in
       let stream_decl =

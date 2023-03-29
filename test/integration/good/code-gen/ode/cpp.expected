@@ -874,7 +874,7 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
     current_statement__ = 48;
     if (pstream__) {
       stan::math::stan_print(pstream__, unused);
-      stan::math::stan_print(pstream__, "\n");
+      *(pstream__) << std::endl;
     }
     current_statement__ = 49;
     stan::model::assign(dydt, (((-beta *

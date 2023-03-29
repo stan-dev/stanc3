@@ -269,16 +269,7 @@ module Make (Deprecation : Deprecation_analysis.DEPRECATION_ANALYZER) :
 
   let repair_syntax program settings =
     if settings.deprecations then
-      let fundefs = Deprecation.userdef_functions program in
-      let drop_forwarddecl = function
-        | {stmt= FunDef {body= {stmt= Skip; _}; funname; arguments; _}; _}
-          when Deprecation.is_redundant_forwarddecl fundefs funname arguments ->
-            false
-        | _ -> true in
-      { program with
-        functionblock=
-          Option.map program.functionblock ~f:(fun x ->
-              {x with stmts= List.filter ~f:drop_forwarddecl x.stmts} ) }
+      program
       |> map_program
            (repair_syntax_stmt
               (Deprecation.userdef_distributions program.functionblock) )
@@ -287,7 +278,7 @@ module Make (Deprecation : Deprecation_analysis.DEPRECATION_ANALYZER) :
   let canonicalize_program program settings : typed_program =
     let program =
       if settings.deprecations then
-        program
+        Deprecation_analysis.remove_unneeded_forward_decls program
         |> map_program
              (replace_deprecated_stmt
                 (Deprecation.collect_userdef_distributions program) )

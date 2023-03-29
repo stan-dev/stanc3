@@ -15,20 +15,36 @@ module type DEPRECATION_ANALYZER = sig
   val is_deprecated_distribution : string -> bool
   val rename_deprecated_distribution : string -> string
   val rename_deprecated_function : string -> string
-
-  val userdef_functions :
-       ('a, 'b, 'c, 'd) statement_with program
-    -> (string * Middle.UnsizedType.argumentlist) list
-
-  val is_redundant_forwarddecl :
-       (string * Middle.UnsizedType.argumentlist) list
-    -> identifier
-    -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * 'a) list
-    -> bool
-
   val userdef_distributions : untyped_statement block option -> string list
   val collect_warnings : typed_program -> Warnings.t list
 end
+
+let userdef_functions program =
+  match program.functionblock with
+  | None -> []
+  | Some {stmts; _} ->
+      List.filter_map stmts ~f:(function
+        | {stmt= FunDef {body= {stmt= Skip; _}; _}; _} -> None
+        | {stmt= FunDef {funname; arguments; _}; _} ->
+            Some (funname.name, Ast.type_of_arguments arguments)
+        | _ -> None )
+
+let is_redundant_forwarddecl fundefs funname arguments =
+  let equal (id1, a1) (id2, a2) =
+    String.equal id1 id2 && UnsizedType.equal_argumentlist a1 a2 in
+  List.mem ~equal fundefs (funname.name, Ast.type_of_arguments arguments)
+
+let remove_unneeded_forward_decls program =
+  let fundefs = userdef_functions program in
+  let drop_forwarddecl = function
+    | {stmt= FunDef {body= {stmt= Skip; _}; funname; arguments; _}; _}
+      when is_redundant_forwarddecl fundefs funname arguments ->
+        false
+    | _ -> true in
+  { program with
+    functionblock=
+      Option.map program.functionblock ~f:(fun x ->
+          {x with stmts= List.filter ~f:drop_forwarddecl x.stmts} ) }
 
 module Make (StdLibrary : Std_library_utils.Library) : DEPRECATION_ANALYZER =
 struct
@@ -51,21 +67,6 @@ struct
          ~f:(fun Std_library_utils.{replacement; canonicalize_away; _} ->
            if canonicalize_away then replacement else name )
     |> Option.value ~default:name
-
-  let userdef_functions program =
-    match program.functionblock with
-    | None -> []
-    | Some {stmts; _} ->
-        List.filter_map stmts ~f:(function
-          | {stmt= FunDef {body= {stmt= Skip; _}; _}; _} -> None
-          | {stmt= FunDef {funname; arguments; _}; _} ->
-              Some (funname.name, Ast.type_of_arguments arguments)
-          | _ -> None )
-
-  let is_redundant_forwarddecl fundefs funname arguments =
-    let equal (id1, a1) (id2, a2) =
-      String.equal id1 id2 && UnsizedType.equal_argumentlist a1 a2 in
-    List.mem ~equal fundefs (funname.name, Ast.type_of_arguments arguments)
 
   let rename_deprecated_distribution =
     rename_deprecated StdLibrary.deprecated_distributions
