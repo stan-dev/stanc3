@@ -2865,7 +2865,7 @@ Ill-formed phrase. Expect either "+=" or "()" after "target".
 Syntax error in 'target-pe-bad1.stan', line 3, column 10 to column 17, parsing error:
    -------------------------------------------------
      1:  model {
-     2:  
+     2:
      3:  target += "hallo";
                    ^
      4:  }

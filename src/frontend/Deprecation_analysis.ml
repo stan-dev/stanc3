@@ -2,7 +2,7 @@ open Core_kernel
 open Ast
 open Middle
 
-let current_removal_version = (2, 32)
+let current_removal_version = (2, 33)
 
 let expired (major, minor) =
   let removal_major, removal_minor = current_removal_version in
@@ -10,9 +10,9 @@ let expired (major, minor) =
 
 let deprecated_functions =
   String.Map.of_alist_exn
-    [ ("multiply_log", ("lmultiply", (2, 32)))
-    ; ("binomial_coefficient_log", ("lchoose", (2, 32)))
-    ; ("cov_exp_quad", ("gp_exp_quad_cov", (2, 32))); ("fabs", ("abs", (2, 33)))
+    [ ("multiply_log", ("lmultiply", (2, 33)))
+    ; ("binomial_coefficient_log", ("lchoose", (2, 33)))
+    ; ("cov_exp_quad", ("gp_exp_quad_cov", (2, 33))); ("fabs", ("abs", (2, 33)))
     ]
 
 (* TODO need to mark lkj_cov as deprecated *)
@@ -27,7 +27,7 @@ let deprecated_odes =
 let deprecated_distributions =
   String.Map.of_alist_exn
     (List.map
-       ~f:(fun (x, y) -> (x, (y, (2, 32))))
+       ~f:(fun (x, y) -> (x, (y, (2, 33))))
        (List.concat_map Middle.Stan_math_signatures.distributions
           ~f:(fun (fnkinds, name, _, _) ->
             List.filter_map fnkinds ~f:(function

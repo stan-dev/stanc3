@@ -1379,7 +1379,7 @@ void _stan_alignas(const int& _stan_asm, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1394,7 +1394,7 @@ void _stan_alignof(const int& _stan_char, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1426,7 +1426,7 @@ void _stan_and_eq(const T0__& _stan_STAN_MINOR, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1445,7 +1445,7 @@ void _stan_asm(const T0__& _stan_class_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1460,7 +1460,7 @@ void _stan_bitand(const int& _stan_constexpr, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1475,7 +1475,7 @@ void _stan_bitor(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1490,7 +1490,7 @@ void _stan_bool(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1505,7 +1505,7 @@ void _stan_case(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1520,7 +1520,7 @@ void _stan_catch(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1535,7 +1535,7 @@ void _stan_char(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1550,7 +1550,7 @@ void _stan_char16_t(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1565,7 +1565,7 @@ void _stan_char32_t(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    
+
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -2696,7 +2696,7 @@ void bar(const T0__& x, const T1__& y, std::ostream* pstream__) {
     current_statement__ = 9;
     if (pstream__) {
       stan::math::stan_print(pstream__, (x / y));
-      stan::math::stan_print(pstream__, "\n");
+      *(pstream__) << std::endl;
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2734,7 +2734,7 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
       if (pstream__) {
         stan::math::stan_print(pstream__, "x = ");
         stan::math::stan_print(pstream__, x);
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
       current_statement__ = 6;
       bar(static_cast<double>(1), static_cast<double>(2), pstream__);
@@ -2777,7 +2777,7 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
       if (pstream__) {
         stan::math::stan_print(pstream__, "x2 = ");
         stan::math::stan_print(pstream__, x2);
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
       current_statement__ = 3;
       bar(static_cast<double>(1), static_cast<double>(2), pstream__);
@@ -5392,7 +5392,7 @@ f0(const int& a1, const std::vector<int>& a2,
     current_statement__ = 737;
     if (pstream__) {
       stan::math::stan_print(pstream__, "hi");
-      stan::math::stan_print(pstream__, "\n");
+      *(pstream__) << std::endl;
     }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7638,7 +7638,7 @@ class mother_model final : public model_base_crtp<mother_model> {
             stan::math::stan_print(pstream__, j);
             stan::math::stan_print(pstream__, " matrix: ");
             stan::math::stan_print(pstream__, l_mat);
-            stan::math::stan_print(pstream__, "\n");
+            *(pstream__) << std::endl;
           }
         }
       }
@@ -13449,155 +13449,155 @@ STAN_REGISTER_MAP_RECT(7, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(8, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(9, motherHOF_model_namespace::foo_functor__)
 Warning in 'motherHOF.stan', line 100, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 101, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 102, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 104, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 106, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 108, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 111, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 112, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 113, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 114, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 116, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 118, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 120, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 122, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 125, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 126, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 127, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 128, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 158, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 159, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 160, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 161, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 163, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 165, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 167, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 169, column 10: integrate_ode_adams is
-    deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_adams instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 172, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 173, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 174, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 175, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 177, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 179, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 181, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 183, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 186, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 187, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 188, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'motherHOF.stan', line 189, column 10: integrate_ode_rk45 is
-    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
+    deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --print-cpp new_integrate_interface.stan
@@ -18605,7 +18605,7 @@ stan::math::profile_map& get_stan_profile_data() {
 }
 #endif
 Warning in 'old_integrate_interface.stan', line 36, column 23: integrate_ode_bdf
-    is deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    is deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --print-cpp optimize_glm.stan
@@ -21086,7 +21086,7 @@ static constexpr std::array<const char*, 3> locations_array__ =
   " (in 'print_unicode.stan', line 3, column 2 to column 23)"};
 class print_unicode_model final : public model_base_crtp<print_unicode_model> {
  private:
-  
+
  public:
   ~print_unicode_model() {}
   print_unicode_model(stan::io::var_context& context__, unsigned int
@@ -21111,13 +21111,13 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
       current_statement__ = 1;
       if (pstream__) {
         stan::math::stan_print(pstream__, "test: \320\211\360\237\230\203");
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__,
           "\316\273 \316\262 \316\266 \317\200");
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -21151,7 +21151,7 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      
+
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -21412,7 +21412,7 @@ foo(const std::vector<T0__>& zs, std::ostream* pstream__) {
 }
 class promotion_model final : public model_base_crtp<promotion_model> {
  private:
-  
+
  public:
   ~promotion_model() {}
   promotion_model(stan::io::var_context& context__, unsigned int
@@ -21466,7 +21466,7 @@ class promotion_model final : public model_base_crtp<promotion_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      
+
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -22016,7 +22016,7 @@ void test6(const T0__& alpha_arg__, std::ostream* pstream__) {
       if (pstream__) {
         stan::math::stan_print(pstream__,
           stan::model::rvalue(alpha, "alpha", stan::model::index_uni(1)));
-        stan::math::stan_print(pstream__, "\n");
+        *(pstream__) << std::endl;
       }
     } else {
       current_statement__ = 32;
@@ -28911,7 +28911,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
         current_statement__ = 46;
         if (pstream__) {
           stan::math::stan_print(pstream__, "hello world");
-          stan::math::stan_print(pstream__, "\n");
+          *(pstream__) << std::endl;
         }
       }
     } catch (const std::exception& e) {
@@ -29714,7 +29714,7 @@ foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
 }
 class single_argument_lpmf_model final : public model_base_crtp<single_argument_lpmf_model> {
  private:
-  
+
  public:
   ~single_argument_lpmf_model() {}
   single_argument_lpmf_model(stan::io::var_context& context__, unsigned int
@@ -29768,7 +29768,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     // suppress unused var warning
     (void) function__;
     try {
-      
+
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -33105,7 +33105,7 @@ stan::promote_args_t<T0__> normal(const T0__& a, std::ostream* pstream__) {
 }
 class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stmt_conflict_model> {
  private:
-  
+
  public:
   ~udf_tilde_stmt_conflict_model() {}
   udf_tilde_stmt_conflict_model(stan::io::var_context& context__,
@@ -33412,7 +33412,7 @@ lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
 }
 class user_constrain_model final : public model_base_crtp<user_constrain_model> {
  private:
-  
+
  public:
   ~user_constrain_model() {}
   user_constrain_model(stan::io::var_context& context__, unsigned int

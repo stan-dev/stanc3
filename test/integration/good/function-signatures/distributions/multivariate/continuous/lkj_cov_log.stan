@@ -47,4 +47,3 @@ transformed parameters {
 model {
   y_p ~ normal(0, 1);
 }
-

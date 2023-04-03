@@ -3543,8 +3543,7 @@
               (FunCall stan::math::stan_print ()
                ((Var pstream__) (Literal "\"hi\""))))
              (Expression
-              (FunCall stan::math::stan_print ()
-               ((Var pstream__) (Literal "\"\\n\""))))))
+              (StreamInsertion (Deref (Var pstream__)) ((Literal std::endl))))))
            ()))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
@@ -17979,8 +17978,8 @@
                      (FunCall stan::math::stan_print ()
                       ((Var pstream__) (Var l_mat))))
                     (Expression
-                     (FunCall stan::math::stan_print ()
-                      ((Var pstream__) (Literal "\"\\n\""))))))
+                     (StreamInsertion (Deref (Var pstream__))
+                      ((Literal std::endl))))))
                   ())))))))
            (Expression (Assign (Var current_statement__) (Literal 347)))
            (Expression

@@ -1,7 +1,7 @@
 $ node allow-undefined.js
 Semantic error in 'string', line 3, column 8 to column 11:
    -------------------------------------------------
-     1:  
+     1:
      2:  functions {
      3:      int foo(real a);
                  ^
@@ -54,7 +54,7 @@ model {
   if (y != 0.0) {
     print("y is nonzero ");
   }
-  
+
   y ~ normal(0, 1);
 }
 
@@ -62,9 +62,9 @@ parameters {
   real y;
 }
 model {
-  if (y != 0.0) 
+  if (y != 0.0)
     print("y is nonzero ");
-  
+
   y ~ normal(((((((((0)))))))), 1);
 }
 
@@ -75,7 +75,7 @@ model {
   if (y) {
     print("y is nonzero ");
   }
-  
+
   y ~ normal(0, 1);
 }
 
@@ -235,12 +235,12 @@ $ node math_sigs.js
 $ node optimization.js
 Semantic error in 'string', line 3, column 8 to column 11:
    -------------------------------------------------
-     1:  
+     1:
      2:  functions {
      3:      int foo(real a);
                  ^
      4:  }
-     5:  
+     5:
    -------------------------------------------------
 
 Function 'foo' is declared without specifying a definition.
