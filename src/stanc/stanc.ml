@@ -211,22 +211,6 @@ let options =
       , Arg.Set print_info_json
       , " If set, print information about the model." ) ]
 
-(* To be removed in Stan 2.33 *)
-let removed_arg_errors =
-  (* is_prefix is used to also cover the --include-paths=... *)
-  let arg_is_used arg =
-    Array.mem ~equal:(fun x y -> String.is_prefix ~prefix:x y) Sys.argv arg
-  in
-  if arg_is_used "--allow_undefined" then (
-    eprintf
-      "--allow_undefined was removed in Stan 2.32.0. Please use \
-       --allow-undefined.\n" ;
-    exit 65 (* EX_DATAERR in sysexits.h*) ) ;
-  if arg_is_used "--include_paths" then (
-    eprintf
-      "--include_paths was removed in Stan 2.32.0. Please use --include-paths.\n" ;
-    exit 65 (* EX_DATAERR in sysexits.h*) )
-
 let model_file_err () =
   Arg.usage options ("Please specify a model_file.\n" ^ usage) ;
   exit 127

@@ -977,7 +977,7 @@ let check_lvalue cf tenv = function
       let ad_level = inferred_ad_type_of_indexed lval.lmeta.ad_level idcs in
       let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
       ( if List.exists ~f:is_multiindex flat then
-        (* TODO: prevent in 2.33 *)
+        (* TODO: prevent in 2.34 *)
         let lvalue_rvalue_types_differ =
           try
             let flat_type =

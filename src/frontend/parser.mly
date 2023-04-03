@@ -87,7 +87,6 @@ let (!=) = Stdlib.(!=)
 %nonassoc unary_over_binary
 %right HAT ELTPOW
 %left TRANSPOSE
-%nonassoc ARRAY (* resolves shift-reduce with array keyword in declarations *)
 %left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE
@@ -180,17 +179,7 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
-  | id = new_reserved_words
-    { id }
 
-(* TEMP: move to reserved_words for 2.33 *)
-new_reserved_words:
-  | OFFSET { build_id "offset" $loc }
-  | MULTIPLIER { build_id "multiplier" $loc }
-  | LOWER { build_id "lower" $loc }
-  | UPPER { build_id "upper" $loc }
-  | ARRAY
-    { build_id "array" $loc }
 
 decl_identifier:
   | id=identifier { id }
@@ -234,6 +223,12 @@ reserved_word:
   | TARGET { build_id "target" $loc }
   | GETLP { build_id "get_lp" $loc }
   | PROFILE { build_id "profile" $loc }
+  | OFFSET { build_id "offset" $loc }
+  | MULTIPLIER { build_id "multiplier" $loc }
+  | LOWER { build_id "lower" $loc }
+  | UPPER { build_id "upper" $loc }
+  | ARRAY
+    { build_id "array" $loc }
 
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)

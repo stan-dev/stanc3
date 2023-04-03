@@ -1,27 +1,12 @@
-  $ ../../../../../install/default/bin/stanc --auto-format abs-deprecate.stan
-transformed data {
-  real mu;
-  mu = fabs(-1.2);
-}
-parameters {
-  real y;
-}
-model {
-  y ~ normal(mu, 1);
-}
-
-Warning in 'abs-deprecate.stan', line 3, column 7: fabs is deprecated and
-    will be removed in Stan 2.33. Use abs instead. This can be automatically
-    changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format deprecated_syntax.stan
 parameters {
-
+  
 }
 model {
   real z = 3.0;
   real x = target();
   array[5] real xyz;
-
+  
   if (1 < 2 < 3 < 4) {
     // multiple comparisons
   }
@@ -37,13 +22,13 @@ model {
 }
 
 Warning in 'deprecated_syntax.stan', line 9, column 6: Found 1 < 2 < 3. This
-    is interpreted as (1 < 2) < 3. Consider if the intended meaning was
+    is interpreted as (1 < 2) < 3. Consider if the intended meaning was 
     1 < 2 && 2 < 3 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
 Warning in 'deprecated_syntax.stan', line 9, column 6: Found 1 < 2 < 3 < 4.
     This is interpreted as (1 < 2 < 3) < 4. Consider if the intended meaning
-    was
+    was 
     1 < 2 < 3 && 3 < 4 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
@@ -78,7 +63,7 @@ Warning: Empty file 'empty.stan' detected; this is a valid stan model but
  */
 functions {
   real n_lpdf(real y);
-
+  
   real n_lpdf(real y) {
     return -0.5 * square(y);
   }
@@ -98,9 +83,9 @@ Warning in 'fun_log_forward_decl.stan', line 6, column 7: Functions do not
   $ ../../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
-
+  
   int foo(int n) {
-    if (n == 0)
+    if (n == 0) 
       return 1;
     return n * foo(n - 1);
   }
@@ -125,7 +110,7 @@ transformed data {
   c = a[1] / b[2];
 }
 model {
-
+  
 }
 
 Warning in 'int_div_user.stan', line 7, column 6: Found int division:
@@ -194,7 +179,7 @@ model {
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
-
+  
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
                               1e-10, 1e8);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
@@ -208,7 +193,7 @@ generated quantities {
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
-
+  
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
                               1e-10, 1e8);
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
@@ -220,59 +205,59 @@ generated quantities {
 }
 
 Warning in 'integrate_ode_adams.stan', line 25, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 26, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 27, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 29, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 31, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 33, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 38, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 39, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 40, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 41, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 43, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 45, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 47, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_adams.stan', line 49, column 10: integrate_ode_adams
-    is deprecated and will be removed in Stan 3.0. Use ode_adams instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
@@ -304,7 +289,7 @@ model {
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
-
+  
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
                             1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
@@ -320,7 +305,7 @@ generated quantities {
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
-
+  
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
                             1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
@@ -332,67 +317,67 @@ generated quantities {
 }
 
 Warning in 'integrate_ode_bdf.stan', line 25, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 26, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 27, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 28, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 30, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 32, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 34, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 36, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 41, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 42, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 43, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 44, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 46, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 48, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 50, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_bdf.stan', line 52, column 10: integrate_ode_bdf is
-    deprecated and will be removed in Stan 3.0. Use ode_bdf instead.
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
@@ -417,12 +402,12 @@ transformed data {
   array[0] int x_int;
 }
 model {
-
+  
 }
 generated quantities {
   array[T, 2] real y_hat;
   y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
-
+  
   // add measurement error
   for (t in 1 : T) {
     y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
@@ -431,7 +416,7 @@ generated quantities {
 }
 
 Warning in 'integrate_ode_deprecation.stan', line 26, column 10: integrate_ode
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --auto-format integrate_ode_rk45.stan
@@ -473,35 +458,35 @@ generated quantities {
 }
 
 Warning in 'integrate_ode_rk45.stan', line 25, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_rk45.stan', line 26, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_rk45.stan', line 27, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_rk45.stan', line 28, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_rk45.stan', line 32, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_rk45.stan', line 33, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_rk45.stan', line 34, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 Warning in 'integrate_ode_rk45.stan', line 35, column 10: integrate_ode_rk45
-    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead.
+    is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation1.stan
@@ -557,11 +542,11 @@ Warning in 'matrix_pow_warning.stan', line 9, column 25: Found matrix^scalar:
 functions {
   int is_real(int x);
   int is_real(real x);
-
+  
   int is_real(real x) {
     return 1;
   }
-
+  
   int is_real(int x) {
     return 0;
   }
@@ -581,7 +566,7 @@ Warning in 'overloaded_forward_decl.stan', line 3, column 6: Functions do not
   $ ../../../../../install/default/bin/stanc --auto-format unreachable_statement.stan
 functions {
   void foo(real x) {
-    if (x == 0.0)
+    if (x == 0.0) 
       ; // bug - misplaced ; makes the next statement unconditional
     reject("Cannot be 0");
     return;
