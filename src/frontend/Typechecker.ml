@@ -980,7 +980,7 @@ let check_lvalue cf tenv = function
         add_warning loc
           "Nested multi-indexing on the left hand side of assignment does not \
            behave the same as nested indexing in expressions. This is \
-           considered a bug and will be disallowed in Stan 2.32.0. The \
+           considered a bug and will be disallowed in Stan 2.33.0. The \
            indexing can be automatically fixed using the canonicalize flag for \
            stanc." ;
         let lvalue_rvalue_types_differ =

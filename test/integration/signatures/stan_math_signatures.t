@@ -11518,6 +11518,7 @@ Display all Stan math signatures exposed in the language
   lkj_corr_lpdf(matrix, real) => real
   lkj_corr_rng(int, real) => matrix
   lkj_cov_log(matrix, vector, vector, real) => real
+  lkj_cov_lpdf(matrix, vector, vector, real) => real
   lmgamma(int, real) => real
   lmgamma(int, vector) => vector
   lmgamma(array[] int, vector) => vector

@@ -26,14 +26,14 @@ let array_syntax ?(unsized = false) (pos1, pos2) =
     (Option.value ~default:Middle.Location_span.empty
        (Middle.Location_span.of_positions_opt pos1 pos2) )
     ( "Declaration of arrays by placing brackets after " ^ placement
-    ^ " is deprecated and will be removed in Stan 2.32.0. Instead use the \
+    ^ " is deprecated and will be removed in Stan 2.33.0. Instead use the \
        array keyword before the type. This can be changed automatically using \
        the auto-format flag to stanc" )
 
 let drop_array_future () =
   match !warnings with
   | ( _
-    , "Variable name 'array' will be a reserved word starting in Stan 2.32.0. \
+    , "Variable name 'array' will be a reserved word starting in Stan 2.33.0. \
        Please rename it!" )
     :: tl ->
       warnings := tl
