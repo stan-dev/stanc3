@@ -55,6 +55,10 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           flag_val "max-line-length"
           |> Option.map ~f:int_of_string
           |> Option.value ~default:78 in
+        let deprecation_warnings =
+          if canonicalizer_settings.deprecations then []
+          else Deprecation_analysis.collect_warnings typed_ast in
+        let warnings = warnings @ deprecation_warnings in
         let mir = Ast_to_Mir.trans_prog model_name typed_ast in
         let tx_mir = Transform_Mir.trans_prog mir in
         if is_flag_set "auto-format" || is_flag_set "print-canonical" then

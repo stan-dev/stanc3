@@ -252,6 +252,7 @@ let distributions =
   ; ([Lpdf; Log], "inv_wishart", [DMatrix; DReal; DMatrix], SoA)
   ; ([Lpdf; Log], "lkj_corr", [DMatrix; DReal], AoS)
   ; ([Lpdf; Log], "lkj_corr_cholesky", [DMatrix; DReal], AoS)
+  ; ([Lpdf; Log], "lkj_cov", [DMatrix; DVector; DVector; DReal], AoS)
   ; (full_lpdf_depr, "logistic", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf; Rng; Cdf; Log], "loglogistic", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf_depr, "lognormal", [DVReal; DVReal; DVReal], SoA)
@@ -1606,8 +1607,6 @@ let () =
   add_unqualified
     ("lkj_corr_cholesky_rng", ReturnType UMatrix, [UInt; UReal], AoS) ;
   add_unqualified ("lkj_corr_rng", ReturnType UMatrix, [UInt; UReal], AoS) ;
-  add_unqualified
-    ("lkj_cov_log", ReturnType UReal, [UMatrix; UVector; UVector; UReal], AoS) ;
   add_binary_vec_int_real "lmgamma" AoS ;
   add_binary_vec "lmultiply" SoA ;
   add_unqualified ("log", ReturnType UComplex, [UComplex], AoS) ;
@@ -2718,5 +2717,4 @@ let%expect_test "declarative distributions" =
   |> print_endline ;
   [%expect {|
     binomial_coefficient_log
-    multiply_log
-    lkj_cov_log |}]
+    multiply_log |}]
