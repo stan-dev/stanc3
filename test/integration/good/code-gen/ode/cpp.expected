@@ -472,9 +472,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       out__.write(t0);
       std::vector<local_scalar_t__> times =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        times[(sym1__ - 1)] = in__.read<local_scalar_t__>();
-      }
+      stan::model::assign(times, in__.read<std::vector<local_scalar_t__>>(N),
+        "assigning variable times");
       out__.write(times);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

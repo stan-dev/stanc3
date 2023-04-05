@@ -13032,22 +13032,39 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        ((pattern (Lit Int 1))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper
-       ((pattern (Lit Int 10))
+       ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (body
        ((pattern
          (Block
           (((pattern
-             (Assignment
-              (p_soa_arr_vec_v UVector
-               ((Single
-                 ((pattern (Var sym1__))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              ((pattern
-                (FunApp (CompilerInternal FnReadSerializer)
-                 (((pattern (Var N))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment
+                      (p_soa_arr_vec_v UVector
+                       ((Single
+                         ((pattern (Var sym2__))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                        (Single
+                         ((pattern (Var sym1__))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      ((pattern
+                        (FunApp (CompilerInternal FnReadSerializer) ()))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))

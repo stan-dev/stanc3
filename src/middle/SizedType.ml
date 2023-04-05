@@ -97,12 +97,21 @@ let is_recursive_container st =
 (** Return a type's array dimensions and the type inside the (possibly nested) array *)
 let rec get_array_dims st =
   match st with
-  | SInt | SReal | SComplex | SVector _ | SRowVector _ | SComplexVector _
-   |SComplexRowVector _ | SMatrix _ | SComplexMatrix _ ->
-      (st, [])
+  | SInt | SReal | SComplex -> (st, [])
+  | SVector (_, d) | SRowVector (_, d) | SComplexVector d | SComplexRowVector d
+    ->
+      (st, [d])
+  | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> (st, [d1; d2])
   | SArray (st, dim) ->
       let st', dims = get_array_dims st in
       (st', dim :: dims)
+
+let rec internal_scalar st =
+  match st with
+  | SInt | SReal | SComplex -> st
+  | SVector _ | SRowVector _ | SMatrix _ -> SReal
+  | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ -> SComplex
+  | SArray (t, _) -> internal_scalar t
 
 let num_elems_expr st =
   Expr.Helpers.binop_list (get_dims_io st) Operator.Times

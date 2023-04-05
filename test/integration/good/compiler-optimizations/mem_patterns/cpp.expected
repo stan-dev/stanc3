@@ -4068,11 +4068,12 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> p_soa_arr_vec_v =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(10,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        stan::model::assign(p_soa_arr_vec_v,
-          in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
-          "assigning variable p_soa_arr_vec_v",
-          stan::model::index_uni(sym1__));
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          stan::model::assign(p_soa_arr_vec_v, in__.read<local_scalar_t__>(),
+            "assigning variable p_soa_arr_vec_v",
+            stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+        }
       }
       out__.write(p_soa_arr_vec_v);
       Eigen::Matrix<local_scalar_t__,-1,-1> p_soa_mat_uni_col_idx =
