@@ -683,6 +683,11 @@ let gen_overloads {Program.output_vars; _} =
             ~args ~body ~cv_qualifiers:[Const] () ) ) ] in
   let unconstrain_array =
     let open Expression_syntax in
+    let call_impl =
+      Expression
+        (Exprs.fun_call "unconstrain_array_impl"
+           [ Var "params_constrained"; Var "params_i"; Var "params_unconstrained"
+           ; Var "pstream" ] ) in
     [ FunDef
         (make_fun_defn ~inline:true ~return_type:Void ~name:"unconstrain_array"
            ~args:
@@ -695,12 +700,29 @@ let gen_overloads {Program.output_vars; _} =
                     ~type_:Types.(Const (std_vector Int))
                     ~name:"params_i" () )
              ; Expression
-                 (Var "params_unconstrained").@?(( "resize"
-                                                 , [Var "num_params_r__"] ))
+                 (Assign
+                    ( Var "params_unconstrained"
+                    , Constructor
+                        ( Types.std_vector Double
+                        , [Var "num_params_r__"; Exprs.quiet_NaN] ) ) )
+             ; call_impl ]
+           ~cv_qualifiers:[Const (*; Final*)] () )
+    ; FunDef
+        (make_fun_defn ~inline:true ~return_type:Void ~name:"unconstrain_array"
+           ~args:
+             [ (Types.const_ref (Types.vector Double), "params_constrained")
+             ; (Ref (Types.vector Double), "params_unconstrained"); pstream ]
+           ~body:
+             [ VariableDefn
+                 (make_variable_defn
+                    ~type_:Types.(Const (std_vector Int))
+                    ~name:"params_i" () )
              ; Expression
-                 (Exprs.fun_call "unconstrain_array_impl"
-                    [ Var "params_constrained"; Var "params_i"
-                    ; Var "params_unconstrained"; Var "pstream" ] ) ]
+                 (Assign
+                    ( Var "params_unconstrained"
+                    , Types.vector Double
+                      |::? ("Constant", [Var "num_params_r__"; Exprs.quiet_NaN])
+                    ) ); call_impl ]
            ~cv_qualifiers:[Const (*; Final*)] () ) ] in
   (GlobalComment "Begin method overload boilerplate" :: write_arrays)
   @ log_probs @ transform_inits @ unconstrain_array

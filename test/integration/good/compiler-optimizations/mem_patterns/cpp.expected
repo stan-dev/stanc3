@@ -350,7 +350,18 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
                     std::vector<double>& params_unconstrained, std::ostream*
                     pstream = nullptr) const {
     const std::vector<int> params_i;
-    params_unconstrained.resize(num_params_r__);
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
     unconstrain_array_impl(params_constrained, params_i,
       params_unconstrained, pstream);
   }
@@ -2313,7 +2324,18 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                     std::vector<double>& params_unconstrained, std::ostream*
                     pstream = nullptr) const {
     const std::vector<int> params_i;
-    params_unconstrained.resize(num_params_r__);
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
     unconstrain_array_impl(params_constrained, params_i,
       params_unconstrained, pstream);
   }
@@ -2868,7 +2890,18 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
                     std::vector<double>& params_unconstrained, std::ostream*
                     pstream = nullptr) const {
     const std::vector<int> params_i;
-    params_unconstrained.resize(num_params_r__);
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
     unconstrain_array_impl(params_constrained, params_i,
       params_unconstrained, pstream);
   }
@@ -4919,7 +4952,18 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                     std::vector<double>& params_unconstrained, std::ostream*
                     pstream = nullptr) const {
     const std::vector<int> params_i;
-    params_unconstrained.resize(num_params_r__);
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
     unconstrain_array_impl(params_constrained, params_i,
       params_unconstrained, pstream);
   }
@@ -5334,7 +5378,18 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
                     std::vector<double>& params_unconstrained, std::ostream*
                     pstream = nullptr) const {
     const std::vector<int> params_i;
-    params_unconstrained.resize(num_params_r__);
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
     unconstrain_array_impl(params_constrained, params_i,
       params_unconstrained, pstream);
   }
@@ -5926,7 +5981,18 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
                     std::vector<double>& params_unconstrained, std::ostream*
                     pstream = nullptr) const {
     const std::vector<int> params_i;
-    params_unconstrained.resize(num_params_r__);
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
     unconstrain_array_impl(params_constrained, params_i,
       params_unconstrained, pstream);
   }
@@ -6519,7 +6585,18 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
                     std::vector<double>& params_unconstrained, std::ostream*
                     pstream = nullptr) const {
     const std::vector<int> params_i;
-    params_unconstrained.resize(num_params_r__);
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
     unconstrain_array_impl(params_constrained, params_i,
       params_unconstrained, pstream);
   }
@@ -6973,7 +7050,18 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
                     std::vector<double>& params_unconstrained, std::ostream*
                     pstream = nullptr) const {
     const std::vector<int> params_i;
-    params_unconstrained.resize(num_params_r__);
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
     unconstrain_array_impl(params_constrained, params_i,
       params_unconstrained, pstream);
   }
@@ -7458,7 +7546,18 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
                     std::vector<double>& params_unconstrained, std::ostream*
                     pstream = nullptr) const {
     const std::vector<int> params_i;
-    params_unconstrained.resize(num_params_r__);
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
     unconstrain_array_impl(params_constrained, params_i,
       params_unconstrained, pstream);
   }

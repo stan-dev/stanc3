@@ -15914,8 +15914,32 @@
               (type_ (Const (StdVector Int))) (name params_i)
               (init Uninitialized)))
             (Expression
-             (MethodCall (Var params_unconstrained) resize ()
-              ((Var num_params_r__))))
+             (Assign (Var params_unconstrained)
+              (Constructor (StdVector Double)
+               ((Var num_params_r__)
+                (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
+            (Expression
+             (FunCall unconstrain_array_impl ()
+              ((Var params_constrained) (Var params_i)
+               (Var params_unconstrained) (Var pstream)))))))))
+       (FunDef
+        ((templates_init ((()) false)) (inline true) (return_type Void)
+         (name unconstrain_array)
+         (args
+          (((Const (Ref (Matrix Double -1 1))) params_constrained)
+           ((Ref (Matrix Double -1 1)) params_unconstrained)
+           ((Pointer (TypeLiteral std::ostream)) "pstream = nullptr")))
+         (cv_qualifiers (Const))
+         (body
+          (((VariableDefn
+             ((static false) (constexpr false)
+              (type_ (Const (StdVector Int))) (name params_i)
+              (init Uninitialized)))
+            (Expression
+             (Assign (Var params_unconstrained)
+              (StaticMethodCall (Matrix Double -1 1) Constant ()
+               ((Var num_params_r__)
+                (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
             (Expression
              (FunCall unconstrain_array_impl ()
               ((Var params_constrained) (Var params_i)
