@@ -235,27 +235,21 @@ class operators_model final : public model_base_crtp<operators_model> {
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(v, in__.read<local_scalar_t__>(),
-          "assigning variable v", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(v,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
+        "assigning variable v");
       out__.write(v);
       Eigen::Matrix<local_scalar_t__,1,-1> rv =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(rv, in__.read<local_scalar_t__>(),
-          "assigning variable rv", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(rv,
+        in__.read<Eigen::Matrix<local_scalar_t__,1,-1>>(N),
+        "assigning variable rv");
       out__.write(rv);
       Eigen::Matrix<local_scalar_t__,-1,-1> A =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          stan::model::assign(A, in__.read<local_scalar_t__>(),
-            "assigning variable A", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(A,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N),
+        "assigning variable A");
       out__.write(A);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1175,24 +1169,22 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        stan::model::assign(a, in__.read<local_scalar_t__>(),
-          "assigning variable a", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(a,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
+        "assigning variable a");
       out__.write(a);
       Eigen::Matrix<local_scalar_t__,-1,1> b =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        stan::model::assign(b, in__.read<local_scalar_t__>(),
-          "assigning variable b", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(b,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
+        "assigning variable b");
       out__.write(b);
       local_scalar_t__ r = DUMMY_VAR__;
       r = in__.read<local_scalar_t__>();
       out__.write(r);
       std::complex<local_scalar_t__> zp =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      zp = in__.read<local_scalar_t__>();
+      zp = in__.read<std::complex<local_scalar_t__>>();
       out__.write(zp);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

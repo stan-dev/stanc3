@@ -1298,57 +1298,45 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cmat =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          stan::model::assign(cmat, in__.read<local_scalar_t__>(),
-            "assigning variable cmat", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(cmat,
+        in__.read<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N),
+        "assigning variable cmat");
       out__.write(cmat);
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvec =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(cvec, in__.read<local_scalar_t__>(),
-          "assigning variable cvec", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(cvec,
+        in__.read<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N),
+        "assigning variable cvec");
       out__.write(cvec);
       Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> crowvec =
         Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(crowvec, in__.read<local_scalar_t__>(),
-          "assigning variable crowvec", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(crowvec,
+        in__.read<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N),
+        "assigning variable crowvec");
       out__.write(crowvec);
       std::complex<local_scalar_t__> z =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      z = in__.read<local_scalar_t__>();
+      z = in__.read<std::complex<local_scalar_t__>>();
       out__.write(z);
       Eigen::Matrix<local_scalar_t__,-1,-1> mat =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          stan::model::assign(mat, in__.read<local_scalar_t__>(),
-            "assigning variable mat", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(mat,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N),
+        "assigning variable mat");
       out__.write(mat);
       Eigen::Matrix<local_scalar_t__,-1,1> vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(vec, in__.read<local_scalar_t__>(),
-          "assigning variable vec", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(vec,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
+        "assigning variable vec");
       out__.write(vec);
       Eigen::Matrix<local_scalar_t__,1,-1> rowvec =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(rowvec, in__.read<local_scalar_t__>(),
-          "assigning variable rowvec", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(rowvec,
+        in__.read<Eigen::Matrix<local_scalar_t__,1,-1>>(N),
+        "assigning variable rowvec");
       out__.write(rowvec);
       local_scalar_t__ r = DUMMY_VAR__;
       r = in__.read<local_scalar_t__>();
@@ -4448,57 +4436,45 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cvmat =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          stan::model::assign(cvmat, in__.read<local_scalar_t__>(),
-            "assigning variable cvmat", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(cvmat,
+        in__.read<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N),
+        "assigning variable cvmat");
       out__.write(cvmat);
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvvec =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(cvvec, in__.read<local_scalar_t__>(),
-          "assigning variable cvvec", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(cvvec,
+        in__.read<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N),
+        "assigning variable cvvec");
       out__.write(cvvec);
       Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> cvrowvec =
         Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(cvrowvec, in__.read<local_scalar_t__>(),
-          "assigning variable cvrowvec", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(cvrowvec,
+        in__.read<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N),
+        "assigning variable cvrowvec");
       out__.write(cvrowvec);
       std::complex<local_scalar_t__> zv =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      zv = in__.read<local_scalar_t__>();
+      zv = in__.read<std::complex<local_scalar_t__>>();
       out__.write(zv);
       Eigen::Matrix<local_scalar_t__,-1,-1> vmat =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          stan::model::assign(vmat, in__.read<local_scalar_t__>(),
-            "assigning variable vmat", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(vmat,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N),
+        "assigning variable vmat");
       out__.write(vmat);
       Eigen::Matrix<local_scalar_t__,-1,1> vvec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(vvec, in__.read<local_scalar_t__>(),
-          "assigning variable vvec", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(vvec,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
+        "assigning variable vvec");
       out__.write(vvec);
       Eigen::Matrix<local_scalar_t__,1,-1> vrowvec =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(vrowvec, in__.read<local_scalar_t__>(),
-          "assigning variable vrowvec", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(vrowvec,
+        in__.read<Eigen::Matrix<local_scalar_t__,1,-1>>(N),
+        "assigning variable vrowvec");
       out__.write(vrowvec);
       local_scalar_t__ v = DUMMY_VAR__;
       v = in__.read<local_scalar_t__>();
@@ -7597,13 +7573,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       out__.write(p_r);
       std::complex<local_scalar_t__> p_complex =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      p_complex = in__.read<local_scalar_t__>();
+      p_complex = in__.read<std::complex<local_scalar_t__>>();
       out__.write(p_complex);
       std::vector<std::complex<local_scalar_t__>> p_complex_array =
         std::vector<std::complex<local_scalar_t__>>(2,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        stan::model::assign(p_complex_array, in__.read<local_scalar_t__>(),
+        stan::model::assign(p_complex_array,
+          in__.read<std::complex<local_scalar_t__>>(),
           "assigning variable p_complex_array",
           stan::model::index_uni(sym1__));
       }
@@ -7616,7 +7593,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           stan::model::assign(p_complex_array_2d,
-            in__.read<local_scalar_t__>(),
+            in__.read<std::complex<local_scalar_t__>>(),
             "assigning variable p_complex_array_2d",
             stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
         }

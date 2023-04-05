@@ -424,8 +424,8 @@ and lower_compiler_internal ad ut f es =
   | FnReadData -> read_data ut es
   | FnReadDataSerializer ->
       serializer_in.@<>(( "read"
-                        , [lower_unsizedtype_local AutoDiffable UReal]
-                        , [] ))
+                        , [lower_unsizedtype_local AutoDiffable ut]
+                        , lower_exprs es ))
   | FnReadParam {constrain; dims; mem_pattern} -> (
       let constrain_opt = constraint_to_string constrain in
       match constrain_opt with

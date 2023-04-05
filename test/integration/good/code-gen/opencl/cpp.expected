@@ -7069,27 +7069,21 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       Eigen::Matrix<local_scalar_t__,-1,-1> p_matrix =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(d_int, d_int,
           DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          stan::model::assign(p_matrix, in__.read<local_scalar_t__>(),
-            "assigning variable p_matrix", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(p_matrix,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int, d_int),
+        "assigning variable p_matrix");
       out__.write(p_matrix);
       Eigen::Matrix<local_scalar_t__,-1,1> p_vector =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(d_int, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        stan::model::assign(p_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_vector", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(p_vector,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int),
+        "assigning variable p_vector");
       out__.write(p_vector);
       Eigen::Matrix<local_scalar_t__,1,-1> p_row_vector =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(d_int, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        stan::model::assign(p_row_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_row_vector", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(p_row_vector,
+        in__.read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int),
+        "assigning variable p_row_vector");
       out__.write(p_row_vector);
       local_scalar_t__ y_p = DUMMY_VAR__;
       y_p = in__.read<local_scalar_t__>();
@@ -7733,27 +7727,21 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       Eigen::Matrix<local_scalar_t__,-1,-1> p_matrix =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(d_int, d_int,
           DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          stan::model::assign(p_matrix, in__.read<local_scalar_t__>(),
-            "assigning variable p_matrix", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(p_matrix,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int, d_int),
+        "assigning variable p_matrix");
       out__.write(p_matrix);
       Eigen::Matrix<local_scalar_t__,-1,1> p_vector =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(d_int, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        stan::model::assign(p_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_vector", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(p_vector,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int),
+        "assigning variable p_vector");
       out__.write(p_vector);
       Eigen::Matrix<local_scalar_t__,1,-1> p_row_vector =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(d_int, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        stan::model::assign(p_row_vector, in__.read<local_scalar_t__>(),
-          "assigning variable p_row_vector", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(p_row_vector,
+        in__.read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int),
+        "assigning variable p_row_vector");
       out__.write(p_row_vector);
       local_scalar_t__ y_p = DUMMY_VAR__;
       y_p = in__.read<local_scalar_t__>();

@@ -463,10 +463,9 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       out__.write(y);
       Eigen::Matrix<local_scalar_t__,-1,1> y0 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(y0, in__.read<local_scalar_t__>(),
-          "assigning variable y0", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(y0,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
+        "assigning variable y0");
       out__.write(y0);
       local_scalar_t__ t0 = DUMMY_VAR__;
       t0 = in__.read<local_scalar_t__>();

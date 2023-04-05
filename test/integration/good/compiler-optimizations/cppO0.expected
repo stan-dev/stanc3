@@ -266,13 +266,9 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          stan::model::assign(X_p, in__.read<local_scalar_t__>(),
-            "assigning variable X_p", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(X_p,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10),
+        "assigning variable X_p");
       out__.write(X_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1342,13 +1338,9 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          stan::model::assign(X_p, in__.read<local_scalar_t__>(),
-            "assigning variable X_p", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(X_p,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10),
+        "assigning variable X_p");
       out__.write(X_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1748,13 +1740,9 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          stan::model::assign(X, in__.read<local_scalar_t__>(),
-            "assigning variable X", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(X,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N),
+        "assigning variable X");
       out__.write(X);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2559,10 +2547,9 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(max_age, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= max_age; ++sym1__) {
-        stan::model::assign(beta, in__.read<local_scalar_t__>(),
-          "assigning variable beta", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(beta,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(max_age),
+        "assigning variable beta");
       out__.write_free_lub(0, 1, beta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3405,42 +3392,34 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       out__.write(b_v_prev);
       Eigen::Matrix<local_scalar_t__,-1,1> b_age =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
-        stan::model::assign(b_age, in__.read<local_scalar_t__>(),
-          "assigning variable b_age", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(b_age,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age),
+        "assigning variable b_age");
       out__.write(b_age);
       Eigen::Matrix<local_scalar_t__,-1,1> b_edu =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_edu, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
-        stan::model::assign(b_edu, in__.read<local_scalar_t__>(),
-          "assigning variable b_edu", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(b_edu,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu),
+        "assigning variable b_edu");
       out__.write(b_edu);
       Eigen::Matrix<local_scalar_t__,-1,1> b_region =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_region, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_region; ++sym1__) {
-        stan::model::assign(b_region, in__.read<local_scalar_t__>(),
-          "assigning variable b_region", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(b_region,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_region),
+        "assigning variable b_region");
       out__.write(b_region);
       Eigen::Matrix<local_scalar_t__,-1,-1> b_age_edu =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_age, n_edu,
           DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n_age; ++sym2__) {
-          stan::model::assign(b_age_edu, in__.read<local_scalar_t__>(),
-            "assigning variable b_age_edu", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(b_age_edu,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n_age, n_edu),
+        "assigning variable b_age_edu");
       out__.write(b_age_edu);
       Eigen::Matrix<local_scalar_t__,-1,1> b_hat =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
-        stan::model::assign(b_hat, in__.read<local_scalar_t__>(),
-          "assigning variable b_hat", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(b_hat,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state),
+        "assigning variable b_hat");
       out__.write(b_hat);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4495,10 +4474,9 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> mu =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        stan::model::assign(mu, in__.read<local_scalar_t__>(),
-          "assigning variable mu", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(mu,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
+        "assigning variable mu");
       out__.write_free_ordered(mu);
       std::vector<local_scalar_t__> sigma =
         std::vector<local_scalar_t__>(2, DUMMY_VAR__);
@@ -5647,47 +5625,41 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
-        stan::model::assign(a, in__.read<local_scalar_t__>(),
-          "assigning variable a", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(a,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age),
+        "assigning variable a");
       out__.write(a);
       Eigen::Matrix<local_scalar_t__,-1,1> b =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_edu, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
-        stan::model::assign(b, in__.read<local_scalar_t__>(),
-          "assigning variable b", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(b,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu),
+        "assigning variable b");
       out__.write(b);
       Eigen::Matrix<local_scalar_t__,-1,1> c =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age_edu,
           DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_age_edu; ++sym1__) {
-        stan::model::assign(c, in__.read<local_scalar_t__>(),
-          "assigning variable c", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(c,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age_edu),
+        "assigning variable c");
       out__.write(c);
       Eigen::Matrix<local_scalar_t__,-1,1> d =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
-        stan::model::assign(d, in__.read<local_scalar_t__>(),
-          "assigning variable d", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(d,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state),
+        "assigning variable d");
       out__.write(d);
       Eigen::Matrix<local_scalar_t__,-1,1> e =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_region_full,
           DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_region_full; ++sym1__) {
-        stan::model::assign(e, in__.read<local_scalar_t__>(),
-          "assigning variable e", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(e,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_region_full),
+        "assigning variable e");
       out__.write(e);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        stan::model::assign(beta, in__.read<local_scalar_t__>(),
-          "assigning variable beta", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(beta,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
+        "assigning variable beta");
       out__.write(beta);
       local_scalar_t__ sigma_a = DUMMY_VAR__;
       sigma_a = in__.read<local_scalar_t__>();
@@ -6347,10 +6319,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(phi_std_raw_1dim__,
           DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= phi_std_raw_1dim__; ++sym1__) {
-        stan::model::assign(phi_std_raw, in__.read<local_scalar_t__>(),
-          "assigning variable phi_std_raw", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(phi_std_raw,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(phi_std_raw_1dim__),
+        "assigning variable phi_std_raw");
       out__.write(phi_std_raw);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7231,10 +7202,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(nind, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
-        stan::model::assign(epsilon, in__.read<local_scalar_t__>(),
-          "assigning variable epsilon", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(epsilon,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(nind),
+        "assigning variable epsilon");
       out__.write(epsilon);
       local_scalar_t__ sigma = DUMMY_VAR__;
       sigma = in__.read<local_scalar_t__>();
@@ -8623,17 +8593,15 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_occasions,
           DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        stan::model::assign(beta, in__.read<local_scalar_t__>(),
-          "assigning variable beta", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(beta,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_occasions),
+        "assigning variable beta");
       out__.write_free_lb(0, beta);
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-        stan::model::assign(epsilon, in__.read<local_scalar_t__>(),
-          "assigning variable epsilon", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(epsilon,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(M),
+        "assigning variable epsilon");
       out__.write(epsilon);
       local_scalar_t__ sigma = DUMMY_VAR__;
       sigma = in__.read<local_scalar_t__>();
@@ -9345,22 +9313,20 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> pi =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        stan::model::assign(pi, in__.read<local_scalar_t__>(),
-          "assigning variable pi", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(pi,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(K),
+        "assigning variable pi");
       out__.write_free_simplex(pi);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>> theta =
         std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(J,
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(K,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__)));
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
-            stan::model::assign(theta, in__.read<local_scalar_t__>(),
-              "assigning variable theta", stan::model::index_uni(sym3__),
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
-          }
+        for (int sym2__ = 1; sym2__ <= J; ++sym2__) {
+          stan::model::assign(theta,
+            in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(K),
+            "assigning variable theta", stan::model::index_uni(sym2__),
+            stan::model::index_uni(sym1__));
         }
       }
       out__.write_free_simplex(theta);
@@ -9897,17 +9863,15 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       out__.write_free_lb(0, tau_phi);
       Eigen::Matrix<local_scalar_t__,-1,1> theta_std =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(theta_std, in__.read<local_scalar_t__>(),
-          "assigning variable theta_std", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(theta_std,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
+        "assigning variable theta_std");
       out__.write(theta_std);
       Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        stan::model::assign(phi_std_raw, in__.read<local_scalar_t__>(),
-          "assigning variable phi_std_raw", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(phi_std_raw,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
+        "assigning variable phi_std_raw");
       out__.write(phi_std_raw);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -10752,10 +10716,9 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(max_age, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= max_age; ++sym1__) {
-        stan::model::assign(beta, in__.read<local_scalar_t__>(),
-          "assigning variable beta", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(beta,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(max_age),
+        "assigning variable beta");
       out__.write_free_lub(0, 1, beta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -11922,19 +11885,15 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        stan::model::assign(p_single_ret_vec, in__.read<local_scalar_t__>(),
-          "assigning variable p_single_ret_vec",
-          stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(p_single_ret_vec,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
+        "assigning variable p_single_ret_vec");
       out__.write(p_single_ret_vec);
       Eigen::Matrix<local_scalar_t__,-1,1> p_multi_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        stan::model::assign(p_multi_ret_vec, in__.read<local_scalar_t__>(),
-          "assigning variable p_multi_ret_vec",
-          stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(p_multi_ret_vec,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
+        "assigning variable p_multi_ret_vec");
       out__.write(p_multi_ret_vec);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -13943,18 +13902,16 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       Eigen::Matrix<local_scalar_t__,-1,1> gamma =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_occasions,
           DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
-        stan::model::assign(gamma, in__.read<local_scalar_t__>(),
-          "assigning variable gamma", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(gamma,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_occasions),
+        "assigning variable gamma");
       out__.write_free_lub(0, 1, gamma);
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(epsilon_1dim__,
           DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= epsilon_1dim__; ++sym1__) {
-        stan::model::assign(epsilon, in__.read<local_scalar_t__>(),
-          "assigning variable epsilon", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(epsilon,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(epsilon_1dim__),
+        "assigning variable epsilon");
       out__.write(epsilon);
       local_scalar_t__ sigma = DUMMY_VAR__;
       sigma = in__.read<local_scalar_t__>();
@@ -17449,17 +17406,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       out__.write(beta);
       Eigen::Matrix<local_scalar_t__,-1,1> eta1 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        stan::model::assign(eta1, in__.read<local_scalar_t__>(),
-          "assigning variable eta1", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(eta1,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(J),
+        "assigning variable eta1");
       out__.write(eta1);
       Eigen::Matrix<local_scalar_t__,-1,1> eta2 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        stan::model::assign(eta2, in__.read<local_scalar_t__>(),
-          "assigning variable eta2", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(eta2,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(J),
+        "assigning variable eta2");
       out__.write(eta2);
       local_scalar_t__ mu_a1 = DUMMY_VAR__;
       mu_a1 = in__.read<local_scalar_t__>();
@@ -18352,30 +18307,21 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       out__.write(phi);
       Eigen::Matrix<local_scalar_t__,-1,-1> x_matrix =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 2, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          stan::model::assign(x_matrix, in__.read<local_scalar_t__>(),
-            "assigning variable x_matrix", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(x_matrix,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 2),
+        "assigning variable x_matrix");
       out__.write(x_matrix);
       Eigen::Matrix<local_scalar_t__,-1,1> x_vector =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        stan::model::assign(x_vector, in__.read<local_scalar_t__>(),
-          "assigning variable x_vector", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(x_vector,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
+        "assigning variable x_vector");
       out__.write(x_vector);
       Eigen::Matrix<local_scalar_t__,-1,-1> x_cov =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          stan::model::assign(x_cov, in__.read<local_scalar_t__>(),
-            "assigning variable x_cov", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(x_cov,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(2, 2),
+        "assigning variable x_cov");
       out__.write_free_cov_matrix(x_cov);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -19575,17 +19521,15 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_pair, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= n_pair; ++sym1__) {
-        stan::model::assign(a, in__.read<local_scalar_t__>(),
-          "assigning variable a", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(a,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_pair),
+        "assigning variable a");
       out__.write(a);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        stan::model::assign(beta, in__.read<local_scalar_t__>(),
-          "assigning variable beta", stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(beta,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
+        "assigning variable beta");
       out__.write(beta);
       local_scalar_t__ mu_a = DUMMY_VAR__;
       mu_a = in__.read<local_scalar_t__>();
@@ -20038,23 +19982,15 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          stan::model::assign(m2, in__.read<local_scalar_t__>(),
-            "assigning variable m2", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(m2,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10),
+        "assigning variable m2");
       out__.write(m2);
       Eigen::Matrix<local_scalar_t__,-1,-1> m3 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          stan::model::assign(m3, in__.read<local_scalar_t__>(),
-            "assigning variable m3", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
-      }
+      stan::model::assign(m3,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10),
+        "assigning variable m3");
       out__.write(m3);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -20598,12 +20534,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> b =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(I,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__));
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
-          stan::model::assign(b, in__.read<local_scalar_t__>(),
-            "assigning variable b", stan::model::index_uni(sym2__),
-            stan::model::index_uni(sym1__));
-        }
+      for (int sym1__ = 1; sym1__ <= I; ++sym1__) {
+        stan::model::assign(b,
+          in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(K),
+          "assigning variable b", stan::model::index_uni(sym1__));
       }
       out__.write(b);
     } catch (const std::exception& e) {
