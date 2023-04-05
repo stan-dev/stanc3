@@ -422,7 +422,7 @@ and lower_compiler_internal ad ut f es =
           [%message
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | FnReadData -> read_data ut es
-  | FnReadDataSerializer ->
+  | FnReadSerializer ->
       serializer_in.@<>(( "read"
                         , [lower_unsizedtype_local AutoDiffable ut]
                         , lower_exprs es ))

@@ -9,7 +9,7 @@ type 'expr t =
   | FnNegInf
   (* In AST_to_MIR being used as StanLib *)
   | FnReadData
-  | FnReadDataSerializer
+  | FnReadSerializer
   (* XXX move these to a backend specific file?*)
   | FnReadParam of
       { constrain: 'expr Transformation.t
@@ -45,13 +45,13 @@ let pp (pp_expr : 'a Fmt.t) ppf internal =
 
 (* Does this function call change state? Can we call it twice with the same results?
 
-   E.g., FnReadDataSerializer moves the serializer forward, so calling it again has
+   E.g., FnReadSerializer moves the serializer forward, so calling it again has
    different results
 
    Useful for optimizations
 *)
 let can_side_effect = function
-  | FnReadParam _ | FnReadData | FnReadDataSerializer | FnWriteParam _
+  | FnReadParam _ | FnReadData | FnReadSerializer | FnWriteParam _
    |FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
    |FnReadWriteEventsOpenCL _ ->
       true

@@ -31,8 +31,11 @@ type ('a, 'b) t =
   ; input_vars: (string * 'a SizedType.t) list
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
   ; log_prob: 'b list (*assumes data & params are in scope and ready*)
-  ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
+  ; generate_quantities: 'b list
+        (* assumes data & params ready & in scope*)
+        (* TODO the following two items are really backend-specific *)
   ; transform_inits: 'b list
+  ; unconstrain_array: 'b list
   ; output_vars: (string * 'a outvar) list
   ; prog_name: string
   ; prog_path: string }

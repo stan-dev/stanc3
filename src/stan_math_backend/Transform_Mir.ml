@@ -210,7 +210,7 @@ let rec base_type = function
 
 let pos = "pos__"
 
-let data_read smeta (decl_id, st) =
+let var_context_read smeta (decl_id, st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
   let flat_type = UnsizedType.UArray scalar in
@@ -295,15 +295,15 @@ let read_constrain_dims constrain_transform st =
       constrain_get_dims st
   | _ -> SizedType.get_dims st
 
-let data_serializer_read loc out_constrained_st =
+let plain_serializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in
   let dims = SizedType.get_dims out_constrained_st in
   let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
   Expr.(
     Helpers.(
-      internal_funapp FnReadDataSerializer dims Typed.Meta.{emeta with type_= ut}))
+      internal_funapp FnReadSerializer dims Typed.Meta.{emeta with type_= ut}))
 
-let param_read smeta
+let param_serializer_read smeta
     (decl_id, Program.{out_constrained_st= cst; out_block; out_trans; _}) =
   if not (out_block = Parameters) then []
   else
@@ -450,8 +450,22 @@ let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
       (FnWriteParam {unconstrain_opt= None; var= decl_var})
       [] Location_span.empty
 
-(** Statements to read, unconstrain and assign a parameter then write it back *)
-let data_unconstrain_transform smeta (decl_id, outvar) =
+(** Reads in parameters from a var_context, the same way as is done in the constructor,
+     and then writes out the unconstrained versions *)
+let var_context_unconstrain_transform smeta (decl_id, outvar) =
+  Stmt.Fixed.
+    { pattern=
+        Decl
+          { decl_adtype= UnsizedType.AutoDiffable
+          ; decl_id
+          ; decl_type= Type.Sized outvar.Program.out_constrained_st
+          ; initialize= true }
+    ; meta= smeta }
+  :: var_context_read smeta (decl_id, outvar.Program.out_constrained_st)
+  @ [gen_write ~unconstrain:true (decl_id, outvar)]
+
+(** Reads in parameters from a serializer and then writes out the unconstrained versions *)
+let array_unconstrain_transform smeta (decl_id, outvar) =
   [ Stmt.Fixed.
       { pattern=
           Decl
@@ -472,7 +486,7 @@ let data_unconstrain_transform smeta (decl_id, outvar) =
                    , SizedType.to_unsized nonarray_st
                    , List.map ~f:(fun e -> Index.Single e) (List.rev loopvars)
                    )
-                 , data_serializer_read smeta nonarray_st ) } )
+                 , plain_serializer_read smeta nonarray_st ) } )
        smeta ); gen_write ~unconstrain:true (decl_id, outvar) ]
 
 let rec contains_var_expr is_vident accum Expr.Fixed.{pattern; _} =
@@ -616,14 +630,15 @@ let trans_prog (p : Program.Typed.t) =
             ; meta= Location_span.empty } ] in
   let generate_quantities =
     ( p.generate_quantities
-    |> add_reads p.output_vars param_read
+    |> add_reads p.output_vars param_serializer_read
     |> translate_to_open_cl
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes_cond )
     @ gq_writes in
   let log_prob =
-    p.log_prob |> add_reads p.output_vars param_read |> translate_to_open_cl
-  in
+    p.log_prob
+    |> add_reads p.output_vars param_serializer_read
+    |> translate_to_open_cl in
   let opencl_vars =
     String.Set.union_list
       (List.concat_map
@@ -662,20 +677,27 @@ let trans_prog (p : Program.Typed.t) =
                     ; meta= Expr.Typed.Meta.empty } )
           ; meta= Location_span.empty } ] ) in
   let p =
+    let params =
+      List.filter
+        ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
+        p.output_vars in
     { p with
       log_prob= log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos
-        @ (p.prepare_data |> add_reads p.input_vars data_read)
+        @ (p.prepare_data |> add_reads p.input_vars var_context_read)
         @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
         @ List.concat_map
-            ~f:(data_unconstrain_transform Location_span.empty)
-            (List.filter
-               ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
-               p.output_vars )
+            ~f:(var_context_unconstrain_transform Location_span.empty)
+            params
+    ; unconstrain_array=
+        init_pos
+        @ List.concat_map
+            ~f:(array_unconstrain_transform Location_span.empty)
+            params
     ; generate_quantities } in
   Program.(
     p
