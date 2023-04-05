@@ -110,8 +110,8 @@ let lub_rt loc rt1 rt2 =
   | _, _ when rt1 = rt2 -> Validate.ok rt2
   | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> Validate.error
 
-(* 
-Checks that a variable/function name: 
+(*
+Checks that a variable/function name:
  - if UDF that it does not match a Stan Math function
  - a function/identifier does not have the _lupdf/_lupmf suffix
  - is not already in use
@@ -1660,7 +1660,7 @@ and semantic_check_pmf_fundef_first_arg_ty ~loc id arg_tys =
   Validate.(
     (* TODO: I think these kind of functions belong with the type definition *)
     let is_int_type = function
-      | UnsizedType.UInt | UArray UInt -> true
+      | UnsizedType.UInt | UArray UInt | UArray (UArray UInt) | UArray (UArray (UArray (UArray UInt))) -> true
       | _ -> false
     in
     if String.is_suffix id.name ~suffix:"_lpmf" then
