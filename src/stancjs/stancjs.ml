@@ -83,14 +83,14 @@ let stan2cpp model_name model_string is_flag_set flag_val =
         if is_flag_set "debug-generate-data" then
           r.return
             ( Result.Ok
-                (Debug_data_generation.print_declarations_json
+                (Debug_data_generation.gen_values_json
                    (Ast_to_Mir.gather_declarations typed_ast.datablock) )
             , warnings
             , [] ) ;
         if is_flag_set "debug-generate-inits" then
           r.return
             ( Result.Ok
-                (Debug_data_generation.print_declarations_json
+                (Debug_data_generation.gen_values_json
                    (Ast_to_Mir.gather_declarations typed_ast.parametersblock) )
             , warnings
             , [] ) ;

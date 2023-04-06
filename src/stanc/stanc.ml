@@ -307,11 +307,11 @@ let use_file filename =
       (Deprecation_analysis.collect_warnings typed_ast) ;
   if !generate_data then
     print_endline
-      (Debug_data_generation.print_declarations_json
+      (Debug_data_generation.gen_values_json
          (Ast_to_Mir.gather_declarations typed_ast.datablock) ) ;
   if !generate_inits then
     print_endline
-      (Debug_data_generation.print_declarations_json
+      (Debug_data_generation.gen_values_json
          (Ast_to_Mir.gather_declarations typed_ast.parametersblock) ) ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
