@@ -33,7 +33,11 @@ type ('a, 'b) t =
   ; log_prob: 'b list (*assumes data & params are in scope and ready*)
   ; generate_quantities: 'b list
         (* assumes data & params ready & in scope*)
-        (* TODO the following two items are really backend-specific *)
+        (* NOTE: the following two items are really backend-specific,
+           and are set to [] by Ast_to_mir before being populated in
+           Stan_math_backend.Transform_Mir.
+           It would be nice to abstract this out somehow
+        *)
   ; transform_inits: 'b list
   ; unconstrain_array: 'b list
   ; output_vars: (string * 'a outvar) list
