@@ -658,7 +658,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (rho UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -680,7 +680,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (alpha UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -702,7 +702,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (sigma UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern

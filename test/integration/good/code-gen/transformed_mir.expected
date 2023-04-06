@@ -22301,7 +22301,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_real UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -22319,7 +22319,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_upper UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -22341,7 +22341,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_lower UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -22369,7 +22369,7 @@
    ((pattern
      (Assignment (offset_multiplier (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -22401,7 +22401,7 @@
    ((pattern
      (Assignment (no_offset_multiplier (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -22431,7 +22431,7 @@
    ((pattern
      (Assignment (offset_no_multiplier (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -22461,7 +22461,7 @@
    ((pattern
      (Assignment (p_real_1d_ar (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -22548,7 +22548,7 @@
                                    ((type_ UInt) (loc <opaque>)
                                     (adlevel DataOnly)))))))
                               ((pattern
-                                (FunApp (CompilerInternal FnReadSerializer)
+                                (FunApp (CompilerInternal FnReadDeserializer)
                                  ()))
                                (meta
                                 ((type_ UReal) (loc <opaque>)
@@ -22587,7 +22587,7 @@
    ((pattern
      (Assignment (p_vec UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -22651,7 +22651,7 @@
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       ((pattern
-                        (FunApp (CompilerInternal FnReadSerializer) ()))
+                        (FunApp (CompilerInternal FnReadDeserializer) ()))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
@@ -22761,7 +22761,8 @@
                                             (adlevel DataOnly)))))))
                                       ((pattern
                                         (FunApp
-                                         (CompilerInternal FnReadSerializer)
+                                         (CompilerInternal
+                                          FnReadDeserializer)
                                          ()))
                                        (meta
                                         ((type_ UReal) (loc <opaque>)
@@ -22798,7 +22799,7 @@
    ((pattern
      (Assignment (p_row_vec URowVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -22858,7 +22859,7 @@
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       ((pattern
-                        (FunApp (CompilerInternal FnReadSerializer) ()))
+                        (FunApp (CompilerInternal FnReadDeserializer) ()))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
@@ -22969,7 +22970,8 @@
                                             (adlevel DataOnly)))))))
                                       ((pattern
                                         (FunApp
-                                         (CompilerInternal FnReadSerializer)
+                                         (CompilerInternal
+                                          FnReadDeserializer)
                                          ()))
                                        (meta
                                         ((type_ UReal) (loc <opaque>)
@@ -23008,7 +23010,7 @@
    ((pattern
      (Assignment (p_mat UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 4))
@@ -23116,7 +23118,8 @@
                                             (adlevel DataOnly)))))))
                                       ((pattern
                                         (FunApp
-                                         (CompilerInternal FnReadSerializer)
+                                         (CompilerInternal
+                                          FnReadDeserializer)
                                          ()))
                                        (meta
                                         ((type_ UReal) (loc <opaque>)
@@ -23159,7 +23162,7 @@
    ((pattern
      (Assignment (p_simplex UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -23219,7 +23222,7 @@
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       ((pattern
-                        (FunApp (CompilerInternal FnReadSerializer) ()))
+                        (FunApp (CompilerInternal FnReadDeserializer) ()))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
@@ -23329,7 +23332,8 @@
                                             (adlevel DataOnly)))))))
                                       ((pattern
                                         (FunApp
-                                         (CompilerInternal FnReadSerializer)
+                                         (CompilerInternal
+                                          FnReadDeserializer)
                                          ()))
                                        (meta
                                         ((type_ UReal) (loc <opaque>)
@@ -23368,7 +23372,7 @@
    ((pattern
      (Assignment (p_cfcov_54 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 4))
@@ -23398,7 +23402,7 @@
    ((pattern
      (Assignment (p_cfcov_33 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 3))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3))
@@ -23482,7 +23486,7 @@
                                    ((type_ UInt) (loc <opaque>)
                                     (adlevel DataOnly)))))))
                               ((pattern
-                                (FunApp (CompilerInternal FnReadSerializer)
+                                (FunApp (CompilerInternal FnReadDeserializer)
                                  ()))
                                (meta
                                 ((type_ UReal) (loc <opaque>)
@@ -23515,7 +23519,7 @@
    ((pattern
      (Assignment (x_p UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 2))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -23541,7 +23545,7 @@
    ((pattern
      (Assignment (y_p UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 2))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))

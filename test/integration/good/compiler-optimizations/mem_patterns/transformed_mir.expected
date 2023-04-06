@@ -302,7 +302,7 @@ matrix[10, 10] A_p: AoS
    ((pattern
      (Assignment (A_p UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -5769,7 +5769,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (high_low_est UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -5801,7 +5801,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (b UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var K))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -5827,7 +5827,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (h UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var Nr))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -5853,7 +5853,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (ar UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 2))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -5873,7 +5873,7 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Assignment (ma UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -5891,7 +5891,7 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Assignment (phi_beta UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -5915,7 +5915,7 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Assignment (sigma2 UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -5937,7 +5937,7 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Assignment (Intercept UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -5961,7 +5961,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (mean_price UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -5987,7 +5987,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (sigma_price UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -6011,7 +6011,7 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Assignment (theta UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -6035,7 +6035,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (upper_test UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -6065,7 +6065,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (lower_upper_test UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -6097,7 +6097,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (row_vec_lower_upper_test URowVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -6137,7 +6137,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (offset_mult_test UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -6169,7 +6169,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (ordered_test UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -6195,7 +6195,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (unit_vec_test UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -6221,7 +6221,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (pos_ordered_test UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -6249,7 +6249,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (corr_matrix_test UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -6279,7 +6279,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (cov_matrix_test UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -6309,7 +6309,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (chol_fac_cov_test UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var K))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var K))
@@ -6339,7 +6339,7 @@ vector[Nr] h_sigma: SoA
    ((pattern
      (Assignment (chol_fac_corr_test UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var K))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var K))
@@ -7494,7 +7494,7 @@ matrix[10, 10] X_tp7: AoS
    ((pattern
      (Assignment (X_p UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -12946,7 +12946,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))
    ((pattern
      (Assignment (alpha UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -12970,7 +12970,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_soa_vec_v UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var M))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -12998,7 +12998,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_soa_mat UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13060,7 +13060,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       ((pattern
-                        (FunApp (CompilerInternal FnReadSerializer) ()))
+                        (FunApp (CompilerInternal FnReadDeserializer) ()))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                     (meta <opaque>)))))
@@ -13091,7 +13091,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_soa_mat_uni_col_idx UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13119,7 +13119,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_soa_vec_uni_idx UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13147,7 +13147,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_soa_loop_mat_uni_col_idx UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13175,7 +13175,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_soa_lhs_loop_mul URowVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13201,7 +13201,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_soa_rhs_loop_mul UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13228,7 +13228,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_soa_used_with_aos_in_excluded_fun UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13257,7 +13257,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_soa_loop_mat_multi_uni_uni_idx UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13285,7 +13285,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_vec_v_assign_to_aos UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var M))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13311,7 +13311,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_vec_v_tp_fails_func UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var M))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13337,7 +13337,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_loop_vec_v_uni_idx UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var M))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13364,7 +13364,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_fail_assign_from_top_idx UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var M))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13392,7 +13392,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_loop_mat_uni_uni_idx UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13422,7 +13422,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_mat UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13453,7 +13453,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_mat_pass_func_outer_single_indexed1 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13484,7 +13484,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_mat_pass_func_outer_single_indexed2 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13514,7 +13514,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_mat_fail_uni_uni_idx1 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13544,7 +13544,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    ((pattern
      (Assignment (p_aos_mat_fail_uni_uni_idx2 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -14314,7 +14314,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
     (meta <opaque>))
    ((pattern
      (Assignment (alpha UReal ())
-      ((pattern (FunApp (CompilerInternal FnReadSerializer) ()))
+      ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -14338,7 +14338,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
    ((pattern
      (Assignment (p_aos_loop_single_idx UVector ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -15229,7 +15229,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
    ((pattern
      (Assignment (soa_x UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -15259,7 +15259,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
    ((pattern
      (Assignment (aos_x UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -15289,7 +15289,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
    ((pattern
      (Assignment (aos_y UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -16138,7 +16138,7 @@ matrix[10, 10] mul_two_aos: AoS
    ((pattern
      (Assignment (row_soa UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -16168,7 +16168,7 @@ matrix[10, 10] mul_two_aos: AoS
    ((pattern
      (Assignment (udf_input_aos UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -16921,7 +16921,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
    ((pattern
      (Assignment (aos_p UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -16951,7 +16951,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
    ((pattern
      (Assignment (soa_p UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -17532,7 +17532,7 @@ matrix[5, 10] tp_matrix_aos: AoS
    ((pattern
      (Assignment (first_pass_soa_x UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
@@ -17562,7 +17562,7 @@ matrix[5, 10] tp_matrix_aos: AoS
    ((pattern
      (Assignment (aos_x UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal FnReadSerializer)
+        (FunApp (CompilerInternal FnReadDeserializer)
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 10))
