@@ -301,7 +301,7 @@ let plain_deserializer_read loc out_constrained_st =
   let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
   Expr.(
     Helpers.(
-      internal_funapp FnReadSerializer dims Typed.Meta.{emeta with type_= ut}))
+      internal_funapp FnReadDeserializer dims Typed.Meta.{emeta with type_= ut}))
 
 let param_deserializer_read smeta
     (decl_id, Program.{out_constrained_st= cst; out_block; out_trans; _}) =
