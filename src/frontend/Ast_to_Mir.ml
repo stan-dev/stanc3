@@ -812,8 +812,9 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     trans_block ud_dists
       {transform_action= Constrain; dadlevel= AutoDiffable}
       Parameters p in
-  (* Backends will add to transform_inits as needed *)
+  (* Backends will add to transform_inits and unconstrain_array as needed *)
   let transform_inits = [] in
+  let unconstrain_array = [] in
   let out_param, paramsizes, param_gq =
     trans_block ud_dists {declc with transform_action= Constrain} Parameters p
   in
@@ -882,6 +883,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   ; log_prob
   ; generate_quantities
   ; transform_inits
+  ; unconstrain_array
   ; output_vars
   ; prog_name= normalize_prog_name !Typechecker.model_name
   ; prog_path= filename }

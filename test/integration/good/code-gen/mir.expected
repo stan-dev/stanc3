@@ -11913,7 +11913,7 @@
           (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
       ()))
     (meta <opaque>))))
- (transform_inits ())
+ (transform_inits ()) (unconstrain_array ())
  (output_vars
   ((p_real
     ((out_unconstrained_st SReal) (out_constrained_st SReal)

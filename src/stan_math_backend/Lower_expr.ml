@@ -103,7 +103,7 @@ let templates udf suffix =
   | FnTarget when udf -> [TemplateType "propto__"]
   | _ -> []
 
-let serializer_in = Var "in__"
+let deserializer = Var "in__"
 
 let rec local_scalar ut ad =
   match (ut, ad) with
@@ -422,27 +422,27 @@ and lower_compiler_internal ad ut f es =
           [%message
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | FnReadData -> read_data ut es
-  | FnReadDataSerializer ->
-      serializer_in.@<>(( "read"
-                        , [lower_unsizedtype_local AutoDiffable UReal]
-                        , [] ))
+  | FnReadDeserializer ->
+      deserializer.@<>(( "read"
+                       , [lower_unsizedtype_local AutoDiffable ut]
+                       , lower_exprs es ))
   | FnReadParam {constrain; dims; mem_pattern} -> (
       let constrain_opt = constraint_to_string constrain in
       match constrain_opt with
       | None ->
-          serializer_in.@<>(( "template read"
-                            , [ lower_possibly_var_decl AutoDiffable ut
-                                  mem_pattern ]
-                            , lower_exprs dims ))
+          deserializer.@<>(( "template read"
+                           , [ lower_possibly_var_decl AutoDiffable ut
+                                 mem_pattern ]
+                           , lower_exprs dims ))
       | Some constraint_string ->
           let constraint_args = transform_args constrain in
           let lp =
             Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
           let args = constraint_args @ [lp] @ dims in
-          serializer_in.@<>(( "template read_constrain_" ^ constraint_string
-                            , [ lower_possibly_var_decl AutoDiffable ut
-                                  mem_pattern; TemplateType "jacobian__" ]
-                            , lower_exprs args )) )
+          deserializer.@<>(( "template read_constrain_" ^ constraint_string
+                           , [ lower_possibly_var_decl AutoDiffable ut
+                                 mem_pattern; TemplateType "jacobian__" ]
+                           , lower_exprs args )) )
   | FnDeepCopy ->
       lower_fun_app Fun_kind.FnPlain "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
