@@ -295,7 +295,7 @@ let read_constrain_dims constrain_transform st =
       constrain_get_dims st
   | _ -> SizedType.get_dims st
 
-let plain_serializer_read loc out_constrained_st =
+let plain_deserializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in
   let dims = SizedType.get_dims out_constrained_st in
   let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
@@ -303,7 +303,7 @@ let plain_serializer_read loc out_constrained_st =
     Helpers.(
       internal_funapp FnReadSerializer dims Typed.Meta.{emeta with type_= ut}))
 
-let param_serializer_read smeta
+let param_deserializer_read smeta
     (decl_id, Program.{out_constrained_st= cst; out_block; out_trans; _}) =
   if not (out_block = Parameters) then []
   else
@@ -406,7 +406,7 @@ let add_reads vars mkread stmts =
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
-let gen_write ?(unconstrain = false)
+let param_serializer_write ?(unconstrain = false)
     (decl_id, Program.{out_constrained_st; out_trans; _}) =
   let decl_var =
     { Expr.Fixed.pattern= Var decl_id
@@ -426,7 +426,8 @@ let gen_write ?(unconstrain = false)
  *  these directly, but for arrays of arrays/vectors/matrices we
  *  need to use for_scalar_inv to write them in "column major order"
  *)
-let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
+let param_unconstrained_serializer_write
+    (decl_id, Program.{out_constrained_st; _}) =
   if SizedType.is_recursive_container out_constrained_st then
     let bodyfn var =
       Stmt.Helpers.internal_nrfunapp
@@ -462,7 +463,7 @@ let var_context_unconstrain_transform smeta (decl_id, outvar) =
           ; initialize= true }
     ; meta= smeta }
   :: var_context_read smeta (decl_id, outvar.Program.out_constrained_st)
-  @ [gen_write ~unconstrain:true (decl_id, outvar)]
+  @ [param_serializer_write ~unconstrain:true (decl_id, outvar)]
 
 (** Reads in parameters from a serializer and then writes out the unconstrained versions *)
 let array_unconstrain_transform smeta (decl_id, outvar) =
@@ -488,7 +489,7 @@ let array_unconstrain_transform smeta (decl_id, outvar) =
                     , SizedType.to_unsized nonarray_st
                     , List.map ~f:(fun e -> Index.Single e) (List.rev loopvars)
                     )
-                  , plain_serializer_read smeta
+                  , plain_deserializer_read smeta
                       (SizedType.internal_scalar nonarray_st) ) } )
         smeta
     else
@@ -497,8 +498,8 @@ let array_unconstrain_transform smeta (decl_id, outvar) =
         ; pattern=
             Assignment
               ( (decl_id, SizedType.to_unsized out_constrained_st, [])
-              , plain_serializer_read smeta out_constrained_st ) } )
-  ; gen_write ~unconstrain:true (decl_id, outvar) ]
+              , plain_deserializer_read smeta out_constrained_st ) } )
+  ; param_serializer_write ~unconstrain:true (decl_id, outvar) ]
 
 let rec contains_var_expr is_vident accum Expr.Fixed.{pattern; _} =
   accum
@@ -585,7 +586,8 @@ let trans_prog (p : Program.Typed.t) =
            Stmt.Fixed.{pattern; meta= Location_span.empty} ) in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars ~f:(fun (name, outvar) ->
-        (outvar.Program.out_block, gen_unconstrained_write (name, outvar)) )
+        ( outvar.Program.out_block
+        , param_unconstrained_serializer_write (name, outvar) ) )
     |> List.partition3_map ~f:(fun (b, x) ->
            match b with
            | Parameters -> `Fst x
@@ -641,14 +643,14 @@ let trans_prog (p : Program.Typed.t) =
             ; meta= Location_span.empty } ] in
   let generate_quantities =
     ( p.generate_quantities
-    |> add_reads p.output_vars param_serializer_read
+    |> add_reads p.output_vars param_deserializer_read
     |> translate_to_open_cl
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes_cond )
     @ gq_writes in
   let log_prob =
     p.log_prob
-    |> add_reads p.output_vars param_serializer_read
+    |> add_reads p.output_vars param_deserializer_read
     |> translate_to_open_cl in
   let opencl_vars =
     String.Set.union_list
