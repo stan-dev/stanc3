@@ -4,7 +4,7 @@ open Frontend
 open Debug_data_generation
 
 let print_data_prog ast =
-  print_declarations_json (Ast_to_Mir.gather_data ast.Ast.datablock)
+  print_declarations_json (Ast_to_Mir.gather_declarations ast.Ast.datablock)
 
 let%expect_test "whole program data generation check" =
   let ast =
