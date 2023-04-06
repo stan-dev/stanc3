@@ -552,7 +552,8 @@ let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
     Program.prepare_data= f p.prepare_data
   ; log_prob= f p.log_prob
   ; generate_quantities= f p.generate_quantities
-  ; transform_inits= f p.transform_inits }
+  ; transform_inits= f p.transform_inits
+  ; unconstrain_array= f p.unconstrain_array }
 
 let trans_prog (p : Program.Typed.t) =
   (* name mangling of c++ keywords*)
