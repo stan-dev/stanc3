@@ -37,6 +37,7 @@ let no_soa_opt = ref false
 let soa_opt = ref false
 let output_file = ref ""
 let generate_data = ref false
+let generate_inits = ref false
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
 let bare_functions = ref false
@@ -77,6 +78,10 @@ let options =
       , Arg.Set generate_data
       , " For debugging purposes: generate a mock dataset to run the model on"
       )
+    ; ( "--debug-generate-inits"
+      , Arg.Set generate_inits
+      , " For debugging purposes: generate a mock initial value for each \
+         parameter" )
     ; ( "--debug-mir"
       , Arg.Set dump_mir
       , " For debugging purposes: print the MIR as an S-expression." )
@@ -302,8 +307,12 @@ let use_file filename =
       (Deprecation_analysis.collect_warnings typed_ast) ;
   if !generate_data then
     print_endline
-      (Debug_data_generation.print_data_prog
-         (Ast_to_Mir.gather_data typed_ast) ) ;
+      (Debug_data_generation.print_declarations_json
+         (Ast_to_Mir.gather_data typed_ast.datablock) ) ;
+  if !generate_inits then
+    print_endline
+      (Debug_data_generation.print_declarations_json
+         (Ast_to_Mir.gather_data typed_ast.parametersblock) ) ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in

@@ -3,7 +3,8 @@ open Core_kernel
 open Frontend
 open Debug_data_generation
 
-let print_data_prog ast = print_data_prog (Ast_to_Mir.gather_data ast)
+let print_data_prog ast =
+  print_declarations_json (Ast_to_Mir.gather_data ast.Ast.datablock)
 
 let%expect_test "whole program data generation check" =
   let ast =

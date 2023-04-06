@@ -771,8 +771,8 @@ let migrate_checks_to_end_of_block stmts =
   let checks, not_checks = List.partition_tf ~f:stmt_contains_check stmts in
   not_checks @ checks
 
-let gather_data (p : Ast.typed_program) =
-  let data = Ast.get_stmts p.datablock in
+let gather_data (b : Ast.typed_statement Ast.block option) =
+  let data = Ast.get_stmts b in
   List.concat_map data ~f:(function
     | {stmt= VarDecl {decl_type= sizedtype; transformation; variables; _}; _} ->
         List.map

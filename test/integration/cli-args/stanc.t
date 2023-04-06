@@ -6,6 +6,7 @@ Show help
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking
     --debug-decorated-ast           For debugging purposes: print the decorated AST, after semantic checking
     --debug-generate-data           For debugging purposes: generate a mock dataset to run the model on
+    --debug-generate-inits          For debugging purposes: generate a mock initial value for each parameter
     --debug-mir                     For debugging purposes: print the MIR as an S-expression.
     --debug-mir-pretty              For debugging purposes: pretty-print the MIR.
     --debug-optimized-mir           For debugging purposes: print the MIR after it's been optimized. Only has an effect when optimizations are turned on.
@@ -52,6 +53,7 @@ Error when no file passed
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking
     --debug-decorated-ast           For debugging purposes: print the decorated AST, after semantic checking
     --debug-generate-data           For debugging purposes: generate a mock dataset to run the model on
+    --debug-generate-inits          For debugging purposes: generate a mock initial value for each parameter
     --debug-mir                     For debugging purposes: print the MIR as an S-expression.
     --debug-mir-pretty              For debugging purposes: pretty-print the MIR.
     --debug-optimized-mir           For debugging purposes: print the MIR after it's been optimized. Only has an effect when optimizations are turned on.
@@ -96,6 +98,7 @@ Error when multiple files passed
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking
     --debug-decorated-ast           For debugging purposes: print the decorated AST, after semantic checking
     --debug-generate-data           For debugging purposes: generate a mock dataset to run the model on
+    --debug-generate-inits          For debugging purposes: generate a mock initial value for each parameter
     --debug-mir                     For debugging purposes: print the MIR as an S-expression.
     --debug-mir-pretty              For debugging purposes: pretty-print the MIR.
     --debug-optimized-mir           For debugging purposes: print the MIR after it's been optimized. Only has an effect when optimizations are turned on.

@@ -300,7 +300,7 @@ let generate_json_entries (name, expr) : string * t =
           [%message "Could not evaluate expression " (e : Expr.Typed.t)] in
   (name, expr_to_json expr)
 
-let print_data_prog data =
+let print_declarations_json data =
   let ids_and_values = generate_expressions data in
   let json_entries = List.map ~f:generate_json_entries ids_and_values in
   let json = `Assoc json_entries in
