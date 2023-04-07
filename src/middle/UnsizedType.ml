@@ -39,8 +39,8 @@ let unsized_array_depth unsized_ty =
 let count_dims unsized_ty =
   let rec aux dims = function
     | UArray t -> aux (dims + 1) t
-    | UMatrix -> dims + 2
-    | UVector | URowVector -> dims + 1
+    | UMatrix | UComplexMatrix -> dims + 2
+    | UVector | URowVector | UComplexVector | UComplexRowVector -> dims + 1
     | _ -> dims in
   aux 0 unsized_ty
 
@@ -159,9 +159,7 @@ let rec internal_scalar ut =
   | UInt -> UInt
   | UComplex | UComplexVector | UComplexMatrix | UComplexRowVector -> UComplex
   | UArray ut -> internal_scalar ut
-  | _ ->
-      Common.FatalError.fatal_error_msg
-        [%message "Tried to get scalar type of " (ut : t)]
+  | UFun _ | UMathLibraryFunction -> ut
 
 let is_eigen_type ut =
   match ut with
