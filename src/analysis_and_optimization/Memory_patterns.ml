@@ -320,6 +320,7 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
    We demote RHS variables if any of the following are true:
    1. The LHS variable has previously or through this iteration
     been marked AoS.
+   2. The LHS is a tuple projection
  *
   For functions see the documentation for [query_initial_demotable_funs] for
    the logic on demotion rules.
@@ -379,7 +380,14 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
             (Set.Poly.union base_set (query_var_eigen_names rhs))
             name
         else Set.Poly.union idx_demotable rhs_demotable_names in
-      Set.Poly.union acc assign_demotes
+      let tuple_demotes =
+        match lval with
+        | LTupleProjection _ ->
+            Set.Poly.add
+              (Set.Poly.union assign_demotes (query_var_eigen_names rhs))
+              name
+        | _ -> assign_demotes in
+      Set.Poly.union acc tuple_demotes
   | NRFunApp (kind, exprs) ->
       query_initial_demotable_funs in_loop acc kind exprs
   | IfElse (predicate, true_stmt, op_false_stmt) ->

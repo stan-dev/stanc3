@@ -804,8 +804,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                                   local_scalar_t__>();
       current_statement__ = 2;
       std::get<1>(std::get<1>(tuple_tuple_p)) = in__.template read<
-                                                  stan::conditional_var_value_t<local_scalar_t__,
-                                                    Eigen::Matrix<local_scalar_t__,-1,1>>>(2);
+                                                  Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       std::vector<
         std::tuple<std::complex<local_scalar_t__>,
           std::vector<local_scalar_t__>,
@@ -6748,8 +6747,7 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
       std::get<0>(std::get<1>(ps2)) = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
       std::get<1>(std::get<1>(ps2)) = in__.template read<
-                                        stan::conditional_var_value_t<local_scalar_t__,
-                                          Eigen::Matrix<local_scalar_t__,-1,-1>>>(10,
+                                        Eigen::Matrix<local_scalar_t__,-1,-1>>(10,
                                         10);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

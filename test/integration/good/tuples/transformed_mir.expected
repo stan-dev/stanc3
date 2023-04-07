@@ -2615,7 +2615,7 @@
            (dims
             (((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern SoA)))
+           (mem_pattern AoS)))
          ()))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2624,7 +2624,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2649,7 +2649,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2660,7 +2660,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2675,7 +2675,7 @@
            (dims
             (((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern SoA)))
+           (mem_pattern AoS)))
          ()))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2803,7 +2803,7 @@
            (dims
             (((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern SoA)))
+           (mem_pattern AoS)))
          ()))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2812,7 +2812,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -2840,7 +2840,7 @@
                 (FunApp
                  (CompilerInternal
                   (FnReadParam (constrain Identity) (dims ())
-                   (mem_pattern SoA)))
+                   (mem_pattern AoS)))
                  ()))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>))
@@ -2860,7 +2860,7 @@
                    (dims
                     (((pattern (Lit Int 4))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-                   (mem_pattern SoA)))
+                   (mem_pattern AoS)))
                  ()))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -11649,7 +11649,7 @@
             (Lower
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern SoA)))
+           (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -11663,7 +11663,7 @@
             (Lower
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern SoA)))
+           (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -13081,7 +13081,7 @@
             (Lower
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern SoA)))
+           (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -13095,7 +13095,7 @@
             (Lower
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern SoA)))
+           (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -13811,7 +13811,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -13820,7 +13820,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -13847,7 +13847,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -13857,7 +13857,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -13873,7 +13873,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern SoA)))
+           (mem_pattern AoS)))
          ()))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))))
@@ -14536,7 +14536,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -14550,7 +14550,7 @@
             (Lower
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (dims ()) (mem_pattern SoA)))
+           (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))))
