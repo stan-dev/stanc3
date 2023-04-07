@@ -31,19 +31,19 @@ type ('a, 'b) t =
   ; input_vars: (string * 'a SizedType.t) list
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
   ; log_prob: 'b list (*assumes data & params are in scope and ready*)
-  ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
+  ; generate_quantities: 'b list
+        (* assumes data & params ready & in scope*)
+        (* NOTE: the following two items are really backend-specific,
+           and are set to [] by Ast_to_mir before being populated in
+           Stan_math_backend.Transform_Mir.
+           It would be nice to abstract this out somehow
+        *)
   ; transform_inits: 'b list
+  ; unconstrain_array: 'b list
   ; output_vars: (string * 'a outvar) list
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, map, fold]
-
-let map_stmts f p =
-  { p with
-    prepare_data= f p.prepare_data
-  ; log_prob= f p.log_prob
-  ; generate_quantities= f p.generate_quantities
-  ; transform_inits= f p.transform_inits }
 
 (* -- Pretty printers -- *)
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =

@@ -1342,8 +1342,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -1359,11 +1359,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                                                     local_scalar_t__>(10,
                                                                     DUMMY_VAR__),
           DUMMY_VAR__};
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        stan::model::assign(std::get<0>(basic_p),
-          in__.read<local_scalar_t__>(), "assigning variable basic_p.1",
-          stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(std::get<0>(basic_p),
+        in__.read<std::vector<local_scalar_t__>>(10),
+        "assigning variable basic_p.1");
       std::get<1>(basic_p) = in__.read<local_scalar_t__>();
       out__.write(std::get<0>(basic_p));
       out__.write(std::get<1>(basic_p));
@@ -1376,12 +1374,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__)}};
       std::get<0>(tuple_tuple_p) = in__.read<local_scalar_t__>();
       std::get<0>(std::get<1>(tuple_tuple_p)) = in__.read<local_scalar_t__>();
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        stan::model::assign(std::get<1>(std::get<1>(tuple_tuple_p)),
-          in__.read<local_scalar_t__>(),
-          "assigning variable tuple_tuple_p.2.2",
-          stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(std::get<1>(std::get<1>(tuple_tuple_p)),
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
+        "assigning variable tuple_tuple_p.2.2");
       out__.write(std::get<0>(tuple_tuple_p));
       out__.write(std::get<0>(std::get<1>(tuple_tuple_p)));
       out__.write(std::get<1>(std::get<1>(tuple_tuple_p)));
@@ -1401,19 +1396,13 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__)});
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         std::get<0>(arr_tuple_p[(sym1__ - 1)]) = in__.read<
-                                                   local_scalar_t__>();
-        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          stan::model::assign(std::get<1>(arr_tuple_p[(sym1__ - 1)]),
-            in__.read<local_scalar_t__>(),
-            "assigning variable arr_tuple_p.2",
-            stan::model::index_uni(sym2__));
-        }
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          stan::model::assign(std::get<2>(arr_tuple_p[(sym1__ - 1)]),
-            in__.read<local_scalar_t__>(),
-            "assigning variable arr_tuple_p.3",
-            stan::model::index_uni(sym2__));
-        }
+                                                   std::complex<local_scalar_t__>>();
+        stan::model::assign(std::get<1>(arr_tuple_p[(sym1__ - 1)]),
+          in__.read<std::vector<local_scalar_t__>>(4),
+          "assigning variable arr_tuple_p.2");
+        stan::model::assign(std::get<2>(arr_tuple_p[(sym1__ - 1)]),
+          in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(3),
+          "assigning variable arr_tuple_p.3");
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         out__.write(std::get<0>(arr_tuple_p[(sym1__ - 1)]));
@@ -1432,23 +1421,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>>(3,
             std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>{DUMMY_VAR__,
               std::vector<local_scalar_t__>(4, DUMMY_VAR__)})};
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        stan::model::assign(std::get<0>(tuple_arr_tuple_p),
-          in__.read<local_scalar_t__>(),
-          "assigning variable tuple_arr_tuple_p.1",
-          stan::model::index_uni(sym1__));
-      }
+      stan::model::assign(std::get<0>(tuple_arr_tuple_p),
+        in__.read<std::vector<local_scalar_t__>>(2),
+        "assigning variable tuple_arr_tuple_p.1");
       std::get<1>(tuple_arr_tuple_p) = in__.read<local_scalar_t__>();
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         std::get<0>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]) = in__.read<
                                                                     local_scalar_t__>();
-        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          stan::model::assign(
-            std::get<1>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]),
-            in__.read<local_scalar_t__>(),
-            "assigning variable tuple_arr_tuple_p.3.2",
-            stan::model::index_uni(sym2__));
-        }
+        stan::model::assign(
+          std::get<1>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]),
+          in__.read<std::vector<local_scalar_t__>>(4),
+          "assigning variable tuple_arr_tuple_p.3.2");
       }
       out__.write(std::get<0>(tuple_arr_tuple_p));
       out__.write(std::get<1>(tuple_arr_tuple_p));
@@ -1487,15 +1470,12 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         std::get<0>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)])) = in__.read<
                                                                     local_scalar_t__>();
         std::get<0>(std::get<1>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))) = 
-          in__.read<local_scalar_t__>();
-        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          stan::model::assign(
-            std::get<1>(
-              std::get<1>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))),
-            in__.read<local_scalar_t__>(),
-            "assigning variable arr_tuple_tuple_p.3.2.2",
-            stan::model::index_uni(sym2__));
-        }
+          in__.read<std::complex<local_scalar_t__>>();
+        stan::model::assign(
+          std::get<1>(
+            std::get<1>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))),
+          in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(4),
+          "assigning variable arr_tuple_tuple_p.3.2.2");
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         out__.write(std::get<0>(arr_tuple_tuple_p[(sym1__ - 1)]));
@@ -1537,14 +1517,11 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           std::get<0>(
             std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[(sym2__ - 1)]) = 
             in__.read<local_scalar_t__>();
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            stan::model::assign(
-              std::get<1>(
-                std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[(sym2__ -
-                1)]), in__.read<local_scalar_t__>(),
-              "assigning variable arr_tuple_arr_tuple_p.2.2",
-              stan::model::index_uni(sym3__));
-          }
+          stan::model::assign(
+            std::get<1>(
+              std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[(sym2__ - 1)]),
+            in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
+            "assigning variable arr_tuple_arr_tuple_p.2.2");
         }
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
@@ -1604,20 +1581,628 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
             std::get<0>(
               std::get<1>(std::get<1>(very_deep_p[(sym1__ - 1)])[(sym2__ -
-                1)])[(sym3__ - 1)]) = in__.read<local_scalar_t__>();
-            for (int sym4__ = 1; sym4__ <= 7; ++sym4__) {
-              for (int sym5__ = 1; sym5__ <= 6; ++sym5__) {
+                1)])[(sym3__ - 1)]) = in__.read<
+                                        std::complex<local_scalar_t__>>();
+            stan::model::assign(
+              std::get<1>(
+                std::get<1>(std::get<1>(very_deep_p[(sym1__ - 1)])[(sym2__ -
+                  1)])[(sym3__ - 1)]),
+              in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(6, 7),
+              "assigning variable very_deep_p.2.2.2");
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(std::get<0>(very_deep_p[(sym1__ - 1)]));
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          out__.write(std::get<0>(
+                        std::get<1>(very_deep_p[(sym1__ - 1)])[(sym2__ - 1)]));
+          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+            out__.write(std::get<0>(
+                          std::get<1>(
+                            std::get<1>(very_deep_p[(sym1__ - 1)])[(sym2__ -
+                            1)])[(sym3__ - 1)]));
+            out__.write(std::get<1>(
+                          std::get<1>(
+                            std::get<1>(very_deep_p[(sym1__ - 1)])[(sym2__ -
+                            1)])[(sym3__ - 1)]));
+          }
+        }
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      std::tuple<std::vector<local_scalar_t__>, local_scalar_t__> basic_p =
+        std::tuple<std::vector<local_scalar_t__>, local_scalar_t__>{std::vector<
+                                                                    local_scalar_t__>(10,
+                                                                    DUMMY_VAR__),
+          DUMMY_VAR__};
+      std::get<0>(basic_p) = context__.vals_r("basic_p.1");
+      std::get<1>(basic_p) = context__.vals_r("basic_p.2")[(1 - 1)];
+      out__.write(std::get<0>(basic_p));
+      out__.write(std::get<1>(basic_p));
+      std::tuple<local_scalar_t__,
+        std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,1>>>
+        tuple_tuple_p =
+        std::tuple<local_scalar_t__,
+          std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,1>>>{DUMMY_VAR__,
+          std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,1>>{DUMMY_VAR__,
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__)}};
+      std::get<0>(tuple_tuple_p) = context__.vals_r("tuple_tuple_p.1")[(1 -
+        1)];
+      std::get<0>(std::get<1>(tuple_tuple_p)) = context__.vals_r("tuple_tuple_p.2.1")[(1
+        - 1)];
+      {
+        std::vector<local_scalar_t__> tuple_tuple_p_dot_2_dot_2_flat__;
+        tuple_tuple_p_dot_2_dot_2_flat__ = context__.vals_r("tuple_tuple_p.2.2");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          stan::model::assign(std::get<1>(std::get<1>(tuple_tuple_p)),
+            tuple_tuple_p_dot_2_dot_2_flat__[(pos__ - 1)],
+            "assigning variable tuple_tuple_p.2.2",
+            stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
+      out__.write(std::get<0>(tuple_tuple_p));
+      out__.write(std::get<0>(std::get<1>(tuple_tuple_p)));
+      out__.write(std::get<1>(std::get<1>(tuple_tuple_p)));
+      std::vector<
+        std::tuple<std::complex<local_scalar_t__>,
+          std::vector<local_scalar_t__>,
+          Eigen::Matrix<local_scalar_t__,-1,1>>> arr_tuple_p =
+        std::vector<
+          std::tuple<std::complex<local_scalar_t__>,
+            std::vector<local_scalar_t__>,
+            Eigen::Matrix<local_scalar_t__,-1,1>>>(3,
+          std::tuple<std::complex<local_scalar_t__>,
+            std::vector<local_scalar_t__>,
+            Eigen::Matrix<local_scalar_t__,-1,1>>{std::complex<local_scalar_t__>(DUMMY_VAR__,
+                                                    DUMMY_VAR__),
+            std::vector<local_scalar_t__>(4, DUMMY_VAR__),
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__)});
+      {
+        std::vector<std::complex<local_scalar_t__>> arr_tuple_p_dot_1_flat__;
+        arr_tuple_p_dot_1_flat__ = context__.vals_c("arr_tuple_p.1");
+        int arr_tuple_p_dot_1_flat__pos__;
+        arr_tuple_p_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__> arr_tuple_p_dot_2_flat__;
+        arr_tuple_p_dot_2_flat__ = context__.vals_r("arr_tuple_p.2");
+        int arr_tuple_p_dot_2_flat__pos__;
+        arr_tuple_p_dot_2_flat__pos__ = 1;
+        std::vector<local_scalar_t__> arr_tuple_p_dot_3_flat__;
+        arr_tuple_p_dot_3_flat__ = context__.vals_r("arr_tuple_p.3");
+        int arr_tuple_p_dot_3_flat__pos__;
+        arr_tuple_p_dot_3_flat__pos__ = 1;
+        std::complex<double> arr_tuple_p_dot_1_temp__ =
+          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+            std::numeric_limits<double>::quiet_NaN());
+        std::vector<double> arr_tuple_p_dot_2_temp__ =
+          std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double,-1,1> arr_tuple_p_dot_3_temp__ =
+          Eigen::Matrix<double,-1,1>::Constant(3,
+            std::numeric_limits<double>::quiet_NaN());
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          arr_tuple_p_dot_1_temp__ = arr_tuple_p_dot_1_flat__[(arr_tuple_p_dot_1_flat__pos__
+            - 1)];
+          arr_tuple_p_dot_1_flat__pos__ = (arr_tuple_p_dot_1_flat__pos__ +
+            2);
+          stan::model::assign(arr_tuple_p_dot_2_temp__,
+            stan::model::rvalue(arr_tuple_p_dot_2_flat__,
+              "arr_tuple_p_dot_2_flat__",
+              stan::model::index_min_max(arr_tuple_p_dot_2_flat__pos__,
+                ((arr_tuple_p_dot_2_flat__pos__ + (4 * 1)) - 1))),
+            "assigning variable arr_tuple_p_dot_2_temp__");
+          arr_tuple_p_dot_2_flat__pos__ = (arr_tuple_p_dot_2_flat__pos__ + (4
+            * 1));
+          {
+            std::vector<local_scalar_t__> arr_tuple_p_dot_3_temp___flat__;
+            stan::model::assign(arr_tuple_p_dot_3_temp___flat__,
+              stan::model::rvalue(arr_tuple_p_dot_3_flat__,
+                "arr_tuple_p_dot_3_flat__",
+                stan::model::index_min_max(arr_tuple_p_dot_3_flat__pos__,
+                  ((arr_tuple_p_dot_3_flat__pos__ + 3) - 1))),
+              "assigning variable arr_tuple_p_dot_3_temp___flat__");
+            pos__ = 1;
+            for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+              stan::model::assign(arr_tuple_p_dot_3_temp__,
+                arr_tuple_p_dot_3_temp___flat__[(pos__ - 1)],
+                "assigning variable arr_tuple_p_dot_3_temp__",
+                stan::model::index_uni(sym2__));
+              pos__ = (pos__ + 1);
+            }
+            arr_tuple_p_dot_3_flat__pos__ = (arr_tuple_p_dot_3_flat__pos__ +
+              3);
+          }
+          stan::model::assign(arr_tuple_p,
+            std::tuple<std::complex<double>, std::vector<double>,
+              Eigen::Matrix<double,-1,1>>(arr_tuple_p_dot_1_temp__,
+              arr_tuple_p_dot_2_temp__, arr_tuple_p_dot_3_temp__),
+            "assigning variable arr_tuple_p", stan::model::index_uni(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(std::get<0>(arr_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<2>(arr_tuple_p[(sym1__ - 1)]));
+      }
+      std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
+        std::vector<
+          std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>>>
+        tuple_arr_tuple_p =
+        std::tuple<std::vector<local_scalar_t__>, local_scalar_t__,
+          std::vector<
+            std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>>>{
+          std::vector<local_scalar_t__>(2, DUMMY_VAR__), DUMMY_VAR__,
+          std::vector<
+            std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>>(3,
+            std::tuple<local_scalar_t__, std::vector<local_scalar_t__>>{DUMMY_VAR__,
+              std::vector<local_scalar_t__>(4, DUMMY_VAR__)})};
+      std::get<0>(tuple_arr_tuple_p) = context__.vals_r("tuple_arr_tuple_p.1");
+      std::get<1>(tuple_arr_tuple_p) = context__.vals_r("tuple_arr_tuple_p.2")[(1
+        - 1)];
+      {
+        std::vector<local_scalar_t__> tuple_arr_tuple_p_dot_3_dot_1_flat__;
+        tuple_arr_tuple_p_dot_3_dot_1_flat__ = context__.vals_r("tuple_arr_tuple_p.3.1");
+        int tuple_arr_tuple_p_dot_3_dot_1_flat__pos__;
+        tuple_arr_tuple_p_dot_3_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__> tuple_arr_tuple_p_dot_3_dot_2_flat__;
+        tuple_arr_tuple_p_dot_3_dot_2_flat__ = context__.vals_r("tuple_arr_tuple_p.3.2");
+        int tuple_arr_tuple_p_dot_3_dot_2_flat__pos__;
+        tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ = 1;
+        double tuple_arr_tuple_p_dot_3_dot_1_temp__ =
+          std::numeric_limits<double>::quiet_NaN();
+        std::vector<double> tuple_arr_tuple_p_dot_3_dot_2_temp__ =
+          std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          tuple_arr_tuple_p_dot_3_dot_1_temp__ = tuple_arr_tuple_p_dot_3_dot_1_flat__[(tuple_arr_tuple_p_dot_3_dot_1_flat__pos__
+            - 1)];
+          tuple_arr_tuple_p_dot_3_dot_1_flat__pos__ = (tuple_arr_tuple_p_dot_3_dot_1_flat__pos__
+            + 1);
+          stan::model::assign(tuple_arr_tuple_p_dot_3_dot_2_temp__,
+            stan::model::rvalue(tuple_arr_tuple_p_dot_3_dot_2_flat__,
+              "tuple_arr_tuple_p_dot_3_dot_2_flat__",
+              stan::model::index_min_max(
+                tuple_arr_tuple_p_dot_3_dot_2_flat__pos__,
+                ((tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ + (4 * 1)) - 1))),
+            "assigning variable tuple_arr_tuple_p_dot_3_dot_2_temp__");
+          tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_p_dot_3_dot_2_flat__pos__
+            + (4 * 1));
+          stan::model::assign(std::get<2>(tuple_arr_tuple_p),
+            std::tuple<double, std::vector<double>>(tuple_arr_tuple_p_dot_3_dot_1_temp__,
+              tuple_arr_tuple_p_dot_3_dot_2_temp__),
+            "assigning variable tuple_arr_tuple_p.3",
+            stan::model::index_uni(sym1__));
+        }
+      }
+      out__.write(std::get<0>(tuple_arr_tuple_p));
+      out__.write(std::get<1>(tuple_arr_tuple_p));
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(std::get<0>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]));
+        out__.write(std::get<1>(std::get<2>(tuple_arr_tuple_p)[(sym1__ - 1)]));
+      }
+      std::vector<
+        std::tuple<local_scalar_t__, local_scalar_t__,
+          std::tuple<local_scalar_t__,
+            std::tuple<std::complex<local_scalar_t__>,
+              Eigen::Matrix<local_scalar_t__,-1,1>>>>> arr_tuple_tuple_p =
+        std::vector<
+          std::tuple<local_scalar_t__, local_scalar_t__,
+            std::tuple<local_scalar_t__,
+              std::tuple<std::complex<local_scalar_t__>,
+                Eigen::Matrix<local_scalar_t__,-1,1>>>>>(2,
+          std::tuple<local_scalar_t__, local_scalar_t__,
+            std::tuple<local_scalar_t__,
+              std::tuple<std::complex<local_scalar_t__>,
+                Eigen::Matrix<local_scalar_t__,-1,1>>>>{DUMMY_VAR__,
+            DUMMY_VAR__,
+            std::tuple<local_scalar_t__,
+              std::tuple<std::complex<local_scalar_t__>,
+                Eigen::Matrix<local_scalar_t__,-1,1>>>{DUMMY_VAR__,
+              std::tuple<std::complex<local_scalar_t__>,
+                Eigen::Matrix<local_scalar_t__,-1,1>>{std::complex<local_scalar_t__>(DUMMY_VAR__,
+                                                        DUMMY_VAR__),
+                Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4,
+                  DUMMY_VAR__)}}});
+      {
+        std::vector<local_scalar_t__> arr_tuple_tuple_p_dot_1_flat__;
+        arr_tuple_tuple_p_dot_1_flat__ = context__.vals_r("arr_tuple_tuple_p.1");
+        int arr_tuple_tuple_p_dot_1_flat__pos__;
+        arr_tuple_tuple_p_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__> arr_tuple_tuple_p_dot_2_flat__;
+        arr_tuple_tuple_p_dot_2_flat__ = context__.vals_r("arr_tuple_tuple_p.2");
+        int arr_tuple_tuple_p_dot_2_flat__pos__;
+        arr_tuple_tuple_p_dot_2_flat__pos__ = 1;
+        std::vector<local_scalar_t__> arr_tuple_tuple_p_dot_3_dot_1_flat__;
+        arr_tuple_tuple_p_dot_3_dot_1_flat__ = context__.vals_r("arr_tuple_tuple_p.3.1");
+        int arr_tuple_tuple_p_dot_3_dot_1_flat__pos__;
+        arr_tuple_tuple_p_dot_3_dot_1_flat__pos__ = 1;
+        std::vector<std::complex<local_scalar_t__>>
+          arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__;
+        arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__ = context__.vals_c("arr_tuple_tuple_p.3.2.1");
+        int arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__;
+        arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__>
+          arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__;
+        arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__ = context__.vals_r("arr_tuple_tuple_p.3.2.2");
+        int arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__;
+        arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__ = 1;
+        double arr_tuple_tuple_p_dot_1_temp__ =
+          std::numeric_limits<double>::quiet_NaN();
+        double arr_tuple_tuple_p_dot_2_temp__ =
+          std::numeric_limits<double>::quiet_NaN();
+        std::tuple<double,
+          std::tuple<std::complex<double>, Eigen::Matrix<double,-1,1>>>
+          arr_tuple_tuple_p_dot_3_temp__ =
+          std::tuple<double,
+            std::tuple<std::complex<double>, Eigen::Matrix<double,-1,1>>>{
+            std::numeric_limits<double>::quiet_NaN(),
+            std::tuple<std::complex<double>, Eigen::Matrix<double,-1,1>>{
+              std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                std::numeric_limits<double>::quiet_NaN()),
+              Eigen::Matrix<double,-1,1>::Constant(4,
+                std::numeric_limits<double>::quiet_NaN())}};
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          arr_tuple_tuple_p_dot_1_temp__ = arr_tuple_tuple_p_dot_1_flat__[(arr_tuple_tuple_p_dot_1_flat__pos__
+            - 1)];
+          arr_tuple_tuple_p_dot_1_flat__pos__ = (arr_tuple_tuple_p_dot_1_flat__pos__
+            + 1);
+          arr_tuple_tuple_p_dot_2_temp__ = arr_tuple_tuple_p_dot_2_flat__[(arr_tuple_tuple_p_dot_2_flat__pos__
+            - 1)];
+          arr_tuple_tuple_p_dot_2_flat__pos__ = (arr_tuple_tuple_p_dot_2_flat__pos__
+            + 1);
+          stan::model::assign(std::get<0>(arr_tuple_tuple_p_dot_3_temp__),
+            arr_tuple_tuple_p_dot_3_dot_1_flat__[(arr_tuple_tuple_p_dot_3_dot_1_flat__pos__
+            - 1)], "assigning variable arr_tuple_tuple_p_dot_3_temp__.1");
+          arr_tuple_tuple_p_dot_3_dot_1_flat__pos__ = (arr_tuple_tuple_p_dot_3_dot_1_flat__pos__
+            + 1);
+          stan::model::assign(
+            std::get<0>(std::get<1>(arr_tuple_tuple_p_dot_3_temp__)),
+            arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__[(arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
+            - 1)], "assigning variable arr_tuple_tuple_p_dot_3_temp__.2.1");
+          arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__ = (arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__
+            + 2);
+          {
+            std::vector<local_scalar_t__>
+              arr_tuple_tuple_p_dot_3_temp___dot_2_dot_2_flat__;
+            stan::model::assign(
+              arr_tuple_tuple_p_dot_3_temp___dot_2_dot_2_flat__,
+              stan::model::rvalue(arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__,
+                "arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__",
+                stan::model::index_min_max(
+                  arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__,
+                  ((arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__ + 4) - 1))),
+              "assigning variable arr_tuple_tuple_p_dot_3_temp___dot_2_dot_2_flat__");
+            pos__ = 1;
+            for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+              stan::model::assign(
+                std::get<1>(std::get<1>(arr_tuple_tuple_p_dot_3_temp__)),
+                arr_tuple_tuple_p_dot_3_temp___dot_2_dot_2_flat__[(pos__ -
+                1)], "assigning variable arr_tuple_tuple_p_dot_3_temp__.2.2",
+                stan::model::index_uni(sym2__));
+              pos__ = (pos__ + 1);
+            }
+            arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__ = (arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__
+              + 4);
+          }
+          stan::model::assign(arr_tuple_tuple_p,
+            std::tuple<double, double,
+              std::tuple<double,
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,1>>>>(arr_tuple_tuple_p_dot_1_temp__,
+              arr_tuple_tuple_p_dot_2_temp__, arr_tuple_tuple_p_dot_3_temp__),
+            "assigning variable arr_tuple_tuple_p",
+            stan::model::index_uni(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        out__.write(std::get<0>(arr_tuple_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<1>(arr_tuple_tuple_p[(sym1__ - 1)]));
+        out__.write(std::get<0>(std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)])));
+        out__.write(std::get<0>(
+                      std::get<1>(
+                        std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))));
+        out__.write(std::get<1>(
+                      std::get<1>(
+                        std::get<2>(arr_tuple_tuple_p[(sym1__ - 1)]))));
+      }
+      std::vector<
+        std::tuple<local_scalar_t__,
+          std::vector<
+            std::tuple<local_scalar_t__,
+              Eigen::Matrix<local_scalar_t__,-1,1>>>>>
+        arr_tuple_arr_tuple_p =
+        std::vector<
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>>>>>(3,
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>>>>{DUMMY_VAR__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>>>(4,
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>>{DUMMY_VAR__,
+                Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5,
+                  DUMMY_VAR__)})});
+      {
+        std::vector<local_scalar_t__> arr_tuple_arr_tuple_p_dot_1_flat__;
+        arr_tuple_arr_tuple_p_dot_1_flat__ = context__.vals_r("arr_tuple_arr_tuple_p.1");
+        int arr_tuple_arr_tuple_p_dot_1_flat__pos__;
+        arr_tuple_arr_tuple_p_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__>
+          arr_tuple_arr_tuple_p_dot_2_dot_1_flat__;
+        arr_tuple_arr_tuple_p_dot_2_dot_1_flat__ = context__.vals_r("arr_tuple_arr_tuple_p.2.1");
+        int arr_tuple_arr_tuple_p_dot_2_dot_1_flat__pos__;
+        arr_tuple_arr_tuple_p_dot_2_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__>
+          arr_tuple_arr_tuple_p_dot_2_dot_2_flat__;
+        arr_tuple_arr_tuple_p_dot_2_dot_2_flat__ = context__.vals_r("arr_tuple_arr_tuple_p.2.2");
+        int arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__;
+        arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__ = 1;
+        double arr_tuple_arr_tuple_p_dot_1_temp__ =
+          std::numeric_limits<double>::quiet_NaN();
+        std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>
+          arr_tuple_arr_tuple_p_dot_2_temp__ =
+          std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>(4,
+            std::tuple<double, Eigen::Matrix<double,-1,1>>{std::numeric_limits<double>::quiet_NaN(
+                                                             ),
+              Eigen::Matrix<double,-1,1>::Constant(5,
+                std::numeric_limits<double>::quiet_NaN())});
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          arr_tuple_arr_tuple_p_dot_1_temp__ = arr_tuple_arr_tuple_p_dot_1_flat__[(arr_tuple_arr_tuple_p_dot_1_flat__pos__
+            - 1)];
+          arr_tuple_arr_tuple_p_dot_1_flat__pos__ = (arr_tuple_arr_tuple_p_dot_1_flat__pos__
+            + 1);
+          {
+            double arr_tuple_arr_tuple_p_dot_2_dot_1_temp__ =
+              std::numeric_limits<double>::quiet_NaN();
+            Eigen::Matrix<double,-1,1>
+              arr_tuple_arr_tuple_p_dot_2_dot_2_temp__ =
+              Eigen::Matrix<double,-1,1>::Constant(5,
+                std::numeric_limits<double>::quiet_NaN());
+            for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+              arr_tuple_arr_tuple_p_dot_2_dot_1_temp__ = arr_tuple_arr_tuple_p_dot_2_dot_1_flat__[(arr_tuple_arr_tuple_p_dot_2_dot_1_flat__pos__
+                - 1)];
+              arr_tuple_arr_tuple_p_dot_2_dot_1_flat__pos__ = (arr_tuple_arr_tuple_p_dot_2_dot_1_flat__pos__
+                + 1);
+              {
+                std::vector<local_scalar_t__>
+                  arr_tuple_arr_tuple_p_dot_2_dot_2_temp___flat__;
                 stan::model::assign(
-                  std::get<1>(
-                    std::get<1>(
-                      std::get<1>(very_deep_p[(sym1__ - 1)])[(sym2__ - 1)])[(sym3__
-                    - 1)]), in__.read<local_scalar_t__>(),
-                  "assigning variable very_deep_p.2.2.2",
-                  stan::model::index_uni(sym5__),
-                  stan::model::index_uni(sym4__));
+                  arr_tuple_arr_tuple_p_dot_2_dot_2_temp___flat__,
+                  stan::model::rvalue(
+                    arr_tuple_arr_tuple_p_dot_2_dot_2_flat__,
+                    "arr_tuple_arr_tuple_p_dot_2_dot_2_flat__",
+                    stan::model::index_min_max(
+                      arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__,
+                      ((arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__ + 5) -
+                      1))),
+                  "assigning variable arr_tuple_arr_tuple_p_dot_2_dot_2_temp___flat__");
+                pos__ = 1;
+                for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+                  stan::model::assign(
+                    arr_tuple_arr_tuple_p_dot_2_dot_2_temp__,
+                    arr_tuple_arr_tuple_p_dot_2_dot_2_temp___flat__[(pos__ -
+                    1)],
+                    "assigning variable arr_tuple_arr_tuple_p_dot_2_dot_2_temp__",
+                    stan::model::index_uni(sym3__));
+                  pos__ = (pos__ + 1);
+                }
+                arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__ = (arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__
+                  + 5);
               }
+              stan::model::assign(arr_tuple_arr_tuple_p_dot_2_temp__,
+                std::tuple<double, Eigen::Matrix<double,-1,1>>(arr_tuple_arr_tuple_p_dot_2_dot_1_temp__,
+                  arr_tuple_arr_tuple_p_dot_2_dot_2_temp__),
+                "assigning variable arr_tuple_arr_tuple_p_dot_2_temp__",
+                stan::model::index_uni(sym2__));
             }
           }
+          stan::model::assign(arr_tuple_arr_tuple_p,
+            std::tuple<double,
+              std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>>(arr_tuple_arr_tuple_p_dot_1_temp__,
+              arr_tuple_arr_tuple_p_dot_2_temp__),
+            "assigning variable arr_tuple_arr_tuple_p",
+            stan::model::index_uni(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(std::get<0>(arr_tuple_arr_tuple_p[(sym1__ - 1)]));
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          out__.write(std::get<0>(
+                        std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[(sym2__
+                        - 1)]));
+          out__.write(std::get<1>(
+                        std::get<1>(arr_tuple_arr_tuple_p[(sym1__ - 1)])[(sym2__
+                        - 1)]));
+        }
+      }
+      std::vector<
+        std::tuple<local_scalar_t__,
+          std::vector<
+            std::tuple<local_scalar_t__,
+              std::vector<
+                std::tuple<std::complex<local_scalar_t__>,
+                  Eigen::Matrix<local_scalar_t__,-1,-1>>>>>>> very_deep_p =
+        std::vector<
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  std::tuple<std::complex<local_scalar_t__>,
+                    Eigen::Matrix<local_scalar_t__,-1,-1>>>>>>>(3,
+          std::tuple<local_scalar_t__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  std::tuple<std::complex<local_scalar_t__>,
+                    Eigen::Matrix<local_scalar_t__,-1,-1>>>>>>{DUMMY_VAR__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  std::tuple<std::complex<local_scalar_t__>,
+                    Eigen::Matrix<local_scalar_t__,-1,-1>>>>>(4,
+              std::tuple<local_scalar_t__,
+                std::vector<
+                  std::tuple<std::complex<local_scalar_t__>,
+                    Eigen::Matrix<local_scalar_t__,-1,-1>>>>{DUMMY_VAR__,
+                std::vector<
+                  std::tuple<std::complex<local_scalar_t__>,
+                    Eigen::Matrix<local_scalar_t__,-1,-1>>>(5,
+                  std::tuple<std::complex<local_scalar_t__>,
+                    Eigen::Matrix<local_scalar_t__,-1,-1>>{std::complex<local_scalar_t__>(DUMMY_VAR__,
+                                                             DUMMY_VAR__),
+                    Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(6, 7,
+                      DUMMY_VAR__)})})});
+      {
+        std::vector<local_scalar_t__> very_deep_p_dot_1_flat__;
+        very_deep_p_dot_1_flat__ = context__.vals_r("very_deep_p.1");
+        int very_deep_p_dot_1_flat__pos__;
+        very_deep_p_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__> very_deep_p_dot_2_dot_1_flat__;
+        very_deep_p_dot_2_dot_1_flat__ = context__.vals_r("very_deep_p.2.1");
+        int very_deep_p_dot_2_dot_1_flat__pos__;
+        very_deep_p_dot_2_dot_1_flat__pos__ = 1;
+        std::vector<std::complex<local_scalar_t__>>
+          very_deep_p_dot_2_dot_2_dot_1_flat__;
+        very_deep_p_dot_2_dot_2_dot_1_flat__ = context__.vals_c("very_deep_p.2.2.1");
+        int very_deep_p_dot_2_dot_2_dot_1_flat__pos__;
+        very_deep_p_dot_2_dot_2_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__> very_deep_p_dot_2_dot_2_dot_2_flat__;
+        very_deep_p_dot_2_dot_2_dot_2_flat__ = context__.vals_r("very_deep_p.2.2.2");
+        int very_deep_p_dot_2_dot_2_dot_2_flat__pos__;
+        very_deep_p_dot_2_dot_2_dot_2_flat__pos__ = 1;
+        double very_deep_p_dot_1_temp__ =
+          std::numeric_limits<double>::quiet_NaN();
+        std::vector<
+          std::tuple<double,
+            std::vector<
+              std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>>>
+          very_deep_p_dot_2_temp__ =
+          std::vector<
+            std::tuple<double,
+              std::vector<
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>>>(4,
+            std::tuple<double,
+              std::vector<
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>>{
+              std::numeric_limits<double>::quiet_NaN(),
+              std::vector<
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>(5,
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>{
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN()),
+                  Eigen::Matrix<double,-1,-1>::Constant(6, 7,
+                    std::numeric_limits<double>::quiet_NaN())})});
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          very_deep_p_dot_1_temp__ = very_deep_p_dot_1_flat__[(very_deep_p_dot_1_flat__pos__
+            - 1)];
+          very_deep_p_dot_1_flat__pos__ = (very_deep_p_dot_1_flat__pos__ +
+            1);
+          {
+            double very_deep_p_dot_2_dot_1_temp__ =
+              std::numeric_limits<double>::quiet_NaN();
+            std::vector<
+              std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>
+              very_deep_p_dot_2_dot_2_temp__ =
+              std::vector<
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>>(5,
+                std::tuple<std::complex<double>, Eigen::Matrix<double,-1,-1>>{
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN()),
+                  Eigen::Matrix<double,-1,-1>::Constant(6, 7,
+                    std::numeric_limits<double>::quiet_NaN())});
+            for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+              very_deep_p_dot_2_dot_1_temp__ = very_deep_p_dot_2_dot_1_flat__[(very_deep_p_dot_2_dot_1_flat__pos__
+                - 1)];
+              very_deep_p_dot_2_dot_1_flat__pos__ = (very_deep_p_dot_2_dot_1_flat__pos__
+                + 1);
+              {
+                std::complex<double> very_deep_p_dot_2_dot_2_dot_1_temp__ =
+                  std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+                    std::numeric_limits<double>::quiet_NaN());
+                Eigen::Matrix<double,-1,-1>
+                  very_deep_p_dot_2_dot_2_dot_2_temp__ =
+                  Eigen::Matrix<double,-1,-1>::Constant(6, 7,
+                    std::numeric_limits<double>::quiet_NaN());
+                for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+                  very_deep_p_dot_2_dot_2_dot_1_temp__ = very_deep_p_dot_2_dot_2_dot_1_flat__[(very_deep_p_dot_2_dot_2_dot_1_flat__pos__
+                    - 1)];
+                  very_deep_p_dot_2_dot_2_dot_1_flat__pos__ = (very_deep_p_dot_2_dot_2_dot_1_flat__pos__
+                    + 2);
+                  {
+                    std::vector<local_scalar_t__>
+                      very_deep_p_dot_2_dot_2_dot_2_temp___flat__;
+                    stan::model::assign(
+                      very_deep_p_dot_2_dot_2_dot_2_temp___flat__,
+                      stan::model::rvalue(
+                        very_deep_p_dot_2_dot_2_dot_2_flat__,
+                        "very_deep_p_dot_2_dot_2_dot_2_flat__",
+                        stan::model::index_min_max(
+                          very_deep_p_dot_2_dot_2_dot_2_flat__pos__,
+                          ((very_deep_p_dot_2_dot_2_dot_2_flat__pos__ + (6 *
+                          7)) - 1))),
+                      "assigning variable very_deep_p_dot_2_dot_2_dot_2_temp___flat__");
+                    pos__ = 1;
+                    for (int sym4__ = 1; sym4__ <= 7; ++sym4__) {
+                      for (int sym5__ = 1; sym5__ <= 6; ++sym5__) {
+                        stan::model::assign(
+                          very_deep_p_dot_2_dot_2_dot_2_temp__,
+                          very_deep_p_dot_2_dot_2_dot_2_temp___flat__[(pos__
+                          - 1)],
+                          "assigning variable very_deep_p_dot_2_dot_2_dot_2_temp__",
+                          stan::model::index_uni(sym5__),
+                          stan::model::index_uni(sym4__));
+                        pos__ = (pos__ + 1);
+                      }
+                    }
+                    very_deep_p_dot_2_dot_2_dot_2_flat__pos__ = (very_deep_p_dot_2_dot_2_dot_2_flat__pos__
+                      + (6 * 7));
+                  }
+                  stan::model::assign(very_deep_p_dot_2_dot_2_temp__,
+                    std::tuple<std::complex<double>,
+                      Eigen::Matrix<double,-1,-1>>(very_deep_p_dot_2_dot_2_dot_1_temp__,
+                      very_deep_p_dot_2_dot_2_dot_2_temp__),
+                    "assigning variable very_deep_p_dot_2_dot_2_temp__",
+                    stan::model::index_uni(sym3__));
+                }
+              }
+              stan::model::assign(very_deep_p_dot_2_temp__,
+                std::tuple<double,
+                  std::vector<
+                    std::tuple<std::complex<double>,
+                      Eigen::Matrix<double,-1,-1>>>>(very_deep_p_dot_2_dot_1_temp__,
+                  very_deep_p_dot_2_dot_2_temp__),
+                "assigning variable very_deep_p_dot_2_temp__",
+                stan::model::index_uni(sym2__));
+            }
+          }
+          stan::model::assign(very_deep_p,
+            std::tuple<double,
+              std::vector<
+                std::tuple<double,
+                  std::vector<
+                    std::tuple<std::complex<double>,
+                      Eigen::Matrix<double,-1,-1>>>>>>(very_deep_p_dot_1_temp__,
+              very_deep_p_dot_2_temp__), "assigning variable very_deep_p",
+            stan::model::index_uni(sym1__));
         }
       }
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
@@ -2010,31 +2595,28 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 7>
-      names__{"basic_p", "tuple_tuple_p", "arr_tuple_p", "tuple_arr_tuple_p",
-              "arr_tuple_tuple_p", "arr_tuple_arr_tuple_p", "very_deep_p"};
-    const std::array<Eigen::Index, 7>
-      constrain_param_sizes__{((10 * 1) + 1), (1 + (1 + 2)), (3 * ((2 + (4 *
-                              1)) + 3)), (((2 * 1) + 1) + (3 * (1 + (4 *
-                              1)))), (2 * ((1 + 1) + (1 + (2 + 4)))), (3 * (1
-                              + (4 * (1 + 5)))), (3 * (1 + (4 * (1 + (5 * (2
-                              + (6 * 7)))))))};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -2203,10 +2785,27 @@ class onepl_model final : public model_base_crtp<onepl_model> {
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2313,24 +2912,28 @@ class onepl_model final : public model_base_crtp<onepl_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -2479,10 +3082,27 @@ class simple_model final : public model_base_crtp<simple_model> {
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2589,24 +3209,28 @@ class simple_model final : public model_base_crtp<simple_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -2760,10 +3384,27 @@ class simple2_model final : public model_base_crtp<simple2_model> {
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2870,24 +3511,28 @@ class simple2_model final : public model_base_crtp<simple2_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -3056,10 +3701,27 @@ class simple3_model final : public model_base_crtp<simple3_model> {
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3166,24 +3828,28 @@ class simple3_model final : public model_base_crtp<simple3_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -3470,10 +4136,27 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3580,24 +4263,28 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -3818,8 +4505,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -3855,10 +4542,97 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.read<
                                                            local_scalar_t__>();
-          for (int sym3__ = 1; sym3__ <= 4; ++sym3__) {
-            stan::model::assign(std::get<1>(ps2[(sym2__ - 1)][(sym1__ - 1)]),
-              in__.read<local_scalar_t__>(), "assigning variable ps2.2",
-              stan::model::index_uni(sym3__));
+          stan::model::assign(std::get<1>(ps2[(sym2__ - 1)][(sym1__ - 1)]),
+            in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(4),
+            "assigning variable ps2.2");
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          out__.write_free_lb(0,
+            std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]));
+          out__.write_free_simplex(std::get<1>(ps2[(sym2__ - 1)][(sym1__ -
+                                     1)]));
+        }
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      std::tuple<local_scalar_t__, local_scalar_t__> ps =
+        std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__,
+          DUMMY_VAR__};
+      std::get<0>(ps) = context__.vals_r("ps.1")[(1 - 1)];
+      std::get<1>(ps) = context__.vals_r("ps.2")[(1 - 1)];
+      out__.write_free_lb(0, std::get<0>(ps));
+      out__.write_free_lb(0, std::get<1>(ps));
+      std::vector<
+        std::vector<
+          std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,1>>>>
+        ps2 =
+        std::vector<
+          std::vector<
+            std::tuple<local_scalar_t__,
+              Eigen::Matrix<local_scalar_t__,-1,1>>>>(3,
+          std::vector<
+            std::tuple<local_scalar_t__,
+              Eigen::Matrix<local_scalar_t__,-1,1>>>(2,
+            std::tuple<local_scalar_t__,
+              Eigen::Matrix<local_scalar_t__,-1,1>>{DUMMY_VAR__,
+              Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__)}));
+      {
+        std::vector<local_scalar_t__> ps2_dot_1_flat__;
+        ps2_dot_1_flat__ = context__.vals_r("ps2.1");
+        int ps2_dot_1_flat__pos__;
+        ps2_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__> ps2_dot_2_flat__;
+        ps2_dot_2_flat__ = context__.vals_r("ps2.2");
+        int ps2_dot_2_flat__pos__;
+        ps2_dot_2_flat__pos__ = 1;
+        double ps2_dot_1_temp__ = std::numeric_limits<double>::quiet_NaN();
+        Eigen::Matrix<double,-1,1> ps2_dot_2_temp__ =
+          Eigen::Matrix<double,-1,1>::Constant(4,
+            std::numeric_limits<double>::quiet_NaN());
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            stan::model::assign(ps2_dot_1_temp__,
+              ps2_dot_1_flat__[(ps2_dot_1_flat__pos__ - 1)],
+              "assigning variable ps2_dot_1_temp__");
+            ps2_dot_1_flat__pos__ = (ps2_dot_1_flat__pos__ + 1);
+            {
+              std::vector<local_scalar_t__> ps2_dot_2_temp___flat__;
+              stan::model::assign(ps2_dot_2_temp___flat__,
+                stan::model::rvalue(ps2_dot_2_flat__, "ps2_dot_2_flat__",
+                  stan::model::index_min_max(ps2_dot_2_flat__pos__,
+                    ((ps2_dot_2_flat__pos__ + 4) - 1))),
+                "assigning variable ps2_dot_2_temp___flat__");
+              pos__ = 1;
+              for (int sym3__ = 1; sym3__ <= 4; ++sym3__) {
+                stan::model::assign(ps2_dot_2_temp__,
+                  ps2_dot_2_temp___flat__[(pos__ - 1)],
+                  "assigning variable ps2_dot_2_temp__",
+                  stan::model::index_uni(sym3__));
+                pos__ = (pos__ + 1);
+              }
+              ps2_dot_2_flat__pos__ = (ps2_dot_2_flat__pos__ + 4);
+            }
+            stan::model::assign(ps2,
+              std::tuple<double, Eigen::Matrix<double,-1,1>>(ps2_dot_1_temp__,
+                ps2_dot_2_temp__), "assigning variable ps2",
+              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
           }
         }
       }
@@ -4005,25 +4779,28 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 2> names__{"ps", "ps2"};
-    const std::array<Eigen::Index, 2>
-      constrain_param_sizes__{(1 + 1), (3 * (2 * (1 + 4)))};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -4192,10 +4969,27 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4302,24 +5096,28 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -4515,8 +5313,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -4532,6 +5330,30 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
           DUMMY_VAR__};
       std::get<0>(ps) = in__.read<local_scalar_t__>();
       std::get<1>(ps) = in__.read<local_scalar_t__>();
+      out__.write_free_lb(0, std::get<0>(ps));
+      out__.write_free_lb(0, std::get<1>(ps));
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      std::tuple<local_scalar_t__, local_scalar_t__> ps =
+        std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__,
+          DUMMY_VAR__};
+      std::get<0>(ps) = context__.vals_r("ps.1")[(1 - 1)];
+      std::get<1>(ps) = context__.vals_r("ps.2")[(1 - 1)];
       out__.write_free_lb(0, std::get<0>(ps));
       out__.write_free_lb(0, std::get<1>(ps));
     } catch (const std::exception& e) {
@@ -4641,24 +5463,28 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 1> names__{"ps"};
-    const std::array<Eigen::Index, 1> constrain_param_sizes__{(1 + 1)};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -4801,10 +5627,27 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4911,24 +5754,28 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -5073,10 +5920,27 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -5183,24 +6047,28 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -5344,10 +6212,27 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -5454,24 +6339,28 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -5619,10 +6508,27 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -5729,24 +6635,28 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -5938,8 +6848,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -5967,11 +6877,58 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
               DUMMY_VAR__)}};
       std::get<0>(ps2) = in__.read<local_scalar_t__>();
       std::get<0>(std::get<1>(ps2)) = in__.read<local_scalar_t__>();
-      for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-          stan::model::assign(std::get<1>(std::get<1>(ps2)),
-            in__.read<local_scalar_t__>(), "assigning variable ps2.2.2",
-            stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+      stan::model::assign(std::get<1>(std::get<1>(ps2)),
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10),
+        "assigning variable ps2.2.2");
+      out__.write(std::get<0>(ps2));
+      out__.write(std::get<0>(std::get<1>(ps2)));
+      out__.write(std::get<1>(std::get<1>(ps2)));
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      std::tuple<local_scalar_t__, local_scalar_t__> ps =
+        std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__,
+          DUMMY_VAR__};
+      std::get<0>(ps) = context__.vals_r("ps.1")[(1 - 1)];
+      std::get<1>(ps) = context__.vals_r("ps.2")[(1 - 1)];
+      out__.write(std::get<0>(ps));
+      out__.write(std::get<1>(ps));
+      std::tuple<local_scalar_t__,
+        std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,-1>>>
+        ps2 =
+        std::tuple<local_scalar_t__,
+          std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,-1>>>{DUMMY_VAR__,
+          std::tuple<local_scalar_t__, Eigen::Matrix<local_scalar_t__,-1,-1>>{DUMMY_VAR__,
+            Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10,
+              DUMMY_VAR__)}};
+      std::get<0>(ps2) = context__.vals_r("ps2.1")[(1 - 1)];
+      std::get<0>(std::get<1>(ps2)) = context__.vals_r("ps2.2.1")[(1 - 1)];
+      {
+        std::vector<local_scalar_t__> ps2_dot_2_dot_2_flat__;
+        ps2_dot_2_dot_2_flat__ = context__.vals_r("ps2.2.2");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            stan::model::assign(std::get<1>(std::get<1>(ps2)),
+              ps2_dot_2_dot_2_flat__[(pos__ - 1)],
+              "assigning variable ps2.2.2", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
         }
       }
       out__.write(std::get<0>(ps2));
@@ -6110,25 +7067,28 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 2> names__{"ps", "ps2"};
-    const std::array<Eigen::Index, 2>
-      constrain_param_sizes__{(1 + 1), (1 + (1 + (10 * 10)))};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -6284,8 +7244,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
@@ -6301,6 +7261,30 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
           DUMMY_VAR__};
       std::get<0>(ps) = in__.read<local_scalar_t__>();
       std::get<1>(ps) = in__.read<local_scalar_t__>();
+      out__.write(std::get<0>(ps));
+      out__.write_free_lb(0, std::get<1>(ps));
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      std::tuple<local_scalar_t__, local_scalar_t__> ps =
+        std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__,
+          DUMMY_VAR__};
+      std::get<0>(ps) = context__.vals_r("ps.1")[(1 - 1)];
+      std::get<1>(ps) = context__.vals_r("ps.2")[(1 - 1)];
       out__.write(std::get<0>(ps));
       out__.write_free_lb(0, std::get<1>(ps));
     } catch (const std::exception& e) {
@@ -6410,24 +7394,28 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 1> names__{"ps"};
-    const std::array<Eigen::Index, 1> constrain_param_sizes__{(1 + 1)};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -6968,10 +7956,27 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -7303,24 +8308,28 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }
@@ -7751,10 +8760,27 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
             stan::require_vector_t<VecVar>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   inline void
-  transform_inits_impl(VecVar& params_r__, VecI& params_i__, VecVar& vars__,
-                       std::ostream* pstream__ = nullptr) const {
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -7873,24 +8899,28 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
   transform_inits(const stan::io::var_context& context, std::vector<int>&
                   params_i, std::vector<double>& vars, std::ostream*
                   pstream__ = nullptr) const {
-    constexpr std::array<const char*, 0> names__{};
-    const std::array<Eigen::Index, 0> constrain_param_sizes__{};
-    const auto num_constrained_params__ =
-      std::accumulate(constrain_param_sizes__.begin(),
-        constrain_param_sizes__.end(), 0);
-    std::vector<double> params_r_flat__(num_constrained_params__);
-    Eigen::Index size_iter__ = 0;
-    Eigen::Index flat_iter__ = 0;
-    for (auto&& param_name__: names__) {
-      const auto param_vec__ = context.vals_r(param_name__);
-      for (Eigen::Index i = 0; i < constrain_param_sizes__[size_iter__]; ++i) {
-        params_r_flat__[flat_iter__] = param_vec__[i];
-        ++flat_iter__;
-      }
-      ++size_iter__;
-    }
     vars.resize(num_params_r__);
-    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
   }
 };
 }

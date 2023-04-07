@@ -4,9 +4,9 @@ open Middle
 
 let deprecated_functions =
   String.Map.of_alist_exn
-    [ ("multiply_log", ("lmultiply", "2.32.0"))
-    ; ("binomial_coefficient_log", ("lchoose", "2.32.0"))
-    ; ("cov_exp_quad", ("gp_exp_quad_cov", "2.32.0"))
+    [ ("multiply_log", ("lmultiply", "2.33.0"))
+    ; ("binomial_coefficient_log", ("lchoose", "2.33.0"))
+    ; ("cov_exp_quad", ("gp_exp_quad_cov", "2.33.0"))
     ; ("fabs", ("abs", "2.33.0")) ]
 
 let deprecated_odes =
@@ -19,7 +19,7 @@ let deprecated_odes =
 let deprecated_distributions =
   String.Map.of_alist_exn
     (List.map
-       ~f:(fun (x, y) -> (x, (y, "2.32.0")))
+       ~f:(fun (x, y) -> (x, (y, "2.33.0")))
        (List.concat_map Middle.Stan_math_signatures.distributions
           ~f:(fun (fnkinds, name, _, _) ->
             List.filter_map fnkinds ~f:(function
@@ -112,7 +112,7 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
       acc
       @ [ ( emeta.loc
           , "The function `if_else` is deprecated and will be removed in Stan \
-             2.32.0. Use the conditional operator (x ? y : z) instead; this \
+             2.33.0. Use the conditional operator (x ? y : z) instead; this \
              can be automatically changed using the canonicalize flag for \
              stanc" ) ]
       @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
@@ -129,7 +129,7 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
             [ ( emeta.loc
               , "Use of " ^ name
                 ^ " without a vertical bar (|) between the first two arguments \
-                   of a CDF is deprecated and will be removed in Stan 2.32.0. \
+                   of a CDF is deprecated and will be removed in Stan 2.33.0. \
                    This can be automatically changed using the canonicalize \
                    flag for stanc" ) ]
         | _ -> (
@@ -190,7 +190,7 @@ let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
         acc
         @ [ ( id_loc
             , "Use of the _log suffix in user defined probability functions is \
-               deprecated and will be removed in Stan 2.32.0, use name '"
+               deprecated and will be removed in Stan 2.33.0, use name '"
               ^ update_suffix name type_
               ^ "' instead if you intend on using this function in ~ \
                  statements or calling unnormalized probability functions \

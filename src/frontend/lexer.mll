@@ -83,7 +83,7 @@ rule token = parse
                                   (lexbuf.lex_curr_p, "Comments beginning with \
                                                        # are deprecated and this \
                                                        syntax will be removed in \
-                                                       Stan 2.32.0. Use // to begin \
+                                                       Stan 2.33.0. Use // to begin \
                                                        line comments; this can be \
                                                        done automatically using the \
                                                        auto-format flag to stanc") ;
@@ -195,7 +195,7 @@ rule token = parse
                                   (lexbuf.lex_curr_p, "assignment operator <- \
                                                        is deprecated in the \
                                                        Stan language and will \
-                                                       be removed in Stan 2.32.0; \
+                                                       be removed in Stan 2.33.0; \
                                                        use = instead. This \
                                                        can be done automatically \
                                                        with the canonicalize flag \
@@ -206,7 +206,7 @@ rule token = parse
                                   (lexbuf.lex_curr_p, "increment_log_prob(...)\
                                                        ; is deprecated and \
                                                        will be removed in Stan \
-                                                       2.32.0. Use target \
+                                                       2.33.0. Use target \
                                                        += ...; instead. This \
                                                        can be done automatically \
                                                        with the canonicalize flag \
@@ -231,7 +231,7 @@ rule token = parse
                                 Input_warnings.deprecated "get_lp"
                                   (lexbuf.lex_curr_p, "get_lp() function is \
                                                        deprecated. It will be \
-                                                       removed in Stan 2.32.0. \
+                                                       removed in Stan 2.33.0. \
                                                        Use target() instead. \
                                                        This can be done automatically \
                                                        with the canonicalize flag for \

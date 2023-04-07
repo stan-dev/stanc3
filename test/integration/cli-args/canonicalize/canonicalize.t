@@ -8,6 +8,7 @@ Test that a nonsense argument is caught
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking
     --debug-decorated-ast           For debugging purposes: print the decorated AST, after semantic checking
     --debug-generate-data           For debugging purposes: generate a mock dataset to run the model on
+    --debug-generate-inits          For debugging purposes: generate a mock initial value for each parameter
     --debug-mir                     For debugging purposes: print the MIR as an S-expression.
     --debug-mir-pretty              For debugging purposes: pretty-print the MIR.
     --debug-optimized-mir           For debugging purposes: print the MIR after it's been optimized. Only has an effect when optimizations are turned on.
@@ -35,9 +36,7 @@ Test that a nonsense argument is caught
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
-    --allow_undefined               Deprecated. Same as --allow-undefined. Will be removed in Stan 2.32.0
     --include-paths                 Takes a comma-separated list of directories that may contain a file in an #include directive (default = "")
-    --include_paths                 Deprecated. Same as --include-paths. Will be removed in Stan 2.32.0
     --use-opencl                    If set, try to use matrix_cl signatures.
     --standalone-functions          If set, the generated C++ will be the standalone functions C++ code.
     --filename-in-msg               Sets the filename used in compiler errors. Uses actual filename by default.
@@ -55,6 +54,7 @@ Test capitalization - this should fail due to the lack of model_name, not the ca
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking
     --debug-decorated-ast           For debugging purposes: print the decorated AST, after semantic checking
     --debug-generate-data           For debugging purposes: generate a mock dataset to run the model on
+    --debug-generate-inits          For debugging purposes: generate a mock initial value for each parameter
     --debug-mir                     For debugging purposes: print the MIR as an S-expression.
     --debug-mir-pretty              For debugging purposes: pretty-print the MIR.
     --debug-optimized-mir           For debugging purposes: print the MIR after it's been optimized. Only has an effect when optimizations are turned on.
@@ -82,9 +82,7 @@ Test capitalization - this should fail due to the lack of model_name, not the ca
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
-    --allow_undefined               Deprecated. Same as --allow-undefined. Will be removed in Stan 2.32.0
     --include-paths                 Takes a comma-separated list of directories that may contain a file in an #include directive (default = "")
-    --include_paths                 Deprecated. Same as --include-paths. Will be removed in Stan 2.32.0
     --use-opencl                    If set, try to use matrix_cl signatures.
     --standalone-functions          If set, the generated C++ will be the standalone functions C++ code.
     --filename-in-msg               Sets the filename used in compiler errors. Uses actual filename by default.

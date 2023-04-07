@@ -216,10 +216,10 @@ let munge_tuple_name name =
 
 let make_tuple_temp name = munge_tuple_name name ^ "_temp__"
 
-(** This function is essentially copied from [data_read],
+(** This function is essentially copied from [var_context_read],
     but rather than calling ReadDataFn, this indexes
     into the flattened versions of the tuple data
-    created by [data_read] when it encounters an array of tuples
+    created by [var_context_read] when it encounters an array of tuples
 
     @param enclosing_tuple_name The name (in the sense of [Stmt.Helpers.get_lhs_name])
       of the element of the tuple this recursive call is handling. This is
@@ -227,7 +227,7 @@ let make_tuple_temp name = munge_tuple_name name ^ "_temp__"
     @param origin_type The type of the flat variable for this call, if one exists.
       In situations where this is an array of tuples still, this type is unused.
   *)
-let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
+let rec var_context_read_inside_tuple enclosing_tuple_name origin_type smeta
     ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
@@ -286,13 +286,14 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
           ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
           get_subtypes in
       List.map2_exn
-        ~f:(fun name sts -> data_read_inside_tuple name origin_type smeta sts)
+        ~f:(fun name sts ->
+          var_context_read_inside_tuple name origin_type smeta sts )
         enclosing_names sub_sts
       |> List.concat
   | UArray _ when UnsizedType.contains_tuple unsized ->
-      let nonarray_st, dims = SizedType.get_container_dims st in
+      let tupl, dims = SizedType.get_array_dims st in
       let tuple_component_names, tuple_types =
-        match nonarray_st with
+        match tupl with
         | STuple sts ->
             ( List.mapi
                 ~f:(fun i _ ->
@@ -338,7 +339,7 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
                       ( ( List.map2_exn
                             ~f:(fun io_name st ->
                               let temp_name = make_tuple_temp io_name in
-                              data_read_inside_tuple io_name
+                              var_context_read_inside_tuple io_name
                                 (UnsizedType.wind_array_type
                                    (SizedType.to_unsized st, List.length dims) )
                                 smeta
@@ -391,7 +392,7 @@ let rec data_read_inside_tuple enclosing_tuple_name origin_type smeta
           ]
         |> swrap ]
 
-let rec data_read ?origin ?name smeta
+let rec var_context_read ?origin ?name smeta
     ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
@@ -436,26 +437,26 @@ let rec data_read ?origin ?name smeta
           ~f:(fun iter x ->
             (Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1), x) )
           get_subtypes in
-      List.concat_map ~f:(data_read smeta) sub_sts
+      List.concat_map ~f:(var_context_read smeta) sub_sts
   | UArray _ when UnsizedType.contains_tuple unsized ->
       (* The IO format for tuples is complicated in this case.
          Therefore, we need to do the following
          1. Make "_flat__" decls for everything
          2. Declare a temp for each item of this tuple
          3. in a loop:
-           i. call [data_read_inside_tuple] with the temp variable as the destination
+           i. call [var_context_read_inside_tuple] with the temp variable as the destination
              this function does essentially the same things recursively, but it doesn't create
              more "_flat__" variables for deeper nested arrays-of-tuples.
            ii. assign those temps (forwarding as tuple) to this variable, properly indexed.
       *)
-      let nonarray_st, dims = SizedType.get_container_dims st in
+      let tupl, dims = SizedType.get_array_dims st in
       let flat_decls =
         (* Here we need to go recursively all the way down the tuple *)
         let flat_io_names =
           UnsizedType.enumerate_tuple_names_io decl_id
-            (SizedType.to_unsized nonarray_st) in
+            (SizedType.to_unsized tupl) in
         let flat_vars = List.map ~f:flat_name flat_io_names in
-        let flat_types = SizedType.flatten_tuple_io nonarray_st in
+        let flat_types = SizedType.flatten_tuple_io tupl in
         List.map3_exn
           ~f:(fun variable_name io_name st ->
             let typ = SizedType.to_unsized st in
@@ -486,9 +487,9 @@ let rec data_read ?origin ?name smeta
           flat_vars flat_io_names flat_types
         |> List.concat in
       (* from now on, we only care about things at this level,
-         calling [data_read_inside_tuple] *)
+         calling [var_context_read_inside_tuple] *)
       let tuple_component_names, tuple_types =
-        match nonarray_st with
+        match tupl with
         | STuple sts ->
             ( List.mapi ~f:(fun i _ -> decl_id ^ "." ^ string_of_int (i + 1)) sts
             , sts )
@@ -531,7 +532,7 @@ let rec data_read ?origin ?name smeta
                       ( ( List.map2_exn
                             ~f:(fun io_name st ->
                               let temp_name = make_tuple_temp io_name in
-                              data_read_inside_tuple io_name
+                              var_context_read_inside_tuple io_name
                                 (UnsizedType.wind_array_type
                                    (SizedType.to_unsized st, List.length dims) )
                                 smeta
@@ -608,15 +609,15 @@ let read_constrain_dims constrain_transform st =
       constrain_get_dims st
   | _ -> SizedType.get_dims st
 
-let data_serializer_read loc out_constrained_st =
+let plain_deserializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in
-  let dims = SizedType.get_dims_io out_constrained_st in
+  let dims = SizedType.get_dims out_constrained_st in
   let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
   Expr.(
     Helpers.(
-      internal_funapp FnReadDataSerializer dims Typed.Meta.{emeta with type_= ut}))
+      internal_funapp FnReadDeserializer dims Typed.Meta.{emeta with type_= ut}))
 
-let param_read smeta
+let param_deserializer_read smeta
     (decl_id_lval, Program.{out_constrained_st= cst; out_block; out_trans; _}) =
   if not (out_block = Parameters) then []
   else
@@ -649,7 +650,7 @@ let param_read smeta
         | _ -> false in
       match cst with
       | SizedType.SArray _ when SizedType.contains_tuple cst ->
-          let nonarray_st, array_dims = SizedType.get_container_dims cst in
+          let tupl, array_dims = SizedType.get_array_dims cst in
           [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
               (fun loopvars ->
                 Stmt.Fixed.
@@ -662,7 +663,7 @@ let param_read smeta
                                , List.map
                                    ~f:(fun e -> Index.Single e)
                                    (List.rev loopvars) )
-                           , nonarray_st
+                           , tupl
                            , out_trans ) ) } )
               smeta ]
       | SizedType.STuple _ when contains_nested_tuple_arr cst ->
@@ -767,7 +768,7 @@ let add_reads vars mkread stmts =
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
-let gen_write ?(unconstrain = false)
+let param_serializer_write ?(unconstrain = false)
     (decl_id, Program.{out_constrained_st; out_trans; _}) =
   let rec write (var, st, trans) =
     match (unconstrain, st, trans) with
@@ -779,7 +780,7 @@ let gen_write ?(unconstrain = false)
           |> List.map2_exn ~f:(fun t (v, st) -> (v, st, t)) ts in
         List.concat_map ~f:write sub_sts
     | true, SArray _, TupleTransformation _ ->
-        let nonarray_st, array_dims = SizedType.get_container_dims st in
+        let tupl, array_dims = SizedType.get_array_dims st in
         [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
             (fun loopvars ->
               Stmt.Fixed.
@@ -791,7 +792,7 @@ let gen_write ?(unconstrain = false)
                              (List.map
                                 ~f:(fun e -> Index.Single e)
                                 (List.rev loopvars) )
-                         , nonarray_st
+                         , tupl
                          , trans ) ) } )
             Stmt.Located.Meta.empty ]
     | true, _, _ ->
@@ -817,11 +818,8 @@ let gen_write ?(unconstrain = false)
   these directly, but for arrays of arrays/vectors/matrices we
   need to write them in "column major order"
  *)
-let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
-  (* TUPLE MAYBE: to make things like standalone GQ/unconstraining from a row of draws easier,
-     we may need to do something where we change the order tuples are printed to group
-     indicies better
-  *)
+let param_unconstrained_serializer_write
+    (decl_id, Program.{out_constrained_st; _}) =
   let smeta = Stmt.Located.Meta.empty in
   let rec write (var, st) =
     match st with
@@ -832,7 +830,7 @@ let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
             sts in
         List.concat_map ~f:write sub_sts
     | _ when SizedType.is_recursive_container st ->
-        let nonarray_st, array_dims = SizedType.get_container_dims st in
+        let nonarray_st, array_dims = SizedType.get_array_dims st in
         [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
             (fun loopvars ->
               Stmt.Fixed.
@@ -859,8 +857,25 @@ let gen_unconstrained_write (decl_id, Program.{out_constrained_st; _}) =
           ; adlevel= DataOnly } } in
   write (var, out_constrained_st)
 
-(** Statements to read, unconstrain and assign a parameter then write it back *)
-let data_unconstrain_transform smeta (decl_id, outvar) : Stmt.Located.t list =
+(** Reads in parameters from a var_context, the same way as is done in the constructor,
+     and then writes out the unconstrained versions *)
+let var_context_unconstrain_transform smeta (decl_id, outvar) =
+  let st = outvar.Program.out_constrained_st in
+  Stmt.Fixed.
+    { pattern=
+        Decl
+          { decl_adtype=
+              UnsizedType.fill_adtype_for_type AutoDiffable
+                (SizedType.to_unsized st)
+          ; decl_id
+          ; decl_type= Type.Sized st
+          ; initialize= true }
+    ; meta= smeta }
+  :: var_context_read smeta (LVariable decl_id, st)
+  @ param_serializer_write ~unconstrain:true (decl_id, outvar)
+
+(** Reads in parameters from a serializer and then writes out the unconstrained versions *)
+let array_unconstrain_transform smeta (decl_id, outvar) =
   let decl =
     Stmt.Fixed.
       { pattern=
@@ -874,24 +889,15 @@ let data_unconstrain_transform smeta (decl_id, outvar) : Stmt.Located.t list =
       ; meta= smeta } in
   let rec read (lval, st) =
     match st with
-    | SizedType.SInt | SReal | SComplex ->
-        [ Stmt.Fixed.
-            { meta= smeta
-            ; pattern=
-                Assignment
-                  ( lval
-                  , outvar.Program.out_constrained_st |> SizedType.inner_type
-                    |> SizedType.to_unsized
-                  , data_serializer_read smeta st ) } ]
-    | STuple sts ->
+    | SizedType.STuple sts ->
         let sub_sts =
           List.mapi
             ~f:(fun iter x ->
               (Stmt.Fixed.Pattern.LTupleProjection (lval, iter + 1), x) )
             sts in
         List.concat_map ~f:read sub_sts
-    | _ ->
-        let nonarray_st, array_dims = SizedType.get_container_dims st in
+    | _ when SizedType.contains_tuple st ->
+        let tupl, array_dims = SizedType.get_array_dims st in
         [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
             (fun loopvars ->
               Stmt.Fixed.
@@ -904,10 +910,36 @@ let data_unconstrain_transform smeta (decl_id, outvar) : Stmt.Located.t list =
                              , List.map
                                  ~f:(fun e -> Index.Single e)
                                  (List.rev loopvars) )
-                         , nonarray_st ) ) } )
-            smeta ] in
+                         , tupl ) ) } )
+            smeta ]
+    | _ when SizedType.is_recursive_container st ->
+        (* non-tuple containing array *)
+        let nonarray_st, array_dims = SizedType.get_array_dims st in
+        [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
+            (fun loopvars ->
+              Stmt.Fixed.
+                { meta= smeta
+                ; pattern=
+                    Assignment
+                      ( LIndexed
+                          ( lval
+                          , List.map
+                              ~f:(fun e -> Index.Single e)
+                              (List.rev loopvars) )
+                      , SizedType.to_unsized nonarray_st
+                      , plain_deserializer_read smeta
+                          (SizedType.internal_scalar nonarray_st) ) } )
+            smeta ]
+    | _ ->
+        [ Stmt.Fixed.
+            { meta= smeta
+            ; pattern=
+                Assignment
+                  ( lval
+                  , SizedType.to_unsized st
+                  , plain_deserializer_read smeta st ) } ] in
   (decl :: read (LVariable decl_id, outvar.Program.out_constrained_st))
-  @ gen_write ~unconstrain:true (decl_id, outvar)
+  @ param_serializer_write ~unconstrain:true (decl_id, outvar)
 
 let rec contains_var_expr is_vident accum Expr.Fixed.{pattern; _} =
   accum
@@ -960,7 +992,8 @@ let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
     Program.prepare_data= f p.prepare_data
   ; log_prob= f p.log_prob
   ; generate_quantities= f p.generate_quantities
-  ; transform_inits= f p.transform_inits }
+  ; transform_inits= f p.transform_inits
+  ; unconstrain_array= f p.unconstrain_array }
 
 let trans_prog (p : Program.Typed.t) =
   (* name mangling of c++ keywords*)
@@ -993,7 +1026,7 @@ let trans_prog (p : Program.Typed.t) =
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} ) in
   let param_writes, tparam_writes, gq_writes =
-    List.map p.output_vars ~f:gen_unconstrained_write
+    List.map p.output_vars ~f:param_unconstrained_serializer_write
     |> List.map2_exn p.output_vars ~f:(fun (_, outvar) writes ->
            ( outvar.Program.out_block
            , Stmt.Fixed.{pattern= SList writes; meta= Location_span.empty} ) )
@@ -1052,14 +1085,15 @@ let trans_prog (p : Program.Typed.t) =
             ; meta= Location_span.empty } ] in
   let generate_quantities =
     ( p.generate_quantities
-    |> add_reads p.output_vars param_read
+    |> add_reads p.output_vars param_deserializer_read
     |> translate_to_open_cl
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes_cond )
     @ gq_writes in
   let log_prob =
-    p.log_prob |> add_reads p.output_vars param_read |> translate_to_open_cl
-  in
+    p.log_prob
+    |> add_reads p.output_vars param_deserializer_read
+    |> translate_to_open_cl in
   let opencl_vars =
     String.Set.union_list
       (List.concat_map
@@ -1099,20 +1133,27 @@ let trans_prog (p : Program.Typed.t) =
                     ; meta= Expr.Typed.Meta.empty } )
           ; meta= Location_span.empty } ] ) in
   let p =
+    let params =
+      List.filter
+        ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
+        p.output_vars in
     { p with
       log_prob= log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos
-        @ (p.prepare_data |> add_reads p.input_vars data_read)
+        @ (p.prepare_data |> add_reads p.input_vars var_context_read)
         @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
         @ List.concat_map
-            ~f:(data_unconstrain_transform Location_span.empty)
-            (List.filter
-               ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
-               p.output_vars )
+            ~f:(var_context_unconstrain_transform Location_span.empty)
+            params
+    ; unconstrain_array=
+        init_pos
+        @ List.concat_map
+            ~f:(array_unconstrain_transform Location_span.empty)
+            params
     ; generate_quantities } in
   Program.(
     p

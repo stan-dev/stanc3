@@ -15,12 +15,6 @@ let get_unconstrained_param_st lst =
       Some (SizedType.io_size st)
   | _ -> None
 
-let get_constrained_param_st lst =
-  match lst with
-  | _, {Program.out_block= Parameters; out_constrained_st= st; _} ->
-      Some (SizedType.io_size st)
-  | _ -> None
-
 (** Create a variable for the name of model function.
   @param prog_name Name of the Stan program.
   @param fname Name of the function.
@@ -284,13 +278,31 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
 
 let gen_transform_inits_impl {Program.transform_inits; _} =
   let templates =
+    [Typename "VecVar"; Require ("stan::require_vector_t", ["VecVar"])] in
+  let args =
+    [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context__")
+    ; (Ref (TemplateType "VecVar"), "vars__")
+    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+  let intro =
+    [ Using ("local_scalar_t__", Some Double); Decls.serializer_out
+    ; Decls.current_statement ]
+    @ Decls.dummy_var in
+  FunDef
+    (make_fun_defn
+       ~templates_init:([templates], true)
+       ~inline:true ~return_type:Void ~name:"transform_inits_impl" ~args
+       ~body:(intro @ [Stmts.rethrow_located (lower_statements transform_inits)])
+       ~cv_qualifiers:[Const] () )
+
+let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
+  let templates =
     [ Typename "VecVar"; Typename "VecI"
     ; Require ("stan::require_vector_t", ["VecVar"])
     ; Require ("stan::require_vector_like_vt", ["std::is_integral"; "VecI"]) ]
   in
   let args =
-    [ (Ref (TemplateType "VecVar"), "params_r__")
-    ; (Ref (TemplateType "VecI"), "params_i__")
+    [ (Types.const_ref (TemplateType "VecVar"), "params_r__")
+    ; (Types.const_ref (TemplateType "VecI"), "params_i__")
     ; (Ref (TemplateType "VecVar"), "vars__")
     ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
   let intro =
@@ -300,8 +312,9 @@ let gen_transform_inits_impl {Program.transform_inits; _} =
   FunDef
     (make_fun_defn
        ~templates_init:([templates], true)
-       ~inline:true ~return_type:Void ~name:"transform_inits_impl" ~args
-       ~body:(intro @ [Stmts.rethrow_located (lower_statements transform_inits)])
+       ~inline:true ~return_type:Void ~name:"unconstrain_array_impl" ~args
+       ~body:
+         (intro @ [Stmts.rethrow_located (lower_statements unconstrain_array)])
        ~cv_qualifiers:[Const] () )
 
 let gen_extend_vector name type_ elts =
@@ -456,7 +469,7 @@ let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
     (* same name, different idcs going forward. would also cover the above case but generate worse code? *)
     | SizedType.SArray _ when SizedType.contains_tuple st ->
         gen_param_names ~outer_idcs:idcs
-          (name, fst (SizedType.get_container_dims st))
+          (name, fst (SizedType.get_array_dims st))
     | _ when SizedType.is_complex_type st ->
         [ emplace_name_stmt name
             (idcs_vars @ [(`Array, Exprs.literal_string "real")])
@@ -692,115 +705,75 @@ let gen_overloads {Program.output_vars; _} =
                           let open Expression_syntax in
                           [params_r_vec.@!("data"); params_r_vec.@!("size")] )
                     ) ) ]
-           ~cv_qualifiers:[Const; Final] () ) ] in
+           ~cv_qualifiers:[Const; Final] () )
+    ; (let args =
+         [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context")
+         ; (Ref (Types.std_vector Int), "params_i")
+         ; (Ref (Types.std_vector Double), "vars")
+         ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+       let body =
+         let open Expression_syntax in
+         [ Expression (Var "vars").@?(("resize", [Var "num_params_r__"]))
+         ; Expression
+             (Exprs.fun_call "transform_inits_impl"
+                [Var "context"; Var "vars"; Var "pstream__"] ) ] in
+       FunDef
+         (make_fun_defn ~inline:true ~return_type:Void ~name:"transform_inits"
+            ~args ~body ~cv_qualifiers:[Const] () ) ) ] in
+  let unconstrain_array =
+    let open Expression_syntax in
+    let call_impl =
+      Expression
+        (Exprs.fun_call "unconstrain_array_impl"
+           [ Var "params_constrained"; Var "params_i"; Var "params_unconstrained"
+           ; Var "pstream" ] ) in
+    [ FunDef
+        (make_fun_defn ~inline:true ~return_type:Void ~name:"unconstrain_array"
+           ~args:
+             [ (Types.const_ref (Types.std_vector Double), "params_constrained")
+             ; (Ref (Types.std_vector Double), "params_unconstrained"); pstream
+             ]
+           ~body:
+             [ VariableDefn
+                 (make_variable_defn
+                    ~type_:Types.(Const (std_vector Int))
+                    ~name:"params_i" () )
+             ; Expression
+                 (Assign
+                    ( Var "params_unconstrained"
+                    , Constructor
+                        ( Types.std_vector Double
+                        , [Var "num_params_r__"; Exprs.quiet_NaN] ) ) )
+             ; call_impl ]
+           ~cv_qualifiers:[Const (*; Final*)] () )
+    ; FunDef
+        (make_fun_defn ~inline:true ~return_type:Void ~name:"unconstrain_array"
+           ~args:
+             [ (Types.const_ref (Types.vector Double), "params_constrained")
+             ; (Ref (Types.vector Double), "params_unconstrained"); pstream ]
+           ~body:
+             [ VariableDefn
+                 (make_variable_defn
+                    ~type_:Types.(Const (std_vector Int))
+                    ~name:"params_i" () )
+             ; Expression
+                 (Assign
+                    ( Var "params_unconstrained"
+                    , Types.vector Double
+                      |::? ("Constant", [Var "num_params_r__"; Exprs.quiet_NaN])
+                    ) ); call_impl ]
+           ~cv_qualifiers:[Const (*; Final*)] () ) ] in
   (GlobalComment "Begin method overload boilerplate" :: write_arrays)
-  @ log_probs @ transform_inits
-
-let gen_transform_inits {Program.output_vars; _} =
-  (* TUPLE TODO This method currently does not correctly read in tuples.
-     It will need to look something like the level of complexity of [Transform_inits.data_read]
-  *)
-  let args =
-    [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context")
-    ; (Ref (Types.std_vector Int), "params_i")
-    ; (Ref (Types.std_vector Double), "vars")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
-  let list_names ((stri : string), (Program.{out_block; _} : 'a Program.outvar))
-      =
-    match out_block with Parameters -> Some stri | _ -> None in
-  let param_names = List.filter_map ~f:list_names output_vars in
-  let list_len = List.length param_names in
-  let constrained_params =
-    List.filter_map ~f:get_constrained_param_st output_vars in
-  let names_array =
-    VariableDefn
-      (make_variable_defn ~constexpr:true
-         ~type_:(Types.const_char_array list_len)
-         ~name:"names__"
-         ~init:
-           (InitializerList
-              (List.map
-                 ~f:(Fn.compose Exprs.literal_string Mangle.remove_prefix)
-                 param_names ) )
-         () ) in
-  let constrained_params_arr =
-    VariableDefn
-      (make_variable_defn
-         ~type_:(Const (Array (TypeLiteral "Eigen::Index", list_len)))
-         ~name:"constrain_param_sizes__"
-         ~init:(InitializerList (lower_exprs constrained_params))
-         () ) in
-  let num_constrained_param_size =
-    let constrain_param_sizes = Var "constrain_param_sizes__" in
-    let open Expression_syntax in
-    VariableDefn
-      (make_variable_defn ~type_:(Const Auto) ~name:"num_constrained_params__"
-         ~init:
-           (Assignment
-              (Exprs.fun_call "std::accumulate"
-                 [ constrain_param_sizes.@!("begin")
-                 ; constrain_param_sizes.@!("end"); Literal "0" ] ) )
-         () ) in
-  let flatten_and_call =
-    let open Expression_syntax in
-    [ VariableDefn
-        (make_variable_defn ~type_:(Types.std_vector Double)
-           ~name:"params_r_flat__"
-           ~init:(Construction [Var "num_constrained_params__"])
-           () )
-    ; VariableDefn
-        (make_variable_defn ~type_:(TypeLiteral "Eigen::Index")
-           ~name:"size_iter__" ~init:(Assignment (Literal "0")) () )
-    ; VariableDefn
-        (make_variable_defn ~type_:(TypeLiteral "Eigen::Index")
-           ~name:"flat_iter__" ~init:(Assignment (Literal "0")) () )
-    ; ForEach
-        ( (Ref (Ref Auto), "param_name__")
-        , Var "names__"
-        , Block
-            [ VariableDefn
-                (make_variable_defn ~type_:(Const Auto) ~name:"param_vec__"
-                   ~init:
-                     (Assignment
-                        (Var "context").@?(("vals_r", [Var "param_name__"])) )
-                   () )
-            ; For
-                ( make_variable_defn ~type_:(TypeLiteral "Eigen::Index")
-                    ~name:"i" ~init:(Assignment (Literal "0")) ()
-                , BinOp
-                    ( Var "i"
-                    , Lthn
-                    , Index (Var "constrain_param_sizes__", Var "size_iter__")
-                    )
-                , Increment (Var "i")
-                , Block
-                    [ Expression
-                        (Assign
-                           ( Index (Var "params_r_flat__", Var "flat_iter__")
-                           , Index (Var "param_vec__", Var "i") ) )
-                    ; Expression (Increment (Var "flat_iter__")) ] )
-            ; Expression (Increment (Var "size_iter__")) ] )
-    ; Expression (Var "vars").@?(("resize", [Var "num_params_r__"]))
-    ; Expression
-        (Exprs.fun_call "transform_inits_impl"
-           [Var "params_r_flat__"; Var "params_i"; Var "vars"; Var "pstream__"] )
-    ] in
-  FunDef
-    (make_fun_defn ~inline:true ~return_type:Void ~name:"transform_inits" ~args
-       ~body:
-         ( [names_array; constrained_params_arr; num_constrained_param_size]
-         @ flatten_and_call )
-       ~cv_qualifiers:[Const] () )
+  @ log_probs @ transform_inits @ unconstrain_array
 
 let lower_model_public p =
-  [ gen_log_prob p; gen_write_array p; gen_transform_inits_impl p
-  ; (* Begin metadata methods *) gen_get_param_names p
-  ; (* Post-data metadata methods *) gen_get_dims p
+  [ gen_log_prob p; gen_write_array p; gen_unconstrain_array_impl p
+  ; gen_transform_inits_impl p; (* Begin metadata methods *)
+    gen_get_param_names p; (* Post-data metadata methods *) gen_get_dims p
   ; gen_constrained_param_names p; gen_unconstrained_param_names p
   ; gen_constrained_types p; gen_unconstrained_types p ]
   (* Boilerplate *)
   @ gen_overloads p
-  @ [gen_transform_inits p]
 
 let model_public_basics name =
   [ FunDef

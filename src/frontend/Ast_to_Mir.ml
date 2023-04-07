@@ -324,7 +324,7 @@ let rec param_size transform sizedtype =
    |Ordered | PositiveOrdered | UnitVector ->
       sizedtype
   | TupleTransformation _ ->
-      let _, dims = SizedType.get_container_dims sizedtype in
+      let _, dims = SizedType.get_array_dims sizedtype in
       let subtypes_transforms = Utils.zip_stuple_trans_exn sizedtype transform in
       (* NB: [build_sarray] is a no-op if this was not originally an array *)
       SizedType.build_sarray (List.rev dims)
@@ -361,7 +361,7 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
       check_decl var decl_type' (Lower lb) smeta adlevel
       @ check_decl var decl_type' (Upper ub) smeta adlevel
   | TupleTransformation ts when List.exists ~f:Transformation.has_check ts ->
-      let _, dims = SizedType.get_container_dims decl_type' in
+      let _, dims = SizedType.get_array_dims decl_type' in
       let sts = Utils.zip_stuple_trans_exn decl_type' decl_trans in
       if List.is_empty dims then check_tuple var sts
       else
@@ -823,8 +823,8 @@ let migrate_checks_to_end_of_block stmts =
   let checks, not_checks = List.partition_tf ~f:stmt_contains_check stmts in
   not_checks @ checks
 
-let gather_data (p : Ast.typed_program) =
-  let data = Ast.get_stmts p.datablock in
+let gather_declarations (b : Ast.typed_statement Ast.block option) =
+  let data = Ast.get_stmts b in
   List.concat_map data ~f:(function
     | {stmt= VarDecl {decl_type= sizedtype; transformation; variables; _}; _} ->
         List.map
@@ -864,8 +864,9 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     trans_block ud_dists
       {transform_action= Constrain; dadlevel= AutoDiffable}
       Parameters p in
-  (* Backends will add to transform_inits as needed *)
+  (* Backends will add to transform_inits and unconstrain_array as needed *)
   let transform_inits = [] in
+  let unconstrain_array = [] in
   let out_param, paramsizes, param_gq =
     trans_block ud_dists {declc with transform_action= Constrain} Parameters p
   in
@@ -934,6 +935,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   ; log_prob
   ; generate_quantities
   ; transform_inits
+  ; unconstrain_array
   ; output_vars
   ; prog_name= normalize_prog_name !Typechecker.model_name
   ; prog_path= filename }

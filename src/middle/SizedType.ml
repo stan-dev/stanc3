@@ -126,16 +126,27 @@ let is_recursive_container st =
   | STuple _ -> true
 
 (** Return a type's array dimensions and the type inside the (possibly nested) array *)
-let rec get_container_dims st =
+let rec get_array_dims st =
   match st with
   | SInt | SReal | SComplex | STuple _ -> (st, [])
-  | SVector (_, d) | SRowVector (_, d) -> (SReal, [d])
-  | SComplexVector d | SComplexRowVector d -> (SComplex, [d])
-  | SMatrix (_, d1, d2) -> (SReal, [d1; d2])
-  | SComplexMatrix (d1, d2) -> (SComplex, [d1; d2])
+  | SVector (_, d) | SRowVector (_, d) | SComplexVector d | SComplexRowVector d
+    ->
+      (st, [d])
+  | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> (st, [d1; d2])
   | SArray (st, dim) ->
-      let st', dims = get_container_dims st in
+      let st', dims = get_array_dims st in
       (st', dim :: dims)
+
+let rec internal_scalar st =
+  match st with
+  | SInt | SReal | SComplex | STuple _ -> st
+  | SVector _ | SRowVector _ | SMatrix _ -> SReal
+  | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ -> SComplex
+  | SArray (t, _) -> internal_scalar t
+
+let num_elems_expr st =
+  Expr.Helpers.binop_list (get_dims_io st) Operator.Times
+    ~default:(Expr.Helpers.int 1)
 
 let%expect_test "dims" =
   let open Fmt in
@@ -209,7 +220,7 @@ let rec has_mem_pattern = function
   | SArray (t, _) -> has_mem_pattern t
   | STuple ts -> List.exists ~f:has_mem_pattern ts
 
-(** NB: This is not quite the inverse of [get_container_dims]
+(** NB: This is not quite the inverse of [get_array_dims]
     you need to reverse [dims] first.
 *)
 let rec build_sarray dims st =
@@ -220,15 +231,15 @@ let flatten_tuple_io st =
     match st with
     | STuple ts -> List.concat_map ~f:loop ts
     | SArray _ when contains_tuple st ->
-        let scalar, dims = get_container_dims st in
-        List.map ~f:(fun t -> build_sarray (List.rev dims) t) (loop scalar)
+        let tupl, dims = get_array_dims st in
+        List.map ~f:(fun t -> build_sarray (List.rev dims) t) (loop tupl)
     | _ -> [st] in
   loop st
 
 let%expect_test "dims" =
   let st : Expr.Typed.t t =
     SArray (SArray (SReal, Expr.Helpers.variable "N"), Expr.Helpers.one) in
-  let sclr, dims = get_container_dims st in
+  let sclr, dims = get_array_dims st in
   let st2 = build_sarray (List.rev dims) sclr in
   let open Fmt in
   pf stdout "%a = %a" (pp Expr.Typed.pp) st (pp Expr.Typed.pp) st2 ;

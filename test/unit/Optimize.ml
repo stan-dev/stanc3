@@ -380,7 +380,8 @@ let%expect_test "list collapsing" =
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
       ((pattern (Return ())) (meta <opaque>)) ()))
     (meta <opaque>))))
- (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ()) (prog_name "")
+ (prog_path ""))
     |}]
 
 let%expect_test "recursive functions" =
@@ -3071,7 +3072,8 @@ let%expect_test "block fixing" =
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
             ((pattern (Return ())) (meta <opaque>)) ()))
           (meta <opaque>))))
-       (transform_inits ()) (output_vars ()) (prog_name "") (prog_path "")) |}]
+       (transform_inits ()) (unconstrain_array ()) (output_vars ()) (prog_name "")
+       (prog_path "")) |}]
 
 let%expect_test "one-step loop unrolling" =
   let mir =
