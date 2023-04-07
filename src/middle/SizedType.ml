@@ -70,15 +70,11 @@ let rec get_dims_io st =
   | SComplexVector d | SComplexRowVector d -> [d; two]
   | SComplexMatrix (dim1, dim2) -> [dim1; dim2; two]
   | SArray (t, dim) -> dim :: get_dims_io t
-  | STuple ts ->
-      (* TUPLE TODO get_dims_io
-
-         THIS IS WRONG FOR TUPLES
-         We should use io_size wherever possible
-         and make this a failwith
-      *)
-      let subts = List.map ~f:get_dims_io ts in
-      Expr.Helpers.int (List.length subts) :: List.concat subts
+  | STuple _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Tried to get IO dims of a tuple, which is not rectangular"
+            (st : Expr.Typed.t t)]
 
 let rec io_size st =
   let two = Expr.Helpers.int 2 in
@@ -99,11 +95,7 @@ let rec io_size st =
 
 let rec get_dims st =
   match st with
-  (* TUPLE STUB get_dims
-     How should tuples be expected to behave in this function?
-     Same as above?
-     Although this one seems to have a sense of recursion
-  *)
+  (* NOTE: tuples are treated as scalars by this function *)
   | STuple _ | SInt | SReal | SComplex -> []
   | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> [d1; d2]
   | SRowVector (_, dim)
@@ -143,10 +135,6 @@ let rec internal_scalar st =
   | SVector _ | SRowVector _ | SMatrix _ -> SReal
   | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ -> SComplex
   | SArray (t, _) -> internal_scalar t
-
-let num_elems_expr st =
-  Expr.Helpers.binop_list (get_dims_io st) Operator.Times
-    ~default:(Expr.Helpers.int 1)
 
 let%expect_test "dims" =
   let open Fmt in

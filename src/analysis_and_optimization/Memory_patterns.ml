@@ -144,7 +144,8 @@ let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       acc
   | Promotion (expr, _, _) -> query_expr acc expr
-  | TupleProjection (expr, _) -> query_expr acc expr (* TUPLE STUB *)
+  | TupleProjection (expr, _) ->
+      query_expr acc expr (* TUPLE MAYBE: does this need to be smarter? *)
   | TernaryIf (predicate, texpr, fexpr) ->
       let predicate_demotes = query_expr acc predicate in
       Set.Poly.union

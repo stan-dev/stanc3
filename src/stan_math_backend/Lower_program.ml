@@ -94,6 +94,7 @@ let lower_model_private {Program.prepare_data; _} =
 let rec gen_validate_data name st =
   if String.is_suffix ~suffix:"__" name then []
   else if SizedType.contains_tuple st then
+    (* We know tuples are given as flattened names containing "." in var_contexts *)
     let names =
       UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st) in
     let sts = SizedType.flatten_tuple_io st in
@@ -372,8 +373,11 @@ let gen_get_param_names {Program.output_vars; _} =
        ~body ~cv_qualifiers:[Const] () )
 
 let gen_get_dims {Program.output_vars; _} =
-  (* TUPLE MAYBE: this is a mirror of how we give dims in var context.
+  (* NOTE: for tuples this is a mirror of how we give dims in var context.
       This won't generalize to ragged arrays, I don't think.
+
+      We should probably deprecate get_dims and replace it with a
+      new function later on which returns a more structured type
   *)
   let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
   let pack inner_dims =
