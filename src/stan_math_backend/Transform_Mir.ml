@@ -621,33 +621,22 @@ let param_deserializer_read smeta
     (decl_id_lval, Program.{out_constrained_st= cst; out_block; out_trans; _}) =
   if not (out_block = Parameters) then []
   else
-    let rec read_expr (cst, out_trans) =
+    let basic_read (cst, out_trans) =
       let ut = SizedType.to_unsized cst in
       let emeta =
         Expr.Typed.Meta.create ~loc:smeta ~type_:ut
           ~adlevel:(UnsizedType.fill_adtype_for_type AutoDiffable ut)
           () in
-      match cst with
-      | STuple _ ->
-          Expr.Helpers.internal_funapp FnMakeTuple
-            (List.map ~f:read_expr @@ Utils.zip_stuple_trans_exn cst out_trans)
-            emeta
-      | _ ->
-          let dims = read_constrain_dims out_trans cst in
-          let read =
-            Expr.Helpers.internal_funapp
-              (FnReadParam
-                 { constrain= out_trans
-                 ; dims
-                 ; mem_pattern= SizedType.get_mem_pattern cst } )
-              [] emeta in
-          read in
+      let dims = read_constrain_dims out_trans cst in
+      let read =
+        Expr.Helpers.internal_funapp
+          (FnReadParam
+             { constrain= out_trans
+             ; dims
+             ; mem_pattern= SizedType.get_mem_pattern cst } )
+          [] emeta in
+      read in
     let rec read_stmt (lval, cst, out_trans) =
-      let rec contains_nested_tuple_arr st =
-        match st with
-        | SizedType.SArray _ -> SizedType.contains_tuple st
-        | STuple ts -> List.exists ~f:contains_nested_tuple_arr ts
-        | _ -> false in
       match cst with
       | SizedType.SArray _ when SizedType.contains_tuple cst ->
           let tupl, array_dims = SizedType.get_array_dims cst in
@@ -666,7 +655,7 @@ let param_deserializer_read smeta
                            , tupl
                            , out_trans ) ) } )
               smeta ]
-      | SizedType.STuple _ when contains_nested_tuple_arr cst ->
+      | SizedType.STuple _ ->
           let subtys = Utils.zip_stuple_trans_exn cst out_trans in
           let sub_sts =
             List.mapi
@@ -676,7 +665,7 @@ let param_deserializer_read smeta
               subtys in
           List.concat_map ~f:read_stmt sub_sts
       | _ ->
-          let read = read_expr (cst, out_trans) in
+          let read = basic_read (cst, out_trans) in
           [ Stmt.Fixed.
               { pattern=
                   Pattern.Assignment (lval, SizedType.to_unsized cst, read)
