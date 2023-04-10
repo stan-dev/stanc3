@@ -2,7 +2,7 @@ Test that a nonsense argument is caught
   $ stanc --canonicalize dummy
   stanc: Unrecognized canonicalizer option 'dummy'. 
   Should be one of 'deprecations', 'parentheses', 'braces', 'includes'.
-  Usage: %%NAME%% [option] ... <model_file.stan[functions]>
+  Usage: stanc [option] ... <model_file.stan[functions]>
     --debug-lex                     For debugging purposes: print the lexer actions
     --debug-parse                   For debugging purposes: print the parser actions
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking
@@ -48,7 +48,7 @@ Test that a nonsense argument is caught
 Test capitalization - this should fail due to the lack of model_name, not the canonicalizer
   $ stanc --canonicalize DEPRECATIONS,parentheses,bRaCeS
   Please specify a model_file.
-  Usage: %%NAME%% [option] ... <model_file.stan[functions]>
+  Usage: stanc [option] ... <model_file.stan[functions]>
     --debug-lex                     For debugging purposes: print the lexer actions
     --debug-parse                   For debugging purposes: print the parser actions
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking

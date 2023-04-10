@@ -1,6 +1,6 @@
 Show help
   $ stanc --help
-  Usage: %%NAME%% [option] ... <model_file.stan[functions]>
+  Usage: stanc [option] ... <model_file.stan[functions]>
     --debug-lex                     For debugging purposes: print the lexer actions
     --debug-parse                   For debugging purposes: print the parser actions
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking
@@ -43,11 +43,11 @@ Show help
     --help                          Display this list of options
 Show version
   $ stanc --version
-  %%NAME%%3 %%VERSION%% (Unix)
+  stanc3 v2.32.0-rc1 (Unix)
 Error when no file passed
   $ stanc
   Please specify a model_file.
-  Usage: %%NAME%% [option] ... <model_file.stan[functions]>
+  Usage: stanc [option] ... <model_file.stan[functions]>
     --debug-lex                     For debugging purposes: print the lexer actions
     --debug-parse                   For debugging purposes: print the parser actions
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking
@@ -92,7 +92,7 @@ Error when no file passed
 Error when multiple files passed
   $ stanc foo.stan foo2.stan
   stanc: Please specify only one model_file.
-  Usage: %%NAME%% [option] ... <model_file.stan[functions]>
+  Usage: stanc [option] ... <model_file.stan[functions]>
     --debug-lex                     For debugging purposes: print the lexer actions
     --debug-parse                   For debugging purposes: print the parser actions
     --debug-ast                     For debugging purposes: print the undecorated AST, before semantic checking

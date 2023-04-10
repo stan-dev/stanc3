@@ -5,7 +5,7 @@ open Analysis_and_optimization
 open Middle
 open Js_of_ocaml
 
-let version = "%%NAME%% %%VERSION%%"
+let version = "stanc v2.32.0-rc1"
 
 let stan2cpp model_name model_string is_flag_set flag_val =
   Common.Gensym.reset_danger_use_cautiously () ;
