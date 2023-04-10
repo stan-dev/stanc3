@@ -885,21 +885,24 @@ pipeline {
             }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
-                unstash 'windows-exe'
-                unstash 'linux-exe'
-                unstash 'mac-exe'
-                unstash 'linux-mips64el-exe'
-                unstash 'linux-ppc64el-exe'
-                unstash 'linux-s390x-exe'
-                unstash 'linux-arm64-exe'
-                unstash 'linux-armhf-exe'
-                unstash 'linux-armel-exe'
-                unstash 'js-exe'
-                runShell("""
-                    wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
-                    tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                    ./ghr_v0.12.1_linux_amd64/ghr -u stan-dev -recreate ${tagName()} bin/
-                """)
+                retry(3) {
+                    unstash 'windows-exe'
+                    unstash 'linux-exe'
+                    unstash 'mac-exe'
+                    unstash 'linux-mips64el-exe'
+                    unstash 'linux-ppc64el-exe'
+                    unstash 'linux-s390x-exe'
+                    unstash 'linux-arm64-exe'
+                    unstash 'linux-armhf-exe'
+                    unstash 'linux-armel-exe'
+                    unstash 'js-exe'
+
+                    runShell("""
+                        wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
+                        tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
+                        ./ghr_v0.12.1_linux_amd64/ghr -r stanc3 -u stan-dev -recreate ${tagName()} bin/
+                    """)
+                }
             }
             post {
                 failure {
