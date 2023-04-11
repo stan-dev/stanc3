@@ -5,11 +5,7 @@ open Lexing
 open Debugging
 module Str = Re.Str
 
-let dup_exists l =
-  match List.find_a_dup ~compare:String.compare l with
-  | Some _ -> true
-  | None -> false
-
+let dup_exists l = Option.is_some @@ List.find_a_dup ~compare:String.compare l
 let include_stack = Stack.create ()
 let include_paths : string list ref = ref []
 let included_files : string list ref = ref []

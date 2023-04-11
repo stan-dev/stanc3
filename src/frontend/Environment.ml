@@ -29,15 +29,14 @@ type t = info list String.Map.t
 
 let stan_math_environment =
   let functions =
-    Hashtbl.to_alist Stan_math_signatures.stan_math_signatures
-    |> List.map ~f:(fun (key, values) ->
-           ( key
-           , List.map values ~f:(fun (rt, args, mem) ->
-                 let type_ =
-                   UnsizedType.UFun
-                     (args, rt, Fun_kind.suffix_from_name key, mem) in
-                 {type_; kind= `StanMath} ) ) )
-    |> String.Map.of_alist_exn in
+    Stan_math_signatures.stan_math_signatures
+    |> Hashtbl.mapi ~f:(fun ~key ~data ->
+           List.map data ~f:(fun (rt, args, mem) ->
+               let type_ =
+                 UnsizedType.UFun (args, rt, Fun_kind.suffix_from_name key, mem)
+               in
+               {type_; kind= `StanMath} ) )
+    |> String.Map.of_hashtbl_exn in
   functions
 
 let add env key type_ kind = Map.add_multi env ~key ~data:{type_; kind}

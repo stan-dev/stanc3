@@ -98,29 +98,40 @@ let trim_quotes s =
   let s = String.drop_prefix s 1 in
   String.drop_suffix s 1
 
-let rec of_string_opt str =
-  let split_str =
-    Str.bounded_split
-      (Str.regexp ", line \\|, column \\|, included from\n")
-      str 4 in
-  match split_str with
-  | [fname; linenum_str; colnum_str] ->
-      Some
-        { filename= trim_quotes fname
-        ; line_num= int_of_string linenum_str
-        ; col_num= int_of_string colnum_str
-        ; included_from= None }
-  | [fname; linenum_str; colnum_str; included_from_str] ->
-      of_string_opt included_from_str
-      |> Option.map ~f:(fun included_from ->
-             { filename= trim_quotes fname
-             ; line_num= int_of_string linenum_str
-             ; col_num= int_of_string colnum_str
-             ; included_from= Some included_from } )
-  | _ -> None
+let line_str = ", line "
+let line_len = String.length line_str
+let line_pat = String.Search_pattern.create ~case_sensitive:true line_str
+let column_str = ", column "
+let column_len = String.length column_str
+let column_pat = String.Search_pattern.create ~case_sensitive:true column_str
+let included_str = ", included from\n"
+let included_len = String.length included_str
 
 let included_pat =
-  String.Search_pattern.create ~case_sensitive:true ", included from\n"
+  String.Search_pattern.create ~case_sensitive:true included_str
+
+let rec of_string_opt str =
+  let open Option.Monad_infix in
+  let line = String.Search_pattern.index line_pat ~in_:str in
+  let column = String.Search_pattern.index column_pat ~in_:str in
+  Option.both line column
+  >>= fun (line, column) ->
+  let included_from = String.Search_pattern.index included_pat ~in_:str in
+  match included_from with
+  | None ->
+      Some
+        { filename= trim_quotes (String.slice str 0 line)
+        ; line_num= int_of_string (String.slice str (line + line_len) column)
+        ; col_num= int_of_string (String.slice str (column + column_len) 0)
+        ; included_from= None }
+  | Some included_idx ->
+      of_string_opt (String.slice str (included_idx + included_len) 0)
+      >>| fun included_from ->
+      { filename= trim_quotes (String.slice str 0 line)
+      ; line_num= int_of_string (String.slice str (line + line_len) column)
+      ; col_num=
+          int_of_string (String.slice str (column + column_len) included_idx)
+      ; included_from= Some included_from }
 
 let of_position_opt {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   let split_locations =
@@ -132,9 +143,10 @@ let of_position_opt {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
         ; line_num= pos_lnum
         ; col_num= pos_cnum - pos_bol
         ; included_from= None }
-  | Some i ->
+  | Some included_idx ->
       let fname1, fname2 =
-        (String.slice pos_fname 0 i, String.slice pos_fname (i + 16) 0) in
+        ( String.slice pos_fname 0 included_idx
+        , String.slice pos_fname (included_idx + included_len) 0 ) in
       Option.map (of_string_opt fname2) ~f:(fun included_from ->
           { filename= fname1
           ; line_num= pos_lnum
