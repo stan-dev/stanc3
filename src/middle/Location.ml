@@ -1,14 +1,6 @@
-(** Storing locations in the original source *)
-
 open Core_kernel
-
-(**/**)
-
 module Str = Re.Str
 
-(**/**)
-
-(** Source code locations *)
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
 
@@ -41,11 +33,6 @@ let pp_context_list ppf (lines, {line_num; col_num; _}) =
      %s%s%s%s%s%s   -------------------------------------------------\n"
     line_2_before line_before our_line cursor_line line_after line_2_after
 
-(** Turn the given location into a string holding the code of that location.
-    Code is retrieved by calling context_cb, which may do IO.
-    Exceptions in the callback or in the creation of the string
-    (possible if the context is incorrectly too short for the given location)
-    return [None] *)
 let context_to_string (context_cb : unit -> string list) (loc : t) :
     string option =
   Option.try_with (fun () ->
@@ -53,12 +40,6 @@ let context_to_string (context_cb : unit -> string list) (loc : t) :
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
-(**
-Format the location for error messaging.
-
-If printed_filename is passed, it replaces the highest-level name and
-leaves the filenames of included files intact.
-*)
 let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)
     loc =
   let open Format in
