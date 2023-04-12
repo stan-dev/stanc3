@@ -1,5 +1,6 @@
 (executable
  (name stanc)
+ (modes (byte c) (byte exe))
  (libraries frontend middle stan_math_backend analysis_and_optimization)
  (instrumentation
   (backend bisect_ppx))
