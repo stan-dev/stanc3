@@ -45,6 +45,7 @@ let no_soa_opt = ref false
 let soa_opt = ref false
 let output_file = ref ""
 let generate_data = ref false
+let generate_inits = ref false
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
 let bare_functions = ref false
@@ -85,6 +86,10 @@ let options =
       , Arg.Set generate_data
       , " For debugging purposes: generate a mock dataset to run the model on"
       )
+    ; ( "--debug-generate-inits"
+      , Arg.Set generate_inits
+      , " For debugging purposes: generate a mock initial value for each \
+         parameter" )
     ; ( "--debug-mir"
       , Arg.Set dump_mir
       , " For debugging purposes: print the MIR as an S-expression." )
@@ -198,22 +203,11 @@ let options =
     ; ( "--allow-undefined"
       , Arg.Clear Typechecking.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
-    ; ( "--allow_undefined"
-      , Arg.Clear Typechecking.check_that_all_functions_have_definition
-      , " Deprecated. Same as --allow-undefined. Will be removed in Stan 2.32.0"
-      )
     ; ( "--include-paths"
       , Arg.String
           (fun str -> Preprocessor.include_paths := String.split ~on:',' str)
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
-    ; ( "--include_paths"
-      , Arg.String
-          (fun str ->
-            Preprocessor.include_paths :=
-              !Preprocessor.include_paths @ String.split ~on:',' str )
-      , " Deprecated. Same as --include-paths. Will be removed in Stan 2.32.0"
-      )
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
       , " If set, try to use matrix_cl signatures." )
@@ -229,19 +223,21 @@ let options =
       , Arg.Set print_info_json
       , " If set, print information about the model." ) ]
 
-let print_deprecated_arg_warning =
+(* To be removed in Stan 2.33 *)
+let removed_arg_errors =
   (* is_prefix is used to also cover the --include-paths=... *)
   let arg_is_used arg =
     Array.mem ~equal:(fun x y -> String.is_prefix ~prefix:x y) Sys.argv arg
   in
-  if arg_is_used "--allow_undefined" then
+  if arg_is_used "--allow_undefined" then (
     eprintf
-      "--allow_undefined is deprecated and will be removed in Stan 2.32.0. \
-       Please use --allow-undefined.\n" ;
-  if arg_is_used "--include_paths" then
+      "--allow_undefined was removed in Stan 2.32.0. Please use \
+       --allow-undefined.\n" ;
+    exit 65 (* EX_DATAERR in sysexits.h*) ) ;
+  if arg_is_used "--include_paths" then (
     eprintf
-      "--include_paths is deprecated and Will be removed in Stan 2.32.0. \
-       Please use --include-paths.\n"
+      "--include_paths was removed in Stan 2.32.0. Please use --include-paths.\n" ;
+    exit 65 (* EX_DATAERR in sysexits.h*) )
 
 let model_file_err () =
   Arg.usage options ("Please specify a model_file.\n" ^ usage) ;
@@ -318,7 +314,12 @@ let use_file filename =
       (Deprecations.collect_warnings typed_ast) ;
   if !generate_data then
     print_endline
-      (Debug_data_generation.print_data_prog (Ast2Mir.gather_data typed_ast)) ;
+      (Debug_data_generation.gen_values_json
+         (Ast2Mir.gather_declarations typed_ast.datablock) ) ;
+  if !generate_inits then
+    print_endline
+      (Debug_data_generation.gen_values_json
+         (Ast2Mir.gather_declarations typed_ast.parametersblock) ) ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast2Mir.trans_prog filename typed_ast in
@@ -365,7 +366,6 @@ let mangle =
 let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
-  print_deprecated_arg_warning ;
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
     Stan_math_library.pretty_print_all_math_sigs Format.std_formatter () ;

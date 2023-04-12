@@ -183,12 +183,12 @@ identifier:
     }
 
 future_keyword:
-  | OFFSET { build_id "offset" $loc, "2.32.0" }
-  | MULTIPLIER { build_id "multiplier" $loc, "2.32.0" }
-  | LOWER { build_id "lower" $loc, "2.32.0" }
-  | UPPER { build_id "upper" $loc, "2.32.0" }
+  | OFFSET { build_id "offset" $loc, "2.33.0" }
+  | MULTIPLIER { build_id "multiplier" $loc, "2.33.0" }
+  | LOWER { build_id "lower" $loc, "2.33.0" }
+  | UPPER { build_id "upper" $loc, "2.33.0" }
   | ARRAY
-    { build_id "array" $loc, "2.32.0" }
+    { build_id "array" $loc, "2.33.0" }
 
 decl_identifier:
   | id=identifier { id }

@@ -64,6 +64,10 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           |> Option.map ~f:int_of_string
           |> Option.value ~default:78 in
         let mir = Ast2Mir.trans_prog model_name typed_ast in
+        let deprecation_warnings =
+          if canonicalizer_settings.deprecations then []
+          else Deprecations.collect_warnings typed_ast in
+        let warnings = warnings @ deprecation_warnings in
         let tx_mir = Transform_Mir.trans_prog mir in
         if is_flag_set "auto-format" || is_flag_set "print-canonical" then
           r.return
@@ -87,8 +91,15 @@ let stan2cpp model_name model_string is_flag_set flag_val =
         if is_flag_set "debug-generate-data" then
           r.return
             ( Result.Ok
-                (Debug_data_generation.print_data_prog
-                   (Ast2Mir.gather_data typed_ast) )
+                (Debug_data_generation.gen_values_json
+                   (Ast2Mir.gather_declarations typed_ast.datablock) )
+            , warnings
+            , [] ) ;
+        if is_flag_set "debug-generate-inits" then
+          r.return
+            ( Result.Ok
+                (Debug_data_generation.gen_values_json
+                   (Ast2Mir.gather_declarations typed_ast.parametersblock) )
             , warnings
             , [] ) ;
         let opt_mir =

@@ -119,18 +119,22 @@ let rec of_string_opt str =
              ; included_from= Some included_from } )
   | _ -> None
 
+let included_pat =
+  String.Search_pattern.create ~case_sensitive:true ", included from\n"
+
 let of_position_opt {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
-  let split_fname =
-    Str.bounded_split (Str.regexp ", included from\n") pos_fname 2 in
-  match split_fname with
-  | [] -> None
-  | [fname] ->
+  let split_locations =
+    String.Search_pattern.index included_pat ~in_:pos_fname in
+  match split_locations with
+  | None ->
       Some
-        { filename= fname
+        { filename= pos_fname
         ; line_num= pos_lnum
         ; col_num= pos_cnum - pos_bol
         ; included_from= None }
-  | fname1 :: fname2 :: _ ->
+  | Some i ->
+      let fname1, fname2 =
+        (String.slice pos_fname 0 i, String.slice pos_fname (i + 16) 0) in
       Option.map (of_string_opt fname2) ~f:(fun included_from ->
           { filename= fname1
           ; line_num= pos_lnum

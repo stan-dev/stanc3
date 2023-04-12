@@ -176,14 +176,14 @@ Available signatures:
   The first argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword 'data'.)
-(data int) => int
-  The first argument must be int but got array[] real
-(data real) => int
-  The first argument must be real but got array[] real
 (data array[] int) => array[] int
   The first argument must be array[] int but got array[] real
-(data array[,] int) => array[,] int
-  The first argument must be array[,] int but got array[] real
+(data real) => int
+  The first argument must be real but got array[] real
+(data array[,] real) => array[,] int
+  The first argument must be array[,] real but got array[] real
+(data array[,,] real) => array[,,] int
+  The first argument must be array[,,] real but got array[] real
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc bad_to_int2.stan
 Semantic error in 'bad_to_int2.stan', line 3, column 19 to column 28:
@@ -202,14 +202,14 @@ Available signatures:
   The first argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword 'data'.)
-(data int) => int
-  The first argument must be int but got array[] real
-(data real) => int
-  The first argument must be real but got array[] real
 (data array[] int) => array[] int
   The first argument must be array[] int but got array[] real
-(data array[,] int) => array[,] int
-  The first argument must be array[,] int but got array[] real
+(data real) => int
+  The first argument must be real but got array[] real
+(data array[,] real) => array[,] int
+  The first argument must be array[,] real but got array[] real
+(data array[,,] real) => array[,,] int
+  The first argument must be array[,,] real but got array[] real
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
 Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
@@ -2197,16 +2197,16 @@ Semantic error in 'signature_function_known.stan', line 8, column 12 to column 4
 Ill-typed arguments supplied to function 'bernoulli_logit_lpmf':
 (vector, vector)
 Available signatures:
-(int, row_vector) => real
-  The first argument must be int but got vector
-(int, vector) => real
-  The first argument must be int but got vector
-(int, array[] real) => real
-  The first argument must be int but got vector
-(int, real) => real
-  The first argument must be int but got vector
 (array[] int, row_vector) => real
   The first argument must be array[] int but got vector
+(array[] int, vector) => real
+  The first argument must be array[] int but got vector
+(array[] int, array[] real) => real
+  The first argument must be array[] int but got vector
+(array[] int, real) => real
+  The first argument must be array[] int but got vector
+(int, row_vector) => real
+  The first argument must be int but got vector
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
 Semantic error in 'signature_function_unknown.stan', line 8, column 12 to column 37:
@@ -2232,16 +2232,16 @@ Semantic error in 'signature_sampling_known.stan', line 8, column 2 to column 29
 Ill-typed arguments supplied to function 'bernoulli_logit':
 (vector, vector)
 Available signatures:
-(int, row_vector) => real
-  The first argument must be int but got vector
-(int, vector) => real
-  The first argument must be int but got vector
-(int, array[] real) => real
-  The first argument must be int but got vector
-(int, real) => real
-  The first argument must be int but got vector
 (array[] int, row_vector) => real
   The first argument must be array[] int but got vector
+(array[] int, vector) => real
+  The first argument must be array[] int but got vector
+(array[] int, array[] real) => real
+  The first argument must be array[] int but got vector
+(array[] int, real) => real
+  The first argument must be array[] int but got vector
+(int, row_vector) => real
+  The first argument must be int but got vector
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc signature_sampling_udf.stan
 Semantic error in 'signature_sampling_udf.stan', line 8, column 2 to column 19:

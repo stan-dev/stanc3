@@ -3,8 +3,8 @@ open Core_kernel.Poly
 open Middle
 
 module type AST_MIR_TRANSLATOR = sig
-  val gather_data :
-       Ast.typed_program
+  val gather_declarations :
+       Ast.typed_statement Ast.block option
     -> (Expr.Typed.t SizedType.t * Expr.Typed.t Transformation.t * string) list
 
   val trans_prog : string -> Ast.typed_program -> Program.Typed.t
@@ -939,8 +939,8 @@ struct
     | Ast.Continue -> Continue |> swrap
     | Ast.Skip -> Skip |> swrap
 
-  let gather_data (p : Ast.typed_program) =
-    let data = Ast.get_stmts p.datablock in
+  let gather_declarations (b : Ast.typed_statement Ast.block option) =
+    let data = Ast.get_stmts b in
     List.concat_map data ~f:(function
       | {stmt= VarDecl {decl_type= sizedtype; transformation; variables; _}; _}
         ->
@@ -983,8 +983,9 @@ struct
       trans_block ud_dists
         {transform_action= Constrain; dadlevel= AutoDiffable}
         Parameters p in
-    (* Backends will add to transform_inits as needed *)
+    (* Backends will add to transform_inits and unconstrain_array as needed *)
     let transform_inits = [] in
+    let unconstrain_array = [] in
     let out_param, paramsizes, param_gq =
       trans_block ud_dists {declc with transform_action= Constrain} Parameters p
     in
@@ -1056,6 +1057,7 @@ struct
     ; log_prob
     ; generate_quantities
     ; transform_inits
+    ; unconstrain_array
     ; output_vars
     ; prog_name= normalize_prog_name !Typechecking.model_name
     ; prog_path= filename }

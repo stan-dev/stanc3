@@ -557,6 +557,8 @@ struct
     { mir with
       transform_inits=
         autodiffable_inline_function_statements mir.transform_inits
+    ; unconstrain_array=
+        autodiffable_inline_function_statements mir.unconstrain_array
     ; log_prob= autodiffable_inline_function_statements mir.log_prob
     ; generate_quantities=
         dataonly_inline_function_statements mir.generate_quantities }
@@ -937,6 +939,7 @@ struct
     ; log_prob= transformer mir.log_prob
     ; generate_quantities= transformer mir.generate_quantities
     ; transform_inits= transformer mir.transform_inits
+    ; unconstrain_array= transformer mir.unconstrain_array
     ; output_vars= mir.output_vars
     ; prog_name= mir.prog_name
     ; prog_path= mir.prog_path }

@@ -244,6 +244,7 @@ let distributions =
   ; ([Lpdf; Log], "inv_wishart", [DMatrix; DReal; DMatrix], SoA)
   ; ([Lpdf; Log], "lkj_corr", [DMatrix; DReal], AoS)
   ; ([Lpdf; Log], "lkj_corr_cholesky", [DMatrix; DReal], AoS)
+  ; ([Lpdf; Log], "lkj_cov", [DMatrix; DVector; DVector; DReal], AoS)
   ; (full_lpdf_depr, "logistic", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf; Rng; Cdf; Log], "loglogistic", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf_depr, "lognormal", [DVReal; DVReal; DVReal], SoA)
@@ -483,7 +484,7 @@ let deprecated_distributions =
   |> List.map ~f:(fun (x, y) ->
          ( x
          , { replacement= y
-           ; version= "2.32.0"
+           ; version= "2.33.0"
            ; extra_message=
                "This can be automatically changed using the canonicalize flag \
                 for stanc"
@@ -502,7 +503,7 @@ let deprecated_functions =
   let std =
     make
       "This can be automatically changed using the canonicalize flag for stanc"
-      "2.32.0" true in
+      "2.33.0" true in
   String.Map.of_alist_exn
     [ ("multiply_log", std "lmultiply")
     ; ("binomial_coefficient_log", std "lchoose")
@@ -511,11 +512,7 @@ let deprecated_functions =
     ; ("integrate_ode_bdf", ode "ode_bdf")
     ; ("integrate_ode_adams", ode "ode_adams")
     ; ("if_else", std "the conditional operator (x ? y : z)")
-    ; ( "fabs"
-      , make
-          "This can be automatically changed using the canonicalize flag for \
-           stanc"
-          "2.33.0" true "abs" ) ]
+    ; ("fabs", std "abs") ]
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 
@@ -1620,8 +1617,6 @@ let () =
   add_unqualified
     ("lkj_corr_cholesky_rng", ReturnType UMatrix, [UInt; UReal], AoS) ;
   add_unqualified ("lkj_corr_rng", ReturnType UMatrix, [UInt; UReal], AoS) ;
-  add_unqualified
-    ("lkj_cov_log", ReturnType UReal, [UMatrix; UVector; UVector; UReal], AoS) ;
   add_binary_vec_int_real "lmgamma" AoS ;
   add_binary_vec "lmultiply" SoA ;
   add_unqualified ("log", ReturnType UComplex, [UComplex], AoS) ;
@@ -2808,5 +2803,4 @@ let%expect_test "declarative distributions" =
   |> print_endline ;
   [%expect {|
     binomial_coefficient_log
-    multiply_log
-    lkj_cov_log |}]
+    multiply_log |}]

@@ -137,7 +137,7 @@ struct
                 , "Use of " ^ name
                   ^ " without a vertical bar (|) between the first two \
                      arguments of a CDF is deprecated and will be removed in \
-                     Stan 2.32.0. This can be automatically changed using the \
+                     Stan 2.33.0. This can be automatically changed using the \
                      canonicalize flag for stanc" ) ]
           | _ -> [] in
         acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
@@ -188,7 +188,7 @@ struct
           acc
           @ [ ( id_loc
               , "Use of the _log suffix in user defined probability functions \
-                 is deprecated and will be removed in Stan 2.32.0, use name '"
+                 is deprecated and will be removed in Stan 2.33.0, use name '"
                 ^ update_suffix name type_
                 ^ "' instead if you intend on using this function in ~ \
                    statements or calling unnormalized probability functions \
