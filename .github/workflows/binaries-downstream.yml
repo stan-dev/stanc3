@@ -1,0 +1,104 @@
+name: CmdStan Downstream Tests with Binaries
+
+on:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+jobs:
+  package-stanc-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup OCaml 4.12.0
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 4.12.0
+          cache-prefix: v3
+
+      - run: bash -x scripts/install_build_deps.sh
+
+      - name: Package stanc sources
+        run: |
+          eval $(opam env)
+          opam exec -- dune subst
+          DOWNLOAD_SOURCES=true make package-stanc
+
+      - name: Stash stanc sources
+        uses: actions/upload-artifact@master
+        with:
+          name: stanc
+          path: ./stanc
+
+  run-cmdstan-tests:
+    name: Stanc3 Downstream Tests - ${{ matrix.config.os }}
+    needs: package-stanc-source
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { os: macos-latest, stanc: stanc, make: make }
+          - { os: windows-latest, stanc: stanc.exe, make: mingw32-make }
+          - { os: ubuntu-latest, stanc: stanc, make: make }
+
+    steps:
+
+      - name: Checkout CmdStan
+        uses: actions/checkout@v3
+        with:
+          repository: stan-dev/cmdstan
+          submodules: recursive
+
+      - uses: actions/setup-python@v4
+
+      - name: Restore Stanc Sources
+        uses: actions/download-artifact@master
+        with:
+          name: stanc
+          path: ./stanc
+
+      - name: Windows - Install RTools
+        if: runner.os == 'Windows'
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          rtools-version: '42'
+
+      - name: Windows - Configure RTools
+        if: runner.os == 'Windows'
+        run: |
+          pacman -Sy mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-gcc --noconfirm
+
+          echo "C:\\rtools42\\ucrt64\\bin" >> $GITHUB_PATH
+          echo "C:\\rtools42\\usr\\bin" >> $GITHUB_PATH
+          echo "${{ github.workspace }}\\stan\\lib\\stan_math\\lib\\tbb" >> $GITHUB_PATH
+          # Suppress noisy Boost warnings
+          echo "CXXFLAGS += -Wno-deprecated-declarations" >> make/local
+          # Fixes TBB build
+          echo "TBB_CXXFLAGS += -D_UCRT" >> make/local
+        shell: bash
+
+      - name: Build Stanc
+        if: ${{ matrix.config.arch }} == ''
+        run: |
+          cd stanc
+          ${{ matrix.config.make }} -j2 stanc
+        shell: bash
+
+      - name: Build CmdStan & replace Stanc
+        if: ${{ matrix.config.arch }} == ''
+        run: |
+          ${{ matrix.config.make }} -j2 build
+          ${{ matrix.config.make }} install-tbb
+          rm bin/${{ matrix.config.stanc }}
+          cp stanc/${{ matrix.config.stanc }} bin/${{ matrix.config.stanc }}
+        shell: bash
+
+      - name: Run CmdStan tests
+        if: ${{ matrix.config.arch }} == ''
+        run: |
+          python ./runCmdStanTests.py -j2 src/test/interface
+        shell: bash

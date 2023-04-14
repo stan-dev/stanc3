@@ -29,107 +29,121 @@ clean:
 doc:
 	dune build @doc
 
-OCAMLLIBDIR=$(shell ocamlc -where)
+OCAML_VER=$(shell opam info ocaml-base-compiler --field=installed-version --color=never)
+BASE_VER = $(shell opam info base --field=installed-version --color=never)
+BASE_BIGSTRING_VER = $(shell opam info base_bigstring --field=installed-version --color=never)
+JANESTREET_VER = $(shell opam info jane-street-headers --field=installed-version --color=never)
+PPX_INLINE_VER=$(shell opam info ppx_inline_test --field=installed-version --color=never)
+BIN_PROT_VER=$(shell opam info bin_prot --field=installed-version --color=never)
+TIME_NOW_VER=$(shell opam info time_now --field=installed-version --color=never)
+PPX_EXPECT_VER=$(shell opam info ppx_expect --field=installed-version --color=never)
+CORE_KERNEL_VER=$(shell opam info ppx_expect --field=installed-version --color=never)
+
+RUNTIME_FILES = floats.c backtrace_byt.c alloc.c array.c bigarray.c \
+	backtrace.c str.c ints.c io.c compare.c dynlink.c stacks.c weak.c \
+	eventlog.c finalise.c gc_ctrl.c meta.c hash.c intern.c signals.c \
+	obj.c md5.c memprof.c memory.c extern.c parsing.c callback.c afl.c \
+	sys.c unix.c win32.c startup_aux.c startup_byt.c codefrag.c domain.c \
+	misc.c fix_code.c skiplist.c signals_byt.c minor_gc.c major_gc.c \
+	globroots.c compact.c lexing.c interp.c custom.c printexc.c debugger.c \
+	freelist.c roots_byt.c fail_byt.c
+
+CAML_FILES = threads.h unixsupport.h version.h
+
+BASE_FILES = hash_types/src/internalhash_stubs.c src/hash_stubs.c \
+	src/exn_stubs.c src/int_math_stubs.c
+
+JANESTREET_FILES = core_params.h ocaml_utils.h jane_common.h
+
+ifeq ($(DOWNLOAD_SOURCES),true)
+	OCAML_SRCDIR=ocaml_sources
+else
+	OCAML_SRCDIR=$(OCAML_LIBDIR)/../../.opam-switch/sources
+endif
+
+OCAML_LIBDIR=$(OPAM_SWITCH_PREFIX)/lib/ocaml
+COMPILER_SRCDIR=$(OCAML_SRCDIR)/ocaml-base-compiler.$(OCAML_VER)
+SEXLIB_DUNEPACKAGE=$(OCAML_LIBDIR)/../sexplib/dune-package
 
 stanc-bytecode:
-	$(eval SEXLIB_DUNE=$(OCAMLLIBDIR)/../sexplib/dune-package)
-	sed -i'.bak' -e 's/requires bigarray/requires/g' $(SEXLIB_DUNE)
+	# Temporarily remove the bigarray requirement from sexplib - otherwise unix is required
+	sed -i'.bak' -e 's/requires bigarray/requires/g' $(SEXLIB_DUNEPACKAGE)
+	# Temporarily mask the unix library so it can't be included
+	mv $(OCAML_LIBDIR)/unix.cma $(OCAML_LIBDIR)/unix.cma.bak
+
 	dune build src/stanc/stanc.bc.c
-	$(RM) $(SEXLIB_DUNE)
-	mv $(SEXLIB_DUNE).bak $(SEXLIB_DUNE)
+	mv $(OCAML_LIBDIR)/unix.cma.bak $(OCAML_LIBDIR)/unix.cma
+	$(RM) $(SEXLIB_DUNEPACKAGE)
+	mv $(SEXLIB_DUNEPACKAGE).bak $(SEXLIB_DUNEPACKAGE)
 
-stanc.c: stanc-bytecode
-	mkdir stanc_c_files
-	mkdir stanc_c_files/include
-	cp _build/default/src/stanc/stanc.bc.c stanc_c_files/.
-	cp -r /Users/andrew/.opam/stanc/lib/ocaml/caml stanc_c_files/
-	mkdir stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/floats.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/backtrace_byt.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/alloc.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/array.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/bigarray.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/backtrace.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/str.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/ints.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/io.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/compare.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/dynlink.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/stacks.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/weak.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/eventlog.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/finalise.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/gc_ctrl.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/meta.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/hash.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/intern.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/signals.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/obj.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/md5.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/memprof.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/memory.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/extern.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/parsing.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/callback.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/afl.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/sys.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/unix.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/startup_aux.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/startup_byt.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/codefrag.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/domain.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/misc.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/fix_code.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/skiplist.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/signals_byt.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/minor_gc.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/major_gc.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/globroots.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/compact.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/lexing.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/interp.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/custom.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/printexc.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/runtime/debugger.c stanc_c_files/runtime
+package-ocaml-runtime:
+	mkdir stanc/runtime
+	cp -r $(COMPILER_SRCDIR)/runtime/caml stanc/runtime
+	cp $(addprefix $(OCAML_LIBDIR)/caml/,$(CAML_FILES)) stanc/runtime/caml
+	cp $(addprefix $(COMPILER_SRCDIR)/runtime/,$(RUNTIME_FILES)) stanc/runtime
+	cp $(COMPILER_SRCDIR)/otherlibs/str/strstubs.c stanc/runtime
+	cp $(COMPILER_SRCDIR)/otherlibs/systhreads/st_stubs.c stanc/runtime
 
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/otherlibs/str/strstubs.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/otherlibs/systhreads/st_stubs.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/otherlibs/systhreads/freelist.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/otherlibs/systhreads/roots_byt.c stanc_c_files/runtime
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/otherlibs/systhreads/fail_byt.c stanc_c_files/runtime
+	# Compilation on Windows needs additional typedefs - update file to #include them
+	sed -i'.bak' -e 's/#include \"caml\/sys.h\"/#include \"caml\/sys.h\"\n#include \"extra\/win32-defs.h\"/g' ./stanc/runtime/win32.c
+	rm ./stanc/runtime/win32.c.bak
 
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/otherlibs/systhreads/st_win32.h stanc_c_files/include
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ocaml-base-compiler.4.12.0/otherlibs/systhreads/st_posix.h stanc_c_files/include
+package-ocaml-config:
+	cp -r $(COMPILER_SRCDIR)/tools stanc/
+	cp -r $(COMPILER_SRCDIR)/build-aux stanc/
+	cp $(COMPILER_SRCDIR)/configure stanc/
+	cp $(COMPILER_SRCDIR)/Makefile.build_config.in stanc/
+	cp $(COMPILER_SRCDIR)/Makefile.config.in stanc/
+	chmod +x stanc/configure
 
+package-ocaml-headers:
+	mkdir stanc/include
+	cp $(COMPILER_SRCDIR)/otherlibs/systhreads/st_win32.h stanc/include
+	cp $(COMPILER_SRCDIR)/otherlibs/systhreads/st_posix.h stanc/include
+	cp $(OCAML_SRCDIR)/base.$(BASE_VER)/hash_types/src/internalhash.h stanc/include
+	cp $(OCAML_SRCDIR)/base_bigstring.$(BASE_BIGSTRING_VER)/src/base_bigstring.h stanc/include
+	cp $(OCAML_SRCDIR)/core_kernel/src/core_bigstring.h stanc/include
+	cp $(addprefix $(OCAML_SRCDIR)/jane-street-headers.$(JANESTREET_VER)/include/,$(JANESTREET_FILES)) stanc/include
 
-	mkdir stanc_c_files/base
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ppx_inline_test.v0.14.1/runner/lib/am_testing.c stanc_c_files/base
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/base.v0.14.3/hash_types/src/internalhash_stubs.c stanc_c_files/base
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/base.v0.14.3/hash_types/src/internalhash.h stanc_c_files/include
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/base.v0.14.3/src/hash_stubs.c stanc_c_files/base
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/base.v0.14.3/src/exn_stubs.c stanc_c_files/base
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/base.v0.14.3/src/int_math_stubs.c stanc_c_files/base
+package-ocaml-base:
+	mkdir stanc/base
+	cp $(addprefix $(OCAML_SRCDIR)/base.$(BASE_VER)/,$(BASE_FILES)) stanc/base/
+	cp $(OCAML_SRCDIR)/base_bigstring.$(BASE_BIGSTRING_VER)/src/base_bigstring_stubs.c stanc/base
 
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/base_bigstring.v0.14.0/src/base_bigstring_stubs.c stanc_c_files/base
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/base_bigstring.v0.14.0/src/base_bigstring.h stanc_c_files/include
+package-ocaml-libraries:
+	mkdir stanc/libraries
+	cp $(OCAML_SRCDIR)/ppx_inline_test.$(PPX_INLINE_VER)/runner/lib/am_testing.c stanc/libraries
+	cp $(OCAML_SRCDIR)/bin_prot.$(BIN_PROT_VER)/src/blit_stubs.c stanc/libraries
+	cp $(OCAML_SRCDIR)/time_now.$(TIME_NOW_VER)/src/time_now_stubs.c stanc/libraries
+	cp $(OCAML_SRCDIR)/ppx_expect.$(PPX_EXPECT_VER)/collector/expect_test_collector_stubs.c stanc/libraries
+	cp $(OCAML_SRCDIR)/core_kernel/src/array_stubs.c stanc/libraries
+	cp $(OCAML_SRCDIR)/core_kernel/src/bigstring_stubs.c stanc/libraries
+	cp $(OCAML_SRCDIR)/core_kernel/src/md5_stubs.c stanc/libraries
 
-	mkdir stanc_c_files/bin_prot
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/bin_prot.v0.14.1/src/blit_stubs.c stanc_c_files/bin_prot
+download-sources:
+	mkdir ocaml_sources
+	opam source ocaml-base-compiler.$(OCAML_VER) --dir=ocaml_sources/ocaml-base-compiler.$(OCAML_VER)
+	opam source base.$(BASE_VER) --dir=ocaml_sources/base.$(BASE_VER)
+	opam source base_bigstring.$(BASE_BIGSTRING_VER) --dir=ocaml_sources/base_bigstring.$(BASE_BIGSTRING_VER)
+	opam source jane-street-headers.$(JANESTREET_VER) --dir=ocaml_sources/jane-street-headers.$(JANESTREET_VER)
+	opam source ppx_inline_test.$(PPX_INLINE_VER) --dir=ocaml_sources/ppx_inline_test.$(PPX_INLINE_VER)
+	opam source bin_prot.$(BIN_PROT_VER) --dir=ocaml_sources/bin_prot.$(BIN_PROT_VER)
+	opam source time_now.$(TIME_NOW_VER) --dir=ocaml_sources/time_now.$(TIME_NOW_VER)
+	opam source ppx_expect.$(PPX_EXPECT_VER) --dir=ocaml_sources/ppx_expect.$(PPX_EXPECT_VER)
+	opam source core_kernel.$(CORE_KERNEL_VER) --dir=ocaml_sources/core_kernel
 
-	mkdir stanc_c_files/time_now
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/time_now.v0.14.0/src/time_now_stubs.c stanc_c_files/time_now
+package-stanc: stanc-bytecode
+	cp _build/default/src/stanc/stanc.bc.c stanc/stanc.c
+ifeq ($(DOWNLOAD_SOURCES),true)
+	$(MAKE) download-sources
+endif
+	$(MAKE) package-ocaml-config
+	$(MAKE) package-ocaml-runtime
+	$(MAKE) package-ocaml-headers
+	$(MAKE) package-ocaml-base
+	$(MAKE) package-ocaml-libraries
 
-	mkdir stanc_c_files/ppx_expect
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/ppx_expect.v0.14.2/collector/expect_test_collector_stubs.c stanc_c_files/ppx_expect
-
-	mkdir stanc_c_files/core_kernel
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/core_kernel/src/array_stubs.c stanc_c_files/core_kernel
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/core_kernel/src/bigstring_stubs.c stanc_c_files/core_kernel
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/core_kernel/src/md5_stubs.c stanc_c_files/core_kernel
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/core_kernel/src/core_bigstring.h stanc_c_files/include
-
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/jane-street-headers.v0.14.0/include/core_params.h stanc_c_files/include
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/jane-street-headers.v0.14.0/include/ocaml_utils.h stanc_c_files/include
-	cp /Users/andrew/.opam/stanc/lib/ocaml/../../.opam-switch/sources/jane-street-headers.v0.14.0/include/jane_common.h stanc_c_files/include
+clean-stanc-package:
+	$(RM) -r $(filter-out stanc/extra stanc/main.c stanc/Makefile, $(wildcard stanc/*))
 
 re: clean all
