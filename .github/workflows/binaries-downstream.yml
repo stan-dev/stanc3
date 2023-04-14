@@ -45,7 +45,6 @@ jobs:
           - { os: ubuntu-latest, stanc: stanc, make: make }
 
     steps:
-
       - name: Checkout CmdStan
         uses: actions/checkout@v3
         with:
@@ -72,24 +71,25 @@ jobs:
         run: |
           pacman -Sy mingw-w64-ucrt-x86_64-make mingw-w64-ucrt-x86_64-gcc --noconfirm
 
+          # Update PATH for toolchain and TBB
           echo "C:\\rtools42\\ucrt64\\bin" >> $GITHUB_PATH
           echo "C:\\rtools42\\usr\\bin" >> $GITHUB_PATH
           echo "${{ github.workspace }}\\stan\\lib\\stan_math\\lib\\tbb" >> $GITHUB_PATH
+
           # Suppress noisy Boost warnings
           echo "CXXFLAGS += -Wno-deprecated-declarations" >> make/local
+
           # Fixes TBB build
           echo "TBB_CXXFLAGS += -D_UCRT" >> make/local
         shell: bash
 
       - name: Build Stanc
-        if: ${{ matrix.config.arch }} == ''
         run: |
           cd stanc
           ${{ matrix.config.make }} -j2 stanc
         shell: bash
 
       - name: Build CmdStan & replace Stanc
-        if: ${{ matrix.config.arch }} == ''
         run: |
           ${{ matrix.config.make }} -j2 build
           ${{ matrix.config.make }} install-tbb
@@ -98,7 +98,6 @@ jobs:
         shell: bash
 
       - name: Run CmdStan tests
-        if: ${{ matrix.config.arch }} == ''
         run: |
           python ./runCmdStanTests.py -j2 src/test/interface
         shell: bash
