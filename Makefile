@@ -1,5 +1,3 @@
--include Makefile.package-stanc
-
 all:
 	dune build src/stanc/stanc.exe
 
