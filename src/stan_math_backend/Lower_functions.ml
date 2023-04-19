@@ -316,7 +316,9 @@ let lower_standalone_fun_def namespace_fun
   let return_type, return_stmt =
     match fdrt with
     | Void -> (Void, fun e -> Expression e)
-    | _ -> (Auto, fun e -> Return (Some e)) in
+    | ReturnType ut when UnsizedType.is_int_type ut ->
+        (lower_type ut Int, fun e -> Return (Some e))
+    | ReturnType ut -> (lower_type ut Double, fun e -> Return (Some e)) in
   let fn_sig = make_fun_defn ~name:fdname ~return_type ~args:all_args in
   let internal_fname = namespace_fun ^ "::" ^ fdname in
   let template =
