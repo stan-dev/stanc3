@@ -737,6 +737,7 @@ let lower_model_public p =
   @ gen_overloads p
 
 let model_public_basics name =
+  let version_string = "stanc_version = %%NAME%%3 %%VERSION%%" in
   [ FunDef
       (make_fun_defn ~inline:true ~return_type:Types.string ~name:"model_name"
          ~cv_qualifiers:[Const; Final]
@@ -750,8 +751,7 @@ let model_public_basics name =
            [ Return
                (Some
                   (Exprs.std_vector_init_expr Types.string
-                     [ Exprs.literal_string
-                         "stanc_version = %%NAME%%3 %%VERSION%%"
+                     [ Exprs.literal_string version_string
                      ; Exprs.literal_string
                          ("stancflags = " ^ !stanc_args_to_print) ] ) ) ]
          ~cv_qualifiers:[Const; NoExcept] () ) ]
