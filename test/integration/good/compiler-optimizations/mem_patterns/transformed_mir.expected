@@ -320,6 +320,12 @@ matrix[10, 10] A_p: AoS
     (meta <opaque>))))
  (output_vars
   ((A_p
+    ((begin_loc
+      ((filename complex-fails.stan) (line_num 2) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename complex-fails.stan) (line_num 2) (col_num 22)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -334,6 +340,12 @@ matrix[10, 10] A_p: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (A_complex_tp
+    ((begin_loc
+      ((filename complex-fails.stan) (line_num 6) (col_num 26)
+       (included_from ())))
+     (end_loc
+      ((filename complex-fails.stan) (line_num 6) (col_num 38)
+       (included_from ()))))
     ((out_unconstrained_st
       (SComplexMatrix
        ((pattern (Lit Int 10))
@@ -375,27 +387,112 @@ vector[Nr] h_i_sigma: SoA
 vector[Nr] h_sigma: SoA
 ((functions_block ())
  (input_vars
-  ((N SInt) (K SInt)
+  ((N
+    ((begin_loc
+      ((filename constraints.stan) (line_num 3) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 3) (col_num 17)
+       (included_from ()))))
+    SInt)
+   (K
+    ((begin_loc
+      ((filename constraints.stan) (line_num 4) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 4) (col_num 17)
+       (included_from ()))))
+    SInt)
    (diff_low_mid
+    ((begin_loc
+      ((filename constraints.stan) (line_num 5) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 5) (col_num 25)
+       (included_from ()))))
     (SVector AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (diff_high_mid
+    ((begin_loc
+      ((filename constraints.stan) (line_num 6) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 6) (col_num 26)
+       (included_from ()))))
     (SVector AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (mid_price
+    ((begin_loc
+      ((filename constraints.stan) (line_num 7) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 7) (col_num 22)
+       (included_from ()))))
     (SVector AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (X_all
+    ((begin_loc
+      ((filename constraints.stan) (line_num 8) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 8) (col_num 21)
+       (included_from ()))))
     (SMatrix AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
      ((pattern (Var K))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-   (phi_prior_a SReal) (phi_prior_b SReal) (mu_prior_mu SReal)
-   (mu_prior_sigma SReal) (sigma_prior_shape SReal) (sigma_prior_rate SReal)))
+   (phi_prior_a
+    ((begin_loc
+      ((filename constraints.stan) (line_num 9) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 9) (col_num 28)
+       (included_from ()))))
+    SReal)
+   (phi_prior_b
+    ((begin_loc
+      ((filename constraints.stan) (line_num 10) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 10) (col_num 28)
+       (included_from ()))))
+    SReal)
+   (mu_prior_mu
+    ((begin_loc
+      ((filename constraints.stan) (line_num 11) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 11) (col_num 19)
+       (included_from ()))))
+    SReal)
+   (mu_prior_sigma
+    ((begin_loc
+      ((filename constraints.stan) (line_num 12) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 12) (col_num 31)
+       (included_from ()))))
+    SReal)
+   (sigma_prior_shape
+    ((begin_loc
+      ((filename constraints.stan) (line_num 13) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 13) (col_num 34)
+       (included_from ()))))
+    SReal)
+   (sigma_prior_rate
+    ((begin_loc
+      ((filename constraints.stan) (line_num 14) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 14) (col_num 33)
+       (included_from ()))))
+    SReal)))
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
@@ -6357,6 +6454,12 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))))
  (output_vars
   ((high_low_est
+    ((begin_loc
+      ((filename constraints.stan) (line_num 20) (col_num 53)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 20) (col_num 65)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6373,6 +6476,12 @@ vector[Nr] h_sigma: SoA
        ((pattern (Var diff_high_mid))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))))
    (b
+    ((begin_loc
+      ((filename constraints.stan) (line_num 21) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 21) (col_num 13)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var K))
@@ -6383,6 +6492,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (h
+    ((begin_loc
+      ((filename constraints.stan) (line_num 22) (col_num 13)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 22) (col_num 14)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var Nr))
@@ -6393,6 +6508,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (ar
+    ((begin_loc
+      ((filename constraints.stan) (line_num 23) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 23) (col_num 14)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Lit Int 2))
@@ -6403,9 +6524,21 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (ma
+    ((begin_loc
+      ((filename constraints.stan) (line_num 24) (col_num 7)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 24) (col_num 9)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters) (out_trans Identity)))
    (phi_beta
+    ((begin_loc
+      ((filename constraints.stan) (line_num 25) (col_num 24)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 25) (col_num 32)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters)
      (out_trans
@@ -6415,6 +6548,12 @@ vector[Nr] h_sigma: SoA
        ((pattern (Lit Int 1))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (sigma2
+    ((begin_loc
+      ((filename constraints.stan) (line_num 26) (col_num 16)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 26) (col_num 22)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters)
      (out_trans
@@ -6422,9 +6561,21 @@ vector[Nr] h_sigma: SoA
        ((pattern (Lit Int 0))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (Intercept
+    ((begin_loc
+      ((filename constraints.stan) (line_num 27) (col_num 7)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 27) (col_num 16)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters) (out_trans Identity)))
    (mean_price
+    ((begin_loc
+      ((filename constraints.stan) (line_num 28) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 28) (col_num 22)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6435,6 +6586,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (sigma_price
+    ((begin_loc
+      ((filename constraints.stan) (line_num 29) (col_num 23)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 29) (col_num 34)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6449,9 +6606,21 @@ vector[Nr] h_sigma: SoA
        ((pattern (Lit Real 0.0))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
    (theta
+    ((begin_loc
+      ((filename constraints.stan) (line_num 30) (col_num 7)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 30) (col_num 12)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters) (out_trans Identity)))
    (upper_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 31) (col_num 22)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 31) (col_num 32)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6466,6 +6635,12 @@ vector[Nr] h_sigma: SoA
        ((pattern (Var ma))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
    (lower_upper_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 32) (col_num 49)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 32) (col_num 65)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6482,6 +6657,12 @@ vector[Nr] h_sigma: SoA
        ((pattern (Var upper_test))
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
    (row_vec_lower_upper_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 33) (col_num 55)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 33) (col_num 79)
+       (included_from ()))))
     ((out_unconstrained_st
       (SRowVector AoS
        ((pattern (Var N))
@@ -6504,6 +6685,12 @@ vector[Nr] h_sigma: SoA
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
    (offset_mult_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 34) (col_num 55)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 34) (col_num 71)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6520,6 +6707,12 @@ vector[Nr] h_sigma: SoA
        ((pattern (Var sigma_price))
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
    (ordered_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 35) (col_num 13)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 35) (col_num 25)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6530,6 +6723,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Ordered)))
    (unit_vec_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 36) (col_num 17)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 36) (col_num 30)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6540,6 +6739,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans UnitVector)))
    (pos_ordered_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 37) (col_num 22)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 37) (col_num 38)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6550,6 +6755,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans PositiveOrdered)))
    (corr_matrix_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 38) (col_num 17)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 38) (col_num 33)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern
@@ -6577,6 +6788,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Correlation)))
    (cov_matrix_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 39) (col_num 16)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 39) (col_num 31)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern
@@ -6611,6 +6828,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Covariance)))
    (chol_fac_cov_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 40) (col_num 25)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 40) (col_num 42)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern
@@ -6662,6 +6885,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans CholeskyCov)))
    (chol_fac_corr_test
+    ((begin_loc
+      ((filename constraints.stan) (line_num 41) (col_num 26)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 41) (col_num 44)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern
@@ -6689,6 +6918,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans CholeskyCorr)))
    (phi
+    ((begin_loc
+      ((filename constraints.stan) (line_num 47) (col_num 25)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 47) (col_num 28)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters)
      (out_trans
@@ -6701,6 +6936,12 @@ vector[Nr] h_sigma: SoA
        ((pattern (Lit Int 1))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (sigma
+    ((begin_loc
+      ((filename constraints.stan) (line_num 48) (col_num 16)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 48) (col_num 21)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters)
      (out_trans
@@ -6708,6 +6949,12 @@ vector[Nr] h_sigma: SoA
        ((pattern (Lit Int 0))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (prices
+    ((begin_loc
+      ((filename constraints.stan) (line_num 50) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 50) (col_num 18)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -6718,6 +6965,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (prices_diff
+    ((begin_loc
+      ((filename constraints.stan) (line_num 51) (col_num 13)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 51) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var Nr))
@@ -6728,6 +6981,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (mu
+    ((begin_loc
+      ((filename constraints.stan) (line_num 52) (col_num 13)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 52) (col_num 15)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var Nr))
@@ -6738,6 +6997,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (err
+    ((begin_loc
+      ((filename constraints.stan) (line_num 54) (col_num 13)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 54) (col_num 16)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var Nr))
@@ -6748,6 +7013,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (h_i_mean
+    ((begin_loc
+      ((filename constraints.stan) (line_num 61) (col_num 13)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 61) (col_num 21)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var Nr))
@@ -6758,6 +7029,12 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (h_i_sigma
+    ((begin_loc
+      ((filename constraints.stan) (line_num 62) (col_num 22)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 62) (col_num 31)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var Nr))
@@ -6772,6 +7049,12 @@ vector[Nr] h_sigma: SoA
        ((pattern (Lit Int 0))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (h_sigma
+    ((begin_loc
+      ((filename constraints.stan) (line_num 67) (col_num 13)
+       (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 67) (col_num 20)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var Nr))
@@ -7512,6 +7795,12 @@ matrix[10, 10] X_tp7: AoS
     (meta <opaque>))))
  (output_vars
   ((X_p
+    ((begin_loc
+      ((filename deep_dependence.stan) (line_num 6) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename deep_dependence.stan) (line_num 6) (col_num 22)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -7526,6 +7815,12 @@ matrix[10, 10] X_tp7: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (X_tp1
+    ((begin_loc
+      ((filename deep_dependence.stan) (line_num 10) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename deep_dependence.stan) (line_num 10) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -7540,6 +7835,12 @@ matrix[10, 10] X_tp7: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (X_tp2
+    ((begin_loc
+      ((filename deep_dependence.stan) (line_num 11) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename deep_dependence.stan) (line_num 11) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -7554,6 +7855,12 @@ matrix[10, 10] X_tp7: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (X_tp3
+    ((begin_loc
+      ((filename deep_dependence.stan) (line_num 12) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename deep_dependence.stan) (line_num 12) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -7568,6 +7875,12 @@ matrix[10, 10] X_tp7: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (X_tp4
+    ((begin_loc
+      ((filename deep_dependence.stan) (line_num 13) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename deep_dependence.stan) (line_num 13) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -7582,6 +7895,12 @@ matrix[10, 10] X_tp7: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (X_tp5
+    ((begin_loc
+      ((filename deep_dependence.stan) (line_num 14) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename deep_dependence.stan) (line_num 14) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -7596,6 +7915,12 @@ matrix[10, 10] X_tp7: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (X_tp6
+    ((begin_loc
+      ((filename deep_dependence.stan) (line_num 15) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename deep_dependence.stan) (line_num 15) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -7610,6 +7935,12 @@ matrix[10, 10] X_tp7: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (X_tp7
+    ((begin_loc
+      ((filename deep_dependence.stan) (line_num 16) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename deep_dependence.stan) (line_num 16) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -7680,18 +8011,44 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (meta <opaque>))))
     (fdloc <opaque>))))
  (input_vars
-  ((N SInt) (M SInt)
+  ((N
+    ((begin_loc
+      ((filename indexing.stan) (line_num 11) (col_num 1) (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 11) (col_num 7) (included_from ()))))
+    SInt)
+   (M
+    ((begin_loc
+      ((filename indexing.stan) (line_num 12) (col_num 1) (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 12) (col_num 7) (included_from ()))))
+    SInt)
    (dat_x
+    ((begin_loc
+      ((filename indexing.stan) (line_num 13) (col_num 1) (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 13) (col_num 20)
+       (included_from ()))))
     (SMatrix AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
      ((pattern (Var M))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (y
+    ((begin_loc
+      ((filename indexing.stan) (line_num 14) (col_num 1) (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 14) (col_num 13)
+       (included_from ()))))
     (SVector AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (idx_tester
+    ((begin_loc
+      ((filename indexing.stan) (line_num 15) (col_num 1) (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 15) (col_num 25)
+       (included_from ()))))
     (SArray SInt
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
@@ -13562,9 +13919,20 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))))
  (output_vars
   ((alpha
+    ((begin_loc
+      ((filename indexing.stan) (line_num 19) (col_num 7) (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 19) (col_num 12)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters) (out_trans Identity)))
    (p_soa_vec_v
+    ((begin_loc
+      ((filename indexing.stan) (line_num 21) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 21) (col_num 23)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))
@@ -13575,6 +13943,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_soa_mat
+    ((begin_loc
+      ((filename indexing.stan) (line_num 22) (col_num 15)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 22) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13589,6 +13963,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_soa_arr_vec_v
+    ((begin_loc
+      ((filename indexing.stan) (line_num 23) (col_num 22)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 23) (col_num 37)
+       (included_from ()))))
     ((out_unconstrained_st
       (SArray
        (SVector AoS
@@ -13605,6 +13985,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_soa_mat_uni_col_idx
+    ((begin_loc
+      ((filename indexing.stan) (line_num 24) (col_num 14)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 24) (col_num 35)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13619,6 +14005,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_soa_vec_uni_idx
+    ((begin_loc
+      ((filename indexing.stan) (line_num 25) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 25) (col_num 29)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -13629,6 +14021,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_soa_loop_mat_uni_col_idx
+    ((begin_loc
+      ((filename indexing.stan) (line_num 26) (col_num 14)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 26) (col_num 40)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13643,6 +14041,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_soa_lhs_loop_mul
+    ((begin_loc
+      ((filename indexing.stan) (line_num 27) (col_num 16)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 27) (col_num 34)
+       (included_from ()))))
     ((out_unconstrained_st
       (SRowVector AoS
        ((pattern (Var N))
@@ -13653,6 +14057,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_soa_rhs_loop_mul
+    ((begin_loc
+      ((filename indexing.stan) (line_num 28) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 28) (col_num 30)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -13663,6 +14073,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_soa_used_with_aos_in_excluded_fun
+    ((begin_loc
+      ((filename indexing.stan) (line_num 29) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 29) (col_num 47)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -13673,6 +14089,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_soa_loop_mat_multi_uni_uni_idx
+    ((begin_loc
+      ((filename indexing.stan) (line_num 30) (col_num 14)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 30) (col_num 46)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13687,6 +14109,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_vec_v_assign_to_aos
+    ((begin_loc
+      ((filename indexing.stan) (line_num 33) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 33) (col_num 37)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))
@@ -13697,6 +14125,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_vec_v_tp_fails_func
+    ((begin_loc
+      ((filename indexing.stan) (line_num 35) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 35) (col_num 37)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))
@@ -13707,6 +14141,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_loop_vec_v_uni_idx
+    ((begin_loc
+      ((filename indexing.stan) (line_num 37) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 37) (col_num 36)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))
@@ -13717,6 +14157,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_fail_assign_from_top_idx
+    ((begin_loc
+      ((filename indexing.stan) (line_num 39) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 39) (col_num 42)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))
@@ -13727,6 +14173,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_loop_mat_uni_uni_idx
+    ((begin_loc
+      ((filename indexing.stan) (line_num 40) (col_num 14)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 40) (col_num 40)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13741,6 +14193,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_mat
+    ((begin_loc
+      ((filename indexing.stan) (line_num 43) (col_num 15)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 43) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13755,6 +14213,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_mat_pass_func_outer_single_indexed1
+    ((begin_loc
+      ((filename indexing.stan) (line_num 45) (col_num 15)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 45) (col_num 56)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13769,6 +14233,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_mat_pass_func_outer_single_indexed2
+    ((begin_loc
+      ((filename indexing.stan) (line_num 46) (col_num 15)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 46) (col_num 56)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13783,6 +14253,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_mat_fail_uni_uni_idx1
+    ((begin_loc
+      ((filename indexing.stan) (line_num 49) (col_num 15)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 49) (col_num 42)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13797,6 +14273,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_mat_fail_uni_uni_idx2
+    ((begin_loc
+      ((filename indexing.stan) (line_num 50) (col_num 15)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 50) (col_num 42)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))
@@ -13811,9 +14293,20 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (tp_real_from_aos
+    ((begin_loc
+      ((filename indexing.stan) (line_num 56) (col_num 7) (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 56) (col_num 23)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_aos_vec_v
+    ((begin_loc
+      ((filename indexing.stan) (line_num 59) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 59) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))
@@ -13824,6 +14317,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_soa_single_idx_uninit
+    ((begin_loc
+      ((filename indexing.stan) (line_num 61) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 61) (col_num 36)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))
@@ -13834,6 +14333,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_aos_fail_func_vec_v
+    ((begin_loc
+      ((filename indexing.stan) (line_num 66) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 66) (col_num 34)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))
@@ -13844,6 +14349,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_aos_fail_assign_from_top_idx
+    ((begin_loc
+      ((filename indexing.stan) (line_num 70) (col_num 12)
+       (included_from ())))
+     (end_loc
+      ((filename indexing.stan) (line_num 70) (col_num 43)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))
@@ -13860,8 +14371,24 @@ vector[N] tp_soa_multi_idx_assign_in_loop: SoA
 vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
 ((functions_block ())
  (input_vars
-  ((N SInt) (M SInt)
+  ((N
+    ((begin_loc
+      ((filename indexing2.stan) (line_num 2) (col_num 1) (included_from ())))
+     (end_loc
+      ((filename indexing2.stan) (line_num 2) (col_num 7) (included_from ()))))
+    SInt)
+   (M
+    ((begin_loc
+      ((filename indexing2.stan) (line_num 3) (col_num 1) (included_from ())))
+     (end_loc
+      ((filename indexing2.stan) (line_num 3) (col_num 7) (included_from ()))))
+    SInt)
    (Idx
+    ((begin_loc
+      ((filename indexing2.stan) (line_num 4) (col_num 1) (included_from ())))
+     (end_loc
+      ((filename indexing2.stan) (line_num 4) (col_num 18)
+       (included_from ()))))
     (SArray SInt
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
@@ -14354,9 +14881,20 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
     (meta <opaque>))))
  (output_vars
   ((alpha
+    ((begin_loc
+      ((filename indexing2.stan) (line_num 8) (col_num 7) (included_from ())))
+     (end_loc
+      ((filename indexing2.stan) (line_num 8) (col_num 12)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters) (out_trans Identity)))
    (p_aos_loop_single_idx
+    ((begin_loc
+      ((filename indexing2.stan) (line_num 9) (col_num 13)
+       (included_from ())))
+     (end_loc
+      ((filename indexing2.stan) (line_num 9) (col_num 34)
+       (included_from ()))))
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Lit Int 10))
@@ -14405,7 +14943,15 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))))
- (input_vars ((data_r SReal)))
+ (input_vars
+  ((data_r
+    ((begin_loc
+      ((filename reductions_allowed.stan) (line_num 12) (col_num 4)
+       (included_from ())))
+     (end_loc
+      ((filename reductions_allowed.stan) (line_num 12) (col_num 16)
+       (included_from ()))))
+    SReal)))
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
@@ -15307,6 +15853,12 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
     (meta <opaque>))))
  (output_vars
   ((soa_x
+    ((begin_loc
+      ((filename reductions_allowed.stan) (line_num 16) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename reductions_allowed.stan) (line_num 16) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5))
@@ -15321,6 +15873,12 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (aos_x
+    ((begin_loc
+      ((filename reductions_allowed.stan) (line_num 17) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename reductions_allowed.stan) (line_num 17) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5))
@@ -15335,6 +15893,12 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (aos_y
+    ((begin_loc
+      ((filename reductions_allowed.stan) (line_num 18) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename reductions_allowed.stan) (line_num 18) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5))
@@ -15349,9 +15913,21 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (tp_real_from_soa
+    ((begin_loc
+      ((filename reductions_allowed.stan) (line_num 22) (col_num 9)
+       (included_from ())))
+     (end_loc
+      ((filename reductions_allowed.stan) (line_num 22) (col_num 25)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_matrix_aos_from_mix
+    ((begin_loc
+      ((filename reductions_allowed.stan) (line_num 23) (col_num 18)
+       (included_from ())))
+     (end_loc
+      ((filename reductions_allowed.stan) (line_num 23) (col_num 40)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5))
@@ -15366,6 +15942,12 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_matrix_from_udf_reduced_soa
+    ((begin_loc
+      ((filename reductions_allowed.stan) (line_num 24) (col_num 18)
+       (included_from ())))
+     (end_loc
+      ((filename reductions_allowed.stan) (line_num 24) (col_num 48)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5))
@@ -16186,6 +16768,12 @@ matrix[10, 10] mul_two_aos: AoS
     (meta <opaque>))))
  (output_vars
   ((row_soa
+    ((begin_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 20)
+       (col_num 19) (included_from ())))
+     (end_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 20)
+       (col_num 26) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -16200,6 +16788,12 @@ matrix[10, 10] mul_two_aos: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (udf_input_aos
+    ((begin_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 21)
+       (col_num 19) (included_from ())))
+     (end_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 21)
+       (col_num 32) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -16214,6 +16808,12 @@ matrix[10, 10] mul_two_aos: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (user_func_aos
+    ((begin_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 25)
+       (col_num 19) (included_from ())))
+     (end_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 25)
+       (col_num 32) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -16228,6 +16828,12 @@ matrix[10, 10] mul_two_aos: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (empty_user_func_aos
+    ((begin_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 26)
+       (col_num 19) (included_from ())))
+     (end_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 26)
+       (col_num 38) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -16242,6 +16848,12 @@ matrix[10, 10] mul_two_aos: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (inner_empty_user_func_aos
+    ((begin_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 27)
+       (col_num 19) (included_from ())))
+     (end_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 27)
+       (col_num 44) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -16256,6 +16868,12 @@ matrix[10, 10] mul_two_aos: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (int_aos_mul_aos
+    ((begin_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 28)
+       (col_num 19) (included_from ())))
+     (end_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 28)
+       (col_num 34) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -16270,6 +16888,12 @@ matrix[10, 10] mul_two_aos: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (mul_two_aos
+    ((begin_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 29)
+       (col_num 19) (included_from ())))
+     (end_loc
+      ((filename return_types_and_udfs_demotes.stan) (line_num 29)
+       (col_num 30) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -16969,6 +17593,12 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
     (meta <opaque>))))
  (output_vars
   ((aos_p
+    ((begin_loc
+      ((filename single_indexing.stan) (line_num 6) (col_num 18)
+       (included_from ())))
+     (end_loc
+      ((filename single_indexing.stan) (line_num 6) (col_num 23)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -16983,6 +17613,12 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (soa_p
+    ((begin_loc
+      ((filename single_indexing.stan) (line_num 7) (col_num 18)
+       (included_from ())))
+     (end_loc
+      ((filename single_indexing.stan) (line_num 7) (col_num 23)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 10))
@@ -16997,6 +17633,12 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (tp_real_from_soa
+    ((begin_loc
+      ((filename single_indexing.stan) (line_num 11) (col_num 10)
+       (included_from ())))
+     (end_loc
+      ((filename single_indexing.stan) (line_num 11) (col_num 26)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name single_indexing_model) (prog_path single_indexing.stan))
@@ -17036,7 +17678,15 @@ matrix[5, 10] tp_matrix_aos: AoS
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))))
- (input_vars ((data_r SReal)))
+ (input_vars
+  ((data_r
+    ((begin_loc
+      ((filename tp_reused.stan) (line_num 12) (col_num 4)
+       (included_from ())))
+     (end_loc
+      ((filename tp_reused.stan) (line_num 12) (col_num 16)
+       (included_from ()))))
+    SReal)))
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
@@ -17580,6 +18230,12 @@ matrix[5, 10] tp_matrix_aos: AoS
     (meta <opaque>))))
  (output_vars
   ((first_pass_soa_x
+    ((begin_loc
+      ((filename tp_reused.stan) (line_num 16) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename tp_reused.stan) (line_num 16) (col_num 35)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5))
@@ -17594,6 +18250,12 @@ matrix[5, 10] tp_matrix_aos: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (aos_x
+    ((begin_loc
+      ((filename tp_reused.stan) (line_num 17) (col_num 19)
+       (included_from ())))
+     (end_loc
+      ((filename tp_reused.stan) (line_num 17) (col_num 24)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5))
@@ -17608,6 +18270,12 @@ matrix[5, 10] tp_matrix_aos: AoS
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (tp_matrix_aos
+    ((begin_loc
+      ((filename tp_reused.stan) (line_num 21) (col_num 18)
+       (included_from ())))
+     (end_loc
+      ((filename tp_reused.stan) (line_num 21) (col_num 31)
+       (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 5))

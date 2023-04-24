@@ -1,12 +1,31 @@
   $ ../../../../../../install/default/bin/stanc --debug-transformed-mir simple_function.stan
 ((functions_block ())
  (input_vars
-  ((N SInt)
+  ((N
+    ((begin_loc
+      ((filename simple_function.stan) (line_num 2) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename simple_function.stan) (line_num 2) (col_num 17)
+       (included_from ()))))
+    SInt)
    (x
+    ((begin_loc
+      ((filename simple_function.stan) (line_num 3) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename simple_function.stan) (line_num 3) (col_num 18)
+       (included_from ()))))
     (SArray SReal
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (y
+    ((begin_loc
+      ((filename simple_function.stan) (line_num 4) (col_num 2)
+       (included_from ())))
+     (end_loc
+      ((filename simple_function.stan) (line_num 4) (col_num 14)
+       (included_from ()))))
     (SVector AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
@@ -720,6 +739,12 @@
     (meta <opaque>))))
  (output_vars
   ((rho
+    ((begin_loc
+      ((filename simple_function.stan) (line_num 13) (col_num 16)
+       (included_from ())))
+     (end_loc
+      ((filename simple_function.stan) (line_num 13) (col_num 19)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters)
      (out_trans
@@ -727,6 +752,12 @@
        ((pattern (Lit Int 0))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (alpha
+    ((begin_loc
+      ((filename simple_function.stan) (line_num 14) (col_num 16)
+       (included_from ())))
+     (end_loc
+      ((filename simple_function.stan) (line_num 14) (col_num 21)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters)
      (out_trans
@@ -734,6 +765,12 @@
        ((pattern (Lit Int 0))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (sigma
+    ((begin_loc
+      ((filename simple_function.stan) (line_num 15) (col_num 16)
+       (included_from ())))
+     (end_loc
+      ((filename simple_function.stan) (line_num 15) (col_num 21)
+       (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters)
      (out_trans

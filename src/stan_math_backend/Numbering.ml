@@ -29,6 +29,14 @@ let prepare_prog (mir : Program.Typed.t) :
         Queue.enqueue label_locations (new_label, meta) ;
         Hashtbl.set location_to_label ~key:meta ~data:new_label ;
         {pattern; meta= new_label}
+  and number_outvars meta =
+    match Hashtbl.find location_to_label meta with
+    | Some i -> i
+    | None ->
+        let new_label = Queue.length label_locations in
+        Queue.enqueue label_locations (new_label, meta) ;
+        Hashtbl.set location_to_label ~key:meta ~data:new_label ;
+        new_label
   (* map_rect numbering *)
   and number_map_rect_calls_expr ({meta; pattern} : Expr.Typed.t) : Expr.Typed.t
       =
@@ -47,7 +55,9 @@ let prepare_prog (mir : Program.Typed.t) :
                 (Expr.Helpers.int next_map_rect_id :: es) ) in
         {meta; pattern}
     | _ -> {meta; pattern} in
-  let mir = Program.map number_map_rect_calls_expr number_locations_stmt mir in
+  let mir =
+    Program.map number_map_rect_calls_expr number_locations_stmt number_outvars
+      mir in
   let location_list =
     List.map ~f:snd
       (List.sort

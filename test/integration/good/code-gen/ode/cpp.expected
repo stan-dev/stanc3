@@ -5,8 +5,13 @@ namespace ode_adjoint_test_model_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 36> locations_array__ =
+static constexpr std::array<const char*, 41> locations_array__ =
   {" (found before start of program)",
+  " (in 'ode_adjoint_test_model.stan', line 34, column 7 to column 8)",
+  " (in 'ode_adjoint_test_model.stan', line 36, column 12 to column 14)",
+  " (in 'ode_adjoint_test_model.stan', line 37, column 7 to column 9)",
+  " (in 'ode_adjoint_test_model.stan', line 38, column 16 to column 21)",
+  " (in 'ode_adjoint_test_model.stan', line 42, column 21 to column 22)",
   " (in 'ode_adjoint_test_model.stan', line 34, column 2 to column 9)",
   " (in 'ode_adjoint_test_model.stan', line 36, column 2 to column 15)",
   " (in 'ode_adjoint_test_model.stan', line 37, column 2 to column 10)",
@@ -115,7 +120,7 @@ f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 30;
+    current_statement__ = 35;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -140,7 +145,7 @@ f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 32;
+    current_statement__ = 37;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -165,7 +170,7 @@ f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 34;
+    current_statement__ = 39;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -210,63 +215,63 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 10;
+      current_statement__ = 15;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 10;
+      current_statement__ = 15;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 11;
+      current_statement__ = 16;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
-      current_statement__ = 11;
+      current_statement__ = 16;
       M = context__.vals_i("M")[(1 - 1)];
-      current_statement__ = 12;
+      current_statement__ = 17;
       context__.validate_dims("data initialization", "i", "int",
         std::vector<size_t>{});
       i = std::numeric_limits<int>::min();
-      current_statement__ = 12;
+      current_statement__ = 17;
       i = context__.vals_i("i")[(1 - 1)];
-      current_statement__ = 13;
+      current_statement__ = 18;
       rel_tol_f = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 14;
+      current_statement__ = 19;
       stan::math::validate_non_negative_index("abs_tol_f", "N", N);
-      current_statement__ = 15;
+      current_statement__ = 20;
       abs_tol_f_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                            std::numeric_limits<double>::quiet_NaN());
       new (&abs_tol_f)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(abs_tol_f_data__.data(), N);
-      current_statement__ = 16;
+      current_statement__ = 21;
       rel_tol_b = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 17;
+      current_statement__ = 22;
       stan::math::validate_non_negative_index("abs_tol_b", "N", N);
-      current_statement__ = 18;
+      current_statement__ = 23;
       abs_tol_b_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                            std::numeric_limits<double>::quiet_NaN());
       new (&abs_tol_b)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(abs_tol_b_data__.data(), N);
-      current_statement__ = 19;
-      rel_tol_q = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 20;
-      abs_tol_q = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 21;
-      max_num_steps = std::numeric_limits<int>::min();
-      current_statement__ = 22;
-      num_checkpoints = std::numeric_limits<int>::min();
-      current_statement__ = 23;
-      interpolation_polynomial = std::numeric_limits<int>::min();
       current_statement__ = 24;
-      solver_f = std::numeric_limits<int>::min();
+      rel_tol_q = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 25;
-      solver_b = std::numeric_limits<int>::min();
+      abs_tol_q = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 26;
-      stan::math::validate_non_negative_index("y0", "N", N);
+      max_num_steps = std::numeric_limits<int>::min();
       current_statement__ = 27;
-      stan::math::validate_non_negative_index("times", "N", N);
+      num_checkpoints = std::numeric_limits<int>::min();
       current_statement__ = 28;
-      stan::math::validate_non_negative_index("z", "M", M);
+      interpolation_polynomial = std::numeric_limits<int>::min();
       current_statement__ = 29;
+      solver_f = std::numeric_limits<int>::min();
+      current_statement__ = 30;
+      solver_b = std::numeric_limits<int>::min();
+      current_statement__ = 31;
+      stan::math::validate_non_negative_index("y0", "N", N);
+      current_statement__ = 32;
+      stan::math::validate_non_negative_index("times", "N", N);
+      current_statement__ = 33;
+      stan::math::validate_non_negative_index("z", "M", M);
+      current_statement__ = 34;
       stan::math::validate_non_negative_index("z", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -317,21 +322,21 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> z =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(M,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
-      current_statement__ = 6;
+      current_statement__ = 11;
       stan::model::assign(z,
         stan::math::ode_adjoint_tol_ctl(f_0_arg_variadic2_functor__(), y0,
           t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__),
         "assigning variable z");
-      current_statement__ = 7;
+      current_statement__ = 12;
       stan::model::assign(z,
         stan::math::ode_adjoint_tol_ctl(f_1_arg_variadic2_functor__(), y0,
           t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__, y),
         "assigning variable z");
-      current_statement__ = 8;
+      current_statement__ = 13;
       stan::model::assign(z,
         stan::math::ode_adjoint_tol_ctl(f_2_arg_variadic2_functor__(), y0,
           t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
@@ -339,7 +344,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           interpolation_polynomial, solver_f, solver_b, pstream__, i, y),
         "assigning variable z");
       {
-        current_statement__ = 9;
+        current_statement__ = 14;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, 0, 1));
       }
     } catch (const std::exception& e) {
@@ -407,21 +412,21 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 6;
+      current_statement__ = 11;
       stan::model::assign(z,
         stan::math::ode_adjoint_tol_ctl(f_0_arg_variadic2_functor__(), y0,
           t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__),
         "assigning variable z");
-      current_statement__ = 7;
+      current_statement__ = 12;
       stan::model::assign(z,
         stan::math::ode_adjoint_tol_ctl(f_1_arg_variadic2_functor__(), y0,
           t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
           abs_tol_q, max_num_steps, num_checkpoints,
           interpolation_polynomial, solver_f, solver_b, pstream__, y),
         "assigning variable z");
-      current_statement__ = 8;
+      current_statement__ = 13;
       stan::model::assign(z,
         stan::math::ode_adjoint_tol_ctl(f_2_arg_variadic2_functor__(), y0,
           t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q,
@@ -459,19 +464,23 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
+      current_statement__ = 1;
       y = in__.read<local_scalar_t__>();
       out__.write(y);
       Eigen::Matrix<local_scalar_t__,-1,1> y0 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(y0,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
         "assigning variable y0");
       out__.write(y0);
       local_scalar_t__ t0 = DUMMY_VAR__;
+      current_statement__ = 3;
       t0 = in__.read<local_scalar_t__>();
       out__.write(t0);
       std::vector<local_scalar_t__> times =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      current_statement__ = 4;
       stan::model::assign(times, in__.read<std::vector<local_scalar_t__>>(N),
         "assigning variable times");
       out__.write(times);
@@ -490,37 +499,49 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
       context__.validate_dims("parameter initialization", "y", "double",
         std::vector<size_t>{});
+      current_statement__ = 2;
       context__.validate_dims("parameter initialization", "y0", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
+      current_statement__ = 3;
       context__.validate_dims("parameter initialization", "t0", "double",
         std::vector<size_t>{});
+      current_statement__ = 4;
       context__.validate_dims("parameter initialization", "times", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
+      current_statement__ = 1;
       y = context__.vals_r("y")[(1 - 1)];
       out__.write(y);
       Eigen::Matrix<local_scalar_t__,-1,1> y0 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> y0_flat__;
+        current_statement__ = 2;
         y0_flat__ = context__.vals_r("y0");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(y0, y0_flat__[(pos__ - 1)],
             "assigning variable y0", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
       out__.write(y0);
       local_scalar_t__ t0 = DUMMY_VAR__;
+      current_statement__ = 3;
       t0 = context__.vals_r("t0")[(1 - 1)];
       out__.write(t0);
       std::vector<local_scalar_t__> times =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      current_statement__ = 4;
       times = context__.vals_r("times");
       out__.write(times);
     } catch (const std::exception& e) {
@@ -713,8 +734,14 @@ namespace overloaded_ode_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 55> locations_array__ =
+static constexpr std::array<const char*, 61> locations_array__ =
   {" (found before start of program)",
+  " (in 'overloaded-ode.stan', line 54, column 16 to column 20)",
+  " (in 'overloaded-ode.stan', line 55, column 16 to column 21)",
+  " (in 'overloaded-ode.stan', line 56, column 16 to column 18)",
+  " (in 'overloaded-ode.stan', line 57, column 16 to column 21)",
+  " (in 'overloaded-ode.stan', line 60, column 32 to column 33)",
+  " (in 'overloaded-ode.stan', line 64, column 32 to column 34)",
   " (in 'overloaded-ode.stan', line 54, column 2 to column 21)",
   " (in 'overloaded-ode.stan', line 55, column 2 to column 22)",
   " (in 'overloaded-ode.stan', line 56, column 2 to column 19)",
@@ -864,29 +891,29 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
   try {
     Eigen::Matrix<local_scalar_t__,-1,1> dydt =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__);
-    current_statement__ = 41;
+    current_statement__ = 47;
     stan::model::assign(dydt, (((-beta *
       stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
       (stan::model::rvalue(y, "y", stan::model::index_uni(4)) + kappa)) *
       stan::model::rvalue(y, "y", stan::model::index_uni(1))),
       "assigning variable dydt", stan::model::index_uni(1));
-    current_statement__ = 42;
+    current_statement__ = 48;
     stan::model::assign(dydt, ((((beta *
       stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
       (stan::model::rvalue(y, "y", stan::model::index_uni(4)) + kappa)) *
       stan::model::rvalue(y, "y", stan::model::index_uni(1))) - (gamma *
       stan::model::rvalue(y, "y", stan::model::index_uni(2)))),
       "assigning variable dydt", stan::model::index_uni(2));
-    current_statement__ = 43;
+    current_statement__ = 49;
     stan::model::assign(dydt, (gamma *
       stan::model::rvalue(y, "y", stan::model::index_uni(2))),
       "assigning variable dydt", stan::model::index_uni(3));
-    current_statement__ = 44;
+    current_statement__ = 50;
     stan::model::assign(dydt, ((xi *
       stan::model::rvalue(y, "y", stan::model::index_uni(2))) - (delta *
       stan::model::rvalue(y, "y", stan::model::index_uni(4)))),
       "assigning variable dydt", stan::model::index_uni(4));
-    current_statement__ = 45;
+    current_statement__ = 51;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -921,34 +948,34 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
   try {
     Eigen::Matrix<local_scalar_t__,-1,1> dydt =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__);
-    current_statement__ = 48;
+    current_statement__ = 54;
     if (pstream__) {
       stan::math::stan_print(pstream__, unused);
       *(pstream__) << std::endl;
     }
-    current_statement__ = 49;
+    current_statement__ = 55;
     stan::model::assign(dydt, (((-beta *
       stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
       (stan::model::rvalue(y, "y", stan::model::index_uni(4)) + kappa)) *
       stan::model::rvalue(y, "y", stan::model::index_uni(1))),
       "assigning variable dydt", stan::model::index_uni(1));
-    current_statement__ = 50;
+    current_statement__ = 56;
     stan::model::assign(dydt, ((((beta *
       stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
       (stan::model::rvalue(y, "y", stan::model::index_uni(4)) + kappa)) *
       stan::model::rvalue(y, "y", stan::model::index_uni(1))) - (gamma *
       stan::model::rvalue(y, "y", stan::model::index_uni(2)))),
       "assigning variable dydt", stan::model::index_uni(2));
-    current_statement__ = 51;
+    current_statement__ = 57;
     stan::model::assign(dydt, (gamma *
       stan::model::rvalue(y, "y", stan::model::index_uni(2))),
       "assigning variable dydt", stan::model::index_uni(3));
-    current_statement__ = 52;
+    current_statement__ = 58;
     stan::model::assign(dydt, ((xi *
       stan::model::rvalue(y, "y", stan::model::index_uni(2))) - (delta *
       stan::model::rvalue(y, "y", stan::model::index_uni(4)))),
       "assigning variable dydt", stan::model::index_uni(4));
-    current_statement__ = 53;
+    current_statement__ = 59;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -986,23 +1013,23 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 27;
+      current_statement__ = 33;
       context__.validate_dims("data initialization", "N_t", "int",
         std::vector<size_t>{});
       N_t = std::numeric_limits<int>::min();
-      current_statement__ = 27;
+      current_statement__ = 33;
       N_t = context__.vals_i("N_t")[(1 - 1)];
-      current_statement__ = 27;
+      current_statement__ = 33;
       stan::math::check_greater_or_equal(function__, "N_t", N_t, 0);
-      current_statement__ = 28;
+      current_statement__ = 34;
       stan::math::validate_non_negative_index("t", "N_t", N_t);
-      current_statement__ = 29;
+      current_statement__ = 35;
       context__.validate_dims("data initialization", "t", "double",
         std::vector<size_t>{static_cast<size_t>(N_t)});
       t = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 29;
+      current_statement__ = 35;
       t = context__.vals_r("t");
-      current_statement__ = 30;
+      current_statement__ = 36;
       context__.validate_dims("data initialization", "y0", "double",
         std::vector<size_t>{static_cast<size_t>(4)});
       y0_data__ = Eigen::Matrix<double,-1,1>::Constant(4,
@@ -1010,52 +1037,52 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       new (&y0) Eigen::Map<Eigen::Matrix<double,-1,1>>(y0_data__.data(), 4);
       {
         std::vector<local_scalar_t__> y0_flat__;
-        current_statement__ = 30;
+        current_statement__ = 36;
         y0_flat__ = context__.vals_r("y0");
-        current_statement__ = 30;
+        current_statement__ = 36;
         pos__ = 1;
-        current_statement__ = 30;
+        current_statement__ = 36;
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          current_statement__ = 30;
+          current_statement__ = 36;
           stan::model::assign(y0, y0_flat__[(pos__ - 1)],
             "assigning variable y0", stan::model::index_uni(sym1__));
-          current_statement__ = 30;
+          current_statement__ = 36;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 31;
+      current_statement__ = 37;
       stan::math::validate_non_negative_index("stoi", "N_t", N_t);
-      current_statement__ = 32;
+      current_statement__ = 38;
       context__.validate_dims("data initialization", "stoi", "int",
         std::vector<size_t>{static_cast<size_t>(N_t)});
       stoi = std::vector<int>(N_t, std::numeric_limits<int>::min());
-      current_statement__ = 32;
+      current_statement__ = 38;
       stoi = context__.vals_i("stoi");
-      current_statement__ = 33;
+      current_statement__ = 39;
       stan::math::validate_non_negative_index("B", "N_t", N_t);
-      current_statement__ = 34;
+      current_statement__ = 40;
       context__.validate_dims("data initialization", "B", "double",
         std::vector<size_t>{static_cast<size_t>(N_t)});
       B = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 34;
+      current_statement__ = 40;
       B = context__.vals_r("B");
-      current_statement__ = 35;
+      current_statement__ = 41;
       t0 = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 35;
+      current_statement__ = 41;
       t0 = 0;
-      current_statement__ = 36;
+      current_statement__ = 42;
       kappa = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 36;
+      current_statement__ = 42;
       kappa = 1000000;
-      current_statement__ = 37;
+      current_statement__ = 43;
       unused = std::numeric_limits<int>::min();
-      current_statement__ = 37;
+      current_statement__ = 43;
       unused = 34;
-      current_statement__ = 36;
+      current_statement__ = 42;
       stan::math::check_greater_or_equal(function__, "kappa", kappa, 0);
-      current_statement__ = 38;
+      current_statement__ = 44;
       stan::math::validate_non_negative_index("y", "N_t", N_t);
-      current_statement__ = 39;
+      current_statement__ = 45;
       stan::math::validate_non_negative_index("y2", "N_t", N_t);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1108,7 +1135,7 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> y =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N_t,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__));
-      current_statement__ = 5;
+      current_statement__ = 11;
       stan::model::assign(y,
         stan::math::ode_rk45_tol(simple_SIR_variadic2_functor__(), y0, t0, t,
           1e-6, 1e-6, 1000, pstream__, beta, kappa, gamma, xi, delta),
@@ -1116,29 +1143,29 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> y2 =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N_t,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__));
-      current_statement__ = 6;
+      current_statement__ = 12;
       stan::model::assign(y2,
         stan::math::ode_rk45_tol(simple_SIR_variadic2_functor__(), y0, t0, t,
           1e-6, 1e-6, 1000, pstream__, beta, kappa, gamma, xi, delta, unused),
         "assigning variable y2");
-      current_statement__ = 5;
+      current_statement__ = 11;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
-      current_statement__ = 6;
+      current_statement__ = 12;
       stan::math::check_greater_or_equal(function__, "y2", y2, 0);
       {
-        current_statement__ = 7;
+        current_statement__ = 13;
         stan::math::validate_non_negative_index("y_diff", "N_t", N_t);
         Eigen::Matrix<local_scalar_t__,-1,1> y_diff =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N_t, DUMMY_VAR__);
-        current_statement__ = 9;
+        current_statement__ = 15;
         stan::model::assign(y_diff,
           (stan::model::rvalue(y0, "y0", stan::model::index_uni(1)) -
           stan::model::rvalue(y, "y", stan::model::index_uni(1),
             stan::model::index_uni(1))), "assigning variable y_diff",
           stan::model::index_uni(1));
-        current_statement__ = 12;
+        current_statement__ = 18;
         for (int n = 2; n <= N_t; ++n) {
-          current_statement__ = 10;
+          current_statement__ = 16;
           stan::model::assign(y_diff,
             (stan::model::rvalue(y, "y", stan::model::index_uni((n - 1)),
                stan::model::index_uni(1)) -
@@ -1146,35 +1173,35 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
               stan::model::index_uni(1))), "assigning variable y_diff",
             stan::model::index_uni(n));
         }
-        current_statement__ = 13;
+        current_statement__ = 19;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(beta, 0, 2.5));
-        current_statement__ = 14;
+        current_statement__ = 20;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(gamma, 0, 1));
-        current_statement__ = 15;
+        current_statement__ = 21;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(xi, 0, 25));
-        current_statement__ = 16;
+        current_statement__ = 22;
         lp_accum__.add(stan::math::cauchy_lpdf<propto__>(delta, 0, 1));
-        current_statement__ = 17;
+        current_statement__ = 23;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(stoi, y_diff));
-        current_statement__ = 18;
+        current_statement__ = 24;
         lp_accum__.add(stan::math::lognormal_lpdf<propto__>(B,
                          stan::math::log(
                            stan::model::rvalue(y, "y",
                              stan::model::index_omni(),
                              stan::model::index_uni(4))), 0.15));
-        current_statement__ = 19;
+        current_statement__ = 25;
         stan::math::validate_non_negative_index("y2_diff", "N_t", N_t);
         Eigen::Matrix<local_scalar_t__,-1,1> y2_diff =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N_t, DUMMY_VAR__);
-        current_statement__ = 21;
+        current_statement__ = 27;
         stan::model::assign(y2_diff,
           (stan::model::rvalue(y0, "y0", stan::model::index_uni(1)) -
           stan::model::rvalue(y2, "y2", stan::model::index_uni(1),
             stan::model::index_uni(1))), "assigning variable y2_diff",
           stan::model::index_uni(1));
-        current_statement__ = 24;
+        current_statement__ = 30;
         for (int n = 2; n <= N_t; ++n) {
-          current_statement__ = 22;
+          current_statement__ = 28;
           stan::model::assign(y2_diff,
             (stan::model::rvalue(y2, "y2", stan::model::index_uni((n - 1)),
                stan::model::index_uni(1)) -
@@ -1182,9 +1209,9 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
               stan::model::index_uni(1))), "assigning variable y2_diff",
             stan::model::index_uni(n));
         }
-        current_statement__ = 25;
+        current_statement__ = 31;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(stoi, y2_diff));
-        current_statement__ = 26;
+        current_statement__ = 32;
         lp_accum__.add(stan::math::lognormal_lpdf<propto__>(B,
                          stan::math::log(
                            stan::model::rvalue(y2, "y2",
@@ -1261,19 +1288,19 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 5;
+      current_statement__ = 11;
       stan::model::assign(y,
         stan::math::ode_rk45_tol(simple_SIR_variadic2_functor__(), y0, t0, t,
           1e-6, 1e-6, 1000, pstream__, beta, kappa, gamma, xi, delta),
         "assigning variable y");
-      current_statement__ = 6;
+      current_statement__ = 12;
       stan::model::assign(y2,
         stan::math::ode_rk45_tol(simple_SIR_variadic2_functor__(), y0, t0, t,
           1e-6, 1e-6, 1000, pstream__, beta, kappa, gamma, xi, delta, unused),
         "assigning variable y2");
-      current_statement__ = 5;
+      current_statement__ = 11;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
-      current_statement__ = 6;
+      current_statement__ = 12;
       stan::math::check_greater_or_equal(function__, "y2", y2, 0);
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
@@ -1311,15 +1338,19 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
+      current_statement__ = 1;
       beta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, beta);
       local_scalar_t__ gamma = DUMMY_VAR__;
+      current_statement__ = 2;
       gamma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, gamma);
       local_scalar_t__ xi = DUMMY_VAR__;
+      current_statement__ = 3;
       xi = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, xi);
       local_scalar_t__ delta = DUMMY_VAR__;
+      current_statement__ = 4;
       delta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, delta);
     } catch (const std::exception& e) {
@@ -1337,26 +1368,34 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
       context__.validate_dims("parameter initialization", "beta", "double",
         std::vector<size_t>{});
+      current_statement__ = 2;
       context__.validate_dims("parameter initialization", "gamma", "double",
         std::vector<size_t>{});
+      current_statement__ = 3;
       context__.validate_dims("parameter initialization", "xi", "double",
         std::vector<size_t>{});
+      current_statement__ = 4;
       context__.validate_dims("parameter initialization", "delta", "double",
         std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
+      current_statement__ = 1;
       beta = context__.vals_r("beta")[(1 - 1)];
       out__.write_free_lb(0, beta);
       local_scalar_t__ gamma = DUMMY_VAR__;
+      current_statement__ = 2;
       gamma = context__.vals_r("gamma")[(1 - 1)];
       out__.write_free_lb(0, gamma);
       local_scalar_t__ xi = DUMMY_VAR__;
+      current_statement__ = 3;
       xi = context__.vals_r("xi")[(1 - 1)];
       out__.write_free_lb(0, xi);
       local_scalar_t__ delta = DUMMY_VAR__;
+      current_statement__ = 4;
       delta = context__.vals_r("delta")[(1 - 1)];
       out__.write_free_lb(0, delta);
     } catch (const std::exception& e) {

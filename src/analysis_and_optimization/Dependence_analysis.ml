@@ -175,9 +175,9 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
       (Set.Poly.singleton "target") in
   let parameters =
     Set.Poly.of_list
-      (List.map ~f:fst
+      (List.map ~f:fst3
          (List.filter
-            ~f:(fun (_, {out_block; _}) -> out_block = Parameters)
+            ~f:(fun (_, _, {out_block; _}) -> out_block = Parameters)
             mir.output_vars ) ) in
   let globals_data = Set.Poly.union globals data_vars in
   let globals_data_prep =
