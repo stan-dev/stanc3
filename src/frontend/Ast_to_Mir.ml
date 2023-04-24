@@ -733,7 +733,7 @@ let trans_block ud_dists declc block prog =
                    |> Option.to_list in
                  let outvar =
                    ( identifier.name
-                   , identifier.id_loc
+                   , smeta.loc
                    , Program.
                        { out_constrained_st= type_
                        ; out_unconstrained_st= param_size transform type_

@@ -15,28 +15,21 @@ let prepare_prog (mir : Program.Typed.t) :
   Queue.enqueue label_locations (no_span_num, Location_span.empty) ;
   Hashtbl.set location_to_label ~key:Location_span.empty ~data:no_span_num ;
   (* turn locations into numbers for array printing *)
-  let rec number_locations_stmt ({pattern; meta} : Stmt.Located.t) :
-      Stmt.Numbered.t =
-    let pattern =
-      Stmt.Fixed.Pattern.map number_map_rect_calls_expr number_locations_stmt
-        pattern in
-    match Hashtbl.find location_to_label meta with
-    | Some i ->
-        let meta = Stmt.Numbered.Meta.from_int i in
-        {meta; pattern}
-    | None ->
-        let new_label = Queue.length label_locations in
-        Queue.enqueue label_locations (new_label, meta) ;
-        Hashtbl.set location_to_label ~key:meta ~data:new_label ;
-        {pattern; meta= new_label}
-  and number_outvars meta =
+  let number_meta meta =
     match Hashtbl.find location_to_label meta with
     | Some i -> i
     | None ->
         let new_label = Queue.length label_locations in
         Queue.enqueue label_locations (new_label, meta) ;
         Hashtbl.set location_to_label ~key:meta ~data:new_label ;
-        new_label
+        new_label in
+  let rec number_locations_stmt ({pattern; meta} : Stmt.Located.t) :
+      Stmt.Numbered.t =
+    let pattern =
+      Stmt.Fixed.Pattern.map number_map_rect_calls_expr number_locations_stmt
+        pattern in
+    let meta = number_meta meta in
+    {meta; pattern}
   (* map_rect numbering *)
   and number_map_rect_calls_expr ({meta; pattern} : Expr.Typed.t) : Expr.Typed.t
       =
@@ -56,8 +49,8 @@ let prepare_prog (mir : Program.Typed.t) :
         {meta; pattern}
     | _ -> {meta; pattern} in
   let mir =
-    Program.map number_map_rect_calls_expr number_locations_stmt number_outvars
-      mir in
+    Program.map number_map_rect_calls_expr number_locations_stmt number_meta mir
+  in
   let location_list =
     List.map ~f:snd
       (List.sort

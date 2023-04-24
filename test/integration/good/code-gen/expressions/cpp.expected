@@ -5,27 +5,19 @@ namespace operators_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 28> locations_array__ =
+static constexpr std::array<const char*, 20> locations_array__ =
   {" (found before start of program)",
-  " (in 'operators.stan', line 6, column 12 to column 13)",
-  " (in 'operators.stan', line 7, column 16 to column 18)",
-  " (in 'operators.stan', line 8, column 14 to column 15)",
-  " (in 'operators.stan', line 11, column 6 to column 7)",
-  " (in 'operators.stan', line 12, column 7 to column 8)",
-  " (in 'operators.stan', line 13, column 6 to column 7)",
-  " (in 'operators.stan', line 17, column 16 to column 19)",
-  " (in 'operators.stan', line 18, column 12 to column 14)",
   " (in 'operators.stan', line 6, column 2 to column 14)",
   " (in 'operators.stan', line 7, column 2 to column 19)",
   " (in 'operators.stan', line 8, column 2 to column 16)",
   " (in 'operators.stan', line 11, column 2 to column 16)",
   " (in 'operators.stan', line 12, column 2 to column 14)",
   " (in 'operators.stan', line 13, column 2 to column 17)",
+  " (in 'operators.stan', line 17, column 2 to column 29)",
+  " (in 'operators.stan', line 18, column 2 to column 23)",
   " (in 'operators.stan', line 15, column 4 to column 10)",
   " (in 'operators.stan', line 14, column 9 to line 16, column 3)",
   " (in 'operators.stan', line 14, column 2 to line 16, column 3)",
-  " (in 'operators.stan', line 17, column 2 to column 29)",
-  " (in 'operators.stan', line 18, column 2 to column 23)",
   " (in 'operators.stan', line 2, column 2 to column 8)",
   " (in 'operators.stan', line 3, column 2 to column 9)",
   " (in 'operators.stan', line 6, column 9 to column 10)",
@@ -59,29 +51,29 @@ class operators_model final : public model_base_crtp<operators_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 20;
+      current_statement__ = 12;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 20;
+      current_statement__ = 12;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 21;
+      current_statement__ = 13;
       context__.validate_dims("data initialization", "r", "double",
         std::vector<size_t>{});
       r = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 21;
+      current_statement__ = 13;
       r = context__.vals_r("r")[(1 - 1)];
-      current_statement__ = 22;
+      current_statement__ = 14;
       stan::math::validate_non_negative_index("v", "N", N);
-      current_statement__ = 23;
+      current_statement__ = 15;
       stan::math::validate_non_negative_index("rv", "N", N);
-      current_statement__ = 24;
+      current_statement__ = 16;
       stan::math::validate_non_negative_index("A", "N", N);
-      current_statement__ = 25;
+      current_statement__ = 17;
       stan::math::validate_non_negative_index("A", "N", N);
-      current_statement__ = 26;
+      current_statement__ = 18;
       stan::math::validate_non_negative_index("drv", "N", N);
-      current_statement__ = 27;
+      current_statement__ = 19;
       stan::math::validate_non_negative_index("dv", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -191,29 +183,29 @@ class operators_model final : public model_base_crtp<operators_model> {
         return ;
       }
       int i = std::numeric_limits<int>::min();
-      current_statement__ = 12;
+      current_statement__ = 4;
       i = stan::math::modulus(3, N);
       double x = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 13;
+      current_statement__ = 5;
       x = r;
       int b = std::numeric_limits<int>::min();
-      current_statement__ = 14;
+      current_statement__ = 6;
       b = stan::math::logical_lte(r, N);
-      current_statement__ = 17;
+      current_statement__ = 11;
       if (stan::math::as_bool(r)) {
-        current_statement__ = 15;
+        current_statement__ = 9;
         b = 0;
       }
       Eigen::Matrix<double,1,-1> drv =
         Eigen::Matrix<double,1,-1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 18;
+      current_statement__ = 7;
       stan::model::assign(drv, stan::math::mdivide_right(rv, A),
         "assigning variable drv");
       Eigen::Matrix<double,-1,1> dv =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 19;
+      current_statement__ = 8;
       stan::model::assign(dv, stan::math::mdivide_left(A, v),
         "assigning variable dv");
       out__.write(i);
@@ -1048,15 +1040,8 @@ namespace ternary_if_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 18> locations_array__ =
+static constexpr std::array<const char*, 11> locations_array__ =
   {" (found before start of program)",
-  " (in 'ternary_if.stan', line 5, column 12 to column 13)",
-  " (in 'ternary_if.stan', line 6, column 12 to column 13)",
-  " (in 'ternary_if.stan', line 7, column 7 to column 8)",
-  " (in 'ternary_if.stan', line 8, column 10 to column 12)",
-  " (in 'ternary_if.stan', line 11, column 12 to column 13)",
-  " (in 'ternary_if.stan', line 12, column 12 to column 13)",
-  " (in 'ternary_if.stan', line 14, column 10 to column 11)",
   " (in 'ternary_if.stan', line 5, column 2 to column 14)",
   " (in 'ternary_if.stan', line 6, column 2 to column 14)",
   " (in 'ternary_if.stan', line 7, column 2 to column 9)",
@@ -1091,11 +1076,11 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 17;
+      current_statement__ = 10;
       context__.validate_dims("data initialization", "y", "double",
         std::vector<size_t>{});
       y = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 17;
+      current_statement__ = 10;
       y = context__.vals_r("y")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1146,7 +1131,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       zp = in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__,-1,1> c =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      current_statement__ = 12;
+      current_statement__ = 5;
       stan::model::assign(c,
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
@@ -1156,7 +1141,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         "assigning variable c");
       Eigen::Matrix<local_scalar_t__,-1,1> d =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-      current_statement__ = 13;
+      current_statement__ = 6;
       stan::model::assign(d,
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
@@ -1165,14 +1150,14 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
       std::complex<local_scalar_t__> z =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      current_statement__ = 14;
+      current_statement__ = 7;
       z = (1 ? stan::math::to_complex(0, 3) : stan::math::to_complex(2, 0));
       {
         std::complex<local_scalar_t__> z2 =
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-        current_statement__ = 15;
+        current_statement__ = 8;
         z2 = (1 ? r : 2);
-        current_statement__ = 16;
+        current_statement__ = 9;
         z2 = (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                     0) : zp);
       }
@@ -1249,7 +1234,7 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 12;
+      current_statement__ = 5;
       stan::model::assign(c,
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
@@ -1257,14 +1242,14 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
                                                                2.0, a), b)) : 
         stan::math::eval(stan::math::multiply(2.0, a))),
         "assigning variable c");
-      current_statement__ = 13;
+      current_statement__ = 6;
       stan::model::assign(d,
         (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
                                                            stan::math::add(
                                                              stan::math::multiply(
                                                                2, a), b)) : 
         stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
-      current_statement__ = 14;
+      current_statement__ = 7;
       z = (1 ? stan::math::to_complex(0, 3) : stan::math::to_complex(2, 0));
       if (emit_transformed_parameters__) {
         out__.write(c);

@@ -5,10 +5,8 @@ namespace complex_fails_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 5> locations_array__ =
+static constexpr std::array<const char*, 3> locations_array__ =
   {" (found before start of program)",
-  " (in 'complex-fails.stan', line 2, column 19 to column 22)",
-  " (in 'complex-fails.stan', line 6, column 26 to column 38)",
   " (in 'complex-fails.stan', line 2, column 4 to column 23)",
   " (in 'complex-fails.stan', line 6, column 3 to column 45)"};
 class complex_fails_model final : public model_base_crtp<complex_fails_model> {
@@ -74,7 +72,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> A_complex_tp =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(10, 10,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 4;
+      current_statement__ = 2;
       stan::model::assign(A_complex_tp, A_p,
         "assigning variable A_complex_tp");
     } catch (const std::exception& e) {
@@ -129,7 +127,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 4;
+      current_statement__ = 2;
       stan::model::assign(A_complex_tp, A_p,
         "assigning variable A_complex_tp");
       if (emit_transformed_parameters__) {
@@ -399,39 +397,8 @@ namespace constraints_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 123> locations_array__ =
+static constexpr std::array<const char*, 92> locations_array__ =
   {" (found before start of program)",
-  " (in 'constraints.stan', line 20, column 53 to column 65)",
-  " (in 'constraints.stan', line 21, column 12 to column 13)",
-  " (in 'constraints.stan', line 22, column 13 to column 14)",
-  " (in 'constraints.stan', line 23, column 12 to column 14)",
-  " (in 'constraints.stan', line 24, column 7 to column 9)",
-  " (in 'constraints.stan', line 25, column 24 to column 32)",
-  " (in 'constraints.stan', line 26, column 16 to column 22)",
-  " (in 'constraints.stan', line 27, column 7 to column 16)",
-  " (in 'constraints.stan', line 28, column 12 to column 22)",
-  " (in 'constraints.stan', line 29, column 23 to column 34)",
-  " (in 'constraints.stan', line 30, column 7 to column 12)",
-  " (in 'constraints.stan', line 31, column 22 to column 32)",
-  " (in 'constraints.stan', line 32, column 49 to column 65)",
-  " (in 'constraints.stan', line 33, column 55 to column 79)",
-  " (in 'constraints.stan', line 34, column 55 to column 71)",
-  " (in 'constraints.stan', line 35, column 13 to column 25)",
-  " (in 'constraints.stan', line 36, column 17 to column 30)",
-  " (in 'constraints.stan', line 37, column 22 to column 38)",
-  " (in 'constraints.stan', line 38, column 17 to column 33)",
-  " (in 'constraints.stan', line 39, column 16 to column 31)",
-  " (in 'constraints.stan', line 40, column 25 to column 42)",
-  " (in 'constraints.stan', line 41, column 26 to column 44)",
-  " (in 'constraints.stan', line 47, column 25 to column 28)",
-  " (in 'constraints.stan', line 48, column 16 to column 21)",
-  " (in 'constraints.stan', line 50, column 12 to column 18)",
-  " (in 'constraints.stan', line 51, column 13 to column 24)",
-  " (in 'constraints.stan', line 52, column 13 to column 15)",
-  " (in 'constraints.stan', line 54, column 13 to column 16)",
-  " (in 'constraints.stan', line 61, column 13 to column 21)",
-  " (in 'constraints.stan', line 62, column 22 to column 31)",
-  " (in 'constraints.stan', line 67, column 13 to column 20)",
   " (in 'constraints.stan', line 20, column 2 to column 66)",
   " (in 'constraints.stan', line 21, column 2 to column 14)",
   " (in 'constraints.stan', line 22, column 2 to column 15)",
@@ -563,25 +530,25 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 82;
+      current_statement__ = 51;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 82;
+      current_statement__ = 51;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 82;
+      current_statement__ = 51;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
-      current_statement__ = 83;
+      current_statement__ = 52;
       context__.validate_dims("data initialization", "K", "int",
         std::vector<size_t>{});
       K = std::numeric_limits<int>::min();
-      current_statement__ = 83;
+      current_statement__ = 52;
       K = context__.vals_i("K")[(1 - 1)];
-      current_statement__ = 83;
+      current_statement__ = 52;
       stan::math::check_greater_or_equal(function__, "K", K, 1);
-      current_statement__ = 84;
+      current_statement__ = 53;
       stan::math::validate_non_negative_index("diff_low_mid", "N", N);
-      current_statement__ = 85;
+      current_statement__ = 54;
       context__.validate_dims("data initialization", "diff_low_mid",
         "double", std::vector<size_t>{static_cast<size_t>(N)});
       diff_low_mid_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -590,22 +557,22 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         Eigen::Map<Eigen::Matrix<double,-1,1>>(diff_low_mid_data__.data(), N);
       {
         std::vector<local_scalar_t__> diff_low_mid_flat__;
-        current_statement__ = 85;
+        current_statement__ = 54;
         diff_low_mid_flat__ = context__.vals_r("diff_low_mid");
-        current_statement__ = 85;
+        current_statement__ = 54;
         pos__ = 1;
-        current_statement__ = 85;
+        current_statement__ = 54;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 85;
+          current_statement__ = 54;
           stan::model::assign(diff_low_mid, diff_low_mid_flat__[(pos__ - 1)],
             "assigning variable diff_low_mid", stan::model::index_uni(sym1__));
-          current_statement__ = 85;
+          current_statement__ = 54;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 86;
+      current_statement__ = 55;
       stan::math::validate_non_negative_index("diff_high_mid", "N", N);
-      current_statement__ = 87;
+      current_statement__ = 56;
       context__.validate_dims("data initialization", "diff_high_mid",
         "double", std::vector<size_t>{static_cast<size_t>(N)});
       diff_high_mid_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -615,23 +582,23 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         N);
       {
         std::vector<local_scalar_t__> diff_high_mid_flat__;
-        current_statement__ = 87;
+        current_statement__ = 56;
         diff_high_mid_flat__ = context__.vals_r("diff_high_mid");
-        current_statement__ = 87;
+        current_statement__ = 56;
         pos__ = 1;
-        current_statement__ = 87;
+        current_statement__ = 56;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 87;
+          current_statement__ = 56;
           stan::model::assign(diff_high_mid, diff_high_mid_flat__[(pos__ -
             1)], "assigning variable diff_high_mid",
             stan::model::index_uni(sym1__));
-          current_statement__ = 87;
+          current_statement__ = 56;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 88;
+      current_statement__ = 57;
       stan::math::validate_non_negative_index("mid_price", "N", N);
-      current_statement__ = 89;
+      current_statement__ = 58;
       context__.validate_dims("data initialization", "mid_price", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       mid_price_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -640,24 +607,24 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         Eigen::Map<Eigen::Matrix<double,-1,1>>(mid_price_data__.data(), N);
       {
         std::vector<local_scalar_t__> mid_price_flat__;
-        current_statement__ = 89;
+        current_statement__ = 58;
         mid_price_flat__ = context__.vals_r("mid_price");
-        current_statement__ = 89;
+        current_statement__ = 58;
         pos__ = 1;
-        current_statement__ = 89;
+        current_statement__ = 58;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 89;
+          current_statement__ = 58;
           stan::model::assign(mid_price, mid_price_flat__[(pos__ - 1)],
             "assigning variable mid_price", stan::model::index_uni(sym1__));
-          current_statement__ = 89;
+          current_statement__ = 58;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 90;
+      current_statement__ = 59;
       stan::math::validate_non_negative_index("X_all", "N", N);
-      current_statement__ = 91;
+      current_statement__ = 60;
       stan::math::validate_non_negative_index("X_all", "K", K);
-      current_statement__ = 92;
+      current_statement__ = 61;
       context__.validate_dims("data initialization", "X_all", "double",
         std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(K)});
       X_all_data__ = Eigen::Matrix<double,-1,-1>::Constant(N, K,
@@ -666,136 +633,136 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         Eigen::Map<Eigen::Matrix<double,-1,-1>>(X_all_data__.data(), N, K);
       {
         std::vector<local_scalar_t__> X_all_flat__;
-        current_statement__ = 92;
+        current_statement__ = 61;
         X_all_flat__ = context__.vals_r("X_all");
-        current_statement__ = 92;
+        current_statement__ = 61;
         pos__ = 1;
-        current_statement__ = 92;
+        current_statement__ = 61;
         for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-          current_statement__ = 92;
+          current_statement__ = 61;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 92;
+            current_statement__ = 61;
             stan::model::assign(X_all, X_all_flat__[(pos__ - 1)],
               "assigning variable X_all", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 92;
+            current_statement__ = 61;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 93;
+      current_statement__ = 62;
       context__.validate_dims("data initialization", "phi_prior_a", "double",
         std::vector<size_t>{});
       phi_prior_a = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 93;
+      current_statement__ = 62;
       phi_prior_a = context__.vals_r("phi_prior_a")[(1 - 1)];
-      current_statement__ = 93;
+      current_statement__ = 62;
       stan::math::check_greater_or_equal(function__, "phi_prior_a",
         phi_prior_a, 0);
-      current_statement__ = 94;
+      current_statement__ = 63;
       context__.validate_dims("data initialization", "phi_prior_b", "double",
         std::vector<size_t>{});
       phi_prior_b = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 94;
+      current_statement__ = 63;
       phi_prior_b = context__.vals_r("phi_prior_b")[(1 - 1)];
-      current_statement__ = 94;
+      current_statement__ = 63;
       stan::math::check_greater_or_equal(function__, "phi_prior_b",
         phi_prior_b, 0);
-      current_statement__ = 95;
+      current_statement__ = 64;
       context__.validate_dims("data initialization", "mu_prior_mu", "double",
         std::vector<size_t>{});
       mu_prior_mu = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 95;
+      current_statement__ = 64;
       mu_prior_mu = context__.vals_r("mu_prior_mu")[(1 - 1)];
-      current_statement__ = 96;
+      current_statement__ = 65;
       context__.validate_dims("data initialization", "mu_prior_sigma",
         "double", std::vector<size_t>{});
       mu_prior_sigma = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 96;
+      current_statement__ = 65;
       mu_prior_sigma = context__.vals_r("mu_prior_sigma")[(1 - 1)];
-      current_statement__ = 96;
+      current_statement__ = 65;
       stan::math::check_greater_or_equal(function__, "mu_prior_sigma",
         mu_prior_sigma, 0);
-      current_statement__ = 97;
+      current_statement__ = 66;
       context__.validate_dims("data initialization", "sigma_prior_shape",
         "double", std::vector<size_t>{});
       sigma_prior_shape = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 97;
+      current_statement__ = 66;
       sigma_prior_shape = context__.vals_r("sigma_prior_shape")[(1 - 1)];
-      current_statement__ = 97;
+      current_statement__ = 66;
       stan::math::check_greater_or_equal(function__, "sigma_prior_shape",
         sigma_prior_shape, 0);
-      current_statement__ = 98;
+      current_statement__ = 67;
       context__.validate_dims("data initialization", "sigma_prior_rate",
         "double", std::vector<size_t>{});
       sigma_prior_rate = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 98;
+      current_statement__ = 67;
       sigma_prior_rate = context__.vals_r("sigma_prior_rate")[(1 - 1)];
-      current_statement__ = 98;
+      current_statement__ = 67;
       stan::math::check_greater_or_equal(function__, "sigma_prior_rate",
         sigma_prior_rate, 0);
-      current_statement__ = 99;
+      current_statement__ = 68;
       Nr = std::numeric_limits<int>::min();
-      current_statement__ = 99;
+      current_statement__ = 68;
       Nr = (N - 1);
-      current_statement__ = 100;
+      current_statement__ = 69;
       stan::math::validate_non_negative_index("high_low_est", "N", N);
-      current_statement__ = 101;
+      current_statement__ = 70;
       stan::math::validate_non_negative_index("b", "K", K);
-      current_statement__ = 102;
+      current_statement__ = 71;
       stan::math::validate_non_negative_index("h", "Nr", Nr);
-      current_statement__ = 103;
+      current_statement__ = 72;
       stan::math::validate_non_negative_index("mean_price", "N", N);
-      current_statement__ = 104;
+      current_statement__ = 73;
       stan::math::validate_non_negative_index("sigma_price", "N", N);
-      current_statement__ = 105;
+      current_statement__ = 74;
       stan::math::validate_non_negative_index("upper_test", "N", N);
-      current_statement__ = 106;
+      current_statement__ = 75;
       stan::math::validate_non_negative_index("lower_upper_test", "N", N);
-      current_statement__ = 107;
+      current_statement__ = 76;
       stan::math::validate_non_negative_index("row_vec_lower_upper_test",
         "N", N);
-      current_statement__ = 108;
+      current_statement__ = 77;
       stan::math::validate_non_negative_index("offset_mult_test", "N", N);
-      current_statement__ = 109;
+      current_statement__ = 78;
       stan::math::validate_non_negative_index("ordered_test", "N", N);
-      current_statement__ = 110;
+      current_statement__ = 79;
       stan::math::validate_unit_vector_index("unit_vec_test", "N", N);
-      current_statement__ = 111;
+      current_statement__ = 80;
       stan::math::validate_non_negative_index("pos_ordered_test", "N", N);
-      current_statement__ = 112;
+      current_statement__ = 81;
       stan::math::validate_non_negative_index("corr_matrix_test", "N", N);
-      current_statement__ = 112;
+      current_statement__ = 81;
       stan::math::validate_non_negative_index("corr_matrix_test", "N", N);
-      current_statement__ = 113;
+      current_statement__ = 82;
       stan::math::validate_non_negative_index("cov_matrix_test", "N", N);
-      current_statement__ = 113;
+      current_statement__ = 82;
       stan::math::validate_non_negative_index("cov_matrix_test", "N", N);
-      current_statement__ = 114;
+      current_statement__ = 83;
       stan::math::validate_non_negative_index("chol_fac_cov_test", "K", K);
-      current_statement__ = 114;
+      current_statement__ = 83;
       stan::math::validate_non_negative_index("chol_fac_cov_test", "K", K);
-      current_statement__ = 114;
+      current_statement__ = 83;
       stan::math::check_greater_or_equal(
         "cholesky_factor_cov chol_fac_cov_test",
         "num rows (must be greater or equal to num cols)", K, K);
-      current_statement__ = 115;
+      current_statement__ = 84;
       stan::math::validate_non_negative_index("chol_fac_corr_test", "K", K);
-      current_statement__ = 115;
+      current_statement__ = 84;
       stan::math::validate_non_negative_index("chol_fac_corr_test", "K", K);
-      current_statement__ = 116;
+      current_statement__ = 85;
       stan::math::validate_non_negative_index("prices", "N", N);
-      current_statement__ = 117;
+      current_statement__ = 86;
       stan::math::validate_non_negative_index("prices_diff", "Nr", Nr);
-      current_statement__ = 118;
+      current_statement__ = 87;
       stan::math::validate_non_negative_index("mu", "Nr", Nr);
-      current_statement__ = 119;
+      current_statement__ = 88;
       stan::math::validate_non_negative_index("err", "Nr", Nr);
-      current_statement__ = 120;
+      current_statement__ = 89;
       stan::math::validate_non_negative_index("h_i_mean", "Nr", Nr);
-      current_statement__ = 121;
+      current_statement__ = 90;
       stan::math::validate_non_negative_index("h_i_sigma", "Nr", Nr);
-      current_statement__ = 122;
+      current_statement__ = 91;
       stan::math::validate_non_negative_index("h_sigma", "Nr", Nr);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -842,10 +809,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                        stan::conditional_var_value_t<local_scalar_t__,
                          Eigen::Matrix<local_scalar_t__,-1,1>>,
                        jacobian__>(diff_low_mid, diff_high_mid, lp__, N);
-      current_statement__ = 32;
+      current_statement__ = 1;
       stan::math::check_matching_dims("constraint", "high_low_est",
         high_low_est, "lower", diff_low_mid);
-      current_statement__ = 32;
+      current_statement__ = 1;
       stan::math::check_matching_dims("constraint", "high_low_est",
         high_low_est, "upper", diff_high_mid);
       stan::conditional_var_value_t<local_scalar_t__,
@@ -938,10 +905,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                            stan::conditional_var_value_t<local_scalar_t__,
                              Eigen::Matrix<local_scalar_t__,-1,1>>,
                            jacobian__>(sigma_price, upper_test, lp__, N);
-      current_statement__ = 44;
+      current_statement__ = 13;
       stan::math::check_matching_dims("constraint", "lower_upper_test",
         lower_upper_test, "lower", sigma_price);
-      current_statement__ = 44;
+      current_statement__ = 13;
       stan::math::check_matching_dims("constraint", "lower_upper_test",
         lower_upper_test, "upper", upper_test);
       stan::conditional_var_value_t<local_scalar_t__,
@@ -958,11 +925,11 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                                                  sigma_price),
                                    stan::math::transpose(upper_test), lp__,
                                    N);
-      current_statement__ = 45;
+      current_statement__ = 14;
       stan::math::check_matching_dims("constraint",
         "row_vec_lower_upper_test", row_vec_lower_upper_test, "lower",
         stan::math::transpose(sigma_price));
-      current_statement__ = 45;
+      current_statement__ = 14;
       stan::math::check_matching_dims("constraint",
         "row_vec_lower_upper_test", row_vec_lower_upper_test, "upper",
         stan::math::transpose(upper_test));
@@ -977,10 +944,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                            stan::conditional_var_value_t<local_scalar_t__,
                              Eigen::Matrix<local_scalar_t__,-1,1>>,
                            jacobian__>(mean_price, sigma_price, lp__, N);
-      current_statement__ = 46;
+      current_statement__ = 15;
       stan::math::check_matching_dims("constraint", "offset_mult_test",
         offset_mult_test, "offset", mean_price);
-      current_statement__ = 46;
+      current_statement__ = 15;
       stan::math::check_matching_dims("constraint", "offset_mult_test",
         offset_mult_test, "multiplier", sigma_price);
       stan::conditional_var_value_t<local_scalar_t__,
@@ -1065,10 +1032,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                                Eigen::Matrix<local_scalar_t__,-1,-1>>,
                              jacobian__>(lp__, K);
       local_scalar_t__ phi = DUMMY_VAR__;
-      current_statement__ = 54;
+      current_statement__ = 23;
       phi = stan::math::fma(phi_beta, 2.0, -1.0);
       local_scalar_t__ sigma = DUMMY_VAR__;
-      current_statement__ = 55;
+      current_statement__ = 24;
       sigma = stan::math::sqrt(sigma2);
       stan::conditional_var_value_t<local_scalar_t__,
         Eigen::Matrix<local_scalar_t__,-1,1>> prices =
@@ -1076,7 +1043,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                   std::numeric_limits<double>::quiet_NaN(
                                                     )));
-      current_statement__ = 56;
+      current_statement__ = 25;
       stan::model::assign(prices, stan::math::add(mid_price, high_low_est),
         "assigning variable prices");
       stan::conditional_var_value_t<local_scalar_t__,
@@ -1085,7 +1052,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(Nr,
                                                   std::numeric_limits<double>::quiet_NaN(
                                                     )));
-      current_statement__ = 57;
+      current_statement__ = 26;
       stan::model::assign(prices_diff,
         stan::math::subtract(
           stan::model::rvalue(prices, "prices",
@@ -1099,7 +1066,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(Nr,
                                                   std::numeric_limits<double>::quiet_NaN(
                                                     )));
-      current_statement__ = 58;
+      current_statement__ = 27;
       stan::model::assign(mu,
         stan::math::add(Intercept, stan::math::multiply(X_all, b)),
         "assigning variable mu");
@@ -1109,10 +1076,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(Nr,
                                                   std::numeric_limits<double>::quiet_NaN(
                                                     )));
-      current_statement__ = 63;
+      current_statement__ = 32;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
-      current_statement__ = 64;
+      current_statement__ = 33;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -1126,7 +1093,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                 stan::model::index_min_max(1, (Nr - 1))),
               stan::model::rvalue(ar, "ar", stan::model::index_uni(1))))),
         "assigning variable mu", stan::model::index_min_max(2, Nr));
-      current_statement__ = 65;
+      current_statement__ = 34;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -1136,7 +1103,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
               stan::model::index_min_max(1, (Nr - 2))),
             stan::model::rvalue(ar, "ar", stan::model::index_uni(2)))),
         "assigning variable mu", stan::model::index_min_max(3, Nr));
-      current_statement__ = 66;
+      current_statement__ = 35;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
       stan::conditional_var_value_t<local_scalar_t__,
@@ -1151,17 +1118,17 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(Nr,
                                                   std::numeric_limits<double>::quiet_NaN(
                                                     )));
-      current_statement__ = 67;
+      current_statement__ = 36;
       stan::model::assign(h_i_mean, 0.0, "assigning variable h_i_mean",
         stan::model::index_uni(1));
-      current_statement__ = 68;
+      current_statement__ = 37;
       stan::model::assign(h_i_sigma,
         stan::math::pow((1 - stan::math::square(phi)), -0.5),
         "assigning variable h_i_sigma", stan::model::index_uni(1));
-      current_statement__ = 69;
+      current_statement__ = 38;
       stan::model::assign(h_i_sigma, stan::math::rep_vector(1.0, (Nr - 1)),
         "assigning variable h_i_sigma", stan::model::index_min_max(2, Nr));
-      current_statement__ = 70;
+      current_statement__ = 39;
       stan::model::assign(h_i_mean,
         stan::math::add(
           stan::math::multiply(phi,
@@ -1178,51 +1145,51 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(Nr,
                                                   std::numeric_limits<double>::quiet_NaN(
                                                     )));
-      current_statement__ = 62;
+      current_statement__ = 31;
       stan::model::assign(h_sigma,
         stan::math::add(
           stan::math::exp(
             stan::math::add(stan::math::multiply(h, (0.5 * sigma)),
               stan::math::multiply(0.5, mu))), 0.000001),
         "assigning variable h_sigma");
-      current_statement__ = 54;
+      current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "phi", phi, -1);
-      current_statement__ = 54;
+      current_statement__ = 23;
       stan::math::check_less_or_equal(function__, "phi", phi, 1);
-      current_statement__ = 55;
+      current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "sigma", sigma, 0);
-      current_statement__ = 61;
+      current_statement__ = 30;
       stan::math::check_greater_or_equal(function__, "h_i_sigma", h_i_sigma,
         0);
       {
-        current_statement__ = 71;
+        current_statement__ = 40;
         lp_accum__.add(stan::math::multiply(-2, stan::math::log(sigma_price)));
-        current_statement__ = 72;
+        current_statement__ = 41;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(Intercept,
                          mu_prior_mu, mu_prior_sigma));
-        current_statement__ = 73;
+        current_statement__ = 42;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(phi_beta, phi_prior_a,
                          phi_prior_b));
-        current_statement__ = 74;
+        current_statement__ = 43;
         lp_accum__.add(stan::math::gamma_lpdf<propto__>(sigma2,
                          sigma_prior_shape, sigma_prior_rate));
-        current_statement__ = 75;
+        current_statement__ = 44;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(ar, 0, .2));
-        current_statement__ = 76;
+        current_statement__ = 45;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(ma, 0, .2));
-        current_statement__ = 77;
+        current_statement__ = 46;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(h, h_i_mean,
                          h_i_sigma));
-        current_statement__ = 78;
+        current_statement__ = 47;
         lp_accum__.add(stan::math::student_t_lpdf<propto__>(sigma_price, 3,
                          1, 1));
-        current_statement__ = 79;
+        current_statement__ = 48;
         lp_accum__.add(stan::math::uniform_lpdf<propto__>(high_low_est,
                          diff_low_mid, diff_high_mid));
-        current_statement__ = 80;
+        current_statement__ = 49;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(prices, mean_price,
                          sigma_price));
-        current_statement__ = 81;
+        current_statement__ = 50;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(prices_diff, mu,
                          h_sigma));
       }
@@ -1270,10 +1237,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       high_low_est = in__.template read_constrain_lub<
                        Eigen::Matrix<local_scalar_t__,-1,1>,
                        jacobian__>(diff_low_mid, diff_high_mid, lp__, N);
-      current_statement__ = 32;
+      current_statement__ = 1;
       stan::math::check_matching_dims("constraint", "high_low_est",
         high_low_est, "lower", diff_low_mid);
-      current_statement__ = 32;
+      current_statement__ = 1;
       stan::math::check_matching_dims("constraint", "high_low_est",
         high_low_est, "upper", diff_high_mid);
       Eigen::Matrix<double,-1,1> b =
@@ -1335,10 +1302,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       lower_upper_test = in__.template read_constrain_lub<
                            Eigen::Matrix<local_scalar_t__,-1,1>,
                            jacobian__>(sigma_price, upper_test, lp__, N);
-      current_statement__ = 44;
+      current_statement__ = 13;
       stan::math::check_matching_dims("constraint", "lower_upper_test",
         lower_upper_test, "lower", sigma_price);
-      current_statement__ = 44;
+      current_statement__ = 13;
       stan::math::check_matching_dims("constraint", "lower_upper_test",
         lower_upper_test, "upper", upper_test);
       Eigen::Matrix<double,1,-1> row_vec_lower_upper_test =
@@ -1351,11 +1318,11 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                                                  sigma_price),
                                    stan::math::transpose(upper_test), lp__,
                                    N);
-      current_statement__ = 45;
+      current_statement__ = 14;
       stan::math::check_matching_dims("constraint",
         "row_vec_lower_upper_test", row_vec_lower_upper_test, "lower",
         stan::math::transpose(sigma_price));
-      current_statement__ = 45;
+      current_statement__ = 14;
       stan::math::check_matching_dims("constraint",
         "row_vec_lower_upper_test", row_vec_lower_upper_test, "upper",
         stan::math::transpose(upper_test));
@@ -1366,10 +1333,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       offset_mult_test = in__.template read_constrain_offset_multiplier<
                            Eigen::Matrix<local_scalar_t__,-1,1>,
                            jacobian__>(mean_price, sigma_price, lp__, N);
-      current_statement__ = 46;
+      current_statement__ = 15;
       stan::math::check_matching_dims("constraint", "offset_mult_test",
         offset_mult_test, "offset", mean_price);
-      current_statement__ = 46;
+      current_statement__ = 15;
       stan::math::check_matching_dims("constraint", "offset_mult_test",
         offset_mult_test, "multiplier", sigma_price);
       Eigen::Matrix<double,-1,1> ordered_test =
@@ -1471,14 +1438,14 @@ class constraints_model final : public model_base_crtp<constraints_model> {
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 54;
+      current_statement__ = 23;
       phi = stan::math::fma(phi_beta, 2.0, -1.0);
-      current_statement__ = 55;
+      current_statement__ = 24;
       sigma = stan::math::sqrt(sigma2);
-      current_statement__ = 56;
+      current_statement__ = 25;
       stan::model::assign(prices, stan::math::add(mid_price, high_low_est),
         "assigning variable prices");
-      current_statement__ = 57;
+      current_statement__ = 26;
       stan::model::assign(prices_diff,
         stan::math::subtract(
           stan::model::rvalue(prices, "prices",
@@ -1486,14 +1453,14 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           stan::model::rvalue(prices, "prices",
             stan::model::index_min_max(1, (N - 1)))),
         "assigning variable prices_diff");
-      current_statement__ = 58;
+      current_statement__ = 27;
       stan::model::assign(mu,
         stan::math::add(Intercept, stan::math::multiply(X_all, b)),
         "assigning variable mu");
-      current_statement__ = 63;
+      current_statement__ = 32;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
-      current_statement__ = 64;
+      current_statement__ = 33;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -1507,7 +1474,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                 stan::model::index_min_max(1, (Nr - 1))),
               stan::model::rvalue(ar, "ar", stan::model::index_uni(1))))),
         "assigning variable mu", stan::model::index_min_max(2, Nr));
-      current_statement__ = 65;
+      current_statement__ = 34;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -1517,20 +1484,20 @@ class constraints_model final : public model_base_crtp<constraints_model> {
               stan::model::index_min_max(1, (Nr - 2))),
             stan::model::rvalue(ar, "ar", stan::model::index_uni(2)))),
         "assigning variable mu", stan::model::index_min_max(3, Nr));
-      current_statement__ = 66;
+      current_statement__ = 35;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
-      current_statement__ = 67;
+      current_statement__ = 36;
       stan::model::assign(h_i_mean, 0.0, "assigning variable h_i_mean",
         stan::model::index_uni(1));
-      current_statement__ = 68;
+      current_statement__ = 37;
       stan::model::assign(h_i_sigma,
         stan::math::pow((1 - stan::math::square(phi)), -0.5),
         "assigning variable h_i_sigma", stan::model::index_uni(1));
-      current_statement__ = 69;
+      current_statement__ = 38;
       stan::model::assign(h_i_sigma, stan::math::rep_vector(1.0, (Nr - 1)),
         "assigning variable h_i_sigma", stan::model::index_min_max(2, Nr));
-      current_statement__ = 70;
+      current_statement__ = 39;
       stan::model::assign(h_i_mean,
         stan::math::add(
           stan::math::multiply(phi,
@@ -1541,20 +1508,20 @@ class constraints_model final : public model_base_crtp<constraints_model> {
               stan::model::rvalue(err, "err",
                 stan::model::index_min_max(1, (Nr - 1)))))),
         "assigning variable h_i_mean", stan::model::index_min_max(2, Nr));
-      current_statement__ = 62;
+      current_statement__ = 31;
       stan::model::assign(h_sigma,
         stan::math::add(
           stan::math::exp(
             stan::math::add(stan::math::multiply(h, (0.5 * sigma)),
               stan::math::multiply(0.5, mu))), 0.000001),
         "assigning variable h_sigma");
-      current_statement__ = 54;
+      current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "phi", phi, -1);
-      current_statement__ = 54;
+      current_statement__ = 23;
       stan::math::check_less_or_equal(function__, "phi", phi, 1);
-      current_statement__ = 55;
+      current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "sigma", sigma, 0);
-      current_statement__ = 61;
+      current_statement__ = 30;
       stan::math::check_greater_or_equal(function__, "h_i_sigma", h_i_sigma,
         0);
       if (emit_transformed_parameters__) {
@@ -2591,16 +2558,8 @@ namespace deep_dependence_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 22> locations_array__ =
+static constexpr std::array<const char*, 14> locations_array__ =
   {" (found before start of program)",
-  " (in 'deep_dependence.stan', line 6, column 19 to column 22)",
-  " (in 'deep_dependence.stan', line 10, column 19 to column 24)",
-  " (in 'deep_dependence.stan', line 11, column 19 to column 24)",
-  " (in 'deep_dependence.stan', line 12, column 19 to column 24)",
-  " (in 'deep_dependence.stan', line 13, column 19 to column 24)",
-  " (in 'deep_dependence.stan', line 14, column 19 to column 24)",
-  " (in 'deep_dependence.stan', line 15, column 19 to column 24)",
-  " (in 'deep_dependence.stan', line 16, column 19 to column 24)",
   " (in 'deep_dependence.stan', line 6, column 4 to column 23)",
   " (in 'deep_dependence.stan', line 10, column 4 to column 36)",
   " (in 'deep_dependence.stan', line 11, column 4 to column 38)",
@@ -2676,44 +2635,44 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 10;
+      current_statement__ = 2;
       stan::model::assign(X_tp1, stan::math::exp(X_p),
         "assigning variable X_tp1");
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp2 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 11;
+      current_statement__ = 3;
       stan::model::assign(X_tp2, stan::math::exp(X_tp1),
         "assigning variable X_tp2");
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp3 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 12;
+      current_statement__ = 4;
       stan::model::assign(X_tp3, stan::math::exp(X_tp2),
         "assigning variable X_tp3");
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp4 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 13;
+      current_statement__ = 5;
       stan::model::assign(X_tp4, stan::math::exp(X_tp3),
         "assigning variable X_tp4");
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp5 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 14;
+      current_statement__ = 6;
       stan::model::assign(X_tp5, stan::math::exp(X_tp4),
         "assigning variable X_tp5");
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp6 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 15;
+      current_statement__ = 7;
       stan::model::assign(X_tp6, stan::math::exp(X_tp5),
         "assigning variable X_tp6");
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp7 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 16;
+      current_statement__ = 8;
       stan::model::assign(X_tp7, stan::math::exp(X_tp6),
         "assigning variable X_tp7");
-      current_statement__ = 21;
+      current_statement__ = 13;
       for (int i = 1; i <= 5; ++i) {
-        current_statement__ = 19;
+        current_statement__ = 11;
         for (int j = 1; j <= 5; ++j) {
-          current_statement__ = 17;
+          current_statement__ = 9;
           stan::model::assign(X_tp7,
             stan::math::exp(
               stan::model::rvalue(X_tp7, "X_tp7", stan::model::index_uni(i),
@@ -2790,32 +2749,32 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 10;
+      current_statement__ = 2;
       stan::model::assign(X_tp1, stan::math::exp(X_p),
         "assigning variable X_tp1");
-      current_statement__ = 11;
+      current_statement__ = 3;
       stan::model::assign(X_tp2, stan::math::exp(X_tp1),
         "assigning variable X_tp2");
-      current_statement__ = 12;
+      current_statement__ = 4;
       stan::model::assign(X_tp3, stan::math::exp(X_tp2),
         "assigning variable X_tp3");
-      current_statement__ = 13;
+      current_statement__ = 5;
       stan::model::assign(X_tp4, stan::math::exp(X_tp3),
         "assigning variable X_tp4");
-      current_statement__ = 14;
+      current_statement__ = 6;
       stan::model::assign(X_tp5, stan::math::exp(X_tp4),
         "assigning variable X_tp5");
-      current_statement__ = 15;
+      current_statement__ = 7;
       stan::model::assign(X_tp6, stan::math::exp(X_tp5),
         "assigning variable X_tp6");
-      current_statement__ = 16;
+      current_statement__ = 8;
       stan::model::assign(X_tp7, stan::math::exp(X_tp6),
         "assigning variable X_tp7");
-      current_statement__ = 21;
+      current_statement__ = 13;
       for (int i = 1; i <= 5; ++i) {
-        current_statement__ = 19;
+        current_statement__ = 11;
         for (int j = 1; j <= 5; ++j) {
-          current_statement__ = 17;
+          current_statement__ = 9;
           stan::model::assign(X_tp7,
             stan::math::exp(
               stan::model::rvalue(X_tp7, "X_tp7", stan::model::index_uni(i),
@@ -3175,34 +3134,8 @@ namespace indexing_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 142> locations_array__ =
+static constexpr std::array<const char*, 116> locations_array__ =
   {" (found before start of program)",
-  " (in 'indexing.stan', line 19, column 7 to column 12)",
-  " (in 'indexing.stan', line 21, column 12 to column 23)",
-  " (in 'indexing.stan', line 22, column 15 to column 24)",
-  " (in 'indexing.stan', line 23, column 22 to column 37)",
-  " (in 'indexing.stan', line 24, column 14 to column 35)",
-  " (in 'indexing.stan', line 25, column 12 to column 29)",
-  " (in 'indexing.stan', line 26, column 14 to column 40)",
-  " (in 'indexing.stan', line 27, column 16 to column 34)",
-  " (in 'indexing.stan', line 28, column 12 to column 30)",
-  " (in 'indexing.stan', line 29, column 12 to column 47)",
-  " (in 'indexing.stan', line 30, column 14 to column 46)",
-  " (in 'indexing.stan', line 33, column 12 to column 37)",
-  " (in 'indexing.stan', line 35, column 12 to column 37)",
-  " (in 'indexing.stan', line 37, column 12 to column 36)",
-  " (in 'indexing.stan', line 39, column 12 to column 42)",
-  " (in 'indexing.stan', line 40, column 14 to column 40)",
-  " (in 'indexing.stan', line 43, column 15 to column 24)",
-  " (in 'indexing.stan', line 45, column 15 to column 56)",
-  " (in 'indexing.stan', line 46, column 15 to column 56)",
-  " (in 'indexing.stan', line 49, column 15 to column 42)",
-  " (in 'indexing.stan', line 50, column 15 to column 42)",
-  " (in 'indexing.stan', line 56, column 7 to column 23)",
-  " (in 'indexing.stan', line 59, column 12 to column 24)",
-  " (in 'indexing.stan', line 61, column 12 to column 36)",
-  " (in 'indexing.stan', line 66, column 12 to column 34)",
-  " (in 'indexing.stan', line 70, column 12 to column 43)",
   " (in 'indexing.stan', line 19, column 2 to column 13)",
   " (in 'indexing.stan', line 21, column 2 to column 24)",
   " (in 'indexing.stan', line 22, column 2 to column 25)",
@@ -3334,7 +3267,7 @@ int mask_fun(const int& i, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 138;
+    current_statement__ = 112;
     return i;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3355,7 +3288,7 @@ udf_fun(const T0__& A_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 140;
+    current_statement__ = 114;
     return A;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3391,23 +3324,23 @@ class indexing_model final : public model_base_crtp<indexing_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 95;
+      current_statement__ = 69;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 95;
+      current_statement__ = 69;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 96;
+      current_statement__ = 70;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
-      current_statement__ = 96;
+      current_statement__ = 70;
       M = context__.vals_i("M")[(1 - 1)];
-      current_statement__ = 97;
+      current_statement__ = 71;
       stan::math::validate_non_negative_index("dat_x", "N", N);
-      current_statement__ = 98;
+      current_statement__ = 72;
       stan::math::validate_non_negative_index("dat_x", "M", M);
-      current_statement__ = 99;
+      current_statement__ = 73;
       context__.validate_dims("data initialization", "dat_x", "double",
         std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(M)});
       dat_x_data__ = Eigen::Matrix<double,-1,-1>::Constant(N, M,
@@ -3416,26 +3349,26 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         Eigen::Map<Eigen::Matrix<double,-1,-1>>(dat_x_data__.data(), N, M);
       {
         std::vector<local_scalar_t__> dat_x_flat__;
-        current_statement__ = 99;
+        current_statement__ = 73;
         dat_x_flat__ = context__.vals_r("dat_x");
-        current_statement__ = 99;
+        current_statement__ = 73;
         pos__ = 1;
-        current_statement__ = 99;
+        current_statement__ = 73;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 99;
+          current_statement__ = 73;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 99;
+            current_statement__ = 73;
             stan::model::assign(dat_x, dat_x_flat__[(pos__ - 1)],
               "assigning variable dat_x", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 99;
+            current_statement__ = 73;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 100;
+      current_statement__ = 74;
       stan::math::validate_non_negative_index("y", "N", N);
-      current_statement__ = 101;
+      current_statement__ = 75;
       context__.validate_dims("data initialization", "y", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -3443,115 +3376,115 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
       {
         std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 101;
+        current_statement__ = 75;
         y_flat__ = context__.vals_r("y");
-        current_statement__ = 101;
+        current_statement__ = 75;
         pos__ = 1;
-        current_statement__ = 101;
+        current_statement__ = 75;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 101;
+          current_statement__ = 75;
           stan::model::assign(y, y_flat__[(pos__ - 1)],
             "assigning variable y", stan::model::index_uni(sym1__));
-          current_statement__ = 101;
+          current_statement__ = 75;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 102;
+      current_statement__ = 76;
       stan::math::validate_non_negative_index("idx_tester", "N", N);
-      current_statement__ = 103;
+      current_statement__ = 77;
       context__.validate_dims("data initialization", "idx_tester", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       idx_tester = std::vector<int>(N, std::numeric_limits<int>::min());
-      current_statement__ = 103;
+      current_statement__ = 77;
       idx_tester = context__.vals_i("idx_tester");
-      current_statement__ = 104;
+      current_statement__ = 78;
       stan::math::validate_non_negative_index("p_soa_vec_v", "M", M);
-      current_statement__ = 105;
+      current_statement__ = 79;
       stan::math::validate_non_negative_index("p_soa_mat", "N", N);
-      current_statement__ = 106;
+      current_statement__ = 80;
       stan::math::validate_non_negative_index("p_soa_mat", "M", M);
-      current_statement__ = 107;
+      current_statement__ = 81;
       stan::math::validate_non_negative_index("p_soa_arr_vec_v", "N", N);
-      current_statement__ = 108;
+      current_statement__ = 82;
       stan::math::validate_non_negative_index("p_soa_mat_uni_col_idx", "N", N);
-      current_statement__ = 109;
+      current_statement__ = 83;
       stan::math::validate_non_negative_index("p_soa_mat_uni_col_idx", "M", M);
-      current_statement__ = 110;
+      current_statement__ = 84;
       stan::math::validate_non_negative_index("p_soa_vec_uni_idx", "N", N);
-      current_statement__ = 111;
+      current_statement__ = 85;
       stan::math::validate_non_negative_index("p_soa_loop_mat_uni_col_idx",
         "N", N);
-      current_statement__ = 112;
+      current_statement__ = 86;
       stan::math::validate_non_negative_index("p_soa_loop_mat_uni_col_idx",
         "M", M);
-      current_statement__ = 113;
+      current_statement__ = 87;
       stan::math::validate_non_negative_index("p_soa_lhs_loop_mul", "N", N);
-      current_statement__ = 114;
+      current_statement__ = 88;
       stan::math::validate_non_negative_index("p_soa_rhs_loop_mul", "N", N);
-      current_statement__ = 115;
+      current_statement__ = 89;
       stan::math::validate_non_negative_index(
         "p_soa_used_with_aos_in_excluded_fun", "N", N);
-      current_statement__ = 116;
+      current_statement__ = 90;
       stan::math::validate_non_negative_index(
         "p_soa_loop_mat_multi_uni_uni_idx", "N", N);
-      current_statement__ = 117;
+      current_statement__ = 91;
       stan::math::validate_non_negative_index(
         "p_soa_loop_mat_multi_uni_uni_idx", "M", M);
-      current_statement__ = 118;
+      current_statement__ = 92;
       stan::math::validate_non_negative_index("p_aos_vec_v_assign_to_aos",
         "M", M);
-      current_statement__ = 119;
+      current_statement__ = 93;
       stan::math::validate_non_negative_index("p_aos_vec_v_tp_fails_func",
         "M", M);
-      current_statement__ = 120;
+      current_statement__ = 94;
       stan::math::validate_non_negative_index("p_aos_loop_vec_v_uni_idx",
         "M", M);
-      current_statement__ = 121;
+      current_statement__ = 95;
       stan::math::validate_non_negative_index(
         "p_aos_fail_assign_from_top_idx", "M", M);
-      current_statement__ = 122;
+      current_statement__ = 96;
       stan::math::validate_non_negative_index("p_aos_loop_mat_uni_uni_idx",
         "N", N);
-      current_statement__ = 123;
+      current_statement__ = 97;
       stan::math::validate_non_negative_index("p_aos_loop_mat_uni_uni_idx",
         "M", M);
-      current_statement__ = 124;
+      current_statement__ = 98;
       stan::math::validate_non_negative_index("p_aos_mat", "N", N);
-      current_statement__ = 125;
+      current_statement__ = 99;
       stan::math::validate_non_negative_index("p_aos_mat", "M", M);
-      current_statement__ = 126;
+      current_statement__ = 100;
       stan::math::validate_non_negative_index(
         "p_aos_mat_pass_func_outer_single_indexed1", "N", N);
-      current_statement__ = 127;
+      current_statement__ = 101;
       stan::math::validate_non_negative_index(
         "p_aos_mat_pass_func_outer_single_indexed1", "M", M);
-      current_statement__ = 128;
+      current_statement__ = 102;
       stan::math::validate_non_negative_index(
         "p_aos_mat_pass_func_outer_single_indexed2", "N", N);
-      current_statement__ = 129;
+      current_statement__ = 103;
       stan::math::validate_non_negative_index(
         "p_aos_mat_pass_func_outer_single_indexed2", "M", M);
-      current_statement__ = 130;
+      current_statement__ = 104;
       stan::math::validate_non_negative_index("p_aos_mat_fail_uni_uni_idx1",
         "N", N);
-      current_statement__ = 131;
+      current_statement__ = 105;
       stan::math::validate_non_negative_index("p_aos_mat_fail_uni_uni_idx1",
         "M", M);
-      current_statement__ = 132;
+      current_statement__ = 106;
       stan::math::validate_non_negative_index("p_aos_mat_fail_uni_uni_idx2",
         "N", N);
-      current_statement__ = 133;
+      current_statement__ = 107;
       stan::math::validate_non_negative_index("p_aos_mat_fail_uni_uni_idx2",
         "M", M);
-      current_statement__ = 134;
+      current_statement__ = 108;
       stan::math::validate_non_negative_index("tp_aos_vec_v", "M", M);
-      current_statement__ = 135;
+      current_statement__ = 109;
       stan::math::validate_non_negative_index("tp_soa_single_idx_uninit",
         "M", M);
-      current_statement__ = 136;
+      current_statement__ = 110;
       stan::math::validate_non_negative_index("tp_aos_fail_func_vec_v", "M",
         M);
-      current_statement__ = 137;
+      current_statement__ = 111;
       stan::math::validate_non_negative_index(
         "tp_aos_fail_assign_from_top_idx", "M", M);
     } catch (const std::exception& e) {
@@ -3763,12 +3696,12 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                       Eigen::Matrix<local_scalar_t__,-1,-1>>(N,
                                       M);
       local_scalar_t__ tp_real_from_aos = DUMMY_VAR__;
-      current_statement__ = 48;
+      current_statement__ = 22;
       tp_real_from_aos = stan::model::rvalue(p_soa_vec_v, "p_soa_vec_v",
                            stan::model::index_uni(1));
       Eigen::Matrix<local_scalar_t__,-1,1> tp_aos_vec_v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      current_statement__ = 49;
+      current_statement__ = 23;
       stan::model::assign(tp_aos_vec_v,
         udf_fun(p_aos_vec_v_assign_to_aos, pstream__),
         "assigning variable tp_aos_vec_v");
@@ -3778,11 +3711,11 @@ class indexing_model final : public model_base_crtp<indexing_model> {
           Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(M,
                                                   std::numeric_limits<double>::quiet_NaN(
                                                     )));
-      current_statement__ = 53;
+      current_statement__ = 27;
       stan::model::assign(tp_soa_single_idx_uninit, tp_real_from_aos,
         "assigning variable tp_soa_single_idx_uninit",
         stan::model::index_uni(1));
-      current_statement__ = 54;
+      current_statement__ = 28;
       stan::model::assign(tp_soa_single_idx_uninit,
         stan::math::rep_vector<
           stan::conditional_var_value_t<local_scalar_t__,
@@ -3791,10 +3724,10 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         stan::model::index_min_max(2, M));
       Eigen::Matrix<local_scalar_t__,-1,1> tp_aos_fail_func_vec_v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      current_statement__ = 51;
+      current_statement__ = 25;
       stan::model::assign(tp_aos_fail_func_vec_v, p_aos_vec_v_tp_fails_func,
         "assigning variable tp_aos_fail_func_vec_v");
-      current_statement__ = 55;
+      current_statement__ = 29;
       stan::model::assign(tp_aos_fail_func_vec_v,
         stan::model::rvalue(p_soa_vec_v, "p_soa_vec_v",
           stan::model::index_uni(1)),
@@ -3802,14 +3735,14 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         stan::model::index_uni(1));
       Eigen::Matrix<local_scalar_t__,-1,1> tp_aos_fail_assign_from_top_idx =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
-      current_statement__ = 56;
+      current_statement__ = 30;
       stan::model::assign(tp_aos_fail_assign_from_top_idx,
         stan::model::rvalue(p_aos_fail_assign_from_top_idx,
           "p_aos_fail_assign_from_top_idx", stan::model::index_min(1)),
         "assigning variable tp_aos_fail_assign_from_top_idx",
         stan::model::index_min(1));
       {
-        current_statement__ = 57;
+        current_statement__ = 31;
         stan::math::validate_non_negative_index(
           "tp_soa_used_with_aos_in_excluded_fun", "N", N);
         stan::conditional_var_value_t<local_scalar_t__,
@@ -3819,29 +3752,29 @@ class indexing_model final : public model_base_crtp<indexing_model> {
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                     std::numeric_limits<double>::quiet_NaN(
                                                       )));
-        current_statement__ = 58;
+        current_statement__ = 32;
         stan::model::assign(tp_soa_used_with_aos_in_excluded_fun,
           stan::math::multiply(p_soa_used_with_aos_in_excluded_fun,
             stan::math::size(tp_aos_vec_v)),
           "assigning variable tp_soa_used_with_aos_in_excluded_fun");
-        current_statement__ = 59;
+        current_statement__ = 33;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::math::add(alpha,
                            stan::math::multiply(dat_x,
                              stan::math::add(p_soa_vec_v,
                                tp_soa_used_with_aos_in_excluded_fun))), 1.0));
-        current_statement__ = 60;
+        current_statement__ = 34;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::math::add(alpha,
                            stan::math::multiply(dat_x, p_soa_vec_v)), 1.0));
-        current_statement__ = 61;
+        current_statement__ = 35;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::math::multiply(dat_x,
                            stan::model::rvalue(p_soa_mat_uni_col_idx,
                              "p_soa_mat_uni_col_idx",
                              stan::model::index_omni(),
                              stan::model::index_uni(N))), 1.0));
-        current_statement__ = 62;
+        current_statement__ = 36;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::math::multiply(dat_x,
                            stan::model::rvalue(p_soa_mat_uni_col_idx,
@@ -3850,25 +3783,25 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                              stan::model::index_uni(N))),
                          stan::model::rvalue(p_soa_vec_uni_idx,
                            "p_soa_vec_uni_idx", stan::model::index_uni(N))));
-        current_statement__ = 63;
+        current_statement__ = 37;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::math::multiply(dat_x,
                            udf_fun(tp_aos_fail_func_vec_v, pstream__)),
                          stan::model::rvalue(p_soa_vec_uni_idx,
                            "p_soa_vec_uni_idx", stan::model::index_uni(N))));
-        current_statement__ = 64;
+        current_statement__ = 38;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::math::multiply(p_soa_mat,
                            udf_fun(tp_aos_fail_func_vec_v, pstream__)),
                          stan::model::rvalue(p_soa_vec_uni_idx,
                            "p_soa_vec_uni_idx", stan::model::index_uni(N))));
-        current_statement__ = 65;
+        current_statement__ = 39;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::math::multiply(p_soa_mat,
                            udf_fun(tp_aos_fail_assign_from_top_idx, pstream__)),
                          stan::model::rvalue(p_soa_vec_uni_idx,
                            "p_soa_vec_uni_idx", stan::model::index_uni(N))));
-        current_statement__ = 66;
+        current_statement__ = 40;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                          stan::math::multiply(p_soa_mat,
                            udf_fun(
@@ -3876,7 +3809,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                tp_aos_fail_func_vec_v), pstream__)),
                          stan::model::rvalue(p_soa_vec_uni_idx,
                            "p_soa_vec_uni_idx", stan::model::index_uni(N))));
-        current_statement__ = 67;
+        current_statement__ = 41;
         stan::math::validate_non_negative_index("tp_soa_single_assign", "N",
           N);
         stan::conditional_var_value_t<local_scalar_t__,
@@ -3885,11 +3818,11 @@ class indexing_model final : public model_base_crtp<indexing_model> {
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                     std::numeric_limits<double>::quiet_NaN(
                                                       )));
-        current_statement__ = 69;
+        current_statement__ = 43;
         stan::model::assign(tp_soa_single_assign, 2.0,
           "assigning variable tp_soa_single_assign",
           stan::model::index_uni(1));
-        current_statement__ = 70;
+        current_statement__ = 44;
         stan::math::validate_non_negative_index(
           "tp_soa_single_assign_from_soa", "N", N);
         stan::conditional_var_value_t<local_scalar_t__,
@@ -3899,34 +3832,34 @@ class indexing_model final : public model_base_crtp<indexing_model> {
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                     std::numeric_limits<double>::quiet_NaN(
                                                       )));
-        current_statement__ = 72;
+        current_statement__ = 46;
         stan::model::assign(tp_soa_single_assign_from_soa,
           stan::math::multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul),
           "assigning variable tp_soa_single_assign_from_soa",
           stan::model::index_uni(2));
-        current_statement__ = 83;
+        current_statement__ = 57;
         for (int i = 1; i <= 10; ++i) {
-          current_statement__ = 73;
+          current_statement__ = 47;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(dat_x,
                              stan::model::rvalue(p_soa_arr_vec_v,
                                "p_soa_arr_vec_v", stan::model::index_uni(i))),
                            1.0));
-          current_statement__ = 74;
+          current_statement__ = 48;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(dat_x,
                              stan::model::rvalue(p_soa_loop_mat_uni_col_idx,
                                "p_soa_loop_mat_uni_col_idx",
                                stan::model::index_omni(),
                                stan::model::index_uni(i))), 1.0));
-          current_statement__ = 75;
+          current_statement__ = 49;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(
                              stan::model::rvalue(p_soa_loop_mat_uni_col_idx,
                                "p_soa_loop_mat_uni_col_idx",
                                stan::model::index_uni(i),
                                stan::model::index_omni()), dat_x), 1.0));
-          current_statement__ = 76;
+          current_statement__ = 50;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(dat_x,
                              stan::math::transpose(
@@ -3935,14 +3868,14 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                  "p_soa_loop_mat_uni_col_idx",
                                  stan::model::index_uni(i),
                                  stan::model::index_omni()))), 1.0));
-          current_statement__ = 77;
+          current_statement__ = 51;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(dat_x,
                              stan::model::rvalue(p_soa_loop_mat_uni_col_idx,
                                "p_soa_loop_mat_uni_col_idx",
                                stan::model::index_min_max(1, N),
                                stan::model::index_uni(1))), 1.0));
-          current_statement__ = 78;
+          current_statement__ = 52;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(dat_x,
                              stan::math::transpose(
@@ -3950,7 +3883,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                  p_soa_loop_mat_uni_col_idx,
                                  "p_soa_loop_mat_uni_col_idx",
                                  stan::model::index_uni(i)))), 1.0));
-          current_statement__ = 79;
+          current_statement__ = 53;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(dat_x,
                              stan::math::transpose(
@@ -3961,7 +3894,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                    stan::model::rvalue(idx_tester,
                                      "idx_tester", stan::model::index_uni(i))),
                                  stan::model::index_omni()))), 1.0));
-          current_statement__ = 80;
+          current_statement__ = 54;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(
                              stan::model::rvalue(dat_x, "dat_x",
@@ -3976,7 +3909,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                stan::model::index_uni(mask_fun(i, pstream__)),
                                stan::model::index_uni(mask_fun(i, pstream__)))),
                            1.0));
-          current_statement__ = 81;
+          current_statement__ = 55;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(
                              stan::model::rvalue(dat_x, "dat_x",
@@ -3992,32 +3925,32 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                stan::model::index_uni(i),
                                stan::model::index_uni(i)))), 1.0));
         }
-        current_statement__ = 84;
+        current_statement__ = 58;
         stan::math::validate_non_negative_index("tp_aos_loop_vec_v_uni_idx",
           "N", N);
         Eigen::Matrix<local_scalar_t__,-1,1> tp_aos_loop_vec_v_uni_idx =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-        current_statement__ = 86;
+        current_statement__ = 60;
         stan::math::validate_non_negative_index(
           "tp_aos_loop_vec_v_multi_uni_idx", "N", N);
         Eigen::Matrix<local_scalar_t__,-1,1>
           tp_aos_loop_vec_v_multi_uni_idx =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-        current_statement__ = 94;
+        current_statement__ = 68;
         for (int i = 1; i <= N; ++i) {
-          current_statement__ = 88;
+          current_statement__ = 62;
           stan::model::assign(tp_aos_loop_vec_v_uni_idx,
             stan::math::multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul),
             "assigning variable tp_aos_loop_vec_v_uni_idx",
             stan::model::index_uni(i));
-          current_statement__ = 89;
+          current_statement__ = 63;
           stan::model::assign(tp_aos_loop_vec_v_multi_uni_idx,
             stan::math::multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul),
             "assigning variable tp_aos_loop_vec_v_multi_uni_idx",
             stan::model::index_uni(
               stan::model::rvalue(idx_tester, "idx_tester",
                 stan::model::index_uni(i))));
-          current_statement__ = 90;
+          current_statement__ = 64;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(
                              stan::model::rvalue(dat_x, "dat_x",
@@ -4026,7 +3959,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                              stan::model::rvalue(p_aos_loop_vec_v_uni_idx,
                                "p_aos_loop_vec_v_uni_idx",
                                stan::model::index_uni(i))), 1.0));
-          current_statement__ = 91;
+          current_statement__ = 65;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::math::multiply(
                              stan::model::rvalue(dat_x, "dat_x",
@@ -4036,7 +3969,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                "p_aos_loop_mat_uni_uni_idx",
                                stan::model::index_uni(i),
                                stan::model::index_uni(i))), 1.0));
-          current_statement__ = 92;
+          current_statement__ = 66;
           lp_accum__.add(stan::math::normal_lpdf<propto__>(y,
                            stan::model::rvalue(dat_x, "dat_x",
                              stan::model::index_omni(),
@@ -4263,32 +4196,32 @@ class indexing_model final : public model_base_crtp<indexing_model> {
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 48;
+      current_statement__ = 22;
       tp_real_from_aos = stan::model::rvalue(p_soa_vec_v, "p_soa_vec_v",
                            stan::model::index_uni(1));
-      current_statement__ = 49;
+      current_statement__ = 23;
       stan::model::assign(tp_aos_vec_v,
         udf_fun(p_aos_vec_v_assign_to_aos, pstream__),
         "assigning variable tp_aos_vec_v");
-      current_statement__ = 53;
+      current_statement__ = 27;
       stan::model::assign(tp_soa_single_idx_uninit, tp_real_from_aos,
         "assigning variable tp_soa_single_idx_uninit",
         stan::model::index_uni(1));
-      current_statement__ = 54;
+      current_statement__ = 28;
       stan::model::assign(tp_soa_single_idx_uninit,
         stan::math::rep_vector(tp_real_from_aos, (M - 1)),
         "assigning variable tp_soa_single_idx_uninit",
         stan::model::index_min_max(2, M));
-      current_statement__ = 51;
+      current_statement__ = 25;
       stan::model::assign(tp_aos_fail_func_vec_v, p_aos_vec_v_tp_fails_func,
         "assigning variable tp_aos_fail_func_vec_v");
-      current_statement__ = 55;
+      current_statement__ = 29;
       stan::model::assign(tp_aos_fail_func_vec_v,
         stan::model::rvalue(p_soa_vec_v, "p_soa_vec_v",
           stan::model::index_uni(1)),
         "assigning variable tp_aos_fail_func_vec_v",
         stan::model::index_uni(1));
-      current_statement__ = 56;
+      current_statement__ = 30;
       stan::model::assign(tp_aos_fail_assign_from_top_idx,
         stan::model::rvalue(p_aos_fail_assign_from_top_idx,
           "p_aos_fail_assign_from_top_idx", stan::model::index_min(1)),
@@ -5481,10 +5414,8 @@ namespace indexing2_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 19> locations_array__ =
+static constexpr std::array<const char*, 17> locations_array__ =
   {" (found before start of program)",
-  " (in 'indexing2.stan', line 8, column 7 to column 12)",
-  " (in 'indexing2.stan', line 9, column 13 to column 34)",
   " (in 'indexing2.stan', line 8, column 2 to column 13)",
   " (in 'indexing2.stan', line 9, column 2 to column 35)",
   " (in 'indexing2.stan', line 13, column 9 to column 10)",
@@ -5527,25 +5458,25 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 15;
+      current_statement__ = 13;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 15;
+      current_statement__ = 13;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 16;
+      current_statement__ = 14;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
-      current_statement__ = 16;
+      current_statement__ = 14;
       M = context__.vals_i("M")[(1 - 1)];
-      current_statement__ = 17;
+      current_statement__ = 15;
       stan::math::validate_non_negative_index("Idx", "N", N);
-      current_statement__ = 18;
+      current_statement__ = 16;
       context__.validate_dims("data initialization", "Idx", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       Idx = std::vector<int>(N, std::numeric_limits<int>::min());
-      current_statement__ = 18;
+      current_statement__ = 16;
       Idx = context__.vals_i("Idx");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5588,7 +5519,7 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
       p_aos_loop_single_idx = in__.template read<
                                 Eigen::Matrix<local_scalar_t__,-1,1>>(10);
       {
-        current_statement__ = 5;
+        current_statement__ = 3;
         stan::math::validate_non_negative_index(
           "tp_soa_multi_idx_assign_in_loop", "N", N);
         stan::conditional_var_value_t<local_scalar_t__,
@@ -5598,15 +5529,15 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                     std::numeric_limits<double>::quiet_NaN(
                                                       )));
-        current_statement__ = 6;
+        current_statement__ = 4;
         stan::model::assign(tp_soa_multi_idx_assign_in_loop,
           stan::math::rep_vector<
             stan::conditional_var_value_t<local_scalar_t__,
               Eigen::Matrix<local_scalar_t__,-1,1>>>(alpha, N),
           "assigning variable tp_soa_multi_idx_assign_in_loop");
-        current_statement__ = 9;
+        current_statement__ = 7;
         for (int i = 1; i <= 10; ++i) {
-          current_statement__ = 7;
+          current_statement__ = 5;
           stan::model::assign(tp_soa_multi_idx_assign_in_loop,
             stan::math::multiply(
               stan::model::deep_copy(tp_soa_multi_idx_assign_in_loop),
@@ -5614,7 +5545,7 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
                 "p_aos_loop_single_idx", stan::model::index_uni(i))),
             "assigning variable tp_soa_multi_idx_assign_in_loop");
         }
-        current_statement__ = 10;
+        current_statement__ = 8;
         stan::math::validate_non_negative_index(
           "tp_soa_single_idx_in_upfrom_idx", "N", N);
         stan::conditional_var_value_t<local_scalar_t__,
@@ -5624,9 +5555,9 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
             Eigen::Matrix<local_scalar_t__,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                     std::numeric_limits<double>::quiet_NaN(
                                                       )));
-        current_statement__ = 14;
+        current_statement__ = 12;
         for (int i = 1; i <= 5; ++i) {
-          current_statement__ = 12;
+          current_statement__ = 10;
           stan::model::assign(tp_soa_single_idx_in_upfrom_idx,
             stan::model::rvalue(tp_soa_multi_idx_assign_in_loop,
               "tp_soa_multi_idx_assign_in_loop",
@@ -5924,14 +5855,8 @@ namespace reductions_allowed_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 18> locations_array__ =
+static constexpr std::array<const char*, 12> locations_array__ =
   {" (found before start of program)",
-  " (in 'reductions_allowed.stan', line 16, column 19 to column 24)",
-  " (in 'reductions_allowed.stan', line 17, column 19 to column 24)",
-  " (in 'reductions_allowed.stan', line 18, column 19 to column 24)",
-  " (in 'reductions_allowed.stan', line 22, column 9 to column 25)",
-  " (in 'reductions_allowed.stan', line 23, column 18 to column 40)",
-  " (in 'reductions_allowed.stan', line 24, column 18 to column 48)",
   " (in 'reductions_allowed.stan', line 16, column 4 to column 25)",
   " (in 'reductions_allowed.stan', line 17, column 4 to column 25)",
   " (in 'reductions_allowed.stan', line 18, column 4 to column 25)",
@@ -5970,7 +5895,7 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 14;
+    current_statement__ = 8;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5994,7 +5919,7 @@ okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 16;
+    current_statement__ = 10;
     return stan::math::add(sum_x, y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6024,11 +5949,11 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 13;
+      current_statement__ = 7;
       context__.validate_dims("data initialization", "data_r", "double",
         std::vector<size_t>{});
       data_r = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 13;
+      current_statement__ = 7;
       data_r = context__.vals_r("data_r")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6084,12 +6009,12 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       aos_y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(5,
                 10);
       local_scalar_t__ tp_real_from_soa = DUMMY_VAR__;
-      current_statement__ = 10;
+      current_statement__ = 4;
       tp_real_from_soa = (stan::math::logical_gt(5, 0) ? data_r : stan::math::sum(
                                                                     soa_x));
       Eigen::Matrix<local_scalar_t__,-1,-1> tp_matrix_aos_from_mix =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
-      current_statement__ = 11;
+      current_statement__ = 5;
       stan::model::assign(tp_matrix_aos_from_mix,
         (stan::math::logical_gt(stan::math::sum(soa_x), 0) ? stan::math::eval(
                                                                nono_func(
@@ -6100,7 +6025,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
         stan::math::eval(aos_y)), "assigning variable tp_matrix_aos_from_mix");
       Eigen::Matrix<local_scalar_t__,-1,-1> tp_matrix_from_udf_reduced_soa =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
-      current_statement__ = 12;
+      current_statement__ = 6;
       stan::model::assign(tp_matrix_from_udf_reduced_soa,
         okay_reduction(stan::math::sum(soa_x), aos_x, pstream__),
         "assigning variable tp_matrix_from_udf_reduced_soa");
@@ -6174,10 +6099,10 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 10;
+      current_statement__ = 4;
       tp_real_from_soa = (stan::math::logical_gt(5, 0) ? data_r : stan::math::sum(
                                                                     soa_x));
-      current_statement__ = 11;
+      current_statement__ = 5;
       stan::model::assign(tp_matrix_aos_from_mix,
         (stan::math::logical_gt(stan::math::sum(soa_x), 0) ? stan::math::eval(
                                                                nono_func(
@@ -6186,7 +6111,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
                                                                    aos_y),
                                                                  pstream__)) : 
         stan::math::eval(aos_y)), "assigning variable tp_matrix_aos_from_mix");
-      current_statement__ = 12;
+      current_statement__ = 6;
       stan::model::assign(tp_matrix_from_udf_reduced_soa,
         okay_reduction(stan::math::sum(soa_x), aos_x, pstream__),
         "assigning variable tp_matrix_from_udf_reduced_soa");
@@ -6563,15 +6488,8 @@ namespace return_types_and_udfs_demotes_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 20> locations_array__ =
+static constexpr std::array<const char*, 13> locations_array__ =
   {" (found before start of program)",
-  " (in 'return_types_and_udfs_demotes.stan', line 20, column 19 to column 26)",
-  " (in 'return_types_and_udfs_demotes.stan', line 21, column 19 to column 32)",
-  " (in 'return_types_and_udfs_demotes.stan', line 25, column 19 to column 32)",
-  " (in 'return_types_and_udfs_demotes.stan', line 26, column 19 to column 38)",
-  " (in 'return_types_and_udfs_demotes.stan', line 27, column 19 to column 44)",
-  " (in 'return_types_and_udfs_demotes.stan', line 28, column 19 to column 34)",
-  " (in 'return_types_and_udfs_demotes.stan', line 29, column 19 to column 30)",
   " (in 'return_types_and_udfs_demotes.stan', line 20, column 4 to column 27)",
   " (in 'return_types_and_udfs_demotes.stan', line 21, column 4 to column 33)",
   " (in 'return_types_and_udfs_demotes.stan', line 25, column 4 to column 68)",
@@ -6602,7 +6520,7 @@ Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__) {
   try {
     Eigen::Matrix<local_scalar_t__,-1,-1> some_mat =
       Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-    current_statement__ = 16;
+    current_statement__ = 9;
     return some_mat;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6623,7 +6541,7 @@ mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 18;
+    current_statement__ = 11;
     return A;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6704,30 +6622,30 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
                         Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       Eigen::Matrix<local_scalar_t__,-1,-1> user_func_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 10;
+      current_statement__ = 3;
       stan::model::assign(user_func_aos,
         mat_ret_user_func(udf_input_aos, pstream__),
         "assigning variable user_func_aos");
       Eigen::Matrix<local_scalar_t__,-1,-1> empty_user_func_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 11;
+      current_statement__ = 4;
       stan::model::assign(empty_user_func_aos, empty_user_func(pstream__),
         "assigning variable empty_user_func_aos");
       Eigen::Matrix<local_scalar_t__,-1,-1> inner_empty_user_func_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 12;
+      current_statement__ = 5;
       stan::model::assign(inner_empty_user_func_aos,
         stan::math::multiply(udf_input_aos, empty_user_func(pstream__)),
         "assigning variable inner_empty_user_func_aos");
       Eigen::Matrix<local_scalar_t__,-1,-1> int_aos_mul_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 13;
+      current_statement__ = 6;
       stan::model::assign(int_aos_mul_aos,
         stan::math::multiply(stan::math::rows(row_soa), empty_user_func_aos),
         "assigning variable int_aos_mul_aos");
       Eigen::Matrix<local_scalar_t__,-1,-1> mul_two_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
-      current_statement__ = 14;
+      current_statement__ = 7;
       stan::model::assign(mul_two_aos,
         stan::math::multiply(
           stan::math::multiply(stan::math::cols(row_soa),
@@ -6804,22 +6722,22 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 10;
+      current_statement__ = 3;
       stan::model::assign(user_func_aos,
         mat_ret_user_func(udf_input_aos, pstream__),
         "assigning variable user_func_aos");
-      current_statement__ = 11;
+      current_statement__ = 4;
       stan::model::assign(empty_user_func_aos, empty_user_func(pstream__),
         "assigning variable empty_user_func_aos");
-      current_statement__ = 12;
+      current_statement__ = 5;
       stan::model::assign(inner_empty_user_func_aos,
         stan::math::multiply(udf_input_aos, empty_user_func(pstream__)),
         "assigning variable inner_empty_user_func_aos");
-      current_statement__ = 13;
+      current_statement__ = 6;
       stan::model::assign(int_aos_mul_aos,
         stan::math::multiply(stan::math::rows(row_soa), empty_user_func_aos),
         "assigning variable int_aos_mul_aos");
-      current_statement__ = 14;
+      current_statement__ = 7;
       stan::model::assign(mul_two_aos,
         stan::math::multiply(
           stan::math::multiply(stan::math::cols(row_soa),
@@ -7196,11 +7114,8 @@ namespace single_indexing_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 11> locations_array__ =
+static constexpr std::array<const char*, 8> locations_array__ =
   {" (found before start of program)",
-  " (in 'single_indexing.stan', line 6, column 18 to column 23)",
-  " (in 'single_indexing.stan', line 7, column 18 to column 23)",
-  " (in 'single_indexing.stan', line 11, column 10 to column 26)",
   " (in 'single_indexing.stan', line 6, column 3 to column 24)",
   " (in 'single_indexing.stan', line 7, column 3 to column 24)",
   " (in 'single_indexing.stan', line 11, column 5 to column 41)",
@@ -7281,11 +7196,11 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
                 stan::conditional_var_value_t<local_scalar_t__,
                   Eigen::Matrix<local_scalar_t__,-1,-1>>>(10, 10);
       local_scalar_t__ tp_real_from_soa = DUMMY_VAR__;
-      current_statement__ = 6;
+      current_statement__ = 3;
       tp_real_from_soa = stan::model::rvalue(soa_p, "soa_p",
                            stan::model::index_uni(1),
                            stan::model::index_uni(1));
-      current_statement__ = 10;
+      current_statement__ = 7;
       for (int i = 1; i <= 10; ++i) {
         stan::conditional_var_value_t<local_scalar_t__,
           Eigen::Matrix<local_scalar_t__,1,-1>> tp_row_vector_from_soa_loop =
@@ -7293,7 +7208,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
             Eigen::Matrix<local_scalar_t__,1,-1>>(Eigen::Matrix<double,1,-1>::Constant(10,
                                                     std::numeric_limits<double>::quiet_NaN(
                                                       )));
-        current_statement__ = 7;
+        current_statement__ = 4;
         stan::model::assign(tp_row_vector_from_soa_loop,
           stan::math::multiply(
             stan::model::rvalue(soa_p, "soa_p", stan::model::index_uni(i)),
@@ -7305,7 +7220,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
                                                      10,
                                                      std::numeric_limits<double>::quiet_NaN(
                                                        )));
-        current_statement__ = 8;
+        current_statement__ = 5;
         stan::model::assign(tp_matrix_from_soa_loop,
           stan::math::multiply(
             stan::model::rvalue(aos_p, "aos_p", stan::model::index_uni(i),
@@ -7369,16 +7284,16 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 6;
+      current_statement__ = 3;
       tp_real_from_soa = stan::model::rvalue(soa_p, "soa_p",
                            stan::model::index_uni(1),
                            stan::model::index_uni(1));
-      current_statement__ = 10;
+      current_statement__ = 7;
       for (int i = 1; i <= 10; ++i) {
         Eigen::Matrix<double,1,-1> tp_row_vector_from_soa_loop =
           Eigen::Matrix<double,1,-1>::Constant(10,
             std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 7;
+        current_statement__ = 4;
         stan::model::assign(tp_row_vector_from_soa_loop,
           stan::math::multiply(
             stan::model::rvalue(soa_p, "soa_p", stan::model::index_uni(i)),
@@ -7386,7 +7301,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
         Eigen::Matrix<double,-1,-1> tp_matrix_from_soa_loop =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
             std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 8;
+        current_statement__ = 5;
         stan::model::assign(tp_matrix_from_soa_loop,
           stan::math::multiply(
             stan::model::rvalue(aos_p, "aos_p", stan::model::index_uni(i),
@@ -7684,11 +7599,8 @@ namespace tp_reused_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 13> locations_array__ =
+static constexpr std::array<const char*, 10> locations_array__ =
   {" (found before start of program)",
-  " (in 'tp_reused.stan', line 16, column 19 to column 35)",
-  " (in 'tp_reused.stan', line 17, column 19 to column 24)",
-  " (in 'tp_reused.stan', line 21, column 18 to column 31)",
   " (in 'tp_reused.stan', line 16, column 4 to column 36)",
   " (in 'tp_reused.stan', line 17, column 4 to column 25)",
   " (in 'tp_reused.stan', line 21, column 4 to column 51)",
@@ -7725,7 +7637,7 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 9;
+    current_statement__ = 6;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7749,7 +7661,7 @@ okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 11;
+    current_statement__ = 8;
     return stan::math::add(sum_x, y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7779,11 +7691,11 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 8;
+      current_statement__ = 5;
       context__.validate_dims("data initialization", "data_r", "double",
         std::vector<size_t>{});
       data_r = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 8;
+      current_statement__ = 5;
       data_r = context__.vals_r("data_r")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7829,10 +7741,10 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
                 10);
       Eigen::Matrix<local_scalar_t__,-1,-1> tp_matrix_aos =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
-      current_statement__ = 6;
+      current_statement__ = 3;
       stan::model::assign(tp_matrix_aos, first_pass_soa_x,
         "assigning variable tp_matrix_aos");
-      current_statement__ = 7;
+      current_statement__ = 4;
       stan::model::assign(tp_matrix_aos, nono_func(aos_x, pstream__),
         "assigning variable tp_matrix_aos");
     } catch (const std::exception& e) {
@@ -7894,10 +7806,10 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 6;
+      current_statement__ = 3;
       stan::model::assign(tp_matrix_aos, first_pass_soa_x,
         "assigning variable tp_matrix_aos");
-      current_statement__ = 7;
+      current_statement__ = 4;
       stan::model::assign(tp_matrix_aos, nono_func(aos_x, pstream__),
         "assigning variable tp_matrix_aos");
       if (emit_transformed_parameters__) {

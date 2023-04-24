@@ -740,10 +740,10 @@
  (output_vars
   ((rho
     ((begin_loc
-      ((filename simple_function.stan) (line_num 13) (col_num 16)
+      ((filename simple_function.stan) (line_num 13) (col_num 2)
        (included_from ())))
      (end_loc
-      ((filename simple_function.stan) (line_num 13) (col_num 19)
+      ((filename simple_function.stan) (line_num 13) (col_num 20)
        (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters)
@@ -753,10 +753,10 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (alpha
     ((begin_loc
-      ((filename simple_function.stan) (line_num 14) (col_num 16)
+      ((filename simple_function.stan) (line_num 14) (col_num 2)
        (included_from ())))
      (end_loc
-      ((filename simple_function.stan) (line_num 14) (col_num 21)
+      ((filename simple_function.stan) (line_num 14) (col_num 22)
        (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters)
@@ -766,10 +766,10 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (sigma
     ((begin_loc
-      ((filename simple_function.stan) (line_num 15) (col_num 16)
+      ((filename simple_function.stan) (line_num 15) (col_num 2)
        (included_from ())))
      (end_loc
-      ((filename simple_function.stan) (line_num 15) (col_num 21)
+      ((filename simple_function.stan) (line_num 15) (col_num 22)
        (included_from ()))))
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters)
