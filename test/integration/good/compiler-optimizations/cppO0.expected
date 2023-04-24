@@ -285,6 +285,8 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "X_p", "double",
+        std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
@@ -1015,6 +1017,14 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "gamma", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "xi", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "delta", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
@@ -1426,6 +1436,8 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "X_p", "double",
+        std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
@@ -1865,6 +1877,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "X", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X =
@@ -2709,6 +2723,10 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(max_age)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_p = DUMMY_VAR__;
@@ -3616,6 +3634,40 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_age",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_edu",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_state",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_region",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_age_edu",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "b_0", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "b_female",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "b_black",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "b_female_black",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "b_v_prev",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "b_age", "double",
+        std::vector<size_t>{static_cast<size_t>(n_age)});
+      context__.validate_dims("parameter initialization", "b_edu", "double",
+        std::vector<size_t>{static_cast<size_t>(n_edu)});
+      context__.validate_dims("parameter initialization", "b_region",
+        "double", std::vector<size_t>{static_cast<size_t>(n_region)});
+      context__.validate_dims("parameter initialization", "b_age_edu",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(n_age),
+          static_cast<size_t>(n_edu)});
+      context__.validate_dims("parameter initialization", "b_hat", "double",
+        std::vector<size_t>{static_cast<size_t>(n_state)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ sigma = DUMMY_VAR__;
@@ -4840,6 +4892,12 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> mu =
@@ -5248,6 +5306,12 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{static_cast<size_t>(J)});
+      context__.validate_dims("parameter initialization", "tau", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
@@ -6100,6 +6164,28 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "a", "double",
+        std::vector<size_t>{static_cast<size_t>(n_age)});
+      context__.validate_dims("parameter initialization", "b", "double",
+        std::vector<size_t>{static_cast<size_t>(n_edu)});
+      context__.validate_dims("parameter initialization", "c", "double",
+        std::vector<size_t>{static_cast<size_t>(n_age_edu)});
+      context__.validate_dims("parameter initialization", "d", "double",
+        std::vector<size_t>{static_cast<size_t>(n_state)});
+      context__.validate_dims("parameter initialization", "e", "double",
+        std::vector<size_t>{static_cast<size_t>(n_region_full)});
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(5)});
+      context__.validate_dims("parameter initialization", "sigma_a",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_b",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_c",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_d",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_e",
+        "double", std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
@@ -6859,6 +6945,11 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "tau_phi",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "phi_std_raw",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(phi_std_raw_1dim__)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ tau_phi = DUMMY_VAR__;
@@ -7782,6 +7873,14 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mean_phi",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "epsilon",
+        "double", std::vector<size_t>{static_cast<size_t>(nind)});
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
@@ -9221,6 +9320,18 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mean_phi",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "psi", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(n_occasions)});
+      context__.validate_dims("parameter initialization", "epsilon",
+        "double", std::vector<size_t>{static_cast<size_t>(M)});
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
@@ -10004,6 +10115,11 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "pi", "double",
+        std::vector<size_t>{static_cast<size_t>(K)});
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{static_cast<size_t>(J), static_cast<size_t>(K),
+          static_cast<size_t>(K)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> pi =
@@ -10602,6 +10718,18 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "beta0", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "beta1", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "tau_theta",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "tau_phi",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "theta_std",
+        "double", std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "phi_std_raw",
+        "double", std::vector<size_t>{static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta0 = DUMMY_VAR__;
@@ -11505,6 +11633,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(max_age)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_p = DUMMY_VAR__;
@@ -12759,6 +12891,10 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "p_single_ret_vec",
+        "double", std::vector<size_t>{static_cast<size_t>(5)});
+      context__.validate_dims("parameter initialization", "p_multi_ret_vec",
+        "double", std::vector<size_t>{static_cast<size_t>(5)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec =
@@ -13182,6 +13318,8 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "alpha", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha = DUMMY_VAR__;
@@ -14874,6 +15012,16 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mean_phi",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "gamma", "double",
+        std::vector<size_t>{static_cast<size_t>(n_occasions)});
+      context__.validate_dims("parameter initialization", "epsilon",
+        "double", std::vector<size_t>{static_cast<size_t>(epsilon_1dim__)});
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
@@ -15694,6 +15842,8 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "x", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
@@ -16025,6 +16175,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{static_cast<size_t>(J)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::vector<local_scalar_t__> theta =
@@ -16784,6 +16936,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mean_phi",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
@@ -17244,6 +17400,8 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
@@ -17886,6 +18044,14 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "alpha_occ",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "beta_occ",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "alpha_p",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "beta_p", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha_occ = DUMMY_VAR__;
@@ -18597,6 +18763,22 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "eta1", "double",
+        std::vector<size_t>{static_cast<size_t>(J)});
+      context__.validate_dims("parameter initialization", "eta2", "double",
+        std::vector<size_t>{static_cast<size_t>(J)});
+      context__.validate_dims("parameter initialization", "mu_a1", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "mu_a2", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_a1",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_a2",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_y",
+        "double", std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
@@ -19551,6 +19733,17 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "phi", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "x_matrix",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "x_vector",
+        "double", std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "x_cov", "double",
+        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ theta = DUMMY_VAR__;
@@ -20880,6 +21073,16 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "a", "double",
+        std::vector<size_t>{static_cast<size_t>(n_pair)});
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "mu_a", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_a",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma_y",
+        "double", std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
@@ -21386,6 +21589,10 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "m2", "double",
+        std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
+      context__.validate_dims("parameter initialization", "m3", "double",
+        std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
@@ -21988,6 +22195,18 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "alpha0", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "alpha1", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "alpha2", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "alpha12",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "tau", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "b", "double",
+        std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(K)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha0 = DUMMY_VAR__;
@@ -22414,6 +22633,8 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "param", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ param = DUMMY_VAR__;
@@ -22801,6 +23022,8 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "y", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;

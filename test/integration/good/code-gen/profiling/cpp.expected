@@ -317,6 +317,12 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "rho", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "alpha", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ rho = DUMMY_VAR__;

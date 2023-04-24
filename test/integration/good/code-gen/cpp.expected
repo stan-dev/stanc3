@@ -257,6 +257,12 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "tau", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "theta_tilde",
+        "double", std::vector<size_t>{static_cast<size_t>(J)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
@@ -610,6 +616,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "bar", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ bar = DUMMY_VAR__;
@@ -1104,6 +1112,8 @@ class container_promotion_model final : public model_base_crtp<container_promoti
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "y", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
@@ -2090,6 +2100,36 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "explicit",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "float", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "friend", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "goto", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "inline", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "long", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "mutable",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "namespace",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "new", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "noexcept",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "not", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "not_eq", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "nullptr",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "operator",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "or", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ _stan_explicit = DUMMY_VAR__;
@@ -2630,6 +2670,12 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "tau", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "theta_tilde",
+        "double", std::vector<size_t>{static_cast<size_t>(J)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
@@ -3420,6 +3466,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "xx", "double",
+        std::vector<size_t>{static_cast<size_t>(3)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::vector<local_scalar_t__> xx =
@@ -10635,6 +10683,74 @@ class mother_model final : public model_base_crtp<mother_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "p_real", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "p_upper",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "p_lower",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization",
+        "offset_multiplier", "double",
+        std::vector<size_t>{static_cast<size_t>(5)});
+      context__.validate_dims("parameter initialization",
+        "no_offset_multiplier", "double",
+        std::vector<size_t>{static_cast<size_t>(5)});
+      context__.validate_dims("parameter initialization",
+        "offset_no_multiplier", "double",
+        std::vector<size_t>{static_cast<size_t>(5)});
+      context__.validate_dims("parameter initialization", "p_real_1d_ar",
+        "double", std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_real_3d_ar",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(M),
+          static_cast<size_t>(K)});
+      context__.validate_dims("parameter initialization", "p_vec", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_1d_vec",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_3d_vec",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(M),
+          static_cast<size_t>(K), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_row_vec",
+        "double", std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_1d_row_vec",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_3d_row_vec",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(M),
+          static_cast<size_t>(K), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_mat", "double",
+        std::vector<size_t>{static_cast<size_t>(5), static_cast<size_t>(4)});
+      context__.validate_dims("parameter initialization", "p_ar_mat",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(4), static_cast<size_t>(5),
+          static_cast<size_t>(2), static_cast<size_t>(3)});
+      context__.validate_dims("parameter initialization", "p_simplex",
+        "double", std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_1d_simplex",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_3d_simplex",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(M),
+          static_cast<size_t>(K), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "p_cfcov_54",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(5), static_cast<size_t>(4)});
+      context__.validate_dims("parameter initialization", "p_cfcov_33",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(3)});
+      context__.validate_dims("parameter initialization", "p_cfcov_33_ar",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(K), static_cast<size_t>(3),
+          static_cast<size_t>(3)});
+      context__.validate_dims("parameter initialization", "x_p", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "y_p", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ p_real = DUMMY_VAR__;
@@ -13675,6 +13791,21 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "y0_p", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "theta_p",
+        "double", std::vector<size_t>{static_cast<size_t>(1)});
+      context__.validate_dims("parameter initialization", "x_p", "double",
+        std::vector<size_t>{static_cast<size_t>(1)});
+      context__.validate_dims("parameter initialization", "x_p_v", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "shared_params_p",
+        "double", std::vector<size_t>{static_cast<size_t>(3)});
+      context__.validate_dims("parameter initialization", "job_params_p",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(3)});
+      context__.validate_dims("parameter initialization", "x_r", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::vector<local_scalar_t__> y0_p =
@@ -18440,6 +18571,12 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "r", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "ra", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "v", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ r = DUMMY_VAR__;
@@ -19115,6 +19252,18 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "alpha", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "gamma", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "delta", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "z_init", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha = DUMMY_VAR__;
@@ -20562,6 +20711,24 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "alpha_v",
+        "double", std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "cuts", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "alpha", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "phi", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "X_p", "double",
+        std::vector<size_t>{static_cast<size_t>(n), static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "beta_m", "double",
+        std::vector<size_t>{static_cast<size_t>(n), static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "X_rv_p", "double",
+        std::vector<size_t>{static_cast<size_t>(n)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> alpha_v =
@@ -21390,6 +21557,10 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "y", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "z", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
@@ -21774,6 +21945,12 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "L_Omega",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(nt), static_cast<size_t>(2),
+          static_cast<size_t>(2)});
+      context__.validate_dims("parameter initialization", "z1", "double",
+        std::vector<size_t>{static_cast<size_t>(NS)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>> L_Omega =
@@ -23238,6 +23415,8 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "gamma", "double",
+        std::vector<size_t>{static_cast<size_t>(times)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> gamma =
@@ -23778,6 +23957,12 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "y1", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y2", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y3", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::vector<local_scalar_t__> y1 =
@@ -25720,6 +25905,46 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "a8", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "a7", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "a6", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "a5", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "a4", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "a3", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "a2", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "a1", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y8", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y7", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y6", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y5", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y4", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y3", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y2", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y1", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>> a8 =
@@ -29457,6 +29682,37 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "y1", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y2", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y3", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y4", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y5", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y6", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y7", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y8", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y9", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "y10", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y11", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y12", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "y17", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N),
+          static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::vector<local_scalar_t__> y1 =
@@ -30810,6 +31066,73 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "e", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "pi", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "log2", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "log10", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sqrt2", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "not_a_number",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization",
+        "positive_infinity", "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization",
+        "negative_infinity", "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization",
+        "machine_precision", "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "inv_logit",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "logit", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "num_elements",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "pow", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "add", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sub", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "multiply",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization",
+        "binomial_coefficient_log", "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization",
+        "read_constrain_lb", "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "read", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization",
+        "validate_non_negative_index", "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "length", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization",
+        "validate_positive_index", "double",
+        std::vector<size_t>{static_cast<size_t>(5)});
+      context__.validate_dims("parameter initialization", "profile_map",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "assign", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "rvalue", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "stan_print",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "model_base_crtp",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "index_uni",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization",
+        "bernoulli_logit_glm_lpmf", "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "reduce_sum",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "segment",
+        "double", std::vector<size_t>{static_cast<size_t>(4)});
+      context__.validate_dims("parameter initialization", "ode_bdf",
+        "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "ode_bdf_tol",
+        "double", std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ e = DUMMY_VAR__;
@@ -31824,6 +32147,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "x", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
@@ -33738,6 +34063,46 @@ class transform_model final : public model_base_crtp<transform_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "p_1", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "p_2", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "p_3", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "p_4", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "p_5", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "p_6", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "p_7", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "p_8", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "p_9", "double",
+        std::vector<size_t>{static_cast<size_t>(m), static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "p_10", "double",
+        std::vector<size_t>{static_cast<size_t>(n), static_cast<size_t>(m),
+          static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "pv_1", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "pv_2", "double",
+        std::vector<size_t>{static_cast<size_t>(m), static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "pv_3", "double",
+        std::vector<size_t>{static_cast<size_t>(n), static_cast<size_t>(m),
+          static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "pr_1", "double",
+        std::vector<size_t>{static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "pr_2", "double",
+        std::vector<size_t>{static_cast<size_t>(m), static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "pr_3", "double",
+        std::vector<size_t>{static_cast<size_t>(n), static_cast<size_t>(m),
+          static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "pm_1", "double",
+        std::vector<size_t>{static_cast<size_t>(m), static_cast<size_t>(k)});
+      context__.validate_dims("parameter initialization", "pm_2", "double",
+        std::vector<size_t>{static_cast<size_t>(n), static_cast<size_t>(m),
+          static_cast<size_t>(k)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::vector<local_scalar_t__> p_1 =
@@ -34876,6 +35241,10 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "m", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "y", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ m = DUMMY_VAR__;
@@ -35208,6 +35577,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "x", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
@@ -35541,6 +35912,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "x", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
@@ -35895,6 +36268,10 @@ class variable_named_context_model final : public model_base_crtp<variable_named
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
@@ -36849,6 +37226,14 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "vector_mu",
+        "double", std::vector<size_t>{static_cast<size_t>(N)});
+      context__.validate_dims("parameter initialization", "vector_sigma",
+        "double", std::vector<size_t>{static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;

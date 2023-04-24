@@ -95,7 +95,7 @@ let lower_model_private {Program.prepare_data; _} =
   List.map ~f:lower_data_decl data_decls
   @ List.map ~f:lower_map_decl eigen_map_decls
 
-let gen_validate_data name st =
+let validate_dims ~stage name st =
   if String.is_suffix ~suffix:"__" name then []
   else
     let vector args =
@@ -106,7 +106,7 @@ let gen_validate_data name st =
     let context = Var "context__" in
     let validate =
       context.@?(( "validate_dims"
-                 , [ literal_string "data initialization"
+                 , [ literal_string stage
                    ; literal_string (Mangle.remove_prefix name)
                    ; literal_string
                        (Fmt.to_to_string Cpp.Printing.pp_type_
@@ -173,7 +173,9 @@ let lower_constructor
           Numbering.assign_loc meta
           @
           match Set.mem data_idents decl_id with
-          | true -> gen_validate_data decl_id st @ gen_assign_data decl_id st
+          | true ->
+              validate_dims ~stage:"data initialization" decl_id st
+              @ gen_assign_data decl_id st
           | false -> gen_assign_data decl_id st )
       | Unsized _ -> [] )
     | _ -> lower_statement s in
@@ -271,7 +273,7 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
          (intro @ [Stmts.rethrow_located (lower_statements generate_quantities)])
        ~cv_qualifiers:[Const] () )
 
-let gen_transform_inits_impl {Program.transform_inits; _} =
+let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
   let templates =
     [Typename "VecVar"; Require ("stan::require_vector_t", ["VecVar"])] in
   let args =
@@ -282,11 +284,25 @@ let gen_transform_inits_impl {Program.transform_inits; _} =
     [ Using ("local_scalar_t__", Some Double); Decls.serializer_out
     ; Decls.current_statement ]
     @ Decls.dummy_var in
+  let validate_params
+      ( (name : string)
+      , (Program.{out_block; out_constrained_st; _} : 'a Program.outvar) ) =
+    match out_block with
+    | Parameters ->
+        Some
+          (validate_dims ~stage:"parameter initialization" name
+             out_constrained_st )
+    | _ -> None in
+  let validation =
+    List.filter_map ~f:validate_params output_vars |> List.concat in
   FunDef
     (make_fun_defn
        ~templates_init:([templates], true)
        ~inline:true ~return_type:Void ~name:"transform_inits_impl" ~args
-       ~body:(intro @ [Stmts.rethrow_located (lower_statements transform_inits)])
+       ~body:
+         ( intro
+         @ [ Stmts.rethrow_located
+               (validation @ lower_statements transform_inits) ] )
        ~cv_qualifiers:[Const] () )
 
 let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
