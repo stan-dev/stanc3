@@ -38,6 +38,7 @@ let soa_opt = ref false
 let output_file = ref ""
 let generate_data = ref false
 let generate_inits = ref false
+let data_file = ref None
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
 let bare_functions = ref false
@@ -82,6 +83,9 @@ let options =
       , Arg.Set generate_inits
       , " For debugging purposes: generate a mock initial value for each \
          parameter" )
+    ; ( "--data-file"
+      , Arg.String (fun s -> data_file := Some s)
+      , " For --debug-generate-data or --debug-generate-inits" )
     ; ( "--debug-mir"
       , Arg.Set dump_mir
       , " For debugging purposes: print the MIR as an S-expression." )
@@ -306,13 +310,27 @@ let use_file filename =
     Warnings.pp_warnings Fmt.stderr ?printed_filename
       (Deprecation_analysis.collect_warnings typed_ast) ;
   if !generate_data then
+    let decls = Ast_to_Mir.gather_declarations typed_ast.datablock in
+    let data =
+      match !data_file with
+      | None -> Map.Poly.empty
+      | Some file ->
+          Debug_data_generation.json_to_mir decls (Yojson.Basic.from_file file)
+    in
+    print_endline (Debug_data_generation.gen_values_json ~data decls)
+  else if !generate_inits then
+    let data =
+      match !data_file with
+      | None -> Map.Poly.empty
+      | Some file ->
+          Debug_data_generation.json_to_mir
+            (Ast_to_Mir.gather_declarations typed_ast.datablock)
+            (Yojson.Basic.from_file file) in
     print_endline
-      (Debug_data_generation.gen_values_json
-         (Ast_to_Mir.gather_declarations typed_ast.datablock) ) ;
-  if !generate_inits then
-    print_endline
-      (Debug_data_generation.gen_values_json
-         (Ast_to_Mir.gather_declarations typed_ast.parametersblock) ) ;
+      (Debug_data_generation.gen_values_json ~filter:true ~data
+         (Ast_to_Mir.gather_declarations typed_ast.parametersblock) )
+  else if Option.is_some !data_file then
+    Fmt.pf Fmt.stderr "Warning: ignoring --data-file" ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in

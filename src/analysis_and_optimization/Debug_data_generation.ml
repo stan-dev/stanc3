@@ -261,9 +261,7 @@ and generate_value m st t =
   match st with
   | SizedType.SInt -> Expr.Helpers.int (gen_num_int m t)
   | SReal -> Expr.Helpers.float (gen_num_real m t)
-  | SComplex ->
-      (* when serialzied, a complex number looks just like a 2-array of reals *)
-      gen_complex ()
+  | SComplex -> gen_complex ()
   | SVector (_, e) -> gen_vector m (unwrap_int_exn m e) t
   | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
   | SMatrix (_, e1, e2) ->
@@ -274,14 +272,60 @@ and generate_value m st t =
       gen_complex_matrix (unwrap_int_exn m e1) (unwrap_int_exn m e2)
   | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
 
-let generate_expressions data =
-  List.fold data ~init:([], Map.Poly.empty)
+let generate_expressions input data =
+  List.fold data ~init:([], input)
     ~f:(fun (l, m) (sizedtype, transformation, name) ->
       let value = generate_value m sizedtype transformation in
       ((name, value) :: l, Map.set m ~key:name ~data:value) )
   |> fst |> List.rev
 
 open Yojson
+
+let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
+    (json : Yojson.Basic.t) =
+  let rec create_expr (type_ : UnsizedType.t) (json : Basic.t) =
+    let as_float = function `Int i -> float_of_int i | `Float f -> f in
+    let try_float = function
+      | `Int i -> Some (float_of_int i)
+      | `Float f -> Some f
+      | _ -> None in
+    let try_complex = function
+      | `List [((`Int _ | `Float _) as r); ((`Int _ | `Float _) as i)] ->
+          Some (as_float r, as_float i)
+      | _ -> None in
+    let try_map f l g =
+      let s = List.filter_map ~f l in
+      if List.length s <> List.length l then None else Some (g s) in
+    match (json, type_) with
+    | `Int i, (UInt | UReal) -> Some (Expr.Helpers.int i)
+    | `Float f, (UInt | UReal) -> Some (Expr.Helpers.float f)
+    | `List [((`Int _ | `Float _) as r); ((`Int _ | `Float _) as i)], UComplex
+      ->
+        Some (Expr.Helpers.complex (as_float r, as_float i))
+    | `List l, UArray ty -> try_map (create_expr ty) l Expr.Helpers.array_expr
+    | `List l, UVector -> try_map try_float l Expr.Helpers.vector
+    | `List l, URowVector -> try_map try_float l Expr.Helpers.row_vector
+    | `List l, UMatrix ->
+        try_map (create_expr URowVector) l Expr.Helpers.matrix_from_rows
+    | `List l, UComplexVector ->
+        try_map try_complex l Expr.Helpers.complex_vector
+    | `List l, UComplexRowVector ->
+        try_map try_complex l Expr.Helpers.complex_row_vector
+    | `List l, UComplexMatrix ->
+        try_map
+          (create_expr UComplexRowVector)
+          l Expr.Helpers.complex_matrix_from_rows
+    | _ -> None in
+  let map =
+    match json with
+    | `Assoc l -> String.Map.of_alist_reduce ~f:Fn.const l
+    | _ -> String.Map.empty in
+  List.filter_map decls ~f:(fun (st, _, name) ->
+      Map.find map name
+      |> Option.bind ~f:(fun value ->
+             create_expr (SizedType.to_unsized st) value )
+      |> Option.map ~f:(fun value -> (name, value)) )
+  |> Map.Poly.of_alist_reduce ~f:Fn.const
 
 let generate_json_entries (name, expr) : string * t =
   let rec expr_to_json e : t =
@@ -300,8 +344,14 @@ let generate_json_entries (name, expr) : string * t =
           [%message "Could not evaluate expression " (e : Expr.Typed.t)] in
   (name, expr_to_json expr)
 
-let gen_values_json decls =
-  let ids_and_values = generate_expressions decls in
+let gen_values_json ?(filter = false) ?(data = Map.Poly.empty) decls =
+  let ids_and_values = generate_expressions data decls in
   let json_entries = List.map ~f:generate_json_entries ids_and_values in
+  let json_entries =
+    if filter then
+      List.filter
+        ~f:(fun (name, _) -> Option.is_none (Map.find data name))
+        json_entries
+    else json_entries in
   let json = `Assoc json_entries in
   pretty_to_string json
