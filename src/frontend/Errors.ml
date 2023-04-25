@@ -21,6 +21,7 @@ type t =
   | FileNotFound of string
   | Syntax_error of syntax_error
   | Semantic_error of Semantic_error.t
+  | DebugDataError of (Middle.Location_span.t * string)
 
 let pp_context_with_message ?code ppf (msg, loc) =
   let open Middle.Location in
@@ -69,5 +70,10 @@ let pp ?printed_filename ?code ppf = function
       Fmt.pf ppf "Error: file '%s' not found or cannot be opened@." f
   | Syntax_error e -> pp_syntax_error ?printed_filename ?code ppf e
   | Semantic_error e -> pp_semantic_error ?printed_filename ?code ppf e
+  | DebugDataError (loc, msg) ->
+      if Middle.Location_span.(loc = empty) then Fmt.pf ppf "Error: %s" msg
+      else
+        let loc = Middle.Location_span.to_string ?printed_filename loc in
+        Fmt.pf ppf "@[<v>Error in %s:@ %s@;@]" loc msg
 
 let to_string = Fmt.str "%a" (pp ?printed_filename:None ?code:None)
