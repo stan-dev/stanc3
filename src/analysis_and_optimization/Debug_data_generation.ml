@@ -275,8 +275,11 @@ and generate_value m st t =
 let generate_expressions input data =
   List.fold data ~init:([], input)
     ~f:(fun (l, m) (sizedtype, transformation, name) ->
-      let value = generate_value m sizedtype transformation in
-      ((name, value) :: l, Map.set m ~key:name ~data:value) )
+      match Map.find m name with
+      | Some value -> ((name, value) :: l, m)
+      | None ->
+          let value = generate_value m sizedtype transformation in
+          ((name, value) :: l, Map.set m ~key:name ~data:value) )
   |> fst |> List.rev
 
 open Yojson
