@@ -266,6 +266,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(X_p,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10),
         "assigning variable X_p");
@@ -285,19 +286,28 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "X_p", "double",
+        std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> X_p_flat__;
+        current_statement__ = 1;
         X_p_flat__ = context__.vals_r("X_p");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          current_statement__ = 1;
           for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            current_statement__ = 1;
             stan::model::assign(X_p, X_p_flat__[(pos__ - 1)],
               "assigning variable X_p", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 1;
             pos__ = (pos__ + 1);
           }
         }
@@ -989,15 +999,19 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
+      current_statement__ = 1;
       beta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, beta);
       local_scalar_t__ gamma = DUMMY_VAR__;
+      current_statement__ = 2;
       gamma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, gamma);
       local_scalar_t__ xi = DUMMY_VAR__;
+      current_statement__ = 3;
       xi = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, xi);
       local_scalar_t__ delta = DUMMY_VAR__;
+      current_statement__ = 4;
       delta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, delta);
     } catch (const std::exception& e) {
@@ -1015,18 +1029,34 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "gamma", "double",
+        std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "xi", "double",
+        std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "delta", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
+      current_statement__ = 1;
       beta = context__.vals_r("beta")[(1 - 1)];
       out__.write_free_lb(0, beta);
       local_scalar_t__ gamma = DUMMY_VAR__;
+      current_statement__ = 2;
       gamma = context__.vals_r("gamma")[(1 - 1)];
       out__.write_free_lb(0, gamma);
       local_scalar_t__ xi = DUMMY_VAR__;
+      current_statement__ = 3;
       xi = context__.vals_r("xi")[(1 - 1)];
       out__.write_free_lb(0, xi);
       local_scalar_t__ delta = DUMMY_VAR__;
+      current_statement__ = 4;
       delta = context__.vals_r("delta")[(1 - 1)];
       out__.write_free_lb(0, delta);
     } catch (const std::exception& e) {
@@ -1407,6 +1437,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(X_p,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10),
         "assigning variable X_p");
@@ -1426,19 +1457,28 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "X_p", "double",
+        std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> X_p_flat__;
+        current_statement__ = 1;
         X_p_flat__ = context__.vals_r("X_p");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          current_statement__ = 1;
           for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            current_statement__ = 1;
             stan::model::assign(X_p, X_p_flat__[(pos__ - 1)],
               "assigning variable X_p", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 1;
             pos__ = (pos__ + 1);
           }
         }
@@ -1846,6 +1886,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(X,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N),
         "assigning variable X");
@@ -1865,19 +1906,28 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "X", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> X_flat__;
+        current_statement__ = 1;
         X_flat__ = context__.vals_r("X");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 1;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 1;
             stan::model::assign(X, X_flat__[(pos__ - 1)],
               "assigning variable X", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 1;
             pos__ = (pos__ + 1);
           }
         }
@@ -2686,10 +2736,12 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_p = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(max_age, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(max_age),
         "assigning variable beta");
@@ -2709,20 +2761,32 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(max_age)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(max_age, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> beta_flat__;
+        current_statement__ = 2;
         beta_flat__ = context__.vals_r("beta");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= max_age; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(beta, beta_flat__[(pos__ - 1)],
             "assigning variable beta", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -3538,52 +3602,66 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 1;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma);
       local_scalar_t__ sigma_age = DUMMY_VAR__;
+      current_statement__ = 2;
       sigma_age = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma_age);
       local_scalar_t__ sigma_edu = DUMMY_VAR__;
+      current_statement__ = 3;
       sigma_edu = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma_edu);
       local_scalar_t__ sigma_state = DUMMY_VAR__;
+      current_statement__ = 4;
       sigma_state = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma_state);
       local_scalar_t__ sigma_region = DUMMY_VAR__;
+      current_statement__ = 5;
       sigma_region = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma_region);
       local_scalar_t__ sigma_age_edu = DUMMY_VAR__;
+      current_statement__ = 6;
       sigma_age_edu = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, sigma_age_edu);
       local_scalar_t__ b_0 = DUMMY_VAR__;
+      current_statement__ = 7;
       b_0 = in__.read<local_scalar_t__>();
       out__.write(b_0);
       local_scalar_t__ b_female = DUMMY_VAR__;
+      current_statement__ = 8;
       b_female = in__.read<local_scalar_t__>();
       out__.write(b_female);
       local_scalar_t__ b_black = DUMMY_VAR__;
+      current_statement__ = 9;
       b_black = in__.read<local_scalar_t__>();
       out__.write(b_black);
       local_scalar_t__ b_female_black = DUMMY_VAR__;
+      current_statement__ = 10;
       b_female_black = in__.read<local_scalar_t__>();
       out__.write(b_female_black);
       local_scalar_t__ b_v_prev = DUMMY_VAR__;
+      current_statement__ = 11;
       b_v_prev = in__.read<local_scalar_t__>();
       out__.write(b_v_prev);
       Eigen::Matrix<local_scalar_t__,-1,1> b_age =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age, DUMMY_VAR__);
+      current_statement__ = 12;
       stan::model::assign(b_age,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age),
         "assigning variable b_age");
       out__.write(b_age);
       Eigen::Matrix<local_scalar_t__,-1,1> b_edu =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_edu, DUMMY_VAR__);
+      current_statement__ = 13;
       stan::model::assign(b_edu,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu),
         "assigning variable b_edu");
       out__.write(b_edu);
       Eigen::Matrix<local_scalar_t__,-1,1> b_region =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_region, DUMMY_VAR__);
+      current_statement__ = 14;
       stan::model::assign(b_region,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_region),
         "assigning variable b_region");
@@ -3591,12 +3669,14 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       Eigen::Matrix<local_scalar_t__,-1,-1> b_age_edu =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_age, n_edu,
           DUMMY_VAR__);
+      current_statement__ = 15;
       stan::model::assign(b_age_edu,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n_age, n_edu),
         "assigning variable b_age_edu");
       out__.write(b_age_edu);
       Eigen::Matrix<local_scalar_t__,-1,1> b_hat =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state, DUMMY_VAR__);
+      current_statement__ = 16;
       stan::model::assign(b_hat,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state),
         "assigning variable b_hat");
@@ -3616,50 +3696,116 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "sigma_age",
+        "double", std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "sigma_edu",
+        "double", std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "sigma_state",
+        "double", std::vector<size_t>{});
+      current_statement__ = 5;
+      context__.validate_dims("parameter initialization", "sigma_region",
+        "double", std::vector<size_t>{});
+      current_statement__ = 6;
+      context__.validate_dims("parameter initialization", "sigma_age_edu",
+        "double", std::vector<size_t>{});
+      current_statement__ = 7;
+      context__.validate_dims("parameter initialization", "b_0", "double",
+        std::vector<size_t>{});
+      current_statement__ = 8;
+      context__.validate_dims("parameter initialization", "b_female",
+        "double", std::vector<size_t>{});
+      current_statement__ = 9;
+      context__.validate_dims("parameter initialization", "b_black",
+        "double", std::vector<size_t>{});
+      current_statement__ = 10;
+      context__.validate_dims("parameter initialization", "b_female_black",
+        "double", std::vector<size_t>{});
+      current_statement__ = 11;
+      context__.validate_dims("parameter initialization", "b_v_prev",
+        "double", std::vector<size_t>{});
+      current_statement__ = 12;
+      context__.validate_dims("parameter initialization", "b_age", "double",
+        std::vector<size_t>{static_cast<size_t>(n_age)});
+      current_statement__ = 13;
+      context__.validate_dims("parameter initialization", "b_edu", "double",
+        std::vector<size_t>{static_cast<size_t>(n_edu)});
+      current_statement__ = 14;
+      context__.validate_dims("parameter initialization", "b_region",
+        "double", std::vector<size_t>{static_cast<size_t>(n_region)});
+      current_statement__ = 15;
+      context__.validate_dims("parameter initialization", "b_age_edu",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(n_age),
+          static_cast<size_t>(n_edu)});
+      current_statement__ = 16;
+      context__.validate_dims("parameter initialization", "b_hat", "double",
+        std::vector<size_t>{static_cast<size_t>(n_state)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 1;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       out__.write_free_lb(0, sigma);
       local_scalar_t__ sigma_age = DUMMY_VAR__;
+      current_statement__ = 2;
       sigma_age = context__.vals_r("sigma_age")[(1 - 1)];
       out__.write_free_lb(0, sigma_age);
       local_scalar_t__ sigma_edu = DUMMY_VAR__;
+      current_statement__ = 3;
       sigma_edu = context__.vals_r("sigma_edu")[(1 - 1)];
       out__.write_free_lb(0, sigma_edu);
       local_scalar_t__ sigma_state = DUMMY_VAR__;
+      current_statement__ = 4;
       sigma_state = context__.vals_r("sigma_state")[(1 - 1)];
       out__.write_free_lb(0, sigma_state);
       local_scalar_t__ sigma_region = DUMMY_VAR__;
+      current_statement__ = 5;
       sigma_region = context__.vals_r("sigma_region")[(1 - 1)];
       out__.write_free_lb(0, sigma_region);
       local_scalar_t__ sigma_age_edu = DUMMY_VAR__;
+      current_statement__ = 6;
       sigma_age_edu = context__.vals_r("sigma_age_edu")[(1 - 1)];
       out__.write_free_lb(0, sigma_age_edu);
       local_scalar_t__ b_0 = DUMMY_VAR__;
+      current_statement__ = 7;
       b_0 = context__.vals_r("b_0")[(1 - 1)];
       out__.write(b_0);
       local_scalar_t__ b_female = DUMMY_VAR__;
+      current_statement__ = 8;
       b_female = context__.vals_r("b_female")[(1 - 1)];
       out__.write(b_female);
       local_scalar_t__ b_black = DUMMY_VAR__;
+      current_statement__ = 9;
       b_black = context__.vals_r("b_black")[(1 - 1)];
       out__.write(b_black);
       local_scalar_t__ b_female_black = DUMMY_VAR__;
+      current_statement__ = 10;
       b_female_black = context__.vals_r("b_female_black")[(1 - 1)];
       out__.write(b_female_black);
       local_scalar_t__ b_v_prev = DUMMY_VAR__;
+      current_statement__ = 11;
       b_v_prev = context__.vals_r("b_v_prev")[(1 - 1)];
       out__.write(b_v_prev);
       Eigen::Matrix<local_scalar_t__,-1,1> b_age =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> b_age_flat__;
+        current_statement__ = 12;
         b_age_flat__ = context__.vals_r("b_age");
+        current_statement__ = 12;
         pos__ = 1;
+        current_statement__ = 12;
         for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
+          current_statement__ = 12;
           stan::model::assign(b_age, b_age_flat__[(pos__ - 1)],
             "assigning variable b_age", stan::model::index_uni(sym1__));
+          current_statement__ = 12;
           pos__ = (pos__ + 1);
         }
       }
@@ -3668,11 +3814,16 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_edu, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> b_edu_flat__;
+        current_statement__ = 13;
         b_edu_flat__ = context__.vals_r("b_edu");
+        current_statement__ = 13;
         pos__ = 1;
+        current_statement__ = 13;
         for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
+          current_statement__ = 13;
           stan::model::assign(b_edu, b_edu_flat__[(pos__ - 1)],
             "assigning variable b_edu", stan::model::index_uni(sym1__));
+          current_statement__ = 13;
           pos__ = (pos__ + 1);
         }
       }
@@ -3681,11 +3832,16 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_region, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> b_region_flat__;
+        current_statement__ = 14;
         b_region_flat__ = context__.vals_r("b_region");
+        current_statement__ = 14;
         pos__ = 1;
+        current_statement__ = 14;
         for (int sym1__ = 1; sym1__ <= n_region; ++sym1__) {
+          current_statement__ = 14;
           stan::model::assign(b_region, b_region_flat__[(pos__ - 1)],
             "assigning variable b_region", stan::model::index_uni(sym1__));
+          current_statement__ = 14;
           pos__ = (pos__ + 1);
         }
       }
@@ -3695,13 +3851,19 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
           DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> b_age_edu_flat__;
+        current_statement__ = 15;
         b_age_edu_flat__ = context__.vals_r("b_age_edu");
+        current_statement__ = 15;
         pos__ = 1;
+        current_statement__ = 15;
         for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
+          current_statement__ = 15;
           for (int sym2__ = 1; sym2__ <= n_age; ++sym2__) {
+            current_statement__ = 15;
             stan::model::assign(b_age_edu, b_age_edu_flat__[(pos__ - 1)],
               "assigning variable b_age_edu", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 15;
             pos__ = (pos__ + 1);
           }
         }
@@ -3711,11 +3873,16 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> b_hat_flat__;
+        current_statement__ = 16;
         b_hat_flat__ = context__.vals_r("b_hat");
+        current_statement__ = 16;
         pos__ = 1;
+        current_statement__ = 16;
         for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
+          current_statement__ = 16;
           stan::model::assign(b_hat, b_hat_flat__[(pos__ - 1)],
             "assigning variable b_hat", stan::model::index_uni(sym1__));
+          current_statement__ = 16;
           pos__ = (pos__ + 1);
         }
       }
@@ -4813,16 +4980,19 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> mu =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(mu,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
         "assigning variable mu");
       out__.write_free_ordered(mu);
       std::vector<local_scalar_t__> sigma =
         std::vector<local_scalar_t__>(2, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(sigma, in__.read<std::vector<local_scalar_t__>>(2),
         "assigning variable sigma");
       out__.write_free_lb(0, sigma);
       local_scalar_t__ theta = DUMMY_VAR__;
+      current_statement__ = 3;
       theta = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, theta);
     } catch (const std::exception& e) {
@@ -4840,26 +5010,42 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> mu =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> mu_flat__;
+        current_statement__ = 1;
         mu_flat__ = context__.vals_r("mu");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 1;
           stan::model::assign(mu, mu_flat__[(pos__ - 1)],
             "assigning variable mu", stan::model::index_uni(sym1__));
+          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
       out__.write_free_ordered(mu);
       std::vector<local_scalar_t__> sigma =
         std::vector<local_scalar_t__>(2, DUMMY_VAR__);
+      current_statement__ = 2;
       sigma = context__.vals_r("sigma");
       out__.write_free_lb(0, sigma);
       local_scalar_t__ theta = DUMMY_VAR__;
+      current_statement__ = 3;
       theta = context__.vals_r("theta")[(1 - 1)];
       out__.write_free_lub(0, 1, theta);
     } catch (const std::exception& e) {
@@ -5223,14 +5409,17 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
+      current_statement__ = 1;
       mu = in__.read<local_scalar_t__>();
       out__.write(mu);
       std::vector<local_scalar_t__> theta =
         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(theta, in__.read<std::vector<local_scalar_t__>>(J),
         "assigning variable theta");
       out__.write(theta);
       local_scalar_t__ tau = DUMMY_VAR__;
+      current_statement__ = 3;
       tau = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, tau);
     } catch (const std::exception& e) {
@@ -5248,16 +5437,28 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{static_cast<size_t>(J)});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "tau", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
+      current_statement__ = 1;
       mu = context__.vals_r("mu")[(1 - 1)];
       out__.write(mu);
       std::vector<local_scalar_t__> theta =
         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
+      current_statement__ = 2;
       theta = context__.vals_r("theta");
       out__.write(theta);
       local_scalar_t__ tau = DUMMY_VAR__;
+      current_statement__ = 3;
       tau = context__.vals_r("tau")[(1 - 1)];
       out__.write_free_lb(0, tau);
     } catch (const std::exception& e) {
@@ -6034,12 +6235,14 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(a,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age),
         "assigning variable a");
       out__.write(a);
       Eigen::Matrix<local_scalar_t__,-1,1> b =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_edu, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(b,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu),
         "assigning variable b");
@@ -6047,12 +6250,14 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       Eigen::Matrix<local_scalar_t__,-1,1> c =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age_edu,
           DUMMY_VAR__);
+      current_statement__ = 3;
       stan::model::assign(c,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age_edu),
         "assigning variable c");
       out__.write(c);
       Eigen::Matrix<local_scalar_t__,-1,1> d =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state, DUMMY_VAR__);
+      current_statement__ = 4;
       stan::model::assign(d,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state),
         "assigning variable d");
@@ -6060,29 +6265,36 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       Eigen::Matrix<local_scalar_t__,-1,1> e =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_region_full,
           DUMMY_VAR__);
+      current_statement__ = 5;
       stan::model::assign(e,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_region_full),
         "assigning variable e");
       out__.write(e);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
+      current_statement__ = 6;
       stan::model::assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
         "assigning variable beta");
       out__.write(beta);
       local_scalar_t__ sigma_a = DUMMY_VAR__;
+      current_statement__ = 7;
       sigma_a = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_a);
       local_scalar_t__ sigma_b = DUMMY_VAR__;
+      current_statement__ = 8;
       sigma_b = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_b);
       local_scalar_t__ sigma_c = DUMMY_VAR__;
+      current_statement__ = 9;
       sigma_c = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_c);
       local_scalar_t__ sigma_d = DUMMY_VAR__;
+      current_statement__ = 10;
       sigma_d = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_d);
       local_scalar_t__ sigma_e = DUMMY_VAR__;
+      current_statement__ = 11;
       sigma_e = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_e);
     } catch (const std::exception& e) {
@@ -6100,17 +6312,55 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "a", "double",
+        std::vector<size_t>{static_cast<size_t>(n_age)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "b", "double",
+        std::vector<size_t>{static_cast<size_t>(n_edu)});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "c", "double",
+        std::vector<size_t>{static_cast<size_t>(n_age_edu)});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "d", "double",
+        std::vector<size_t>{static_cast<size_t>(n_state)});
+      current_statement__ = 5;
+      context__.validate_dims("parameter initialization", "e", "double",
+        std::vector<size_t>{static_cast<size_t>(n_region_full)});
+      current_statement__ = 6;
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(5)});
+      current_statement__ = 7;
+      context__.validate_dims("parameter initialization", "sigma_a",
+        "double", std::vector<size_t>{});
+      current_statement__ = 8;
+      context__.validate_dims("parameter initialization", "sigma_b",
+        "double", std::vector<size_t>{});
+      current_statement__ = 9;
+      context__.validate_dims("parameter initialization", "sigma_c",
+        "double", std::vector<size_t>{});
+      current_statement__ = 10;
+      context__.validate_dims("parameter initialization", "sigma_d",
+        "double", std::vector<size_t>{});
+      current_statement__ = 11;
+      context__.validate_dims("parameter initialization", "sigma_e",
+        "double", std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_age, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> a_flat__;
+        current_statement__ = 1;
         a_flat__ = context__.vals_r("a");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= n_age; ++sym1__) {
+          current_statement__ = 1;
           stan::model::assign(a, a_flat__[(pos__ - 1)],
             "assigning variable a", stan::model::index_uni(sym1__));
+          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
@@ -6119,11 +6369,16 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_edu, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> b_flat__;
+        current_statement__ = 2;
         b_flat__ = context__.vals_r("b");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= n_edu; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(b, b_flat__[(pos__ - 1)],
             "assigning variable b", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -6133,11 +6388,16 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
           DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> c_flat__;
+        current_statement__ = 3;
         c_flat__ = context__.vals_r("c");
+        current_statement__ = 3;
         pos__ = 1;
+        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= n_age_edu; ++sym1__) {
+          current_statement__ = 3;
           stan::model::assign(c, c_flat__[(pos__ - 1)],
             "assigning variable c", stan::model::index_uni(sym1__));
+          current_statement__ = 3;
           pos__ = (pos__ + 1);
         }
       }
@@ -6146,11 +6406,16 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_state, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> d_flat__;
+        current_statement__ = 4;
         d_flat__ = context__.vals_r("d");
+        current_statement__ = 4;
         pos__ = 1;
+        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
+          current_statement__ = 4;
           stan::model::assign(d, d_flat__[(pos__ - 1)],
             "assigning variable d", stan::model::index_uni(sym1__));
+          current_statement__ = 4;
           pos__ = (pos__ + 1);
         }
       }
@@ -6160,11 +6425,16 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
           DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> e_flat__;
+        current_statement__ = 5;
         e_flat__ = context__.vals_r("e");
+        current_statement__ = 5;
         pos__ = 1;
+        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= n_region_full; ++sym1__) {
+          current_statement__ = 5;
           stan::model::assign(e, e_flat__[(pos__ - 1)],
             "assigning variable e", stan::model::index_uni(sym1__));
+          current_statement__ = 5;
           pos__ = (pos__ + 1);
         }
       }
@@ -6173,28 +6443,38 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> beta_flat__;
+        current_statement__ = 6;
         beta_flat__ = context__.vals_r("beta");
+        current_statement__ = 6;
         pos__ = 1;
+        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          current_statement__ = 6;
           stan::model::assign(beta, beta_flat__[(pos__ - 1)],
             "assigning variable beta", stan::model::index_uni(sym1__));
+          current_statement__ = 6;
           pos__ = (pos__ + 1);
         }
       }
       out__.write(beta);
       local_scalar_t__ sigma_a = DUMMY_VAR__;
+      current_statement__ = 7;
       sigma_a = context__.vals_r("sigma_a")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_a);
       local_scalar_t__ sigma_b = DUMMY_VAR__;
+      current_statement__ = 8;
       sigma_b = context__.vals_r("sigma_b")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_b);
       local_scalar_t__ sigma_c = DUMMY_VAR__;
+      current_statement__ = 9;
       sigma_c = context__.vals_r("sigma_c")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_c);
       local_scalar_t__ sigma_d = DUMMY_VAR__;
+      current_statement__ = 10;
       sigma_d = context__.vals_r("sigma_d")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_d);
       local_scalar_t__ sigma_e = DUMMY_VAR__;
+      current_statement__ = 11;
       sigma_e = context__.vals_r("sigma_e")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_e);
     } catch (const std::exception& e) {
@@ -6436,9 +6716,6 @@ static constexpr std::array<const char*, 46> locations_array__ =
   " (in 'expr-prop-fail4.stan', line 13, column 2 to column 28)",
   " (in 'expr-prop-fail4.stan', line 16, column 2 to column 47)",
   " (in 'expr-prop-fail4.stan', line 17, column 2 to column 16)",
-  " (in 'expr-prop-fail4.stan', line 18, column 2 to column 33)",
-  " (in 'expr-prop-fail4.stan', line 19, column 2 to column 29)",
-  " (in 'expr-prop-fail4.stan', line 20, column 2 to column 24)",
   " (in 'expr-prop-fail4.stan', line 27, column 2 to column 13)",
   " (in 'expr-prop-fail4.stan', line 28, column 2 to column 13)",
   " (in 'expr-prop-fail4.stan', line 29, column 2 to column 26)",
@@ -6447,6 +6724,9 @@ static constexpr std::array<const char*, 46> locations_array__ =
   " (in 'expr-prop-fail4.stan', line 32, column 2 to column 22)",
   " (in 'expr-prop-fail4.stan', line 34, column 2 to column 14)",
   " (in 'expr-prop-fail4.stan', line 35, column 2 to column 17)",
+  " (in 'expr-prop-fail4.stan', line 18, column 2 to column 33)",
+  " (in 'expr-prop-fail4.stan', line 19, column 2 to column 29)",
+  " (in 'expr-prop-fail4.stan', line 20, column 2 to column 24)",
   " (in 'expr-prop-fail4.stan', line 37, column 2 to column 27)",
   " (in 'expr-prop-fail4.stan', line 38, column 2 to column 27)",
   " (in 'expr-prop-fail4.stan', line 40, column 4 to column 36)",
@@ -6648,13 +6928,13 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       sigma_phi = stan::math::inv(stan::math::sqrt(tau_phi));
       Eigen::Matrix<local_scalar_t__,-1,1> phi =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 5;
+      current_statement__ = 13;
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, (N - 1)));
-      current_statement__ = 6;
+      current_statement__ = 14;
       stan::model::assign(phi, -stan::math::sum(phi_std_raw),
         "assigning variable phi", stan::model::index_uni(N));
-      current_statement__ = 7;
+      current_statement__ = 15;
       stan::model::assign(phi,
         stan::math::multiply(stan::model::deep_copy(phi), sigma_phi),
         "assigning variable phi");
@@ -6731,13 +7011,13 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       }
       current_statement__ = 3;
       sigma_phi = stan::math::inv(stan::math::sqrt(tau_phi));
-      current_statement__ = 5;
+      current_statement__ = 13;
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, (N - 1)));
-      current_statement__ = 6;
+      current_statement__ = 14;
       stan::model::assign(phi, -stan::math::sum(phi_std_raw),
         "assigning variable phi", stan::model::index_uni(N));
-      current_statement__ = 7;
+      current_statement__ = 15;
       stan::model::assign(phi,
         stan::math::multiply(stan::model::deep_copy(phi), sigma_phi),
         "assigning variable phi");
@@ -6800,10 +7080,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
             stan::model::rvalue(theta, "theta", stan::model::index_uni(i))),
             base_rng__), "assigning variable y", stan::model::index_uni(i));
       }
-      current_statement__ = 10;
+      current_statement__ = 7;
       stan::math::check_greater_or_equal(function__, "tau_theta", tau_theta,
         0);
-      current_statement__ = 11;
+      current_statement__ = 8;
       stan::math::check_greater_or_equal(function__, "sigma_theta",
         sigma_theta, 0);
       out__.write(beta0);
@@ -6835,11 +7115,13 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ tau_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       tau_phi = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, tau_phi);
       Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(phi_std_raw_1dim__,
           DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(phi_std_raw,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(phi_std_raw_1dim__),
         "assigning variable phi_std_raw");
@@ -6859,9 +7141,17 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "tau_phi",
+        "double", std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "phi_std_raw",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(phi_std_raw_1dim__)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ tau_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       tau_phi = context__.vals_r("tau_phi")[(1 - 1)];
       out__.write_free_lb(0, tau_phi);
       Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
@@ -6869,11 +7159,16 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
           DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> phi_std_raw_flat__;
+        current_statement__ = 2;
         phi_std_raw_flat__ = context__.vals_r("phi_std_raw");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= phi_std_raw_1dim__; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(phi_std_raw, phi_std_raw_flat__[(pos__ - 1)],
             "assigning variable phi_std_raw", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -7124,6 +7419,7 @@ static constexpr std::array<const char*, 81> locations_array__ =
   " (in 'expr-prop-fail5.stan', line 77, column 2 to column 50)",
   " (in 'expr-prop-fail5.stan', line 78, column 2 to column 50)",
   " (in 'expr-prop-fail5.stan', line 79, column 2 to column 10)",
+  " (in 'expr-prop-fail5.stan', line 118, column 2 to column 23)",
   " (in 'expr-prop-fail5.stan', line 82, column 2 to column 23)",
   " (in 'expr-prop-fail5.stan', line 85, column 6 to column 20)",
   " (in 'expr-prop-fail5.stan', line 86, column 6 to column 18)",
@@ -7136,7 +7432,6 @@ static constexpr std::array<const char*, 81> locations_array__ =
   " (in 'expr-prop-fail5.stan', line 83, column 22 to line 92, column 3)",
   " (in 'expr-prop-fail5.stan', line 83, column 2 to line 92, column 3)",
   " (in 'expr-prop-fail5.stan', line 94, column 2 to column 51)",
-  " (in 'expr-prop-fail5.stan', line 118, column 2 to column 23)",
   " (in 'expr-prop-fail5.stan', line 120, column 2 to column 25)",
   " (in 'expr-prop-fail5.stan', line 104, column 2 to column 29)",
   " (in 'expr-prop-fail5.stan', line 110, column 8 to column 37)",
@@ -7513,37 +7808,37 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
           DUMMY_VAR__);
       local_scalar_t__ mu = DUMMY_VAR__;
-      current_statement__ = 9;
+      current_statement__ = 10;
       mu = stan::math::logit(mean_phi);
-      current_statement__ = 19;
+      current_statement__ = 20;
       for (int i = 1; i <= nind; ++i) {
-        current_statement__ = 13;
+        current_statement__ = 14;
         for (int t = 1; t <=
              (stan::model::rvalue(first, "first", stan::model::index_uni(i))
              - 1); ++t) {
-          current_statement__ = 10;
+          current_statement__ = 11;
           stan::model::assign(phi, 0, "assigning variable phi",
             stan::model::index_uni(i), stan::model::index_uni(t));
-          current_statement__ = 11;
+          current_statement__ = 12;
           stan::model::assign(p, 0, "assigning variable p",
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
-        current_statement__ = 17;
+        current_statement__ = 18;
         for (int t =
                stan::model::rvalue(first, "first", stan::model::index_uni(i)); t
              <= n_occ_minus_1; ++t) {
-          current_statement__ = 14;
+          current_statement__ = 15;
           stan::model::assign(phi,
             stan::math::inv_logit((mu +
               stan::model::rvalue(epsilon, "epsilon",
                 stan::model::index_uni(i)))), "assigning variable phi",
             stan::model::index_uni(i), stan::model::index_uni(t));
-          current_statement__ = 15;
+          current_statement__ = 16;
           stan::model::assign(p, mean_p, "assigning variable p",
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
       }
-      current_statement__ = 20;
+      current_statement__ = 21;
       stan::model::assign(chi,
         prob_uncaptured(nind, n_occasions, p, phi, pstream__),
         "assigning variable chi");
@@ -7671,37 +7966,37 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 9;
+      current_statement__ = 10;
       mu = stan::math::logit(mean_phi);
-      current_statement__ = 19;
+      current_statement__ = 20;
       for (int i = 1; i <= nind; ++i) {
-        current_statement__ = 13;
+        current_statement__ = 14;
         for (int t = 1; t <=
              (stan::model::rvalue(first, "first", stan::model::index_uni(i))
              - 1); ++t) {
-          current_statement__ = 10;
+          current_statement__ = 11;
           stan::model::assign(phi, 0, "assigning variable phi",
             stan::model::index_uni(i), stan::model::index_uni(t));
-          current_statement__ = 11;
+          current_statement__ = 12;
           stan::model::assign(p, 0, "assigning variable p",
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
-        current_statement__ = 17;
+        current_statement__ = 18;
         for (int t =
                stan::model::rvalue(first, "first", stan::model::index_uni(i)); t
              <= n_occ_minus_1; ++t) {
-          current_statement__ = 14;
+          current_statement__ = 15;
           stan::model::assign(phi,
             stan::math::inv_logit((mu +
               stan::model::rvalue(epsilon, "epsilon",
                 stan::model::index_uni(i)))), "assigning variable phi",
             stan::model::index_uni(i), stan::model::index_uni(t));
-          current_statement__ = 15;
+          current_statement__ = 16;
           stan::model::assign(p, mean_p, "assigning variable p",
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
       }
-      current_statement__ = 20;
+      current_statement__ = 21;
       stan::model::assign(chi,
         prob_uncaptured(nind, n_occasions, p, phi, pstream__),
         "assigning variable chi");
@@ -7729,7 +8024,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       double sigma2 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 22;
       sigma2 = stan::math::square(sigma);
-      current_statement__ = 21;
+      current_statement__ = 9;
       stan::math::check_greater_or_equal(function__, "sigma2", sigma2, 0);
       out__.write(sigma2);
     } catch (const std::exception& e) {
@@ -7753,18 +8048,22 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_phi = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_phi);
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 2;
       mean_p = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(nind, DUMMY_VAR__);
+      current_statement__ = 3;
       stan::model::assign(epsilon,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(nind),
         "assigning variable epsilon");
       out__.write(epsilon);
       local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 4;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 5, sigma);
     } catch (const std::exception& e) {
@@ -7782,28 +8081,48 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "mean_phi",
+        "double", std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "epsilon",
+        "double", std::vector<size_t>{static_cast<size_t>(nind)});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_phi);
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(nind, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> epsilon_flat__;
+        current_statement__ = 3;
         epsilon_flat__ = context__.vals_r("epsilon");
+        current_statement__ = 3;
         pos__ = 1;
+        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= nind; ++sym1__) {
+          current_statement__ = 3;
           stan::model::assign(epsilon, epsilon_flat__[(pos__ - 1)],
             "assigning variable epsilon", stan::model::index_uni(sym1__));
+          current_statement__ = 3;
           pos__ = (pos__ + 1);
         }
       }
       out__.write(epsilon);
       local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 4;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       out__.write_free_lub(0, 5, sigma);
     } catch (const std::exception& e) {
@@ -8048,6 +8367,11 @@ static constexpr std::array<const char*, 158> locations_array__ =
   " (in 'expr-prop-fail6.stan', line 172, column 2 to column 25)",
   " (in 'expr-prop-fail6.stan', line 173, column 2 to column 43)",
   " (in 'expr-prop-fail6.stan', line 174, column 2 to column 47)",
+  " (in 'expr-prop-fail6.stan', line 212, column 2 to column 23)",
+  " (in 'expr-prop-fail6.stan', line 213, column 2 to column 22)",
+  " (in 'expr-prop-fail6.stan', line 214, column 2 to column 36)",
+  " (in 'expr-prop-fail6.stan', line 215, column 2 to column 36)",
+  " (in 'expr-prop-fail6.stan', line 216, column 2 to column 48)",
   " (in 'expr-prop-fail6.stan', line 177, column 2 to column 49)",
   " (in 'expr-prop-fail6.stan', line 179, column 4 to column 51)",
   " (in 'expr-prop-fail6.stan', line 178, column 2 to line 179, column 51)",
@@ -8061,11 +8385,6 @@ static constexpr std::array<const char*, 158> locations_array__ =
   " (in 'expr-prop-fail6.stan', line 194, column 4 to column 26)",
   " (in 'expr-prop-fail6.stan', line 186, column 2 to line 195, column 3)",
   " (in 'expr-prop-fail6.stan', line 198, column 2 to column 32)",
-  " (in 'expr-prop-fail6.stan', line 212, column 2 to column 23)",
-  " (in 'expr-prop-fail6.stan', line 213, column 2 to column 22)",
-  " (in 'expr-prop-fail6.stan', line 214, column 2 to column 36)",
-  " (in 'expr-prop-fail6.stan', line 215, column 2 to column 36)",
-  " (in 'expr-prop-fail6.stan', line 216, column 2 to column 48)",
   " (in 'expr-prop-fail6.stan', line 218, column 2 to column 25)",
   " (in 'expr-prop-fail6.stan', line 222, column 4 to column 14)",
   " (in 'expr-prop-fail6.stan', line 232, column 6 to column 44)",
@@ -8798,45 +9117,45 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       Eigen::Matrix<local_scalar_t__,-1,-1> chi =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(M, n_occasions,
           DUMMY_VAR__);
-      current_statement__ = 12;
+      current_statement__ = 17;
       stan::model::assign(phi,
         stan::math::rep_matrix(mean_phi, M, (n_occasions - 1)),
         "assigning variable phi");
-      current_statement__ = 14;
+      current_statement__ = 19;
       for (int t = 1; t <= n_occasions; ++t) {
-        current_statement__ = 13;
+        current_statement__ = 18;
         stan::model::assign(p,
           stan::math::inv_logit(
             stan::math::add(stan::math::logit(mean_p), epsilon)),
           "assigning variable p", stan::model::index_omni(),
           stan::model::index_uni(t));
       }
-      current_statement__ = 15;
+      current_statement__ = 20;
       stan::model::assign(b, stan::math::divide(beta, stan::math::sum(beta)),
         "assigning variable b");
       {
         local_scalar_t__ cum_b = DUMMY_VAR__;
-        current_statement__ = 16;
+        current_statement__ = 21;
         cum_b = stan::model::rvalue(b, "b", stan::model::index_uni(1));
-        current_statement__ = 17;
+        current_statement__ = 22;
         stan::model::assign(nu,
           stan::model::rvalue(b, "b", stan::model::index_uni(1)),
           "assigning variable nu", stan::model::index_uni(1));
-        current_statement__ = 21;
+        current_statement__ = 26;
         for (int t = 2; t <= (n_occasions - 1); ++t) {
-          current_statement__ = 18;
+          current_statement__ = 23;
           stan::model::assign(nu,
             (stan::model::rvalue(b, "b", stan::model::index_uni(t)) / (1.0 -
             cum_b)), "assigning variable nu", stan::model::index_uni(t));
-          current_statement__ = 19;
+          current_statement__ = 24;
           cum_b = (cum_b +
             stan::model::rvalue(b, "b", stan::model::index_uni(t)));
         }
-        current_statement__ = 22;
+        current_statement__ = 27;
         stan::model::assign(nu, 1.0, "assigning variable nu",
           stan::model::index_uni(n_occasions));
       }
-      current_statement__ = 24;
+      current_statement__ = 29;
       stan::model::assign(chi, prob_uncaptured(p, phi, pstream__),
         "assigning variable chi");
       current_statement__ = 7;
@@ -8957,45 +9276,45 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 12;
+      current_statement__ = 17;
       stan::model::assign(phi,
         stan::math::rep_matrix(mean_phi, M, (n_occasions - 1)),
         "assigning variable phi");
-      current_statement__ = 14;
+      current_statement__ = 19;
       for (int t = 1; t <= n_occasions; ++t) {
-        current_statement__ = 13;
+        current_statement__ = 18;
         stan::model::assign(p,
           stan::math::inv_logit(
             stan::math::add(stan::math::logit(mean_p), epsilon)),
           "assigning variable p", stan::model::index_omni(),
           stan::model::index_uni(t));
       }
-      current_statement__ = 15;
+      current_statement__ = 20;
       stan::model::assign(b, stan::math::divide(beta, stan::math::sum(beta)),
         "assigning variable b");
       {
         double cum_b = std::numeric_limits<double>::quiet_NaN();
-        current_statement__ = 16;
+        current_statement__ = 21;
         cum_b = stan::model::rvalue(b, "b", stan::model::index_uni(1));
-        current_statement__ = 17;
+        current_statement__ = 22;
         stan::model::assign(nu,
           stan::model::rvalue(b, "b", stan::model::index_uni(1)),
           "assigning variable nu", stan::model::index_uni(1));
-        current_statement__ = 21;
+        current_statement__ = 26;
         for (int t = 2; t <= (n_occasions - 1); ++t) {
-          current_statement__ = 18;
+          current_statement__ = 23;
           stan::model::assign(nu,
             (stan::model::rvalue(b, "b", stan::model::index_uni(t)) / (1.0 -
             cum_b)), "assigning variable nu", stan::model::index_uni(t));
-          current_statement__ = 19;
+          current_statement__ = 24;
           cum_b = (cum_b +
             stan::model::rvalue(b, "b", stan::model::index_uni(t)));
         }
-        current_statement__ = 22;
+        current_statement__ = 27;
         stan::model::assign(nu, 1.0, "assigning variable nu",
           stan::model::index_uni(n_occasions));
       }
-      current_statement__ = 24;
+      current_statement__ = 29;
       stan::model::assign(chi, prob_uncaptured(p, phi, pstream__),
         "assigning variable chi");
       current_statement__ = 7;
@@ -9140,17 +9459,17 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 63;
         Nsuper = stan::math::sum(Nalive);
       }
-      current_statement__ = 25;
+      current_statement__ = 12;
       stan::math::check_greater_or_equal(function__, "sigma2", sigma2, 0);
-      current_statement__ = 26;
+      current_statement__ = 13;
       stan::math::check_greater_or_equal(function__, "Nsuper", Nsuper, 0);
-      current_statement__ = 27;
+      current_statement__ = 14;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
-      current_statement__ = 28;
+      current_statement__ = 15;
       stan::math::check_greater_or_equal(function__, "B", B, 0);
-      current_statement__ = 29;
+      current_statement__ = 16;
       stan::math::check_greater_or_equal(function__, "z", z, 0);
-      current_statement__ = 29;
+      current_statement__ = 16;
       stan::math::check_less_or_equal(function__, "z", z, 1);
       out__.write(sigma2);
       out__.write(Nsuper);
@@ -9182,28 +9501,34 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_phi = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_phi);
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 2;
       mean_p = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_p);
       local_scalar_t__ psi = DUMMY_VAR__;
+      current_statement__ = 3;
       psi = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, psi);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_occasions,
           DUMMY_VAR__);
+      current_statement__ = 4;
       stan::model::assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_occasions),
         "assigning variable beta");
       out__.write_free_lb(0, beta);
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
+      current_statement__ = 5;
       stan::model::assign(epsilon,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(M),
         "assigning variable epsilon");
       out__.write(epsilon);
       local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 6;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 5, sigma);
     } catch (const std::exception& e) {
@@ -9221,15 +9546,36 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "mean_phi",
+        "double", std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "psi", "double",
+        std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(n_occasions)});
+      current_statement__ = 5;
+      context__.validate_dims("parameter initialization", "epsilon",
+        "double", std::vector<size_t>{static_cast<size_t>(M)});
+      current_statement__ = 6;
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_phi);
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_p);
       local_scalar_t__ psi = DUMMY_VAR__;
+      current_statement__ = 3;
       psi = context__.vals_r("psi")[(1 - 1)];
       out__.write_free_lub(0, 1, psi);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
@@ -9237,11 +9583,16 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> beta_flat__;
+        current_statement__ = 4;
         beta_flat__ = context__.vals_r("beta");
+        current_statement__ = 4;
         pos__ = 1;
+        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          current_statement__ = 4;
           stan::model::assign(beta, beta_flat__[(pos__ - 1)],
             "assigning variable beta", stan::model::index_uni(sym1__));
+          current_statement__ = 4;
           pos__ = (pos__ + 1);
         }
       }
@@ -9250,16 +9601,22 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(M, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> epsilon_flat__;
+        current_statement__ = 5;
         epsilon_flat__ = context__.vals_r("epsilon");
+        current_statement__ = 5;
         pos__ = 1;
+        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+          current_statement__ = 5;
           stan::model::assign(epsilon, epsilon_flat__[(pos__ - 1)],
             "assigning variable epsilon", stan::model::index_uni(sym1__));
+          current_statement__ = 5;
           pos__ = (pos__ + 1);
         }
       }
       out__.write(epsilon);
       local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 6;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       out__.write_free_lub(0, 5, sigma);
     } catch (const std::exception& e) {
@@ -9971,6 +10328,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> pi =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(pi,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(K),
         "assigning variable pi");
@@ -9979,9 +10337,13 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(J,
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(K,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__)));
+      current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        current_statement__ = 2;
         for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+          current_statement__ = 2;
           for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
+            current_statement__ = 2;
             stan::model::assign(theta, in__.read<local_scalar_t__>(),
               "assigning variable theta", stan::model::index_uni(sym3__),
               stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
@@ -10004,17 +10366,29 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "pi", "double",
+        std::vector<size_t>{static_cast<size_t>(K)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{static_cast<size_t>(J), static_cast<size_t>(K),
+          static_cast<size_t>(K)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> pi =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> pi_flat__;
+        current_statement__ = 1;
         pi_flat__ = context__.vals_r("pi");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          current_statement__ = 1;
           stan::model::assign(pi, pi_flat__[(pos__ - 1)],
             "assigning variable pi", stan::model::index_uni(sym1__));
+          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
@@ -10025,15 +10399,22 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__)));
       {
         std::vector<local_scalar_t__> theta_flat__;
+        current_statement__ = 2;
         theta_flat__ = context__.vals_r("theta");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          current_statement__ = 2;
           for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            current_statement__ = 2;
             for (int sym3__ = 1; sym3__ <= J; ++sym3__) {
+              current_statement__ = 2;
               stan::model::assign(theta, theta_flat__[(pos__ - 1)],
                 "assigning variable theta", stan::model::index_uni(sym3__),
                 stan::model::index_uni(sym2__),
                 stan::model::index_uni(sym1__));
+              current_statement__ = 2;
               pos__ = (pos__ + 1);
             }
           }
@@ -10564,25 +10945,31 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta0 = DUMMY_VAR__;
+      current_statement__ = 1;
       beta0 = in__.read<local_scalar_t__>();
       out__.write(beta0);
       local_scalar_t__ beta1 = DUMMY_VAR__;
+      current_statement__ = 2;
       beta1 = in__.read<local_scalar_t__>();
       out__.write(beta1);
       local_scalar_t__ tau_theta = DUMMY_VAR__;
+      current_statement__ = 3;
       tau_theta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, tau_theta);
       local_scalar_t__ tau_phi = DUMMY_VAR__;
+      current_statement__ = 4;
       tau_phi = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, tau_phi);
       Eigen::Matrix<local_scalar_t__,-1,1> theta_std =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 5;
       stan::model::assign(theta_std,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
         "assigning variable theta_std");
       out__.write(theta_std);
       Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 6;
       stan::model::assign(phi_std_raw,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
         "assigning variable phi_std_raw");
@@ -10602,29 +10989,56 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "beta0", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "beta1", "double",
+        std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "tau_theta",
+        "double", std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "tau_phi",
+        "double", std::vector<size_t>{});
+      current_statement__ = 5;
+      context__.validate_dims("parameter initialization", "theta_std",
+        "double", std::vector<size_t>{static_cast<size_t>(N)});
+      current_statement__ = 6;
+      context__.validate_dims("parameter initialization", "phi_std_raw",
+        "double", std::vector<size_t>{static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta0 = DUMMY_VAR__;
+      current_statement__ = 1;
       beta0 = context__.vals_r("beta0")[(1 - 1)];
       out__.write(beta0);
       local_scalar_t__ beta1 = DUMMY_VAR__;
+      current_statement__ = 2;
       beta1 = context__.vals_r("beta1")[(1 - 1)];
       out__.write(beta1);
       local_scalar_t__ tau_theta = DUMMY_VAR__;
+      current_statement__ = 3;
       tau_theta = context__.vals_r("tau_theta")[(1 - 1)];
       out__.write_free_lb(0, tau_theta);
       local_scalar_t__ tau_phi = DUMMY_VAR__;
+      current_statement__ = 4;
       tau_phi = context__.vals_r("tau_phi")[(1 - 1)];
       out__.write_free_lb(0, tau_phi);
       Eigen::Matrix<local_scalar_t__,-1,1> theta_std =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> theta_std_flat__;
+        current_statement__ = 5;
         theta_std_flat__ = context__.vals_r("theta_std");
+        current_statement__ = 5;
         pos__ = 1;
+        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 5;
           stan::model::assign(theta_std, theta_std_flat__[(pos__ - 1)],
             "assigning variable theta_std", stan::model::index_uni(sym1__));
+          current_statement__ = 5;
           pos__ = (pos__ + 1);
         }
       }
@@ -10633,11 +11047,16 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> phi_std_raw_flat__;
+        current_statement__ = 6;
         phi_std_raw_flat__ = context__.vals_r("phi_std_raw");
+        current_statement__ = 6;
         pos__ = 1;
+        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 6;
           stan::model::assign(phi_std_raw, phi_std_raw_flat__[(pos__ - 1)],
             "assigning variable phi_std_raw", stan::model::index_uni(sym1__));
+          current_statement__ = 6;
           pos__ = (pos__ + 1);
         }
       }
@@ -11482,10 +11901,12 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_p = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(max_age, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(max_age),
         "assigning variable beta");
@@ -11505,20 +11926,32 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(max_age)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(max_age, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> beta_flat__;
+        current_statement__ = 2;
         beta_flat__ = context__.vals_r("beta");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= max_age; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(beta, beta_flat__[(pos__ - 1)],
             "assigning variable beta", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -12734,12 +13167,14 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(p_single_ret_vec,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
         "assigning variable p_single_ret_vec");
       out__.write(p_single_ret_vec);
       Eigen::Matrix<local_scalar_t__,-1,1> p_multi_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(p_multi_ret_vec,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
         "assigning variable p_multi_ret_vec");
@@ -12759,19 +13194,30 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "p_single_ret_vec",
+        "double", std::vector<size_t>{static_cast<size_t>(5)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "p_multi_ret_vec",
+        "double", std::vector<size_t>{static_cast<size_t>(5)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> p_single_ret_vec_flat__;
+        current_statement__ = 1;
         p_single_ret_vec_flat__ = context__.vals_r("p_single_ret_vec");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          current_statement__ = 1;
           stan::model::assign(p_single_ret_vec,
             p_single_ret_vec_flat__[(pos__ - 1)],
             "assigning variable p_single_ret_vec",
             stan::model::index_uni(sym1__));
+          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
@@ -12780,12 +13226,17 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> p_multi_ret_vec_flat__;
+        current_statement__ = 2;
         p_multi_ret_vec_flat__ = context__.vals_r("p_multi_ret_vec");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(p_multi_ret_vec, p_multi_ret_vec_flat__[(pos__
             - 1)], "assigning variable p_multi_ret_vec",
             stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -13165,6 +13616,7 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha = DUMMY_VAR__;
+      current_statement__ = 1;
       alpha = in__.read<local_scalar_t__>();
       out__.write(alpha);
     } catch (const std::exception& e) {
@@ -13182,9 +13634,13 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "alpha", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha = DUMMY_VAR__;
+      current_statement__ = 1;
       alpha = context__.vals_r("alpha")[(1 - 1)];
       out__.write(alpha);
     } catch (const std::exception& e) {
@@ -13727,11 +14183,6 @@ static constexpr std::array<const char*, 158> locations_array__ =
   " (in 'inlining-fail2.stan', line 184, column 2 to column 51)",
   " (in 'inlining-fail2.stan', line 185, column 2 to column 45)",
   " (in 'inlining-fail2.stan', line 186, column 2 to column 47)",
-  " (in 'inlining-fail2.stan', line 191, column 6 to column 58)",
-  " (in 'inlining-fail2.stan', line 190, column 4 to line 191, column 58)",
-  " (in 'inlining-fail2.stan', line 189, column 2 to line 191, column 58)",
-  " (in 'inlining-fail2.stan', line 192, column 2 to column 41)",
-  " (in 'inlining-fail2.stan', line 195, column 2 to column 32)",
   " (in 'inlining-fail2.stan', line 208, column 2 to column 14)",
   " (in 'inlining-fail2.stan', line 209, column 2 to column 11)",
   " (in 'inlining-fail2.stan', line 210, column 2 to column 24)",
@@ -13739,6 +14190,11 @@ static constexpr std::array<const char*, 158> locations_array__ =
   " (in 'inlining-fail2.stan', line 212, column 2 to column 27)",
   " (in 'inlining-fail2.stan', line 213, column 2 to column 27)",
   " (in 'inlining-fail2.stan', line 214, column 2 to column 30)",
+  " (in 'inlining-fail2.stan', line 191, column 6 to column 58)",
+  " (in 'inlining-fail2.stan', line 190, column 4 to line 191, column 58)",
+  " (in 'inlining-fail2.stan', line 189, column 2 to line 191, column 58)",
+  " (in 'inlining-fail2.stan', line 192, column 2 to column 41)",
+  " (in 'inlining-fail2.stan', line 195, column 2 to column 32)",
   " (in 'inlining-fail2.stan', line 218, column 4 to column 14)",
   " (in 'inlining-fail2.stan', line 219, column 4 to column 13)",
   " (in 'inlining-fail2.stan', line 221, column 4 to column 38)",
@@ -14522,11 +14978,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       Eigen::Matrix<local_scalar_t__,-1,-1> chi =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(M, n_occasions,
           DUMMY_VAR__);
-      current_statement__ = 11;
+      current_statement__ = 18;
       for (int t = 1; t <= (n_occasions - 1); ++t) {
-        current_statement__ = 10;
+        current_statement__ = 17;
         for (int i = 1; i <= M; ++i) {
-          current_statement__ = 9;
+          current_statement__ = 16;
           stan::model::assign(phi,
             stan::math::inv_logit((stan::math::logit(mean_phi) +
               stan::model::rvalue(epsilon, "epsilon",
@@ -14534,10 +14990,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
       }
-      current_statement__ = 12;
+      current_statement__ = 19;
       stan::model::assign(p, stan::math::rep_matrix(mean_p, M, n_occasions),
         "assigning variable p");
-      current_statement__ = 13;
+      current_statement__ = 20;
       stan::model::assign(chi, prob_uncaptured(p, phi, pstream__),
         "assigning variable chi");
       current_statement__ = 6;
@@ -14640,11 +15096,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 11;
+      current_statement__ = 18;
       for (int t = 1; t <= (n_occasions - 1); ++t) {
-        current_statement__ = 10;
+        current_statement__ = 17;
         for (int i = 1; i <= M; ++i) {
-          current_statement__ = 9;
+          current_statement__ = 16;
           stan::model::assign(phi,
             stan::math::inv_logit((stan::math::logit(mean_phi) +
               stan::model::rvalue(epsilon, "epsilon",
@@ -14652,10 +15108,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             stan::model::index_uni(i), stan::model::index_uni(t));
         }
       }
-      current_statement__ = 12;
+      current_statement__ = 19;
       stan::model::assign(p, stan::math::rep_matrix(mean_p, M, n_occasions),
         "assigning variable p");
-      current_statement__ = 13;
+      current_statement__ = 20;
       stan::model::assign(chi, prob_uncaptured(p, phi, pstream__),
         "assigning variable chi");
       current_statement__ = 6;
@@ -14837,14 +15293,17 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_phi = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_phi);
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 2;
       mean_p = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> gamma =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_occasions,
           DUMMY_VAR__);
+      current_statement__ = 3;
       stan::model::assign(gamma,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_occasions),
         "assigning variable gamma");
@@ -14852,11 +15311,13 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(epsilon_1dim__,
           DUMMY_VAR__);
+      current_statement__ = 4;
       stan::model::assign(epsilon,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(epsilon_1dim__),
         "assigning variable epsilon");
       out__.write(epsilon);
       local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 5;
       sigma = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 5, sigma);
     } catch (const std::exception& e) {
@@ -14874,12 +15335,29 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "mean_phi",
+        "double", std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "gamma", "double",
+        std::vector<size_t>{static_cast<size_t>(n_occasions)});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "epsilon",
+        "double", std::vector<size_t>{static_cast<size_t>(epsilon_1dim__)});
+      current_statement__ = 5;
+      context__.validate_dims("parameter initialization", "sigma", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_phi);
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_p);
       Eigen::Matrix<local_scalar_t__,-1,1> gamma =
@@ -14887,11 +15365,16 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> gamma_flat__;
+        current_statement__ = 3;
         gamma_flat__ = context__.vals_r("gamma");
+        current_statement__ = 3;
         pos__ = 1;
+        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          current_statement__ = 3;
           stan::model::assign(gamma, gamma_flat__[(pos__ - 1)],
             "assigning variable gamma", stan::model::index_uni(sym1__));
+          current_statement__ = 3;
           pos__ = (pos__ + 1);
         }
       }
@@ -14901,16 +15384,22 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> epsilon_flat__;
+        current_statement__ = 4;
         epsilon_flat__ = context__.vals_r("epsilon");
+        current_statement__ = 4;
         pos__ = 1;
+        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= epsilon_1dim__; ++sym1__) {
+          current_statement__ = 4;
           stan::model::assign(epsilon, epsilon_flat__[(pos__ - 1)],
             "assigning variable epsilon", stan::model::index_uni(sym1__));
+          current_statement__ = 4;
           pos__ = (pos__ + 1);
         }
       }
       out__.write(epsilon);
       local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 5;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       out__.write_free_lub(0, 5, sigma);
     } catch (const std::exception& e) {
@@ -15677,6 +16166,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
+      current_statement__ = 1;
       x = in__.read<local_scalar_t__>();
       out__.write(x);
     } catch (const std::exception& e) {
@@ -15694,9 +16184,13 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "x", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
+      current_statement__ = 1;
       x = context__.vals_r("x")[(1 - 1)];
       out__.write(x);
     } catch (const std::exception& e) {
@@ -16007,6 +16501,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       pos__ = 1;
       std::vector<local_scalar_t__> theta =
         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(theta, in__.read<std::vector<local_scalar_t__>>(J),
         "assigning variable theta");
       out__.write(theta);
@@ -16025,10 +16520,14 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{static_cast<size_t>(J)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       std::vector<local_scalar_t__> theta =
         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
+      current_statement__ = 1;
       theta = context__.vals_r("theta");
       out__.write(theta);
     } catch (const std::exception& e) {
@@ -16764,9 +17263,11 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_phi = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_phi);
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 2;
       mean_p = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 1, mean_p);
     } catch (const std::exception& e) {
@@ -16784,12 +17285,20 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "mean_phi",
+        "double", std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "mean_p", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
+      current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_phi);
       local_scalar_t__ mean_p = DUMMY_VAR__;
+      current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_p);
     } catch (const std::exception& e) {
@@ -17227,6 +17736,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
+      current_statement__ = 1;
       mu = in__.read<local_scalar_t__>();
       out__.write(mu);
     } catch (const std::exception& e) {
@@ -17244,9 +17754,13 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "mu", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
+      current_statement__ = 1;
       mu = context__.vals_r("mu")[(1 - 1)];
       out__.write(mu);
     } catch (const std::exception& e) {
@@ -17429,11 +17943,11 @@ static constexpr std::array<const char*, 55> locations_array__ =
   " (in 'off-dce.stan', line 24, column 2 to column 14)",
   " (in 'off-dce.stan', line 27, column 2 to column 22)",
   " (in 'off-dce.stan', line 28, column 2 to column 23)",
-  " (in 'off-dce.stan', line 30, column 2 to column 39)",
-  " (in 'off-dce.stan', line 31, column 2 to column 48)",
   " (in 'off-dce.stan', line 54, column 2 to column 13)",
   " (in 'off-dce.stan', line 55, column 2 to column 24)",
   " (in 'off-dce.stan', line 56, column 2 to column 17)",
+  " (in 'off-dce.stan', line 30, column 2 to column 39)",
+  " (in 'off-dce.stan', line 31, column 2 to column 48)",
   " (in 'off-dce.stan', line 68, column 6 to column 21)",
   " (in 'off-dce.stan', line 69, column 6 to column 15)",
   " (in 'off-dce.stan', line 66, column 11 to line 70, column 5)",
@@ -17665,11 +18179,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(R, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,-1> logit_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(R, T, DUMMY_VAR__);
-      current_statement__ = 7;
+      current_statement__ = 10;
       stan::model::assign(logit_psi,
         stan::math::add(alpha_occ, stan::math::multiply(beta_occ, X)),
         "assigning variable logit_psi");
-      current_statement__ = 8;
+      current_statement__ = 11;
       stan::model::assign(logit_p,
         stan::math::rep_matrix(
           stan::math::add(alpha_p, stan::math::multiply(beta_p, X)), T),
@@ -17768,11 +18282,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 7;
+      current_statement__ = 10;
       stan::model::assign(logit_psi,
         stan::math::add(alpha_occ, stan::math::multiply(beta_occ, X)),
         "assigning variable logit_psi");
-      current_statement__ = 8;
+      current_statement__ = 11;
       stan::model::assign(logit_p,
         stan::math::rep_matrix(
           stan::math::add(alpha_p, stan::math::multiply(beta_p, X)), T),
@@ -17860,15 +18374,19 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha_occ = DUMMY_VAR__;
+      current_statement__ = 1;
       alpha_occ = in__.read<local_scalar_t__>();
       out__.write(alpha_occ);
       local_scalar_t__ beta_occ = DUMMY_VAR__;
+      current_statement__ = 2;
       beta_occ = in__.read<local_scalar_t__>();
       out__.write(beta_occ);
       local_scalar_t__ alpha_p = DUMMY_VAR__;
+      current_statement__ = 3;
       alpha_p = in__.read<local_scalar_t__>();
       out__.write(alpha_p);
       local_scalar_t__ beta_p = DUMMY_VAR__;
+      current_statement__ = 4;
       beta_p = in__.read<local_scalar_t__>();
       out__.write(beta_p);
     } catch (const std::exception& e) {
@@ -17886,18 +18404,34 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "alpha_occ",
+        "double", std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "beta_occ",
+        "double", std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "alpha_p",
+        "double", std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "beta_p", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha_occ = DUMMY_VAR__;
+      current_statement__ = 1;
       alpha_occ = context__.vals_r("alpha_occ")[(1 - 1)];
       out__.write(alpha_occ);
       local_scalar_t__ beta_occ = DUMMY_VAR__;
+      current_statement__ = 2;
       beta_occ = context__.vals_r("beta_occ")[(1 - 1)];
       out__.write(beta_occ);
       local_scalar_t__ alpha_p = DUMMY_VAR__;
+      current_statement__ = 3;
       alpha_p = context__.vals_r("alpha_p")[(1 - 1)];
       out__.write(alpha_p);
       local_scalar_t__ beta_p = DUMMY_VAR__;
+      current_statement__ = 4;
       beta_p = context__.vals_r("beta_p")[(1 - 1)];
       out__.write(beta_p);
     } catch (const std::exception& e) {
@@ -18553,33 +19087,41 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
+      current_statement__ = 1;
       beta = in__.read<local_scalar_t__>();
       out__.write(beta);
       Eigen::Matrix<local_scalar_t__,-1,1> eta1 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(eta1,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(J),
         "assigning variable eta1");
       out__.write(eta1);
       Eigen::Matrix<local_scalar_t__,-1,1> eta2 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
+      current_statement__ = 3;
       stan::model::assign(eta2,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(J),
         "assigning variable eta2");
       out__.write(eta2);
       local_scalar_t__ mu_a1 = DUMMY_VAR__;
+      current_statement__ = 4;
       mu_a1 = in__.read<local_scalar_t__>();
       out__.write(mu_a1);
       local_scalar_t__ mu_a2 = DUMMY_VAR__;
+      current_statement__ = 5;
       mu_a2 = in__.read<local_scalar_t__>();
       out__.write(mu_a2);
       local_scalar_t__ sigma_a1 = DUMMY_VAR__;
+      current_statement__ = 6;
       sigma_a1 = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_a1);
       local_scalar_t__ sigma_a2 = DUMMY_VAR__;
+      current_statement__ = 7;
       sigma_a2 = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_a2);
       local_scalar_t__ sigma_y = DUMMY_VAR__;
+      current_statement__ = 8;
       sigma_y = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_y);
     } catch (const std::exception& e) {
@@ -18597,20 +19139,50 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "eta1", "double",
+        std::vector<size_t>{static_cast<size_t>(J)});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "eta2", "double",
+        std::vector<size_t>{static_cast<size_t>(J)});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "mu_a1", "double",
+        std::vector<size_t>{});
+      current_statement__ = 5;
+      context__.validate_dims("parameter initialization", "mu_a2", "double",
+        std::vector<size_t>{});
+      current_statement__ = 6;
+      context__.validate_dims("parameter initialization", "sigma_a1",
+        "double", std::vector<size_t>{});
+      current_statement__ = 7;
+      context__.validate_dims("parameter initialization", "sigma_a2",
+        "double", std::vector<size_t>{});
+      current_statement__ = 8;
+      context__.validate_dims("parameter initialization", "sigma_y",
+        "double", std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
+      current_statement__ = 1;
       beta = context__.vals_r("beta")[(1 - 1)];
       out__.write(beta);
       Eigen::Matrix<local_scalar_t__,-1,1> eta1 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> eta1_flat__;
+        current_statement__ = 2;
         eta1_flat__ = context__.vals_r("eta1");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(eta1, eta1_flat__[(pos__ - 1)],
             "assigning variable eta1", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -18619,28 +19191,38 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> eta2_flat__;
+        current_statement__ = 3;
         eta2_flat__ = context__.vals_r("eta2");
+        current_statement__ = 3;
         pos__ = 1;
+        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+          current_statement__ = 3;
           stan::model::assign(eta2, eta2_flat__[(pos__ - 1)],
             "assigning variable eta2", stan::model::index_uni(sym1__));
+          current_statement__ = 3;
           pos__ = (pos__ + 1);
         }
       }
       out__.write(eta2);
       local_scalar_t__ mu_a1 = DUMMY_VAR__;
+      current_statement__ = 4;
       mu_a1 = context__.vals_r("mu_a1")[(1 - 1)];
       out__.write(mu_a1);
       local_scalar_t__ mu_a2 = DUMMY_VAR__;
+      current_statement__ = 5;
       mu_a2 = context__.vals_r("mu_a2")[(1 - 1)];
       out__.write(mu_a2);
       local_scalar_t__ sigma_a1 = DUMMY_VAR__;
+      current_statement__ = 6;
       sigma_a1 = context__.vals_r("sigma_a1")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_a1);
       local_scalar_t__ sigma_a2 = DUMMY_VAR__;
+      current_statement__ = 7;
       sigma_a2 = context__.vals_r("sigma_a2")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_a2);
       local_scalar_t__ sigma_y = DUMMY_VAR__;
+      current_statement__ = 8;
       sigma_y = context__.vals_r("sigma_y")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_y);
     } catch (const std::exception& e) {
@@ -19513,25 +20095,30 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ theta = DUMMY_VAR__;
+      current_statement__ = 1;
       theta = in__.read<local_scalar_t__>();
       out__.write(theta);
       local_scalar_t__ phi = DUMMY_VAR__;
+      current_statement__ = 2;
       phi = in__.read<local_scalar_t__>();
       out__.write(phi);
       Eigen::Matrix<local_scalar_t__,-1,-1> x_matrix =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 2, DUMMY_VAR__);
+      current_statement__ = 3;
       stan::model::assign(x_matrix,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 2),
         "assigning variable x_matrix");
       out__.write(x_matrix);
       Eigen::Matrix<local_scalar_t__,-1,1> x_vector =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      current_statement__ = 4;
       stan::model::assign(x_vector,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
         "assigning variable x_vector");
       out__.write(x_vector);
       Eigen::Matrix<local_scalar_t__,-1,-1> x_cov =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__);
+      current_statement__ = 5;
       stan::model::assign(x_cov,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(2, 2),
         "assigning variable x_cov");
@@ -19551,25 +20138,49 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "theta", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "phi", "double",
+        std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "x_matrix",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(2)});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "x_vector",
+        "double", std::vector<size_t>{static_cast<size_t>(2)});
+      current_statement__ = 5;
+      context__.validate_dims("parameter initialization", "x_cov", "double",
+        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ theta = DUMMY_VAR__;
+      current_statement__ = 1;
       theta = context__.vals_r("theta")[(1 - 1)];
       out__.write(theta);
       local_scalar_t__ phi = DUMMY_VAR__;
+      current_statement__ = 2;
       phi = context__.vals_r("phi")[(1 - 1)];
       out__.write(phi);
       Eigen::Matrix<local_scalar_t__,-1,-1> x_matrix =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 2, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> x_matrix_flat__;
+        current_statement__ = 3;
         x_matrix_flat__ = context__.vals_r("x_matrix");
+        current_statement__ = 3;
         pos__ = 1;
+        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 3;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 3;
             stan::model::assign(x_matrix, x_matrix_flat__[(pos__ - 1)],
               "assigning variable x_matrix", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 3;
             pos__ = (pos__ + 1);
           }
         }
@@ -19579,11 +20190,16 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> x_vector_flat__;
+        current_statement__ = 4;
         x_vector_flat__ = context__.vals_r("x_vector");
+        current_statement__ = 4;
         pos__ = 1;
+        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 4;
           stan::model::assign(x_vector, x_vector_flat__[(pos__ - 1)],
             "assigning variable x_vector", stan::model::index_uni(sym1__));
+          current_statement__ = 4;
           pos__ = (pos__ + 1);
         }
       }
@@ -19592,13 +20208,19 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> x_cov_flat__;
+        current_statement__ = 5;
         x_cov_flat__ = context__.vals_r("x_cov");
+        current_statement__ = 5;
         pos__ = 1;
+        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 5;
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            current_statement__ = 5;
             stan::model::assign(x_cov, x_cov_flat__[(pos__ - 1)],
               "assigning variable x_cov", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 5;
             pos__ = (pos__ + 1);
           }
         }
@@ -20846,23 +21468,28 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_pair, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(a,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_pair),
         "assigning variable a");
       out__.write(a);
       Eigen::Matrix<local_scalar_t__,-1,1> beta =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
         "assigning variable beta");
       out__.write(beta);
       local_scalar_t__ mu_a = DUMMY_VAR__;
+      current_statement__ = 3;
       mu_a = in__.read<local_scalar_t__>();
       out__.write(mu_a);
       local_scalar_t__ sigma_a = DUMMY_VAR__;
+      current_statement__ = 4;
       sigma_a = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_a);
       local_scalar_t__ sigma_y = DUMMY_VAR__;
+      current_statement__ = 5;
       sigma_y = in__.read<local_scalar_t__>();
       out__.write_free_lub(0, 100, sigma_y);
     } catch (const std::exception& e) {
@@ -20880,17 +21507,37 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "a", "double",
+        std::vector<size_t>{static_cast<size_t>(n_pair)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "mu_a", "double",
+        std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "sigma_a",
+        "double", std::vector<size_t>{});
+      current_statement__ = 5;
+      context__.validate_dims("parameter initialization", "sigma_y",
+        "double", std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(n_pair, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> a_flat__;
+        current_statement__ = 1;
         a_flat__ = context__.vals_r("a");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= n_pair; ++sym1__) {
+          current_statement__ = 1;
           stan::model::assign(a, a_flat__[(pos__ - 1)],
             "assigning variable a", stan::model::index_uni(sym1__));
+          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
@@ -20899,22 +21546,30 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> beta_flat__;
+        current_statement__ = 2;
         beta_flat__ = context__.vals_r("beta");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(beta, beta_flat__[(pos__ - 1)],
             "assigning variable beta", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
       out__.write(beta);
       local_scalar_t__ mu_a = DUMMY_VAR__;
+      current_statement__ = 3;
       mu_a = context__.vals_r("mu_a")[(1 - 1)];
       out__.write(mu_a);
       local_scalar_t__ sigma_a = DUMMY_VAR__;
+      current_statement__ = 4;
       sigma_a = context__.vals_r("sigma_a")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_a);
       local_scalar_t__ sigma_y = DUMMY_VAR__;
+      current_statement__ = 5;
       sigma_y = context__.vals_r("sigma_y")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_y);
     } catch (const std::exception& e) {
@@ -21361,12 +22016,14 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(m2,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10),
         "assigning variable m2");
       out__.write(m2);
       Eigen::Matrix<local_scalar_t__,-1,-1> m3 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(m3,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10),
         "assigning variable m3");
@@ -21386,19 +22043,31 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "m2", "double",
+        std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "m3", "double",
+        std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> m2_flat__;
+        current_statement__ = 1;
         m2_flat__ = context__.vals_r("m2");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          current_statement__ = 1;
           for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            current_statement__ = 1;
             stan::model::assign(m2, m2_flat__[(pos__ - 1)],
               "assigning variable m2", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 1;
             pos__ = (pos__ + 1);
           }
         }
@@ -21408,13 +22077,19 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> m3_flat__;
+        current_statement__ = 2;
         m3_flat__ = context__.vals_r("m3");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          current_statement__ = 2;
           for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            current_statement__ = 2;
             stan::model::assign(m3, m3_flat__[(pos__ - 1)],
               "assigning variable m3", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 2;
             pos__ = (pos__ + 1);
           }
         }
@@ -21948,25 +22623,33 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha0 = DUMMY_VAR__;
+      current_statement__ = 1;
       alpha0 = in__.read<local_scalar_t__>();
       out__.write(alpha0);
       local_scalar_t__ alpha1 = DUMMY_VAR__;
+      current_statement__ = 2;
       alpha1 = in__.read<local_scalar_t__>();
       out__.write(alpha1);
       local_scalar_t__ alpha2 = DUMMY_VAR__;
+      current_statement__ = 3;
       alpha2 = in__.read<local_scalar_t__>();
       out__.write(alpha2);
       local_scalar_t__ alpha12 = DUMMY_VAR__;
+      current_statement__ = 4;
       alpha12 = in__.read<local_scalar_t__>();
       out__.write(alpha12);
       local_scalar_t__ tau = DUMMY_VAR__;
+      current_statement__ = 5;
       tau = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, tau);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> b =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(I,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__));
+      current_statement__ = 6;
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        current_statement__ = 6;
         for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+          current_statement__ = 6;
           stan::model::assign(b, in__.read<local_scalar_t__>(),
             "assigning variable b", stan::model::index_uni(sym2__),
             stan::model::index_uni(sym1__));
@@ -21988,21 +22671,44 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "alpha0", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "alpha1", "double",
+        std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "alpha2", "double",
+        std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "alpha12",
+        "double", std::vector<size_t>{});
+      current_statement__ = 5;
+      context__.validate_dims("parameter initialization", "tau", "double",
+        std::vector<size_t>{});
+      current_statement__ = 6;
+      context__.validate_dims("parameter initialization", "b", "double",
+        std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(K)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ alpha0 = DUMMY_VAR__;
+      current_statement__ = 1;
       alpha0 = context__.vals_r("alpha0")[(1 - 1)];
       out__.write(alpha0);
       local_scalar_t__ alpha1 = DUMMY_VAR__;
+      current_statement__ = 2;
       alpha1 = context__.vals_r("alpha1")[(1 - 1)];
       out__.write(alpha1);
       local_scalar_t__ alpha2 = DUMMY_VAR__;
+      current_statement__ = 3;
       alpha2 = context__.vals_r("alpha2")[(1 - 1)];
       out__.write(alpha2);
       local_scalar_t__ alpha12 = DUMMY_VAR__;
+      current_statement__ = 4;
       alpha12 = context__.vals_r("alpha12")[(1 - 1)];
       out__.write(alpha12);
       local_scalar_t__ tau = DUMMY_VAR__;
+      current_statement__ = 5;
       tau = context__.vals_r("tau")[(1 - 1)];
       out__.write_free_lb(0, tau);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> b =
@@ -22010,13 +22716,19 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__));
       {
         std::vector<local_scalar_t__> b_flat__;
+        current_statement__ = 6;
         b_flat__ = context__.vals_r("b");
+        current_statement__ = 6;
         pos__ = 1;
+        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          current_statement__ = 6;
           for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+            current_statement__ = 6;
             stan::model::assign(b, b_flat__[(pos__ - 1)],
               "assigning variable b", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 6;
             pos__ = (pos__ + 1);
           }
         }
@@ -22397,6 +23109,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ param = DUMMY_VAR__;
+      current_statement__ = 1;
       param = in__.read<local_scalar_t__>();
       out__.write(param);
     } catch (const std::exception& e) {
@@ -22414,9 +23127,13 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "param", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ param = DUMMY_VAR__;
+      current_statement__ = 1;
       param = context__.vals_r("param")[(1 - 1)];
       out__.write(param);
     } catch (const std::exception& e) {
@@ -22784,6 +23501,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
+      current_statement__ = 1;
       y = in__.read<local_scalar_t__>();
       out__.write(y);
     } catch (const std::exception& e) {
@@ -22801,9 +23519,13 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "y", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
+      current_statement__ = 1;
       y = context__.vals_r("y")[(1 - 1)];
       out__.write(y);
     } catch (const std::exception& e) {

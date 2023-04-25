@@ -13,11 +13,11 @@ static constexpr std::array<const char*, 20> locations_array__ =
   " (in 'operators.stan', line 11, column 2 to column 16)",
   " (in 'operators.stan', line 12, column 2 to column 14)",
   " (in 'operators.stan', line 13, column 2 to column 17)",
+  " (in 'operators.stan', line 17, column 2 to column 29)",
+  " (in 'operators.stan', line 18, column 2 to column 23)",
   " (in 'operators.stan', line 15, column 4 to column 10)",
   " (in 'operators.stan', line 14, column 9 to line 16, column 3)",
   " (in 'operators.stan', line 14, column 2 to line 16, column 3)",
-  " (in 'operators.stan', line 17, column 2 to column 29)",
-  " (in 'operators.stan', line 18, column 2 to column 23)",
   " (in 'operators.stan', line 2, column 2 to column 8)",
   " (in 'operators.stan', line 3, column 2 to column 9)",
   " (in 'operators.stan', line 6, column 9 to column 10)",
@@ -191,21 +191,21 @@ class operators_model final : public model_base_crtp<operators_model> {
       int b = std::numeric_limits<int>::min();
       current_statement__ = 6;
       b = stan::math::logical_lte(r, N);
-      current_statement__ = 9;
+      current_statement__ = 11;
       if (stan::math::as_bool(r)) {
-        current_statement__ = 7;
+        current_statement__ = 9;
         b = 0;
       }
       Eigen::Matrix<double,1,-1> drv =
         Eigen::Matrix<double,1,-1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 10;
+      current_statement__ = 7;
       stan::model::assign(drv, stan::math::mdivide_right(rv, A),
         "assigning variable drv");
       Eigen::Matrix<double,-1,1> dv =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 11;
+      current_statement__ = 8;
       stan::model::assign(dv, stan::math::mdivide_left(A, v),
         "assigning variable dv");
       out__.write(i);
@@ -235,18 +235,21 @@ class operators_model final : public model_base_crtp<operators_model> {
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(v,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
         "assigning variable v");
       out__.write(v);
       Eigen::Matrix<local_scalar_t__,1,-1> rv =
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(rv,
         in__.read<Eigen::Matrix<local_scalar_t__,1,-1>>(N),
         "assigning variable rv");
       out__.write(rv);
       Eigen::Matrix<local_scalar_t__,-1,-1> A =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      current_statement__ = 3;
       stan::model::assign(A,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N),
         "assigning variable A");
@@ -266,17 +269,31 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "v", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "rv", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "A", "double",
+        std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> v_flat__;
+        current_statement__ = 1;
         v_flat__ = context__.vals_r("v");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 1;
           stan::model::assign(v, v_flat__[(pos__ - 1)],
             "assigning variable v", stan::model::index_uni(sym1__));
+          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
@@ -285,11 +302,16 @@ class operators_model final : public model_base_crtp<operators_model> {
         Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> rv_flat__;
+        current_statement__ = 2;
         rv_flat__ = context__.vals_r("rv");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(rv, rv_flat__[(pos__ - 1)],
             "assigning variable rv", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -298,13 +320,19 @@ class operators_model final : public model_base_crtp<operators_model> {
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> A_flat__;
+        current_statement__ = 3;
         A_flat__ = context__.vals_r("A");
+        current_statement__ = 3;
         pos__ = 1;
+        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 3;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 3;
             stan::model::assign(A, A_flat__[(pos__ - 1)],
               "assigning variable A", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
+            current_statement__ = 3;
             pos__ = (pos__ + 1);
           }
         }
@@ -1253,21 +1281,25 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      current_statement__ = 1;
       stan::model::assign(a,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
         "assigning variable a");
       out__.write(a);
       Eigen::Matrix<local_scalar_t__,-1,1> b =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(b,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
         "assigning variable b");
       out__.write(b);
       local_scalar_t__ r = DUMMY_VAR__;
+      current_statement__ = 3;
       r = in__.read<local_scalar_t__>();
       out__.write(r);
       std::complex<local_scalar_t__> zp =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      current_statement__ = 4;
       zp = in__.read<std::complex<local_scalar_t__>>();
       out__.write(zp);
     } catch (const std::exception& e) {
@@ -1285,17 +1317,34 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "a", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "b", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "r", "double",
+        std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "zp", "double",
+        std::vector<size_t>{static_cast<size_t>(2)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> a_flat__;
+        current_statement__ = 1;
         a_flat__ = context__.vals_r("a");
+        current_statement__ = 1;
         pos__ = 1;
+        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 1;
           stan::model::assign(a, a_flat__[(pos__ - 1)],
             "assigning variable a", stan::model::index_uni(sym1__));
+          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
@@ -1304,20 +1353,27 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> b_flat__;
+        current_statement__ = 2;
         b_flat__ = context__.vals_r("b");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(b, b_flat__[(pos__ - 1)],
             "assigning variable b", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
       out__.write(b);
       local_scalar_t__ r = DUMMY_VAR__;
+      current_statement__ = 3;
       r = context__.vals_r("r")[(1 - 1)];
       out__.write(r);
       std::complex<local_scalar_t__> zp =
         std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      current_statement__ = 4;
       zp = context__.vals_c("zp")[(1 - 1)];
       out__.write(zp);
     } catch (const std::exception& e) {

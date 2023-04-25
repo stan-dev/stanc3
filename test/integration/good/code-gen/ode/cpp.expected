@@ -459,19 +459,23 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
+      current_statement__ = 1;
       y = in__.read<local_scalar_t__>();
       out__.write(y);
       Eigen::Matrix<local_scalar_t__,-1,1> y0 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 2;
       stan::model::assign(y0,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(N),
         "assigning variable y0");
       out__.write(y0);
       local_scalar_t__ t0 = DUMMY_VAR__;
+      current_statement__ = 3;
       t0 = in__.read<local_scalar_t__>();
       out__.write(t0);
       std::vector<local_scalar_t__> times =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      current_statement__ = 4;
       stan::model::assign(times, in__.read<std::vector<local_scalar_t__>>(N),
         "assigning variable times");
       out__.write(times);
@@ -490,29 +494,49 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "y", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "y0", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "t0", "double",
+        std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "times", "double",
+        std::vector<size_t>{static_cast<size_t>(N)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
+      current_statement__ = 1;
       y = context__.vals_r("y")[(1 - 1)];
       out__.write(y);
       Eigen::Matrix<local_scalar_t__,-1,1> y0 =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> y0_flat__;
+        current_statement__ = 2;
         y0_flat__ = context__.vals_r("y0");
+        current_statement__ = 2;
         pos__ = 1;
+        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 2;
           stan::model::assign(y0, y0_flat__[(pos__ - 1)],
             "assigning variable y0", stan::model::index_uni(sym1__));
+          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
       out__.write(y0);
       local_scalar_t__ t0 = DUMMY_VAR__;
+      current_statement__ = 3;
       t0 = context__.vals_r("t0")[(1 - 1)];
       out__.write(t0);
       std::vector<local_scalar_t__> times =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      current_statement__ = 4;
       times = context__.vals_r("times");
       out__.write(times);
     } catch (const std::exception& e) {
@@ -1303,15 +1327,19 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
+      current_statement__ = 1;
       beta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, beta);
       local_scalar_t__ gamma = DUMMY_VAR__;
+      current_statement__ = 2;
       gamma = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, gamma);
       local_scalar_t__ xi = DUMMY_VAR__;
+      current_statement__ = 3;
       xi = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, xi);
       local_scalar_t__ delta = DUMMY_VAR__;
+      current_statement__ = 4;
       delta = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, delta);
     } catch (const std::exception& e) {
@@ -1329,18 +1357,34 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "beta", "double",
+        std::vector<size_t>{});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "gamma", "double",
+        std::vector<size_t>{});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "xi", "double",
+        std::vector<size_t>{});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "delta", "double",
+        std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
+      current_statement__ = 1;
       beta = context__.vals_r("beta")[(1 - 1)];
       out__.write_free_lb(0, beta);
       local_scalar_t__ gamma = DUMMY_VAR__;
+      current_statement__ = 2;
       gamma = context__.vals_r("gamma")[(1 - 1)];
       out__.write_free_lb(0, gamma);
       local_scalar_t__ xi = DUMMY_VAR__;
+      current_statement__ = 3;
       xi = context__.vals_r("xi")[(1 - 1)];
       out__.write_free_lb(0, xi);
       local_scalar_t__ delta = DUMMY_VAR__;
+      current_statement__ = 4;
       delta = context__.vals_r("delta")[(1 - 1)];
       out__.write_free_lb(0, delta);
     } catch (const std::exception& e) {

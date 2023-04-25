@@ -58,6 +58,33 @@
          (Literal "\" (in 'mother.stan', line 640, column 2 to column 49)\"")
          (Literal "\" (in 'mother.stan', line 641, column 2 to column 20)\"")
          (Literal "\" (in 'mother.stan', line 642, column 2 to column 15)\"")
+         (Literal "\" (in 'mother.stan', line 733, column 2 to column 32)\"")
+         (Literal "\" (in 'mother.stan', line 734, column 2 to column 27)\"")
+         (Literal "\" (in 'mother.stan', line 735, column 2 to column 39)\"")
+         (Literal "\" (in 'mother.stan', line 736, column 2 to column 45)\"")
+         (Literal "\" (in 'mother.stan', line 737, column 2 to column 28)\"")
+         (Literal "\" (in 'mother.stan', line 738, column 2 to column 31)\"")
+         (Literal "\" (in 'mother.stan', line 739, column 2 to column 37)\"")
+         (Literal "\" (in 'mother.stan', line 740, column 2 to column 27)\"")
+         (Literal "\" (in 'mother.stan', line 741, column 2 to column 39)\"")
+         (Literal "\" (in 'mother.stan', line 742, column 2 to column 45)\"")
+         (Literal "\" (in 'mother.stan', line 743, column 2 to column 55)\"")
+         (Literal "\" (in 'mother.stan', line 744, column 2 to column 24)\"")
+         (Literal "\" (in 'mother.stan', line 745, column 2 to column 36)\"")
+         (Literal "\" (in 'mother.stan', line 746, column 2 to column 42)\"")
+         (Literal "\" (in 'mother.stan', line 747, column 2 to column 40)\"")
+         (Literal "\" (in 'mother.stan', line 748, column 2 to column 37)\"")
+         (Literal "\" (in 'mother.stan', line 749, column 2 to column 49)\"")
+         (Literal "\" (in 'mother.stan', line 750, column 2 to column 35)\"")
+         (Literal "\" (in 'mother.stan', line 751, column 2 to column 37)\"")
+         (Literal "\" (in 'mother.stan', line 752, column 2 to column 33)\"")
+         (Literal "\" (in 'mother.stan', line 753, column 2 to column 33)\"")
+         (Literal "\" (in 'mother.stan', line 754, column 2 to column 33)\"")
+         (Literal "\" (in 'mother.stan', line 755, column 2 to column 34)\"")
+         (Literal "\" (in 'mother.stan', line 756, column 2 to column 34)\"")
+         (Literal "\" (in 'mother.stan', line 757, column 2 to column 34)\"")
+         (Literal "\" (in 'mother.stan', line 758, column 2 to column 34)\"")
+         (Literal "\" (in 'mother.stan', line 759, column 2 to column 30)\"")
          (Literal "\" (in 'mother.stan', line 644, column 2 to column 31)\"")
          (Literal "\" (in 'mother.stan', line 645, column 2 to column 31)\"")
          (Literal "\" (in 'mother.stan', line 646, column 2 to column 23)\"")
@@ -107,33 +134,6 @@
           "\" (in 'mother.stan', line 685, column 2 to line 686, column 37)\"")
          (Literal "\" (in 'mother.stan', line 688, column 2 to column 29)\"")
          (Literal "\" (in 'mother.stan', line 689, column 2 to column 29)\"")
-         (Literal "\" (in 'mother.stan', line 733, column 2 to column 32)\"")
-         (Literal "\" (in 'mother.stan', line 734, column 2 to column 27)\"")
-         (Literal "\" (in 'mother.stan', line 735, column 2 to column 39)\"")
-         (Literal "\" (in 'mother.stan', line 736, column 2 to column 45)\"")
-         (Literal "\" (in 'mother.stan', line 737, column 2 to column 28)\"")
-         (Literal "\" (in 'mother.stan', line 738, column 2 to column 31)\"")
-         (Literal "\" (in 'mother.stan', line 739, column 2 to column 37)\"")
-         (Literal "\" (in 'mother.stan', line 740, column 2 to column 27)\"")
-         (Literal "\" (in 'mother.stan', line 741, column 2 to column 39)\"")
-         (Literal "\" (in 'mother.stan', line 742, column 2 to column 45)\"")
-         (Literal "\" (in 'mother.stan', line 743, column 2 to column 55)\"")
-         (Literal "\" (in 'mother.stan', line 744, column 2 to column 24)\"")
-         (Literal "\" (in 'mother.stan', line 745, column 2 to column 36)\"")
-         (Literal "\" (in 'mother.stan', line 746, column 2 to column 42)\"")
-         (Literal "\" (in 'mother.stan', line 747, column 2 to column 40)\"")
-         (Literal "\" (in 'mother.stan', line 748, column 2 to column 37)\"")
-         (Literal "\" (in 'mother.stan', line 749, column 2 to column 49)\"")
-         (Literal "\" (in 'mother.stan', line 750, column 2 to column 35)\"")
-         (Literal "\" (in 'mother.stan', line 751, column 2 to column 37)\"")
-         (Literal "\" (in 'mother.stan', line 752, column 2 to column 33)\"")
-         (Literal "\" (in 'mother.stan', line 753, column 2 to column 33)\"")
-         (Literal "\" (in 'mother.stan', line 754, column 2 to column 33)\"")
-         (Literal "\" (in 'mother.stan', line 755, column 2 to column 34)\"")
-         (Literal "\" (in 'mother.stan', line 756, column 2 to column 34)\"")
-         (Literal "\" (in 'mother.stan', line 757, column 2 to column 34)\"")
-         (Literal "\" (in 'mother.stan', line 758, column 2 to column 34)\"")
-         (Literal "\" (in 'mother.stan', line 759, column 2 to column 30)\"")
          (Literal "\" (in 'mother.stan', line 761, column 2 to column 39)\"")
          (Literal "\" (in 'mother.stan', line 762, column 2 to column 31)\"")
          (Literal "\" (in 'mother.stan', line 763, column 2 to column 23)\"")
@@ -6131,98 +6131,98 @@
                ((static false) (constexpr false)
                 (type_ (TypeLiteral local_scalar_t__)) (name tp_real)
                 (init (Assignment (Var DUMMY_VAR__)))))
-              (Expression (Assign (Var current_statement__) (Literal 43)))
+              (Expression (Assign (Var current_statement__) (Literal 70)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_real_1d_ar) (Var p_real_1d_ar)
                  (Literal "\"assigning variable tp_real_1d_ar\""))))
-              (Expression (Assign (Var current_statement__) (Literal 44)))
+              (Expression (Assign (Var current_statement__) (Literal 71)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_real_3d_ar) (Var p_real_3d_ar)
                  (Literal "\"assigning variable tp_real_3d_ar\""))))
-              (Expression (Assign (Var current_statement__) (Literal 45)))
+              (Expression (Assign (Var current_statement__) (Literal 72)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_1d_vec) (Var p_1d_vec)
                  (Literal "\"assigning variable tp_1d_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 46)))
+              (Expression (Assign (Var current_statement__) (Literal 73)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_3d_vec) (Var p_3d_vec)
                  (Literal "\"assigning variable tp_3d_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 47)))
+              (Expression (Assign (Var current_statement__) (Literal 74)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_simplex) (Var p_simplex)
                  (Literal "\"assigning variable tp_simplex\""))))
-              (Expression (Assign (Var current_statement__) (Literal 48)))
+              (Expression (Assign (Var current_statement__) (Literal 75)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_1d_simplex) (Var p_1d_simplex)
                  (Literal "\"assigning variable tp_1d_simplex\""))))
-              (Expression (Assign (Var current_statement__) (Literal 49)))
+              (Expression (Assign (Var current_statement__) (Literal 76)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_3d_simplex) (Var p_3d_simplex)
                  (Literal "\"assigning variable tp_3d_simplex\""))))
-              (Expression (Assign (Var current_statement__) (Literal 50)))
+              (Expression (Assign (Var current_statement__) (Literal 77)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_cfcov_54) (Var p_cfcov_54)
                  (Literal "\"assigning variable tp_cfcov_54\""))))
-              (Expression (Assign (Var current_statement__) (Literal 51)))
+              (Expression (Assign (Var current_statement__) (Literal 78)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_cfcov_33) (Var p_cfcov_33)
                  (Literal "\"assigning variable tp_cfcov_33\""))))
-              (Expression (Assign (Var current_statement__) (Literal 52)))
+              (Expression (Assign (Var current_statement__) (Literal 79)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_cfcov_33_ar) (Var p_cfcov_33_ar)
                  (Literal "\"assigning variable tp_cfcov_33_ar\""))))
-              (Expression (Assign (Var current_statement__) (Literal 53)))
+              (Expression (Assign (Var current_statement__) (Literal 80)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_mat)
                  (FunCall stan::math::fma ()
                   ((Var d_cfcov_54) (Var p_mat) (Var p_mat)))
                  (Literal "\"assigning variable tp_mat\""))))
-              (Expression (Assign (Var current_statement__) (Literal 54)))
+              (Expression (Assign (Var current_statement__) (Literal 81)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_vec)
                  (FunCall stan::math::fma ()
                   ((Var d_vec) (Var p_vec) (Var p_vec)))
                  (Literal "\"assigning variable tp_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 63)))
+              (Expression (Assign (Var current_statement__) (Literal 90)))
               (For
                ((static false) (constexpr false) (type_ Int) (name i)
                 (init (Assignment (Literal 1))))
                (BinOp (Var i) LEq (Literal 2)) (Increment (Var i))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 61)))
+                ((Expression (Assign (Var current_statement__) (Literal 88)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name j)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var j) LEq (Literal 3)) (Increment (Var j))
                   (Block
                    ((Expression
-                     (Assign (Var current_statement__) (Literal 59)))
+                     (Assign (Var current_statement__) (Literal 86)))
                     (For
                      ((static false) (constexpr false) (type_ Int) (name m)
                       (init (Assignment (Literal 1))))
                      (BinOp (Var m) LEq (Literal 4)) (Increment (Var m))
                      (Block
                       ((Expression
-                        (Assign (Var current_statement__) (Literal 57)))
+                        (Assign (Var current_statement__) (Literal 84)))
                        (For
                         ((static false) (constexpr false) (type_ Int)
                          (name n) (init (Assignment (Literal 1))))
                         (BinOp (Var n) LEq (Literal 5)) (Increment (Var n))
                         (Block
                          ((Expression
-                           (Assign (Var current_statement__) (Literal 55)))
+                           (Assign (Var current_statement__) (Literal 82)))
                           (Expression
                            (FunCall stan::model::assign ()
                             ((Var tp_ar_mat) (Literal 0.4)
@@ -6231,13 +6231,13 @@
                              (FunCall stan::model::index_uni () ((Var n)))
                              (FunCall stan::model::index_uni () ((Var i)))
                              (FunCall stan::model::index_uni () ((Var j))))))))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 65)))
+              (Expression (Assign (Var current_statement__) (Literal 92)))
               (For
                ((static false) (constexpr false) (type_ Int) (name i)
                 (init (Assignment (Literal 1))))
                (BinOp (Var i) LEq (Var N)) (Increment (Var i))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 64)))
+                ((Expression (Assign (Var current_statement__) (Literal 91)))
                  (Expression
                   (FunCall stan::model::assign ()
                    ((Var tp_vec)
@@ -6248,7 +6248,7 @@
                         (FunCall stan::model::index_uni () ((Var i)))))))
                     (Literal "\"assigning variable tp_vec\"")
                     (FunCall stan::model::index_uni () ((Var i)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 66)))
+              (Expression (Assign (Var current_statement__) (Literal 93)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_row_vec)
@@ -6257,17 +6257,17 @@
                     ((Var tp_1d_vec) (Literal "\"tp_1d_vec\"")
                      (FunCall stan::model::index_uni () ((Literal 1)))))))
                  (Literal "\"assigning variable tp_row_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 67)))
+              (Expression (Assign (Var current_statement__) (Literal 94)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_1d_row_vec) (Var p_1d_row_vec)
                  (Literal "\"assigning variable tp_1d_row_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 68)))
+              (Expression (Assign (Var current_statement__) (Literal 95)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_3d_row_vec) (Var p_3d_row_vec)
                  (Literal "\"assigning variable tp_3d_row_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 69)))
+              (Expression (Assign (Var current_statement__) (Literal 96)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -6275,7 +6275,7 @@
                   ((FunCall algebra_system_functor__ () ()) (Var x) (Var y)
                    (Var dat) (Var dat_int) (Var pstream__)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 70)))
+              (Expression (Assign (Var current_statement__) (Literal 97)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -6284,7 +6284,7 @@
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01)
                    (Literal 0.01) (Literal 10)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 71)))
+              (Expression (Assign (Var current_statement__) (Literal 98)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -6293,7 +6293,7 @@
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01)
                    (Literal 0.01) (Literal 10)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 72)))
+              (Expression (Assign (Var current_statement__) (Literal 99)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -6301,7 +6301,7 @@
                   ((FunCall algebra_system_functor__ () ()) (Var x_p) 
                    (Var y) (Var dat) (Var dat_int) (Var pstream__)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 73)))
+              (Expression (Assign (Var current_statement__) (Literal 100)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -6310,7 +6310,7 @@
                    (Var y) (Var dat) (Var dat_int) (Var pstream__)
                    (Literal 0.01) (Literal 0.01) (Literal 10)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 74)))
+              (Expression (Assign (Var current_statement__) (Literal 101)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -6318,7 +6318,7 @@
                   ((FunCall algebra_system_functor__ () ()) (Var x_p)
                    (Var y_p) (Var dat) (Var dat_int) (Var pstream__)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 75)))
+              (Expression (Assign (Var current_statement__) (Literal 102)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -6327,11 +6327,11 @@
                    (Var y_p) (Var dat) (Var dat_int) (Var pstream__)
                    (Literal 0.01) (Literal 0.01) (Literal 10)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 76)))
+              (Expression (Assign (Var current_statement__) (Literal 103)))
               (Expression
                (Assign (Var tp_real)
                 (Parens (BinOp (Var p_real) Multiply (Var p_real)))))
-              (Expression (Assign (Var current_statement__) (Literal 77)))
+              (Expression (Assign (Var current_statement__) (Literal 104)))
               (Expression
                (Assign (Var tp_real)
                 (Parens (BinOp (Var p_real) Divide (Var p_real)))))
@@ -7627,98 +7627,98 @@
                    (FunCall stan::math::primitive_value ()
                     ((Var emit_generated_quantities__)))))))
                (Block ((Return ()))) ())
-              (Expression (Assign (Var current_statement__) (Literal 43)))
+              (Expression (Assign (Var current_statement__) (Literal 70)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_real_1d_ar) (Var p_real_1d_ar)
                  (Literal "\"assigning variable tp_real_1d_ar\""))))
-              (Expression (Assign (Var current_statement__) (Literal 44)))
+              (Expression (Assign (Var current_statement__) (Literal 71)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_real_3d_ar) (Var p_real_3d_ar)
                  (Literal "\"assigning variable tp_real_3d_ar\""))))
-              (Expression (Assign (Var current_statement__) (Literal 45)))
+              (Expression (Assign (Var current_statement__) (Literal 72)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_1d_vec) (Var p_1d_vec)
                  (Literal "\"assigning variable tp_1d_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 46)))
+              (Expression (Assign (Var current_statement__) (Literal 73)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_3d_vec) (Var p_3d_vec)
                  (Literal "\"assigning variable tp_3d_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 47)))
+              (Expression (Assign (Var current_statement__) (Literal 74)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_simplex) (Var p_simplex)
                  (Literal "\"assigning variable tp_simplex\""))))
-              (Expression (Assign (Var current_statement__) (Literal 48)))
+              (Expression (Assign (Var current_statement__) (Literal 75)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_1d_simplex) (Var p_1d_simplex)
                  (Literal "\"assigning variable tp_1d_simplex\""))))
-              (Expression (Assign (Var current_statement__) (Literal 49)))
+              (Expression (Assign (Var current_statement__) (Literal 76)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_3d_simplex) (Var p_3d_simplex)
                  (Literal "\"assigning variable tp_3d_simplex\""))))
-              (Expression (Assign (Var current_statement__) (Literal 50)))
+              (Expression (Assign (Var current_statement__) (Literal 77)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_cfcov_54) (Var p_cfcov_54)
                  (Literal "\"assigning variable tp_cfcov_54\""))))
-              (Expression (Assign (Var current_statement__) (Literal 51)))
+              (Expression (Assign (Var current_statement__) (Literal 78)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_cfcov_33) (Var p_cfcov_33)
                  (Literal "\"assigning variable tp_cfcov_33\""))))
-              (Expression (Assign (Var current_statement__) (Literal 52)))
+              (Expression (Assign (Var current_statement__) (Literal 79)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_cfcov_33_ar) (Var p_cfcov_33_ar)
                  (Literal "\"assigning variable tp_cfcov_33_ar\""))))
-              (Expression (Assign (Var current_statement__) (Literal 53)))
+              (Expression (Assign (Var current_statement__) (Literal 80)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_mat)
                  (FunCall stan::math::fma ()
                   ((Var d_cfcov_54) (Var p_mat) (Var p_mat)))
                  (Literal "\"assigning variable tp_mat\""))))
-              (Expression (Assign (Var current_statement__) (Literal 54)))
+              (Expression (Assign (Var current_statement__) (Literal 81)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_vec)
                  (FunCall stan::math::fma ()
                   ((Var d_vec) (Var p_vec) (Var p_vec)))
                  (Literal "\"assigning variable tp_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 63)))
+              (Expression (Assign (Var current_statement__) (Literal 90)))
               (For
                ((static false) (constexpr false) (type_ Int) (name i)
                 (init (Assignment (Literal 1))))
                (BinOp (Var i) LEq (Literal 2)) (Increment (Var i))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 61)))
+                ((Expression (Assign (Var current_statement__) (Literal 88)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name j)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var j) LEq (Literal 3)) (Increment (Var j))
                   (Block
                    ((Expression
-                     (Assign (Var current_statement__) (Literal 59)))
+                     (Assign (Var current_statement__) (Literal 86)))
                     (For
                      ((static false) (constexpr false) (type_ Int) (name m)
                       (init (Assignment (Literal 1))))
                      (BinOp (Var m) LEq (Literal 4)) (Increment (Var m))
                      (Block
                       ((Expression
-                        (Assign (Var current_statement__) (Literal 57)))
+                        (Assign (Var current_statement__) (Literal 84)))
                        (For
                         ((static false) (constexpr false) (type_ Int)
                          (name n) (init (Assignment (Literal 1))))
                         (BinOp (Var n) LEq (Literal 5)) (Increment (Var n))
                         (Block
                          ((Expression
-                           (Assign (Var current_statement__) (Literal 55)))
+                           (Assign (Var current_statement__) (Literal 82)))
                           (Expression
                            (FunCall stan::model::assign ()
                             ((Var tp_ar_mat) (Literal 0.4)
@@ -7727,13 +7727,13 @@
                              (FunCall stan::model::index_uni () ((Var n)))
                              (FunCall stan::model::index_uni () ((Var i)))
                              (FunCall stan::model::index_uni () ((Var j))))))))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 65)))
+              (Expression (Assign (Var current_statement__) (Literal 92)))
               (For
                ((static false) (constexpr false) (type_ Int) (name i)
                 (init (Assignment (Literal 1))))
                (BinOp (Var i) LEq (Var N)) (Increment (Var i))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 64)))
+                ((Expression (Assign (Var current_statement__) (Literal 91)))
                  (Expression
                   (FunCall stan::model::assign ()
                    ((Var tp_vec)
@@ -7744,7 +7744,7 @@
                         (FunCall stan::model::index_uni () ((Var i)))))))
                     (Literal "\"assigning variable tp_vec\"")
                     (FunCall stan::model::index_uni () ((Var i)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 66)))
+              (Expression (Assign (Var current_statement__) (Literal 93)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_row_vec)
@@ -7753,17 +7753,17 @@
                     ((Var tp_1d_vec) (Literal "\"tp_1d_vec\"")
                      (FunCall stan::model::index_uni () ((Literal 1)))))))
                  (Literal "\"assigning variable tp_row_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 67)))
+              (Expression (Assign (Var current_statement__) (Literal 94)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_1d_row_vec) (Var p_1d_row_vec)
                  (Literal "\"assigning variable tp_1d_row_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 68)))
+              (Expression (Assign (Var current_statement__) (Literal 95)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var tp_3d_row_vec) (Var p_3d_row_vec)
                  (Literal "\"assigning variable tp_3d_row_vec\""))))
-              (Expression (Assign (Var current_statement__) (Literal 69)))
+              (Expression (Assign (Var current_statement__) (Literal 96)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -7771,7 +7771,7 @@
                   ((FunCall algebra_system_functor__ () ()) (Var x) (Var y)
                    (Var dat) (Var dat_int) (Var pstream__)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 70)))
+              (Expression (Assign (Var current_statement__) (Literal 97)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -7780,7 +7780,7 @@
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01)
                    (Literal 0.01) (Literal 10)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 71)))
+              (Expression (Assign (Var current_statement__) (Literal 98)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -7789,7 +7789,7 @@
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01)
                    (Literal 0.01) (Literal 10)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 72)))
+              (Expression (Assign (Var current_statement__) (Literal 99)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -7797,7 +7797,7 @@
                   ((FunCall algebra_system_functor__ () ()) (Var x_p) 
                    (Var y) (Var dat) (Var dat_int) (Var pstream__)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 73)))
+              (Expression (Assign (Var current_statement__) (Literal 100)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -7806,7 +7806,7 @@
                    (Var y) (Var dat) (Var dat_int) (Var pstream__)
                    (Literal 0.01) (Literal 0.01) (Literal 10)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 74)))
+              (Expression (Assign (Var current_statement__) (Literal 101)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -7814,7 +7814,7 @@
                   ((FunCall algebra_system_functor__ () ()) (Var x_p)
                    (Var y_p) (Var dat) (Var dat_int) (Var pstream__)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 75)))
+              (Expression (Assign (Var current_statement__) (Literal 102)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var theta_p)
@@ -7823,11 +7823,11 @@
                    (Var y_p) (Var dat) (Var dat_int) (Var pstream__)
                    (Literal 0.01) (Literal 0.01) (Literal 10)))
                  (Literal "\"assigning variable theta_p\""))))
-              (Expression (Assign (Var current_statement__) (Literal 76)))
+              (Expression (Assign (Var current_statement__) (Literal 103)))
               (Expression
                (Assign (Var tp_real)
                 (Parens (BinOp (Var p_real) Multiply (Var p_real)))))
-              (Expression (Assign (Var current_statement__) (Literal 77)))
+              (Expression (Assign (Var current_statement__) (Literal 104)))
               (Expression
                (Assign (Var tp_real)
                 (Parens (BinOp (Var p_real) Divide (Var p_real)))))
@@ -8177,7 +8177,7 @@
                 (init
                  (Assignment
                   (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-              (Expression (Assign (Var current_statement__) (Literal 78)))
+              (Expression (Assign (Var current_statement__) (Literal 43)))
               (Expression
                (Assign (Var gq_r1)
                 (FunCall foo_bar1 () ((Var p_real) (Var pstream__)))))
@@ -8186,7 +8186,7 @@
                 (init
                  (Assignment
                   (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-              (Expression (Assign (Var current_statement__) (Literal 79)))
+              (Expression (Assign (Var current_statement__) (Literal 44)))
               (Expression
                (Assign (Var gq_r2)
                 (FunCall foo_bar1 () ((Var J) (Var pstream__)))))
@@ -8369,7 +8369,7 @@
                   (Constructor (StdVector Int)
                    ((Literal 3)
                     (FunCall std::numeric_limits<int>::min () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 95)))
+              (Expression (Assign (Var current_statement__) (Literal 60)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var indices)
@@ -8882,57 +8882,57 @@
                     ((Literal 2) (Literal 3)))
                    (FunCall stan::model::index_uni () ((Literal 1)))))
                  (Literal "\"assigning variable idx_res5\""))))
-              (Expression (Assign (Var current_statement__) (Literal 80)))
+              (Expression (Assign (Var current_statement__) (Literal 45)))
               (Expression
                (FunCall stan::math::check_greater_or_equal ()
                 ((Var function__) (Literal "\"gq_real_1d_ar\"")
                  (Var gq_real_1d_ar) (Literal 0))))
-              (Expression (Assign (Var current_statement__) (Literal 81)))
+              (Expression (Assign (Var current_statement__) (Literal 46)))
               (Expression
                (FunCall stan::math::check_greater_or_equal ()
                 ((Var function__) (Literal "\"gq_real_3d_ar\"")
                  (Var gq_real_3d_ar) (Literal 0))))
-              (Expression (Assign (Var current_statement__) (Literal 82)))
+              (Expression (Assign (Var current_statement__) (Literal 47)))
               (Expression
                (FunCall stan::math::check_less_or_equal ()
                 ((Var function__) (Literal "\"gq_vec\"") (Var gq_vec)
                  (Literal 1))))
-              (Expression (Assign (Var current_statement__) (Literal 88)))
+              (Expression (Assign (Var current_statement__) (Literal 53)))
               (Expression
                (FunCall stan::math::check_greater_or_equal ()
                 ((Var function__) (Literal "\"gq_ar_mat\"") (Var gq_ar_mat)
                  (Literal 0))))
-              (Expression (Assign (Var current_statement__) (Literal 88)))
+              (Expression (Assign (Var current_statement__) (Literal 53)))
               (Expression
                (FunCall stan::math::check_less_or_equal ()
                 ((Var function__) (Literal "\"gq_ar_mat\"") (Var gq_ar_mat)
                  (Literal 1))))
-              (Expression (Assign (Var current_statement__) (Literal 89)))
+              (Expression (Assign (Var current_statement__) (Literal 54)))
               (Expression
                (FunCall stan::math::check_simplex ()
                 ((Var function__) (Literal "\"gq_simplex\"")
                  (Var gq_simplex))))
-              (Expression (Assign (Var current_statement__) (Literal 90)))
+              (Expression (Assign (Var current_statement__) (Literal 55)))
               (Expression
                (FunCall stan::math::check_simplex ()
                 ((Var function__) (Literal "\"gq_1d_simplex\"")
                  (Var gq_1d_simplex))))
-              (Expression (Assign (Var current_statement__) (Literal 91)))
+              (Expression (Assign (Var current_statement__) (Literal 56)))
               (Expression
                (FunCall stan::math::check_simplex ()
                 ((Var function__) (Literal "\"gq_3d_simplex\"")
                  (Var gq_3d_simplex))))
-              (Expression (Assign (Var current_statement__) (Literal 92)))
+              (Expression (Assign (Var current_statement__) (Literal 57)))
               (Expression
                (FunCall stan::math::check_cholesky_factor ()
                 ((Var function__) (Literal "\"gq_cfcov_54\"")
                  (Var gq_cfcov_54))))
-              (Expression (Assign (Var current_statement__) (Literal 93)))
+              (Expression (Assign (Var current_statement__) (Literal 58)))
               (Expression
                (FunCall stan::math::check_cholesky_factor ()
                 ((Var function__) (Literal "\"gq_cfcov_33\"")
                  (Var gq_cfcov_33))))
-              (Expression (Assign (Var current_statement__) (Literal 94)))
+              (Expression (Assign (Var current_statement__) (Literal 59)))
               (Expression
                (FunCall stan::math::check_cholesky_factor ()
                 ((Var function__) (Literal "\"gq_cfcov_33_ar\"")
@@ -9473,6 +9473,7 @@
                ((static false) (constexpr false)
                 (type_ (TypeLiteral local_scalar_t__)) (name p_real)
                 (init (Assignment (Var DUMMY_VAR__)))))
+              (Expression (Assign (Var current_statement__) (Literal 1)))
               (Expression
                (Assign (Var p_real)
                 (MethodCall (Var in__) read ((TypeLiteral local_scalar_t__))
@@ -9482,6 +9483,7 @@
                ((static false) (constexpr false)
                 (type_ (TypeLiteral local_scalar_t__)) (name p_upper)
                 (init (Assignment (Var DUMMY_VAR__)))))
+              (Expression (Assign (Var current_statement__) (Literal 2)))
               (Expression
                (Assign (Var p_upper)
                 (MethodCall (Var in__) read ((TypeLiteral local_scalar_t__))
@@ -9493,6 +9495,7 @@
                ((static false) (constexpr false)
                 (type_ (TypeLiteral local_scalar_t__)) (name p_lower)
                 (init (Assignment (Var DUMMY_VAR__)))))
+              (Expression (Assign (Var current_statement__) (Literal 3)))
               (Expression
                (Assign (Var p_lower)
                 (MethodCall (Var in__) read ((TypeLiteral local_scalar_t__))
@@ -9508,6 +9511,7 @@
                  (Assignment
                   (Constructor (StdVector (TypeLiteral local_scalar_t__))
                    ((Literal 5) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 4)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var offset_multiplier)
@@ -9525,6 +9529,7 @@
                  (Assignment
                   (Constructor (StdVector (TypeLiteral local_scalar_t__))
                    ((Literal 5) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 5)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var no_offset_multiplier)
@@ -9542,6 +9547,7 @@
                  (Assignment
                   (Constructor (StdVector (TypeLiteral local_scalar_t__))
                    ((Literal 5) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 6)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var offset_no_multiplier)
@@ -9559,6 +9565,7 @@
                  (Assignment
                   (Constructor (StdVector (TypeLiteral local_scalar_t__))
                    ((Var N) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 7)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_real_1d_ar)
@@ -9585,23 +9592,29 @@
                      ((Var M)
                       (Constructor (StdVector (TypeLiteral local_scalar_t__))
                        ((Var K) (Var DUMMY_VAR__)))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 8)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var K)) (Increment (Var sym1__))
                (Block
-                ((For
+                ((Expression (Assign (Var current_statement__) (Literal 8)))
+                 (For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var M)) (Increment (Var sym2__))
                   (Block
-                   ((For
+                   ((Expression
+                     (Assign (Var current_statement__) (Literal 8)))
+                    (For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var N))
                      (Increment (Var sym3__))
                      (Block
                       ((Expression
+                        (Assign (Var current_statement__) (Literal 8)))
+                       (Expression
                         (Assign
                          (Index
                           (Index
@@ -9624,6 +9637,7 @@
                   (StaticMethodCall
                    (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
                    ((Var N) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 9)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_vec)
@@ -9646,17 +9660,21 @@
                     (StaticMethodCall
                      (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
                      ((Var N) (Var DUMMY_VAR__)))))))))
+              (Expression (Assign (Var current_statement__) (Literal 10)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((For
+                ((Expression (Assign (Var current_statement__) (Literal 10)))
+                 (For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                   (Block
                    ((Expression
+                     (Assign (Var current_statement__) (Literal 10)))
+                    (Expression
                      (FunCall stan::model::assign ()
                       ((Var p_1d_vec)
                        (MethodCall (Var in__) read
@@ -9691,29 +9709,37 @@
                         (StaticMethodCall
                          (Matrix (TypeLiteral local_scalar_t__) -1 1)
                          Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 11)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((For
+                ((Expression (Assign (Var current_statement__) (Literal 11)))
+                 (For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                   (Block
-                   ((For
+                   ((Expression
+                     (Assign (Var current_statement__) (Literal 11)))
+                    (For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var M))
                      (Increment (Var sym3__))
                      (Block
-                      ((For
+                      ((Expression
+                        (Assign (Var current_statement__) (Literal 11)))
+                       (For
                         ((static false) (constexpr false) (type_ Int)
                          (name sym4__) (init (Assignment (Literal 1))))
                         (BinOp (Var sym4__) LEq (Var N))
                         (Increment (Var sym4__))
                         (Block
                          ((Expression
+                           (Assign (Var current_statement__) (Literal 11)))
+                          (Expression
                            (FunCall stan::model::assign ()
                             ((Var p_3d_vec)
                              (MethodCall (Var in__) read
@@ -9737,6 +9763,7 @@
                   (StaticMethodCall
                    (Matrix (TypeLiteral local_scalar_t__) 1 -1) Constant ()
                    ((Var N) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 12)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_row_vec)
@@ -9758,17 +9785,21 @@
                     (StaticMethodCall
                      (Matrix (TypeLiteral local_scalar_t__) 1 -1) Constant ()
                      ((Var N) (Var DUMMY_VAR__)))))))))
+              (Expression (Assign (Var current_statement__) (Literal 13)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((For
+                ((Expression (Assign (Var current_statement__) (Literal 13)))
+                 (For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                   (Block
                    ((Expression
+                     (Assign (Var current_statement__) (Literal 13)))
+                    (Expression
                      (FunCall stan::model::assign ()
                       ((Var p_1d_row_vec)
                        (MethodCall (Var in__) read
@@ -9804,29 +9835,37 @@
                         (StaticMethodCall
                          (Matrix (TypeLiteral local_scalar_t__) 1 -1)
                          Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 14)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((For
+                ((Expression (Assign (Var current_statement__) (Literal 14)))
+                 (For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                   (Block
-                   ((For
+                   ((Expression
+                     (Assign (Var current_statement__) (Literal 14)))
+                    (For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var M))
                      (Increment (Var sym3__))
                      (Block
-                      ((For
+                      ((Expression
+                        (Assign (Var current_statement__) (Literal 14)))
+                       (For
                         ((static false) (constexpr false) (type_ Int)
                          (name sym4__) (init (Assignment (Literal 1))))
                         (BinOp (Var sym4__) LEq (Var N))
                         (Increment (Var sym4__))
                         (Block
                          ((Expression
+                           (Assign (Var current_statement__) (Literal 14)))
+                          (Expression
                            (FunCall stan::model::assign ()
                             ((Var p_3d_row_vec)
                              (MethodCall (Var in__) read
@@ -9851,6 +9890,7 @@
                   (StaticMethodCall
                    (Matrix (TypeLiteral local_scalar_t__) -1 -1) Constant ()
                    ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 15)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_mat)
@@ -9878,30 +9918,38 @@
                       (StaticMethodCall
                        (Matrix (TypeLiteral local_scalar_t__) -1 -1) Constant
                        () ((Literal 2) (Literal 3) (Var DUMMY_VAR__)))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 16)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
                (Block
-                ((For
+                ((Expression (Assign (Var current_statement__) (Literal 16)))
+                 (For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Literal 2))
                   (Increment (Var sym2__))
                   (Block
-                   ((For
+                   ((Expression
+                     (Assign (Var current_statement__) (Literal 16)))
+                    (For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Literal 5))
                      (Increment (Var sym3__))
                      (Block
-                      ((For
+                      ((Expression
+                        (Assign (Var current_statement__) (Literal 16)))
+                       (For
                         ((static false) (constexpr false) (type_ Int)
                          (name sym4__) (init (Assignment (Literal 1))))
                         (BinOp (Var sym4__) LEq (Literal 4))
                         (Increment (Var sym4__))
                         (Block
                          ((Expression
+                           (Assign (Var current_statement__) (Literal 16)))
+                          (Expression
                            (FunCall stan::model::assign ()
                             ((Var p_ar_mat)
                              (MethodCall (Var in__) read
@@ -9927,6 +9975,7 @@
                   (StaticMethodCall
                    (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
                    ((Var N) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 17)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_simplex)
@@ -9949,17 +9998,21 @@
                     (StaticMethodCall
                      (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
                      ((Var N) (Var DUMMY_VAR__)))))))))
+              (Expression (Assign (Var current_statement__) (Literal 18)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((For
+                ((Expression (Assign (Var current_statement__) (Literal 18)))
+                 (For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                   (Block
                    ((Expression
+                     (Assign (Var current_statement__) (Literal 18)))
+                    (Expression
                      (FunCall stan::model::assign ()
                       ((Var p_1d_simplex)
                        (MethodCall (Var in__) read
@@ -9996,29 +10049,37 @@
                         (StaticMethodCall
                          (Matrix (TypeLiteral local_scalar_t__) -1 1)
                          Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 19)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((For
+                ((Expression (Assign (Var current_statement__) (Literal 19)))
+                 (For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                   (Block
-                   ((For
+                   ((Expression
+                     (Assign (Var current_statement__) (Literal 19)))
+                    (For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var M))
                      (Increment (Var sym3__))
                      (Block
-                      ((For
+                      ((Expression
+                        (Assign (Var current_statement__) (Literal 19)))
+                       (For
                         ((static false) (constexpr false) (type_ Int)
                          (name sym4__) (init (Assignment (Literal 1))))
                         (BinOp (Var sym4__) LEq (Var N))
                         (Increment (Var sym4__))
                         (Block
                          ((Expression
+                           (Assign (Var current_statement__) (Literal 19)))
+                          (Expression
                            (FunCall stan::model::assign ()
                             ((Var p_3d_simplex)
                              (MethodCall (Var in__) read
@@ -10044,6 +10105,7 @@
                   (StaticMethodCall
                    (Matrix (TypeLiteral local_scalar_t__) -1 -1) Constant ()
                    ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 20)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_cfcov_54)
@@ -10063,6 +10125,7 @@
                   (StaticMethodCall
                    (Matrix (TypeLiteral local_scalar_t__) -1 -1) Constant ()
                    ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 21)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_cfcov_33)
@@ -10086,24 +10149,30 @@
                     (StaticMethodCall
                      (Matrix (TypeLiteral local_scalar_t__) -1 -1) Constant
                      () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))))
+              (Expression (Assign (Var current_statement__) (Literal 22)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
                (Block
-                ((For
+                ((Expression (Assign (Var current_statement__) (Literal 22)))
+                 (For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Literal 3))
                   (Increment (Var sym2__))
                   (Block
-                   ((For
+                   ((Expression
+                     (Assign (Var current_statement__) (Literal 22)))
+                    (For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var K))
                      (Increment (Var sym3__))
                      (Block
                       ((Expression
+                        (Assign (Var current_statement__) (Literal 22)))
+                       (Expression
                         (FunCall stan::model::assign ()
                          ((Var p_cfcov_33_ar)
                           (MethodCall (Var in__) read
@@ -10124,6 +10193,7 @@
                   (StaticMethodCall
                    (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
                    ((Literal 2) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 23)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var x_p)
@@ -10141,6 +10211,7 @@
                   (StaticMethodCall
                    (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
                    ((Literal 2) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 24)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var y_p)
@@ -10184,7 +10255,194 @@
             (Comment "suppress unused var warning")
             (Expression (Cast Void (Var DUMMY_VAR__)))
             (TryCatch
-             ((VariableDefn
+             ((Expression (Assign (Var current_statement__) (Literal 1)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_real\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
+              (Expression (Assign (Var current_statement__) (Literal 2)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_upper\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
+              (Expression (Assign (Var current_statement__) (Literal 3)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_lower\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
+              (Expression (Assign (Var current_statement__) (Literal 4)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"offset_multiplier\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 5))))))))
+              (Expression (Assign (Var current_statement__) (Literal 5)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"no_offset_multiplier\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 5))))))))
+              (Expression (Assign (Var current_statement__) (Literal 6)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"offset_no_multiplier\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 5))))))))
+              (Expression (Assign (Var current_statement__) (Literal 7)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_real_1d_ar\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 8)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_real_3d_ar\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var M)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var K))))))))
+              (Expression (Assign (Var current_statement__) (Literal 9)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_vec\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 10)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_1d_vec\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 11)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_3d_vec\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var M)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var K)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 12)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_row_vec\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 13)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_1d_row_vec\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 14)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_3d_row_vec\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var M)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var K)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 15)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_mat\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 5)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Literal 4))))))))
+              (Expression (Assign (Var current_statement__) (Literal 16)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_ar_mat\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 4)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Literal 5)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Literal 2)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Literal 3))))))))
+              (Expression (Assign (Var current_statement__) (Literal 17)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_simplex\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 18)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_1d_simplex\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 19)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_3d_simplex\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var M)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var K)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
+              (Expression (Assign (Var current_statement__) (Literal 20)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_cfcov_54\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 5)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Literal 4))))))))
+              (Expression (Assign (Var current_statement__) (Literal 21)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_cfcov_33\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 3)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Literal 3))))))))
+              (Expression (Assign (Var current_statement__) (Literal 22)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"")
+                 (Literal "\"p_cfcov_33_ar\"") (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Var K)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Literal 3)))
+                   (FunCall static_cast ((TypeLiteral size_t)) ((Literal 3))))))))
+              (Expression (Assign (Var current_statement__) (Literal 23)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"") (Literal "\"x_p\"")
+                 (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 2))))))))
+              (Expression (Assign (Var current_statement__) (Literal 24)))
+              (Expression
+               (MethodCall (Var context__) validate_dims ()
+                ((Literal "\"parameter initialization\"") (Literal "\"y_p\"")
+                 (Literal "\"double\"")
+                 (InitializerExpr (StdVector (TypeLiteral size_t))
+                  ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 2))))))))
+              (VariableDefn
                ((static false) (constexpr false) (type_ Int) (name pos__)
                 (init
                  (Assignment (FunCall std::numeric_limits<int>::min () ())))))
@@ -10193,6 +10451,7 @@
                ((static false) (constexpr false)
                 (type_ (TypeLiteral local_scalar_t__)) (name p_real)
                 (init (Assignment (Var DUMMY_VAR__)))))
+              (Expression (Assign (Var current_statement__) (Literal 1)))
               (Expression
                (Assign (Var p_real)
                 (Index
@@ -10204,6 +10463,7 @@
                ((static false) (constexpr false)
                 (type_ (TypeLiteral local_scalar_t__)) (name p_upper)
                 (init (Assignment (Var DUMMY_VAR__)))))
+              (Expression (Assign (Var current_statement__) (Literal 2)))
               (Expression
                (Assign (Var p_upper)
                 (Index
@@ -10217,6 +10477,7 @@
                ((static false) (constexpr false)
                 (type_ (TypeLiteral local_scalar_t__)) (name p_lower)
                 (init (Assignment (Var DUMMY_VAR__)))))
+              (Expression (Assign (Var current_statement__) (Literal 3)))
               (Expression
                (Assign (Var p_lower)
                 (Index
@@ -10234,6 +10495,7 @@
                  (Assignment
                   (Constructor (StdVector (TypeLiteral local_scalar_t__))
                    ((Literal 5) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 4)))
               (Expression
                (Assign (Var offset_multiplier)
                 (MethodCall (Var context__) vals_r ()
@@ -10249,6 +10511,7 @@
                  (Assignment
                   (Constructor (StdVector (TypeLiteral local_scalar_t__))
                    ((Literal 5) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 5)))
               (Expression
                (Assign (Var no_offset_multiplier)
                 (MethodCall (Var context__) vals_r ()
@@ -10264,6 +10527,7 @@
                  (Assignment
                   (Constructor (StdVector (TypeLiteral local_scalar_t__))
                    ((Literal 5) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 6)))
               (Expression
                (Assign (Var offset_no_multiplier)
                 (MethodCall (Var context__) vals_r ()
@@ -10279,6 +10543,7 @@
                  (Assignment
                   (Constructor (StdVector (TypeLiteral local_scalar_t__))
                    ((Var N) (Var DUMMY_VAR__)))))))
+              (Expression (Assign (Var current_statement__) (Literal 7)))
               (Expression
                (Assign (Var p_real_1d_ar)
                 (MethodCall (Var context__) vals_r ()
@@ -10308,28 +10573,37 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_real_3d_ar_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 8)))
                 (Expression
                  (Assign (Var p_real_3d_ar_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_real_3d_ar\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 8)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 8)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var K)) (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 8)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var M)) (Increment (Var sym2__))
                     (Block
-                     ((For
+                     ((Expression
+                       (Assign (Var current_statement__) (Literal 8)))
+                      (For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var N))
                        (Increment (Var sym3__))
                        (Block
                         ((Expression
+                          (Assign (Var current_statement__) (Literal 8)))
+                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var p_real_3d_ar)
                             (Index (Var p_real_3d_ar_flat__)
@@ -10342,6 +10616,8 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
+                         (Expression
+                          (Assign (Var current_statement__) (Literal 8)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -10362,23 +10638,30 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_vec_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 9)))
                 (Expression
                  (Assign (Var p_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_vec\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 9)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 9)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
                   ((Expression
+                    (Assign (Var current_statement__) (Literal 9)))
+                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var p_vec)
                       (Index (Var p_vec_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable p_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
+                   (Expression
+                    (Assign (Var current_statement__) (Literal 9)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -10403,22 +10686,29 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_1d_vec_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 10)))
                 (Expression
                  (Assign (Var p_1d_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_1d_vec\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 10)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 10)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 10)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                     (Block
                      ((Expression
+                       (Assign (Var current_statement__) (Literal 10)))
+                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_1d_vec)
                          (Index (Var p_1d_vec_flat__)
@@ -10426,6 +10716,8 @@
                          (Literal "\"assigning variable p_1d_vec\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
+                      (Expression
+                       (Assign (Var current_statement__) (Literal 10)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -10461,34 +10753,45 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_3d_vec_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 11)))
                 (Expression
                  (Assign (Var p_3d_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_3d_vec\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 11)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 11)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 11)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                     (Block
-                     ((For
+                     ((Expression
+                       (Assign (Var current_statement__) (Literal 11)))
+                      (For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var M))
                        (Increment (Var sym3__))
                        (Block
-                        ((For
+                        ((Expression
+                          (Assign (Var current_statement__) (Literal 11)))
+                         (For
                           ((static false) (constexpr false) (type_ Int)
                            (name sym4__) (init (Assignment (Literal 1))))
                           (BinOp (Var sym4__) LEq (Var N))
                           (Increment (Var sym4__))
                           (Block
                            ((Expression
+                             (Assign (Var current_statement__) (Literal 11)))
+                            (Expression
                              (FunCall stan::model::assign ()
                               ((Var p_3d_vec)
                                (Index (Var p_3d_vec_flat__)
@@ -10503,6 +10806,8 @@
                                 ((Var sym2__)))
                                (FunCall stan::model::index_uni ()
                                 ((Var sym1__))))))
+                            (Expression
+                             (Assign (Var current_statement__) (Literal 11)))
                             (Expression
                              (Assign (Var pos__)
                               (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -10521,23 +10826,30 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_row_vec_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 12)))
                 (Expression
                  (Assign (Var p_row_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_row_vec\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 12)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 12)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
                   ((Expression
+                    (Assign (Var current_statement__) (Literal 12)))
+                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var p_row_vec)
                       (Index (Var p_row_vec_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable p_row_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
+                   (Expression
+                    (Assign (Var current_statement__) (Literal 12)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -10561,22 +10873,29 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_1d_row_vec_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 13)))
                 (Expression
                  (Assign (Var p_1d_row_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_1d_row_vec\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 13)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 13)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 13)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                     (Block
                      ((Expression
+                       (Assign (Var current_statement__) (Literal 13)))
+                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_1d_row_vec)
                          (Index (Var p_1d_row_vec_flat__)
@@ -10584,6 +10903,8 @@
                          (Literal "\"assigning variable p_1d_row_vec\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
+                      (Expression
+                       (Assign (Var current_statement__) (Literal 13)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -10620,34 +10941,45 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_3d_row_vec_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 14)))
                 (Expression
                  (Assign (Var p_3d_row_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_3d_row_vec\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 14)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 14)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 14)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                     (Block
-                     ((For
+                     ((Expression
+                       (Assign (Var current_statement__) (Literal 14)))
+                      (For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var M))
                        (Increment (Var sym3__))
                        (Block
-                        ((For
+                        ((Expression
+                          (Assign (Var current_statement__) (Literal 14)))
+                         (For
                           ((static false) (constexpr false) (type_ Int)
                            (name sym4__) (init (Assignment (Literal 1))))
                           (BinOp (Var sym4__) LEq (Var N))
                           (Increment (Var sym4__))
                           (Block
                            ((Expression
+                             (Assign (Var current_statement__) (Literal 14)))
+                            (Expression
                              (FunCall stan::model::assign ()
                               ((Var p_3d_row_vec)
                                (Index (Var p_3d_row_vec_flat__)
@@ -10663,6 +10995,8 @@
                                 ((Var sym2__)))
                                (FunCall stan::model::index_uni ()
                                 ((Var sym1__))))))
+                            (Expression
+                             (Assign (Var current_statement__) (Literal 14)))
                             (Expression
                              (Assign (Var pos__)
                               (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -10682,24 +11016,31 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_mat_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 15)))
                 (Expression
                  (Assign (Var p_mat_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_mat\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 15)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 15)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 4))
                  (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 15)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 5))
                     (Increment (Var sym2__))
                     (Block
                      ((Expression
+                       (Assign (Var current_statement__) (Literal 15)))
+                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_mat)
                          (Index (Var p_mat_flat__)
@@ -10707,6 +11048,8 @@
                          (Literal "\"assigning variable p_mat\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
+                      (Expression
+                       (Assign (Var current_statement__) (Literal 15)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -10735,36 +11078,47 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_ar_mat_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 16)))
                 (Expression
                  (Assign (Var p_ar_mat_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_ar_mat\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 16)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 16)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 3))
                  (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 16)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 2))
                     (Increment (Var sym2__))
                     (Block
-                     ((For
+                     ((Expression
+                       (Assign (Var current_statement__) (Literal 16)))
+                      (For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Literal 5))
                        (Increment (Var sym3__))
                        (Block
-                        ((For
+                        ((Expression
+                          (Assign (Var current_statement__) (Literal 16)))
+                         (For
                           ((static false) (constexpr false) (type_ Int)
                            (name sym4__) (init (Assignment (Literal 1))))
                           (BinOp (Var sym4__) LEq (Literal 4))
                           (Increment (Var sym4__))
                           (Block
                            ((Expression
+                             (Assign (Var current_statement__) (Literal 16)))
+                            (Expression
                              (FunCall stan::model::assign ()
                               ((Var p_ar_mat)
                                (Index (Var p_ar_mat_flat__)
@@ -10779,6 +11133,8 @@
                                 ((Var sym2__)))
                                (FunCall stan::model::index_uni ()
                                 ((Var sym1__))))))
+                            (Expression
+                             (Assign (Var current_statement__) (Literal 16)))
                             (Expression
                              (Assign (Var pos__)
                               (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -10799,23 +11155,30 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_simplex_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 17)))
                 (Expression
                  (Assign (Var p_simplex_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_simplex\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 17)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 17)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
                   ((Expression
+                    (Assign (Var current_statement__) (Literal 17)))
+                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var p_simplex)
                       (Index (Var p_simplex_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable p_simplex\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
+                   (Expression
+                    (Assign (Var current_statement__) (Literal 17)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -10840,22 +11203,29 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_1d_simplex_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 18)))
                 (Expression
                  (Assign (Var p_1d_simplex_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_1d_simplex\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 18)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 18)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 18)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                     (Block
                      ((Expression
+                       (Assign (Var current_statement__) (Literal 18)))
+                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_1d_simplex)
                          (Index (Var p_1d_simplex_flat__)
@@ -10863,6 +11233,8 @@
                          (Literal "\"assigning variable p_1d_simplex\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
+                      (Expression
+                       (Assign (Var current_statement__) (Literal 18)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -10900,34 +11272,45 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_3d_simplex_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 19)))
                 (Expression
                  (Assign (Var p_3d_simplex_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_3d_simplex\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 19)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 19)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 19)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                     (Block
-                     ((For
+                     ((Expression
+                       (Assign (Var current_statement__) (Literal 19)))
+                      (For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var M))
                        (Increment (Var sym3__))
                        (Block
-                        ((For
+                        ((Expression
+                          (Assign (Var current_statement__) (Literal 19)))
+                         (For
                           ((static false) (constexpr false) (type_ Int)
                            (name sym4__) (init (Assignment (Literal 1))))
                           (BinOp (Var sym4__) LEq (Var N))
                           (Increment (Var sym4__))
                           (Block
                            ((Expression
+                             (Assign (Var current_statement__) (Literal 19)))
+                            (Expression
                              (FunCall stan::model::assign ()
                               ((Var p_3d_simplex)
                                (Index (Var p_3d_simplex_flat__)
@@ -10943,6 +11326,8 @@
                                 ((Var sym2__)))
                                (FunCall stan::model::index_uni ()
                                 ((Var sym1__))))))
+                            (Expression
+                             (Assign (Var current_statement__) (Literal 19)))
                             (Expression
                              (Assign (Var pos__)
                               (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -10963,24 +11348,31 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_cfcov_54_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 20)))
                 (Expression
                  (Assign (Var p_cfcov_54_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_cfcov_54\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 20)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 20)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 4))
                  (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 20)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 5))
                     (Increment (Var sym2__))
                     (Block
                      ((Expression
+                       (Assign (Var current_statement__) (Literal 20)))
+                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_cfcov_54)
                          (Index (Var p_cfcov_54_flat__)
@@ -10988,6 +11380,8 @@
                          (Literal "\"assigning variable p_cfcov_54\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
+                      (Expression
+                       (Assign (Var current_statement__) (Literal 20)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -11008,24 +11402,31 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_cfcov_33_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 21)))
                 (Expression
                  (Assign (Var p_cfcov_33_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_cfcov_33\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 21)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 21)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 3))
                  (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 21)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 3))
                     (Increment (Var sym2__))
                     (Block
                      ((Expression
+                       (Assign (Var current_statement__) (Literal 21)))
+                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_cfcov_33)
                          (Index (Var p_cfcov_33_flat__)
@@ -11033,6 +11434,8 @@
                          (Literal "\"assigning variable p_cfcov_33\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
+                      (Expression
+                       (Assign (Var current_statement__) (Literal 21)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -11057,30 +11460,39 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_cfcov_33_ar_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 22)))
                 (Expression
                  (Assign (Var p_cfcov_33_ar_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_cfcov_33_ar\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 22)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 22)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 3))
                  (Increment (Var sym1__))
                  (Block
-                  ((For
+                  ((Expression
+                    (Assign (Var current_statement__) (Literal 22)))
+                   (For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 3))
                     (Increment (Var sym2__))
                     (Block
-                     ((For
+                     ((Expression
+                       (Assign (Var current_statement__) (Literal 22)))
+                      (For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var K))
                        (Increment (Var sym3__))
                        (Block
                         ((Expression
+                          (Assign (Var current_statement__) (Literal 22)))
+                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var p_cfcov_33_ar)
                             (Index (Var p_cfcov_33_ar_flat__)
@@ -11093,6 +11505,8 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
+                         (Expression
+                          (Assign (Var current_statement__) (Literal 22)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -11113,11 +11527,14 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name x_p_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 23)))
                 (Expression
                  (Assign (Var x_p_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"x_p\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 23)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 23)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
@@ -11125,12 +11542,16 @@
                  (Increment (Var sym1__))
                  (Block
                   ((Expression
+                    (Assign (Var current_statement__) (Literal 23)))
+                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var x_p)
                       (Index (Var x_p_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable x_p\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
+                   (Expression
+                    (Assign (Var current_statement__) (Literal 23)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -11149,11 +11570,14 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name y_p_flat__) (init Uninitialized)))
+                (Expression (Assign (Var current_statement__) (Literal 24)))
                 (Expression
                  (Assign (Var y_p_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"y_p\"")))))
+                (Expression (Assign (Var current_statement__) (Literal 24)))
                 (Expression (Assign (Var pos__) (Literal 1)))
+                (Expression (Assign (Var current_statement__) (Literal 24)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
@@ -11161,12 +11585,16 @@
                  (Increment (Var sym1__))
                  (Block
                   ((Expression
+                    (Assign (Var current_statement__) (Literal 24)))
+                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var y_p)
                       (Index (Var y_p_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable y_p\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
+                   (Expression
+                    (Assign (Var current_statement__) (Literal 24)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
