@@ -88,9 +88,7 @@ promotion.*)
 let lower_returntype arg_types rt =
   let scalar = lower_promoted_scalar arg_types in
   match rt with
-  | UnsizedType.ReturnType ut when UnsizedType.is_int_type ut ->
-      lower_type ut Int
-  | ReturnType ut -> lower_type ut scalar
+  | UnsizedType.ReturnType ut -> lower_type ut scalar
   | Void -> Void
 
 let lower_eigen_args_to_ref arg_types =
@@ -316,8 +314,6 @@ let lower_standalone_fun_def namespace_fun
   let return_type, return_stmt =
     match fdrt with
     | Void -> (Void, fun e -> Expression e)
-    | ReturnType ut when UnsizedType.is_int_type ut ->
-        (lower_type ut Int, fun e -> Return (Some e))
     | ReturnType ut -> (lower_type ut Double, fun e -> Return (Some e)) in
   let fn_sig = make_fun_defn ~name:fdname ~return_type ~args:all_args in
   let internal_fname = namespace_fun ^ "::" ^ fdname in
