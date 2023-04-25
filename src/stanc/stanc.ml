@@ -311,19 +311,19 @@ let use_file filename =
       (Deprecation_analysis.collect_warnings typed_ast) ;
   if !generate_data then (
     let decls = Ast_to_Mir.gather_declarations typed_ast.datablock in
-    let data =
+    let context =
       match !data_file with
       | None -> Map.Poly.empty
       | Some file ->
           Debug_data_generation.json_to_mir decls (Yojson.Basic.from_file file)
     in
-    match Debug_data_generation.gen_values_json ~data decls with
+    match Debug_data_generation.gen_values_json ~context decls with
     | Ok s -> print_or_write s ; exit 0
     | Error e ->
         Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e) ;
         exit 1 )
   else if !generate_inits then (
-    let data =
+    let context =
       match !data_file with
       | None -> Map.Poly.empty
       | Some file ->
@@ -331,7 +331,7 @@ let use_file filename =
             (Ast_to_Mir.gather_declarations typed_ast.datablock)
             (Yojson.Basic.from_file file) in
     match
-      Debug_data_generation.gen_values_json ~filter:true ~data
+      Debug_data_generation.gen_values_json ~new_only:true ~context
         (Ast_to_Mir.gather_declarations typed_ast.parametersblock)
     with
     | Ok s -> print_or_write s ; exit 0

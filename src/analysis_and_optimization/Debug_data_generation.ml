@@ -347,18 +347,18 @@ let generate_json_entries (name, expr) : string * t =
           (Fmt.str "Could not evaluate expression %a" Expr.Typed.pp e) in
   (name, expr_to_json expr)
 
-let gen_values_json_exn ?(filter = false) ?(data = Map.Poly.empty) decls =
-  let ids_and_values = generate_expressions data decls in
+let gen_values_json_exn ?(new_only = false) ?(context = Map.Poly.empty) decls =
+  let ids_and_values = generate_expressions context decls in
   let json_entries = List.map ~f:generate_json_entries ids_and_values in
   let json_entries =
-    if filter then
+    if new_only then
       List.filter
-        ~f:(fun (name, _) -> Option.is_none (Map.find data name))
+        ~f:(fun (name, _) -> Option.is_none (Map.find context name))
         json_entries
     else json_entries in
   let json = `Assoc json_entries in
   pretty_to_string json
 
-let gen_values_json ?(filter = false) ?(data = Map.Poly.empty) decls =
-  try Ok (gen_values_json_exn ~filter ~data decls)
+let gen_values_json ?(new_only = false) ?(context = Map.Poly.empty) decls =
+  try Ok (gen_values_json_exn ~new_only ~context decls)
   with Partial_evaluator.Rejected (loc, msg) -> Error (loc, msg)
