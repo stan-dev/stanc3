@@ -4,5 +4,5 @@ data {
   array[K + N] real y;
 }
 parameters {
-  simplex[K + N + 1] theta; // mixture proportions
+  simplex[K + N + 1] theta;
 }
