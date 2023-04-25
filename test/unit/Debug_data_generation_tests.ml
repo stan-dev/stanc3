@@ -5,6 +5,7 @@ open Debug_data_generation
 
 let print_data_prog ast =
   gen_values_json (Ast_to_Mir.gather_declarations ast.Ast.datablock)
+  |> Result.ok |> Option.value_exn
 
 let%expect_test "whole program data generation check" =
   let ast =

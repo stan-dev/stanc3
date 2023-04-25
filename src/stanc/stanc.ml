@@ -83,7 +83,7 @@ let options =
       , Arg.Set generate_inits
       , " For debugging purposes: generate a mock initial value for each \
          parameter" )
-    ; ( "--data-file"
+    ; ( "--debug-data-file"
       , Arg.String (fun s -> data_file := Some s)
       , " For --debug-generate-data or --debug-generate-inits" )
     ; ( "--debug-mir"
@@ -317,8 +317,10 @@ let use_file filename =
       | Some file ->
           Debug_data_generation.json_to_mir decls (Yojson.Basic.from_file file)
     in
-    print_endline (Debug_data_generation.gen_values_json ~data decls)
-  else if !generate_inits then
+    match Debug_data_generation.gen_values_json ~data decls with
+    | Ok s -> print_endline s
+    | Error e -> Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e)
+  else if !generate_inits then (
     let data =
       match !data_file with
       | None -> Map.Poly.empty
@@ -326,9 +328,15 @@ let use_file filename =
           Debug_data_generation.json_to_mir
             (Ast_to_Mir.gather_declarations typed_ast.datablock)
             (Yojson.Basic.from_file file) in
-    print_endline
-      (Debug_data_generation.gen_values_json ~filter:true ~data
-         (Ast_to_Mir.gather_declarations typed_ast.parametersblock) )
+    match
+      Debug_data_generation.gen_values_json ~filter:true ~data
+        (Ast_to_Mir.gather_declarations typed_ast.parametersblock)
+    with
+    | Ok s -> print_endline s
+    | Error e ->
+        Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e) ;
+        if Option.is_none !data_file then
+          Fmt.pf Fmt.stderr "Supplying a --debug-data-file may help@;" )
   else if Option.is_some !data_file then
     Fmt.pf Fmt.stderr "Warning: ignoring --data-file" ;
   Debugging.typed_ast_logger typed_ast ;

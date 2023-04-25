@@ -8,6 +8,8 @@ let rec transpose = function
       let tl = List.map ~f:List.tl_exn rows in
       hd :: transpose tl
 
+let reject loc msg = raise (Partial_evaluator.Rejected (loc, msg))
+
 let dotproduct xs ys =
   List.fold2_exn xs ys ~init:0. ~f:(fun accum x y -> accum +. (x *. y))
 
@@ -41,8 +43,8 @@ let unwrap_num_exn m e =
   match e.pattern with
   | Lit (_, s) -> Float.of_string s
   | _ ->
-      Common.FatalError.fatal_error_msg
-        [%message "Cannot convert size to number."]
+      reject e.meta.loc
+        (Fmt.str "Cannot evaluate expression: %a" Expr.Typed.pp e)
 
 let unwrap_int_exn m e = Int.of_float (unwrap_num_exn m e)
 
@@ -77,8 +79,9 @@ let gen_bounded m gen e =
   match Expr.Helpers.try_unpack (eval_expr m e) with
   | Some unpacked_e -> List.map ~f:gen unpacked_e
   | None ->
-      Common.FatalError.fatal_error_msg
-        [%message "Bad bounded (upper OR lower) expr: " (e : Expr.Typed.t)]
+      reject e.meta.loc
+        (Fmt.str "Cannot evaluate bounded (upper OR lower) expr: %a"
+           Expr.Typed.pp e )
 
 let gen_ul_bounded m gen e1 e2 =
   let create_bounds l u =
@@ -94,13 +97,10 @@ let gen_ul_bounded m gen e1 e2 =
   | Some unpacked_e1, None ->
       create_bounds unpacked_e1
         (List.init (List.length unpacked_e1) ~f:(fun _ -> e2))
-  | _ ->
-      Common.FatalError.fatal_error_msg
-        [%message
-          "Bad bounded upper and lower expr: "
-            (e1 : Expr.Typed.t)
-            " and "
-            (e2 : Expr.Typed.t)]
+  | None, None ->
+      reject e1.meta.loc
+        (Fmt.str "Cannot evaluate upper and lower bound expr: %a and %a"
+           Expr.Typed.pp e1 Expr.Typed.pp e2 )
 
 let gen_row_vector m n t =
   match (t : Expr.Typed.t Transformation.t) with
@@ -340,11 +340,11 @@ let generate_json_entries (name, expr) : string * t =
       when String.equal transpose (Operator.to_string Transpose) ->
         expr_to_json e
     | _ ->
-        Common.FatalError.fatal_error_msg
-          [%message "Could not evaluate expression " (e : Expr.Typed.t)] in
+        reject e.meta.Expr.Typed.Meta.loc
+          (Fmt.str "Could not evaluate expression %a" Expr.Typed.pp e) in
   (name, expr_to_json expr)
 
-let gen_values_json ?(filter = false) ?(data = Map.Poly.empty) decls =
+let gen_values_json_exn ?(filter = false) ?(data = Map.Poly.empty) decls =
   let ids_and_values = generate_expressions data decls in
   let json_entries = List.map ~f:generate_json_entries ids_and_values in
   let json_entries =
@@ -355,3 +355,7 @@ let gen_values_json ?(filter = false) ?(data = Map.Poly.empty) decls =
     else json_entries in
   let json = `Assoc json_entries in
   pretty_to_string json
+
+let gen_values_json ?(filter = false) ?(data = Map.Poly.empty) decls =
+  try Ok (gen_values_json_exn ~filter ~data decls)
+  with Partial_evaluator.Rejected (loc, msg) -> Error (loc, msg)
