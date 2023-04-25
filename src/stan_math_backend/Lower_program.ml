@@ -11,7 +11,7 @@ let stanc_args_to_print = ref ""
 
 let get_unconstrained_param_st lst =
   match lst with
-  | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
+  | _, _, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
       Some (SizedType.io_size st)
   | _ -> None
 
@@ -91,14 +91,14 @@ let lower_model_private {Program.prepare_data; _} =
   List.map ~f:lower_data_decl data_decls
   @ List.map ~f:lower_map_decl eigen_map_decls
 
-let rec gen_validate_data name st =
+let rec validate_dims ~stage name st =
   if String.is_suffix ~suffix:"__" name then []
   else if SizedType.contains_tuple st then
     (* We know tuples are given as flattened names containing "." in var_contexts *)
     let names =
       UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st) in
     let sts = SizedType.flatten_tuple_io st in
-    List.map2_exn ~f:gen_validate_data names sts |> List.concat
+    List.map2_exn ~f:(validate_dims ~stage) names sts |> List.concat
   else
     let vector args =
       let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
@@ -108,7 +108,7 @@ let rec gen_validate_data name st =
     let context = Var "context__" in
     let validate =
       context.@?(( "validate_dims"
-                 , [ literal_string "data initialization"
+                 , [ literal_string stage
                    ; literal_string (Mangle.remove_prefix name)
                    ; literal_string
                        (Fmt.to_to_string Cpp.Printing.pp_type_
@@ -171,7 +171,7 @@ let lower_constructor
     @ Stmts.unused "base_rng__"
     @ gen_function__ prog_name prog_name
     @ Decls.dummy_var in
-  let data_idents = List.map ~f:fst input_vars |> String.Set.of_list in
+  let data_idents = List.map ~f:fst3 input_vars |> String.Set.of_list in
   let lower_data (Stmt.Fixed.{pattern; meta} as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
@@ -180,7 +180,9 @@ let lower_constructor
           Numbering.assign_loc meta
           @
           match Set.mem data_idents decl_id with
-          | true -> gen_validate_data decl_id st @ gen_assign_data decl_id st
+          | true ->
+              validate_dims ~stage:"data initialization" decl_id st
+              @ gen_assign_data decl_id st
           | false -> gen_assign_data decl_id st )
       | Unsized _ -> [] )
     | _ -> lower_statement s in
@@ -277,7 +279,7 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
          (intro @ [Stmts.rethrow_located (lower_statements generate_quantities)])
        ~cv_qualifiers:[Const] () )
 
-let gen_transform_inits_impl {Program.transform_inits; _} =
+let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
   let templates =
     [Typename "VecVar"; Require ("stan::require_vector_t", ["VecVar"])] in
   let args =
@@ -288,11 +290,27 @@ let gen_transform_inits_impl {Program.transform_inits; _} =
     [ Using ("local_scalar_t__", Some Double); Decls.serializer_out
     ; Decls.current_statement ]
     @ Decls.dummy_var in
+  let validate_params
+      ( (name : string)
+      , (loc : int)
+      , (Program.{out_block; out_constrained_st; _} : 'a Program.outvar) ) =
+    match out_block with
+    | Parameters ->
+        Some
+          ( Numbering.assign_loc loc
+          @ validate_dims ~stage:"parameter initialization" name
+              out_constrained_st )
+    | _ -> None in
+  let validation =
+    List.filter_map ~f:validate_params output_vars |> List.concat in
   FunDef
     (make_fun_defn
        ~templates_init:([templates], true)
        ~inline:true ~return_type:Void ~name:"transform_inits_impl" ~args
-       ~body:(intro @ [Stmts.rethrow_located (lower_statements transform_inits)])
+       ~body:
+         ( intro
+         @ [ Stmts.rethrow_located
+               (validation @ lower_statements transform_inits) ] )
        ~cv_qualifiers:[Const] () )
 
 let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
@@ -338,11 +356,11 @@ let gen_get_param_names {Program.output_vars; _} =
   in
   let params, tparams, gqs =
     List.partition3_map output_vars ~f:(function
-      | id, {Program.out_block= Parameters; out_constrained_st= st; _} ->
+      | id, _, {Program.out_block= Parameters; out_constrained_st= st; _} ->
           `Fst (param_to_names id st)
-      | id, {out_block= TransformedParameters; out_constrained_st= st; _} ->
+      | id, _, {out_block= TransformedParameters; out_constrained_st= st; _} ->
           `Snd (param_to_names id st)
-      | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
+      | id, _, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
           `Trd (param_to_names id st) ) in
   let args =
     [ (Ref (Types.std_vector Types.string), "names__")
@@ -388,12 +406,15 @@ let gen_get_dims {Program.output_vars; _} =
          (SizedType.flatten_tuple_io inner_dims) ) in
   let params, tparams, gqs =
     List.partition3_map output_vars ~f:(function
-      | _, {Program.out_block= Parameters; Program.out_constrained_st= st; _} ->
-          `Fst (pack st)
-      | _, {out_block= TransformedParameters; Program.out_constrained_st= st; _}
+      | _, _, {Program.out_block= Parameters; Program.out_constrained_st= st; _}
         ->
+          `Fst (pack st)
+      | ( _
+        , _
+        , {out_block= TransformedParameters; Program.out_constrained_st= st; _}
+        ) ->
           `Snd (pack st)
-      | _, {out_block= GeneratedQuantities; Program.out_constrained_st= st; _}
+      | _, _, {out_block= GeneratedQuantities; Program.out_constrained_st= st; _}
         ->
           `Trd (pack st) ) in
   let args =
@@ -508,11 +529,12 @@ let gen_constrained_param_names {Program.output_vars; _} =
   gen_param_names_fn "constrained_param_names"
     (List.partition3_map
        ~f:(function
-         | id, {Program.out_block= Parameters; out_constrained_st= st; _} ->
+         | id, _, {Program.out_block= Parameters; out_constrained_st= st; _} ->
              `Fst (id, st)
-         | id, {out_block= TransformedParameters; out_constrained_st= st; _} ->
+         | id, _, {out_block= TransformedParameters; out_constrained_st= st; _}
+           ->
              `Snd (id, st)
-         | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
+         | id, _, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
              `Trd (id, st) )
        output_vars )
 
@@ -520,12 +542,14 @@ let gen_unconstrained_param_names {Program.output_vars; _} =
   gen_param_names_fn "unconstrained_param_names"
     (List.partition3_map
        ~f:(function
-         | id, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
+         | id, _, {Program.out_block= Parameters; out_unconstrained_st= st; _}
+           ->
              `Fst (id, st)
-         | id, {out_block= TransformedParameters; out_unconstrained_st= st; _}
+         | id, _, {out_block= TransformedParameters; out_unconstrained_st= st; _}
            ->
              `Snd (id, st)
-         | id, {out_block= GeneratedQuantities; out_unconstrained_st= st; _} ->
+         | id, _, {out_block= GeneratedQuantities; out_unconstrained_st= st; _}
+           ->
              `Trd (id, st) )
        output_vars )
 
@@ -543,14 +567,15 @@ let gen_outvar_metadata name outvars =
 
 (** Print the [get_unconstrained_sizedtypes] method of the model class *)
 let gen_unconstrained_types {Program.output_vars; _} =
-  let grab_unconstrained (name, {Program.out_unconstrained_st; out_block; _}) =
+  let grab_unconstrained (name, _, {Program.out_unconstrained_st; out_block; _})
+      =
     (name, out_unconstrained_st, out_block) in
   let outvars = List.map ~f:grab_unconstrained output_vars in
   gen_outvar_metadata "get_unconstrained_sizedtypes" outvars
 
 (** Print the [get_constrained_sizedtypes] method of the model class *)
 let gen_constrained_types {Program.output_vars; _} =
-  let grab_constrained (name, {Program.out_constrained_st; out_block; _}) =
+  let grab_constrained (name, _, {Program.out_constrained_st; out_block; _}) =
     (name, out_constrained_st, out_block) in
   let outvars = List.map ~f:grab_constrained output_vars in
   gen_outvar_metadata "get_constrained_sizedtypes" outvars
@@ -578,7 +603,7 @@ let gen_overloads {Program.output_vars; _} =
       (* The list of output variables that came from a particular block *)
       let block_outvars (block : Program.io_block) =
         List.filter_map output_vars
-          ~f:(fun ((_ : string), (outvar : Expr.Typed.t Program.outvar)) ->
+          ~f:(fun ((_ : string), _, (outvar : Expr.Typed.t Program.outvar)) ->
             if outvar.out_block = block then Some outvar else None ) in
       let num_params = num_outvars (block_outvars Parameters) in
       let num_transformed = num_outvars (block_outvars TransformedParameters) in
@@ -780,6 +805,7 @@ let lower_model_public p =
   @ gen_overloads p
 
 let model_public_basics name =
+  let version_string = "stanc_version = %%NAME%%3 %%VERSION%%" in
   [ FunDef
       (make_fun_defn ~inline:true ~return_type:Types.string ~name:"model_name"
          ~cv_qualifiers:[Const; Final]
@@ -793,8 +819,7 @@ let model_public_basics name =
            [ Return
                (Some
                   (Exprs.std_vector_init_expr Types.string
-                     [ Exprs.literal_string
-                         "stanc_version = %%NAME%%3 %%VERSION%%"
+                     [ Exprs.literal_string version_string
                      ; Exprs.literal_string
                          ("stancflags = " ^ !stanc_args_to_print) ] ) ) ]
          ~cv_qualifiers:[Const; NoExcept] () ) ]

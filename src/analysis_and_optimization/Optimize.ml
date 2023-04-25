@@ -861,9 +861,9 @@ and unenforce_initialize (lst : Stmt.Located.t list) =
  *  @param transformer a function that takes in and returns a list of
  *    Stmts.
  *)
-let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)
-    (transformer : Stmt.Located.t list -> Stmt.Located.t list) :
-    (Expr.Typed.t, Stmt.Located.t) Program.t =
+let transform_mir_blocks (mir : Program.Typed.t)
+    (transformer : Stmt.Located.t list -> Stmt.Located.t list) : Program.Typed.t
+    =
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
         let new_body =
@@ -1138,7 +1138,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   let global_initial_ad_variables =
     Set.Poly.of_list
       (List.filter_map
-         ~f:(fun (v, Program.{out_block; _}) ->
+         ~f:(fun (v, _, Program.{out_block; _}) ->
            match out_block with Parameters -> Some v | _ -> None )
          mir.output_vars ) in
   let initial_ad_variables fundef_opt _ =

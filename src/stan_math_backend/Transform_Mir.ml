@@ -227,8 +227,11 @@ let make_tuple_temp name = munge_tuple_name name ^ "_temp__"
     @param origin_type The type of the flat variable for this call, if one exists.
       In situations where this is an array of tuples still, this type is unused.
   *)
-let rec var_context_read_inside_tuple enclosing_tuple_name origin_type smeta
-    ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
+let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
+    ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), _, st) =
+  let smeta =
+    (* avoid a bunch of redundant current_statement assigns *)
+    Location_span.empty in
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
   let flat_type = UnsizedType.UArray scalar in
@@ -279,15 +282,16 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type smeta
       let sub_sts =
         List.mapi
           ~f:(fun iter x ->
-            (Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1), x) )
+            ( Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1)
+            , smeta
+            , x ) )
           get_subtypes in
       let enclosing_names =
         List.mapi
           ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
           get_subtypes in
       List.map2_exn
-        ~f:(fun name sts ->
-          var_context_read_inside_tuple name origin_type smeta sts )
+        ~f:(fun name sts -> var_context_read_inside_tuple name origin_type sts)
         enclosing_names sub_sts
       |> List.concat
   | UArray _ when UnsizedType.contains_tuple unsized ->
@@ -342,8 +346,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type smeta
                               var_context_read_inside_tuple io_name
                                 (UnsizedType.wind_array_type
                                    (SizedType.to_unsized st, List.length dims) )
-                                smeta
-                                (Pattern.LVariable temp_name, st) )
+                                (Pattern.LVariable temp_name, smeta, st) )
                             tuple_component_names tuple_types
                         |> List.concat )
                       @ final_assignment loopvars ) } )
@@ -392,8 +395,8 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type smeta
           ]
         |> swrap ]
 
-let rec var_context_read ?origin ?name smeta
-    ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), st) =
+let rec var_context_read ?origin ?name
+    ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), smeta, st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
   let flat_type = UnsizedType.UArray scalar in
@@ -435,9 +438,11 @@ let rec var_context_read ?origin ?name smeta
       let sub_sts =
         List.mapi
           ~f:(fun iter x ->
-            (Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1), x) )
+            ( Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1)
+            , smeta
+            , x ) )
           get_subtypes in
-      List.concat_map ~f:(var_context_read smeta) sub_sts
+      List.concat_map ~f:var_context_read sub_sts
   | UArray _ when UnsizedType.contains_tuple unsized ->
       (* The IO format for tuples is complicated in this case.
          Therefore, we need to do the following
@@ -535,8 +540,7 @@ let rec var_context_read ?origin ?name smeta
                               var_context_read_inside_tuple io_name
                                 (UnsizedType.wind_array_type
                                    (SizedType.to_unsized st, List.length dims) )
-                                smeta
-                                (Pattern.LVariable temp_name, st) )
+                                (Pattern.LVariable temp_name, smeta, st) )
                             tuple_component_names tuple_types
                         |> List.concat )
                       @ final_assignment loopvars ) } )
@@ -617,8 +621,10 @@ let plain_deserializer_read loc out_constrained_st =
     Helpers.(
       internal_funapp FnReadDeserializer dims Typed.Meta.{emeta with type_= ut}))
 
-let param_deserializer_read smeta
-    (decl_id_lval, Program.{out_constrained_st= cst; out_block; out_trans; _}) =
+let param_deserializer_read
+    ( decl_id_lval
+    , smeta
+    , Program.{out_constrained_st= cst; out_block; out_trans; _} ) =
   if not (out_block = Parameters) then []
   else
     let basic_read (cst, out_trans) =
@@ -746,14 +752,13 @@ let%expect_test "Flatten slists" =
       (meta ()))) |}]
 
 let add_reads vars mkread stmts =
+  let vars = List.map ~f:(fun (id, l, outvar) -> (id, (l, outvar))) vars in
   let var_names = String.Map.of_alist_exn vars in
-  let add_read_to_decl (Stmt.Fixed.{pattern; meta} as stmt) =
+  let add_read_to_decl (Stmt.Fixed.{pattern; _} as stmt) =
     match pattern with
     | Decl {decl_id; _} when Map.mem var_names decl_id ->
-        stmt
-        :: mkread meta
-             ( Stmt.Fixed.Pattern.LVariable decl_id
-             , Map.find_exn var_names decl_id )
+        let loc, out = Map.find_exn var_names decl_id in
+        stmt :: mkread (Stmt.Fixed.Pattern.LVariable decl_id, loc, out)
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
@@ -808,8 +813,7 @@ let param_serializer_write ?(unconstrain = false)
   need to write them in "column major order"
  *)
 let param_unconstrained_serializer_write
-    (decl_id, Program.{out_constrained_st; _}) =
-  let smeta = Stmt.Located.Meta.empty in
+    (decl_id, smeta, Program.{out_constrained_st; _}) =
   let rec write (var, st) =
     match st with
     | SizedType.STuple sts ->
@@ -848,7 +852,7 @@ let param_unconstrained_serializer_write
 
 (** Reads in parameters from a var_context, the same way as is done in the constructor,
      and then writes out the unconstrained versions *)
-let var_context_unconstrain_transform smeta (decl_id, outvar) =
+let var_context_unconstrain_transform (decl_id, smeta, outvar) =
   let st = outvar.Program.out_constrained_st in
   Stmt.Fixed.
     { pattern=
@@ -860,11 +864,11 @@ let var_context_unconstrain_transform smeta (decl_id, outvar) =
           ; decl_type= Type.Sized st
           ; initialize= true }
     ; meta= smeta }
-  :: var_context_read smeta (LVariable decl_id, st)
+  :: var_context_read (LVariable decl_id, smeta, st)
   @ param_serializer_write ~unconstrain:true (decl_id, outvar)
 
 (** Reads in parameters from a serializer and then writes out the unconstrained versions *)
-let array_unconstrain_transform smeta (decl_id, outvar) =
+let array_unconstrain_transform (decl_id, smeta, outvar) =
   let decl =
     Stmt.Fixed.
       { pattern=
@@ -976,7 +980,7 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
-let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
+let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
   ; log_prob= f p.log_prob
@@ -990,7 +994,7 @@ let trans_prog (p : Program.Typed.t) =
     { Stmt.Fixed.pattern=
         Stmt.Fixed.Pattern.map translate_funapps_and_kwrds map_stmt pattern
     ; meta } in
-  let rename_kwrds (s, e) = (add_prefix_to_kwrds s, e) in
+  let rename_inout (s, l, e) = (add_prefix_to_kwrds s, l, e) in
   let rename_fdarg (e1, s, e2) = (e1, add_prefix_to_kwrds s, e2) in
   let rename_func (s : 'a Program.fun_def) =
     { s with
@@ -999,11 +1003,11 @@ let trans_prog (p : Program.Typed.t) =
   let p =
     Program.(
       { p with
-        output_vars= List.map ~f:rename_kwrds p.output_vars
-      ; input_vars= List.map ~f:rename_kwrds p.input_vars
+        output_vars= List.map ~f:rename_inout p.output_vars
+      ; input_vars= List.map ~f:rename_inout p.input_vars
       ; functions_block= List.map ~f:rename_func p.functions_block }
-      |> map translate_funapps_and_kwrds map_stmt
-      |> map Fn.id change_kwrds_stmts) in
+      |> map translate_funapps_and_kwrds map_stmt Fn.id
+      |> map Fn.id change_kwrds_stmts Fn.id) in
   let p = {p with functions_block= break_eigen_cycles p.functions_block} in
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
@@ -1016,9 +1020,8 @@ let trans_prog (p : Program.Typed.t) =
            Stmt.Fixed.{pattern; meta= Location_span.empty} ) in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars ~f:param_unconstrained_serializer_write
-    |> List.map2_exn p.output_vars ~f:(fun (_, outvar) writes ->
-           ( outvar.Program.out_block
-           , Stmt.Fixed.{pattern= SList writes; meta= Location_span.empty} ) )
+    |> List.map2_exn p.output_vars ~f:(fun (_, meta, outvar) writes ->
+           (outvar.Program.out_block, Stmt.Fixed.{pattern= SList writes; meta}) )
     |> List.partition3_map ~f:(fun (b, x) ->
            match b with
            | Parameters -> `Fst x
@@ -1101,9 +1104,11 @@ let trans_prog (p : Program.Typed.t) =
           String.chop_suffix_exn ~suffix:opencl_suffix vident in
         let type_of_input_var =
           match
-            List.Assoc.find p.input_vars vident_sans_opencl ~equal:String.equal
+            List.find
+              ~f:(fun (s, _, _) -> String.equal s vident_sans_opencl)
+              p.input_vars
           with
-          | Some st -> SizedType.to_unsized st
+          | Some (_, _, st) -> SizedType.to_unsized st
           | None -> UnsizedType.UMatrix in
         [ Stmt.Fixed.
             { pattern=
@@ -1124,7 +1129,7 @@ let trans_prog (p : Program.Typed.t) =
   let p =
     let params =
       List.filter
-        ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
+        ~f:(fun (_, _, ov) -> ov.Program.out_block = Parameters)
         p.output_vars in
     { p with
       log_prob= log_prob @ maybe_add_opencl_events_clear
@@ -1134,17 +1139,11 @@ let trans_prog (p : Program.Typed.t) =
         @ (p.prepare_data |> add_reads p.input_vars var_context_read)
         @ to_matrix_cl_stmts
     ; transform_inits=
-        init_pos
-        @ List.concat_map
-            ~f:(var_context_unconstrain_transform Location_span.empty)
-            params
+        init_pos @ List.concat_map ~f:var_context_unconstrain_transform params
     ; unconstrain_array=
-        init_pos
-        @ List.concat_map
-            ~f:(array_unconstrain_transform Location_span.empty)
-            params
+        init_pos @ List.concat_map ~f:array_unconstrain_transform params
     ; generate_quantities } in
   Program.(
     p
-    |> map Fn.id ensure_body_in_block
+    |> map Fn.id ensure_body_in_block Fn.id
     |> map_prog_stmt_lists flatten_slists_list)

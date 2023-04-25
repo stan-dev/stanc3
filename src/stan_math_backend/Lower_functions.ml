@@ -346,7 +346,7 @@ let get_functor_requirements (p : Program.Numbered.t) =
     Stmt.Fixed.(
       Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
   in
-  Program.fold find_functors_expr find_functors_stmt String.Map.empty p
+  Program.fold find_functors_expr find_functors_stmt Fn.const String.Map.empty p
 
 let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let functor_required = get_functor_requirements p in

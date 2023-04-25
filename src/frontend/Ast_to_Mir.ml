@@ -793,6 +793,7 @@ let trans_block ud_dists declc block prog =
                    |> Option.to_list in
                  let outvar =
                    ( identifier.name
+                   , smeta.loc
                    , Program.
                        { out_constrained_st= type_
                        ; out_unconstrained_st= param_size transform type_
@@ -848,16 +849,20 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     | _ -> [] in
   let ud_dists = map grab_fundef_names_and_types functionblock in
   let trans_stmt = trans_stmt ud_dists in
-  let get_name_size s =
+  let get_name_size (s : Ast.typed_statement) =
     match s.Ast.stmt with
     | Ast.VarDecl {decl_type= st; variables; transformation; _} ->
         List.map
           ~f:(fun {identifier; _} ->
-            (identifier.name, trans_sizedtype st, transformation) )
+            ( identifier.name
+            , trans_sizedtype st
+            , transformation
+            , s.Ast.smeta.loc ) )
           variables
     | _ -> [] in
   let input_vars =
-    map get_name_size datablock |> List.map ~f:(fun (n, st, _) -> (n, st)) in
+    map get_name_size datablock
+    |> List.map ~f:(fun (n, st, _, loc) -> (n, loc, st)) in
   let declc = {transform_action= IgnoreTransform; dadlevel= DataOnly} in
   let datab = map (trans_stmt {declc with transform_action= Check}) datablock in
   let _, _, param =
