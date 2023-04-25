@@ -11,7 +11,7 @@ let stanc_args_to_print = ref ""
 
 let get_unconstrained_param_st lst =
   match lst with
-  | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
+  | _, _, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
       Some (SizedType.get_dims_io st)
   | _ -> None
 
@@ -164,7 +164,7 @@ let lower_constructor
     @ Stmts.unused "base_rng__"
     @ gen_function__ prog_name prog_name
     @ Decls.dummy_var in
-  let data_idents = List.map ~f:fst input_vars |> String.Set.of_list in
+  let data_idents = List.map ~f:fst3 input_vars |> String.Set.of_list in
   let lower_data (Stmt.Fixed.{pattern; meta} as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
@@ -286,12 +286,14 @@ let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
     @ Decls.dummy_var in
   let validate_params
       ( (name : string)
+      , (loc : int)
       , (Program.{out_block; out_constrained_st; _} : 'a Program.outvar) ) =
     match out_block with
     | Parameters ->
         Some
-          (validate_dims ~stage:"parameter initialization" name
-             out_constrained_st )
+          ( Numbering.assign_loc loc
+          @ validate_dims ~stage:"parameter initialization" name
+              out_constrained_st )
     | _ -> None in
   let validation =
     List.filter_map ~f:validate_params output_vars |> List.concat in
@@ -343,11 +345,11 @@ let gen_extend_vector name type_ elts =
 let gen_get_param_names {Program.output_vars; _} =
   let params, tparams, gqs =
     List.partition3_map output_vars ~f:(function
-      | id, {Program.out_block= Parameters; _} ->
+      | id, _, {Program.out_block= Parameters; _} ->
           `Fst (Exprs.literal_string (Mangle.remove_prefix id))
-      | id, {out_block= TransformedParameters; _} ->
+      | id, _, {out_block= TransformedParameters; _} ->
           `Snd (Exprs.literal_string (Mangle.remove_prefix id))
-      | id, {out_block= GeneratedQuantities; _} ->
+      | id, _, {out_block= GeneratedQuantities; _} ->
           `Trd (Exprs.literal_string (Mangle.remove_prefix id)) ) in
   let args =
     [ (Ref (Types.std_vector Types.string), "names__")
@@ -377,12 +379,15 @@ let gen_get_dims {Program.output_vars; _} =
       (List.map ~f:cast (SizedType.get_dims_io inner_dims)) in
   let params, tparams, gqs =
     List.partition3_map output_vars ~f:(function
-      | _, {Program.out_block= Parameters; Program.out_constrained_st= st; _} ->
-          `Fst (pack st)
-      | _, {out_block= TransformedParameters; Program.out_constrained_st= st; _}
+      | _, _, {Program.out_block= Parameters; Program.out_constrained_st= st; _}
         ->
+          `Fst (pack st)
+      | ( _
+        , _
+        , {out_block= TransformedParameters; Program.out_constrained_st= st; _}
+        ) ->
           `Snd (pack st)
-      | _, {out_block= GeneratedQuantities; Program.out_constrained_st= st; _}
+      | _, _, {out_block= GeneratedQuantities; Program.out_constrained_st= st; _}
         ->
           `Trd (pack st) ) in
   let args =
@@ -481,11 +486,12 @@ let gen_constrained_param_names {Program.output_vars; _} =
   gen_param_names_fn "constrained_param_names"
     (List.partition3_map
        ~f:(function
-         | id, {Program.out_block= Parameters; out_constrained_st= st; _} ->
+         | id, _, {Program.out_block= Parameters; out_constrained_st= st; _} ->
              `Fst (id, st)
-         | id, {out_block= TransformedParameters; out_constrained_st= st; _} ->
+         | id, _, {out_block= TransformedParameters; out_constrained_st= st; _}
+           ->
              `Snd (id, st)
-         | id, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
+         | id, _, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
              `Trd (id, st) )
        output_vars )
 
@@ -493,12 +499,14 @@ let gen_unconstrained_param_names {Program.output_vars; _} =
   gen_param_names_fn "unconstrained_param_names"
     (List.partition3_map
        ~f:(function
-         | id, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
+         | id, _, {Program.out_block= Parameters; out_unconstrained_st= st; _}
+           ->
              `Fst (id, st)
-         | id, {out_block= TransformedParameters; out_unconstrained_st= st; _}
+         | id, _, {out_block= TransformedParameters; out_unconstrained_st= st; _}
            ->
              `Snd (id, st)
-         | id, {out_block= GeneratedQuantities; out_unconstrained_st= st; _} ->
+         | id, _, {out_block= GeneratedQuantities; out_unconstrained_st= st; _}
+           ->
              `Trd (id, st) )
        output_vars )
 
@@ -516,14 +524,15 @@ let gen_outvar_metadata name outvars =
 
 (** Print the [get_unconstrained_sizedtypes] method of the model class *)
 let gen_unconstrained_types {Program.output_vars; _} =
-  let grab_unconstrained (name, {Program.out_unconstrained_st; out_block; _}) =
+  let grab_unconstrained (name, _, {Program.out_unconstrained_st; out_block; _})
+      =
     (name, out_unconstrained_st, out_block) in
   let outvars = List.map ~f:grab_unconstrained output_vars in
   gen_outvar_metadata "get_unconstrained_sizedtypes" outvars
 
 (** Print the [get_constrained_sizedtypes] method of the model class *)
 let gen_constrained_types {Program.output_vars; _} =
-  let grab_constrained (name, {Program.out_constrained_st; out_block; _}) =
+  let grab_constrained (name, _, {Program.out_constrained_st; out_block; _}) =
     (name, out_constrained_st, out_block) in
   let outvars = List.map ~f:grab_constrained output_vars in
   gen_outvar_metadata "get_constrained_sizedtypes" outvars
@@ -551,7 +560,7 @@ let gen_overloads {Program.output_vars; _} =
       (* The list of output variables that came from a particular block *)
       let block_outvars (block : Program.io_block) =
         List.filter_map output_vars
-          ~f:(fun ((_ : string), (outvar : Expr.Typed.t Program.outvar)) ->
+          ~f:(fun ((_ : string), _, (outvar : Expr.Typed.t Program.outvar)) ->
             if outvar.out_block = block then Some outvar else None ) in
       let num_params = num_outvars (block_outvars Parameters) in
       let num_transformed = num_outvars (block_outvars TransformedParameters) in

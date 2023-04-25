@@ -210,7 +210,7 @@ let rec base_type = function
 
 let pos = "pos__"
 
-let var_context_read smeta (decl_id, st) =
+let var_context_read (decl_id, smeta, st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
   let flat_type = UnsizedType.UArray scalar in
@@ -303,8 +303,9 @@ let plain_deserializer_read loc out_constrained_st =
     Helpers.(
       internal_funapp FnReadDeserializer dims Typed.Meta.{emeta with type_= ut}))
 
-let param_deserializer_read smeta
-    (decl_id, Program.{out_constrained_st= cst; out_block; out_trans; _}) =
+let param_deserializer_read
+    (decl_id, smeta, Program.{out_constrained_st= cst; out_block; out_trans; _})
+    =
   if not (out_block = Parameters) then []
   else
     let ut = SizedType.to_unsized cst in
@@ -398,11 +399,13 @@ let%expect_test "Flatten slists" =
       (meta ()))) |}]
 
 let add_reads vars mkread stmts =
+  let vars = List.map ~f:(fun (id, l, outvar) -> (id, (l, outvar))) vars in
   let var_names = String.Map.of_alist_exn vars in
-  let add_read_to_decl (Stmt.Fixed.{pattern; meta} as stmt) =
+  let add_read_to_decl (Stmt.Fixed.{pattern; _} as stmt) =
     match pattern with
     | Decl {decl_id; _} when Map.mem var_names decl_id ->
-        stmt :: mkread meta (decl_id, Map.find_exn var_names decl_id)
+        let loc, out = Map.find_exn var_names decl_id in
+        stmt :: mkread (decl_id, loc, out)
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
@@ -427,15 +430,16 @@ let param_serializer_write ?(unconstrain = false)
  *  need to use for_scalar_inv to write them in "column major order"
  *)
 let param_unconstrained_serializer_write
-    (decl_id, Program.{out_constrained_st; _}) =
+    (decl_id, loc, Program.{out_constrained_st; _}) =
   if SizedType.is_recursive_container out_constrained_st then
     let bodyfn var =
       Stmt.Helpers.internal_nrfunapp
         (FnWriteParam {unconstrain_opt= None; var})
         [var] Location_span.empty in
     let meta =
-      {Expr.Typed.Meta.empty with type_= SizedType.to_unsized out_constrained_st}
-    in
+      { Expr.Typed.Meta.empty with
+        type_= SizedType.to_unsized out_constrained_st
+      ; loc } in
     let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
     Stmt.Helpers.for_scalar_inv out_constrained_st bodyfn expr
       Location_span.empty
@@ -453,7 +457,7 @@ let param_unconstrained_serializer_write
 
 (** Reads in parameters from a var_context, the same way as is done in the constructor,
      and then writes out the unconstrained versions *)
-let var_context_unconstrain_transform smeta (decl_id, outvar) =
+let var_context_unconstrain_transform (decl_id, smeta, outvar) =
   Stmt.Fixed.
     { pattern=
         Decl
@@ -462,11 +466,11 @@ let var_context_unconstrain_transform smeta (decl_id, outvar) =
           ; decl_type= Type.Sized outvar.Program.out_constrained_st
           ; initialize= true }
     ; meta= smeta }
-  :: var_context_read smeta (decl_id, outvar.Program.out_constrained_st)
+  :: var_context_read (decl_id, smeta, outvar.Program.out_constrained_st)
   @ [param_serializer_write ~unconstrain:true (decl_id, outvar)]
 
 (** Reads in parameters from a serializer and then writes out the unconstrained versions *)
-let array_unconstrain_transform smeta (decl_id, outvar) =
+let array_unconstrain_transform (decl_id, smeta, outvar) =
   let out_constrained_st = outvar.Program.out_constrained_st in
   [ Stmt.Fixed.
       { pattern=
@@ -547,7 +551,7 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
-let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
+let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
   ; log_prob= f p.log_prob
@@ -561,7 +565,7 @@ let trans_prog (p : Program.Typed.t) =
     { Stmt.Fixed.pattern=
         Stmt.Fixed.Pattern.map translate_funapps_and_kwrds map_stmt pattern
     ; meta } in
-  let rename_kwrds (s, e) = (add_prefix_to_kwrds s, e) in
+  let rename_inout (s, l, e) = (add_prefix_to_kwrds s, l, e) in
   let rename_fdarg (e1, s, e2) = (e1, add_prefix_to_kwrds s, e2) in
   let rename_func (s : 'a Program.fun_def) =
     { s with
@@ -570,11 +574,11 @@ let trans_prog (p : Program.Typed.t) =
   let p =
     Program.(
       { p with
-        output_vars= List.map ~f:rename_kwrds p.output_vars
-      ; input_vars= List.map ~f:rename_kwrds p.input_vars
+        output_vars= List.map ~f:rename_inout p.output_vars
+      ; input_vars= List.map ~f:rename_inout p.input_vars
       ; functions_block= List.map ~f:rename_func p.functions_block }
-      |> map translate_funapps_and_kwrds map_stmt
-      |> map Fn.id change_kwrds_stmts) in
+      |> map translate_funapps_and_kwrds map_stmt Fn.id
+      |> map Fn.id change_kwrds_stmts Fn.id) in
   let p = {p with functions_block= break_eigen_cycles p.functions_block} in
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
@@ -586,9 +590,9 @@ let trans_prog (p : Program.Typed.t) =
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} ) in
   let param_writes, tparam_writes, gq_writes =
-    List.map p.output_vars ~f:(fun (name, outvar) ->
+    List.map p.output_vars ~f:(fun (name, loc, outvar) ->
         ( outvar.Program.out_block
-        , param_unconstrained_serializer_write (name, outvar) ) )
+        , param_unconstrained_serializer_write (name, loc, outvar) ) )
     |> List.partition3_map ~f:(fun (b, x) ->
            match b with
            | Parameters -> `Fst x
@@ -671,9 +675,11 @@ let trans_prog (p : Program.Typed.t) =
           String.chop_suffix_exn ~suffix:opencl_suffix vident in
         let type_of_input_var =
           match
-            List.Assoc.find p.input_vars vident_sans_opencl ~equal:String.equal
+            List.find
+              ~f:(fun (s, _, _) -> String.equal s vident_sans_opencl)
+              p.input_vars
           with
-          | Some st -> SizedType.to_unsized st
+          | Some (_, _, st) -> SizedType.to_unsized st
           | None -> UnsizedType.UMatrix in
         [ Stmt.Fixed.
             { pattern=
@@ -693,7 +699,7 @@ let trans_prog (p : Program.Typed.t) =
   let p =
     let params =
       List.filter
-        ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
+        ~f:(fun (_, _, ov) -> ov.Program.out_block = Parameters)
         p.output_vars in
     { p with
       log_prob= log_prob @ maybe_add_opencl_events_clear
@@ -703,17 +709,11 @@ let trans_prog (p : Program.Typed.t) =
         @ (p.prepare_data |> add_reads p.input_vars var_context_read)
         @ to_matrix_cl_stmts
     ; transform_inits=
-        init_pos
-        @ List.concat_map
-            ~f:(var_context_unconstrain_transform Location_span.empty)
-            params
+        init_pos @ List.concat_map ~f:var_context_unconstrain_transform params
     ; unconstrain_array=
-        init_pos
-        @ List.concat_map
-            ~f:(array_unconstrain_transform Location_span.empty)
-            params
+        init_pos @ List.concat_map ~f:array_unconstrain_transform params
     ; generate_quantities } in
   Program.(
     p
-    |> map Fn.id ensure_body_in_block
+    |> map Fn.id ensure_body_in_block Fn.id
     |> map_prog_stmt_lists flatten_slists_list)
