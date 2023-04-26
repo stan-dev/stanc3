@@ -2,7 +2,6 @@
     API *)
 
 open Core_kernel
-open Middle
 
 let parse parse_fun lexbuf =
   Input_warnings.init () ;
@@ -44,7 +43,7 @@ let parse parse_fun lexbuf =
         ) in
     Errors.Parsing
       ( message
-      , Location_span.of_positions_exn
+      , Preprocessor.location_span_of_positions
           ( Lexing.lexeme_start_p (Preprocessor.current_buffer ())
           , Lexing.lexeme_end_p (Preprocessor.current_buffer ()) ) )
     |> Result.Error in
@@ -55,14 +54,15 @@ let parse parse_fun lexbuf =
       |> Result.map_error ~f:(fun e -> Errors.Syntax_error e)
     with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err) in
   Lexer.comments := [] ;
+  Preprocessor.reset_locations () ;
   (result, Input_warnings.collect ())
 
 let parse_string parse_fun str =
   let lexbuf =
     let open Lexing in
     let lexbuf = from_string str in
-    lexbuf.lex_start_p <-
-      {pos_fname= "string"; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+    Preprocessor.reset_locations () ;
+    lexbuf.lex_start_p <- Preprocessor.new_file_start_position "string" None ;
     lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
     lexbuf in
   parse parse_fun lexbuf
@@ -77,8 +77,8 @@ let parse_file parse_fun path =
       let lexbuf =
         let open Lexing in
         let lexbuf = from_channel chan in
-        lexbuf.lex_start_p <-
-          {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+        Preprocessor.reset_locations () ;
+        lexbuf.lex_start_p <- Preprocessor.new_file_start_position path None ;
         lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
         lexbuf in
       parse parse_fun lexbuf

@@ -22,22 +22,22 @@
   let add_comment (begin_pos, buffer) end_pos =
       comments :=
         LineComment ( Buffer.contents buffer
-                , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+                , location_span_of_positions (begin_pos, end_pos) )
       :: !comments
 
   let add_multi_comment begin_pos lines end_pos =
     comments :=
-        BlockComment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+        BlockComment ( lines, location_span_of_positions (begin_pos, end_pos) )
       :: !comments
 
   let add_separator lexbuf =
     comments :=
-        Separator (Middle.Location.of_position_exn lexbuf.lex_curr_p)
+        Separator (location_of_position lexbuf.lex_curr_p)
       :: !comments
 
   let add_include fname lexbuf =
     comments :=
-        Include (fname, (Middle.Location_span.of_positions_exn (lexbuf.lex_start_p, lexbuf.lex_curr_p)) )
+        Include (fname, (location_span_of_positions (lexbuf.lex_start_p, lexbuf.lex_curr_p)) )
       :: !comments
 }
 
@@ -247,7 +247,7 @@ rule token = parse
 
   | _                         { raise (Errors.SyntaxError
                                         (Errors.Lexing
-                                          (Middle.Location.of_position_exn
+                                          (location_of_position
                                             (lexeme_start_p
                                               (current_buffer ()))))) }
 
@@ -259,7 +259,7 @@ and multiline_comment state = parse
                update_start_positions lexbuf.lex_curr_p }
   | eof      { raise (Errors.SyntaxError
                       (Errors.UnexpectedEOF
-                        (Middle.Location.of_position_exn lexbuf.lex_curr_p))) }
+                        (location_of_position lexbuf.lex_curr_p))) }
   | newline  { incr_linenum lexbuf;
                let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in

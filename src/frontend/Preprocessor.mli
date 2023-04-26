@@ -2,6 +2,16 @@
 
 open Core_kernel
 
+val reset_locations : unit -> unit
+
+val new_file_start_position :
+  string -> Middle.Location.t option -> Lexing.position
+
+val location_of_position : Lexing.position -> Middle.Location.t
+
+val location_span_of_positions :
+  Lexing.position * Lexing.position -> Middle.Location_span.t
+
 val current_buffer : unit -> Lexing.lexbuf
 (** Buffer at the top of the include stack *)
 
