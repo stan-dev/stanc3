@@ -325,7 +325,10 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
           (create_expr UComplexRowVector)
           l Expr.Helpers.complex_matrix_from_rows
     | `Assoc l, UTuple ts ->
-        List.map2_exn ~f:(fun typ_ (_, json) -> create_expr typ_ json) ts l
+        l
+        |> List.sort ~compare:(fun (x, _) (y, _) ->
+               Int.compare (int_of_string x) (int_of_string y) )
+        |> List.map2_exn ~f:(fun typ_ (_, json) -> create_expr typ_ json) ts
         |> Option.all
         |> Option.map ~f:(fun l -> Expr.Helpers.tuple_expr l)
     | _ -> None in
