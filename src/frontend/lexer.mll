@@ -2,6 +2,7 @@
 
 {
   module Stack = Core_kernel.Stack
+  module Queue = Core_kernel.Queue
   open Lexing
   open Debugging
   open Preprocessor
@@ -15,30 +16,23 @@
       pos_bol = pos.pos_cnum } ;
     update_start_positions lexbuf.lex_curr_p
 
-
-  let comments : Ast.comment_type list ref = ref []
-
   (* Store comments *)
   let add_comment (begin_pos, buffer) end_pos =
-      comments :=
+      Queue.enqueue comments @@
         LineComment ( Buffer.contents buffer
                 , location_span_of_positions (begin_pos, end_pos) )
-      :: !comments
 
   let add_multi_comment begin_pos lines end_pos =
-    comments :=
+    Queue.enqueue comments @@
         BlockComment ( lines, location_span_of_positions (begin_pos, end_pos) )
-      :: !comments
 
   let add_separator lexbuf =
-    comments :=
+    Queue.enqueue comments @@
         Separator (location_of_position lexbuf.lex_curr_p)
-      :: !comments
 
   let add_include fname lexbuf =
-    comments :=
+    Queue.enqueue comments @@
         Include (fname, (location_span_of_positions (lexbuf.lex_start_p, lexbuf.lex_curr_p)) )
-      :: !comments
 }
 
 (* Some auxiliary definition for variables and constants *)

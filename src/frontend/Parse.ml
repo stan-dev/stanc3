@@ -5,17 +5,16 @@ open Core_kernel
 
 let parse parse_fun lexbuf =
   Input_warnings.init () ;
-  Lexer.comments := [] ;
   (* see the Menhir manual for the description of
      error messages support *)
   let module Interp = Parser.MenhirInterpreter in
-  Preprocessor.init lexbuf ;
   let input () =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
        (Preprocessor.current_buffer ()) )
       () in
   let success prog =
-    Result.Ok {prog with Ast.comments= List.rev !Lexer.comments} in
+    Result.Ok {prog with Ast.comments= Queue.to_list Preprocessor.comments}
+  in
   let failure error_state =
     let env =
       match[@warning "-4"] error_state with
@@ -53,18 +52,11 @@ let parse parse_fun lexbuf =
       |> Interp.loop_handle success failure input
       |> Result.map_error ~f:(fun e -> Errors.Syntax_error e)
     with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err) in
-  Lexer.comments := [] ;
-  Preprocessor.reset_locations () ;
   (result, Input_warnings.collect ())
 
 let parse_string parse_fun str =
-  let lexbuf =
-    let open Lexing in
-    let lexbuf = from_string str in
-    Preprocessor.reset_locations () ;
-    lexbuf.lex_start_p <- Preprocessor.new_file_start_position "string" None ;
-    lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
-    lexbuf in
+  let lexbuf = Lexing.from_string str in
+  Preprocessor.init lexbuf "string" ;
   parse parse_fun lexbuf
 
 let parse_file parse_fun path =
@@ -74,11 +66,6 @@ let parse_file parse_fun path =
   match chan with
   | Error err -> (Error err, [])
   | Ok chan ->
-      let lexbuf =
-        let open Lexing in
-        let lexbuf = from_channel chan in
-        Preprocessor.reset_locations () ;
-        lexbuf.lex_start_p <- Preprocessor.new_file_start_position path None ;
-        lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
-        lexbuf in
+      let lexbuf = Lexing.from_channel chan in
+      Preprocessor.init lexbuf path ;
       parse parse_fun lexbuf

@@ -2,11 +2,6 @@
 
 open Core_kernel
 
-val reset_locations : unit -> unit
-
-val new_file_start_position :
-  string -> Middle.Location.t option -> Lexing.position
-
 val location_of_position : Lexing.position -> Middle.Location.t
 
 val location_span_of_positions :
@@ -18,7 +13,7 @@ val current_buffer : unit -> Lexing.lexbuf
 val size : unit -> int
 (** Size of the include stack *)
 
-val init : Lexing.lexbuf -> unit
+val init : Lexing.lexbuf -> string -> unit
 (** Push a buffer on to the stack to start *)
 
 val update_start_positions : Lexing.position -> unit
@@ -29,6 +24,8 @@ val update_start_positions : Lexing.position -> unit
 
 val pop_buffer : unit -> Lexing.lexbuf
 (** Pop the buffer at the top of the include stack *)
+
+val comments : Ast.comment_type Queue.t
 
 val include_paths : string list ref
 (** List of paths to search for including files *)

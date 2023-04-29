@@ -5,6 +5,7 @@ open Lexing
 open Debugging
 module Str = Re.Str
 
+let comments = Queue.create ()
 let include_stack = Stack.create ()
 let include_paths : string list ref = ref []
 let included_files : string list ref = ref []
@@ -13,9 +14,18 @@ let size () = Stack.length include_stack
 let locations_map : (string * Middle.Location.t option) String.Table.t =
   String.Table.create ()
 
-let reset_locations () = Hashtbl.clear locations_map
-
 let new_file_start_position filename included_from =
+  (* Lexing.position does not have a field to store `included_from`
+     so we store it in a global hashmap instead and put the hashmap key
+     in `pos_fname`. The keys are arbitrary unique strings. (Filenames are
+     not good keys because the same file could be included multiple times.)
+
+     Prefixing the key with NUL allows us to do a little optimization:
+     when `included_from` is None we don't need to access the hashmap and
+     can store the filename directly in `pos_fname`. Filenames never
+     begin with NUL so `location_of_position` only needs to check the
+     first character to know whether to do a hashmap lookup.
+  *)
   if Option.is_none included_from then
     {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
   else
@@ -33,15 +43,18 @@ let location_of_position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
   ; filename
   ; included_from }
 
-let location_span_of_positions (start_pos, end_pos) =
-  let begin_loc = location_of_position start_pos
-  and end_loc = location_of_position end_pos in
-  {Middle.Location_span.begin_loc; end_loc}
+let location_span_of_positions (start_pos, end_pos) : Middle.Location_span.t =
+  { begin_loc= location_of_position start_pos
+  ; end_loc= location_of_position end_pos }
 
-let init buf =
+let init buf filename =
+  Hashtbl.clear locations_map ;
+  Queue.clear comments ;
   included_files := [] ;
   Stack.clear include_stack ;
-  Stack.push include_stack buf
+  Stack.push include_stack buf ;
+  buf.lex_start_p <- new_file_start_position filename None ;
+  buf.lex_curr_p <- buf.lex_start_p
 
 let current_buffer () =
   let buf = Stack.top_exn include_stack in
