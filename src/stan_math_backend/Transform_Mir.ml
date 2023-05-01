@@ -710,8 +710,7 @@ let trans_prog (p : Program.Typed.t) =
         @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos @ List.concat_map ~f:var_context_unconstrain_transform params
-    ; unconstrain_array=
-        init_pos @ List.concat_map ~f:array_unconstrain_transform params
+    ; unconstrain_array= List.concat_map ~f:array_unconstrain_transform params
     ; generate_quantities } in
   Program.(
     p

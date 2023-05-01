@@ -71,6 +71,8 @@ class external_model final : public model_base_crtp<external_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -136,6 +138,8 @@ class external_model final : public model_base_crtp<external_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "external_model_namespace::write_array";
     // suppress unused var warning
@@ -167,8 +171,7 @@ class external_model final : public model_base_crtp<external_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
+      
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -186,6 +189,8 @@ class external_model final : public model_base_crtp<external_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

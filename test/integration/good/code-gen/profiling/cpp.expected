@@ -111,6 +111,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 27;
         sum_y = stan::math::sum(y);
       }
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -245,6 +247,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "simple_function_model_namespace::write_array";
     // suppress unused var warning
@@ -291,8 +295,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ rho = DUMMY_VAR__;
       current_statement__ = 1;
       rho = in__.read<local_scalar_t__>();
@@ -343,6 +345,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       current_statement__ = 3;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       out__.write_free_lb(0, sigma);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

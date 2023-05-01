@@ -280,15 +280,6 @@ matrix[10, 10] A_p: AoS
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id A_p)
       (decl_type
        (Sized
@@ -5846,15 +5837,6 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id high_low_est)
       (decl_type
        (Sized
@@ -7755,15 +7737,6 @@ matrix[10, 10] X_tp7: AoS
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id X_p)
       (decl_type
        (Sized
@@ -13289,15 +13262,6 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha)
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
@@ -14803,15 +14767,6 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha)
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
@@ -15728,15 +15683,6 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id soa_x)
       (decl_type
        (Sized
@@ -16673,15 +16619,6 @@ matrix[10, 10] mul_two_aos: AoS
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id row_soa)
       (decl_type
        (Sized
@@ -17498,15 +17435,6 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id aos_p)
       (decl_type
        (Sized
@@ -18135,15 +18063,6 @@ matrix[5, 10] tp_matrix_aos: AoS
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id first_pass_soa_x)
       (decl_type
        (Sized

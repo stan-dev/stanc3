@@ -33,6 +33,8 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -107,6 +109,8 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "complex_fails_model_namespace::write_array";
     // suppress unused var warning
@@ -154,8 +158,6 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> A_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       current_statement__ = 1;
@@ -205,6 +207,8 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
         }
       }
       out__.write(A_p);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -764,6 +768,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       stan::math::validate_non_negative_index("h_i_sigma", "Nr", Nr);
       current_statement__ = 91;
       stan::math::validate_non_negative_index("h_sigma", "Nr", Nr);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1225,6 +1231,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "constraints_model_namespace::write_array";
     // suppress unused var warning
@@ -1556,8 +1564,6 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> high_low_est =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 1;
@@ -2144,6 +2150,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         }
       }
       out__.write_free_cholesky_factor_corr(chol_fac_corr_test);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2597,6 +2605,8 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2712,6 +2722,8 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "deep_dependence_model_namespace::write_array";
     // suppress unused var warning
@@ -2812,8 +2824,6 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       current_statement__ = 1;
@@ -2863,6 +2873,8 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
         }
       }
       out__.write(X_p);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -3487,6 +3499,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       current_statement__ = 111;
       stan::math::validate_non_negative_index(
         "tp_aos_fail_assign_from_top_idx", "M", M);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -4016,6 +4030,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "indexing_model_namespace::write_array";
     // suppress unused var warning
@@ -4255,8 +4271,6 @@ class indexing_model final : public model_base_crtp<indexing_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 1;
       alpha = in__.read<local_scalar_t__>();
@@ -4952,6 +4966,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_aos_mat_fail_uni_uni_idx2);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5478,6 +5494,8 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
       Idx = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 16;
       Idx = context__.vals_i("Idx");
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5598,6 +5616,8 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "indexing2_model_namespace::write_array";
     // suppress unused var warning
@@ -5640,8 +5660,6 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 1;
       alpha = in__.read<local_scalar_t__>();
@@ -5701,6 +5719,8 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
         }
       }
       out__.write(p_aos_loop_single_idx);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5955,6 +5975,8 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
       data_r = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 7;
       data_r = context__.vals_r("data_r")[(1 - 1)];
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6061,6 +6083,8 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "reductions_allowed_model_namespace::write_array";
     // suppress unused var warning
@@ -6141,8 +6165,6 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> soa_x =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
       current_statement__ = 1;
@@ -6256,6 +6278,8 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
         }
       }
       out__.write(aos_y);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6572,6 +6596,8 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6683,6 +6709,8 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "return_types_and_udfs_demotes_model_namespace::write_array";
     // suppress unused var warning
@@ -6771,8 +6799,6 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> row_soa =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       current_statement__ = 1;
@@ -6856,6 +6882,8 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
         }
       }
       out__.write(udf_input_aos);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7147,6 +7175,8 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7259,6 +7289,8 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "single_indexing_model_namespace::write_array";
     // suppress unused var warning
@@ -7332,8 +7364,6 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> aos_p =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       current_statement__ = 1;
@@ -7415,6 +7445,8 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
         }
       }
       out__.write(soa_p);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7697,6 +7729,8 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
       data_r = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
       data_r = context__.vals_r("data_r")[(1 - 1)];
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7779,6 +7813,8 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tp_reused_model_namespace::write_array";
     // suppress unused var warning
@@ -7836,8 +7872,6 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,-1> first_pass_soa_x =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 10, DUMMY_VAR__);
       current_statement__ = 1;
@@ -7921,6 +7955,8 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
         }
       }
       out__.write(aos_x);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

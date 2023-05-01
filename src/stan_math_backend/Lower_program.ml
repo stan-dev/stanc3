@@ -180,7 +180,9 @@ let lower_constructor
       | Unsized _ -> [] )
     | _ -> lower_statement s in
   let data =
-    [Stmts.rethrow_located (List.concat_map ~f:lower_data prepare_data)] in
+    [ Stmts.rethrow_located
+        (List.concat_map ~f:lower_data prepare_data @ Stmts.unused "pos__") ]
+  in
   let set_num_params =
     let output_params =
       List.filter_map ~f:get_unconstrained_param_st output_vars in
@@ -261,9 +263,10 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
       :: Stmts.unused "lp__"
     @ [Decls.current_statement; Decls.lp_accum Double]
     @ Decls.dummy_var
-    @ [ VariableDefn
-          (make_variable_defn ~constexpr:true ~type_:Types.bool
-             ~name:"jacobian__" ~init:(Assignment (Literal "false")) () ) ]
+    @ VariableDefn
+        (make_variable_defn ~constexpr:true ~type_:Types.bool ~name:"jacobian__"
+           ~init:(Assignment (Literal "false")) () )
+      :: Stmts.unused "jacobian__"
     @ gen_function__ prog_name "write_array" in
   FunDef
     (make_fun_defn
@@ -304,7 +307,9 @@ let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
        ~body:
          ( intro
          @ [ Stmts.rethrow_located
-               (validation @ lower_statements transform_inits) ] )
+               ( validation
+               @ lower_statements transform_inits
+               @ Stmts.unused "pos__" ) ] )
        ~cv_qualifiers:[Const] () )
 
 let gen_unconstrain_array_impl {Program.unconstrain_array; _} =

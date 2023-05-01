@@ -40,6 +40,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       q = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       q = (p + 5);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -105,6 +107,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "filename_good_model_namespace::write_array";
     // suppress unused var warning
@@ -136,8 +140,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
+      
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -155,6 +158,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

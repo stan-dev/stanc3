@@ -75,6 +75,8 @@ class operators_model final : public model_base_crtp<operators_model> {
       stan::math::validate_non_negative_index("drv", "N", N);
       current_statement__ = 19;
       stan::math::validate_non_negative_index("dv", "N", N);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -151,6 +153,8 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "operators_model_namespace::write_array";
     // suppress unused var warning
@@ -231,8 +235,6 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 1;
@@ -338,6 +340,8 @@ class operators_model final : public model_base_crtp<operators_model> {
         }
       }
       out__.write(A);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -782,6 +786,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           }
         }
       }
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -847,6 +853,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "simple_function_model_namespace::write_array";
     // suppress unused var warning
@@ -878,8 +886,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
+      
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -897,6 +904,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1082,6 +1091,8 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       y = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 10;
       y = context__.vals_r("y")[(1 - 1)];
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1193,6 +1204,8 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "ternary_if_model_namespace::write_array";
     // suppress unused var warning
@@ -1277,8 +1290,6 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 1;
@@ -1376,6 +1387,8 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
       current_statement__ = 4;
       zp = context__.vals_c("zp")[(1 - 1)];
       out__.write(zp);
+      // suppress unused var warning
+      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
