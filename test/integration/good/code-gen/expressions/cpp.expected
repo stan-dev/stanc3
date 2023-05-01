@@ -819,11 +819,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       "simple_function_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -885,11 +880,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -901,14 +891,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool

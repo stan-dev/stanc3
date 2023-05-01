@@ -709,7 +709,10 @@ let trans_prog (p : Program.Typed.t) =
         @ (p.prepare_data |> add_reads p.input_vars var_context_read)
         @ to_matrix_cl_stmts
     ; transform_inits=
-        init_pos @ List.concat_map ~f:var_context_unconstrain_transform params
+        ( if List.is_empty params then []
+        else
+          init_pos @ List.concat_map ~f:var_context_unconstrain_transform params
+        )
     ; unconstrain_array= List.concat_map ~f:array_unconstrain_transform params
     ; generate_quantities } in
   Program.(

@@ -1506,11 +1506,6 @@ void _stan_alignas(const int& _stan_asm, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_alignof(const int& _stan_char, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1521,11 +1516,6 @@ void _stan_alignof(const int& _stan_char, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 int _stan_and(const int& _stan_STAN_MAJOR, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1553,11 +1543,6 @@ void _stan_and_eq(const T0__& _stan_STAN_MINOR, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
@@ -1572,11 +1557,6 @@ void _stan_asm(const T0__& _stan_class_arg__, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_bitand(const int& _stan_constexpr, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1587,11 +1567,6 @@ void _stan_bitand(const int& _stan_constexpr, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_bitor(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1602,11 +1577,6 @@ void _stan_bitor(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_bool(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1617,11 +1587,6 @@ void _stan_bool(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_case(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1632,11 +1597,6 @@ void _stan_case(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_catch(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1647,11 +1607,6 @@ void _stan_catch(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_char(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1662,11 +1617,6 @@ void _stan_char(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_char16_t(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1677,11 +1627,6 @@ void _stan_char16_t(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_char32_t(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1692,11 +1637,6 @@ void _stan_char32_t(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words_model> {
  private:
@@ -3178,11 +3118,6 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -3194,14 +3129,6 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -22704,11 +22631,6 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
       "print_unicode_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -22770,11 +22692,6 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -22786,14 +22703,6 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -23045,11 +22954,6 @@ class promotion_model final : public model_base_crtp<promotion_model> {
       "promotion_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -23131,11 +23035,6 @@ class promotion_model final : public model_base_crtp<promotion_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -23147,14 +23046,6 @@ class promotion_model final : public model_base_crtp<promotion_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -32644,11 +32535,6 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       "single_argument_lpmf_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -32710,11 +32596,6 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -32726,14 +32607,6 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
