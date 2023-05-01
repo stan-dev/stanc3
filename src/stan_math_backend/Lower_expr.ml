@@ -150,14 +150,14 @@ let rec lower_unsizedtype_local adtype ut =
   match (adtype, ut) with
   | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
       Tuple (List.map2_exn ~f:lower_unsizedtype_local ads ts)
-  | _, UnsizedType.UTuple _ ->
+  | UnsizedType.TupleAD _, UnsizedType.UArray t ->
+      Types.std_vector (lower_unsizedtype_local adtype t)
+  | _, UnsizedType.UTuple _ | TupleAD _, _ ->
       Common.FatalError.fatal_error_msg
         [%message
           "Tuple and Tuple AD type not matching!"
             (ut : UnsizedType.t)
             (adtype : UnsizedType.autodifftype)]
-  | UnsizedType.TupleAD _, UnsizedType.UArray t ->
-      Types.std_vector (lower_unsizedtype_local adtype t)
   | _, _ ->
       let s = local_scalar ut adtype in
       lower_type ut s

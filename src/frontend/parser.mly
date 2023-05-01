@@ -617,6 +617,16 @@ constr_expression:
       grammar_logger "constr_expression_indexed" ;
       e
     }
+  | e=identifier ix_str=DOTNUMERAL
+    {  grammar_logger "constr_id_tuple_index" ;
+       match int_of_string_opt (String.drop_prefix ix_str 1) with
+       | None ->
+          raise (Failure ("Could not parse integer from string " ^ ix_str
+                          ^ " in from tuple index. This should never happen,"
+                          ^ " please file a bug."))
+       | Some ix ->
+        build_expr (TupleProjection (build_expr (Variable e) $loc, ix)) $loc
+    }
   | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
@@ -627,6 +637,7 @@ constr_expression:
       grammar_logger "constr_expression_identifier" ;
       build_expr (Variable id) $loc
     }
+
 
 common_expression:
   | i=INTNUMERAL

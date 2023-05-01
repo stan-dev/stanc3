@@ -110,6 +110,18 @@ let rec autodifftype_can_convert at1 at2 =
       List.for_all ts ~f:(autodifftype_can_convert DataOnly)
   | _, _ -> true
 
+let flatten_ad_type ad_type =
+  let rec aux acc = function
+    | DataOnly -> DataOnly :: acc
+    | AutoDiffable -> AutoDiffable :: acc
+    | TupleAD ts -> List.fold ts ~init:acc ~f:aux in
+  aux [] ad_type
+
+let rec has_autodiff = function
+  | DataOnly -> false
+  | AutoDiffable -> true
+  | TupleAD ts -> List.exists ts ~f:has_autodiff
+
 let lub_ad_type xs =
   List.max_elt ~compare:compare_autodifftype xs
   |> Option.value ~default:DataOnly
