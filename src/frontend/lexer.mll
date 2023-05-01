@@ -17,22 +17,24 @@
     update_start_positions lexbuf.lex_curr_p
 
   (* Store comments *)
-  let add_comment (begin_pos, buffer) end_pos =
-      Queue.enqueue comments @@
-        LineComment ( Buffer.contents buffer
-                , location_span_of_positions (begin_pos, end_pos) )
+  let add_line_comment (begin_pos, buffer) end_pos =
+    add_comment
+    @@ LineComment
+         ( Buffer.contents buffer
+         , location_span_of_positions (begin_pos, end_pos) )
 
   let add_multi_comment begin_pos lines end_pos =
-    Queue.enqueue comments @@
-        BlockComment ( lines, location_span_of_positions (begin_pos, end_pos) )
+    add_comment
+    @@ Ast.BlockComment (lines, location_span_of_positions (begin_pos, end_pos))
 
   let add_separator lexbuf =
-    Queue.enqueue comments @@
-        Separator (location_of_position lexbuf.lex_curr_p)
+    add_comment @@ Separator (location_of_position lexbuf.lex_curr_p)
 
   let add_include fname lexbuf =
-    Queue.enqueue comments @@
-        Include (fname, (location_span_of_positions (lexbuf.lex_start_p, lexbuf.lex_curr_p)) )
+    add_comment
+    @@ Include
+         ( fname
+         , location_span_of_positions (lexbuf.lex_start_p, lexbuf.lex_curr_p) )
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -263,8 +265,8 @@ and multiline_comment state = parse
 
 (* Single-line comment terminated by a newline *)
 and singleline_comment state = parse
-  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
-  | eof      { add_comment state lexbuf.lex_curr_p ; update_start_positions lexbuf.lex_curr_p }
+  | newline  { add_line_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
+  | eof      { add_line_comment state lexbuf.lex_curr_p ; update_start_positions lexbuf.lex_curr_p }
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {

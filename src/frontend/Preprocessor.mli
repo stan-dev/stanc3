@@ -25,7 +25,8 @@ val update_start_positions : Lexing.position -> unit
 val pop_buffer : unit -> Lexing.lexbuf
 (** Pop the buffer at the top of the include stack *)
 
-val comments : Ast.comment_type Queue.t
+val add_comment : Ast.comment_type -> unit
+val get_comments : unit -> Ast.comment_type list
 
 val include_paths : string list ref
 (** List of paths to search for including files *)

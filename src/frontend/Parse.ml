@@ -13,8 +13,7 @@ let parse parse_fun lexbuf =
        (Preprocessor.current_buffer ()) )
       () in
   let success prog =
-    Result.Ok {prog with Ast.comments= Queue.to_list Preprocessor.comments}
-  in
+    Result.Ok {prog with Ast.comments= Preprocessor.get_comments ()} in
   let failure error_state =
     let env =
       match[@warning "-4"] error_state with

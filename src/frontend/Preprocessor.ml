@@ -6,6 +6,8 @@ open Debugging
 module Str = Re.Str
 
 let comments = Queue.create ()
+let add_comment = Queue.enqueue comments
+let get_comments () = Queue.to_list comments
 let include_stack = Stack.create ()
 let include_paths : string list ref = ref []
 let included_files : string list ref = ref []
