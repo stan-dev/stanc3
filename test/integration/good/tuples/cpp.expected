@@ -4405,13 +4405,15 @@ namespace tuple_constraints_params_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 8> locations_array__ =
+static constexpr std::array<const char*, 10> locations_array__ =
   {" (found before start of program)",
-  " (in 'tuple-constraints-params.stan', line 8, column 2 to column 41)",
-  " (in 'tuple-constraints-params.stan', line 9, column 2 to column 51)",
-  " (in 'tuple-constraints-params.stan', line 10, column 2 to column 36)",
-  " (in 'tuple-constraints-params.stan', line 12, column 2 to column 84)",
-  " (in 'tuple-constraints-params.stan', line 12, column 65 to column 66)",
+  " (in 'tuple-constraints-params.stan', line 10, column 2 to column 41)",
+  " (in 'tuple-constraints-params.stan', line 11, column 2 to column 51)",
+  " (in 'tuple-constraints-params.stan', line 12, column 2 to column 36)",
+  " (in 'tuple-constraints-params.stan', line 14, column 2 to line 15, column 81)",
+  " (in 'tuple-constraints-params.stan', line 7, column 2 to column 34)",
+  " (in 'tuple-constraints-params.stan', line 14, column 29 to column 46)",
+  " (in 'tuple-constraints-params.stan', line 15, column 61 to column 62)",
   " (in 'tuple-constraints-params.stan', line 3, column 4 to column 22)",
   " (in 'tuple-constraints-params.stan', line 2, column 26 to line 4, column 3)"};
 std::tuple<double, double> foo(std::ostream* pstream__);
@@ -4425,7 +4427,7 @@ std::tuple<double, double> foo(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 6;
+    current_statement__ = 8;
     return std::forward_as_tuple(1.0, 2.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4433,7 +4435,8 @@ std::tuple<double, double> foo(std::ostream* pstream__) {
 }
 class tuple_constraints_params_model final : public model_base_crtp<tuple_constraints_params_model> {
  private:
-  
+  int indicator;
+  int complicated_brack_dot2_1dim__;
  public:
   ~tuple_constraints_params_model() {}
   tuple_constraints_params_model(stan::io::var_context& context__,
@@ -4457,13 +4460,33 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       current_statement__ = 5;
-      stan::math::check_greater_or_equal("cholesky_factor_cov complicated.0",
+      context__.validate_dims("data initialization", "indicator", "int",
+        std::vector<size_t>{});
+      indicator = std::numeric_limits<int>::min();
+      current_statement__ = 5;
+      indicator = context__.vals_i("indicator")[(1 - 1)];
+      current_statement__ = 5;
+      stan::math::check_greater_or_equal(function__, "indicator", indicator,
+        0);
+      current_statement__ = 5;
+      stan::math::check_less_or_equal(function__, "indicator", indicator, 1);
+      current_statement__ = 6;
+      complicated_brack_dot2_1dim__ = std::numeric_limits<int>::min();
+      current_statement__ = 6;
+      complicated_brack_dot2_1dim__ = (indicator ? 3 : 0);
+      current_statement__ = 6;
+      stan::math::validate_non_negative_index("complicated[].2",
+        "indicator ? 3 : 0", complicated_brack_dot2_1dim__);
+      current_statement__ = 7;
+      stan::math::check_greater_or_equal(
+        "cholesky_factor_cov complicated[].2[].3",
         "num rows (must be greater or equal to num cols)", 5, 4);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (1 + 1) + (3 * (2 * (1 + (4 - 1)))) + 1 + (2 * (1 + (3 *
-      ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)))));
+    num_params_r__ = (1 + 1) + (3 * (2 * (1 + (4 - 1)))) + 1 + (2 * (1 +
+      (complicated_brack_dot2_1dim__ * ((1 + (5 - 1)) + ((((4 * (4 - 1)) / 2)
+      + 4) + ((5 - 4) * 4))))));
   }
   inline std::string model_name() const final {
     return "tuple_constraints_params_model";
@@ -4537,27 +4560,52 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
             jacobian__>(std::get<0>(foo(pstream__)), std::get<1>(ps), lp__);
       std::vector<
         std::tuple<local_scalar_t__,
-          std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>> complicated =
+          std::vector<
+            std::tuple<local_scalar_t__,
+              Eigen::Matrix<local_scalar_t__,-1,1>,
+              Eigen::Matrix<local_scalar_t__,-1,-1>>>>> complicated =
         std::vector<
           std::tuple<local_scalar_t__,
-            std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(2,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>>>>(2,
           std::tuple<local_scalar_t__,
-            std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>{DUMMY_VAR__,
-            std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(3,
-              Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 4,
-                DUMMY_VAR__))});
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>>>{DUMMY_VAR__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>>(complicated_brack_dot2_1dim__,
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>{DUMMY_VAR__,
+                Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5,
+                  DUMMY_VAR__),
+                Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 4,
+                  DUMMY_VAR__)})});
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 4;
-        std::get<0>(complicated[(sym1__ - 1)]) = in__.template read_constrain_offset_multiplier<
-                                                   local_scalar_t__,
-                                                   jacobian__>(std::get<0>(ps),
-                                                   1, lp__);
+        std::get<0>(complicated[(sym1__ - 1)]) = in__.template read<
+                                                   local_scalar_t__>();
         current_statement__ = 4;
-        std::get<1>(complicated[(sym1__ - 1)]) = in__.template read_constrain_cholesky_factor_cov<
-                                                   std::vector<
-                                                     Eigen::Matrix<local_scalar_t__,-1,-1>>,
-                                                   jacobian__>(lp__, 3, 5, 4);
+        for (int sym2__ = 1; sym2__ <=
+             complicated_brack_dot2_1dim__; ++sym2__) {
+          current_statement__ = 4;
+          std::get<0>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read<local_scalar_t__>();
+          current_statement__ = 4;
+          std::get<1>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read_constrain_simplex<
+              Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 5);
+          current_statement__ = 4;
+          std::get<2>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read_constrain_cholesky_factor_cov<
+              Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 5, 4);
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4635,27 +4683,50 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       t = in__.template read_constrain_lub<local_scalar_t__,
             jacobian__>(std::get<0>(foo(pstream__)), std::get<1>(ps), lp__);
       std::vector<
-        std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>>
-        complicated =
+        std::tuple<double,
+          std::vector<
+            std::tuple<double, Eigen::Matrix<double,-1,1>,
+              Eigen::Matrix<double,-1,-1>>>>> complicated =
         std::vector<
-          std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>>(2,
-          std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>{
-            std::numeric_limits<double>::quiet_NaN(),
-            std::vector<Eigen::Matrix<double,-1,-1>>(3,
-              Eigen::Matrix<double,-1,-1>::Constant(5, 4,
-                std::numeric_limits<double>::quiet_NaN()))});
+          std::tuple<double,
+            std::vector<
+              std::tuple<double, Eigen::Matrix<double,-1,1>,
+                Eigen::Matrix<double,-1,-1>>>>>(2,
+          std::tuple<double,
+            std::vector<
+              std::tuple<double, Eigen::Matrix<double,-1,1>,
+                Eigen::Matrix<double,-1,-1>>>>{std::numeric_limits<double>::quiet_NaN(
+                                                 ),
+            std::vector<
+              std::tuple<double, Eigen::Matrix<double,-1,1>,
+                Eigen::Matrix<double,-1,-1>>>(complicated_brack_dot2_1dim__,
+              std::tuple<double, Eigen::Matrix<double,-1,1>,
+                Eigen::Matrix<double,-1,-1>>{std::numeric_limits<double>::quiet_NaN(
+                                               ),
+                Eigen::Matrix<double,-1,1>::Constant(5,
+                  std::numeric_limits<double>::quiet_NaN()),
+                Eigen::Matrix<double,-1,-1>::Constant(5, 4,
+                  std::numeric_limits<double>::quiet_NaN())})});
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 4;
-        std::get<0>(complicated[(sym1__ - 1)]) = in__.template read_constrain_offset_multiplier<
-                                                   local_scalar_t__,
-                                                   jacobian__>(std::get<0>(ps),
-                                                   1, lp__);
+        std::get<0>(complicated[(sym1__ - 1)]) = in__.template read<
+                                                   local_scalar_t__>();
         current_statement__ = 4;
-        std::get<1>(complicated[(sym1__ - 1)]) = in__.template read_constrain_cholesky_factor_cov<
-                                                   std::vector<
-                                                     Eigen::Matrix<local_scalar_t__,-1,-1>>,
-                                                   jacobian__>(lp__, 3, 5, 4);
+        for (int sym2__ = 1; sym2__ <=
+             complicated_brack_dot2_1dim__; ++sym2__) {
+          current_statement__ = 4;
+          std::get<0>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read<local_scalar_t__>();
+          current_statement__ = 4;
+          std::get<1>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read_constrain_simplex<
+              Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 5);
+          current_statement__ = 4;
+          std::get<2>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.template read_constrain_cholesky_factor_cov<
+              Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 5, 4);
+        }
       }
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
@@ -4672,19 +4743,14 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         out__.write(std::get<0>(complicated[(sym1__ - 1)]));
         current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-          current_statement__ = 4;
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            current_statement__ = 4;
-            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              out__.write(stan::model::rvalue(
-                            std::get<1>(complicated[(sym1__ - 1)]),
-                            "complicated[sym1__].2",
-                            stan::model::index_uni(sym4__),
-                            stan::model::index_uni(sym3__),
-                            stan::model::index_uni(sym2__)));
-            }
-          }
+        for (int sym2__ = 1; sym2__ <=
+             complicated_brack_dot2_1dim__; ++sym2__) {
+          out__.write(std::get<0>(
+                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
+          out__.write(std::get<1>(
+                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
+          out__.write(std::get<2>(
+                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
         }
       }
       if (stan::math::logical_negation(
@@ -4765,42 +4831,69 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       out__.write_free_lub(std::get<0>(foo(pstream__)), std::get<1>(ps), t);
       std::vector<
         std::tuple<local_scalar_t__,
-          std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>> complicated =
+          std::vector<
+            std::tuple<local_scalar_t__,
+              Eigen::Matrix<local_scalar_t__,-1,1>,
+              Eigen::Matrix<local_scalar_t__,-1,-1>>>>> complicated =
         std::vector<
           std::tuple<local_scalar_t__,
-            std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(2,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>>>>(2,
           std::tuple<local_scalar_t__,
-            std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>{DUMMY_VAR__,
-            std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(3,
-              Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 4,
-                DUMMY_VAR__))});
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>>>{DUMMY_VAR__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>>(complicated_brack_dot2_1dim__,
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>{DUMMY_VAR__,
+                Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5,
+                  DUMMY_VAR__),
+                Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 4,
+                  DUMMY_VAR__)})});
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 4;
         std::get<0>(complicated[(sym1__ - 1)]) = in__.read<
                                                    local_scalar_t__>();
         current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        for (int sym2__ = 1; sym2__ <=
+             complicated_brack_dot2_1dim__; ++sym2__) {
           current_statement__ = 4;
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            current_statement__ = 4;
-            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 4;
-              stan::model::assign(std::get<1>(complicated[(sym1__ - 1)]),
-                in__.read<local_scalar_t__>(),
-                "assigning variable complicated.2",
-                stan::model::index_uni(sym4__),
-                stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__));
-            }
-          }
+          std::get<0>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]) = 
+            in__.read<local_scalar_t__>();
+          current_statement__ = 4;
+          stan::model::assign(
+            std::get<1>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]),
+            in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
+            "assigning variable complicated.2.2");
+          current_statement__ = 4;
+          stan::model::assign(
+            std::get<2>(std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]),
+            in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(5, 4),
+            "assigning variable complicated.2.3");
         }
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write_free_offset_multiplier(std::get<0>(ps), 1,
-          std::get<0>(complicated[(sym1__ - 1)]));
-        out__.write_free_cholesky_factor_cov(std::get<1>(complicated[(sym1__
-                                               - 1)]));
+        out__.write(std::get<0>(complicated[(sym1__ - 1)]));
+        for (int sym2__ = 1; sym2__ <=
+             complicated_brack_dot2_1dim__; ++sym2__) {
+          out__.write(std::get<0>(
+                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
+          out__.write_free_simplex(std::get<1>(
+                                     std::get<1>(complicated[(sym1__ - 1)])[(sym2__
+                                     - 1)]));
+          out__.write_free_cholesky_factor_cov(std::get<2>(
+                                                 std::get<1>(
+                                                   complicated[(sym1__ - 1)])[(sym2__
+                                                 - 1)]));
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4834,9 +4927,19 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       current_statement__ = 4;
       context__.validate_dims("parameter initialization", "complicated.1",
         "double", std::vector<size_t>{static_cast<size_t>(2)});
-      context__.validate_dims("parameter initialization", "complicated.2",
+      context__.validate_dims("parameter initialization", "complicated.2.1",
         "double",
-        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(3),
+        std::vector<size_t>{static_cast<size_t>(2),
+          static_cast<size_t>(complicated_brack_dot2_1dim__)});
+      context__.validate_dims("parameter initialization", "complicated.2.2",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(2),
+          static_cast<size_t>(complicated_brack_dot2_1dim__),
+          static_cast<size_t>(5)});
+      context__.validate_dims("parameter initialization", "complicated.2.3",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(2),
+          static_cast<size_t>(complicated_brack_dot2_1dim__),
           static_cast<size_t>(5), static_cast<size_t>(4)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
@@ -4927,15 +5030,32 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       out__.write_free_lub(std::get<0>(foo(pstream__)), std::get<1>(ps), t);
       std::vector<
         std::tuple<local_scalar_t__,
-          std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>> complicated =
+          std::vector<
+            std::tuple<local_scalar_t__,
+              Eigen::Matrix<local_scalar_t__,-1,1>,
+              Eigen::Matrix<local_scalar_t__,-1,-1>>>>> complicated =
         std::vector<
           std::tuple<local_scalar_t__,
-            std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(2,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>>>>(2,
           std::tuple<local_scalar_t__,
-            std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>{DUMMY_VAR__,
-            std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(3,
-              Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 4,
-                DUMMY_VAR__))});
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>>>{DUMMY_VAR__,
+            std::vector<
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>>(complicated_brack_dot2_1dim__,
+              std::tuple<local_scalar_t__,
+                Eigen::Matrix<local_scalar_t__,-1,1>,
+                Eigen::Matrix<local_scalar_t__,-1,-1>>{DUMMY_VAR__,
+                Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5,
+                  DUMMY_VAR__),
+                Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(5, 4,
+                  DUMMY_VAR__)})});
       {
         std::vector<local_scalar_t__> complicated_dot_1_flat__;
         current_statement__ = 4;
@@ -4943,18 +5063,39 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
         int complicated_dot_1_flat__pos__;
         current_statement__ = 4;
         complicated_dot_1_flat__pos__ = 1;
-        std::vector<local_scalar_t__> complicated_dot_2_flat__;
+        std::vector<local_scalar_t__> complicated_dot_2_dot_1_flat__;
         current_statement__ = 4;
-        complicated_dot_2_flat__ = context__.vals_r("complicated.2");
-        int complicated_dot_2_flat__pos__;
+        complicated_dot_2_dot_1_flat__ = context__.vals_r("complicated.2.1");
+        int complicated_dot_2_dot_1_flat__pos__;
         current_statement__ = 4;
-        complicated_dot_2_flat__pos__ = 1;
+        complicated_dot_2_dot_1_flat__pos__ = 1;
+        std::vector<local_scalar_t__> complicated_dot_2_dot_2_flat__;
+        current_statement__ = 4;
+        complicated_dot_2_dot_2_flat__ = context__.vals_r("complicated.2.2");
+        int complicated_dot_2_dot_2_flat__pos__;
+        current_statement__ = 4;
+        complicated_dot_2_dot_2_flat__pos__ = 1;
+        std::vector<local_scalar_t__> complicated_dot_2_dot_3_flat__;
+        current_statement__ = 4;
+        complicated_dot_2_dot_3_flat__ = context__.vals_r("complicated.2.3");
+        int complicated_dot_2_dot_3_flat__pos__;
+        current_statement__ = 4;
+        complicated_dot_2_dot_3_flat__pos__ = 1;
         double complicated_dot_1_temp__ =
           std::numeric_limits<double>::quiet_NaN();
-        std::vector<Eigen::Matrix<double,-1,-1>> complicated_dot_2_temp__ =
-          std::vector<Eigen::Matrix<double,-1,-1>>(3,
-            Eigen::Matrix<double,-1,-1>::Constant(5, 4,
-              std::numeric_limits<double>::quiet_NaN()));
+        std::vector<
+          std::tuple<double, Eigen::Matrix<double,-1,1>,
+            Eigen::Matrix<double,-1,-1>>> complicated_dot_2_temp__ =
+          std::vector<
+            std::tuple<double, Eigen::Matrix<double,-1,1>,
+              Eigen::Matrix<double,-1,-1>>>(complicated_brack_dot2_1dim__,
+            std::tuple<double, Eigen::Matrix<double,-1,1>,
+              Eigen::Matrix<double,-1,-1>>{std::numeric_limits<double>::quiet_NaN(
+                                             ),
+              Eigen::Matrix<double,-1,1>::Constant(5,
+                std::numeric_limits<double>::quiet_NaN()),
+              Eigen::Matrix<double,-1,-1>::Constant(5, 4,
+                std::numeric_limits<double>::quiet_NaN())});
         current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           complicated_dot_1_temp__ = complicated_dot_1_flat__[(complicated_dot_1_flat__pos__
@@ -4962,42 +5103,98 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
           complicated_dot_1_flat__pos__ = (complicated_dot_1_flat__pos__ +
             1);
           {
-            std::vector<local_scalar_t__> complicated_dot_2_temp___flat__;
-            stan::model::assign(complicated_dot_2_temp___flat__,
-              stan::model::rvalue(complicated_dot_2_flat__,
-                "complicated_dot_2_flat__",
-                stan::model::index_min_max(complicated_dot_2_flat__pos__,
-                  ((complicated_dot_2_flat__pos__ + (3 * (5 * 4))) - 1))),
-              "assigning variable complicated_dot_2_temp___flat__");
-            pos__ = 1;
-            for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
-              for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-                for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-                  stan::model::assign(complicated_dot_2_temp__,
-                    complicated_dot_2_temp___flat__[(pos__ - 1)],
-                    "assigning variable complicated_dot_2_temp__",
-                    stan::model::index_uni(sym4__),
-                    stan::model::index_uni(sym3__),
-                    stan::model::index_uni(sym2__));
+            double complicated_dot_2_dot_1_temp__ =
+              std::numeric_limits<double>::quiet_NaN();
+            Eigen::Matrix<double,-1,1> complicated_dot_2_dot_2_temp__ =
+              Eigen::Matrix<double,-1,1>::Constant(5,
+                std::numeric_limits<double>::quiet_NaN());
+            Eigen::Matrix<double,-1,-1> complicated_dot_2_dot_3_temp__ =
+              Eigen::Matrix<double,-1,-1>::Constant(5, 4,
+                std::numeric_limits<double>::quiet_NaN());
+            for (int sym2__ = 1; sym2__ <=
+                 complicated_brack_dot2_1dim__; ++sym2__) {
+              complicated_dot_2_dot_1_temp__ = complicated_dot_2_dot_1_flat__[(complicated_dot_2_dot_1_flat__pos__
+                - 1)];
+              complicated_dot_2_dot_1_flat__pos__ = (complicated_dot_2_dot_1_flat__pos__
+                + 1);
+              {
+                std::vector<local_scalar_t__>
+                  complicated_dot_2_dot_2_temp___flat__;
+                stan::model::assign(complicated_dot_2_dot_2_temp___flat__,
+                  stan::model::rvalue(complicated_dot_2_dot_2_flat__,
+                    "complicated_dot_2_dot_2_flat__",
+                    stan::model::index_min_max(
+                      complicated_dot_2_dot_2_flat__pos__,
+                      ((complicated_dot_2_dot_2_flat__pos__ + 5) - 1))),
+                  "assigning variable complicated_dot_2_dot_2_temp___flat__");
+                pos__ = 1;
+                for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+                  stan::model::assign(complicated_dot_2_dot_2_temp__,
+                    complicated_dot_2_dot_2_temp___flat__[(pos__ - 1)],
+                    "assigning variable complicated_dot_2_dot_2_temp__",
+                    stan::model::index_uni(sym3__));
                   pos__ = (pos__ + 1);
                 }
+                complicated_dot_2_dot_2_flat__pos__ = (complicated_dot_2_dot_2_flat__pos__
+                  + 5);
               }
+              {
+                std::vector<local_scalar_t__>
+                  complicated_dot_2_dot_3_temp___flat__;
+                stan::model::assign(complicated_dot_2_dot_3_temp___flat__,
+                  stan::model::rvalue(complicated_dot_2_dot_3_flat__,
+                    "complicated_dot_2_dot_3_flat__",
+                    stan::model::index_min_max(
+                      complicated_dot_2_dot_3_flat__pos__,
+                      ((complicated_dot_2_dot_3_flat__pos__ + (5 * 4)) - 1))),
+                  "assigning variable complicated_dot_2_dot_3_temp___flat__");
+                pos__ = 1;
+                for (int sym3__ = 1; sym3__ <= 4; ++sym3__) {
+                  for (int sym4__ = 1; sym4__ <= 5; ++sym4__) {
+                    stan::model::assign(complicated_dot_2_dot_3_temp__,
+                      complicated_dot_2_dot_3_temp___flat__[(pos__ - 1)],
+                      "assigning variable complicated_dot_2_dot_3_temp__",
+                      stan::model::index_uni(sym4__),
+                      stan::model::index_uni(sym3__));
+                    pos__ = (pos__ + 1);
+                  }
+                }
+                complicated_dot_2_dot_3_flat__pos__ = (complicated_dot_2_dot_3_flat__pos__
+                  + (5 * 4));
+              }
+              stan::model::assign(complicated_dot_2_temp__,
+                std::tuple<double, Eigen::Matrix<double,-1,1>,
+                  Eigen::Matrix<double,-1,-1>>(complicated_dot_2_dot_1_temp__,
+                  complicated_dot_2_dot_2_temp__,
+                  complicated_dot_2_dot_3_temp__),
+                "assigning variable complicated_dot_2_temp__",
+                stan::model::index_uni(sym2__));
             }
-            complicated_dot_2_flat__pos__ = (complicated_dot_2_flat__pos__ +
-              (3 * (5 * 4)));
           }
           current_statement__ = 4;
           stan::model::assign(complicated,
-            std::tuple<double, std::vector<Eigen::Matrix<double,-1,-1>>>(complicated_dot_1_temp__,
+            std::tuple<double,
+              std::vector<
+                std::tuple<double, Eigen::Matrix<double,-1,1>,
+                  Eigen::Matrix<double,-1,-1>>>>(complicated_dot_1_temp__,
               complicated_dot_2_temp__), "assigning variable complicated",
             stan::model::index_uni(sym1__));
         }
       }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write_free_offset_multiplier(std::get<0>(ps), 1,
-          std::get<0>(complicated[(sym1__ - 1)]));
-        out__.write_free_cholesky_factor_cov(std::get<1>(complicated[(sym1__
-                                               - 1)]));
+        out__.write(std::get<0>(complicated[(sym1__ - 1)]));
+        for (int sym2__ = 1; sym2__ <=
+             complicated_brack_dot2_1dim__; ++sym2__) {
+          out__.write(std::get<0>(
+                        std::get<1>(complicated[(sym1__ - 1)])[(sym2__ - 1)]));
+          out__.write_free_simplex(std::get<1>(
+                                     std::get<1>(complicated[(sym1__ - 1)])[(sym2__
+                                     - 1)]));
+          out__.write_free_cholesky_factor_cov(std::get<2>(
+                                                 std::get<1>(
+                                                   complicated[(sym1__ - 1)])[(sym2__
+                                                 - 1)]));
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5008,7 +5205,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
     names__ = std::vector<std::string>{"ps.1", "ps.2", "ps2.1", "ps2.2", "t",
-                "complicated.1", "complicated.2"};
+                "complicated.1", "complicated.2.1", "complicated.2.2",
+                "complicated.2.3"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -5025,8 +5223,13 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                 std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(2)},
                 std::vector<size_t>{static_cast<size_t>(2),
-                  static_cast<size_t>(3), static_cast<size_t>(5),
-                  static_cast<size_t>(4)}};
+                  static_cast<size_t>(complicated_brack_dot2_1dim__)},
+                std::vector<size_t>{static_cast<size_t>(2),
+                  static_cast<size_t>(complicated_brack_dot2_1dim__),
+                  static_cast<size_t>(5)},
+                std::vector<size_t>{static_cast<size_t>(2),
+                  static_cast<size_t>(complicated_brack_dot2_1dim__),
+                  static_cast<size_t>(5), static_cast<size_t>(4)}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -5054,13 +5257,22 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "complicated" + '.' +
         std::to_string(sym1__) + ':' + std::to_string(1));
-      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+      for (int sym2__ = 1; sym2__ <= complicated_brack_dot2_1dim__; ++sym2__) {
+        param_names__.emplace_back(std::string() + "complicated" + '.' +
+          std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__) + ':' + std::to_string(1));
         for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-          for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+          param_names__.emplace_back(std::string() + "complicated" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym3__));
+        }
+        for (int sym3__ = 1; sym3__ <= 4; ++sym3__) {
+          for (int sym4__ = 1; sym4__ <= 5; ++sym4__) {
             param_names__.emplace_back(std::string() + "complicated" + '.' +
               std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
-              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
-              std::to_string(sym2__));
+              std::to_string(sym2__) + ':' + std::to_string(3) + '.' +
+              std::to_string(sym4__) + '.' + std::to_string(sym3__));
           }
         }
       }
@@ -5092,12 +5304,22 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "complicated" + '.' +
         std::to_string(sym1__) + ':' + std::to_string(1));
-      for (int sym2__ = 1; sym2__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *
-           4)); ++sym2__) {
-        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+      for (int sym2__ = 1; sym2__ <= complicated_brack_dot2_1dim__; ++sym2__) {
+        param_names__.emplace_back(std::string() + "complicated" + '.' +
+          std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+          std::to_string(sym2__) + ':' + std::to_string(1));
+        for (int sym3__ = 1; sym3__ <= (5 - 1); ++sym3__) {
           param_names__.emplace_back(std::string() + "complicated" + '.' +
             std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
-            std::to_string(sym3__) + '.' + std::to_string(sym2__));
+            std::to_string(sym2__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym3__));
+        }
+        for (int sym3__ = 1; sym3__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4)
+             * 4)); ++sym3__) {
+          param_names__.emplace_back(std::string() + "complicated" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+            std::to_string(sym2__) + ':' + std::to_string(3) + '.' +
+            std::to_string(sym3__));
         }
       }
     }
@@ -5105,10 +5327,10 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"ps2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}}},\"block\":\"parameters\"},{\"name\":\"t\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"complicated\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(4) + "}}]}},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"ps2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}]}}},\"block\":\"parameters\"},{\"name\":\"t\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"complicated\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(complicated_brack_dot2_1dim__) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string(5) + "},{\"name\":\"matrix\",\"rows\":" + std::to_string(5) + ",\"cols\":" + std::to_string(4) + "}]}}]}},\"block\":\"parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"ps2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string((4 -1)) + "}]}}},\"block\":\"parameters\"},{\"name\":\"t\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"complicated\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "}}]}},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"ps\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"real\"}]},\"block\":\"parameters\"},{\"name\":\"ps2\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string((4 -1)) + "}]}}},\"block\":\"parameters\"},{\"name\":\"t\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"complicated\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"array\",\"length\":" + std::to_string(complicated_brack_dot2_1dim__) + ",\"element_type\":{\"name\":\"tuple\",\"num_elements\":\"3\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"vector\",\"length\":" + std::to_string((5 -1)) + "},{\"name\":\"vector\",\"length\":" + std::to_string(((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) *4))) + "}]}}]}},\"block\":\"parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -5118,7 +5340,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = ((((1 + 1) + (3 * (2 * (1 + 4)))) + 1) + (2 *
-      (1 + (3 * (5 * 4)))));
+      (1 + (complicated_brack_dot2_1dim__ * ((1 + 5) + (5 * 4))))));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -5136,7 +5358,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = ((((1 + 1) + (3 * (2 * (1 + 4)))) + 1) + (2 *
-      (1 + (3 * (5 * 4)))));
+      (1 + (complicated_brack_dot2_1dim__ * ((1 + 5) + (5 * 4))))));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +

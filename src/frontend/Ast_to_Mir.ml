@@ -664,7 +664,11 @@ let rec trans_sizedtype_decl declc tr name st =
         ([check fn s e], e)
     | s ->
         let e = trans_expr s in
-        let decl_id = Fmt.str "%s_%ddim__" name n in
+        let decl_name =
+          name
+          |> Str.global_replace (Str.regexp "\\[\\]") "_brack"
+          |> Str.global_replace (Str.regexp "\\.") "_dot" in
+        let decl_id = Fmt.str "%s_%ddim__" decl_name n in
         let decl =
           { Stmt.Fixed.pattern=
               Decl
@@ -731,16 +735,14 @@ let rec trans_sizedtype_decl declc tr name st =
         let ll, t = go (n + 1) t in
         (l @ ll, SizedType.SArray (t, s))
     | STuple _ as tuple ->
-        (* TUPLE MAYBE
-           I'm not 100% sure what this function should do. It looks like it's accumulating some statements to check the sizes of sized types, and also returning the type (will it ever change?)
-           The point of the mutual recursion with "go" seems to be to produce the correct decl_id for the nth dimension of array size. How critical is that dimension name, and where is it read? If it's critical, we'll need to rework it, because the array might be nested inside tuple.
-        *)
+        let former_array_indices =
+          String.concat (List.init (n - 1) ~f:(fun _ -> "[]")) in
         let stmts, sts' =
           List.unzip
             (List.mapi (Utils.zip_stuple_trans_exn tuple tr)
                ~f:(fun ix (st, trans) ->
                  trans_sizedtype_decl declc trans
-                   (name ^ "." ^ string_of_int (ix - 1))
+                   (name ^ former_array_indices ^ "." ^ string_of_int (ix + 1))
                    st ) ) in
         (List.concat stmts, SizedType.STuple sts') in
   go 1 st
