@@ -1,6 +1,14 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.32.1 (2 May 2023)
+======================================================================
+
+- The shapes and sizes of parameter initial values are now checked against the specified sizes in the model before being read in, matching the existing behavior for data. (#1316)
+  **Note:** This change may cause existing code which worked "by accident" to raise new errors about mismatches between the model's declarations and the provided initialization.
+- Errors in transform_inits should now properly highlight the location in the original Stan program. (#1318)
+- Fixed an issue where the `--debug-generate-inits` debug flag would fail badly if parameter sizes depended on data (#1319)
+
 v2.32.0 (20 April 2023)
 ======================================================================
 
