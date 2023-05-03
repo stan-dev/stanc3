@@ -904,8 +904,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       d_real_array_opencl__ = stan::math::to_matrix_cl(d_real_array);
       d_row_vector_opencl__ = stan::math::to_matrix_cl(d_row_vector);
       d_vector_opencl__ = stan::math::to_matrix_cl(d_vector);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7205,8 +7203,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 6;
       y_p = context__.vals_r("y_p")[(1 - 1)];
       out__.write(y_p);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7573,8 +7569,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 39;
       stan::math::validate_non_negative_index("p_row_vector", "d_int", d_int);
       d_vector_opencl__ = stan::math::to_matrix_cl(d_vector);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7983,8 +7977,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 6;
       y_p = context__.vals_r("y_p")[(1 - 1)];
       out__.write(y_p);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

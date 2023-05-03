@@ -68,14 +68,6 @@ class external_model final : public model_base_crtp<external_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 0U;
   }
   inline std::string model_name() const final {

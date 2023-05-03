@@ -1,16 +1,6 @@
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns complex-fails.stan
 matrix[10, 10] A_p: AoS
-((functions_block ()) (input_vars ())
- (prepare_data
-  (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))))
+((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id A_p)
@@ -7056,17 +7046,7 @@ matrix[10, 10] X_tp4: AoS
 matrix[10, 10] X_tp5: AoS
 matrix[10, 10] X_tp6: AoS
 matrix[10, 10] X_tp7: AoS
-((functions_block ()) (input_vars ())
- (prepare_data
-  (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))))
+((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id X_p)
@@ -14334,15 +14314,6 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
       (initialize true)))
     (meta <opaque>))
@@ -14884,15 +14855,6 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
     SReal)))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized SReal))
       (initialize true)))
     (meta <opaque>))
@@ -15927,17 +15889,7 @@ matrix[10, 10] mul_two_aos: AoS
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))))
- (input_vars ())
- (prepare_data
-  (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))))
+ (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id row_soa)
@@ -16826,17 +16778,7 @@ matrix[10, 10] aos_p: AoS
 matrix[10, 10] soa_p: SoA
 row_vector[10] tp_row_vector_from_soa_loop: SoA
 matrix[10, 10] tp_matrix_from_soa_loop: SoA
-((functions_block ()) (input_vars ())
- (prepare_data
-  (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))))
+((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id aos_p)
@@ -17592,15 +17534,6 @@ matrix[5, 10] tp_matrix_aos: AoS
     SReal)))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (pos__ UInt ())
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized SReal))
       (initialize true)))
     (meta <opaque>))

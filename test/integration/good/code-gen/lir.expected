@@ -11595,9 +11595,7 @@
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
-              (Expression (MethodCall (Var out__) write () ((Var y_p))))
-              (Comment "suppress unused var warning")
-              (Expression (Cast Void (Var pos__))))
+              (Expression (MethodCall (Var out__) write () ((Var y_p)))))
              ((Const (Ref (TypeLiteral std::exception))) e)
              ((Expression
                (FunCall stan::lang::rethrow_located ()
@@ -20846,9 +20844,7 @@
            (Expression (Assign (Var current_statement__) (Literal 592)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
-             ((Literal "\"gq_cfcov_33_ar\"") (Literal "\"K\"") (Var K))))
-           (Comment "suppress unused var warning")
-           (Expression (Cast Void (Var pos__))))
+             ((Literal "\"gq_cfcov_33_ar\"") (Literal "\"K\"") (Var K)))))
           ((Const (Ref (TypeLiteral std::exception))) e)
           ((Expression
             (FunCall stan::lang::rethrow_located ()

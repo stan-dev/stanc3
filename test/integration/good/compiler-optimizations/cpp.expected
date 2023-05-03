@@ -863,8 +863,6 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
           }
         }
       }
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1920,8 +1918,6 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
         }
       }
       out__.write(X_p);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2343,8 +2339,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 16;
       context__.validate_dims("data initialization", "N_t", "int",
         std::vector<size_t>{});
@@ -2400,8 +2394,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       stan::math::check_greater_or_equal(function__, "kappa", 1000000, 0);
       current_statement__ = 28;
       stan::math::validate_non_negative_index("y", "N_t", N_t);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2728,8 +2720,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 4;
       context__.validate_dims("parameter initialization", "delta", "double",
         std::vector<size_t>{});
-      int pos__;
-      pos__ = 1;
       local_scalar_t__ beta;
       current_statement__ = 1;
       beta = context__.vals_r("beta")[(1 - 1)];
@@ -2746,8 +2736,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 4;
       delta = context__.vals_r("delta")[(1 - 1)];
       out__.write_free_lb(0, delta);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -3781,8 +3769,6 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
           }
         }
       }
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -4772,8 +4758,6 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
         }
       }
       out__.write(X_p);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5011,8 +4995,6 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 13;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
@@ -5025,8 +5007,6 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       stan::math::validate_non_negative_index("X", "N", N);
       current_statement__ = 15;
       stan::math::validate_non_negative_index("X", "N", N);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5198,8 +5178,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
       double lcm_sym3__;
       int lcm_sym2__;
       int lcm_sym1__;
-      int pos__;
-      pos__ = 1;
+      int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,-1> X =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
       {
@@ -5250,8 +5229,6 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
         }
       }
       out__.write(X);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5967,8 +5944,6 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 56;
       stan::math::validate_non_negative_index("chi", "n_occasions",
         n_occasions);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6834,8 +6809,6 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         }
       }
       out__.write_free_lub(0, 1, beta);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7322,8 +7295,6 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       stan::math::validate_non_negative_index("b_age_edu", "n_edu", n_edu);
       current_statement__ = 65;
       stan::math::validate_non_negative_index("b_hat", "n_state", n_state);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -8108,8 +8079,6 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         }
       }
       out__.write(b_hat);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -8374,8 +8343,6 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 1;
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
@@ -8400,8 +8367,6 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       i = stan::math::normal_rng(5, 1, base_rng__);
       current_statement__ = 8;
       y = stan::math::normal_rng(z, 1, base_rng__);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -8682,8 +8647,6 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 1;
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
@@ -8707,8 +8670,6 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       }
       current_statement__ = 7;
       y = stan::math::normal_rng(z, 1, base_rng__);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -9037,8 +8998,6 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
           }
         }
       }
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -9297,8 +9256,6 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 3;
       theta = context__.vals_r("theta")[(1 - 1)];
       out__.write_free_lub(0, 1, theta);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -9500,8 +9457,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 6;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
@@ -9531,8 +9486,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       stan::math::check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 11;
       stan::math::validate_non_negative_index("theta", "J", J);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -9702,8 +9655,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       current_statement__ = 3;
       context__.validate_dims("parameter initialization", "tau", "double",
         std::vector<size_t>{});
-      int pos__;
-      pos__ = 1;
       local_scalar_t__ mu;
       current_statement__ = 1;
       mu = context__.vals_r("mu")[(1 - 1)];
@@ -9717,8 +9668,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       current_statement__ = 3;
       tau = context__.vals_r("tau")[(1 - 1)];
       out__.write_free_lb(0, tau);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -10224,8 +10173,6 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         n_region_full);
       current_statement__ = 51;
       stan::math::validate_non_negative_index("y_hat", "N", N);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -10972,8 +10919,6 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 11;
       sigma_e = context__.vals_r("sigma_e")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_e);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -11391,8 +11336,6 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::math::validate_non_negative_index("x", "N", N);
       current_statement__ = 42;
       stan::math::validate_non_negative_index("y", "N", N);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -11747,8 +11690,6 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         }
       }
       out__.write(phi_std_raw);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -12470,8 +12411,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 58;
       stan::math::validate_non_negative_index("chi", "n_occasions",
         n_occasions);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -13363,8 +13302,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 4;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       out__.write_free_lub(0, 5, sigma);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -14733,8 +14670,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       stan::math::validate_non_negative_index("z", "M", M);
       current_statement__ = 137;
       stan::math::validate_non_negative_index("z", "n_occasions", n_occasions);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -16511,8 +16446,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 6;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       out__.write_free_lub(0, 5, sigma);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -17076,8 +17009,6 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       stan::math::validate_non_negative_index("log_Pr_z", "I", I);
       current_statement__ = 36;
       stan::math::validate_non_negative_index("log_Pr_z", "K", K);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -17728,8 +17659,6 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         }
       }
       out__.write_free_simplex(theta);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -18074,8 +18003,6 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       stan::math::validate_non_negative_index("phi_std_raw", "N", N);
       current_statement__ = 24;
       stan::math::validate_non_negative_index("phi", "N", N);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -18418,8 +18345,6 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         }
       }
       out__.write(phi_std_raw);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -19172,8 +19097,6 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 56;
       stan::math::validate_non_negative_index("chi", "n_occasions",
         n_occasions);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -20039,8 +19962,6 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         }
       }
       out__.write_free_lub(0, 1, beta);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -20425,8 +20346,6 @@ class function_in_function_inline_model final : public model_base_crtp<function_
           }
         }
       }
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -20804,16 +20723,12 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 12;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 12;
       N = context__.vals_i("N")[(1 - 1)];
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -21232,14 +21147,6 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__;
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 5 + 5;
   }
   inline std::string model_name() const final {
@@ -21480,16 +21387,13 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       double lcm_sym16__;
       double lcm_sym15__;
       int lcm_sym14__;
-      int pos__;
-      pos__ = 1;
+      int pos__ = std::numeric_limits<int>::min();
       Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       {
         std::vector<double> p_single_ret_vec_flat__;
         current_statement__ = 1;
         p_single_ret_vec_flat__ = context__.vals_r("p_single_ret_vec");
-        current_statement__ = 1;
-        pos__ = 1;
         {
           current_statement__ = 1;
           stan::model::assign(p_single_ret_vec,
@@ -21531,8 +21435,6 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
               p_single_ret_vec_flat__[(pos__ - 1)],
               "assigning variable p_single_ret_vec",
               stan::model::index_uni(5));
-            current_statement__ = 1;
-            pos__ = (pos__ + 1);
           }
         }
       }
@@ -21543,8 +21445,6 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
         std::vector<double> p_multi_ret_vec_flat__;
         current_statement__ = 2;
         p_multi_ret_vec_flat__ = context__.vals_r("p_multi_ret_vec");
-        current_statement__ = 2;
-        pos__ = 1;
         {
           current_statement__ = 2;
           stan::model::assign(p_multi_ret_vec,
@@ -21582,14 +21482,10 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
             stan::model::assign(p_multi_ret_vec,
               p_multi_ret_vec_flat__[(pos__ - 1)],
               "assigning variable p_multi_ret_vec", stan::model::index_uni(5));
-            current_statement__ = 2;
-            pos__ = (pos__ + 1);
           }
         }
       }
       out__.write(p_multi_ret_vec);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -21861,8 +21757,6 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
       current_statement__ = 7;
       stan::model::assign(bar, foo(10, 11, pstream__),
         "assigning variable bar");
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -21997,14 +21891,10 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "alpha", "double",
         std::vector<size_t>{});
-      int pos__;
-      pos__ = 1;
       local_scalar_t__ alpha;
       current_statement__ = 1;
       alpha = context__.vals_r("alpha")[(1 - 1)];
       out__.write(alpha);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -22220,8 +22110,6 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 6;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
@@ -22232,8 +22120,6 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       stan::math::validate_non_negative_index("R", "N", N);
       current_statement__ = 8;
       stan::math::validate_non_negative_index("out", "N", N);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -23754,8 +23640,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::math::validate_non_negative_index("z", "M", M);
       current_statement__ = 135;
       stan::math::validate_non_negative_index("z", "n_occasions", n_occasions);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -25501,8 +25385,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 5;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       out__.write_free_lub(0, 5, sigma);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -25828,8 +25710,6 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 1;
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
@@ -25852,8 +25732,6 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       i = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 6;
       i = stan::math::normal_rng(lcm_sym3__, 1, base_rng__);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -26129,14 +26007,6 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__;
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 1;
   }
   inline std::string model_name() const final {
@@ -26279,14 +26149,10 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "x", "double",
         std::vector<size_t>{});
-      int pos__;
-      pos__ = 1;
       local_scalar_t__ x;
       current_statement__ = 1;
       x = context__.vals_r("x")[(1 - 1)];
       out__.write(x);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -26463,8 +26329,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 3;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
@@ -26483,8 +26347,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       y = context__.vals_r("y");
       current_statement__ = 6;
       stan::math::validate_non_negative_index("theta", "J", J);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -26621,15 +26483,11 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "theta", "double",
         std::vector<size_t>{static_cast<size_t>(J)});
-      int pos__;
-      pos__ = 1;
       std::vector<local_scalar_t__> theta =
         std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       current_statement__ = 1;
       theta = context__.vals_r("theta");
       out__.write(theta);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -27259,8 +27117,6 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 52;
       stan::math::validate_non_negative_index("chi", "n_occasions",
         n_occasions);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -28041,8 +27897,6 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 2;
       context__.validate_dims("parameter initialization", "mean_p", "double",
         std::vector<size_t>{});
-      int pos__;
-      pos__ = 1;
       local_scalar_t__ mean_phi;
       current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
@@ -28051,8 +27905,6 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
       out__.write_free_lub(0, 1, mean_p);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -28360,16 +28212,12 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__;
-      pos__ = 1;
       current_statement__ = 6;
       context__.validate_dims("data initialization", "n", "int",
         std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
       current_statement__ = 6;
       n = context__.vals_i("n")[(1 - 1)];
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -28551,14 +28399,10 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "mu", "double",
         std::vector<size_t>{});
-      int pos__;
-      pos__ = 1;
       local_scalar_t__ mu;
       current_statement__ = 1;
       mu = context__.vals_r("mu")[(1 - 1)];
       out__.write(mu);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -28987,8 +28831,6 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       stan::math::validate_non_negative_index("psi_con", "R", R);
       current_statement__ = 51;
       stan::math::validate_non_negative_index("z", "R", R);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -29371,8 +29213,6 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 4;
       context__.validate_dims("parameter initialization", "beta_p", "double",
         std::vector<size_t>{});
-      int pos__;
-      pos__ = 1;
       local_scalar_t__ alpha_occ;
       current_statement__ = 1;
       alpha_occ = context__.vals_r("alpha_occ")[(1 - 1)];
@@ -29389,8 +29229,6 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 4;
       beta_p = context__.vals_r("beta_p")[(1 - 1)];
       out__.write(beta_p);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -29825,8 +29663,6 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       stan::math::validate_non_negative_index("a2", "J", J);
       current_statement__ = 34;
       stan::math::validate_non_negative_index("y_hat", "N", N);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -30293,8 +30129,6 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 8;
       sigma_y = context__.vals_r("sigma_y")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_y);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -30703,14 +30537,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__;
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 1 + 1 + (3 * 2) + 2 + 3;
   }
   inline std::string model_name() const final {
@@ -31408,8 +31234,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       double lcm_sym34__;
       double lcm_sym33__;
       int lcm_sym32__;
-      int pos__;
-      pos__ = 1;
+      int pos__ = std::numeric_limits<int>::min();
       local_scalar_t__ theta;
       current_statement__ = 1;
       theta = context__.vals_r("theta")[(1 - 1)];
@@ -31424,8 +31249,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         std::vector<double> x_matrix_flat__;
         current_statement__ = 3;
         x_matrix_flat__ = context__.vals_r("x_matrix");
-        current_statement__ = 3;
-        pos__ = 1;
         {
           {
             current_statement__ = 3;
@@ -31472,8 +31295,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               stan::model::assign(x_matrix, x_matrix_flat__[(pos__ - 1)],
                 "assigning variable x_matrix", stan::model::index_uni(3),
                 stan::model::index_uni(2));
-              current_statement__ = 3;
-              pos__ = (pos__ + 1);
             }
           }
         }
@@ -31485,8 +31306,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         std::vector<double> x_vector_flat__;
         current_statement__ = 4;
         x_vector_flat__ = context__.vals_r("x_vector");
-        current_statement__ = 4;
-        pos__ = 1;
         {
           current_statement__ = 4;
           stan::model::assign(x_vector,
@@ -31499,8 +31318,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             current_statement__ = 4;
             stan::model::assign(x_vector, x_vector_flat__[(pos__ - 1)],
               "assigning variable x_vector", stan::model::index_uni(2));
-            current_statement__ = 4;
-            pos__ = (pos__ + 1);
           }
         }
       }
@@ -31511,8 +31328,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         std::vector<double> x_cov_flat__;
         current_statement__ = 5;
         x_cov_flat__ = context__.vals_r("x_cov");
-        current_statement__ = 5;
-        pos__ = 1;
         {
           {
             current_statement__ = 5;
@@ -31543,15 +31358,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               stan::model::assign(x_cov, x_cov_flat__[(pos__ - 1)],
                 "assigning variable x_cov", stan::model::index_uni(2),
                 stan::model::index_uni(2));
-              current_statement__ = 5;
-              pos__ = (pos__ + 1);
             }
           }
         }
       }
       out__.write_free_cov_matrix(x_cov);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -31807,14 +31618,6 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__;
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 0U;
   }
   inline std::string model_name() const final {
@@ -32170,14 +31973,6 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__;
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 0U;
   }
   inline std::string model_name() const final {
@@ -32634,8 +32429,6 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       stan::math::validate_non_negative_index("a", "n_pair", n_pair);
       current_statement__ = 27;
       stan::math::validate_non_negative_index("y_hat", "N", N);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -33013,8 +32806,6 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 5;
       sigma_y = context__.vals_r("sigma_y")[(1 - 1)];
       out__.write_free_lub(0, 100, sigma_y);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -34897,8 +34688,6 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       idy = std::vector<int>(10, std::numeric_limits<int>::min());
       current_statement__ = 10;
       idy = context__.vals_i("idy");
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -36710,8 +36499,6 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
         }
       }
       out__.write(m3);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -37069,8 +36856,6 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       stan::math::validate_non_negative_index("b", "I", I);
       current_statement__ = 32;
       stan::math::validate_non_negative_index("b", "K", 8);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -37671,8 +37456,6 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         }
       }
       out__.write(b);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -37898,8 +37681,6 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       stan::model::assign(inputs,
         stan::math::rep_array(stan::math::zeros_vector(5), 2),
         "assigning variable inputs");
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -38262,14 +38043,10 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "param", "double",
         std::vector<size_t>{});
-      int pos__;
-      pos__ = 1;
       local_scalar_t__ param;
       current_statement__ = 1;
       param = context__.vals_r("param")[(1 - 1)];
       out__.write(param);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -38473,14 +38250,6 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__;
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 1;
   }
   inline std::string model_name() const final {
@@ -38730,14 +38499,10 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "y", "double",
         std::vector<size_t>{});
-      int pos__;
-      pos__ = 1;
       local_scalar_t__ y;
       current_statement__ = 1;
       y = context__.vals_r("y")[(1 - 1)];
       out__.write(y);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -38948,14 +38713,6 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__;
-      pos__ = 1;
-      // suppress unused var warning
-      (void) pos__;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 0U;
   }
   inline std::string model_name() const final {

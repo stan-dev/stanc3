@@ -498,8 +498,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       y_v_d_td_opencl__ = stan::math::to_matrix_cl(y_v_d_td);
       y_vi_d_opencl__ = stan::math::to_matrix_cl(y_vi_d);
       y_vi_d_td_opencl__ = stan::math::to_matrix_cl(y_vi_d_td);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1560,8 +1558,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         }
       }
       out__.write(X_rv_p);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

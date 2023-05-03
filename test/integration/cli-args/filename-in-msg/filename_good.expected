@@ -32,16 +32,12 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 1;
       p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       q = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       q = (p + 5);
-      // suppress unused var warning
-      (void) pos__;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

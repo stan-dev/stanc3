@@ -180,8 +180,7 @@ let lower_constructor
       | Unsized _ -> [] )
     | _ -> lower_statement s in
   let data =
-    Stmts.rethrow_located
-      (List.concat_map ~f:lower_data prepare_data @ Stmts.unused "pos__") in
+    Stmts.rethrow_located (List.concat_map ~f:lower_data prepare_data) in
   let set_num_params =
     let output_params =
       List.filter_map ~f:get_unconstrained_param_st output_vars in
@@ -299,9 +298,6 @@ let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
   let validation =
     List.filter_map ~f:validate_params output_vars |> List.concat in
   let read_inits = validation @ lower_statements transform_inits in
-  let read_inits =
-    if List.is_empty read_inits then [] else read_inits @ Stmts.unused "pos__"
-  in
   FunDef
     (make_fun_defn
        ~templates_init:([templates], true)
