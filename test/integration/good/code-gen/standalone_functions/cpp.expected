@@ -5,7 +5,7 @@ namespace basic_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 21> locations_array__ =
+static constexpr std::array<const char*, 25> locations_array__ =
   {" (found before start of program)",
   " (in 'basic.stan', line 4, column 4 to column 24)",
   " (in 'basic.stan', line 3, column 28 to line 5, column 3)",
@@ -26,7 +26,11 @@ static constexpr std::array<const char*, 21> locations_array__ =
   " (in 'basic.stan', line 34, column 4 to column 28)",
   " (in 'basic.stan', line 33, column 24 to line 35, column 3)",
   " (in 'basic.stan', line 38, column 4 to column 33)",
-  " (in 'basic.stan', line 37, column 33 to line 39, column 3)"};
+  " (in 'basic.stan', line 37, column 33 to line 39, column 3)",
+  " (in 'basic.stan', line 42, column 4 to column 17)",
+  " (in 'basic.stan', line 41, column 47 to line 43, column 3)",
+  " (in 'basic.stan', line 46, column 4 to column 13)",
+  " (in 'basic.stan', line 45, column 51 to line 47, column 3)"};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 stan::promote_args_t<T0__>
@@ -62,6 +66,17 @@ template <bool propto__, typename T0__, typename T1__,
                               stan::is_stan_scalar<T1__>>* = nullptr>
 stan::promote_args_t<T0__, T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_complex<T0__>>* = nullptr>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
+test_complex(const T0__& a_arg__, std::ostream* pstream__);
+template <typename T0__,
+          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+std::vector<
+  std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>>
+array_fun(const std::vector<std::vector<std::vector<std::complex<T0__>>>>& a,
+          std::ostream* pstream__);
 template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
 stan::promote_args_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {
@@ -233,35 +248,76 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+template <typename T0__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                              stan::is_vt_complex<T0__>>*>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
+test_complex(const T0__& a_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
+  int current_statement__ = 0;
+  const auto& a = stan::math::to_ref(a_arg__);
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 21;
+    return stan::math::add(a, a);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+std::vector<
+  std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>>
+array_fun(const std::vector<std::vector<std::vector<std::complex<T0__>>>>& a,
+          std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 23;
+    return a;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
 }
 // [[stan::function]]
-auto my_log1p_exp(const double& x, std::ostream* pstream__ = nullptr) {
+double my_log1p_exp(const double& x, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::my_log1p_exp(x, pstream__);
 }
 // [[stan::function]]
-auto
+double
 array_fun(const std::vector<double>& a, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::array_fun(a, pstream__);
 }
 // [[stan::function]]
-auto
+double
 int_array_fun(const std::vector<int>& a, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::int_array_fun(a, pstream__);
 }
 // [[stan::function]]
-auto
+Eigen::Matrix<double,-1,1>
 my_vector_mul_by_5(const Eigen::Matrix<double,-1,1>& x, std::ostream*
                    pstream__ = nullptr) {
   return basic_model_namespace::my_vector_mul_by_5(x, pstream__);
 }
 // [[stan::function]]
-auto
+int
 int_only_multiplication(const int& a, const int& b, std::ostream*
                         pstream__ = nullptr) {
   return basic_model_namespace::int_only_multiplication(a, b, pstream__);
 }
 // [[stan::function]]
-auto test_lgamma(const double& x, std::ostream* pstream__ = nullptr) {
+double test_lgamma(const double& x, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::test_lgamma(x, pstream__);
 }
 // [[stan::function]]
@@ -271,15 +327,27 @@ test_lp(const double& a, double& lp__, stan::math::accumulator<double>&
   basic_model_namespace::test_lp<false>(a, lp__, lp_accum__, pstream__);
 }
 // [[stan::function]]
-auto
+double
 test_rng(const double& a, boost::ecuyer1988& base_rng__, std::ostream*
          pstream__ = nullptr) {
   return basic_model_namespace::test_rng(a, base_rng__, pstream__);
 }
 // [[stan::function]]
-auto
+double
 test_lpdf(const double& a, const double& b, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::test_lpdf<false>(a, b, pstream__);
+}
+// [[stan::function]]
+Eigen::Matrix<std::complex<double>,-1,-1>
+test_complex(const Eigen::Matrix<std::complex<double>,-1,-1>& a,
+             std::ostream* pstream__ = nullptr) {
+  return basic_model_namespace::test_complex(a, pstream__);
+}
+// [[stan::function]]
+std::vector<std::vector<std::vector<std::complex<double>>>>
+array_fun(const std::vector<std::vector<std::vector<std::complex<double>>>>&
+          a, std::ostream* pstream__ = nullptr) {
+  return basic_model_namespace::array_fun(a, pstream__);
 }
   $ ../../../../../../install/default/bin/stanc --standalone-functions --allow-undefined --print-cpp basic.stanfunctions
 // Code generated by %%NAME%% %%VERSION%%
@@ -518,33 +586,33 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
 }
 }
 // [[stan::function]]
-auto my_log1p_exp(const double& x, std::ostream* pstream__ = nullptr) {
+double my_log1p_exp(const double& x, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::my_log1p_exp(x, pstream__);
 }
 // [[stan::function]]
-auto
+double
 array_fun(const std::vector<double>& a, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::array_fun(a, pstream__);
 }
 // [[stan::function]]
-auto
+double
 int_array_fun(const std::vector<int>& a, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::int_array_fun(a, pstream__);
 }
 // [[stan::function]]
-auto
+Eigen::Matrix<double,-1,1>
 my_vector_mul_by_5(const Eigen::Matrix<double,-1,1>& x, std::ostream*
                    pstream__ = nullptr) {
   return basic_model_namespace::my_vector_mul_by_5(x, pstream__);
 }
 // [[stan::function]]
-auto
+int
 int_only_multiplication(const int& a, const int& b, std::ostream*
                         pstream__ = nullptr) {
   return basic_model_namespace::int_only_multiplication(a, b, pstream__);
 }
 // [[stan::function]]
-auto test_lgamma(const double& x, std::ostream* pstream__ = nullptr) {
+double test_lgamma(const double& x, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::test_lgamma(x, pstream__);
 }
 // [[stan::function]]
@@ -554,13 +622,13 @@ test_lp(const double& a, double& lp__, stan::math::accumulator<double>&
   basic_model_namespace::test_lp<false>(a, lp__, lp_accum__, pstream__);
 }
 // [[stan::function]]
-auto
+double
 test_rng(const double& a, boost::ecuyer1988& base_rng__, std::ostream*
          pstream__ = nullptr) {
   return basic_model_namespace::test_rng(a, base_rng__, pstream__);
 }
 // [[stan::function]]
-auto
+double
 test_lpdf(const double& a, const double& b, std::ostream* pstream__ = nullptr) {
   return basic_model_namespace::test_lpdf<false>(a, b, pstream__);
 }
@@ -691,13 +759,13 @@ double ode_integrate(std::ostream* pstream__) {
 }
 }
 // [[stan::function]]
-auto
+Eigen::Matrix<double,-1,1>
 integrand(const Eigen::Matrix<double,-1,1>& x, std::ostream*
           pstream__ = nullptr) {
   return integrate_model_namespace::integrand(x, pstream__);
 }
 // [[stan::function]]
-auto
+std::vector<double>
 integrand_ode(const double& r, const std::vector<double>& f,
               const std::vector<double>& theta, const std::vector<double>&
               x_r, const std::vector<int>& x_i, std::ostream*
@@ -706,7 +774,7 @@ integrand_ode(const double& r, const std::vector<double>& f,
            pstream__);
 }
 // [[stan::function]]
-auto ode_integrate(std::ostream* pstream__ = nullptr) {
+double ode_integrate(std::ostream* pstream__ = nullptr) {
   return integrate_model_namespace::ode_integrate(pstream__);
 }
 Warning in 'integrate.stan', line 21, column 12: integrate_ode_bdf is
