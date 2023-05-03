@@ -48,7 +48,7 @@ functions {
 
 let basic = stanc.stanc("basic_stanfuncs", basic_stanfuncs, ["standalone-functions"]);
 utils.print_error(basic)
-var ind = basic.result.search(/auto[\n\s]+int_only_multiplication/g);
+var ind = basic.result.search(/int[\n\s]+int_only_multiplication/g);
 if (ind == -1) {
 	console.log("ERROR: standalone-functions!")
 }

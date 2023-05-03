@@ -37,5 +37,13 @@ functions {
   real test_lpdf(real a, real b) {
     return normal_lpdf(a | b, 1);
   }
+
+  complex_matrix test_complex(complex_matrix a){
+    return a + a;
+  }
+
+  array[,,] complex array_fun(array[,,] complex a) {
+    return a;
+  }
 }
 

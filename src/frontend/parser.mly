@@ -5,6 +5,7 @@ open Core_kernel
 open Middle
 open Ast
 open Debugging
+open Preprocessor
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
@@ -13,10 +14,10 @@ let reducearray (sbt, l) =
 
 let build_id id loc =
   grammar_logger ("identifier " ^ id);
-  {name=id; id_loc=Location_span.of_positions_exn loc}
+  {name=id; id_loc=location_span_of_positions loc}
 
 let build_expr expr loc =
-  {expr; emeta={loc=Location_span.of_positions_exn loc}}
+  {expr; emeta={loc=location_span_of_positions loc}}
 
 let rec iterate_n f x = function
   | 0 -> x
@@ -114,7 +115,7 @@ program:
       let () =
         match (ofb, odb, otdb, opb, otpb, omb, ogb) with
         | None, None, None, None, None, None, None ->
-            Input_warnings.empty ($startpos).pos_fname
+            Input_warnings.empty (location_of_position $startpos).filename
         | _ -> ()
       in
       { functionblock= ofb
@@ -130,7 +131,7 @@ program:
 functions_only:
   | fd = list(function_def) EOF
     { grammar_logger "functions_only";
-      { functionblock= Some {stmts= fd; xloc= Location_span.of_positions_exn $loc}
+      { functionblock= Some {stmts= fd; xloc= location_span_of_positions $loc}
       ; datablock= None
       ; transformeddatablock= None
       ; parametersblock= None
@@ -144,37 +145,37 @@ functions_only:
 function_block:
   | FUNCTIONBLOCK LBRACE fd=list(function_def) RBRACE
     { grammar_logger "function_block" ;
-      {stmts= fd; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= fd; xloc= location_span_of_positions $loc} }
 
 data_block:
   | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
     { grammar_logger "data_block" ;
-      {stmts= tvd; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvd; xloc= location_span_of_positions $loc} }
 
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "transformed_data_block" ;
-      {stmts= tvds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvds; xloc= location_span_of_positions $loc} }
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
     { grammar_logger "parameters_block" ;
-      {stmts= tvd; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvd; xloc= location_span_of_positions $loc} }
 
 transformed_parameters_block:
   | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "transformed_parameters_block" ;
-      {stmts= tvds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvds; xloc= location_span_of_positions $loc} }
 
 model_block:
   | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE
     { grammar_logger "model_block" ;
-      {stmts= vds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= vds; xloc= location_span_of_positions $loc} }
 
 generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "generated_quantities_block" ;
-      {stmts= tvds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvds; xloc= location_span_of_positions $loc} }
 
 (* function definitions *)
 identifier:
@@ -247,7 +248,7 @@ function_def:
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
                            arguments = args; body=b;};
-       smeta={loc=Location_span.of_positions_exn $loc}
+       smeta={loc=location_span_of_positions $loc}
       }
     }
 
@@ -359,7 +360,7 @@ decl(type_rule, rhs):
             ; is_global
             }
       ; smeta= {
-          loc= Location_span.of_positions_exn $loc
+          loc= location_span_of_positions $loc
         }
     })
     }
@@ -380,7 +381,7 @@ decl(type_rule, rhs):
             ; is_global
             }
       ; smeta= {
-          loc= Location_span.of_positions_exn $sloc
+          loc= location_span_of_positions $sloc
         }
       })
     }
@@ -431,7 +432,7 @@ top_var_decl_no_assign:
   | SEMICOLON
     { grammar_logger "top_var_decl_no_assign_skip";
       { stmt= Skip
-      ; smeta= { loc= Location_span.of_positions_exn $loc }
+      ; smeta= { loc= location_span_of_positions $loc }
       }
     }
 
@@ -769,12 +770,12 @@ statement:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
        {stmt= s;
-        smeta= { loc=Location_span.of_positions_exn $sloc} }
+        smeta= { loc=location_span_of_positions $sloc} }
     }
   | s=nested_statement
     {  grammar_logger "nested_statement" ;
        {stmt= s;
-        smeta={loc = Location_span.of_positions_exn $sloc} }
+        smeta={loc = location_span_of_positions $sloc} }
     }
 
 atomic_statement:
