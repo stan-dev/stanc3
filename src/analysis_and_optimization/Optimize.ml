@@ -781,6 +781,7 @@ let partial_evaluation = Partial_evaluator.eval_prog
  * where that name is the assignee.
  *)
 let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
+  let is_index = function Expr.Fixed.Pattern.Indexed _ -> true | _ -> false in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       ((assign_name, lhs_ut, idx_lst), (rhs : 'a Expr.Fixed.t))
@@ -789,7 +790,7 @@ let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
          && not
               ( rhs.meta.adlevel = UnsizedType.DataOnly
               && UnsizedType.is_array lhs_ut ) ->
-      Some idx_lst
+      Some (idx_lst, is_index rhs.pattern)
   | _ -> None
 
 (**
@@ -801,18 +802,21 @@ and unenforce_initialize (lst : Stmt.Located.t list) =
   let rec unenforce_initialize_patt (Stmt.Fixed.{pattern; _} as stmt) sub_lst =
     match pattern with
     | Stmt.Fixed.Pattern.Decl ({decl_id; decl_type; _} as decl_pat) -> (
-      match decl_type with
-      | Type.Sized t when SizedType.get_mem_pattern t = Mem_pattern.SoA -> stmt
-      | _ -> (
+        let is_soa =
+          match decl_type with
+          | Type.Sized s -> SizedType.get_mem_pattern s = Mem_pattern.SoA
+          | _ -> false in
         match List.hd sub_lst with
         | Some next_stmt -> (
           match find_assignment_idx decl_id next_stmt with
-          | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
+          | Some
+              (([] | [Index.All] | [Index.All; Index.All]), is_assigned_to_index)
+            when not (is_soa && is_assigned_to_index) ->
               { stmt with
                 pattern=
                   Stmt.Fixed.Pattern.Decl {decl_pat with initialize= false} }
           | None | Some _ -> stmt )
-        | None -> stmt ) )
+        | None -> stmt )
     | Block block_lst ->
         {stmt with pattern= Block (unenforce_initialize block_lst)}
     | SList s_lst -> {stmt with pattern= SList (unenforce_initialize s_lst)}
