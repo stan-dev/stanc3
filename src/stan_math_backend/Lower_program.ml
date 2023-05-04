@@ -180,7 +180,7 @@ let lower_constructor
       | Unsized _ -> [] )
     | _ -> lower_statement s in
   let data =
-    [Stmts.rethrow_located (List.concat_map ~f:lower_data prepare_data)] in
+    Stmts.rethrow_located (List.concat_map ~f:lower_data prepare_data) in
   let set_num_params =
     let output_params =
       List.filter_map ~f:get_unconstrained_param_st output_vars in
@@ -228,8 +228,7 @@ let gen_log_prob Program.{prog_name; log_prob; _} =
        ~inline:true
        ~return_type:(TypeTrait ("stan::scalar_type_t", [TemplateType "VecR"]))
        ~name:"log_prob_impl" ~args
-       ~body:
-         (intro @ (Stmts.rethrow_located (lower_statements log_prob) :: outro))
+       ~body:(intro @ Stmts.rethrow_located (lower_statements log_prob) @ outro)
        ~cv_qualifiers:[Const] () )
 
 let gen_write_array {Program.prog_name; generate_quantities; _} =
@@ -261,16 +260,17 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
       :: Stmts.unused "lp__"
     @ [Decls.current_statement; Decls.lp_accum Double]
     @ Decls.dummy_var
-    @ [ VariableDefn
-          (make_variable_defn ~constexpr:true ~type_:Types.bool
-             ~name:"jacobian__" ~init:(Assignment (Literal "false")) () ) ]
+    @ VariableDefn
+        (make_variable_defn ~constexpr:true ~type_:Types.bool ~name:"jacobian__"
+           ~init:(Assignment (Literal "false")) () )
+      :: Stmts.unused "jacobian__"
     @ gen_function__ prog_name "write_array" in
   FunDef
     (make_fun_defn
        ~templates_init:([templates], true)
        ~inline:true ~return_type:Void ~name:"write_array_impl" ~args
        ~body:
-         (intro @ [Stmts.rethrow_located (lower_statements generate_quantities)])
+         (intro @ Stmts.rethrow_located (lower_statements generate_quantities))
        ~cv_qualifiers:[Const] () )
 
 let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
@@ -297,14 +297,12 @@ let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
     | _ -> None in
   let validation =
     List.filter_map ~f:validate_params output_vars |> List.concat in
+  let read_inits = validation @ lower_statements transform_inits in
   FunDef
     (make_fun_defn
        ~templates_init:([templates], true)
        ~inline:true ~return_type:Void ~name:"transform_inits_impl" ~args
-       ~body:
-         ( intro
-         @ [ Stmts.rethrow_located
-               (validation @ lower_statements transform_inits) ] )
+       ~body:(intro @ Stmts.rethrow_located read_inits)
        ~cv_qualifiers:[Const] () )
 
 let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
@@ -326,8 +324,7 @@ let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
     (make_fun_defn
        ~templates_init:([templates], true)
        ~inline:true ~return_type:Void ~name:"unconstrain_array_impl" ~args
-       ~body:
-         (intro @ [Stmts.rethrow_located (lower_statements unconstrain_array)])
+       ~body:(intro @ Stmts.rethrow_located (lower_statements unconstrain_array))
        ~cv_qualifiers:[Const] () )
 
 let gen_extend_vector name type_ elts =

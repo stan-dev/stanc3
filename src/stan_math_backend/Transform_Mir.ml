@@ -589,6 +589,21 @@ let trans_prog (p : Program.Typed.t) =
     ; Assignment ((pos, UInt, []), Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} ) in
+  let maybe_add_pos stmts =
+    if
+      List.exists stmts ~f:(function
+        | {Stmt.Fixed.pattern= Decl {decl_type; _}; _} -> (
+          match Type.to_unsized decl_type with
+          | UInt | UReal | UComplex
+           |UArray (UReal | UInt)
+           |UFun _ | UMathLibraryFunction ->
+              false
+          | UVector | URowVector | UMatrix | UComplexMatrix
+           |UComplexRowVector | UComplexVector | UArray _ ->
+              true )
+        | _ -> false )
+    then init_pos @ stmts
+    else stmts in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars ~f:(fun (name, loc, outvar) ->
         ( outvar.Program.out_block
@@ -705,13 +720,13 @@ let trans_prog (p : Program.Typed.t) =
       log_prob= log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
-        init_pos
-        @ (p.prepare_data |> add_reads p.input_vars var_context_read)
+        (p.prepare_data |> add_reads p.input_vars var_context_read)
         @ to_matrix_cl_stmts
+        |> maybe_add_pos
     ; transform_inits=
-        init_pos @ List.concat_map ~f:var_context_unconstrain_transform params
-    ; unconstrain_array=
-        init_pos @ List.concat_map ~f:array_unconstrain_transform params
+        List.concat_map ~f:var_context_unconstrain_transform params
+        |> maybe_add_pos
+    ; unconstrain_array= List.concat_map ~f:array_unconstrain_transform params
     ; generate_quantities } in
   Program.(
     p

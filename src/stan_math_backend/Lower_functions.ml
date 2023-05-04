@@ -149,8 +149,7 @@ let lower_fun_body fdargs fdsuffix fdbody =
         :: Stmts.unused "propto__" in
   let body = lower_statement fdbody in
   (local_scalar :: Decls.current_statement :: to_refs)
-  @ propto @ Decls.dummy_var
-  @ [Stmts.rethrow_located body]
+  @ propto @ Decls.dummy_var @ Stmts.rethrow_located body
 
 let mk_extra_args templates args =
   List.map
