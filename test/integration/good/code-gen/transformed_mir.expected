@@ -21640,15 +21640,6 @@
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (LVariable pos__) UInt
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_real)
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))

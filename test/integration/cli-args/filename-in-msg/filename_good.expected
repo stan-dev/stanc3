@@ -32,8 +32,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 1;
       p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
@@ -71,11 +69,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       "filename_good_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -105,6 +98,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "filename_good_model_namespace::write_array";
     // suppress unused var warning
@@ -135,12 +130,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -152,12 +141,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool

@@ -49,8 +49,6 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 12;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
@@ -151,6 +149,8 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "operators_model_namespace::write_array";
     // suppress unused var warning
@@ -231,8 +231,6 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 1;
@@ -813,11 +811,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       "simple_function_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -847,6 +840,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "simple_function_model_namespace::write_array";
     // suppress unused var warning
@@ -877,12 +872,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -894,12 +883,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -1074,8 +1057,6 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 10;
       context__.validate_dims("data initialization", "y", "double",
         std::vector<size_t>{});
@@ -1194,6 +1175,8 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "ternary_if_model_namespace::write_array";
     // suppress unused var warning
@@ -1278,8 +1261,6 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> a =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
       current_statement__ = 1;

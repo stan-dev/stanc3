@@ -46,8 +46,6 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 9;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
@@ -171,6 +169,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "_8_schools_ncp_model_namespace::write_array";
     // suppress unused var warning
@@ -228,8 +228,6 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
       current_statement__ = 1;
       mu = in__.read<local_scalar_t__>();
@@ -499,8 +497,6 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 2;
       context__.validate_dims("data initialization", "good_model", "int",
         std::vector<size_t>{});
@@ -574,6 +570,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "_8start_with_number_model_namespace::write_array";
     // suppress unused var warning
@@ -609,8 +607,6 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ bar = DUMMY_VAR__;
       current_statement__ = 1;
       bar = in__.read<local_scalar_t__>();
@@ -633,8 +629,6 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "bar", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ bar = DUMMY_VAR__;
       current_statement__ = 1;
       bar = context__.vals_r("bar")[(1 - 1)];
@@ -953,11 +947,6 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
       "complex_tuples_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -987,6 +976,8 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "complex_tuples_model_namespace::write_array";
     // suppress unused var warning
@@ -1017,12 +1008,6 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -1034,12 +1019,6 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -1365,6 +1344,8 @@ class container_promotion_model final : public model_base_crtp<container_promoti
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "container_promotion_model_namespace::write_array";
     // suppress unused var warning
@@ -1514,8 +1495,6 @@ class container_promotion_model final : public model_base_crtp<container_promoti
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
       current_statement__ = 1;
       y = in__.read<local_scalar_t__>();
@@ -1538,8 +1517,6 @@ class container_promotion_model final : public model_base_crtp<container_promoti
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "y", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
       current_statement__ = 1;
       y = context__.vals_r("y")[(1 - 1)];
@@ -1902,11 +1879,6 @@ void _stan_alignas(const int& _stan_asm, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_alignof(const int& _stan_char, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1917,11 +1889,6 @@ void _stan_alignof(const int& _stan_char, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 int _stan_and(const int& _stan_STAN_MAJOR, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1949,11 +1916,6 @@ void _stan_and_eq(const T0__& _stan_STAN_MINOR, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
@@ -1968,11 +1930,6 @@ void _stan_asm(const T0__& _stan_class_arg__, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_bitand(const int& _stan_constexpr, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1983,11 +1940,6 @@ void _stan_bitand(const int& _stan_constexpr, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_bitor(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1998,11 +1950,6 @@ void _stan_bitor(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_bool(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2013,11 +1960,6 @@ void _stan_bool(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_case(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2028,11 +1970,6 @@ void _stan_case(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_catch(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2043,11 +1980,6 @@ void _stan_catch(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_char(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2058,11 +1990,6 @@ void _stan_char(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_char16_t(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2073,11 +2000,6 @@ void _stan_char16_t(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 void _stan_char32_t(std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2088,11 +2010,6 @@ void _stan_char32_t(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
-  try {
-    
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
 }
 class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words_model> {
  private:
@@ -2127,8 +2044,6 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 53;
       context__.validate_dims("data initialization", "class", "double",
         std::vector<size_t>{});
@@ -2328,6 +2243,8 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "cpp_reserved_words_model_namespace::write_array";
     // suppress unused var warning
@@ -2465,8 +2382,6 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ _stan_explicit = DUMMY_VAR__;
       current_statement__ = 1;
       _stan_explicit = in__.read<local_scalar_t__>();
@@ -2587,8 +2502,6 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       current_statement__ = 15;
       context__.validate_dims("parameter initialization", "or", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ _stan_explicit = DUMMY_VAR__;
       current_statement__ = 1;
       _stan_explicit = context__.vals_r("explicit")[(1 - 1)];
@@ -2931,8 +2844,6 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 9;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
@@ -3056,6 +2967,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "eight_schools_ncp_model_namespace::write_array";
     // suppress unused var warning
@@ -3113,8 +3026,6 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
       current_statement__ = 1;
       mu = in__.read<local_scalar_t__>();
@@ -3443,8 +3354,6 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 4;
       x = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 4;
@@ -3532,6 +3441,8 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "funcall_type_promotion_model_namespace::write_array";
     // suppress unused var warning
@@ -3562,12 +3473,6 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -3579,12 +3484,6 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -3754,8 +3653,6 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 5;
       x = std::vector<double>(3, std::numeric_limits<double>::quiet_NaN());
     } catch (const std::exception& e) {
@@ -3851,6 +3748,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "mixed_type_arrays_model_namespace::write_array";
     // suppress unused var warning
@@ -3935,8 +3834,6 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::vector<local_scalar_t__> xx =
         std::vector<local_scalar_t__>(3, DUMMY_VAR__);
       current_statement__ = 1;
@@ -3961,8 +3858,6 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "xx", "double",
         std::vector<size_t>{static_cast<size_t>(3)});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::vector<local_scalar_t__> xx =
         std::vector<local_scalar_t__>(3, DUMMY_VAR__);
       current_statement__ = 1;
@@ -9844,6 +9739,8 @@ class mother_model final : public model_base_crtp<mother_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "mother_model_namespace::write_array";
     // suppress unused var warning
@@ -11037,8 +10934,6 @@ class mother_model final : public model_base_crtp<mother_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ p_real = DUMMY_VAR__;
       current_statement__ = 1;
       p_real = in__.read<local_scalar_t__>();
@@ -14116,6 +14011,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "motherHOF_model_namespace::write_array";
     // suppress unused var warning
@@ -14530,8 +14427,6 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::vector<local_scalar_t__> y0_p =
         std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       current_statement__ = 1;
@@ -17726,6 +17621,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "new_integrate_interface_model_namespace::write_array";
     // suppress unused var warning
@@ -19380,8 +19277,6 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ r = DUMMY_VAR__;
       current_statement__ = 1;
       r = in__.read<local_scalar_t__>();
@@ -19986,6 +19881,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "old_integrate_interface_model_namespace::write_array";
     // suppress unused var warning
@@ -20067,8 +19964,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 1;
       alpha = in__.read<local_scalar_t__>();
@@ -20131,8 +20026,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       current_statement__ = 6;
       context__.validate_dims("parameter initialization", "sigma", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ alpha = DUMMY_VAR__;
       current_statement__ = 1;
       alpha = context__.vals_r("alpha")[(1 - 1)];
@@ -21443,6 +21336,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "optimize_glm_model_namespace::write_array";
     // suppress unused var warning
@@ -21524,8 +21419,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> alpha_v =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
       current_statement__ = 1;
@@ -22423,6 +22316,8 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "overloading_templating_model_namespace::write_array";
     // suppress unused var warning
@@ -22462,8 +22357,6 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
       current_statement__ = 1;
       y = in__.read<local_scalar_t__>();
@@ -22493,8 +22386,6 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
       current_statement__ = 2;
       context__.validate_dims("parameter initialization", "z", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
       current_statement__ = 1;
       y = context__.vals_r("y")[(1 - 1)];
@@ -22682,8 +22573,6 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 3;
       context__.validate_dims("data initialization", "nt", "int",
         std::vector<size_t>{});
@@ -22780,6 +22669,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "param_constraint_model_namespace::write_array";
     // suppress unused var warning
@@ -22843,8 +22734,6 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>> L_Omega =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(nt,
           Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2, 2, DUMMY_VAR__));
@@ -23142,8 +23031,6 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 1;
       if (pstream__) {
         stan::math::stan_print(pstream__, "test: \320\211\360\237\230\203");
@@ -23186,11 +23073,6 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
       "print_unicode_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -23220,6 +23102,8 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "print_unicode_model_namespace::write_array";
     // suppress unused var warning
@@ -23250,12 +23134,6 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -23267,12 +23145,6 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -23488,12 +23360,6 @@ class promotion_model final : public model_base_crtp<promotion_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 0U;
   }
   inline std::string model_name() const final {
@@ -23522,11 +23388,6 @@ class promotion_model final : public model_base_crtp<promotion_model> {
       "promotion_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -23556,6 +23417,8 @@ class promotion_model final : public model_base_crtp<promotion_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "promotion_model_namespace::write_array";
     // suppress unused var warning
@@ -23606,12 +23469,6 @@ class promotion_model final : public model_base_crtp<promotion_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -23623,12 +23480,6 @@ class promotion_model final : public model_base_crtp<promotion_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -24197,8 +24048,6 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 4;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
@@ -24294,6 +24143,8 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "recursive_slicing_model_namespace::write_array";
     // suppress unused var warning
@@ -24348,8 +24199,6 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> gamma =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(times, DUMMY_VAR__);
       current_statement__ = 1;
@@ -24741,8 +24590,6 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 8;
       N = std::numeric_limits<int>::min();
       current_statement__ = 8;
@@ -24842,6 +24689,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "reduce_sum_m1_model_namespace::write_array";
     // suppress unused var warning
@@ -24888,8 +24737,6 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::vector<local_scalar_t__> y1 =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       current_statement__ = 1;
@@ -24932,8 +24779,6 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       current_statement__ = 3;
       context__.validate_dims("parameter initialization", "y3", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::vector<local_scalar_t__> y1 =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       current_statement__ = 1;
@@ -26103,8 +25948,6 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 33;
       N = std::numeric_limits<int>::min();
       current_statement__ = 33;
@@ -26416,6 +26259,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "reduce_sum_m2_model_namespace::write_array";
     // suppress unused var warning
@@ -26707,8 +26552,6 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>> a8 =
         std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N,
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(N,
@@ -30427,6 +30270,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "reduce_sum_m3_model_namespace::write_array";
     // suppress unused var warning
@@ -30735,8 +30580,6 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::vector<local_scalar_t__> y1 =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       current_statement__ = 1;
@@ -32041,6 +31884,8 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "shadowing_model_namespace::write_array";
     // suppress unused var warning
@@ -32266,8 +32111,6 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ e = DUMMY_VAR__;
       current_statement__ = 1;
       e = in__.read<local_scalar_t__>();
@@ -33126,12 +32969,6 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 0U;
   }
   inline std::string model_name() const final {
@@ -33160,11 +32997,6 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       "single_argument_lpmf_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -33194,6 +33026,8 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "single_argument_lpmf_model_namespace::write_array";
     // suppress unused var warning
@@ -33224,12 +33058,6 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -33241,12 +33069,6 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -33418,8 +33240,6 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 7;
       context__.validate_dims("data initialization", "t", "int",
         std::vector<size_t>{});
@@ -33520,6 +33340,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tilde_block_model_namespace::write_array";
     // suppress unused var warning
@@ -33556,8 +33378,6 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
       current_statement__ = 1;
       x = in__.read<local_scalar_t__>();
@@ -33580,8 +33400,6 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "x", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
       current_statement__ = 1;
       x = context__.vals_r("x")[(1 - 1)];
@@ -34688,6 +34506,8 @@ class transform_model final : public model_base_crtp<transform_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "transform_model_namespace::write_array";
     // suppress unused var warning
@@ -35339,8 +35159,6 @@ class transform_model final : public model_base_crtp<transform_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::vector<local_scalar_t__> p_1 =
         std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       current_statement__ = 1;
@@ -36608,8 +36426,6 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 19;
       context__.validate_dims("data initialization", "n", "int",
         std::vector<size_t>{});
@@ -36775,6 +36591,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "truncate_model_namespace::write_array";
     // suppress unused var warning
@@ -36815,8 +36633,6 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ m = DUMMY_VAR__;
       current_statement__ = 1;
       m = in__.read<local_scalar_t__>();
@@ -36846,8 +36662,6 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       current_statement__ = 2;
       context__.validate_dims("parameter initialization", "y", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ m = DUMMY_VAR__;
       current_statement__ = 1;
       m = context__.vals_r("m")[(1 - 1)];
@@ -37051,12 +36865,6 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 1;
   }
   inline std::string model_name() const final {
@@ -37125,6 +36933,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "udf_tilde_stmt_conflict_model_namespace::write_array";
     // suppress unused var warning
@@ -37160,8 +36970,6 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
       current_statement__ = 1;
       x = in__.read<local_scalar_t__>();
@@ -37184,8 +36992,6 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "x", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
       current_statement__ = 1;
       x = context__.vals_r("x")[(1 - 1)];
@@ -37387,12 +37193,6 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = 1;
   }
   inline std::string model_name() const final {
@@ -37462,6 +37262,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "user_constrain_model_namespace::write_array";
     // suppress unused var warning
@@ -37498,8 +37300,6 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
       current_statement__ = 1;
       x = in__.read<local_scalar_t__>();
@@ -37522,8 +37322,6 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "x", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ x = DUMMY_VAR__;
       current_statement__ = 1;
       x = context__.vals_r("x")[(1 - 1)];
@@ -37814,6 +37612,8 @@ class variable_named_context_model final : public model_base_crtp<variable_named
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "variable_named_context_model_namespace::write_array";
     // suppress unused var warning
@@ -37854,8 +37654,6 @@ class variable_named_context_model final : public model_base_crtp<variable_named
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
       current_statement__ = 1;
       mu = in__.read<local_scalar_t__>();
@@ -37885,8 +37683,6 @@ class variable_named_context_model final : public model_base_crtp<variable_named
       current_statement__ = 2;
       context__.validate_dims("parameter initialization", "sigma", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
       current_statement__ = 1;
       mu = context__.vals_r("mu")[(1 - 1)];
@@ -38163,8 +37959,6 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 87;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
@@ -38753,6 +38547,8 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "vector_truncate_model_namespace::write_array";
     // suppress unused var warning
@@ -38806,8 +38602,6 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ mu = DUMMY_VAR__;
       current_statement__ = 1;
       mu = in__.read<local_scalar_t__>();

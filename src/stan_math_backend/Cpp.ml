@@ -210,7 +210,6 @@ type stmt =
   | Throw of expr
   | Break
   | Continue
-  | Semicolon
   | Using of string * type_ option
   | Comment of string
 [@@deriving sexp]
@@ -226,16 +225,21 @@ module Stmts = struct
   (** Set up the try/catch logic for throwing an exception with
       its location set to the Stan program location. *)
   let rethrow_located stmts =
-    TryCatch
-      ( unblock stmts
-      , (Types.const_ref (TypeLiteral "std::exception"), "e")
-      , [ Expression
-            (FunCall
-               ( "stan::lang::rethrow_located"
-               , []
-               , [ Var "e"
-                 ; Index (Var "locations_array__", Var "current_statement__") ]
-               ) ) ] )
+    let stmts = unblock stmts in
+    match stmts with
+    | [] -> []
+    | _ ->
+        [ TryCatch
+            ( stmts
+            , (Types.const_ref (TypeLiteral "std::exception"), "e")
+            , [ Expression
+                  (FunCall
+                     ( "stan::lang::rethrow_located"
+                     , []
+                     , [ Var "e"
+                       ; Index
+                           (Var "locations_array__", Var "current_statement__")
+                       ] ) ) ] ) ]
 
   let fori loopvar lower upper body =
     let init =
@@ -503,7 +507,6 @@ module Printing = struct
     | Throw e -> pf ppf "throw %a;" pp_expr e
     | Break -> string ppf "break;"
     | Continue -> string ppf "continue;"
-    | Semicolon -> string ppf ";"
     | VariableDefn vd -> pf ppf "%a;" pp_variable_defn vd
     | For (init, cond, incr, s) ->
         let pp ppf () =
@@ -526,6 +529,7 @@ module Printing = struct
         pf ppf "%a %a" (pp_with_block pp_if) thn
           (pp_with_block ~indent:0 (any "else"))
           els
+    | Block [] -> ()
     | Block stmts ->
         pf ppf "@[<v>@[<v 2>{@,%a@]@,}@]" (list ~sep:cut pp_stmt) stmts
     | Using (s, init) ->
@@ -663,7 +667,7 @@ module Tests = struct
            on one line"; Comment "A potentially \n multiline comment"
       ; Expression (Assign (Var "foo", Literal "3")) ] in
     let rethrow = Stmts.rethrow_located s in
-    Printing.pp_stmt Fmt.stdout rethrow ;
+    Fmt.list Printing.pp_stmt Fmt.stdout rethrow ;
     [%expect
       {|
       try {
@@ -758,7 +762,7 @@ module Tests = struct
          make_fun_defn
            ~templates_init:
              ([[Typename "T0__"; RequireIs ("stan::is_foobar", "T0__")]], false)
-           ~name:"foobar" ~return_type:Void ~inline:true ~body:[rethrow] () ) ]
+           ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow () ) ]
     in
     let open Fmt in
     pf stdout "@[<v>%a@]" (list ~sep:cut Printing.pp_fun_defn) funs ;

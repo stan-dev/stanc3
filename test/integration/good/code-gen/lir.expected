@@ -6742,6 +6742,8 @@
             (VariableDefn
              ((static false) (constexpr true) (type_ (TypeLiteral bool))
               (name jacobian__) (init (Assignment (Literal false)))))
+            (Comment "suppress unused var warning")
+            (Expression (Cast Void (Var jacobian__)))
             (VariableDefn
              ((static true) (constexpr true)
               (type_ (Const (Pointer (TypeLiteral char)))) (name function__)
@@ -9620,11 +9622,6 @@
             (Expression (Cast Void (Var DUMMY_VAR__)))
             (TryCatch
              ((VariableDefn
-               ((static false) (constexpr false) (type_ Int) (name pos__)
-                (init
-                 (Assignment (FunCall std::numeric_limits<int>::min () ())))))
-              (Expression (Assign (Var pos__) (Literal 1)))
-              (VariableDefn
                ((static false) (constexpr false)
                 (type_ (TypeLiteral local_scalar_t__)) (name p_real)
                 (init (Assignment (Var DUMMY_VAR__)))))

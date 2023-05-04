@@ -977,6 +977,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "arrays_tuples_nested_model_namespace::write_array";
     // suppress unused var warning
@@ -1293,8 +1295,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::tuple<std::vector<local_scalar_t__>, local_scalar_t__> basic_p =
         std::tuple<std::vector<local_scalar_t__>, local_scalar_t__>{std::vector<
                                                                     local_scalar_t__>(10,
@@ -2835,11 +2835,6 @@ class onepl_model final : public model_base_crtp<onepl_model> {
       "onepl_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -2869,6 +2864,8 @@ class onepl_model final : public model_base_crtp<onepl_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "onepl_model_namespace::write_array";
     // suppress unused var warning
@@ -2899,12 +2896,6 @@ class onepl_model final : public model_base_crtp<onepl_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -2916,12 +2907,6 @@ class onepl_model final : public model_base_crtp<onepl_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -3132,11 +3117,6 @@ class simple_model final : public model_base_crtp<simple_model> {
       "simple_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -3166,6 +3146,8 @@ class simple_model final : public model_base_crtp<simple_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "simple_model_namespace::write_array";
     // suppress unused var warning
@@ -3196,12 +3178,6 @@ class simple_model final : public model_base_crtp<simple_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -3213,12 +3189,6 @@ class simple_model final : public model_base_crtp<simple_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -3434,11 +3404,6 @@ class simple2_model final : public model_base_crtp<simple2_model> {
       "simple2_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -3468,6 +3433,8 @@ class simple2_model final : public model_base_crtp<simple2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "simple2_model_namespace::write_array";
     // suppress unused var warning
@@ -3498,12 +3465,6 @@ class simple2_model final : public model_base_crtp<simple2_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -3515,12 +3476,6 @@ class simple2_model final : public model_base_crtp<simple2_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -3751,11 +3706,6 @@ class simple3_model final : public model_base_crtp<simple3_model> {
       "simple3_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -3785,6 +3735,8 @@ class simple3_model final : public model_base_crtp<simple3_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "simple3_model_namespace::write_array";
     // suppress unused var warning
@@ -3815,12 +3767,6 @@ class simple3_model final : public model_base_crtp<simple3_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -3832,12 +3778,6 @@ class simple3_model final : public model_base_crtp<simple3_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -4178,11 +4118,6 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
       "tuple_constraints_data_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -4212,6 +4147,8 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_constraints_data_model_namespace::write_array";
     // suppress unused var warning
@@ -4242,12 +4179,6 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -4259,12 +4190,6 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -4457,8 +4382,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       current_statement__ = 5;
       context__.validate_dims("data initialization", "indicator", "int",
         std::vector<size_t>{});
@@ -4639,6 +4562,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_constraints_params_model_namespace::write_array";
     // suppress unused var warning
@@ -4779,8 +4704,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
         std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__,
           DUMMY_VAR__};
@@ -5561,6 +5484,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_dataonly_model_namespace::write_array";
     // suppress unused var warning
@@ -5591,12 +5516,6 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -5608,12 +5527,6 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -5892,6 +5805,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_full_model_namespace::write_array";
     // suppress unused var warning
@@ -5934,8 +5849,6 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
         std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__,
           DUMMY_VAR__};
@@ -6192,11 +6105,6 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
       "tuple_ix_assign_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -6226,6 +6134,8 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_ix_assign_model_namespace::write_array";
     // suppress unused var warning
@@ -6256,12 +6166,6 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -6273,12 +6177,6 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -6485,11 +6383,6 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
       "tuple_ix_assign2_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -6519,6 +6412,8 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_ix_assign2_model_namespace::write_array";
     // suppress unused var warning
@@ -6549,12 +6444,6 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -6566,12 +6455,6 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -6777,11 +6660,6 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
       "tuple_ix_assign3_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -6811,6 +6689,8 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_ix_assign3_model_namespace::write_array";
     // suppress unused var warning
@@ -6841,12 +6721,6 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -6858,12 +6732,6 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -7073,11 +6941,6 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
       "tuple_ix_assign4_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -7107,6 +6970,8 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_ix_assign4_model_namespace::write_array";
     // suppress unused var warning
@@ -7137,12 +7002,6 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -7154,12 +7013,6 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -7325,12 +7178,6 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = (1 + 1) + (1 + (1 + (10 * 10)));
   }
   inline std::string model_name() const final {
@@ -7415,6 +7262,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_nested_param_model_namespace::write_array";
     // suppress unused var warning
@@ -7474,8 +7323,6 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
         std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__,
           DUMMY_VAR__};
@@ -7780,12 +7627,6 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     num_params_r__ = (1 + 1);
   }
   inline std::string model_name() const final {
@@ -7855,6 +7696,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_params_model_namespace::write_array";
     // suppress unused var warning
@@ -7896,8 +7739,6 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       std::tuple<local_scalar_t__, local_scalar_t__> ps =
         std::tuple<local_scalar_t__, local_scalar_t__>{DUMMY_VAR__,
           DUMMY_VAR__};
@@ -8424,6 +8265,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_promotion_model_namespace::write_array";
     // suppress unused var warning
@@ -8622,12 +8465,6 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -8639,12 +8476,6 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool
@@ -9334,11 +9165,6 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       "tuple_templating_model_namespace::log_prob";
     // suppress unused var warning
     (void) function__;
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
@@ -9368,6 +9194,8 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "tuple_templating_model_namespace::write_array";
     // suppress unused var warning
@@ -9426,12 +9254,6 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
   inline void
@@ -9443,12 +9265,6 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-    }
   }
   inline void
   get_param_names(std::vector<std::string>& names__, const bool

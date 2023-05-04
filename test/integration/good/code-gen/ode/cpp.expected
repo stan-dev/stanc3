@@ -374,6 +374,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "ode_adjoint_test_model_model_namespace::write_array";
     // suppress unused var warning
@@ -458,8 +460,6 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ y = DUMMY_VAR__;
       current_statement__ = 1;
       y = in__.read<local_scalar_t__>();
@@ -1241,6 +1241,8 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
     static constexpr const char* function__ =
       "overloaded_ode_model_namespace::write_array";
     // suppress unused var warning
@@ -1330,8 +1332,6 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
       current_statement__ = 1;
       beta = in__.read<local_scalar_t__>();
@@ -1375,8 +1375,6 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       current_statement__ = 4;
       context__.validate_dims("parameter initialization", "delta", "double",
         std::vector<size_t>{});
-      int pos__ = std::numeric_limits<int>::min();
-      pos__ = 1;
       local_scalar_t__ beta = DUMMY_VAR__;
       current_statement__ = 1;
       beta = context__.vals_r("beta")[(1 - 1)];

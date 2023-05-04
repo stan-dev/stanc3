@@ -331,7 +331,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       Exprs.fun_call (stan_namespace_qualify fname) (lower_exprs args) |> wrap_e
   | NRFunApp (UserDefined (fname, suffix), args) ->
       lower_user_defined_fun fname suffix args |> wrap_e
-  | Skip -> [Semicolon]
+  | Skip -> []
   | IfElse (cond, ifbranch, elsebranch) ->
       [ IfElse
           ( lower_bool_expr cond
