@@ -17,7 +17,7 @@
    %{targets}
    (run
     %{bin:run_bin_on_args}
-    "%{bin:stanc} --include-paths=\".\" --auto-format --allow-undefined"
+    "%{bin:stanc} --include-paths=\".\" --auto-format --canonicalize=strip-comments --allow-undefined"
     %{stanfiles}))))
 
 (rule
@@ -31,7 +31,7 @@
    %{targets}
    (run
     %{bin:run_bin_on_args}
-    "%{bin:stanc} --include-paths=\".\" --auto-format --canonicalize=includes --allow-undefined"
+    "%{bin:stanc} --include-paths=\".\" --auto-format --canonicalize=includes,strip-comments --allow-undefined"
     %{stanfiles}))))
 
 (rule

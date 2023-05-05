@@ -21,9 +21,9 @@ Show help
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints a formatted version of the Stan program.
-    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces', 'includes'.
+    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces', 'includes', 'strip-comments'.
     --max-line-length               Set the maximum line length for the formatter. Defaults to 78 characters.
-    --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
+    --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize deprecations,includes,parentheses,braces
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")
     --O0                            (Default) Do not apply optimizations to the Stan code.
@@ -69,9 +69,9 @@ Error when no file passed
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints a formatted version of the Stan program.
-    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces', 'includes'.
+    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces', 'includes', 'strip-comments'.
     --max-line-length               Set the maximum line length for the formatter. Defaults to 78 characters.
-    --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
+    --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize deprecations,includes,parentheses,braces
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")
     --O0                            (Default) Do not apply optimizations to the Stan code.
@@ -115,9 +115,9 @@ Error when multiple files passed
     --warn-uninitialized            Emit warnings about uninitialized variables to stderr. Currently an experimental feature.
     --warn-pedantic                 Emit warnings about common mistakes in Stan programs.
     --auto-format                   Pretty prints a formatted version of the Stan program.
-    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces', 'includes'.
+    --canonicalize                  Enable specific canonicalizations in a comma seperated list. Options are 'deprecations', 'parentheses', 'braces', 'includes', 'strip-comments'.
     --max-line-length               Set the maximum line length for the formatter. Defaults to 78 characters.
-    --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize [all options]
+    --print-canonical               Prints the canonicalized program. Equivalent to --auto-format --canonicalize deprecations,includes,parentheses,braces
     --version                       Display stanc version number
     --name                          Take a string to set the model name (default = "$model_filename_model")
     --O0                            (Default) Do not apply optimizations to the Stan code.

@@ -8,7 +8,11 @@ open Ast
     to stanc, but it consumed by the pretty-printer, {i not} this module.
 *)
 type canonicalizer_settings =
-  {deprecations: bool; parentheses: bool; braces: bool; inline_includes: bool}
+  { deprecations: bool
+  ; parentheses: bool
+  ; braces: bool
+  ; inline_includes: bool
+  ; strip_comments: bool }
 
 val all : canonicalizer_settings
 val none : canonicalizer_settings

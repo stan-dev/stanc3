@@ -50,13 +50,14 @@ let parse_canonical_options (settings : Canonicalize.canonicalizer_settings)
   | "parentheses" -> {settings with parentheses= true}
   | "braces" -> {settings with braces= true}
   | "includes" -> {settings with inline_includes= true}
+  | "strip-comments" -> {settings with strip_comments= true}
   | s ->
       raise
       @@ Arg.Bad
            ( "Unrecognized canonicalizer option '" ^ s
            ^ "'. \n\
               Should be one of 'deprecations', 'parentheses', 'braces', \
-              'includes'" )
+              'includes', 'strip-comments'" )
 
 (** Some example command-line options here *)
 let options =
@@ -144,7 +145,8 @@ let options =
                 (String.split s ~on:',') in
             canonicalize_settings := settings )
       , " Enable specific canonicalizations in a comma seperated list. Options \
-         are 'deprecations', 'parentheses', 'braces', 'includes'." )
+         are 'deprecations', 'parentheses', 'braces', 'includes', \
+         'strip-comments'." )
     ; ( "--max-line-length"
       , Arg.Set_int pretty_print_line_length
       , " Set the maximum line length for the formatter. Defaults to 78 \
@@ -155,7 +157,7 @@ let options =
             pretty_print_program := true ;
             canonicalize_settings := Canonicalize.all )
       , " Prints the canonicalized program. Equivalent to --auto-format \
-         --canonicalize [all options]" )
+         --canonicalize deprecations,includes,parentheses,braces" )
     ; ( "--version"
       , Arg.Unit
           (fun _ ->
@@ -302,7 +304,8 @@ let use_file filename =
     print_or_write
       (Pretty_printing.pretty_print_typed_program
          ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
-         ~inline_includes:!canonicalize_settings.inline_includes canonical_ast ) ;
+         ~inline_includes:!canonicalize_settings.inline_includes canonical_ast
+         ~strip_comments:!canonicalize_settings.strip_comments ) ;
   if !print_info_json then (
     print_endline (Info.info canonical_ast) ;
     exit 0 ) ;

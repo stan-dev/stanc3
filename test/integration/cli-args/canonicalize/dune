@@ -38,6 +38,20 @@
     %{stanfiles}))))
 
 (rule
+ (targets strip-comments.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan*)))
+ (action
+  (with-outputs-to
+   %{targets}
+   (run
+    %{bin:run_bin_on_args}
+    "%{bin:stanc} --auto-format --canonicalize strip-comments,braces,parentheses,deprecations"
+    %{stanfiles}))))
+
+(rule
  (alias runtest)
  (action
   (diff canonical.expected canonical.output)))
@@ -51,3 +65,8 @@
  (alias runtest)
  (action
   (diff everything-but.expected everything-but.output)))
+
+(rule
+ (alias runtest)
+ (action
+  (diff strip-comments.expected strip-comments.output)))
