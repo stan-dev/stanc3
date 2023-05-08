@@ -83,6 +83,21 @@ let rec get_dims st =
       [dim]
   | SArray (t, dim) -> dim :: get_dims t
 
+let rec io_size st =
+  let two = Expr.Helpers.int 2 in
+  match st with
+  | SInt | SReal -> Expr.Helpers.one
+  | SComplex -> two
+  | SVector (_, d) | SRowVector (_, d) -> d
+  | SMatrix (_, dim1, dim2) -> Expr.Helpers.binop dim1 Operator.Times dim2
+  | SComplexVector d | SComplexRowVector d ->
+      Expr.Helpers.binop d Operator.Times two
+  | SComplexMatrix (dim1, dim2) ->
+      Expr.Helpers.binop dim1 Operator.Times
+        (Expr.Helpers.binop dim2 Operator.Times two)
+  | SArray ((SReal | SInt), dim) -> dim
+  | SArray (t, dim) -> Expr.Helpers.binop dim Operator.Times (io_size t)
+
 (**
  * Check whether a SizedType holds indexable SizedTypes.
  *)
@@ -112,10 +127,6 @@ let rec internal_scalar st =
   | SVector _ | SRowVector _ | SMatrix _ -> SReal
   | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ -> SComplex
   | SArray (t, _) -> internal_scalar t
-
-let num_elems_expr st =
-  Expr.Helpers.binop_list (get_dims_io st) Operator.Times
-    ~default:(Expr.Helpers.int 1)
 
 let%expect_test "dims" =
   let open Fmt in

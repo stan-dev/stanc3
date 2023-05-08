@@ -555,6 +555,20 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(N),
+            static_cast<size_t>(1), static_cast<size_t>(N)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t> temp{static_cast<size_t>((M * N))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -1400,6 +1414,21 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((N_t * 4)), static_cast<size_t>((N_t * 4))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool

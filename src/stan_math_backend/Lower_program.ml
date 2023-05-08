@@ -12,14 +12,8 @@ let stanc_args_to_print = ref ""
 let get_unconstrained_param_st lst =
   match lst with
   | _, _, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
-      Some (SizedType.get_dims_io st)
+      Some (SizedType.io_size st)
   | _ -> None
-
-let lower_num_param (dims : Expr.Typed.t list) =
-  match List.reduce ~f:Expression_syntax.( * ) (lower_exprs dims) with
-  | Some d when List.length dims = 1 -> d
-  | Some d -> Parens d
-  | None -> Literal "1"
 
 (** Create a variable for the name of model function.
   @param prog_name Name of the Stan program.
@@ -185,8 +179,7 @@ let lower_constructor
     let output_params =
       List.filter_map ~f:get_unconstrained_param_st output_vars in
     match
-      List.map ~f:lower_num_param output_params
-      |> List.reduce ~f:Expression_syntax.( + )
+      lower_exprs output_params |> List.reduce ~f:Expression_syntax.( + )
     with
     | None -> Expression (Assign (Var "num_params_r__", Literal "0U"))
     | Some pars -> Expression (Assign (Var "num_params_r__", pars)) in
@@ -416,6 +409,46 @@ let gen_get_dims {Program.output_vars; _} =
     (make_fun_defn ~inline:true ~return_type:Void ~name:"get_dims" ~args ~body
        ~cv_qualifiers:[Const] () )
 
+let gen_get_param_sizes {Program.output_vars; _} =
+  let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
+  let pack inner_dims = cast (SizedType.io_size inner_dims) in
+  let params, tparams, gqs =
+    List.partition3_map output_vars ~f:(function
+      | _, _, {Program.out_block= Parameters; Program.out_constrained_st= st; _}
+        ->
+          `Fst (pack st)
+      | ( _
+        , _
+        , {out_block= TransformedParameters; Program.out_constrained_st= st; _}
+        ) ->
+          `Snd (pack st)
+      | _, _, {out_block= GeneratedQuantities; Program.out_constrained_st= st; _}
+        ->
+          `Trd (pack st) ) in
+  let args : (type_ * identifier) list =
+    [ (Const Types.bool, "emit_transformed_parameters__ = true")
+    ; (Const Types.bool, "emit_generated_quantities__ = true") ] in
+  let sizes = Var "sizes" in
+  let body =
+    [ VariableDefn
+        (make_variable_defn
+           ~type_:(Types.std_vector Types.size_t)
+           ~name:"sizes" ~init:(InitializerList params) () )
+    ; IfElse
+        ( Var "emit_transformed_parameters__"
+        , Stmts.block
+            (gen_extend_vector sizes (Types.std_vector Types.size_t) tparams)
+        , None )
+    ; IfElse
+        ( Var "emit_generated_quantities__"
+        , Stmts.block
+            (gen_extend_vector sizes (Types.std_vector Types.size_t) gqs)
+        , None ); Return (Some sizes) ] in
+  FunDef
+    (make_fun_defn ~inline:true
+       ~return_type:(Types.std_vector Types.size_t)
+       ~name:"get_param_sizes" ~args ~body ~cv_qualifiers:[Const] () )
+
 let emplace_name_stmt name idcs =
   let null_string = Constructor (Types.string, []) in
   let dot = Literal "'.'" in
@@ -550,7 +583,7 @@ let gen_overloads {Program.output_vars; _} =
         Expr.Helpers.binop_list
           (List.map
              ~f:(fun outvar ->
-               SizedType.num_elems_expr outvar.Program.out_constrained_st )
+               SizedType.io_size outvar.Program.out_constrained_st )
              outvars )
           Operator.Plus ~default:Expr.Helpers.zero
         |> lower_expr in
@@ -752,9 +785,10 @@ let gen_overloads {Program.output_vars; _} =
 let lower_model_public p =
   [ gen_log_prob p; gen_write_array p; gen_unconstrain_array_impl p
   ; gen_transform_inits_impl p; (* Begin metadata methods *)
-    gen_get_param_names p; (* Post-data metadata methods *) gen_get_dims p
-  ; gen_constrained_param_names p; gen_unconstrained_param_names p
-  ; gen_constrained_types p; gen_unconstrained_types p ]
+    gen_get_param_names p; (* Post-data metadata methods *)
+    gen_get_param_sizes p; gen_get_dims p; gen_constrained_param_names p
+  ; gen_unconstrained_param_names p; gen_constrained_types p
+  ; gen_unconstrained_types p ]
   (* Boilerplate *)
   @ gen_overloads p
 

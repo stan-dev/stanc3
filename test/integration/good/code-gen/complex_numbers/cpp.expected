@@ -199,8 +199,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (N * N * 2) + (N * 2) + (N * 2) + 2 + (N * N) + N + N +
-      1;
+    num_params_r__ = (N * (N * 2)) + (N * 2) + (N * 2) + 2 + (N * N) + N + N
+      + 1;
   }
   inline std::string model_name() const final {
     return "basic_op_param_model";
@@ -1536,6 +1536,25 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>((N * (N * 2))), static_cast<size_t>((N * 2)),
+            static_cast<size_t>((N * 2)), static_cast<size_t>(2),
+            static_cast<size_t>((N * N)), static_cast<size_t>(N),
+            static_cast<size_t>(N), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((N * (N * 2))),
+             static_cast<size_t>((N * 2)), static_cast<size_t>((N * 2)),
+             static_cast<size_t>(2), static_cast<size_t>((N * (N * 2)))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -1745,10 +1764,10 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((N * N) * 2) + (N * 2)) + (N * 2)) +
+    const size_t num_params__ = ((((((((N * (N * 2)) + (N * 2)) + (N * 2)) +
       2) + (N * N)) + N) + N) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((N * (N
+      * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -1764,10 +1783,10 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((N * N) * 2) + (N * 2)) + (N * 2)) +
+    const size_t num_params__ = ((((((((N * (N * 2)) + (N * 2)) + (N * 2)) +
       2) + (N * N)) + N) + N) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((N * (N
+      * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -2770,6 +2789,21 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((N * (N * 2))),
+             static_cast<size_t>((N * 2)), static_cast<size_t>((N * 2)),
+             static_cast<size_t>(2), static_cast<size_t>((N * (N * 2)))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -2890,8 +2924,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_gen_quantities = emit_generated_quantities * ((((((N *
+      (N * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -2908,8 +2942,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_gen_quantities = emit_generated_quantities * ((((((N *
+      (N * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -3405,8 +3439,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (N * N * 2) + (N * 2) + (N * 2) + 2 + (N * N) + N + N +
-      1;
+    num_params_r__ = (N * (N * 2)) + (N * 2) + (N * 2) + 2 + (N * N) + N + N
+      + 1;
   }
   inline std::string model_name() const final {
     return "basic_ops_mix_model";
@@ -4860,6 +4894,25 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>((N * (N * 2))), static_cast<size_t>((N * 2)),
+            static_cast<size_t>((N * 2)), static_cast<size_t>(2),
+            static_cast<size_t>((N * N)), static_cast<size_t>(N),
+            static_cast<size_t>(N), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((N * (N * 2))),
+             static_cast<size_t>((N * 2)), static_cast<size_t>((N * 2)),
+             static_cast<size_t>(2), static_cast<size_t>((N * (N * 2)))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -5069,10 +5122,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((N * N) * 2) + (N * 2)) + (N * 2)) +
+    const size_t num_params__ = ((((((((N * (N * 2)) + (N * 2)) + (N * 2)) +
       2) + (N * N)) + N) + N) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((N * (N
+      * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -5088,10 +5141,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((N * N) * 2) + (N * 2)) + (N * 2)) +
+    const size_t num_params__ = ((((((((N * (N * 2)) + (N * 2)) + (N * 2)) +
       2) + (N * N)) + N) + N) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((N * (N
+      * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -5608,6 +5661,14 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     names__ = std::vector<std::string>{};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -6704,7 +6765,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 2 + (2 * 2) + (2 * 3 * 2);
+    num_params_r__ = 1 + 2 + (2 * 2) + (2 * (3 * 2));
   }
   inline std::string model_name() const final {
     return "complex_scalar_model";
@@ -8087,6 +8148,32 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(2),
+            static_cast<size_t>((2 * 2)), static_cast<size_t>((2 * (3 * 2)))};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(2),
+             static_cast<size_t>((2 * 2)), static_cast<size_t>((2 * (3 * 2)))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(1),
+             static_cast<size_t>(2), static_cast<size_t>((2 * 2)),
+             static_cast<size_t>((2 * (3 * 2))), static_cast<size_t>(2),
+             static_cast<size_t>(2), static_cast<size_t>(0),
+             static_cast<size_t>(1), static_cast<size_t>(2),
+             static_cast<size_t>(2), static_cast<size_t>(1)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -8308,11 +8395,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
+    const size_t num_params__ = (((1 + 2) + (2 * 2)) + (2 * (3 * 2)));
     const size_t num_transformed = emit_transformed_parameters * ((((1 + 2) +
-      (2 * 2)) + ((2 * 3) * 2)));
+      (2 * 2)) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities *
-      ((((((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1)
+      ((((((((((((1 + 1) + 2) + (2 * 2)) + (2 * (3 * 2))) + 2) + 2) + 0) + 1)
       + 2) + 2) + 1));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -8328,11 +8415,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
+    const size_t num_params__ = (((1 + 2) + (2 * 2)) + (2 * (3 * 2)));
     const size_t num_transformed = emit_transformed_parameters * ((((1 + 2) +
-      (2 * 2)) + ((2 * 3) * 2)));
+      (2 * 2)) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities *
-      ((((((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1)
+      ((((((((((((1 + 1) + 2) + (2 * 2)) + (2 * (3 * 2))) + 2) + 2) + 0) + 1)
       + 2) + 2) + 1));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -8683,6 +8770,21 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((3 * 2)),
+             static_cast<size_t>((2 * (2 * 2))), static_cast<size_t>(2),
+             static_cast<size_t>((2 * 2)), static_cast<size_t>((2 * (2 * 2)))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -8807,7 +8909,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * ((((((3 * 2)
-      + ((2 * 2) * 2)) + 2) + (2 * 2)) + ((2 * 2) * 2)));
+      + (2 * (2 * 2))) + 2) + (2 * 2)) + (2 * (2 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -8825,7 +8927,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * ((((((3 * 2)
-      + ((2 * 2) * 2)) + 2) + (2 * 2)) + ((2 * 2) * 2)));
+      + (2 * (2 * 2))) + 2) + (2 * 2)) + (2 * (2 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -9326,6 +9428,14 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     names__ = std::vector<std::string>{};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool

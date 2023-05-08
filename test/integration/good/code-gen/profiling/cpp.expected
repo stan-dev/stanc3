@@ -353,6 +353,16 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool

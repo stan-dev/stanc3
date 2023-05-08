@@ -329,6 +329,22 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>((10 * 10))};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((10 * 10)), static_cast<size_t>((10 * 10)),
+             static_cast<size_t>((10 * 10)), static_cast<size_t>((10 * 10)),
+             static_cast<size_t>((10 * 10)), static_cast<size_t>((10 * 10)),
+             static_cast<size_t>((10 * 10))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -1068,6 +1084,20 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t> temp{static_cast<size_t>((N_t * 4))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -1491,6 +1521,19 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>((10 * 10))};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((10 * 10)), static_cast<size_t>((10 * 10))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -1927,6 +1970,14 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     names__ = std::vector<std::string>{"X"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>((N * N))};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -2901,6 +2952,22 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(max_age)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((nind * n_occ_minus_1)),
+             static_cast<size_t>((nind * n_occ_minus_1)),
+             static_cast<size_t>((nind * n_occasions))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -3979,6 +4046,23 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(n_age),
+            static_cast<size_t>(n_edu), static_cast<size_t>(n_region),
+            static_cast<size_t>((n_age * n_edu)),
+            static_cast<size_t>(n_state)};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -4364,6 +4448,14 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -4663,6 +4755,14 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     names__ = std::vector<std::string>{};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -5096,6 +5196,16 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(2), static_cast<size_t>(2),
+            static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -5501,6 +5611,16 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     names__ = std::vector<std::string>{"mu", "theta", "tau"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(J),
+            static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -6517,6 +6637,24 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(n_age), static_cast<size_t>(n_edu),
+            static_cast<size_t>(n_age_edu), static_cast<size_t>(n_state),
+            static_cast<size_t>(n_region_full), static_cast<size_t>(5),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t> temp{static_cast<size_t>(N)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -7218,6 +7356,28 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(phi_std_raw_1dim__)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(N)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(1),
+             static_cast<size_t>(1), static_cast<size_t>(1),
+             static_cast<size_t>(N), static_cast<size_t>(N),
+             static_cast<size_t>(N), static_cast<size_t>(N)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -8281,6 +8441,28 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(nind), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((nind * n_occ_minus_1)),
+             static_cast<size_t>((nind * n_occ_minus_1)),
+             static_cast<size_t>((nind * n_occasions)),
+             static_cast<size_t>(1)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {
+      std::vector<size_t> temp{static_cast<size_t>(1)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -10159,6 +10341,34 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(n_occasions),
+            static_cast<size_t>(M), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((M * phi_2dim__)),
+             static_cast<size_t>((M * n_occasions)),
+             static_cast<size_t>(n_occasions),
+             static_cast<size_t>(n_occasions),
+             static_cast<size_t>((M * n_occasions))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(1),
+             static_cast<size_t>(n_occasions),
+             static_cast<size_t>(n_occasions),
+             static_cast<size_t>((M * n_occasions))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -10631,7 +10841,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (K - 1) + (J * K * (K - 1));
+    num_params_r__ = (K - 1) + (J * (K * (K - 1)));
   }
   inline std::string model_name() const final {
     return "expr_prop_fail7_model";
@@ -10945,6 +11155,19 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(K), static_cast<size_t>((J * (K * K)))};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {
+      std::vector<size_t> temp{static_cast<size_t>((I * K))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -11029,7 +11252,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (K + ((J * K) * K));
+    const size_t num_params__ = (K + (J * (K * K)));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * ((I * K));
     const size_t num_to_write = num_params__ + num_transformed +
@@ -11046,7 +11269,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (K + ((J * K) * K));
+    const size_t num_params__ = (K + (J * (K * K)));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * ((I * K));
     const size_t num_to_write = num_params__ + num_transformed +
@@ -11586,6 +11809,22 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(N), static_cast<size_t>(N)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(N)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -12593,6 +12832,22 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(max_age)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((nind * n_occ_minus_1)),
+             static_cast<size_t>((nind * n_occ_minus_1)),
+             static_cast<size_t>((nind * n_occasions))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -13018,6 +13273,14 @@ class function_in_function_inline_model final : public model_base_crtp<function_
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -13412,6 +13675,14 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -13755,6 +14026,18 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>(3)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t> temp{static_cast<size_t>(3)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -14300,6 +14583,19 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>(5), static_cast<size_t>(5)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(5), static_cast<size_t>(5)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -14697,6 +14993,14 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -15079,6 +15383,19 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(N), static_cast<size_t>(N)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -16902,6 +17219,33 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(n_occasions),
+            static_cast<size_t>(epsilon_1dim__), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((M * phi_2dim__)),
+             static_cast<size_t>((M * n_occasions)),
+             static_cast<size_t>((M * n_occasions))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(1),
+             static_cast<size_t>(n_occasions), static_cast<size_t>(1),
+             static_cast<size_t>(n_occasions),
+             static_cast<size_t>(n_occasions),
+             static_cast<size_t>((M * n_occasions))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -17340,6 +17684,14 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -17656,6 +18008,14 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     names__ = std::vector<std::string>{"x"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -17986,6 +18346,14 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     names__ = std::vector<std::string>{"theta"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>(J)};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -18876,6 +19244,21 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>(1), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>((nind * n_occ_minus_1)),
+             static_cast<size_t>((nind * n_occ_minus_1)),
+             static_cast<size_t>((nind * n_occasions))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -19379,6 +19762,23 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t> temp{static_cast<size_t>(1)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(1)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -20043,6 +20443,27 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(R), static_cast<size_t>((R * T))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(R),
+             static_cast<size_t>(R)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -20826,6 +21247,24 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(J),
+            static_cast<size_t>(J), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(J), static_cast<size_t>(J),
+             static_cast<size_t>(N)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -21781,6 +22220,17 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>((3 * 2)), static_cast<size_t>(2),
+            static_cast<size_t>((2 * 2))};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -22132,6 +22582,14 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -22473,6 +22931,14 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
     names__ = std::vector<std::string>{};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -23097,6 +23563,21 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(n_pair), static_cast<size_t>(2),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t> temp{static_cast<size_t>(N)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -23607,6 +24088,15 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     names__ = std::vector<std::string>{"m2", "m3"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>((10 * 10)), static_cast<size_t>((10 * 10))};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -24254,6 +24744,21 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t>
+      sizes{static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>(1),
+            static_cast<size_t>(1), static_cast<size_t>((I * K))};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t> temp{static_cast<size_t>(1)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -24653,6 +25158,18 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t> temp{static_cast<size_t>((2 * 5))};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -25036,6 +25553,21 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     }
     if (emit_generated_quantities__) {}
   }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{static_cast<size_t>(1)};
+    if (emit_transformed_parameters__) {
+      std::vector<size_t>
+        temp{static_cast<size_t>(1), static_cast<size_t>(1),
+             static_cast<size_t>(1), static_cast<size_t>(1),
+             static_cast<size_t>(1), static_cast<size_t>(1)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    if (emit_generated_quantities__) {}
+    return sizes;
+  }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
            emit_transformed_parameters__ = true, const bool
@@ -25370,6 +25902,18 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
+  }
+  inline std::vector<size_t>
+  get_param_sizes(const bool emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    std::vector<size_t> sizes{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {
+      std::vector<size_t> temp{static_cast<size_t>(1)};
+      sizes.reserve(sizes.size() + temp.size());
+      sizes.insert(sizes.end(), temp.begin(), temp.end());
+    }
+    return sizes;
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool

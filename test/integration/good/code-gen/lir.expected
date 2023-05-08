@@ -11688,6 +11688,248 @@
                   (MethodCall (Var temp) end () ()))))))
              ()))))))
        (FunDef
+        ((templates_init ((()) false)) (inline true)
+         (return_type (StdVector (TypeLiteral size_t)))
+         (name get_param_sizes)
+         (args
+          (((Const (TypeLiteral bool))
+            "emit_transformed_parameters__ = true")
+           ((Const (TypeLiteral bool)) "emit_generated_quantities__ = true")))
+         (cv_qualifiers (Const))
+         (body
+          (((VariableDefn
+             ((static false) (constexpr false)
+              (type_ (StdVector (TypeLiteral size_t))) (name sizes)
+              (init
+               (InitializerList
+                ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 1)))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 1)))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 1)))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 5)))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 5)))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 5)))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens
+                    (BinOp (Var N) Multiply
+                     (Parens (BinOp (Var M) Multiply (Var K)))))))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens (BinOp (Var N) Multiply (Var N)))))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens
+                    (BinOp (Var N) Multiply
+                     (Parens
+                      (BinOp (Var M) Multiply
+                       (Parens (BinOp (Var K) Multiply (Var N)))))))))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens (BinOp (Var N) Multiply (Var N)))))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens
+                    (BinOp (Var N) Multiply
+                     (Parens
+                      (BinOp (Var M) Multiply
+                       (Parens (BinOp (Var K) Multiply (Var N)))))))))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens (BinOp (Literal 5) Multiply (Literal 4)))))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens
+                    (BinOp (Literal 4) Multiply
+                     (Parens
+                      (BinOp (Literal 5) Multiply
+                       (Parens (BinOp (Literal 2) Multiply (Literal 3)))))))))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens (BinOp (Var N) Multiply (Var N)))))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens
+                    (BinOp (Var N) Multiply
+                     (Parens
+                      (BinOp (Var M) Multiply
+                       (Parens (BinOp (Var K) Multiply (Var N)))))))))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens (BinOp (Literal 5) Multiply (Literal 4)))))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens (BinOp (Literal 3) Multiply (Literal 3)))))
+                 (FunCall static_cast ((TypeLiteral size_t))
+                  ((Parens
+                    (BinOp (Var K) Multiply
+                     (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 2)))
+                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 2))))))))
+            (IfElse (Var emit_transformed_parameters__)
+             (Block
+              ((VariableDefn
+                ((static false) (constexpr false)
+                 (type_ (StdVector (TypeLiteral size_t))) (name temp)
+                 (init
+                  (InitializerList
+                   ((FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var N) Multiply
+                        (Parens (BinOp (Var M) Multiply (Var K)))))))
+                    (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Var N) Multiply (Var N)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var N) Multiply
+                        (Parens
+                         (BinOp (Var M) Multiply
+                          (Parens (BinOp (Var K) Multiply (Var N)))))))))
+                    (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Var N) Multiply (Var N)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var N) Multiply
+                        (Parens
+                         (BinOp (Var M) Multiply
+                          (Parens (BinOp (Var K) Multiply (Var N)))))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Literal 5) Multiply (Literal 4)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Literal 4) Multiply
+                        (Parens
+                         (BinOp (Literal 5) Multiply
+                          (Parens (BinOp (Literal 2) Multiply (Literal 3)))))))))
+                    (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Var N) Multiply (Var N)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var N) Multiply
+                        (Parens
+                         (BinOp (Var M) Multiply
+                          (Parens (BinOp (Var K) Multiply (Var N)))))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Literal 5) Multiply (Literal 4)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Literal 3) Multiply (Literal 3)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var K) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Literal 2)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Literal 1))))))))
+               (Expression
+                (MethodCall (Var sizes) reserve ()
+                 ((BinOp (MethodCall (Var sizes) size () ()) Add
+                   (MethodCall (Var temp) size () ())))))
+               (Expression
+                (MethodCall (Var sizes) insert ()
+                 ((MethodCall (Var sizes) end () ())
+                  (MethodCall (Var temp) begin () ())
+                  (MethodCall (Var temp) end () ()))))))
+             ())
+            (IfElse (Var emit_generated_quantities__)
+             (Block
+              ((VariableDefn
+                ((static false) (constexpr false)
+                 (type_ (StdVector (TypeLiteral size_t))) (name temp)
+                 (init
+                  (InitializerList
+                   ((FunCall static_cast ((TypeLiteral size_t))
+                     ((Literal 1)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Literal 1)))
+                    (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var N) Multiply
+                        (Parens (BinOp (Var M) Multiply (Var K)))))))
+                    (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Var N) Multiply (Var N)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var N) Multiply
+                        (Parens
+                         (BinOp (Var M) Multiply
+                          (Parens (BinOp (Var K) Multiply (Var N)))))))))
+                    (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Var N) Multiply (Var N)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var N) Multiply
+                        (Parens
+                         (BinOp (Var M) Multiply
+                          (Parens (BinOp (Var K) Multiply (Var N)))))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Literal 4) Multiply
+                        (Parens
+                         (BinOp (Literal 5) Multiply
+                          (Parens (BinOp (Literal 2) Multiply (Literal 3)))))))))
+                    (FunCall static_cast ((TypeLiteral size_t)) ((Var N)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Var N) Multiply (Var N)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var N) Multiply
+                        (Parens
+                         (BinOp (Var M) Multiply
+                          (Parens (BinOp (Var K) Multiply (Var N)))))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Literal 5) Multiply (Literal 4)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Literal 3) Multiply (Literal 3)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Var K) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Literal 3)))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Literal 5) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 4)))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Literal 3) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 4)))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Literal 5) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 4)))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Literal 3) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Literal 3) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 4)))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Literal 5) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 4)))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens
+                       (BinOp (Literal 3) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Literal 3) Multiply (Literal 4)))))
+                    (FunCall static_cast ((TypeLiteral size_t))
+                     ((Parens (BinOp (Literal 2) Multiply (Literal 2))))))))))
+               (Expression
+                (MethodCall (Var sizes) reserve ()
+                 ((BinOp (MethodCall (Var sizes) size () ()) Add
+                   (MethodCall (Var temp) size () ())))))
+               (Expression
+                (MethodCall (Var sizes) insert ()
+                 ((MethodCall (Var sizes) end () ())
+                  (MethodCall (Var temp) begin () ())
+                  (MethodCall (Var temp) end () ()))))))
+             ())
+            (Return ((Var sizes))))))))
+       (FunDef
         ((templates_init ((()) false)) (inline true) (return_type Void)
          (name get_dims)
          (args
@@ -15459,11 +15701,10 @@
                                                     Add (Var N)))
                                                   Add
                                                   (Parens
-                                                   (BinOp
+                                                   (BinOp (Var N) Multiply
                                                     (Parens
-                                                     (BinOp (Var N) Multiply
-                                                      (Var M)))
-                                                    Multiply (Var K)))))
+                                                     (BinOp (Var M) Multiply
+                                                      (Var K)))))))
                                                 Add (Var N)))
                                               Add
                                               (Parens
@@ -15471,58 +15712,50 @@
                                                 (Var N)))))
                                             Add
                                             (Parens
-                                             (BinOp
+                                             (BinOp (Var N) Multiply
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var M) Multiply
                                                 (Parens
-                                                 (BinOp (Var N) Multiply
-                                                  (Var M)))
-                                                Multiply (Var K)))
-                                              Multiply (Var N)))))
+                                                 (BinOp (Var K) Multiply
+                                                  (Var N)))))))))
                                           Add (Var N)))
                                         Add
                                         (Parens
                                          (BinOp (Var N) Multiply (Var N)))))
                                       Add
                                       (Parens
-                                       (BinOp
+                                       (BinOp (Var N) Multiply
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var M) Multiply
                                           (Parens
-                                           (BinOp (Var N) Multiply (Var M)))
-                                          Multiply (Var K)))
-                                        Multiply (Var N)))))
+                                           (BinOp (Var K) Multiply (Var N)))))))))
                                     Add
                                     (Parens
                                      (BinOp (Literal 5) Multiply (Literal 4)))))
                                   Add
                                   (Parens
-                                   (BinOp
+                                   (BinOp (Literal 4) Multiply
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 5) Multiply
                                       (Parens
-                                       (BinOp (Literal 4) Multiply
-                                        (Literal 5)))
-                                      Multiply (Literal 2)))
-                                    Multiply (Literal 3)))))
+                                       (BinOp (Literal 2) Multiply
+                                        (Literal 3)))))))))
                                 Add (Var N)))
                               Add (Parens (BinOp (Var N) Multiply (Var N)))))
                             Add
                             (Parens
-                             (BinOp
+                             (BinOp (Var N) Multiply
                               (Parens
-                               (BinOp
-                                (Parens (BinOp (Var N) Multiply (Var M)))
-                                Multiply (Var K)))
-                              Multiply (Var N)))))
+                               (BinOp (Var M) Multiply
+                                (Parens (BinOp (Var K) Multiply (Var N)))))))))
                           Add
                           (Parens (BinOp (Literal 5) Multiply (Literal 4)))))
                         Add
                         (Parens (BinOp (Literal 3) Multiply (Literal 3)))))
                       Add
                       (Parens
-                       (BinOp (Parens (BinOp (Var K) Multiply (Literal 3)))
-                        Multiply (Literal 3)))))
+                       (BinOp (Var K) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                     Add (Literal 2)))
                   Add (Literal 2)))))))
             (VariableDefn
@@ -15567,11 +15800,10 @@
                                                   (Parens
                                                    (BinOp (Var N) Add
                                                     (Parens
-                                                     (BinOp
+                                                     (BinOp (Var N) Multiply
                                                       (Parens
-                                                       (BinOp (Var N)
-                                                        Multiply (Var M)))
-                                                      Multiply (Var K)))))
+                                                       (BinOp (Var M)
+                                                        Multiply (Var K)))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -15579,60 +15811,52 @@
                                                   (Var N)))))
                                               Add
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var N) Multiply
                                                 (Parens
-                                                 (BinOp
+                                                 (BinOp (Var M) Multiply
                                                   (Parens
-                                                   (BinOp (Var N) Multiply
-                                                    (Var M)))
-                                                  Multiply (Var K)))
-                                                Multiply (Var N)))))
+                                                   (BinOp (Var K) Multiply
+                                                    (Var N)))))))))
                                             Add (Var N)))
                                           Add
                                           (Parens
                                            (BinOp (Var N) Multiply (Var N)))))
                                         Add
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var N) Multiply
                                           (Parens
-                                           (BinOp
+                                           (BinOp (Var M) Multiply
                                             (Parens
-                                             (BinOp (Var N) Multiply (Var M)))
-                                            Multiply (Var K)))
-                                          Multiply (Var N)))))
+                                             (BinOp (Var K) Multiply (Var N)))))))))
                                       Add
                                       (Parens
                                        (BinOp (Literal 5) Multiply
                                         (Literal 4)))))
                                     Add
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 4) Multiply
                                       (Parens
-                                       (BinOp
+                                       (BinOp (Literal 5) Multiply
                                         (Parens
-                                         (BinOp (Literal 4) Multiply
-                                          (Literal 5)))
-                                        Multiply (Literal 2)))
-                                      Multiply (Literal 3)))))
+                                         (BinOp (Literal 2) Multiply
+                                          (Literal 3)))))))))
                                   Add (Var N)))
                                 Add
                                 (Parens (BinOp (Var N) Multiply (Var N)))))
                               Add
                               (Parens
-                               (BinOp
+                               (BinOp (Var N) Multiply
                                 (Parens
-                                 (BinOp
-                                  (Parens (BinOp (Var N) Multiply (Var M)))
-                                  Multiply (Var K)))
-                                Multiply (Var N)))))
+                                 (BinOp (Var M) Multiply
+                                  (Parens (BinOp (Var K) Multiply (Var N)))))))))
                             Add
                             (Parens (BinOp (Literal 5) Multiply (Literal 4)))))
                           Add
                           (Parens (BinOp (Literal 3) Multiply (Literal 3)))))
                         Add
                         (Parens
-                         (BinOp (Parens (BinOp (Var K) Multiply (Literal 3)))
-                          Multiply (Literal 3)))))
+                         (BinOp (Var K) Multiply
+                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                       Add (Literal 2)))
                     Add (Literal 1)))))))))
             (VariableDefn
@@ -15702,13 +15926,13 @@
                                                                   Add
                                                                   (Parens
                                                                    (BinOp
-                                                                    (Parens
-                                                                    (BinOp
                                                                     (Var N)
                                                                     Multiply
-                                                                    (Var M)))
+                                                                    (Parens
+                                                                    (BinOp
+                                                                    (Var M)
                                                                     Multiply
-                                                                    (Var K)))))
+                                                                    (Var K)))))))
                                                                 Add (Var N)))
                                                               Add
                                                               (Parens
@@ -15718,18 +15942,17 @@
                                                                 (Var N)))))
                                                             Add
                                                             (Parens
-                                                             (BinOp
+                                                             (BinOp (Var N)
+                                                              Multiply
                                                               (Parens
-                                                               (BinOp
+                                                               (BinOp 
+                                                                (Var M)
+                                                                Multiply
                                                                 (Parens
                                                                  (BinOp
-                                                                  (Var N)
+                                                                  (Var K)
                                                                   Multiply
-                                                                  (Var M)))
-                                                                Multiply
-                                                                (Var K)))
-                                                              Multiply
-                                                              (Var N)))))
+                                                                  (Var N)))))))))
                                                           Add (Var N)))
                                                         Add
                                                         (Parens
@@ -15737,26 +15960,26 @@
                                                           Multiply (Var N)))))
                                                       Add
                                                       (Parens
-                                                       (BinOp
+                                                       (BinOp (Var N)
+                                                        Multiply
                                                         (Parens
-                                                         (BinOp
+                                                         (BinOp (Var M)
+                                                          Multiply
                                                           (Parens
-                                                           (BinOp (Var N)
+                                                           (BinOp (Var K)
                                                             Multiply 
-                                                            (Var M)))
-                                                          Multiply (Var K)))
-                                                        Multiply (Var N)))))
+                                                            (Var N)))))))))
                                                     Add
                                                     (Parens
-                                                     (BinOp
+                                                     (BinOp (Literal 4)
+                                                      Multiply
                                                       (Parens
-                                                       (BinOp
+                                                       (BinOp (Literal 5)
+                                                        Multiply
                                                         (Parens
-                                                         (BinOp (Literal 4)
+                                                         (BinOp (Literal 2)
                                                           Multiply
-                                                          (Literal 5)))
-                                                        Multiply (Literal 2)))
-                                                      Multiply (Literal 3)))))
+                                                          (Literal 3)))))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -15764,14 +15987,12 @@
                                                   (Var N)))))
                                               Add
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var N) Multiply
                                                 (Parens
-                                                 (BinOp
+                                                 (BinOp (Var M) Multiply
                                                   (Parens
-                                                   (BinOp (Var N) Multiply
-                                                    (Var M)))
-                                                  Multiply (Var K)))
-                                                Multiply (Var N)))))
+                                                   (BinOp (Var K) Multiply
+                                                    (Var N)))))))))
                                             Add
                                             (Parens
                                              (BinOp (Literal 5) Multiply
@@ -15782,53 +16003,45 @@
                                             (Literal 3)))))
                                         Add
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var K) Multiply
                                           (Parens
-                                           (BinOp (Var K) Multiply
-                                            (Literal 3)))
-                                          Multiply (Literal 3)))))
+                                           (BinOp (Literal 3) Multiply
+                                            (Literal 3)))))))
                                       Add (Literal 3)))
                                     Add
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 5) Multiply
                                       (Parens
-                                       (BinOp (Literal 5) Multiply
-                                        (Literal 3)))
-                                      Multiply (Literal 4)))))
+                                       (BinOp (Literal 3) Multiply
+                                        (Literal 4)))))))
                                   Add
                                   (Parens
-                                   (BinOp
+                                   (BinOp (Literal 3) Multiply
                                     (Parens
-                                     (BinOp (Literal 3) Multiply (Literal 3)))
-                                    Multiply (Literal 4)))))
+                                     (BinOp (Literal 3) Multiply (Literal 4)))))))
                                 Add
                                 (Parens
-                                 (BinOp
+                                 (BinOp (Literal 5) Multiply
                                   (Parens
-                                   (BinOp (Literal 5) Multiply (Literal 3)))
-                                  Multiply (Literal 4)))))
+                                   (BinOp (Literal 3) Multiply (Literal 4)))))))
                               Add
                               (Parens
-                               (BinOp
+                               (BinOp (Literal 3) Multiply
                                 (Parens
-                                 (BinOp (Literal 3) Multiply (Literal 3)))
-                                Multiply (Literal 3)))))
+                                 (BinOp (Literal 3) Multiply (Literal 3)))))))
                             Add
                             (Parens
-                             (BinOp
+                             (BinOp (Literal 3) Multiply
                               (Parens
-                               (BinOp (Literal 3) Multiply (Literal 3)))
-                              Multiply (Literal 4)))))
+                               (BinOp (Literal 3) Multiply (Literal 4)))))))
                           Add
                           (Parens
-                           (BinOp
-                            (Parens (BinOp (Literal 5) Multiply (Literal 3)))
-                            Multiply (Literal 4)))))
+                           (BinOp (Literal 5) Multiply
+                            (Parens (BinOp (Literal 3) Multiply (Literal 4)))))))
                         Add
                         (Parens
-                         (BinOp
-                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))
-                          Multiply (Literal 3)))))
+                         (BinOp (Literal 3) Multiply
+                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                       Add (Parens (BinOp (Literal 3) Multiply (Literal 4)))))
                     Add (Parens (BinOp (Literal 2) Multiply (Literal 2)))))))))))
             (VariableDefn
@@ -15923,11 +16136,10 @@
                                                     Add (Var N)))
                                                   Add
                                                   (Parens
-                                                   (BinOp
+                                                   (BinOp (Var N) Multiply
                                                     (Parens
-                                                     (BinOp (Var N) Multiply
-                                                      (Var M)))
-                                                    Multiply (Var K)))))
+                                                     (BinOp (Var M) Multiply
+                                                      (Var K)))))))
                                                 Add (Var N)))
                                               Add
                                               (Parens
@@ -15935,58 +16147,50 @@
                                                 (Var N)))))
                                             Add
                                             (Parens
-                                             (BinOp
+                                             (BinOp (Var N) Multiply
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var M) Multiply
                                                 (Parens
-                                                 (BinOp (Var N) Multiply
-                                                  (Var M)))
-                                                Multiply (Var K)))
-                                              Multiply (Var N)))))
+                                                 (BinOp (Var K) Multiply
+                                                  (Var N)))))))))
                                           Add (Var N)))
                                         Add
                                         (Parens
                                          (BinOp (Var N) Multiply (Var N)))))
                                       Add
                                       (Parens
-                                       (BinOp
+                                       (BinOp (Var N) Multiply
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var M) Multiply
                                           (Parens
-                                           (BinOp (Var N) Multiply (Var M)))
-                                          Multiply (Var K)))
-                                        Multiply (Var N)))))
+                                           (BinOp (Var K) Multiply (Var N)))))))))
                                     Add
                                     (Parens
                                      (BinOp (Literal 5) Multiply (Literal 4)))))
                                   Add
                                   (Parens
-                                   (BinOp
+                                   (BinOp (Literal 4) Multiply
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 5) Multiply
                                       (Parens
-                                       (BinOp (Literal 4) Multiply
-                                        (Literal 5)))
-                                      Multiply (Literal 2)))
-                                    Multiply (Literal 3)))))
+                                       (BinOp (Literal 2) Multiply
+                                        (Literal 3)))))))))
                                 Add (Var N)))
                               Add (Parens (BinOp (Var N) Multiply (Var N)))))
                             Add
                             (Parens
-                             (BinOp
+                             (BinOp (Var N) Multiply
                               (Parens
-                               (BinOp
-                                (Parens (BinOp (Var N) Multiply (Var M)))
-                                Multiply (Var K)))
-                              Multiply (Var N)))))
+                               (BinOp (Var M) Multiply
+                                (Parens (BinOp (Var K) Multiply (Var N)))))))))
                           Add
                           (Parens (BinOp (Literal 5) Multiply (Literal 4)))))
                         Add
                         (Parens (BinOp (Literal 3) Multiply (Literal 3)))))
                       Add
                       (Parens
-                       (BinOp (Parens (BinOp (Var K) Multiply (Literal 3)))
-                        Multiply (Literal 3)))))
+                       (BinOp (Var K) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                     Add (Literal 2)))
                   Add (Literal 2)))))))
             (VariableDefn
@@ -16031,11 +16235,10 @@
                                                   (Parens
                                                    (BinOp (Var N) Add
                                                     (Parens
-                                                     (BinOp
+                                                     (BinOp (Var N) Multiply
                                                       (Parens
-                                                       (BinOp (Var N)
-                                                        Multiply (Var M)))
-                                                      Multiply (Var K)))))
+                                                       (BinOp (Var M)
+                                                        Multiply (Var K)))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -16043,60 +16246,52 @@
                                                   (Var N)))))
                                               Add
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var N) Multiply
                                                 (Parens
-                                                 (BinOp
+                                                 (BinOp (Var M) Multiply
                                                   (Parens
-                                                   (BinOp (Var N) Multiply
-                                                    (Var M)))
-                                                  Multiply (Var K)))
-                                                Multiply (Var N)))))
+                                                   (BinOp (Var K) Multiply
+                                                    (Var N)))))))))
                                             Add (Var N)))
                                           Add
                                           (Parens
                                            (BinOp (Var N) Multiply (Var N)))))
                                         Add
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var N) Multiply
                                           (Parens
-                                           (BinOp
+                                           (BinOp (Var M) Multiply
                                             (Parens
-                                             (BinOp (Var N) Multiply (Var M)))
-                                            Multiply (Var K)))
-                                          Multiply (Var N)))))
+                                             (BinOp (Var K) Multiply (Var N)))))))))
                                       Add
                                       (Parens
                                        (BinOp (Literal 5) Multiply
                                         (Literal 4)))))
                                     Add
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 4) Multiply
                                       (Parens
-                                       (BinOp
+                                       (BinOp (Literal 5) Multiply
                                         (Parens
-                                         (BinOp (Literal 4) Multiply
-                                          (Literal 5)))
-                                        Multiply (Literal 2)))
-                                      Multiply (Literal 3)))))
+                                         (BinOp (Literal 2) Multiply
+                                          (Literal 3)))))))))
                                   Add (Var N)))
                                 Add
                                 (Parens (BinOp (Var N) Multiply (Var N)))))
                               Add
                               (Parens
-                               (BinOp
+                               (BinOp (Var N) Multiply
                                 (Parens
-                                 (BinOp
-                                  (Parens (BinOp (Var N) Multiply (Var M)))
-                                  Multiply (Var K)))
-                                Multiply (Var N)))))
+                                 (BinOp (Var M) Multiply
+                                  (Parens (BinOp (Var K) Multiply (Var N)))))))))
                             Add
                             (Parens (BinOp (Literal 5) Multiply (Literal 4)))))
                           Add
                           (Parens (BinOp (Literal 3) Multiply (Literal 3)))))
                         Add
                         (Parens
-                         (BinOp (Parens (BinOp (Var K) Multiply (Literal 3)))
-                          Multiply (Literal 3)))))
+                         (BinOp (Var K) Multiply
+                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                       Add (Literal 2)))
                     Add (Literal 1)))))))))
             (VariableDefn
@@ -16166,13 +16361,13 @@
                                                                   Add
                                                                   (Parens
                                                                    (BinOp
-                                                                    (Parens
-                                                                    (BinOp
                                                                     (Var N)
                                                                     Multiply
-                                                                    (Var M)))
+                                                                    (Parens
+                                                                    (BinOp
+                                                                    (Var M)
                                                                     Multiply
-                                                                    (Var K)))))
+                                                                    (Var K)))))))
                                                                 Add (Var N)))
                                                               Add
                                                               (Parens
@@ -16182,18 +16377,17 @@
                                                                 (Var N)))))
                                                             Add
                                                             (Parens
-                                                             (BinOp
+                                                             (BinOp (Var N)
+                                                              Multiply
                                                               (Parens
-                                                               (BinOp
+                                                               (BinOp 
+                                                                (Var M)
+                                                                Multiply
                                                                 (Parens
                                                                  (BinOp
-                                                                  (Var N)
+                                                                  (Var K)
                                                                   Multiply
-                                                                  (Var M)))
-                                                                Multiply
-                                                                (Var K)))
-                                                              Multiply
-                                                              (Var N)))))
+                                                                  (Var N)))))))))
                                                           Add (Var N)))
                                                         Add
                                                         (Parens
@@ -16201,26 +16395,26 @@
                                                           Multiply (Var N)))))
                                                       Add
                                                       (Parens
-                                                       (BinOp
+                                                       (BinOp (Var N)
+                                                        Multiply
                                                         (Parens
-                                                         (BinOp
+                                                         (BinOp (Var M)
+                                                          Multiply
                                                           (Parens
-                                                           (BinOp (Var N)
+                                                           (BinOp (Var K)
                                                             Multiply 
-                                                            (Var M)))
-                                                          Multiply (Var K)))
-                                                        Multiply (Var N)))))
+                                                            (Var N)))))))))
                                                     Add
                                                     (Parens
-                                                     (BinOp
+                                                     (BinOp (Literal 4)
+                                                      Multiply
                                                       (Parens
-                                                       (BinOp
+                                                       (BinOp (Literal 5)
+                                                        Multiply
                                                         (Parens
-                                                         (BinOp (Literal 4)
+                                                         (BinOp (Literal 2)
                                                           Multiply
-                                                          (Literal 5)))
-                                                        Multiply (Literal 2)))
-                                                      Multiply (Literal 3)))))
+                                                          (Literal 3)))))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -16228,14 +16422,12 @@
                                                   (Var N)))))
                                               Add
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var N) Multiply
                                                 (Parens
-                                                 (BinOp
+                                                 (BinOp (Var M) Multiply
                                                   (Parens
-                                                   (BinOp (Var N) Multiply
-                                                    (Var M)))
-                                                  Multiply (Var K)))
-                                                Multiply (Var N)))))
+                                                   (BinOp (Var K) Multiply
+                                                    (Var N)))))))))
                                             Add
                                             (Parens
                                              (BinOp (Literal 5) Multiply
@@ -16246,53 +16438,45 @@
                                             (Literal 3)))))
                                         Add
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var K) Multiply
                                           (Parens
-                                           (BinOp (Var K) Multiply
-                                            (Literal 3)))
-                                          Multiply (Literal 3)))))
+                                           (BinOp (Literal 3) Multiply
+                                            (Literal 3)))))))
                                       Add (Literal 3)))
                                     Add
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 5) Multiply
                                       (Parens
-                                       (BinOp (Literal 5) Multiply
-                                        (Literal 3)))
-                                      Multiply (Literal 4)))))
+                                       (BinOp (Literal 3) Multiply
+                                        (Literal 4)))))))
                                   Add
                                   (Parens
-                                   (BinOp
+                                   (BinOp (Literal 3) Multiply
                                     (Parens
-                                     (BinOp (Literal 3) Multiply (Literal 3)))
-                                    Multiply (Literal 4)))))
+                                     (BinOp (Literal 3) Multiply (Literal 4)))))))
                                 Add
                                 (Parens
-                                 (BinOp
+                                 (BinOp (Literal 5) Multiply
                                   (Parens
-                                   (BinOp (Literal 5) Multiply (Literal 3)))
-                                  Multiply (Literal 4)))))
+                                   (BinOp (Literal 3) Multiply (Literal 4)))))))
                               Add
                               (Parens
-                               (BinOp
+                               (BinOp (Literal 3) Multiply
                                 (Parens
-                                 (BinOp (Literal 3) Multiply (Literal 3)))
-                                Multiply (Literal 3)))))
+                                 (BinOp (Literal 3) Multiply (Literal 3)))))))
                             Add
                             (Parens
-                             (BinOp
+                             (BinOp (Literal 3) Multiply
                               (Parens
-                               (BinOp (Literal 3) Multiply (Literal 3)))
-                              Multiply (Literal 4)))))
+                               (BinOp (Literal 3) Multiply (Literal 4)))))))
                           Add
                           (Parens
-                           (BinOp
-                            (Parens (BinOp (Literal 5) Multiply (Literal 3)))
-                            Multiply (Literal 4)))))
+                           (BinOp (Literal 5) Multiply
+                            (Parens (BinOp (Literal 3) Multiply (Literal 4)))))))
                         Add
                         (Parens
-                         (BinOp
-                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))
-                          Multiply (Literal 3)))))
+                         (BinOp (Literal 3) Multiply
+                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                       Add (Parens (BinOp (Literal 3) Multiply (Literal 4)))))
                     Add (Parens (BinOp (Literal 2) Multiply (Literal 2)))))))))))
             (VariableDefn
@@ -20881,31 +21065,31 @@
                              Add (Var N))
                             Add
                             (Parens
-                             (BinOp (BinOp (Var N) Multiply (Var M)) Multiply
-                              (Var K))))
+                             (BinOp (Var N) Multiply
+                              (Parens (BinOp (Var M) Multiply (Var K))))))
                            Add (Var N))
                           Add (Parens (BinOp (Var N) Multiply (Var N))))
                          Add
                          (Parens
-                          (BinOp
-                           (BinOp (BinOp (Var N) Multiply (Var M)) Multiply
-                            (Var K))
-                           Multiply (Var N))))
+                          (BinOp (Var N) Multiply
+                           (Parens
+                            (BinOp (Var M) Multiply
+                             (Parens (BinOp (Var K) Multiply (Var N))))))))
                         Add (Var N))
                        Add (Parens (BinOp (Var N) Multiply (Var N))))
                       Add
                       (Parens
-                       (BinOp
-                        (BinOp (BinOp (Var N) Multiply (Var M)) Multiply
-                         (Var K))
-                        Multiply (Var N))))
+                       (BinOp (Var N) Multiply
+                        (Parens
+                         (BinOp (Var M) Multiply
+                          (Parens (BinOp (Var K) Multiply (Var N))))))))
                      Add (Parens (BinOp (Literal 5) Multiply (Literal 4))))
                     Add
                     (Parens
-                     (BinOp
-                      (BinOp (BinOp (Literal 4) Multiply (Literal 5))
-                       Multiply (Literal 2))
-                      Multiply (Literal 3))))
+                     (BinOp (Literal 4) Multiply
+                      (Parens
+                       (BinOp (Literal 5) Multiply
+                        (Parens (BinOp (Literal 2) Multiply (Literal 3))))))))
                    Add (Parens (BinOp (Var N) Subtract (Literal 1))))
                   Add
                   (Parens
@@ -20913,9 +21097,12 @@
                     (Parens (BinOp (Var N) Subtract (Literal 1))))))
                  Add
                  (Parens
-                  (BinOp
-                   (BinOp (BinOp (Var N) Multiply (Var M)) Multiply (Var K))
-                   Multiply (Parens (BinOp (Var N) Subtract (Literal 1))))))
+                  (BinOp (Var N) Multiply
+                   (Parens
+                    (BinOp (Var M) Multiply
+                     (Parens
+                      (BinOp (Var K) Multiply
+                       (Parens (BinOp (Var N) Subtract (Literal 1))))))))))
                 Add
                 (Parens
                  (BinOp
