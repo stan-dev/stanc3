@@ -1,34 +1,37 @@
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined bernoulli.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined bernoulli.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
+// GLM for a Bernoulli outcome
 functions {
   #include /functions/common_functions.stan
   #include /functions/bernoulli_likelihoods.stan
 }
 data {
-  int<lower=0> K;
-  array[2] int<lower=1> N;
-  vector[K] xbar;
-  int<lower=0, upper=1> dense_X;
-  array[dense_X] matrix[N[1], K] X0;
-  array[dense_X] matrix[N[2], K] X1;
+  // dimensions
+  int<lower=0> K; // number of predictors
+  array[2] int<lower=1> N; // number of observations where y = 0 and y = 1 respectively
+  vector[K] xbar; // vector of column-means of rbind(X0, X1)
+  int<lower=0, upper=1> dense_X; // flag for dense vs. sparse
+  array[dense_X] matrix[N[1], K] X0; // centered (by xbar) predictor matrix | y = 0
+  array[dense_X] matrix[N[2], K] X1; // centered (by xbar) predictor matrix | y = 1
   
-  int<lower=0, upper=1> clogit;
-  int<lower=0> J;
+  int<lower=0, upper=1> clogit; // 1 iff the number of successes is fixed in each stratum
+  int<lower=0> J; // number of strata (possibly zero)
   array[clogit == 1 ? N[1] + N[2] : 0] int<lower=1, upper=J> strata;
   
-  int<lower=0> nnz_X0;
-  vector[nnz_X0] w_X0;
-  array[nnz_X0] int<lower=0, upper=K - 1> v_X0;
-  
+  // stuff for the sparse case
+  int<lower=0> nnz_X0; // number of non-zero elements in the implicit X0 matrix
+  vector[nnz_X0] w_X0; // non-zero elements in the implicit X0 matrix
+  array[nnz_X0] int<lower=0, upper=K - 1> v_X0; // column indices for w_X0
+  // where the non-zeros start in each row of X0
   array[dense_X ? 0 : N[1] + 1] int<lower=0, upper=rows(w_X0) + 1> u_X0;
-  int<lower=0> nnz_X1;
-  vector[nnz_X1] w_X1;
-  array[nnz_X1] int<lower=0, upper=K - 1> v_X1;
-  
+  int<lower=0> nnz_X1; // number of non-zero elements in the implicit X1 matrix
+  vector[nnz_X1] w_X1; // non-zero elements in the implicit X1 matrix
+  array[nnz_X1] int<lower=0, upper=K - 1> v_X1; // column indices for w_X1
+  // where the non-zeros start in each row of X1
   array[dense_X ? 0 : N[2] + 1] int<lower=0, upper=rows(w_X1) + 1> u_X1;
-  
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   #include /data/data_glm.stan
   
   int<lower=0> K_smooth;
@@ -38,28 +41,33 @@ data {
   
   int<lower=5, upper=5> family;
   
-  int<lower=0, upper=1> has_weights;
+  // weights
+  int<lower=0, upper=1> has_weights; // 0 = No, 1 = Yes
   vector[has_weights ? N[1] : 0] weights0;
   vector[has_weights ? N[2] : 0] weights1;
   
-  int<lower=0, upper=1> has_offset;
+  // offset_
+  int<lower=0, upper=1> has_offset; // 0 = No, 1 = Yes
   vector[has_offset ? N[1] : 0] offset0;
   vector[has_offset ? N[2] : 0] offset1;
   
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
   #include /data/hyperparameters.stan
   
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
   #include /data/glmer_stuff.stan
   
-  array[2] int<lower=0> num_non_zero;
-  vector[num_non_zero[1]] w0;
-  vector[num_non_zero[2]] w1;
-  array[num_non_zero[1]] int<lower=0, upper=q - 1> v0;
-  array[num_non_zero[2]] int<lower=0, upper=q - 1> v1;
-  
+  // more glmer stuff
+  array[2] int<lower=0> num_non_zero; // number of non-zero elements in the Z matrices
+  vector[num_non_zero[1]] w0; // non-zero elements in the implicit Z0 matrix
+  vector[num_non_zero[2]] w1; // non-zero elements in the implicit Z1 matrix
+  array[num_non_zero[1]] int<lower=0, upper=q - 1> v0; // column indices for w0
+  array[num_non_zero[2]] int<lower=0, upper=q - 1> v1; // column indices for w1
+  // where the non-zeros start in each row of Z0
   array[t > 0 ? N[1] + 1 : 0] int<lower=0, upper=rows(w0) + 1> u0;
-  
+  // where the non-zeros start in each row of Z1
   array[t > 0 ? N[2] + 1 : 0] int<lower=0, upper=rows(w1) + 1> u1;
-  int<lower=0, upper=1> special_case;
+  int<lower=0, upper=1> special_case; // whether we only have to deal with (1|group)
 }
 transformed data {
   int NN = N[1] + N[2];
@@ -73,7 +81,7 @@ transformed data {
   array[clogit ? J : 0] int<lower=0> successes;
   array[clogit ? J : 0] int<lower=0> failures;
   array[clogit ? J : 0] int<lower=0> observations;
-  
+  // defines hs, len_z_T, len_var_group, delta, pos
   #include /tdata/tdata_glm.stan
   
   for (j in 1 : J) {
@@ -91,10 +99,11 @@ transformed data {
 }
 parameters {
   array[has_intercept] real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma;
-  
+  // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   #include /parameters/parameters_glm.stan
 }
 transformed parameters {
+  // defines beta, b, theta_L
   #include /tparameters/tparameters_glm.stan
   
   if (t > 0) {
@@ -116,6 +125,7 @@ transformed parameters {
   }
 }
 model {
+  // defines eta0, eta1
   #include /model/make_eta_bern.stan
   
   if (has_intercept == 1) {
@@ -128,12 +138,13 @@ model {
       eta1 += gamma[1] - shift;
     }
   }
-  
+  // Log-likelihood
   if (clogit && prior_PD == 0) {
     real dummy = ll_clogit_lp(eta0, eta1, successes, failures, observations);
   } else if (has_weights == 0 && prior_PD == 0) {
     real dummy = ll_bern_lp(eta0, eta1, link, N);
   } else if (prior_PD == 0) {
+    // weighted log-likelihoods
     target += dot_product(weights0, pw_bern(0, eta0, link));
     target += dot_product(weights1, pw_bern(1, eta1, link));
   }
@@ -159,7 +170,7 @@ generated quantities {
   if (compute_mean_PPD) {
     vector[N[1]] pi0;
     vector[N[2]] pi1;
-    
+    // defines eta0, eta1
     #include /model/make_eta_bern.stan
     
     if (has_intercept == 1) {
@@ -176,7 +187,7 @@ generated quantities {
     }
     if (clogit) 
       for (j in 1 : J) 
-        mean_PPD += successes[j];
+        mean_PPD += successes[j]; // fixed by design
     else {
       pi0 = linkinv_bern(eta0, link);
       pi1 = linkinv_bern(eta1, link);
@@ -193,30 +204,35 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
 'bernoulli.stan', line 7, column 2: Functions
     do not need to be declared before definition; all user defined function
     names are always in scope regardless of defintion order.
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined binomial.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined binomial.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
+// GLM for a binomial outcome
 functions {
   #include /functions/common_functions.stan
   #include /functions/binomial_likelihoods.stan
 }
 data {
+  // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
   #include /data/NKX.stan
   
-  array[N] int<lower=0> y;
-  array[N] int<lower=0> trials;
-  
+  array[N] int<lower=0> y; // outcome: number of successes
+  array[N] int<lower=0> trials; // number of trials
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   #include /data/data_glm.stan
   
+  // declares has_weights, weights, has_offset, offset_
   #include /data/weights_offset.stan
   
   int<lower=5, upper=5> family;
-  
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_scale_{mean, scale, df}_for_aux
   #include /data/hyperparameters.stan
   
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
   #include /data/glmer_stuff.stan
   
+  // declares num_not_zero, w, v, u
   #include /data/glmer_stuff2.stan
 }
 transformed data {
@@ -224,15 +240,16 @@ transformed data {
   array[special_case ? t : 0, N] int<lower=1> V = make_V(N,
                                                          special_case ? t : 0,
                                                          v);
-  
+  // defines hs, len_z_T, len_var_group, delta, pos
   #include /tdata/tdata_glm.stan
 }
 parameters {
   array[has_intercept] real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma;
-  
+  // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   #include /parameters/parameters_glm.stan
 }
 transformed parameters {
+  // defines beta, b, theta_L
   #include /tparameters/tparameters_glm.stan
   
   if (t > 0) {
@@ -268,7 +285,9 @@ model {
     #include /model/eta_no_intercept.stan
   }
   
+  // Log-likelihood
   if (has_weights == 0 && prior_PD == 0) {
+    // unweighted log-likelihoods
     real dummy = ll_binom_lp(y, trials, eta, link);
   } else if (prior_PD == 0) 
     target += dot_product(weights, pw_binom(y, trials, eta, link));
@@ -317,42 +336,59 @@ generated quantities {
   }
 }
 
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined continuous.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined continuous.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
+// GLM for a Gaussian, Gamma, inverse Gaussian, or Beta outcome
 functions {
   #include /functions/common_functions.stan
   #include /functions/continuous_likelihoods.stan
   
   #include /functions/SSfunctions.stan
   
+  /** 
+  * test function for csr_matrix_times_vector
+  *
+  * @param m Integer number of rows
+  * @param n Integer number of columns
+  * @param w Vector (see reference manual)
+  * @param v Integer array (see reference manual)
+  * @param u Integer array (see reference manual)
+  * @param b Vector that is multiplied from the left by the CSR matrix
+  * @return A vector that is the product of the CSR matrix and b
+  */
   vector test_csr_matrix_times_vector(int m, int n, vector w, array[] int v,
                                       array[] int u, vector b) {
     return csr_matrix_times_vector(m, n, w, v, u, b);
   }
 }
 data {
+  // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
   #include /data/NKX.stan
   
-  int<lower=0> len_y;
-  real lb_y;
-  real<lower=lb_y> ub_y;
-  vector<lower=lb_y, upper=ub_y>[len_y] y;
-  int<lower=1, upper=4> family;
-  
+  int<lower=0> len_y; // length of y
+  real lb_y; // lower bound on y
+  real<lower=lb_y> ub_y; // upper bound on y
+  vector<lower=lb_y, upper=ub_y>[len_y] y; // continuous outcome
+  int<lower=1, upper=4> family; // 1 gaussian, 2 gamma, 3 inv-gaussian, 4 beta
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   #include /data/data_glm.stan
   
+  // declares has_weights, weights, has_offset, offset_
   #include /data/weights_offset.stan
   
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
   #include /data/hyperparameters.stan
   
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
   #include /data/glmer_stuff.stan
   
+  // declares num_not_zero, w, v, u
   #include /data/glmer_stuff2.stan
   #include /data/data_betareg.stan
   
-  int<lower=0, upper=10> SSfun;
+  int<lower=0, upper=10> SSfun; // nonlinear function indicator, 0 for identity
   vector[SSfun > 0 ? len_y : 0] input;
   vector[SSfun == 5 ? len_y : 0] Dose;
 }
@@ -363,10 +399,11 @@ transformed data {
   array[special_case ? t : 0, len_y] int<lower=1> V = make_V(len_y,
                                                              special_case ? t
                                                              : 0, v);
-  int<lower=0> hs_z;
-  
+  int<lower=0> hs_z; // for tdata_betareg.stan
+  // defines hs, len_z_T, len_var_group, delta, is_continuous, pos
   #include /tdata/tdata_glm.stan
   
+  // defines hs_z
   #include /tdata/tdata_betareg.stan
   
   is_continuous = 1;
@@ -379,28 +416,29 @@ transformed data {
 parameters {
   array[has_intercept] real<lower=make_lower(family, link),
                             upper=make_upper(family, link)> gamma;
-  
+  // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   #include /parameters/parameters_glm.stan
   
-  real<lower=0> aux_unscaled;
+  real<lower=0> aux_unscaled; // interpretation depends on family!
   #include /parameters/parameters_betareg.stan
 }
 transformed parameters {
+  // aux has to be defined first in the hs case
   real aux = prior_dist_for_aux == 0 ? aux_unscaled
              : (prior_dist_for_aux <= 2
                 ? prior_scale_for_aux * aux_unscaled + prior_mean_for_aux
                 : prior_scale_for_aux * aux_unscaled);
   
-  vector[z_dim] omega;
-  
+  vector[z_dim] omega; // used in tparameters_betareg.stan
+  // defines beta, b, theta_L
   #include /tparameters/tparameters_glm.stan
   #include /tparameters/tparameters_betareg.stan
   
-  if (prior_dist_for_aux == 0) 
+  if (prior_dist_for_aux == 0)  // none
     aux = aux_unscaled;
   else {
     aux = prior_scale_for_aux * aux_unscaled;
-    if (prior_dist_for_aux <= 2) 
+    if (prior_dist_for_aux <= 2)  // normal or student_t
       aux += prior_mean_for_aux;
   }
   
@@ -423,7 +461,7 @@ transformed parameters {
   }
 }
 model {
-  vector[N] eta_z;
+  vector[N] eta_z; // beta regression linear predictor for phi
   #include /model/make_eta.stan
   
   if (t > 0) {
@@ -441,6 +479,7 @@ model {
   }
   
   if (SSfun > 0) {
+    // nlmer
     matrix[len_y, K] P = reshape_vec(eta, len_y, K);
     if (SSfun < 5) {
       if (SSfun <= 2) {
@@ -452,7 +491,7 @@ model {
         target += normal_lpdf(y | SS_asympOrig(input, P), aux);
       else {
         for (i in 1 : len_y) 
-          P[i, 1] += exp(P[i, 3]);
+          P[i, 1] += exp(P[i, 3]); // ordering constraint
         target += normal_lpdf(y | SS_biexp(input, P), aux);
       }
     } else {
@@ -473,8 +512,10 @@ model {
       }
     }
   } else if (has_weights == 0 && prior_PD == 0) {
+    // unweighted log-likelihoods
     #include /model/make_eta_z.stan
     
+    // adjust eta_z according to links
     if (has_intercept_z == 1) {
       if (link_phi > 1) {
         eta_z += gamma_z[1] - min(eta_z);
@@ -482,6 +523,7 @@ model {
         eta_z += gamma_z[1];
       }
     } else {
+      // has_intercept_z == 0
       #include /model/eta_z_no_intercept.stan
     }
     if (family == 1) {
@@ -510,6 +552,7 @@ model {
                                                                     mu_z));
     }
   } else if (prior_PD == 0) {
+    // weighted log-likelihoods
     vector[N] summands;
     if (family == 1) 
       summands = pw_gauss(y, eta, aux, link);
@@ -524,6 +567,7 @@ model {
     target += dot_product(weights, summands);
   }
   
+  // Log-priors
   if (prior_dist_for_aux > 0 && prior_scale_for_aux > 0) {
     real log_half = -0.693147180559945286;
     if (prior_dist_for_aux == 1) 
@@ -555,7 +599,7 @@ generated quantities {
       alpha[1] = gamma[1];
   }
   if (has_intercept_z == 1) {
-    omega_int[1] = gamma_z[1] - dot_product(zbar, omega);
+    omega_int[1] = gamma_z[1] - dot_product(zbar, omega); // adjust betareg intercept 
   }
   
   if (compute_mean_PPD) {
@@ -583,6 +627,7 @@ generated quantities {
     }
     #include /model/make_eta_z.stan
     
+    // adjust eta_z according to links
     if (has_intercept_z == 1) {
       if (link_phi > 1) {
         omega_int[1] -= min(eta_z);
@@ -591,10 +636,12 @@ generated quantities {
         eta_z += gamma_z[1];
       }
     } else {
+      // has_intercept_z == 0
       #include /model/eta_z_no_intercept.stan
     }
     
     if (SSfun > 0) {
+      // nlmer
       vector[len_y] eta_nlmer;
       matrix[len_y, K] P;
       P = reshape_vec(eta, len_y, K);
@@ -708,29 +755,34 @@ Warning in './/functions/SSfunctions.stan', line 10, column 7, included from
 'continuous.stan', line 9, column 2: Functions
     do not need to be declared before definition; all user defined function
     names are always in scope regardless of defintion order.
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined count.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined count.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
+// GLM for a count outcome
 functions {
   #include /functions/common_functions.stan
   #include /functions/count_likelihoods.stan
 }
 data {
+  // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
   #include /data/NKX.stan
   
-  array[N] int<lower=0> y;
-  
+  array[N] int<lower=0> y; // count outcome
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   #include /data/data_glm.stan
   
+  // declares has_weights, weights, has_offset, offset_
   #include /data/weights_offset.stan
   
-  int<lower=6, upper=7> family;
-  
+  int<lower=6, upper=7> family; // 6 poisson, 7 neg-binom, (8 poisson with gamma noise at some point?)
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
   #include /data/hyperparameters.stan
   
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
   #include /data/glmer_stuff.stan
   
+  // declares num_not_zero, w, v, u
   #include /data/glmer_stuff2.stan
 }
 transformed data {
@@ -738,27 +790,27 @@ transformed data {
   array[special_case ? t : 0, N] int<lower=1> V = make_V(N,
                                                          special_case ? t : 0,
                                                          v);
-  
+  // defines hs, len_z_T, len_var_group, delta, pos
   #include /tdata/tdata_glm.stan
 }
 parameters {
   array[has_intercept] real<lower=(link == 1 ? negative_infinity() : 0.0)> gamma;
-  
+  // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   #include /parameters/parameters_glm.stan
   
   array[family > 6] real<lower=0> aux_unscaled;
-  array[family == 8] vector<lower=0>[N] noise;
+  array[family == 8] vector<lower=0>[N] noise; // do not store this
 }
 transformed parameters {
-  real aux = negative_infinity();
-  
+  real aux = negative_infinity(); // be careful with this in the family = 6 case
+  // defines beta, b, theta_L
   #include /tparameters/tparameters_glm.stan
   
   if (family > 6 && (prior_dist_for_aux == 0 || prior_scale_for_aux <= 0)) 
     aux = aux_unscaled[1];
   else if (family > 6) {
     aux = prior_scale_for_aux * aux_unscaled[1];
-    if (prior_dist_for_aux <= 2) 
+    if (prior_dist_for_aux <= 2)  // normal or student_t
       aux += prior_mean_for_aux;
   }
   
@@ -810,7 +862,9 @@ model {
       eta += sqrt(aux) + sqrt(noise[1]);
   }
   
+  // Log-likelihood 
   if (has_weights == 0 && prior_PD == 0) {
+    // unweighted log-likelihoods
     if (family != 7) {
       if (link == 1) 
         target += poisson_log_lpmf(y | eta);
@@ -827,6 +881,7 @@ model {
   else if (prior_PD == 0) 
     target += dot_product(weights, pw_nb(y, eta, aux, link));
   
+  // Log-prior for aux
   if (family > 6 && prior_dist_for_aux > 0 && prior_scale_for_aux > 0) {
     real log_half = -0.693147180559945286;
     if (prior_dist_for_aux == 1) 
@@ -840,6 +895,7 @@ model {
   
   #include /model/priors_glm.stan
   
+  // Log-prior for noise
   if (family == 8) 
     target += gamma_lpdf(noise[1] | aux, 1);
   
@@ -911,11 +967,12 @@ generated quantities {
   }
 }
 
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined jm.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined jm.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/Brilleman_copyright.stan
 #include /pre/license.stan
 
+// Shared parameter joint model
 functions {
   #include /functions/common_functions.stan
   #include /functions/bernoulli_likelihoods.stan
@@ -931,39 +988,72 @@ functions {
   #include /functions/jm_functions.stan
 }
 data {
+  // declares: M, has_aux, has_weights, resp_type, intercept_type,
+  //   yNobs, yNeta, yK, t, p, l, q, len_theta_L, bN1, bK1, bK1_len
+  //   bK1_idx, bN2, bK2, bK2_len, bK2_idx
   #include /data/dimensions_mvmer.stan
   
+  // declares: yInt{1,2,3}, yReal{1,2,3}, yX{1,2,3}, yXbar{1,2,3},
+  //   family, link, y{1,2,3}_Z{1,2}, y{1,2,3}_Z{1,2}_id,
+  //   y_prior_dist{_for_intercept,_for_aux,_for_cov}, prior_PD
   #include /data/data_mvmer.stan
   
+  // declares: e_prior_dist{_for_intercept,_for_aux},
+  //   Npat, Nevents, qnodes, Npat_times_qnodes, qwts,
+  //   basehaz_{type,df,X}, nrow_e_Xq, e_has_intercept, nrow_e_Xq,
+  //   e_{K,Xq,times,xbar,weights,weights_rep}
   #include /data/data_event.stan
   
+  // declares: a_{K,xbar}, a_prior_dist, assoc, assoc_uses, has_assoc,
+  //   {sum_}size_which_b, which_b_zindex, {sum_}size_which_coef,
+  //   which_coef_{zindex,xindex}, a_K_data, y_Xq_{eta,eps,lag,auc,data},
+  //   {sum_,sum_size_}which_interactions, idx_q,
+  //   nrow_y_Xq{_auc}, auc_{qnodes,qwts}, has_grp, grp_assoc, grp_idx,
+  //   y{1,2,3}_xq_{eta,eps,auc}, y{1,2,3}_z{1,2}q_{eta,eps,auc},
+  //   y{1,2,3}_z{1,2}q_id_{eta,eps,auc}
   #include /data/data_assoc.stan
   
+  // declares: e_prior_{mean,scale,df}{_for_intercept,for_aux},
+  //   e_global_prior_{scale,df}
   #include /data/hyperparameters_mvmer.stan
   #include /data/hyperparameters_event.stan
   
+  // declares: a_prior_{mean,scale,df}, a_global_prior_{scale,df}
   #include /data/hyperparameters_assoc.stan
 }
 transformed data {
   int<lower=0> e_hs = get_nvars_for_hs(e_prior_dist);
   int<lower=0> a_hs = get_nvars_for_hs(a_prior_dist);
   
+  // declares: yHs{1,2,3}, len_{z_T,var_group,rho}, pos, delta,
+  //   bCov{1,2}_idx, {sqrt,log,sum_log}_y{1,2,3},
   #include /tdata/tdata_mvmer.stan
 }
 parameters {
+  // declares: yGamma{1,2,3}, z_yBeta{1,2,3}, z_b, z_T, rho,
+  //   zeta, tau, bSd{1,2}, z_bMat{1,2}, bCholesky{1,2},
+  //   yAux{1,2,3}_unscaled, yGlobal{1,2,3}, yLocal{1,2,3},
+  //   yOol{1,2,3}, yMix{1,2,3}
   #include /parameters/parameters_mvmer.stan
   
+  // declares e_{gamma,z_beta,aux_unscaled,global,local,mix,ool}
   #include /parameters/parameters_event.stan
   
+  // declares a_{z_beta,global,local,mix,ool}
   #include /parameters/parameters_assoc.stan
 }
 transformed parameters {
-  vector[e_K] e_beta;
-  vector[a_K] a_beta;
-  vector[basehaz_df] e_aux;
+  vector[e_K] e_beta; // log hazard ratios
+  vector[a_K] a_beta; // assoc params
+  vector[basehaz_df] e_aux; // basehaz params
   
+  //---- Parameters for longitudinal submodels
+  
+  // declares and defines: yBeta{1,2,3}, yAux{1,2,3}, yAuxMaximum,
+  //   theta_L, bMat{1,2}
   #include /tparameters/tparameters_mvmer.stan
   
+  //---- Parameters for event submodel
   e_beta = make_beta(e_z_beta, e_prior_dist, e_prior_mean, e_prior_scale,
                      e_prior_df, e_global_prior_scale, e_global, e_local,
                      e_ool, e_mix, rep_array(1.0, 0), 0, e_slab_scale,
@@ -976,24 +1066,34 @@ transformed parameters {
                             e_prior_mean_for_aux, e_prior_scale_for_aux);
 }
 model {
+  //---- Log likelihoods for longitudinal submodels
   #include /model/mvmer_lp.stan
   
   {
-    vector[nrow_e_Xq] e_eta_q;
+    //---- Log likelihood for event submodel (GK quadrature)
     
+    vector[nrow_e_Xq] e_eta_q; // eta for event submodel (at event and quad times)
+    
+    // Event submodel: linear predictor at event and quad times
     if (e_K > 0) 
       e_eta_q = e_Xq * e_beta;
     else 
       e_eta_q = rep_vector(0.0, nrow_e_Xq);
     if (assoc == 1) {
+      // declares y_eta_q{_eps,_lag,_auc}, y_eta_qwide{_eps,_lag,_auc},
+      //   y_q_wide{_eps,_lag,_auc}, mark{2,3}
       #include /model/assoc_evaluate.stan
     }
     
     {
+      // declares log_basehaz, log_{haz_q,haz_etimes,surv_etimes,event}
+      // increments target with event log-lik
       #include /model/event_lp.stan
     }
   }
   
+  //---- Log priors
+  // increments target with mvmer priors
   #include /model/priors_mvmer.stan
   
   beta_lp(e_z_beta, e_prior_dist, e_prior_scale, e_prior_df,
@@ -1010,10 +1110,12 @@ model {
              e_prior_df_for_intercept);
 }
 generated quantities {
-  real e_alpha;
+  real e_alpha; // transformed intercept for event submodel
   
+  // declares and defines: mean_PPD, yAlpha{1,2,3}, b{1,2}, bCov{1,2}
   #include /gqs/gen_quantities_mvmer.stan
   
+  // norm_const is a constant shift in log baseline hazard
   if (e_has_intercept == 1) 
     e_alpha = e_gamma[1] + norm_const - dot_product(e_xbar, e_beta)
               - dot_product(a_xbar, a_beta);
@@ -1026,39 +1128,54 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
 'jm.stan', line 8, column 0: Functions
     do not need to be declared before definition; all user defined function
     names are always in scope regardless of defintion order.
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined lm.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined lm.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
+// GLM for a Gaussian outcome with no link function
 functions {
+  /**
+   * Increments the log-posterior with the logarithm of a multivariate normal
+   * likelihood with a scalar standard deviation for all errors
+   * Equivalent to normal_lpdf(y | intercept + Q * R * beta, sigma) but faster
+   * @param theta vector of coefficients (excluding intercept), equal to R * beta
+   * @param b precomputed vector of OLS coefficients (excluding intercept) in Q-space
+   * @param intercept scalar (assuming columns of Q have mean zero)
+   * @param ybar precomputed sample mean of the outcome
+   * @param SSR positive precomputed value of the sum of squared OLS residuals
+   * @param sigma positive scalar for the standard deviation of the errors
+   * @param N integer equal to the number of observations
+   */
   real ll_mvn_ols_qr_lp(vector theta, vector b, real intercept, real ybar,
                         real SSR, real sigma, int N) {
     target += -0.5
               * (dot_self(theta - b) + N * square(intercept - ybar) + SSR)
-              / square(sigma) - N * (log(sigma) + 0.91893853320467267);
+              / square(sigma)
+              - // 0.91... is log(sqrt(2 * pi()))
+              N * (log(sigma) + 0.91893853320467267);
     return target();
   }
 }
 data {
-  int<lower=0, upper=1> has_intercept;
-  int<lower=0, upper=1> prior_dist_for_intercept;
-  real<lower=0> prior_scale_for_intercept;
-  real prior_mean_for_intercept;
-  int<lower=0, upper=1> prior_dist;
-  int<lower=0, upper=1> prior_PD;
-  real<lower=0> eta;
+  int<lower=0, upper=1> has_intercept; // 0 = no, 1 = yes
+  int<lower=0, upper=1> prior_dist_for_intercept; // 0 = none, 1 = normal
+  real<lower=0> prior_scale_for_intercept; // 0 = by CLT
+  real prior_mean_for_intercept; // expected value for alpha
+  int<lower=0, upper=1> prior_dist; // 0 = uniform for R^2, 1 = Beta(K/2,eta)
+  int<lower=0, upper=1> prior_PD; // 0 = no, 1 = yes to drawing from the prior
+  real<lower=0> eta; // shape hyperparameter
   
-  int<lower=1> J;
-  
-  array[J] int<lower=1> N;
-  int<lower=1, upper=min(N)> K;
-  array[J] vector[K] xbarR_inv;
-  array[J] real ybar;
-  real center_y;
-  array[J] real<lower=0> s_Y;
-  array[J] vector[K] Rb;
-  array[J] real<lower=0> SSR;
-  array[J] matrix[K, K] R_inv;
+  int<lower=1> J; // number of groups
+  // the rest of these are indexed by group but should work even if J = 1
+  array[J] int<lower=1> N; // number of observations
+  int<lower=1, upper=min(N)> K; // number of predictors
+  array[J] vector[K] xbarR_inv; // vector of means of the predictors
+  array[J] real ybar; // sample mean of outcome
+  real center_y; // zero or sample mean of outcome
+  array[J] real<lower=0> s_Y; // standard deviation of the outcome
+  array[J] vector[K] Rb; // OLS coefficients
+  array[J] real<lower=0> SSR; // OLS sum-of-squared residuals
+  array[J] matrix[K, K] R_inv; // inverse R matrices
 }
 transformed data {
   real half_K = 0.5 * K;
@@ -1070,32 +1187,36 @@ transformed data {
   }
 }
 parameters {
-  array[K > 1 ? J : 0] unit_vector[K] u;
-  array[J * has_intercept] real z_alpha;
-  array[J] real<lower=(K > 1 ? 0 : -1), upper=1> R2;
-  vector[J * (1 - prior_PD)] log_omega;
+  // must not call with init="0"
+  array[K > 1 ? J : 0] unit_vector[K] u; // primitives for coefficients
+  array[J * has_intercept] real z_alpha; // primitives for intercepts
+  array[J] real<lower=(K > 1 ? 0 : -1), upper=1> R2; // proportions of variance explained
+  vector[J * (1 - prior_PD)] log_omega; // under/overfitting factors
 }
 transformed parameters {
-  array[J * has_intercept] real alpha;
-  array[J] vector[K] theta;
-  array[J] real<lower=0> sigma;
+  array[J * has_intercept] real alpha; // uncentered intercepts
+  array[J] vector[K] theta; // coefficients in Q-space
+  array[J] real<lower=0> sigma; // error standard deviations
   for (j in 1 : J) {
+    // marginal standard deviation of outcome for group j
     real Delta_y = prior_PD == 0 ? s_Y[j] * exp(log_omega[j]) : 1;
     
+    // coefficients in Q-space
     if (K > 1) 
       theta[j] = u[j] * sqrt(R2[j]) * sqrt_Nm1[j] * Delta_y;
     else 
       theta[j][1] = R2[j] * sqrt_Nm1[j] * Delta_y;
     
-    sigma[j] = Delta_y * sqrt(1 - R2[j]);
+    sigma[j] = Delta_y * sqrt(1 - R2[j]); // standard deviation of errors
     
     if (has_intercept == 1) {
-      if (prior_dist_for_intercept == 0) 
+      if (prior_dist_for_intercept == 0)  // no information
         alpha[j] = z_alpha[j];
-      else if (prior_scale_for_intercept == 0) 
+      else if (prior_scale_for_intercept == 0)  // central limit theorem
         alpha[j] = z_alpha[j] * Delta_y * sqrt_inv_N[j]
                    + prior_mean_for_intercept;
-      else 
+      else // arbitrary informative prior
+      
       
         alpha[j] = z_alpha[j] * prior_scale_for_intercept
                    + prior_mean_for_intercept;
@@ -1104,14 +1225,16 @@ transformed parameters {
 }
 model {
   for (j in 1 : J) {
+    // likelihood contribution for each group
     if (prior_PD == 0) {
-      real dummy;
+      real dummy; // irrelevant but useful for testing user-defined function
       real shift;
       shift = dot_product(xbarR_inv[j], theta[j]);
       dummy = ll_mvn_ols_qr_lp(theta[j], Rb[j],
                                has_intercept == 1 ? alpha[j] + shift : shift,
                                ybar[j], SSR[j], sigma[j], N[j]);
     }
+    // implicit: u[j] is uniform on the surface of a hypersphere
   }
   if (has_intercept == 1 && prior_dist_for_intercept > 0) 
     target += normal_lpdf(z_alpha | 0, 1);
@@ -1121,6 +1244,7 @@ model {
     else 
       target += beta_lpdf(square(R2) | half_K, eta) + sum(log(abs(R2)));
   }
+  // implicit: log_omega is uniform over the real line for all j
 }
 generated quantities {
   array[J] real mean_PPD;
@@ -1134,11 +1258,12 @@ generated quantities {
   }
 }
 
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined mvmer.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined mvmer.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/Brilleman_copyright.stan
 #include /pre/license.stan
 
+// Multivariate GLM with correlated group-specific terms
 functions {
   #include /functions/common_functions.stan
   #include /functions/bernoulli_likelihoods.stan
@@ -1152,27 +1277,50 @@ functions {
   #include /functions/mvmer_functions.stan
 }
 data {
+  // declares: M, has_aux, has_weights, resp_type, intercept_type,
+  //   yNobs, yNeta, yK, t, p, l, q, len_theta_L, bN1, bK1, bK1_len
+  //   bK1_idx, bN2, bK2, bK2_len, bK2_idx
   #include /data/dimensions_mvmer.stan
   
+  // declares: yInt{1,2,3}, yReal{1,2,3}, yX{1,2,3}, yXbar{1,2,3},
+  //   family, link, y{1,2,3}_Z{1,2}, y{1,2,3}_Z{1,2}_id,
+  //   y_prior_dist{_for_intercept,_for_aux,_for_cov}, prior_PD
   #include /data/data_mvmer.stan
   
+  // declares: y_prior_{mean,scale,df}{1,2,3,_for_intercept,_for_aux}, 
+  //   y_global_prior_{df,scale}, len_{concentration,regularization},
+  //   b_prior_{shape,scale,concentration,regularization},
+  //   b{1,2}_prior_{scale,df,regularization}
   #include /data/hyperparameters_mvmer.stan
 }
 transformed data {
+  // declares: yHs{1,2,3}, len_{z_T,var_group,rho}, pos, delta,
+  //   bCov{1,2}_idx, {sqrt,log,sum_log}_y{1,2,3},
   #include /tdata/tdata_mvmer.stan
 }
 parameters {
+  // declares: yGamma{1,2,3}, z_yBeta{1,2,3}, z_b, z_T, rho,
+  //   zeta, tau, bSd{1,2}, z_bMat{1,2}, bCholesky{1,2},
+  //   yAux{1,2,3}_unscaled, yGlobal{1,2,3}, yLocal{1,2,3}, 
+  //   yOol{1,2,3}, yMix{1,2,3}
   #include /parameters/parameters_mvmer.stan
 }
 transformed parameters {
+  // declares and defines: yBeta{1,2,3}, yAux{1,2,3}, yAuxMaximum, 
+  //   theta_L, bMat{1,2}
   #include /tparameters/tparameters_mvmer.stan
 }
 model {
+  // Log likelihoods
+  // increments target with mvmer log liks
   #include /model/mvmer_lp.stan
   
+  // Log priors
+  // increments target with mvmer priors
   #include /model/priors_mvmer.stan
 }
 generated quantities {
+  // declares and defines: mean_PPD, yAlpha{1,2,3}, b{1,2}, bCov{1,2}
   #include /gqs/gen_quantities_mvmer.stan
 }
 
@@ -1180,12 +1328,22 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
 'mvmer.stan', line 8, column 0: Functions
     do not need to be declared before definition; all user defined function
     names are always in scope regardless of defintion order.
-  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=strip-comments --allow-undefined polr.stan
+  $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined polr.stan
 #include /pre/Columbia_copyright.stan
 #include /pre/license.stan
 
+// GLM for an ordinal outcome with coherent priors
 functions {
+  /**
+  * Evaluate a given CDF
+  *
+  * @param x The point to evaluate the CDF_polr at
+  * @param link An integer indicating the link function
+  * @return A scalar on (0,1)
+  */
   real CDF_polr(real x, int link) {
+    // links in MASS::polr() are in a different order than binomial()
+    // logistic, probit, loglog, cloglog, cauchit
     if (link == 1) 
       return (inv_logit(x));
     else if (link == 2) 
@@ -1198,9 +1356,18 @@ functions {
       return (cauchy_cdf(x | 0, 1));
     else 
       reject("Invalid link");
-    return x;
+    return x; // never reached
   }
   
+  /**
+  * Pointwise (pw) log-likelihood vector
+  *
+  * @param y The integer outcome variable.
+  * @param eta A vector of linear predictors
+  * @param cutpoints An ordered vector of cutpoints
+  * @param link An integer indicating the link function
+  * @return A vector of log-likelihods
+  */
   vector pw_polr(array[] int y, vector eta, vector cutpoints, int link,
                  real alpha) {
     int N = rows(eta);
@@ -1231,11 +1398,20 @@ functions {
     return log(ll);
   }
   
+  /**
+  * Map from conditional probabilities to cutpoints
+  *
+  * @param probabilities A J-simplex
+  * @param scale A positive scalar
+  * @param link An integer indicating the link function
+  * @return A vector of length J - 1 whose elements are in increasing order
+  */
   vector make_cutpoints(vector probabilities, real scale, int link) {
     int C = rows(probabilities) - 1;
     vector[C] cutpoints;
     real running_sum = 0;
-    
+    // links in MASS::polr() are in a different order than binomial()
+    // logistic, probit, loglog, cloglog, cauchit
     if (link == 1) 
       for (c in 1 : C) {
         running_sum += probabilities[c];
@@ -1266,12 +1442,23 @@ functions {
     return scale * cutpoints;
   }
   
+  /**
+   * Randomly draw a value for utility
+   *
+   * @param lower_ A scalar lower_ bound
+   * @param upper_ A scalar upper_ bound
+   * @param eta A scalar linear predictor
+   * @param link An integer indicating the link function
+   * @return A scalar from the appropriate conditional distribution
+   */
   real draw_ystar_rng(real lower_, real upper_, real eta, int link) {
     int iter = 0;
     real ystar = not_a_number();
     if (lower_ >= upper_) 
       reject("lower_ must be less than upper_");
     
+    // links in MASS::polr() are in a different order than binomial()
+    // logistic, probit, loglog, cloglog, cauchit
     if (link == 1) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = logistic_rng(eta,
                                                                     1);
@@ -1290,19 +1477,34 @@ functions {
     return ystar;
   }
   
+  /**
+  * faster version of csr_matrix_times_vector
+  * declared here and defined in C++
+  *
+  * @param m Integer number of rows
+  * @param n Integer number of columns
+  * @param w Vector (see reference manual)
+  * @param v Integer array (see reference manual)
+  * @param u Integer array (see reference manual)
+  * @param b Vector that is multiplied from the left by the CSR matrix
+  * @return A vector that is the product of the CSR matrix and b
+  */
   vector csr_matrix_times_vector2(int m, int n, vector w, array[] int v,
                                   array[] int u, vector b);
 }
 data {
+  // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
   #include /data/NKX.stan
   
-  int<lower=2> J;
-  array[N] int<lower=1, upper=J> y;
-  
+  int<lower=2> J; // number of outcome categories, which typically is > 2
+  array[N] int<lower=1, upper=J> y; // ordinal outcome
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   #include /data/data_glm.stan
   
+  // declares has_weights, weights, has_offset, offset_
   #include /data/weights_offset.stan
   
+  // hyperparameter values
   real<lower=0> regularization;
   vector<lower=0>[J] prior_counts;
   int<lower=0, upper=1> is_skewed;
@@ -1314,7 +1516,7 @@ transformed data {
   real<lower=0> half_K = 0.5 * K;
   real<lower=0> sqrt_Nm1 = sqrt(N - 1.0);
   int<lower=0, upper=1> is_constant = 1;
-  vector[0] beta_smooth;
+  vector[0] beta_smooth; // not used
   for (j in 1 : J) 
     if (prior_counts[j] != 1) 
       is_constant = 0;
@@ -1344,11 +1546,13 @@ model {
   #include /model/make_eta.stan
   
   if (has_weights == 0 && prior_PD == 0) {
+    // unweighted log-likelihoods
     if (is_skewed == 0) 
       target += pw_polr(y, eta, cutpoints, link, 1.0);
     else 
       target += pw_polr(y, eta, cutpoints, link, alpha[1]);
   } else if (prior_PD == 0) {
+    // weighted log-likelihoods
     if (is_skewed == 0) 
       target += dot_product(weights, pw_polr(y, eta, cutpoints, link, 1.0));
     else 
@@ -1358,7 +1562,7 @@ model {
   
   if (is_constant == 0) 
     target += dirichlet_lpdf(pi | prior_counts);
-  
+  // implicit: u is uniform on the surface of a hypersphere
   if (prior_dist == 1) {
     if (K > 1) 
       target += beta_lpdf(R2 | half_K, regularization);
@@ -1373,6 +1577,7 @@ generated quantities {
   vector[do_residuals ? N : 0] residuals;
   vector[J - 1] zeta;
   
+  // xbar is actually post multiplied by R^-1
   if (dense_X) 
     zeta = cutpoints + dot_product(xbar, beta);
   else 
@@ -1402,7 +1607,7 @@ generated quantities {
       else 
         theta[J] = 1 - previous ^ alpha[1];
       if (previous <= 0 || previous >= 1) {
-        
+        // do nothing
       } else if (J == 2) {
         mean_PPD[1] += bernoulli_rng(theta[J]);
       } else {

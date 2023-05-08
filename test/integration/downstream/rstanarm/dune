@@ -17,7 +17,7 @@
    %{targets}
    (run
     %{bin:run_bin_on_args}
-    "%{bin:stanc} --include-paths=\".\" --auto-format --canonicalize=strip-comments --allow-undefined"
+    "%{bin:stanc} --include-paths=\".\" --auto-format --allow-undefined"
     %{stanfiles}))))
 
 (rule
@@ -31,8 +31,27 @@
    %{targets}
    (run
     %{bin:run_bin_on_args}
-    "%{bin:stanc} --include-paths=\".\" --auto-format --canonicalize=includes,strip-comments --allow-undefined"
+    "%{bin:stanc} --include-paths=\".\" --auto-format --canonicalize=includes --allow-undefined"
     %{stanfiles}))))
+
+(rule
+ (targets stripped.output)
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
+ (action
+  (with-stdout-to
+   %{targets}
+   (progn
+    (run
+     %{bin:run_bin_on_args}
+     "%{bin:stanc} --include-paths=\".\" --auto-format --canonicalize=includes,strip-comments --allow-undefined"
+     %{stanfiles})
+    (run
+     %{bin:run_bin_on_args}
+     "%{bin:stanc} --include-paths=\".\" --auto-format --canonicalize=strip-comments --allow-undefined"
+     %{stanfiles})))))
 
 (rule
  (alias runtest)
@@ -43,3 +62,8 @@
  (alias runtest)
  (action
   (diff inlined.expected inlined.output)))
+
+(rule
+ (alias runtest)
+ (action
+  (diff stripped.expected stripped.output)))
