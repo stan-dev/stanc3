@@ -1188,6 +1188,7 @@ let () =
     ("eigenvectors_sym", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("qr", ReturnType (UTuple [UMatrix; UMatrix]), [UMatrix], AoS) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_thin_Q", ReturnType UMatrix, [UMatrix], AoS) ;
