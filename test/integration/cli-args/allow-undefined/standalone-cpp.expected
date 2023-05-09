@@ -49,11 +49,11 @@ internal_fun(const std::vector<std::vector<double>>& a,
 }
 }
 // [[stan::function]]
-auto external_fun(const double& a, std::ostream* pstream__ = nullptr) {
+double external_fun(const double& a, std::ostream* pstream__ = nullptr) {
   return external_model_namespace::external_fun(a, pstream__);
 }
 // [[stan::function]]
-auto
+Eigen::Matrix<double,-1,1>
 external_map_rectable(const Eigen::Matrix<double,-1,1>& phi,
                       const Eigen::Matrix<double,-1,1>& theta,
                       const std::vector<double>& x_r, const std::vector<int>&
@@ -62,7 +62,7 @@ external_map_rectable(const Eigen::Matrix<double,-1,1>& phi,
            x_i, pstream__);
 }
 // [[stan::function]]
-auto
+double
 internal_fun(const std::vector<std::vector<double>>& a,
              const std::vector<std::vector<int>>& d, std::ostream*
              pstream__ = nullptr) {

@@ -26,24 +26,24 @@ type 'e outvar =
   ; out_trans: 'e Transformation.t }
 [@@deriving sexp, map, hash, fold]
 
-type ('a, 'b) t =
+type ('a, 'b, 'm) t =
   { functions_block: 'b fun_def list
-  ; input_vars: (string * 'a SizedType.t) list
+  ; input_vars: (string * 'm * 'a SizedType.t) list
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
   ; log_prob: 'b list (*assumes data & params are in scope and ready*)
-  ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
+  ; generate_quantities: 'b list
+        (* assumes data & params ready & in scope*)
+        (* NOTE: the following two items are really backend-specific,
+           and are set to [] by Ast_to_mir before being populated in
+           Stan_math_backend.Transform_Mir.
+           It would be nice to abstract this out somehow
+        *)
   ; transform_inits: 'b list
-  ; output_vars: (string * 'a outvar) list
+  ; unconstrain_array: 'b list
+  ; output_vars: (string * 'm * 'a outvar) list
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, map, fold]
-
-let map_stmts f p =
-  { p with
-    prepare_data= f p.prepare_data
-  ; log_prob= f p.log_prob
-  ; generate_quantities= f p.generate_quantities
-  ; transform_inits= f p.transform_inits }
 
 (* -- Pretty printers -- *)
 let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
@@ -89,11 +89,11 @@ let pp_transform_inits pp_s ppf transform_inits =
   pp_block "transform_inits" pp_s ppf transform_inits
 
 let pp_output_var pp_e ppf
-    (name, {out_unconstrained_st; out_constrained_st; out_block; _}) =
+    (name, _, {out_unconstrained_st; out_constrained_st; out_block; _}) =
   Fmt.pf ppf "@[<h>%a %a %s; //%a@]" pp_io_block out_block (SizedType.pp pp_e)
     out_constrained_st name (SizedType.pp pp_e) out_unconstrained_st
 
-let pp_input_var pp_e ppf (name, sized_ty) =
+let pp_input_var pp_e ppf (name, _, sized_ty) =
   Fmt.pf ppf "@[<h>%a %s;@]" (SizedType.pp pp_e) sized_ty name
 
 let pp_input_vars pp_e ppf input_vars =
@@ -129,17 +129,27 @@ let pp pp_e pp_s ppf
 
 (** Programs with typed expressions and locations *)
 module Typed = struct
-  type nonrec t = (Expr.Typed.t, Stmt.Located.t) t
+  type nonrec t = (Expr.Typed.t, Stmt.Located.t, Location_span.t) t
 
   let pp ppf x = pp Expr.Typed.pp Stmt.Located.pp ppf x
-  let sexp_of_t = sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t
-  let t_of_sexp = t_of_sexp Expr.Typed.t_of_sexp Stmt.Located.t_of_sexp
+
+  let sexp_of_t =
+    sexp_of_t Expr.Typed.sexp_of_t Stmt.Located.sexp_of_t
+      Location_span.sexp_of_t
+
+  let t_of_sexp =
+    t_of_sexp Expr.Typed.t_of_sexp Stmt.Located.t_of_sexp
+      Location_span.t_of_sexp
 end
 
 module Numbered = struct
-  type nonrec t = (Expr.Typed.t, Stmt.Numbered.t) t
+  type nonrec t = (Expr.Typed.t, Stmt.Numbered.t, int) t
 
   let pp ppf x = pp Expr.Typed.pp Stmt.Numbered.pp ppf x
-  let sexp_of_t = sexp_of_t Expr.Typed.sexp_of_t Stmt.Numbered.sexp_of_t
-  let t_of_sexp = t_of_sexp Expr.Typed.t_of_sexp Stmt.Numbered.t_of_sexp
+
+  let sexp_of_t =
+    sexp_of_t Expr.Typed.sexp_of_t Stmt.Numbered.sexp_of_t sexp_of_int
+
+  let t_of_sexp =
+    t_of_sexp Expr.Typed.t_of_sexp Stmt.Numbered.t_of_sexp int_of_sexp
 end

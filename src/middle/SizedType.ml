@@ -106,6 +106,13 @@ let rec get_array_dims st =
       let st', dims = get_array_dims st in
       (st', dim :: dims)
 
+let rec internal_scalar st =
+  match st with
+  | SInt | SReal | SComplex -> st
+  | SVector _ | SRowVector _ | SMatrix _ -> SReal
+  | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ -> SComplex
+  | SArray (t, _) -> internal_scalar t
+
 let num_elems_expr st =
   Expr.Helpers.binop_list (get_dims_io st) Operator.Times
     ~default:(Expr.Helpers.int 1)

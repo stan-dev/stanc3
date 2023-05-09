@@ -42,7 +42,7 @@ let stan2cpp model_name model_string is_flag_set flag_val :
         if is_flag_set "info" then
           r.return (Result.Ok (Info.info typed_ast), warnings, []) ;
         let canonicalizer_settings =
-          if is_flag_set "print-canonical" then Canonicalize.all
+          if is_flag_set "print-canonical" then Canonicalize.legacy
           else
             match flag_val "canonicalize" with
             | None -> Canonicalize.none
@@ -53,6 +53,7 @@ let stan2cpp model_name model_string is_flag_set flag_val :
                       Canonicalize.{settings with deprecations= true}
                   | "parentheses" -> {settings with parentheses= true}
                   | "braces" -> {settings with braces= true}
+                  | "strip-comments" -> {settings with strip_comments= true}
                   (* this probably never applies to stancjs, but for completion: *)
                   | "includes" -> {settings with inline_includes= true}
                   | _ -> settings in
@@ -78,6 +79,7 @@ let stan2cpp model_name model_string is_flag_set flag_val :
                    ~bare_functions:(is_flag_set "functions-only")
                    ~line_length
                    ~inline_includes:canonicalizer_settings.inline_includes
+                   ~strip_comments:canonicalizer_settings.strip_comments
                    (Canonicalize.canonicalize_program typed_ast
                       canonicalizer_settings ) )
             , warnings
@@ -93,9 +95,18 @@ let stan2cpp model_name model_string is_flag_set flag_val :
           r.return (Result.Ok (Fmt.str "%a" Program.Typed.pp mir), warnings, []) ;
         if is_flag_set "debug-generate-data" then
           r.return
-            ( Result.Ok
-                (Debug_data_generation.print_data_prog
-                   (Ast_to_Mir.gather_data typed_ast) )
+            ( Result.map_error
+                ~f:(fun e -> Errors.DebugDataError e)
+                (Debug_data_generation.gen_values_json
+                   (Ast_to_Mir.gather_declarations typed_ast.datablock) )
+            , warnings
+            , [] ) ;
+        if is_flag_set "debug-generate-inits" then
+          r.return
+            ( Result.map_error
+                ~f:(fun e -> Errors.DebugDataError e)
+                (Debug_data_generation.gen_values_json
+                   (Ast_to_Mir.gather_declarations typed_ast.parametersblock) )
             , warnings
             , [] ) ;
         let tx_mir = Transform_Mir.trans_prog mir in

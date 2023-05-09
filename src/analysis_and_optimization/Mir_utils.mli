@@ -91,8 +91,8 @@ val statement_stmt_loc_of_statement_stmt_loc_num :
 val unnumbered_prog_of_numbered_prog :
      (int, Stmt.Located.Non_recursive.t) Map.Poly.t
   -> ('a -> 'b)
-  -> (Stmt.Located.Non_recursive.t, 'a) Program.t
-  -> (Stmt.Located.t, 'b) Program.t
+  -> (Stmt.Located.Non_recursive.t, 'a, 'c) Program.t
+  -> (Stmt.Located.t, 'b, 'c) Program.t
 
 val fwd_traverse_statement :
      ('e, 'a) Stmt.Fixed.Pattern.t

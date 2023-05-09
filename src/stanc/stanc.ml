@@ -37,6 +37,8 @@ let no_soa_opt = ref false
 let soa_opt = ref false
 let output_file = ref ""
 let generate_data = ref false
+let generate_inits = ref false
+let data_file = ref None
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
 let bare_functions = ref false
@@ -48,13 +50,14 @@ let parse_canonical_options (settings : Canonicalize.canonicalizer_settings)
   | "parentheses" -> {settings with parentheses= true}
   | "braces" -> {settings with braces= true}
   | "includes" -> {settings with inline_includes= true}
+  | "strip-comments" -> {settings with strip_comments= true}
   | s ->
       raise
       @@ Arg.Bad
            ( "Unrecognized canonicalizer option '" ^ s
            ^ "'. \n\
               Should be one of 'deprecations', 'parentheses', 'braces', \
-              'includes'" )
+              'includes', 'strip-comments'" )
 
 (** Some example command-line options here *)
 let options =
@@ -77,6 +80,13 @@ let options =
       , Arg.Set generate_data
       , " For debugging purposes: generate a mock dataset to run the model on"
       )
+    ; ( "--debug-generate-inits"
+      , Arg.Set generate_inits
+      , " For debugging purposes: generate a mock initial value for each \
+         parameter" )
+    ; ( "--debug-data-file"
+      , Arg.String (fun s -> data_file := Some s)
+      , " For --debug-generate-data or --debug-generate-inits" )
     ; ( "--debug-mir"
       , Arg.Set dump_mir
       , " For debugging purposes: print the MIR as an S-expression." )
@@ -135,7 +145,8 @@ let options =
                 (String.split s ~on:',') in
             canonicalize_settings := settings )
       , " Enable specific canonicalizations in a comma seperated list. Options \
-         are 'deprecations', 'parentheses', 'braces', 'includes'." )
+         are 'deprecations', 'parentheses', 'braces', 'includes', \
+         'strip-comments'." )
     ; ( "--max-line-length"
       , Arg.Set_int pretty_print_line_length
       , " Set the maximum line length for the formatter. Defaults to 78 \
@@ -144,9 +155,9 @@ let options =
       , Arg.Unit
           (fun () ->
             pretty_print_program := true ;
-            canonicalize_settings := Canonicalize.all )
+            canonicalize_settings := Canonicalize.legacy )
       , " Prints the canonicalized program. Equivalent to --auto-format \
-         --canonicalize [all options]" )
+         --canonicalize deprecations,includes,parentheses,braces" )
     ; ( "--version"
       , Arg.Unit
           (fun _ ->
@@ -277,7 +288,8 @@ let use_file filename =
     print_or_write
       (Pretty_printing.pretty_print_typed_program
          ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
-         ~inline_includes:!canonicalize_settings.inline_includes canonical_ast ) ;
+         ~inline_includes:!canonicalize_settings.inline_includes canonical_ast
+         ~strip_comments:!canonicalize_settings.strip_comments ) ;
   if !print_info_json then (
     print_endline (Info.info canonical_ast) ;
     exit 0 ) ;
@@ -289,10 +301,39 @@ let use_file filename =
     if not (List.is_empty removals) then (
       Deprecation_removals.pp_removals Fmt.stderr ?printed_filename removals ;
       exit 65 (* EX_DATAERR in sysexits.h*) ) ) ;
-  if !generate_data then
-    print_endline
-      (Debug_data_generation.print_data_prog
-         (Ast_to_Mir.gather_data typed_ast) ) ;
+  if !generate_data then (
+    let decls = Ast_to_Mir.gather_declarations typed_ast.datablock in
+    let context =
+      match !data_file with
+      | None -> Map.Poly.empty
+      | Some file ->
+          Debug_data_generation.json_to_mir decls (Yojson.Basic.from_file file)
+    in
+    match Debug_data_generation.gen_values_json ~context decls with
+    | Ok s -> print_or_write s ; exit 0
+    | Error e ->
+        Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e) ;
+        exit 1 )
+  else if !generate_inits then (
+    let context =
+      match !data_file with
+      | None -> Map.Poly.empty
+      | Some file ->
+          Debug_data_generation.json_to_mir
+            (Ast_to_Mir.gather_declarations typed_ast.datablock)
+            (Yojson.Basic.from_file file) in
+    match
+      Debug_data_generation.gen_values_json ~new_only:true ~context
+        (Ast_to_Mir.gather_declarations typed_ast.parametersblock)
+    with
+    | Ok s -> print_or_write s ; exit 0
+    | Error e ->
+        Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e) ;
+        if Option.is_none !data_file then
+          Fmt.pf Fmt.stderr "Supplying a --debug-data-file may help@;" ;
+        exit 1 )
+  else if Option.is_some !data_file then
+    Fmt.pf Fmt.stderr "Warning: ignoring --debug-data-file" ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in

@@ -27,7 +27,7 @@ let%expect_test "map_rec_stmt_loc" =
     | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
         Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
     | x -> x in
-  let mir = Program.map Fn.id (map_rec_stmt_loc f) mir in
+  let mir = Program.map Fn.id (map_rec_stmt_loc f) Fn.id mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
@@ -379,7 +379,8 @@ let%expect_test "list collapsing" =
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
       ((pattern (Return ())) (meta <opaque>)) ()))
     (meta <opaque>))))
- (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
+ (transform_inits ()) (unconstrain_array ()) (output_vars ()) (prog_name "")
+ (prog_path ""))
     |}]
 
 let%expect_test "recursive functions" =
@@ -3070,7 +3071,8 @@ let%expect_test "block fixing" =
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
             ((pattern (Return ())) (meta <opaque>)) ()))
           (meta <opaque>))))
-       (transform_inits ()) (output_vars ()) (prog_name "") (prog_path "")) |}]
+       (transform_inits ()) (unconstrain_array ()) (output_vars ()) (prog_name "")
+       (prog_path "")) |}]
 
 let%expect_test "one-step loop unrolling" =
   let mir =

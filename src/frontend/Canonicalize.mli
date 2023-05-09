@@ -8,9 +8,15 @@ open Ast
     to stanc, but it consumed by the pretty-printer, {i not} this module.
 *)
 type canonicalizer_settings =
-  {deprecations: bool; parentheses: bool; braces: bool; inline_includes: bool}
+  { deprecations: bool
+  ; parentheses: bool
+  ; braces: bool
+  ; inline_includes: bool
+  ; strip_comments: bool }
 
-val all : canonicalizer_settings
+val legacy : canonicalizer_settings
+(** Equivalent to what [--print-canonical] did before these settings were available *)
+
 val none : canonicalizer_settings
 
 val repair_syntax : untyped_program -> canonicalizer_settings -> untyped_program

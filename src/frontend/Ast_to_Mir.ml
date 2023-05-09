@@ -733,6 +733,7 @@ let trans_block ud_dists declc block prog =
                    |> Option.to_list in
                  let outvar =
                    ( identifier.name
+                   , smeta.loc
                    , Program.
                        { out_constrained_st= type_
                        ; out_unconstrained_st= param_size transform type_
@@ -771,8 +772,8 @@ let migrate_checks_to_end_of_block stmts =
   let checks, not_checks = List.partition_tf ~f:stmt_contains_check stmts in
   not_checks @ checks
 
-let gather_data (p : Ast.typed_program) =
-  let data = Ast.get_stmts p.datablock in
+let gather_declarations (b : Ast.typed_statement Ast.block option) =
+  let data = Ast.get_stmts b in
   List.concat_map data ~f:(function
     | {stmt= VarDecl {decl_type= sizedtype; transformation; variables; _}; _} ->
         List.map
@@ -796,24 +797,29 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     | _ -> [] in
   let ud_dists = map grab_fundef_names_and_types functionblock in
   let trans_stmt = trans_stmt ud_dists in
-  let get_name_size s =
+  let get_name_size (s : Ast.typed_statement) =
     match s.Ast.stmt with
     | Ast.VarDecl {decl_type= st; variables; transformation; _} ->
         List.map
           ~f:(fun {identifier; _} ->
-            (identifier.name, trans_sizedtype st, transformation) )
+            ( identifier.name
+            , trans_sizedtype st
+            , transformation
+            , s.Ast.smeta.loc ) )
           variables
     | _ -> [] in
   let input_vars =
-    map get_name_size datablock |> List.map ~f:(fun (n, st, _) -> (n, st)) in
+    map get_name_size datablock
+    |> List.map ~f:(fun (n, st, _, loc) -> (n, loc, st)) in
   let declc = {transform_action= IgnoreTransform; dadlevel= DataOnly} in
   let datab = map (trans_stmt {declc with transform_action= Check}) datablock in
   let _, _, param =
     trans_block ud_dists
       {transform_action= Constrain; dadlevel= AutoDiffable}
       Parameters p in
-  (* Backends will add to transform_inits as needed *)
+  (* Backends will add to transform_inits and unconstrain_array as needed *)
   let transform_inits = [] in
+  let unconstrain_array = [] in
   let out_param, paramsizes, param_gq =
     trans_block ud_dists {declc with transform_action= Constrain} Parameters p
   in
@@ -882,6 +888,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   ; log_prob
   ; generate_quantities
   ; transform_inits
+  ; unconstrain_array
   ; output_vars
   ; prog_name= normalize_prog_name !Typechecker.model_name
   ; prog_path= filename }

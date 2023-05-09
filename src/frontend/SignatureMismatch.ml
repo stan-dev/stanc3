@@ -95,12 +95,19 @@ type match_result =
   , signature_error list * bool )
   generic_match_result
 
-let rec compare_types t1 t2 =
-  match (t1, t2) with
-  | UnsizedType.(UArray t1, UArray t2) -> compare_types t1 t2
-  | _, UArray _ -> -1
-  | UArray _, _ -> 1
-  | t1, t2 -> UnsizedType.compare t1 t2
+let compare_types x t1 t2 =
+  let open UnsizedType in
+  let dx, dt1, dt2 = (count_dims x, count_dims t1, count_dims t2) in
+  match Int.(dx = dt1, dx = dt2) with
+  | true, false -> -1
+  | false, true -> 1
+  | true, true | false, false -> (
+      let sx, st1, st2 =
+        (internal_scalar x, internal_scalar t1, internal_scalar t2) in
+      match (sx = st1, sx = st2) with
+      | true, false -> -1
+      | false, true -> 1
+      | true, true | false, false -> compare t1 t2 )
 
 let rec compare_errors e1 e2 =
   match (e1, e2) with
@@ -114,8 +121,8 @@ let rec compare_errors e1 e2 =
     | DataOnlyError, TypeMismatch _ -> -1
     | TypeMismatch _, DataOnlyError -> 1
     | TypeMismatch (t1, x1, None), TypeMismatch (t2, x2, None) ->
-        let c = compare_types t1 t2 in
-        if c <> 0 then c else compare_types x1 x2
+        let c = UnsizedType.compare x1 x2 in
+        if c <> 0 then c else compare_types x1 t1 t2
     | TypeMismatch (_, _, Some _), TypeMismatch (_, _, None) -> 1
     | TypeMismatch (_, _, None), TypeMismatch (_, _, Some _) -> -1
     | TypeMismatch (_, _, Some e1), TypeMismatch (_, _, Some e2) -> (

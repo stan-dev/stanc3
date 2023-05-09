@@ -2,21 +2,18 @@
     API *)
 
 open Core_kernel
-open Middle
 
 let parse parse_fun lexbuf =
   Input_warnings.init () ;
-  Lexer.comments := [] ;
   (* see the Menhir manual for the description of
      error messages support *)
   let module Interp = Parser.MenhirInterpreter in
-  Preprocessor.init lexbuf ;
   let input () =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
        (Preprocessor.current_buffer ()) )
       () in
   let success prog =
-    Result.Ok {prog with Ast.comments= List.rev !Lexer.comments} in
+    Result.Ok {prog with Ast.comments= Preprocessor.get_comments ()} in
   let failure error_state =
     let env =
       match[@warning "-4"] error_state with
@@ -44,7 +41,7 @@ let parse parse_fun lexbuf =
         ) in
     Errors.Parsing
       ( message
-      , Location_span.of_positions_exn
+      , Preprocessor.location_span_of_positions
           ( Lexing.lexeme_start_p (Preprocessor.current_buffer ())
           , Lexing.lexeme_end_p (Preprocessor.current_buffer ()) ) )
     |> Result.Error in
@@ -54,17 +51,11 @@ let parse parse_fun lexbuf =
       |> Interp.loop_handle success failure input
       |> Result.map_error ~f:(fun e -> Errors.Syntax_error e)
     with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err) in
-  Lexer.comments := [] ;
   (result, Input_warnings.collect ())
 
 let parse_string parse_fun str =
-  let lexbuf =
-    let open Lexing in
-    let lexbuf = from_string str in
-    lexbuf.lex_start_p <-
-      {pos_fname= "string"; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
-    lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
-    lexbuf in
+  let lexbuf = Lexing.from_string str in
+  Preprocessor.init lexbuf "string" ;
   parse parse_fun lexbuf
 
 let parse_file parse_fun path =
@@ -74,11 +65,6 @@ let parse_file parse_fun path =
   match chan with
   | Error err -> (Error err, [])
   | Ok chan ->
-      let lexbuf =
-        let open Lexing in
-        let lexbuf = from_channel chan in
-        lexbuf.lex_start_p <-
-          {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
-        lexbuf.lex_curr_p <- lexbuf.lex_start_p ;
-        lexbuf in
+      let lexbuf = Lexing.from_channel chan in
+      Preprocessor.init lexbuf path ;
       parse parse_fun lexbuf

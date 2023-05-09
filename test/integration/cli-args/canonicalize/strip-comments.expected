@@ -1,0 +1,304 @@
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations blocks.stan
+data {
+  int N;
+  vector[N] y;
+}
+model {
+  int j = 0;
+  
+  for (i in 1 : N) {
+    target += i;
+  }
+  for (i in 1 : N) {
+    target += i;
+  }
+  
+  while (j < N) {
+    j = j + 1;
+  }
+  while (j < N) {
+    j = j + 1;
+  }
+  while (j < N) {
+    j = j + 1;
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  }
+  if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    if (N > 5) {
+      y ~ std_normal();
+    } else {
+      y ~ std_normal();
+    }
+  }
+  
+  if (N > 5) {
+    if (N > 5) {
+      y ~ std_normal();
+    }
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  } else if (N > 5) {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+  
+  if (N > 5) {
+    y ~ std_normal();
+  } else {
+    y ~ std_normal();
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations deprecated.stan
+functions {
+  array[] real sho(real t, array[] real y, array[] real theta,
+                   array[] real x, array[] int x_int) {
+    array[2] real dydt;
+    dydt[1] = y[2];
+    dydt[2] = -y[1] - theta[1] * y[2];
+    return dydt;
+  }
+  real normal_log_lpdf(real a, real b, real c) {
+    return (a - b) / c;
+  }
+  real foo_lcdf(real x, real y) {
+    real s = 0;
+    for (i in 1 : 10) {
+      s += (x < 0) ? lmultiply(1, y) : 0;
+    }
+    return s;
+  }
+  real foo_cdf(real a, real b, real c) {
+    return a + b + c;
+  }
+}
+data {
+  int<lower=1> N;
+  array[N] real x_quad;
+}
+transformed data {
+  int a = -12;
+  real b = 1.5;
+  int c = abs(a);
+  real d = abs(b);
+  array[0] int x_i;
+  array[0] real x_r;
+  matrix[N, N] K = gp_exp_quad_cov(x_quad, 1.0, 1.0);
+  array[5, 5] real idxs;
+  idxs[1][ : ] = idxs[1][ : ];
+  idxs[ : , 1] = idxs[ : ][2];
+}
+parameters {
+  real x;
+  array[3] real theta;
+}
+model {
+  real k = (b < 0) ? lmultiply(1, d) : 0;
+  target += lchoose(10, 10);
+  
+  c ~ poisson(3.0);
+  c ~ poisson_log(3.0);
+  c ~ poisson_log(3.0);
+  if (b != 0.0) {
+    x ~ normal(0, 1);
+    target += normal_log_lpdf(x | 1, 2);
+    target += std_normal_lpdf(x);
+  } else {
+    x ~ exponential(1);
+    x ~ exponential(1);
+    target += foo_lcdf(x | 1);
+  }
+  while (0.0 != 0.0) {
+    
+  }
+  
+  int bool = !(b != 0.0) < 2 && (d != 0.0) || (x != 0.0);
+  
+  target += normal_lpdf(x | 0, 1) + normal_lcdf(2 | 0, 1)
+            + normal_lccdf(3 | 0, 1);
+  target += sum(K);
+  
+  target += normal_cdf(1 | 2, 3);
+  target += normal_cdf(normal_cdf(0 | 1, 2) | 2, 3);
+  target += foo_cdf(1 | 2, 3);
+  
+  target += hypergeometric_lpmf(1 | 2, 3, 4);
+  target += gaussian_dlm_obs_lpdf(K | K, K, K, K, K[ : , 1], K);
+  
+  print("target: ", target());
+}
+generated quantities {
+  array[2] real y0 = {1.0, 2.0};
+  array[3] real ts = {0.5, 1.0, 2.0};
+  array[3, 2] real y_hat = integrate_ode(sho, y0, 0.0, ts, theta, x_r, x_i);
+  array[3, 2] real y_hat_45 = integrate_ode_rk45(sho, y0, 0.0, ts, theta,
+                                                 x_r, x_i);
+  array[3, 2] real y_hat_bdf = integrate_ode_bdf(sho, y0, 0.0, ts, theta,
+                                                 x_r, x_i);
+  array[3, 2] real y_hat_adams = integrate_ode_adams(sho, y0, 0.0, ts, theta,
+                                                     x_r, x_i);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations deprecated_tilde.stan
+functions {
+  real test_log_lpmf(int bar, real foo) {
+    return foo;
+  }
+  real test_log_lpdf(real bar, real foo) {
+    return foo;
+  }
+}
+model {
+  1 ~ test_log(2.5);
+  1.2 ~ test_log(2.5);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations funs.stanfunctions
+void test(int x, int y) {
+  print(x, y);
+}
+
+real deprecated_lp() {
+  return target();
+}
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations parenthesize.stan
+transformed data {
+  int N = 12;
+  real b = 1.5;
+}
+parameters {
+  real<lower=((b > 3) ? 1.0 : b - 2)> x;
+  matrix[N, N] m;
+}
+model {
+  matrix[N - 3, 4] n;
+  row_vector[N] v = ((1.0 + m)')[1];
+  for (i in 1 : (N - 3)) {
+    n[i] = m[i : (i + 3), i]';
+  }
+  if ((b < x) && (x < 1)) {
+    x + 4 ~ normal(0, 1 + 1) T[0, 8];
+  }
+  
+  real y_raw;
+  real y;
+  y = ((y_raw > 0) ? 1 : -1) - y_raw;
+  y = ((y_raw > 0) ? 1 : -1) - y_raw;
+  
+  int bool = ((1 < 2) > 3) < 4;
+}
+
+Warning in 'parenthesize.stan', line 23, column 13: Found 1 < 2 < 3. This is
+    interpreted as (1 < 2) < 3. Consider if the intended meaning was 
+    1 > 2 && 2 < 3 instead.
+    You can silence this warning by adding explicit parenthesis. This can be
+    automatically changed using the canonicalize flag for stanc
+Warning in 'parenthesize.stan', line 23, column 13: Found 1 < 2 > 3 > 4. This
+    is interpreted as (1 < 2 > 3) > 4. Consider if the intended meaning was 
+    1 < 2 < 3 && 3 > 4 instead.
+    You can silence this warning by adding explicit parenthesis. This can be
+    automatically changed using the canonicalize flag for stanc
+  $ ../../../../../install/default/bin/stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations squaremc.stan
+parameters {
+  real<lower=-1, upper=1> x_raw;
+  real<lower=-(1 - sqrt(1 - square(1 - abs(x_raw)))),
+       upper=(1 - sqrt(1 - square(1 - abs(x_raw))))> y_raw;
+}
+transformed parameters {
+  real<lower=-1, upper=1> x;
+  real<lower=-1, upper=1> y;
+  x = ((x_raw > 0) ? 1 : -1) - x_raw;
+  y = ((y_raw > 0) ? 1 : -1) - y_raw;
+}
+model {
+  target += log1m(sqrt(1 - square(1 - abs(x_raw))));
+}
+

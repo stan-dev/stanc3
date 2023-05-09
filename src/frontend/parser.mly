@@ -5,6 +5,7 @@ open Core_kernel
 open Middle
 open Ast
 open Debugging
+open Preprocessor
 
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
@@ -13,7 +14,7 @@ let reducearray (sbt, l) =
 
 let build_id id loc =
   grammar_logger ("identifier " ^ id);
-  {name=id; id_loc=Location_span.of_positions_exn loc}
+  {name=id; id_loc=location_span_of_positions loc}
 
 let rec iterate_n f x = function
   | 0 -> x
@@ -22,7 +23,7 @@ let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 
 let note_deprecated_array ?(unsized = false) (pos1, pos2) =
-  let loc_span = Middle.Location_span.of_positions_exn (pos1, pos2) in
+  let loc_span = location_span_of_positions (pos1, pos2) in
   Deprecation_removals.old_array_usages := (loc_span, unsized) :: !Deprecation_removals.old_array_usages
 
 
@@ -113,7 +114,7 @@ program:
       let () =
         match (ofb, odb, otdb, opb, otpb, omb, ogb) with
         | None, None, None, None, None, None, None ->
-            Input_warnings.empty ($startpos).pos_fname
+            Input_warnings.empty (location_of_position $startpos).filename
         | _ -> ()
       in
       { functionblock= ofb
@@ -129,7 +130,7 @@ program:
 functions_only:
   | fd = list(function_def) EOF
     { grammar_logger "functions_only";
-      { functionblock= Some {stmts= fd; xloc= Location_span.of_positions_exn $loc}
+      { functionblock= Some {stmts= fd; xloc= location_span_of_positions $loc}
       ; datablock= None
       ; transformeddatablock= None
       ; parametersblock= None
@@ -143,37 +144,37 @@ functions_only:
 function_block:
   | FUNCTIONBLOCK LBRACE fd=list(function_def) RBRACE
     { grammar_logger "function_block" ;
-      {stmts= fd; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= fd; xloc= location_span_of_positions $loc} }
 
 data_block:
   | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
     { grammar_logger "data_block" ;
-      {stmts= tvd; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvd; xloc= location_span_of_positions $loc} }
 
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "transformed_data_block" ;
-      {stmts= tvds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvds; xloc= location_span_of_positions $loc} }
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
     { grammar_logger "parameters_block" ;
-      {stmts= tvd; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvd; xloc= location_span_of_positions $loc} }
 
 transformed_parameters_block:
   | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "transformed_parameters_block" ;
-      {stmts= tvds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvds; xloc= location_span_of_positions $loc} }
 
 model_block:
   | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE
     { grammar_logger "model_block" ;
-      {stmts= vds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= vds; xloc= location_span_of_positions $loc} }
 
 generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
     { grammar_logger "generated_quantities_block" ;
-      {stmts= tvds; xloc= Location_span.of_positions_exn $loc} }
+      {stmts= tvds; xloc= location_span_of_positions $loc} }
 
 (* function definitions *)
 identifier:
@@ -237,7 +238,7 @@ function_def:
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
                            arguments = args; body=b;};
-       smeta={loc=Location_span.of_positions_exn $loc}
+       smeta={loc=location_span_of_positions $loc}
       }
     }
 
@@ -341,7 +342,7 @@ decl(type_rule, rhs):
             ; is_global
             }
       ; smeta= {
-          loc= Location_span.of_positions_exn $loc
+          loc= location_span_of_positions $loc
         }
     })
     }
@@ -364,7 +365,7 @@ decl(type_rule, rhs):
             ; is_global
             }
       ; smeta= {
-          loc= Location_span.of_positions_exn $sloc
+          loc= location_span_of_positions $sloc
         }
       }
     )}
@@ -389,7 +390,7 @@ top_var_decl_no_assign:
   | SEMICOLON
     { grammar_logger "top_var_decl_no_assign_skip";
       { stmt= Skip
-      ; smeta= { loc= Location_span.of_positions_exn $loc }
+      ; smeta= { loc= location_span_of_positions $loc }
       }
     }
 
@@ -508,7 +509,7 @@ dims:
   | e=non_lhs
     { grammar_logger "non_lhs_expression" ;
       {expr=e;
-       emeta={loc= Location_span.of_positions_exn $loc}}}
+       emeta={loc= location_span_of_positions $loc}}}
 
 non_lhs:
   | e1=expression  QMARK e2=expression COLON e3=expression
@@ -522,7 +523,7 @@ non_lhs:
   | ue=non_lhs LBRACK i=indexes RBRACK
     {  grammar_logger "expression_indexed" ;
        Indexed ({expr=ue;
-                 emeta={loc= Location_span.of_positions_exn $loc(ue)}}, i)}
+                 emeta={loc= location_span_of_positions $loc(ue)}}, i)}
   | e=common_expression
     { grammar_logger "common_expr" ; e }
 
@@ -532,38 +533,38 @@ constr_expression:
     {
       grammar_logger "constr_expression_arithmetic" ;
       {expr=BinOp (e1, op, e2);
-       emeta={loc=Location_span.of_positions_exn $loc}
+       emeta={loc=location_span_of_positions $loc}
       }
     }
   | op=prefixOp e=constr_expression %prec unary_over_binary
     {
       grammar_logger "constr_expression_prefixOp" ;
       {expr=PrefixOp (op, e);
-       emeta={loc=Location_span.of_positions_exn $loc}}
+       emeta={loc=location_span_of_positions $loc}}
     }
   | e=constr_expression op=postfixOp
     {
       grammar_logger "constr_expression_postfix" ;
       {expr=PostfixOp (e, op);
-       emeta={loc=Location_span.of_positions_exn $loc}}
+       emeta={loc=location_span_of_positions $loc}}
     }
   | e=constr_expression LBRACK i=indexes RBRACK
     {
       grammar_logger "constr_expression_indexed" ;
       {expr=Indexed (e, i);
-       emeta={loc=Location_span.of_positions_exn $loc}}
+       emeta={loc=location_span_of_positions $loc}}
     }
   | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
       {expr=e;
-       emeta={loc= Location_span.of_positions_exn $loc}}
+       emeta={loc= location_span_of_positions $loc}}
     }
   | id=identifier
     {
       grammar_logger "constr_expression_identifier" ;
       {expr=Variable id;
-       emeta={loc=Location_span.of_positions_exn $loc}}
+       emeta={loc=location_span_of_positions $loc}}
     }
 
 common_expression:
@@ -689,19 +690,19 @@ lhs:
   | l=lhs LBRACK indices=indexes RBRACK
     {  grammar_logger "lhs_index" ;
       {expr=Indexed (l, indices)
-      ;emeta = { loc=Location_span.of_positions_exn $loc}}}
+      ;emeta = { loc=location_span_of_positions $loc}}}
 
 (* statements *)
 statement:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
        {stmt= s;
-        smeta= { loc=Location_span.of_positions_exn $sloc} }
+        smeta= { loc=location_span_of_positions $sloc} }
     }
   | s=nested_statement
     {  grammar_logger "nested_statement" ;
        {stmt= s;
-        smeta={loc = Location_span.of_positions_exn $sloc} }
+        smeta={loc = location_span_of_positions $sloc} }
     }
 
 atomic_statement:

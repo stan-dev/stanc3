@@ -2,6 +2,7 @@
 
 {
   module Stack = Core_kernel.Stack
+  module Queue = Core_kernel.Queue
   open Lexing
   open Debugging
   open Preprocessor
@@ -17,33 +18,28 @@
 
 
   let note_deprecated_comment pos =
-    let loc_span = Middle.Location_span.of_positions_exn (pos, pos) in
+    let loc_span = location_span_of_positions (pos, pos) in
     Deprecation_removals.pound_comment_usages := loc_span :: !Deprecation_removals.pound_comment_usages
 
-
-  let comments : Ast.comment_type list ref = ref []
-
   (* Store comments *)
-  let add_comment (begin_pos, buffer) end_pos =
-      comments :=
-        LineComment ( Buffer.contents buffer
-                , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
-      :: !comments
+  let add_line_comment (begin_pos, buffer) end_pos =
+    add_comment
+    @@ LineComment
+         ( Buffer.contents buffer
+         , location_span_of_positions (begin_pos, end_pos) )
 
   let add_multi_comment begin_pos lines end_pos =
-    comments :=
-        BlockComment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
-      :: !comments
+    add_comment
+    @@ Ast.BlockComment (lines, location_span_of_positions (begin_pos, end_pos))
 
   let add_separator lexbuf =
-    comments :=
-        Separator (Middle.Location.of_position_exn lexbuf.lex_curr_p)
-      :: !comments
+    add_comment @@ Separator (location_of_position lexbuf.lex_curr_p)
 
   let add_include fname lexbuf =
-    comments :=
-        Include (fname, (Middle.Location_span.of_positions_exn (lexbuf.lex_start_p, lexbuf.lex_curr_p)) )
-      :: !comments
+    add_comment
+    @@ Include
+         ( fname
+         , location_span_of_positions (lexbuf.lex_start_p, lexbuf.lex_curr_p) )
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -219,7 +215,7 @@ rule token = parse
 
   | _                         { raise (Errors.SyntaxError
                                         (Errors.Lexing
-                                          (Middle.Location.of_position_exn
+                                          (location_of_position
                                             (lexeme_start_p
                                               (current_buffer ()))))) }
 
@@ -231,7 +227,7 @@ and multiline_comment state = parse
                update_start_positions lexbuf.lex_curr_p }
   | eof      { raise (Errors.SyntaxError
                       (Errors.UnexpectedEOF
-                        (Middle.Location.of_position_exn lexbuf.lex_curr_p))) }
+                        (location_of_position lexbuf.lex_curr_p))) }
   | newline  { incr_linenum lexbuf;
                let ((pos, lines), buffer) = state in
                let lines = (Buffer.contents buffer) :: lines in
@@ -241,8 +237,8 @@ and multiline_comment state = parse
 
 (* Single-line comment terminated by a newline *)
 and singleline_comment state = parse
-  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
-  | eof      { add_comment state lexbuf.lex_curr_p ; update_start_positions lexbuf.lex_curr_p }
+  | newline  { add_line_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
+  | eof      { add_line_comment state lexbuf.lex_curr_p ; update_start_positions lexbuf.lex_curr_p }
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {

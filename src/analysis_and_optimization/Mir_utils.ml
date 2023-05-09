@@ -77,8 +77,9 @@ let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
   let data = Set.Poly.of_list mir.input_vars in
   (* Possibly remove ints from the data set *)
   let filtered_data =
-    let remove_ints = Set.Poly.filter ~f:(fun (_, st) -> st <> SizedType.SInt) in
-    Set.Poly.map ~f:fst ((if exclude_ints then remove_ints else ident) data)
+    let remove_ints =
+      Set.Poly.filter ~f:(fun (_, _, st) -> st <> SizedType.SInt) in
+    Set.Poly.map ~f:fst3 ((if exclude_ints then remove_ints else ident) data)
   in
   (* Transformed data are declarations in prepare_data but excluding data *)
   if exclude_transformed then filtered_data
@@ -87,15 +88,15 @@ let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
       Set.Poly.diff
         (Set.Poly.union_list
            (List.map ~f:top_var_declarations mir.prepare_data) )
-        (Set.Poly.map ~f:fst data) in
+        (Set.Poly.map ~f:fst3 data) in
     Set.Poly.union trans_data filtered_data
 
 let parameter_set ?(include_transformed = false) (mir : Program.Typed.t) =
   Set.Poly.of_list
     (List.map
-       ~f:(fun (pname, {out_trans; _}) -> (pname, out_trans))
+       ~f:(fun (pname, _, {out_trans; _}) -> (pname, out_trans))
        (List.filter
-          ~f:(fun (_, {out_block; _}) ->
+          ~f:(fun (_, _, {out_block; _}) ->
             out_block = Parameters
             || (include_transformed && out_block = TransformedParameters) )
           mir.output_vars ) )
@@ -166,7 +167,7 @@ let statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir pattern =
 
 (** Forgetful function from numbered to unnumbered programs *)
 let unnumbered_prog_of_numbered_prog flowgraph_to_mir p =
-  Program.map (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p
+  Program.map (stmt_loc_of_stmt_loc_num flowgraph_to_mir) p Fn.id
 
 (** See interface file *)
 let fwd_traverse_statement stmt ~init ~f =

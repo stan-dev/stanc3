@@ -88,9 +88,7 @@ promotion.*)
 let lower_returntype arg_types rt =
   let scalar = lower_promoted_scalar arg_types in
   match rt with
-  | UnsizedType.ReturnType ut when UnsizedType.is_int_type ut ->
-      lower_type ut Int
-  | ReturnType ut -> lower_type ut scalar
+  | UnsizedType.ReturnType ut -> lower_type ut scalar
   | Void -> Void
 
 let lower_eigen_args_to_ref arg_types =
@@ -151,8 +149,7 @@ let lower_fun_body fdargs fdsuffix fdbody =
         :: Stmts.unused "propto__" in
   let body = lower_statement fdbody in
   (local_scalar :: Decls.current_statement :: to_refs)
-  @ propto @ Decls.dummy_var
-  @ [Stmts.rethrow_located body]
+  @ propto @ Decls.dummy_var @ Stmts.rethrow_located body
 
 let mk_extra_args templates args =
   List.map
@@ -260,7 +257,7 @@ let get_functor_requirements (p : Program.Numbered.t) =
     Stmt.Fixed.(
       Pattern.fold find_functors_expr find_functors_stmt accum stmt.pattern)
   in
-  Program.fold find_functors_expr find_functors_stmt String.Map.empty p
+  Program.fold find_functors_expr find_functors_stmt Fn.const String.Map.empty p
 
 let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let functor_required = get_functor_requirements p in
@@ -316,7 +313,7 @@ let lower_standalone_fun_def namespace_fun
   let return_type, return_stmt =
     match fdrt with
     | Void -> (Void, fun e -> Expression e)
-    | _ -> (Auto, fun e -> Return (Some e)) in
+    | ReturnType ut -> (lower_type ut Double, fun e -> Return (Some e)) in
   let fn_sig = make_fun_defn ~name:fdname ~return_type ~args:all_args in
   let internal_fname = namespace_fun ^ "::" ^ fdname in
   let template =
