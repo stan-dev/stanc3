@@ -13,8 +13,8 @@ let comments : comment_type list ref = ref []
 
 let skipped = ref []
 
-let set_comments ?(inline_includes = false) ls =
-  let filtered =
+let set_comments ?(inline_includes = false) ?(strip_comments = false) ls =
+  let includes_filtered =
     if inline_includes then
       List.filter ~f:(function Include _ -> false | _ -> true) ls
     else
@@ -28,7 +28,13 @@ let set_comments ?(inline_includes = false) ls =
               false
           | _ -> true )
         ls in
-  comments := filtered
+  let stripped =
+    if strip_comments then
+      List.filter
+        ~f:(function LineComment _ | BlockComment _ -> false | _ -> true)
+        includes_filtered
+    else includes_filtered in
+  comments := stripped
 
 let get_comments end_loc =
   let rec go ls =
@@ -530,7 +536,7 @@ let rec pp_block_list ppf = function
         pp_block_list ppf tl )
   | [] -> pp_spacing None None ppf (remaining_comments ())
 
-let pp_program ~bare_functions ~line_length ~inline_includes ppf
+let pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments ppf
     { functionblock= bf
     ; datablock= bd
     ; transformeddatablock= btd
@@ -540,7 +546,7 @@ let pp_program ~bare_functions ~line_length ~inline_includes ppf
     ; generatedquantitiesblock= bgq
     ; comments } =
   Format.pp_set_margin ppf line_length ;
-  set_comments ~inline_includes comments ;
+  set_comments ~inline_includes ~strip_comments comments ;
   print_included := inline_includes ;
   Format.pp_open_vbox ppf 0 ;
   if bare_functions then pp_bare_block ppf @@ Option.value_exn bf
@@ -556,18 +562,19 @@ let pp_program ~bare_functions ~line_length ~inline_includes ppf
 
 let check_correctness ?(bare_functions = false) prog pretty =
   let result_ast =
-    try
-      let res, (_ : Warnings.t list) =
-        if bare_functions then
-          Parse.parse_string Parser.Incremental.functions_only pretty
-        else Parse.parse_string Parser.Incremental.program pretty in
-      Option.value_exn (Result.ok res)
-    with _ ->
-      Common.FatalError.fatal_error_msg
-        [%message
-          "Pretty-printed program failed to parse"
-            (prog : Ast.untyped_program)
-            pretty] in
+    let res, (_ : Warnings.t list) =
+      if bare_functions then
+        Parse.parse_string Parser.Incremental.functions_only pretty
+      else Parse.parse_string Parser.Incremental.program pretty in
+    match res with
+    | Ok prog -> prog
+    | Error e ->
+        let error = Errors.to_string e in
+        Common.FatalError.fatal_error_msg
+          [%message
+            "Pretty-printed program failed to parse" error
+              (prog : Ast.untyped_program)
+              pretty] in
   if compare_untyped_program prog result_ast <> 0 then
     Common.FatalError.fatal_error_msg
       [%message
@@ -579,13 +586,16 @@ let pp_typed_expression ppf e =
   pp_expression ppf (untyped_expression_of_typed_expression e)
 
 let pretty_print_program ?(bare_functions = false) ?(line_length = 78)
-    ?(inline_includes = false) p =
+    ?(inline_includes = false) ?(strip_comments = false) p =
   let result =
-    str "%a" (pp_program ~bare_functions ~line_length ~inline_includes) p in
+    str "%a"
+      (pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments)
+      p in
   check_correctness ~bare_functions p result ;
   result
 
 let pretty_print_typed_program ?(bare_functions = false) ?(line_length = 78)
-    ?(inline_includes = false) p =
+    ?(inline_includes = false) ?(strip_comments = false) p =
   pretty_print_program ~bare_functions ~line_length ~inline_includes
+    ~strip_comments
     (untyped_program_of_typed_program p)
