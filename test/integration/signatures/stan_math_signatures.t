@@ -19374,6 +19374,7 @@ Display all Stan math signatures exposed in the language
   prod(complex_matrix) => complex
   prod(array[] complex) => complex
   proj(complex) => complex
+  qr(matrix) => tuple(matrix, matrix)
   qr_Q(matrix) => matrix
   qr_R(matrix) => matrix
   qr_thin_Q(matrix) => matrix
