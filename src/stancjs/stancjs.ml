@@ -96,7 +96,7 @@ let stan2cpp model_name model_string is_flag_set flag_val :
         if is_flag_set "debug-generate-data" then
           r.return
             ( Result.map_error
-                ~f:(fun e -> Errors.DebugDataError e)
+                ~f:(fun e -> ProgramError (Errors.DebugDataError e))
                 (Debug_data_generation.gen_values_json
                    (Ast_to_Mir.gather_declarations typed_ast.datablock) )
             , warnings
@@ -104,7 +104,7 @@ let stan2cpp model_name model_string is_flag_set flag_val :
         if is_flag_set "debug-generate-inits" then
           r.return
             ( Result.map_error
-                ~f:(fun e -> Errors.DebugDataError e)
+                ~f:(fun e -> ProgramError (Errors.DebugDataError e))
                 (Debug_data_generation.gen_values_json
                    (Ast_to_Mir.gather_declarations typed_ast.parametersblock) )
             , warnings
