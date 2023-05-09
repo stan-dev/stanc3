@@ -31,6 +31,8 @@ type ('a, 'b, 'm) t =
   ; input_vars: (string * 'm * 'a SizedType.t) list
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
   ; log_prob: 'b list (*assumes data & params are in scope and ready*)
+  ; reverse_mode_log_prob: 'b list option
+        (*assumes data & params are in scope and ready*)
   ; generate_quantities: 'b list
         (* assumes data & params ready & in scope*)
         (* NOTE: the following two items are really backend-specific,
@@ -82,6 +84,9 @@ let pp_prepare_data pp_s ppf prepare_data =
 
 let pp_log_prob pp_s ppf log_prob = pp_block "log_prob" pp_s ppf log_prob
 
+let pp_reverse_mode_log_prob pp_s ppf log_prob =
+  pp_block "log_prob" pp_s ppf log_prob
+
 let pp_generate_quantities pp_s ppf generate_quantities =
   pp_block "generate_quantities" pp_s ppf generate_quantities
 
@@ -107,6 +112,7 @@ let pp pp_e pp_s ppf
     ; input_vars
     ; prepare_data
     ; log_prob
+    ; reverse_mode_log_prob
     ; generate_quantities
     ; transform_inits
     ; output_vars
@@ -119,6 +125,8 @@ let pp pp_e pp_s ppf
   pp_prepare_data pp_s ppf prepare_data ;
   Fmt.cut ppf () ;
   pp_log_prob pp_s ppf log_prob ;
+  Fmt.cut ppf () ;
+  Fmt.option (pp_reverse_mode_log_prob pp_s) ppf reverse_mode_log_prob ;
   Fmt.cut ppf () ;
   pp_generate_quantities pp_s ppf generate_quantities ;
   Fmt.cut ppf () ;

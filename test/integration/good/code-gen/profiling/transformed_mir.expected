@@ -449,6 +449,7 @@
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))))
+ (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id rho) (decl_type (Sized SReal))

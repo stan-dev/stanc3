@@ -43,6 +43,7 @@ let%expect_test "map_rec_stmt_loc" =
         }
       }
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -86,6 +87,7 @@ let%expect_test "map_rec_state_stmt_loc" =
           }
         }
       }
+
 
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -151,6 +153,7 @@ let%expect_test "inline functions" =
         }
       }
 
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -191,6 +194,7 @@ let%expect_test "inline functions 2" =
           }
         }
       }
+
 
 
 
@@ -348,6 +352,7 @@ let%expect_test "list collapsing" =
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
         (meta <opaque>)))))
     (meta <opaque>))))
+ (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -439,6 +444,7 @@ let%expect_test "recursive functions" =
         }
       }
 
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -477,6 +483,7 @@ let%expect_test "do not try to inline extern functions" =
                 FnReject__(fib(5));
               }
             }
+
 
             generate_quantities {
               if(emit_transformed_parameters__) ; else {
@@ -549,6 +556,7 @@ let%expect_test "inline function in for loop" =
           }
         }
       }
+
 
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
@@ -634,6 +642,7 @@ let%expect_test "inline function in for loop 2" =
         }
       }
 
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -699,6 +708,7 @@ let%expect_test "inline function in while loop" =
         }
       }
 
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -757,6 +767,7 @@ let%expect_test "inline function in if then else" =
           if(inline_g_return_sym1__) FnPrint__("body");
         }
       }
+
 
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
@@ -843,6 +854,7 @@ let%expect_test "inline function in ternary if " =
         }
       }
 
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -907,6 +919,7 @@ let%expect_test "inline function multiple returns " =
         }
       }
 
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -962,6 +975,7 @@ let%expect_test "inline function indices " =
           FnPrint__(a[inline_f_return_sym1__, inline_f_return_sym3__]);
         }
       }
+
 
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
@@ -1020,6 +1034,7 @@ let%expect_test "inline function and " =
         }
       }
 
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -1076,6 +1091,7 @@ let%expect_test "inline function or " =
         }
       }
 
+
       generate_quantities {
         if(emit_transformed_parameters__) ; else {
 
@@ -1118,6 +1134,7 @@ let%expect_test "unroll nested loop" =
           }
         }
       }
+
 
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -1315,6 +1332,7 @@ let%expect_test "unroll nested loop 2" =
         }
       }
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1409,6 +1427,7 @@ let%expect_test "unroll nested loop 3" =
         }
       }
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1446,6 +1465,7 @@ let%expect_test "unroll nested loop with break" =
           }
         }
       }
+
 
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -1487,6 +1507,7 @@ let%expect_test "constant propagation" =
         }
       }
     }
+
 
     generate_quantities {
       if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -1535,6 +1556,7 @@ let%expect_test "constant propagation, local scope" =
       }
     }
 
+
     generate_quantities {
       if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
       if(PNot__(emit_generated_quantities__)) return;
@@ -1571,6 +1593,7 @@ let%expect_test "constant propagation, model block local scope" =
         j = 2;
       }
     }
+
 
     generate_quantities {
       if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -1622,6 +1645,7 @@ let%expect_test "expression propagation" =
         }
       }
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1659,6 +1683,7 @@ let%expect_test "copy propagation" =
           }
         }
       }
+
 
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -1703,6 +1728,7 @@ let%expect_test "dead code elimination" =
         }
       }
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1733,6 +1759,7 @@ let%expect_test "dead code elimination decl" =
           int i;
         }
       }
+
 
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -1765,6 +1792,7 @@ let%expect_test "dead code elimination, for loop" =
         }
       }
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1796,6 +1824,7 @@ let%expect_test "dead code elimination, while loop" =
           while(1) ;
         }
       }
+
 
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -1844,6 +1873,7 @@ let%expect_test "dead code elimination, if then" =
         }
       }
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1872,6 +1902,7 @@ let%expect_test "dead code elimination, nested" =
           FnPrint__(i);
         }
       }
+
 
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -1907,6 +1938,7 @@ let%expect_test "partial evaluation" =
         }
       }
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1930,6 +1962,7 @@ let%expect_test "partial evaluate reject" =
           FnReject__("Integer division by zero");
         }
       }
+
 
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -1965,6 +1998,7 @@ let%expect_test "try partially evaluate" =
         }
       }
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -1994,6 +2028,7 @@ let%expect_test "partially evaluate with equality check" =
           FnPrint__(dot_product(x, y));
         }
       }
+
 
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -2329,6 +2364,7 @@ model {
         }
       }
 
+
       generate_quantities {
         data matrix[3, 2] x_matrix;
         data matrix[2, 4] y_matrix;
@@ -2380,6 +2416,7 @@ let%expect_test "lazy code motion" =
       }
     }
 
+
     generate_quantities {
       data int lcm_sym2__;
       data int lcm_sym1__;
@@ -2410,6 +2447,7 @@ let%expect_test "lazy code motion, 2" =
           }
         }
       }
+
 
       generate_quantities {
         data int lcm_sym2__;
@@ -2444,6 +2482,7 @@ let%expect_test "lazy code motion, 3" =
           FnPrint__((lcm_sym3__ + 7));
         }
       }
+
 
       generate_quantities {
         data int lcm_sym2__;
@@ -2508,6 +2547,7 @@ let%expect_test "lazy code motion, 4" =
           y = lcm_sym3__;
         }
       }
+
 
       generate_quantities {
         data int lcm_sym2__;
@@ -2575,6 +2615,7 @@ let%expect_test "lazy code motion, 5" =
         }
       }
 
+
       generate_quantities {
         data int lcm_sym2__;
         data int lcm_sym1__;
@@ -2610,6 +2651,7 @@ let%expect_test "lazy code motion, 6" =
           y = (4 + 3);
         }
       }
+
 
       generate_quantities {
         data int lcm_sym2__;
@@ -2685,6 +2727,7 @@ let%expect_test "lazy code motion, 7" =
         }
       }
 
+
       generate_quantities {
         data int lcm_sym2__;
         data int lcm_sym1__;
@@ -2740,6 +2783,7 @@ let%expect_test "lazy code motion, 8, _lp functions not optimized" =
         }
       }
 
+
       generate_quantities {
         data int lcm_sym2__;
         data int lcm_sym1__;
@@ -2769,6 +2813,7 @@ let%expect_test "lazy code motion, 9" =
           while((x * 2)) FnPrint__("hello");
         }
       }
+
 
       generate_quantities {
         data int lcm_sym2__;
@@ -2805,6 +2850,7 @@ let%expect_test "lazy code motion, 10" =
           FnPrint__((x * 2));
         }
       }
+
 
       generate_quantities {
         data int lcm_sym2__;
@@ -2848,6 +2894,7 @@ let%expect_test "lazy code motion, 11" =
         }
       }
 
+
       generate_quantities {
         data int lcm_sym2__;
         data int lcm_sym1__;
@@ -2883,6 +2930,7 @@ let%expect_test "lazy code motion, 12" =
           }
         }
       }
+
 
       generate_quantities {
         data int lcm_sym2__;
@@ -2951,6 +2999,7 @@ let%expect_test "lazy code motion, 13" =
         }
       }
 
+
       generate_quantities {
         data int lcm_sym2__;
         data int lcm_sym1__;
@@ -3003,6 +3052,7 @@ let%expect_test "cool example: expression propagation + partial evaluation + \
         }
       }
 
+
       generate_quantities {
         data int lcm_sym2__;
         data int lcm_sym1__;
@@ -3047,6 +3097,7 @@ let%expect_test "block fixing" =
              (meta <opaque>))
             ()))
           (meta <opaque>))))
+       (reverse_mode_log_prob ())
        (generate_quantities
         (((pattern
            (IfElse
@@ -3121,6 +3172,7 @@ let%expect_test "one-step loop unrolling" =
       }
 
 
+
       generate_quantities {
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         if(PNot__(emit_generated_quantities__)) return;
@@ -3171,6 +3223,7 @@ let%expect_test "adlevel_optimization" =
           FnPrint__(z_data);
         }
       }
+
 
       generate_quantities {
         data real w;
@@ -3377,6 +3430,7 @@ let%expect_test "adlevel_optimization 2" =
           FnPrint__(z_data);
         }
       }
+
 
       generate_quantities {
         data real w;
