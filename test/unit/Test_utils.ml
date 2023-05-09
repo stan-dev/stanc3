@@ -26,3 +26,4 @@ let mir_of_string s = typed_ast_of_string_exn s |> Ast2Mir.trans_prog ""
 let print_data_prog ast =
   Analysis_and_optimization.Debug_data_generation.gen_values_json
     (Ast2Mir.gather_declarations ast.Ast.datablock)
+  |> Result.ok |> Option.value_exn

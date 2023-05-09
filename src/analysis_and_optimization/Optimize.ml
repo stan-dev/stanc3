@@ -851,6 +851,9 @@ struct
  * where that name is the assignee.
  *)
   let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
+    let is_index = function
+      | Expr.Fixed.Pattern.Indexed _ -> true
+      | _ -> false in
     match pattern with
     | Stmt.Fixed.Pattern.Assignment
         ((assign_name, lhs_ut, idx_lst), (rhs : 'a Expr.Fixed.t))
@@ -859,7 +862,7 @@ struct
            && not
                 ( rhs.meta.adlevel = UnsizedType.DataOnly
                 && UnsizedType.is_array lhs_ut ) ->
-        Some idx_lst
+        Some (idx_lst, is_index rhs.pattern)
     | _ -> None
 
   (**
@@ -871,16 +874,23 @@ struct
     let rec unenforce_initialize_patt (Stmt.Fixed.{pattern; _} as stmt) sub_lst
         =
       match pattern with
-      | Stmt.Fixed.Pattern.Decl ({decl_id; _} as decl_pat) -> (
-        match List.hd sub_lst with
-        | Some next_stmt -> (
-          match find_assignment_idx decl_id next_stmt with
-          | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
-              { stmt with
-                pattern=
-                  Stmt.Fixed.Pattern.Decl {decl_pat with initialize= false} }
-          | None | Some _ -> stmt )
-        | None -> stmt )
+      | Stmt.Fixed.Pattern.Decl ({decl_id; decl_type; _} as decl_pat) -> (
+          let is_soa =
+            match decl_type with
+            | Type.Sized s -> SizedType.get_mem_pattern s = Mem_pattern.SoA
+            | _ -> false in
+          match List.hd sub_lst with
+          | Some next_stmt -> (
+            match find_assignment_idx decl_id next_stmt with
+            | Some
+                ( ([] | [Index.All] | [Index.All; Index.All])
+                , is_assigned_to_index )
+              when not (is_soa && is_assigned_to_index) ->
+                { stmt with
+                  pattern=
+                    Stmt.Fixed.Pattern.Decl {decl_pat with initialize= false} }
+            | None | Some _ -> stmt )
+          | None -> stmt )
       | Block block_lst ->
           {stmt with pattern= Block (unenforce_initialize block_lst)}
       | SList s_lst -> {stmt with pattern= SList (unenforce_initialize s_lst)}
@@ -920,9 +930,9 @@ struct
  *  @param transformer a function that takes in and returns a list of
  *    Stmts.
  *)
-  let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)
+  let transform_mir_blocks (mir : Program.Typed.t)
       (transformer : Stmt.Located.t list -> Stmt.Located.t list) :
-      (Expr.Typed.t, Stmt.Located.t) Program.t =
+      Program.Typed.t =
     let transformed_functions =
       List.map mir.functions_block ~f:(fun fs ->
           let new_body =
@@ -1201,7 +1211,7 @@ struct
     let global_initial_ad_variables =
       Set.Poly.of_list
         (List.filter_map
-           ~f:(fun (v, Program.{out_block; _}) ->
+           ~f:(fun (v, _, Program.{out_block; _}) ->
              match out_block with Parameters -> Some v | _ -> None )
            mir.output_vars ) in
     let initial_ad_variables fundef_opt _ =
@@ -1318,12 +1328,12 @@ struct
       ; (list_collapsing, settings.list_collapsing)
         (* Book: Machine idioms and instruction combining *)
       ; (optimize_ad_levels, settings.optimize_ad_levels)
+      ; (optimize_soa, settings.optimize_soa)
         (*Remove decls immediately assigned to*)
       ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
         (* Book: Machine idioms and instruction combining *)
         (* Matthijs: Everything < block_fixing *)
-      ; (block_fixing, settings.block_fixing)
-      ; (optimize_soa, settings.optimize_soa) ] in
+      ; (block_fixing, settings.block_fixing) ] in
     let optimizations =
       List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
           if flag then Some fn else None ) in

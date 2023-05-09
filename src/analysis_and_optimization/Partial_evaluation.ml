@@ -1192,5 +1192,5 @@ module Make (StdLibrary : Frontend.Std_library_utils.Library) :
           NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
       ; meta= loc }
 
-  let eval_prog = Program.map try_eval_expr eval_stmt
+  let eval_prog = Program.map try_eval_expr eval_stmt Fn.id
 end

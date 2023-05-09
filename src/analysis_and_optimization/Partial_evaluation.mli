@@ -1,5 +1,7 @@
 open Middle
 
+exception Rejected of Location_span.t * string
+
 module type PARTIAL_EVALUATOR = sig
   val try_eval_expr : Expr.Typed.t -> Expr.Typed.t
   val eval_prog : Program.Typed.t -> Program.Typed.t

@@ -881,8 +881,8 @@ let propagation_mfp (prog : Program.Typed.t)
 
       let total =
         Set.Poly.union_list
-          [ Set.Poly.of_list (List.map ~f:fst prog.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst prog.output_vars)
+          [ Set.Poly.of_list (List.map ~f:fst3 prog.input_vars)
+          ; Set.Poly.of_list (List.map ~f:fst3 prog.output_vars)
           ; declared_variables_stmt
               (stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).pattern ] end
     : TOTALTYPE
@@ -907,8 +907,8 @@ let reaching_definitions_mfp (mir : Program.Typed.t)
 
       let initial =
         Set.Poly.union_list
-          [ Set.Poly.of_list (List.map ~f:fst mir.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst mir.output_vars) ] end
+          [ Set.Poly.of_list (List.map ~f:fst3 mir.input_vars)
+          ; Set.Poly.of_list (List.map ~f:fst3 mir.output_vars) ] end
     : INITIALTYPE
       with type vals = string ) in
   let labels = (module struct type vals = int end : TYPE with type vals = int) in
@@ -937,14 +937,14 @@ let initialized_vars_mfp (total : string Set.Poly.t)
 
 let globals (prog : Program.Typed.t) =
   Set.Poly.union_list
-    [ Set.Poly.of_list (List.map ~f:fst prog.output_vars)
+    [ Set.Poly.of_list (List.map ~f:fst3 prog.output_vars)
       (* It is not strictly necessary to exclude data variables from DCE.
          However,
          1. We don't currently check for usage of data variables in
             corners of the MIR, such as in the sizes of parameters
          2. There is code added in codegen that is never represented in
             the MIR that may use data variables as if they're initialized
-      *); Set.Poly.of_list (List.map ~f:fst prog.input_vars)
+      *); Set.Poly.of_list (List.map ~f:fst3 prog.input_vars)
     ; Set.Poly.union_list (List.map ~f:var_declarations prog.prepare_data)
     ; Set.Poly.singleton "target" ]
 

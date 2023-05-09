@@ -18,6 +18,7 @@ type t =
   | FileNotFound of string
   | Syntax_error of syntax_error
   | Semantic_error of Semantic_error.t
+  | DebugDataError of (Middle.Location_span.t * string)
 
 val pp : ?printed_filename:string -> ?code:string -> t Fmt.t
 (** Pretty-printer for error type [t]. Replace occurances of

@@ -1,6 +1,36 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.32.1 (2 May 2023)
+======================================================================
+
+- The shapes and sizes of parameter initial values are now checked against the specified sizes in the model before being read in, matching the existing behavior for data. (#1316)
+  **Note:** This change may cause existing code which worked "by accident" to raise new errors about mismatches between the model's declarations and the provided initialization.
+- Errors in transform_inits should now properly highlight the location in the original Stan program. (#1318)
+- Fixed an issue where the `--debug-generate-inits` debug flag would fail badly if parameter sizes depended on data (#1319)
+
+v2.32.0 (20 April 2023)
+======================================================================
+
+- Syntax removals scheduled for this version have been pushed back to 2.33. We still recommend updating your Stan models as you are able. As a reminder, deprecated syntax which will be removed in minor versions can as a rule be updated automatically using find-and-replace tools or the [Stan compiler's auto-formatting abilities](https://mc-stan.org/docs/stan-users-guide/stanc-pretty-printing.html). (#1303)
+- The deprecated `--include_paths` and `--allow_undefined` arguments have been removed, use `--include-paths` and `--allow-undefined`. (#1303)
+- Recursive user-defined functions no longer need forward declarations. (#1277)
+- Added overloads to `eigenvalues` and `eigenvectors` which accept a complex matrix as input. (#1282)
+- Fixed an issue where `profile` blocks could generate uncompilable C++ when used with `--O1`. (#1281)
+- Fixed an issue where the compiler would generate uncompilable C++ when a matrix expression featured mixed types of elements. (#1292)
+- Fixed an issue where a user-defined-function expecting real arguments could be passed an integer and exhibit integer behavior like truncating division. (#1296)
+- Fixed an issue where external functions could not be used in higher-order functions without the end-user supplying an implementation of our functor structs. (#1298)
+- Fixed a bug in `transform_inits` for models which used complex types (#1305)
+- Improved the error shown when an `#include`d file cannot be found to list the paths it searched on. (#1273)
+- Improved `--filename-in-msg` for the command line version of `stanc`. Errors now use the requested name, not just warnings. (#1274)
+- Refactored how C++ is code-generated in the compiler. (#1233)
+- Added tests for various parts of the C++ backend which weren't previously tested, and added a `--debug-lir` flag to print out the C++ representation in a s-expression. (#1276)
+- Updated code generate of `get_param_names` (#1245)
+- Switched to `std::endl` instead of `'\n'` to end prints. (#1301)
+- Added a new function `unconstrain_array` to the generated code. This is currently not exposed. (#1305)
+- Added a `--debug-generate-inits` flag to stanc which behaves like `--debug-generate-data` but for declarations in the `parameters` block. (#1306)
+- Sped up some code which is critical to parsing. (#1302)
+
 v2.31.0 (21 November 2022)
 ======================================================================
 

@@ -2,16 +2,25 @@ open Core_kernel
 open Ast
 
 type canonicalizer_settings =
-  {deprecations: bool; parentheses: bool; braces: bool; inline_includes: bool}
+  { deprecations: bool
+  ; parentheses: bool
+  ; braces: bool
+  ; inline_includes: bool
+  ; strip_comments: bool }
 
-let all =
-  {deprecations= true; parentheses= true; inline_includes= true; braces= true}
+let legacy =
+  { deprecations= true
+  ; parentheses= true
+  ; inline_includes= true
+  ; braces= true
+  ; strip_comments= false }
 
 let none =
   { deprecations= false
   ; parentheses= false
   ; inline_includes= false
-  ; braces= false }
+  ; braces= false
+  ; strip_comments= false }
 
 module type CANONICALIZER = sig
   val repair_syntax :

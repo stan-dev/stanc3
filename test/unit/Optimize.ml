@@ -31,7 +31,7 @@ let%expect_test "map_rec_stmt_loc" =
     | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
         Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
     | x -> x in
-  let mir = Program.map Fn.id (map_rec_stmt_loc f) mir in
+  let mir = Program.map Fn.id (map_rec_stmt_loc f) Fn.id mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
     {|
