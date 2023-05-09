@@ -155,7 +155,7 @@ let options =
       , Arg.Unit
           (fun () ->
             pretty_print_program := true ;
-            canonicalize_settings := Canonicalize.all )
+            canonicalize_settings := Canonicalize.legacy )
       , " Prints the canonicalized program. Equivalent to --auto-format \
          --canonicalize deprecations,includes,parentheses,braces" )
     ; ( "--version"

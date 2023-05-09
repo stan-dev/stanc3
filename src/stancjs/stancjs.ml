@@ -35,7 +35,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
         if is_flag_set "info" then
           r.return (Result.Ok (Info.info typed_ast), warnings, []) ;
         let canonicalizer_settings =
-          if is_flag_set "print-canonical" then Canonicalize.all
+          if is_flag_set "print-canonical" then Canonicalize.legacy
           else
             match flag_val "canonicalize" with
             | None -> Canonicalize.none

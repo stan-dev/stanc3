@@ -9,7 +9,7 @@ type canonicalizer_settings =
   ; inline_includes: bool
   ; strip_comments: bool }
 
-let all =
+let legacy =
   { deprecations= true
   ; parentheses= true
   ; inline_includes= true

@@ -14,7 +14,9 @@ type canonicalizer_settings =
   ; inline_includes: bool
   ; strip_comments: bool }
 
-val all : canonicalizer_settings
+val legacy : canonicalizer_settings
+(** Equivalent to what [--print-canonical] did before these settings were available *)
+
 val none : canonicalizer_settings
 
 val repair_syntax : untyped_program -> canonicalizer_settings -> untyped_program
