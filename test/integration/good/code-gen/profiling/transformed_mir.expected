@@ -449,7 +449,261 @@
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))))
- (reverse_mode_log_prob ())
+ (reverse_mode_log_prob
+  (((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (rho UReal ())
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam
+           (constrain
+            (Lower
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha)
+      (decl_type (Sized SReal)) (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (alpha UReal ())
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam
+           (constrain
+            (Lower
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma)
+      (decl_type (Sized SReal)) (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (sigma UReal ())
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam
+           (constrain
+            (Lower
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (NRFunApp (CompilerInternal FnValidateSize)
+          (((pattern (Lit Str cov))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Str N))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Var N))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (CompilerInternal FnValidateSize)
+          (((pattern (Lit Str cov))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Str N))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Var N))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id cov)
+          (decl_type
+           (Sized
+            (SMatrix AoS
+             ((pattern (Var N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (initialize true)))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (CompilerInternal FnValidateSize)
+          (((pattern (Lit Str L_cov))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Str N))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Var N))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (CompilerInternal FnValidateSize)
+          (((pattern (Lit Str L_cov))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Str N))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Var N))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id L_cov)
+          (decl_type
+           (Sized
+            (SMatrix AoS
+             ((pattern (Var N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (initialize true)))
+        (meta <opaque>))
+       ((pattern
+         (Profile "\"cov_exp_quad\""
+          (((pattern
+             (Assignment (cov UMatrix ())
+              ((pattern
+                (FunApp (StanLib Plus__ FnPlain AoS)
+                 (((pattern
+                    (FunApp (StanLib gp_exp_quad_cov FnPlain AoS)
+                     (((pattern (Var x))
+                       (meta
+                        ((type_ (UArray UReal)) (loc <opaque>)
+                         (adlevel DataOnly))))
+                      ((pattern (Var alpha))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Var rho))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                   (meta
+                    ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (FunApp (StanLib diag_matrix FnPlain AoS)
+                     (((pattern
+                        (FunApp (StanLib rep_vector FnPlain AoS)
+                         (((pattern (Var sigma))
+                           (meta
+                            ((type_ UReal) (loc <opaque>)
+                             (adlevel AutoDiffable))))
+                          ((pattern (Var N))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UVector) (loc <opaque>)
+                         (adlevel AutoDiffable)))))))
+                   (meta
+                    ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>)))))
+        (meta <opaque>))
+       ((pattern
+         (Profile "\"cholesky_decompose\""
+          (((pattern
+             (Assignment (L_cov UMatrix ())
+              ((pattern
+                (FunApp (StanLib cholesky_decompose FnPlain AoS)
+                 (((pattern (Var cov))
+                   (meta
+                    ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>)))))
+        (meta <opaque>))
+       ((pattern
+         (Profile "\"likelihood\""
+          (((pattern
+             (Profile "\"priors\""
+              (((pattern
+                 (TargetPE
+                  ((pattern
+                    (FunApp (StanLib gamma_lpdf (FnLpdf true) AoS)
+                     (((pattern (Var rho))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Lit Int 25))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 4))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                (meta <opaque>))
+               ((pattern
+                 (TargetPE
+                  ((pattern
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                     (((pattern (Var alpha))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Lit Int 0))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 2))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                (meta <opaque>))
+               ((pattern
+                 (TargetPE
+                  ((pattern
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+                     (((pattern (Var sigma))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Lit Int 0))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                (meta <opaque>)))))
+            (meta <opaque>))
+           ((pattern
+             (Profile "\"multi_normal_cholesky\""
+              (((pattern
+                 (TargetPE
+                  ((pattern
+                    (FunApp
+                     (StanLib multi_normal_cholesky_lpdf (FnLpdf true) AoS)
+                     (((pattern (Var y))
+                       (meta
+                        ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (FunApp (StanLib rep_vector FnPlain AoS)
+                         (((pattern
+                            (Promotion
+                             ((pattern (Lit Int 0))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             UReal DataOnly))
+                           (meta
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Var N))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Var L_cov))
+                       (meta
+                        ((type_ UMatrix) (loc <opaque>)
+                         (adlevel AutoDiffable)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
  (generate_quantities
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id rho) (decl_type (Sized SReal))

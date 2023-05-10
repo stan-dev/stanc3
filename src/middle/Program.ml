@@ -31,7 +31,7 @@ type ('a, 'b, 'm) t =
   ; input_vars: (string * 'm * 'a SizedType.t) list
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
   ; log_prob: 'b list (*assumes data & params are in scope and ready*)
-  ; reverse_mode_log_prob: 'b list option
+  ; reverse_mode_log_prob: 'b list
         (*assumes data & params are in scope and ready*)
   ; generate_quantities: 'b list
         (* assumes data & params ready & in scope*)
@@ -126,7 +126,7 @@ let pp pp_e pp_s ppf
   Fmt.cut ppf () ;
   pp_log_prob pp_s ppf log_prob ;
   Fmt.cut ppf () ;
-  Fmt.option (pp_reverse_mode_log_prob pp_s) ppf reverse_mode_log_prob ;
+  pp_log_prob pp_s ppf reverse_mode_log_prob ;
   Fmt.cut ppf () ;
   pp_generate_quantities pp_s ppf generate_quantities ;
   Fmt.cut ppf () ;

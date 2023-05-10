@@ -20,26 +20,13 @@ let transform_program (mir : Program.Typed.t)
                ~f:(fun x ->
                  Stmt.Fixed.{pattern= SList x; meta= Location_span.empty} )
                [ mir.prepare_data; mir.transform_inits; mir.log_prob
-               ; mir.generate_quantities ] )
+               ; mir.reverse_mode_log_prob; mir.generate_quantities ] )
       ; meta= Location_span.empty } in
   let transformed_prog_body = transform packed_prog_body in
   let transformed_functions =
     List.map mir.functions_block ~f:(fun fs ->
         {fs with fdbody= Option.map ~f:transform fs.fdbody} ) in
   match transformed_prog_body with
-  | { pattern=
-        SList
-          [ {pattern= SList prepare_data'; _}
-          ; {pattern= SList transform_inits'; _}; {pattern= SList log_prob'; _}
-          ; {pattern= SList generate_quantities'; _} ]
-    ; _ } ->
-      { mir with
-        functions_block= transformed_functions
-      ; prepare_data= prepare_data'
-      ; transform_inits= transform_inits'
-      ; log_prob= log_prob'
-      ; reverse_mode_log_prob= None
-      ; generate_quantities= generate_quantities' }
   | { pattern=
         SList
           [ {pattern= SList prepare_data'; _}
@@ -52,7 +39,7 @@ let transform_program (mir : Program.Typed.t)
       ; prepare_data= prepare_data'
       ; transform_inits= transform_inits'
       ; log_prob= log_prob'
-      ; reverse_mode_log_prob= Some reverse_mode_log_prob'
+      ; reverse_mode_log_prob= reverse_mode_log_prob'
       ; generate_quantities= generate_quantities' }
   | _ ->
       Common.FatalError.fatal_error_msg
@@ -80,8 +67,7 @@ let transform_program_blockwise (mir : Program.Typed.t)
   ; prepare_data= transform' None mir.prepare_data
   ; transform_inits= transform' None mir.transform_inits
   ; log_prob= transform' None mir.log_prob
-  ; reverse_mode_log_prob=
-      Option.map ~f:(transform' None) mir.reverse_mode_log_prob
+  ; reverse_mode_log_prob= transform' None mir.reverse_mode_log_prob
   ; generate_quantities= transform' None mir.generate_quantities }
 
 let map_no_loc l =
@@ -520,8 +506,7 @@ let function_inlining (mir : Program.Typed.t) =
       autodiffable_inline_function_statements mir.unconstrain_array
   ; log_prob= autodiffable_inline_function_statements mir.log_prob
   ; reverse_mode_log_prob=
-      Option.map ~f:autodiffable_inline_function_statements
-        mir.reverse_mode_log_prob
+      autodiffable_inline_function_statements mir.reverse_mode_log_prob
   ; generate_quantities=
       dataonly_inline_function_statements mir.generate_quantities }
 
@@ -891,7 +876,7 @@ let transform_mir_blocks (mir : Program.Typed.t)
   ; input_vars= mir.input_vars
   ; prepare_data= transformer mir.prepare_data
   ; log_prob= transformer mir.log_prob
-  ; reverse_mode_log_prob= Option.map ~f:transformer mir.reverse_mode_log_prob
+  ; reverse_mode_log_prob= transformer mir.reverse_mode_log_prob
   ; generate_quantities= transformer mir.generate_quantities
   ; transform_inits= transformer mir.transform_inits
   ; unconstrain_array= transformer mir.unconstrain_array
@@ -1211,7 +1196,7 @@ let optimize_soa (mir : Program.Typed.t) =
   let initial_variables =
     List.fold ~init:Set.Poly.empty
       ~f:(Memory_patterns.query_initial_demotable_stmt false)
-      mir.log_prob in
+      mir.reverse_mode_log_prob in
   (*
   let print_set s =
     Set.Poly.iter ~f:print_endline s in
@@ -1234,7 +1219,7 @@ let optimize_soa (mir : Program.Typed.t) =
         Common.FatalError.fatal_error_msg
           [%message "Something went wrong with program transformation packing!"]
   in
-  {mir with reverse_mode_log_prob= Some (transform' mir.log_prob)}
+  {mir with reverse_mode_log_prob= transform' mir.reverse_mode_log_prob}
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)

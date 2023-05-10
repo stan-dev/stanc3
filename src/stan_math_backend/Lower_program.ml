@@ -217,33 +217,24 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     let lp_accum__ = Var "lp_accum__" in
     [ Expression lp_accum__.@?(("add", [Var "lp__"]))
     ; Return (Some lp_accum__.@!("sum")) ] in
-  let log_prob_fun_def logp reverse_log_prob =
-    let templates =
-      let template_params =
-        [ Bool "propto__"; Bool "jacobian__"; Typename "VecR"; Typename "VecI"
-        ; Require ("stan::require_vector_like_t", ["VecR"])
-        ; Require ("stan::require_vector_like_vt", ["std::is_integral"; "VecI"])
-        ] in
-      match reverse_log_prob with
-      | Some _ ->
-          [ template_params @ [Require ("stan::require_not_st_var", ["VecR"])]
-          ; template_params @ [Require ("stan::require_st_var", ["VecR"])] ]
-      | None -> [template_params] in
-    let gen_ll template lp_lst =
-      FunDef
-        (make_fun_defn
-           ~templates_init:([template], true)
-           ~inline:true
-           ~return_type:
-             (TypeTrait ("stan::scalar_type_t", [TemplateType "VecR"]))
-           ~name:"log_prob_impl" ~args
-           ~body:
-             (intro @ Stmts.rethrow_located (lower_statements lp_lst) @ outro)
-           ~cv_qualifiers:[Const] () ) in
-    match reverse_mode_log_prob with
-    | None -> List.map2_exn ~f:gen_ll templates [logp]
-    | Some blah -> List.map2_exn ~f:gen_ll templates [logp; blah] in
-  log_prob_fun_def log_prob reverse_mode_log_prob
+  let templates =
+    let template_params =
+      [ Bool "propto__"; Bool "jacobian__"; Typename "VecR"; Typename "VecI"
+      ; Require ("stan::require_vector_like_t", ["VecR"])
+      ; Require ("stan::require_vector_like_vt", ["std::is_integral"; "VecI"])
+      ] in
+    [ template_params @ [Require ("stan::require_not_st_var", ["VecR"])]
+    ; template_params @ [Require ("stan::require_st_var", ["VecR"])] ] in
+  let gen_ll template lp_lst =
+    FunDef
+      (make_fun_defn
+         ~templates_init:([template], true)
+         ~inline:true
+         ~return_type:(TypeTrait ("stan::scalar_type_t", [TemplateType "VecR"]))
+         ~name:"log_prob_impl" ~args
+         ~body:(intro @ Stmts.rethrow_located (lower_statements lp_lst) @ outro)
+         ~cv_qualifiers:[Const] () ) in
+  List.map2_exn ~f:gen_ll templates [log_prob; reverse_mode_log_prob]
 
 let gen_write_array {Program.prog_name; generate_quantities; _} =
   let templates =

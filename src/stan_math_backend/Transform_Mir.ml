@@ -718,6 +718,7 @@ let trans_prog (p : Program.Typed.t) =
         p.output_vars in
     { p with
       log_prob= log_prob @ maybe_add_opencl_events_clear
+    ; reverse_mode_log_prob= log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         (p.prepare_data |> add_reads p.input_vars var_context_read)
