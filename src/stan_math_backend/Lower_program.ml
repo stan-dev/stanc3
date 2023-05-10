@@ -233,7 +233,7 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     ; Require ("stan::require_vector_like_vt", ["std::is_integral"; "VecI"]) ]
   in
   let non_rev_templates =
-    template_params @ [Require ("stan::require_st_var", ["VecR"])] in
+    template_params @ [Require ("stan::require_not_st_var", ["VecR"])] in
   let rev_templates =
     template_params @ [Require ("stan::require_st_var", ["VecR"])] in
   let gen_ll intro template lp_lst =

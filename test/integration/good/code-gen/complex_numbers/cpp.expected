@@ -213,7 +213,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_st_var<VecR>* = nullptr>
+            stan::require_not_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -2742,7 +2742,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_st_var<VecR>* = nullptr>
+            stan::require_not_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -3957,7 +3957,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_st_var<VecR>* = nullptr>
+            stan::require_not_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -6623,7 +6623,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_st_var<VecR>* = nullptr>
+            stan::require_not_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -7852,7 +7852,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_st_var<VecR>* = nullptr>
+            stan::require_not_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -9840,7 +9840,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_st_var<VecR>* = nullptr>
+            stan::require_not_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -10664,7 +10664,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_st_var<VecR>* = nullptr>
+            stan::require_not_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
