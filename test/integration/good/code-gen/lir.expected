@@ -5458,12 +5458,13 @@
              ((InitializerExpr (StdVector (TypeLiteral std::string))
                ((Literal "\"stanc_version = %%NAME%%3 %%VERSION%%\"")
                 (Literal "\"stancflags = --debug-lir\""))))))))))
+       (GlobalComment "Base log_prob")
        (FunDef
         ((templates_init
           ((((Bool propto__) (Bool jacobian__) (Typename VecR)
              (Typename VecI) (Require stan::require_vector_like_t (VecR))
              (Require stan::require_vector_like_vt (std::is_integral VecI))
-             (Require stan::require_not_st_var (VecR))))
+             (Require stan::require_st_var (VecR))))
            true))
          (inline true)
          (return_type (TypeTrait stan::scalar_type_t ((TemplateType VecR))))
@@ -6790,6 +6791,7 @@
                  (Index (Var locations_array__) (Var current_statement__)))))))
             (Expression (MethodCall (Var lp_accum__) add () ((Var lp__))))
             (Return ((MethodCall (Var lp_accum__) sum () ()))))))))
+       (GlobalComment "Reverse Mode log_prob")
        (FunDef
         ((templates_init
           ((((Bool propto__) (Bool jacobian__) (Typename VecR)
@@ -6806,15 +6808,16 @@
            ((Pointer (TypeLiteral std::ostream)) "pstream__ = nullptr")))
          (cv_qualifiers (Const))
          (body
-          (((Using T__
-             ((TypeTrait stan::scalar_type_t ((TemplateType VecR)))))
-            (Using local_scalar_t__ ((TypeLiteral T__)))
-            (VariableDefn
-             ((static false) (constexpr false) (type_ (TypeLiteral T__))
-              (name lp__) (init (Construction ((Literal 0.0))))))
+          (((Using local_scalar_t__ ((TypeLiteral stan::math::var)))
             (VariableDefn
              ((static false) (constexpr false)
-              (type_ (TypeTrait stan::math::accumulator ((TypeLiteral T__))))
+              (type_ (TypeLiteral stan::math::var)) (name lp__)
+              (init (Construction ((Literal 0.0))))))
+            (VariableDefn
+             ((static false) (constexpr false)
+              (type_
+               (TypeTrait stan::math::accumulator
+                ((TypeLiteral stan::math::var))))
               (name lp_accum__) (init Uninitialized)))
             (VariableDefn
              ((static false) (constexpr false)

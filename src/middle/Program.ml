@@ -32,7 +32,12 @@ type ('a, 'b, 'm) t =
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
   ; log_prob: 'b list (*assumes data & params are in scope and ready*)
   ; reverse_mode_log_prob: 'b list
-        (*assumes data & params are in scope and ready*)
+        (* assumes data & params ready & in scope.
+           A copy of log_prob but with optimizations which are specific
+           to reverse-mode autodiff. This is used in the C++ backend,
+           but can be ignored if not needed. It is initialized
+            to [[]] in [Ast_to_Mir], set it equal to log_prob
+           before calling into the optimization suite if desired. *)
   ; generate_quantities: 'b list
         (* assumes data & params ready & in scope*)
         (* NOTE: the following two items are really backend-specific,
@@ -85,7 +90,7 @@ let pp_prepare_data pp_s ppf prepare_data =
 let pp_log_prob pp_s ppf log_prob = pp_block "log_prob" pp_s ppf log_prob
 
 let pp_reverse_mode_log_prob pp_s ppf log_prob =
-  pp_block "log_prob" pp_s ppf log_prob
+  pp_block "rev_log_prob" pp_s ppf log_prob
 
 let pp_generate_quantities pp_s ppf generate_quantities =
   pp_block "generate_quantities" pp_s ppf generate_quantities

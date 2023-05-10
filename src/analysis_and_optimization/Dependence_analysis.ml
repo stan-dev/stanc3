@@ -189,6 +189,9 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
       (* log_prob scope: data, prep declarations *)
     ; stmt_uninitialized_variables globals_data_prep
         {pattern= SList mir.log_prob; meta= Location_span.empty}
+      (* log_prob scope: data, prep declarations *)
+    ; stmt_uninitialized_variables globals_data_prep
+        {pattern= SList mir.reverse_mode_log_prob; meta= Location_span.empty}
       (* gen quant scope: data, prep declarations *)
     ; stmt_uninitialized_variables globals_data_prep
         {pattern= SList mir.generate_quantities; meta= Location_span.empty}
@@ -231,7 +234,22 @@ let log_prob_build_dep_info_map (mir : Program.Typed.t) :
     Stmt.Fixed.{meta= Location_span.empty; pattern= SList mir.log_prob} in
   build_dep_info_map mir log_prob_stmt
 
+let reverse_mode_log_prob_build_dep_info_map (mir : Program.Typed.t) :
+    ( label
+    , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
+    Map.Poly.t =
+  let log_prob_stmt =
+    Stmt.Fixed.
+      {meta= Location_span.empty; pattern= SList mir.reverse_mode_log_prob}
+  in
+  build_dep_info_map mir log_prob_stmt
+
 let log_prob_dependency_graph (mir : Program.Typed.t) :
     (label, label Set.Poly.t) Map.Poly.t =
   let dep_info_map = log_prob_build_dep_info_map mir in
+  all_node_dependencies dep_info_map
+
+let reverse_mode_log_prob_dependency_graph (mir : Program.Typed.t) :
+    (label, label Set.Poly.t) Map.Poly.t =
+  let dep_info_map = reverse_mode_log_prob_build_dep_info_map mir in
   all_node_dependencies dep_info_map

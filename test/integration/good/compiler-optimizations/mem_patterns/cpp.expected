@@ -39,10 +39,11 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = -fsoa --print-cpp"};
   }
+  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -76,6 +77,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -83,10 +85,9 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -810,10 +811,11 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = -fsoa --print-cpp"};
   }
+  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -1112,6 +1114,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -1119,10 +1122,9 @@ class constraints_model final : public model_base_crtp<constraints_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2874,10 +2876,11 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = -fsoa --print-cpp"};
   }
+  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -2952,6 +2955,7 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -2959,10 +2963,9 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3845,10 +3848,11 @@ class indexing_model final : public model_base_crtp<indexing_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = -fsoa --print-cpp"};
   }
+  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -4258,6 +4262,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -4265,10 +4270,9 @@ class indexing_model final : public model_base_crtp<indexing_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -6211,10 +6215,11 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = -fsoa --print-cpp"};
   }
+  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -6284,6 +6289,7 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -6291,10 +6297,9 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -6755,10 +6760,11 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = -fsoa --print-cpp"};
   }
+  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -6818,6 +6824,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -6825,10 +6832,9 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -7427,10 +7433,11 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = -fsoa --print-cpp"};
   }
+  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -7495,6 +7502,7 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -7502,10 +7510,9 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -8062,10 +8069,11 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = -fsoa --print-cpp"};
   }
+  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -8123,6 +8131,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -8130,10 +8139,9 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -8667,10 +8675,11 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = -fsoa --print-cpp"};
   }
+  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
-            stan::require_not_st_var<VecR>* = nullptr>
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -8712,6 +8721,7 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -8719,10 +8729,9 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());

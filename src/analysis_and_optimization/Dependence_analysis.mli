@@ -85,6 +85,15 @@ val log_prob_build_dep_info_map :
    Build the dependency information for each node in the log_prob section of a program
 *)
 
+val reverse_mode_log_prob_build_dep_info_map :
+     Program.Typed.t
+  -> ( label
+     , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
+     Map.Poly.t
+(**
+   Build the dependency information for each node in the log_prob section of a program
+*)
+
 val all_node_dependencies :
      ( label
      , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
@@ -98,6 +107,13 @@ val all_node_dependencies :
 *)
 
 val log_prob_dependency_graph :
+  Program.Typed.t -> (label, label Set.Poly.t) Map.Poly.t
+(**
+   Build the dependency graph for the log_prob section of a program, where labels
+   correspond to the labels built by statement_map.
+*)
+
+val reverse_mode_log_prob_dependency_graph :
   Program.Typed.t -> (label, label Set.Poly.t) Map.Poly.t
 (**
    Build the dependency graph for the log_prob section of a program, where labels

@@ -389,30 +389,30 @@ matrix[10, 10] A_p: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name complex_fails_model) (prog_path complex-fails.stan))
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns constraints.stan
-vector[N] high_low_est: AoS
-vector[K] b: AoS
-vector[Nr] h: AoS
-vector[2] ar: AoS
-vector[N] mean_price: AoS
-vector[N] sigma_price: AoS
-vector[N] upper_test: AoS
-vector[N] lower_upper_test: AoS
-row_vector[N] row_vec_lower_upper_test: AoS
-vector[N] offset_mult_test: AoS
-vector[N] ordered_test: AoS
-vector[N] unit_vec_test: AoS
-vector[N] pos_ordered_test: AoS
-matrix[N, N] corr_matrix_test: AoS
-matrix[N, N] cov_matrix_test: AoS
-matrix[K, K] chol_fac_cov_test: AoS
-matrix[K, K] chol_fac_corr_test: AoS
-vector[N] prices: AoS
-vector[Nr] prices_diff: AoS
-vector[Nr] mu: AoS
-vector[Nr] err: AoS
-vector[Nr] h_i_mean: AoS
-vector[Nr] h_i_sigma: AoS
-vector[Nr] h_sigma: AoS
+vector[N] high_low_est: SoA
+vector[K] b: SoA
+vector[Nr] h: SoA
+vector[2] ar: SoA
+vector[N] mean_price: SoA
+vector[N] sigma_price: SoA
+vector[N] upper_test: SoA
+vector[N] lower_upper_test: SoA
+row_vector[N] row_vec_lower_upper_test: SoA
+vector[N] offset_mult_test: SoA
+vector[N] ordered_test: SoA
+vector[N] unit_vec_test: SoA
+vector[N] pos_ordered_test: SoA
+matrix[N, N] corr_matrix_test: SoA
+matrix[N, N] cov_matrix_test: SoA
+matrix[K, K] chol_fac_cov_test: SoA
+matrix[K, K] chol_fac_corr_test: SoA
+vector[N] prices: SoA
+vector[Nr] prices_diff: SoA
+vector[Nr] mu: SoA
+vector[Nr] err: SoA
+vector[Nr] h_i_mean: SoA
+vector[Nr] h_i_sigma: SoA
+vector[Nr] h_sigma: SoA
 ((functions_block ())
  (input_vars
   ((N
@@ -9484,16 +9484,16 @@ matrix[10, 10] X_tp7: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name deep_dependence_model) (prog_path deep_dependence.stan))
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns indexing.stan
-vector[M] p_soa_vec_v: AoS
-matrix[N, M] p_soa_mat: AoS
-array[vector[N], 10] p_soa_arr_vec_v: AoS
-matrix[N, M] p_soa_mat_uni_col_idx: AoS
-vector[N] p_soa_vec_uni_idx: AoS
-matrix[N, M] p_soa_loop_mat_uni_col_idx: AoS
-row_vector[N] p_soa_lhs_loop_mul: AoS
-vector[N] p_soa_rhs_loop_mul: AoS
-vector[N] p_soa_used_with_aos_in_excluded_fun: AoS
-matrix[N, M] p_soa_loop_mat_multi_uni_uni_idx: AoS
+vector[M] p_soa_vec_v: SoA
+matrix[N, M] p_soa_mat: SoA
+array[vector[N], 10] p_soa_arr_vec_v: SoA
+matrix[N, M] p_soa_mat_uni_col_idx: SoA
+vector[N] p_soa_vec_uni_idx: SoA
+matrix[N, M] p_soa_loop_mat_uni_col_idx: SoA
+row_vector[N] p_soa_lhs_loop_mul: SoA
+vector[N] p_soa_rhs_loop_mul: SoA
+vector[N] p_soa_used_with_aos_in_excluded_fun: SoA
+matrix[N, M] p_soa_loop_mat_multi_uni_uni_idx: SoA
 vector[M] p_aos_vec_v_assign_to_aos: AoS
 vector[M] p_aos_vec_v_tp_fails_func: AoS
 vector[M] p_aos_loop_vec_v_uni_idx: AoS
@@ -9505,12 +9505,12 @@ matrix[N, M] p_aos_mat_pass_func_outer_single_indexed2: AoS
 matrix[N, M] p_aos_mat_fail_uni_uni_idx1: AoS
 matrix[N, M] p_aos_mat_fail_uni_uni_idx2: AoS
 vector[M] tp_aos_vec_v: AoS
-vector[M] tp_soa_single_idx_uninit: AoS
+vector[M] tp_soa_single_idx_uninit: SoA
 vector[M] tp_aos_fail_func_vec_v: AoS
 vector[M] tp_aos_fail_assign_from_top_idx: AoS
-vector[N] tp_soa_used_with_aos_in_excluded_fun: AoS
-vector[N] tp_soa_single_assign: AoS
-vector[N] tp_soa_single_assign_from_soa: AoS
+vector[N] tp_soa_used_with_aos_in_excluded_fun: SoA
+vector[N] tp_soa_single_assign: SoA
+vector[N] tp_soa_single_assign_from_soa: SoA
 vector[N] tp_aos_loop_vec_v_uni_idx: AoS
 vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
 ((functions_block
@@ -17574,8 +17574,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
  (prog_name indexing_model) (prog_path indexing.stan))
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns indexing2.stan
 vector[10] p_aos_loop_single_idx: AoS
-vector[N] tp_soa_multi_idx_assign_in_loop: AoS
-vector[N] tp_soa_single_idx_in_upfrom_idx: AoS
+vector[N] tp_soa_multi_idx_assign_in_loop: SoA
+vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
 ((functions_block ())
  (input_vars
   ((N
@@ -18255,7 +18255,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: AoS
      (out_block Parameters) (out_trans Identity)))))
  (prog_name indexing2_model) (prog_path indexing2.stan))
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns reductions_allowed.stan
-matrix[5, 10] soa_x: AoS
+matrix[5, 10] soa_x: SoA
 matrix[5, 10] aos_x: AoS
 matrix[5, 10] aos_y: AoS
 matrix[5, 10] tp_matrix_aos_from_mix: AoS
@@ -19468,7 +19468,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name reductions_allowed_model) (prog_path reductions_allowed.stan))
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns return_types_and_udfs_demotes.stan
-matrix[10, 10] row_soa: AoS
+matrix[10, 10] row_soa: SoA
 matrix[10, 10] udf_input_aos: AoS
 matrix[10, 10] user_func_aos: AoS
 matrix[10, 10] empty_user_func_aos: AoS
@@ -20574,9 +20574,9 @@ matrix[10, 10] mul_two_aos: AoS
  (prog_path return_types_and_udfs_demotes.stan))
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns single_indexing.stan
 matrix[10, 10] aos_p: AoS
-matrix[10, 10] soa_p: AoS
-row_vector[10] tp_row_vector_from_soa_loop: AoS
-matrix[10, 10] tp_matrix_from_soa_loop: AoS
+matrix[10, 10] soa_p: SoA
+row_vector[10] tp_row_vector_from_soa_loop: SoA
+matrix[10, 10] tp_matrix_from_soa_loop: SoA
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
