@@ -4,32 +4,22 @@ open Middle
 open Yojson.Basic
 
 let rec unsized_basetype_json t =
-  match t with
-  | t when UnsizedType.contains_tuple t ->
-      let internal, dims = UnsizedType.unwind_array_type t in
-      let internals =
-        match internal with UnsizedType.UTuple ts -> ts | _ -> assert false
-      in
+  let to_json (type_, dim) : t =
+    `Assoc [("type", `String type_); ("dimensions", `Int dim)] in
+  let internal, dims = UnsizedType.unwind_array_type t in
+  match internal with
+  | UnsizedType.UInt -> to_json ("int", dims)
+  | UReal -> to_json ("real", dims)
+  | UComplex -> to_json ("complex", dims)
+  | UVector | URowVector -> to_json ("real", dims + 1)
+  | UComplexVector | UComplexRowVector -> to_json ("complex", dims + 1)
+  | UMatrix -> to_json ("real", dims + 2)
+  | UComplexMatrix -> to_json ("complex", dims + 2)
+  | UTuple internals ->
       `Assoc
         [ ("type", `List (List.map ~f:unsized_basetype_json internals))
         ; ("dimensions", `Int dims) ]
-  | _ ->
-      let rec type_dims t =
-        match t with
-        | UnsizedType.UInt -> ("int", 0)
-        | UReal -> ("real", 0)
-        | UComplex -> ("complex", 0)
-        | UVector | URowVector -> ("real", 1)
-        | UComplexVector | UComplexRowVector -> ("complex", 1)
-        | UMatrix -> ("real", 2)
-        | UComplexMatrix -> ("complex", 2)
-        | UArray t' ->
-            let type_, dim = type_dims t' in
-            (type_, dim + 1)
-        | UMathLibraryFunction | UFun _ | UTuple _ -> assert false in
-      let to_json (type_, dim) : t =
-        `Assoc [("type", `String type_); ("dimensions", `Int dim)] in
-      type_dims t |> to_json
+  | UMathLibraryFunction | UFun _ | UArray _ -> assert false
 
 let basetype_dims t = SizedType.to_unsized t |> unsized_basetype_json
 
