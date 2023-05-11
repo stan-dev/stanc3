@@ -213,8 +213,9 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     @ Decls.dummy_var
     @ gen_function__ prog_name "log_prob" in
   let intro_rev =
-    let t__ = TypeLiteral "stan::math::var" in
-    [ Using ("local_scalar_t__", Some (TypeLiteral "stan::math::var"))
+    let t__ = TypeLiteral "T__" in
+    [ Using ("T__", Some (TypeLiteral "stan::math::var"))
+    ; Using ("local_scalar_t__", Some t__)
     ; VariableDefn
         (make_variable_defn ~type_:t__ ~name:"lp__"
            ~init:(Construction [Literal "0.0"])
