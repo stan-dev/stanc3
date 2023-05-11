@@ -200,11 +200,21 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     [ (Ref (TemplateType "VecR"), "params_r__")
     ; (Ref (TemplateType "VecI"), "params_i__")
     ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
-  let intro =
+  let intro_nonrev =
     let t__ = TypeLiteral "T__" in
     [ Using
         ("T__", Some (TypeTrait ("stan::scalar_type_t", [TemplateType "VecR"])))
     ; Using ("local_scalar_t__", Some t__)
+    ; VariableDefn
+        (make_variable_defn ~type_:t__ ~name:"lp__"
+           ~init:(Construction [Literal "0.0"])
+           () ); Decls.lp_accum t__; Decls.serializer_in
+    ; Decls.current_statement ]
+    @ Decls.dummy_var
+    @ gen_function__ prog_name "log_prob" in
+  let intro_rev =
+    let t__ = TypeLiteral "stan::math::var" in
+    [ Using ("local_scalar_t__", Some (TypeLiteral "stan::math::var"))
     ; VariableDefn
         (make_variable_defn ~type_:t__ ~name:"lp__"
            ~init:(Construction [Literal "0.0"])
@@ -217,15 +227,16 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     let lp_accum__ = Var "lp_accum__" in
     [ Expression lp_accum__.@?(("add", [Var "lp__"]))
     ; Return (Some lp_accum__.@!("sum")) ] in
-  let templates =
-    let template_params =
-      [ Bool "propto__"; Bool "jacobian__"; Typename "VecR"; Typename "VecI"
-      ; Require ("stan::require_vector_like_t", ["VecR"])
-      ; Require ("stan::require_vector_like_vt", ["std::is_integral"; "VecI"])
-      ] in
-    [ template_params @ [Require ("stan::require_not_st_var", ["VecR"])]
-    ; template_params @ [Require ("stan::require_st_var", ["VecR"])] ] in
-  let gen_ll template lp_lst =
+  let template_params =
+    [ Bool "propto__"; Bool "jacobian__"; Typename "VecR"; Typename "VecI"
+    ; Require ("stan::require_vector_like_t", ["VecR"])
+    ; Require ("stan::require_vector_like_vt", ["std::is_integral"; "VecI"]) ]
+  in
+  let template_nonrev =
+    template_params @ [Require ("stan::require_not_st_var", ["VecR"])] in
+  let template_rev =
+    template_params @ [Require ("stan::require_st_var", ["VecR"])] in
+  let gen_ll intro template lp_lst =
     FunDef
       (make_fun_defn
          ~templates_init:([template], true)
@@ -234,7 +245,8 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
          ~name:"log_prob_impl" ~args
          ~body:(intro @ Stmts.rethrow_located (lower_statements lp_lst) @ outro)
          ~cv_qualifiers:[Const] () ) in
-  List.map2_exn ~f:gen_ll templates [log_prob; reverse_mode_log_prob]
+  [ gen_ll intro_nonrev template_nonrev log_prob
+  ; gen_ll intro_rev template_rev reverse_mode_log_prob ]
 
 let gen_write_array {Program.prog_name; generate_quantities; _} =
   let templates =

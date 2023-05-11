@@ -6806,15 +6806,16 @@
            ((Pointer (TypeLiteral std::ostream)) "pstream__ = nullptr")))
          (cv_qualifiers (Const))
          (body
-          (((Using T__
-             ((TypeTrait stan::scalar_type_t ((TemplateType VecR)))))
-            (Using local_scalar_t__ ((TypeLiteral T__)))
-            (VariableDefn
-             ((static false) (constexpr false) (type_ (TypeLiteral T__))
-              (name lp__) (init (Construction ((Literal 0.0))))))
+          (((Using local_scalar_t__ ((TypeLiteral stan::math::var)))
             (VariableDefn
              ((static false) (constexpr false)
-              (type_ (TypeTrait stan::math::accumulator ((TypeLiteral T__))))
+              (type_ (TypeLiteral stan::math::var)) (name lp__)
+              (init (Construction ((Literal 0.0))))))
+            (VariableDefn
+             ((static false) (constexpr false)
+              (type_
+               (TypeTrait stan::math::accumulator
+                ((TypeLiteral stan::math::var))))
               (name lp_accum__) (init Uninitialized)))
             (VariableDefn
              ((static false) (constexpr false)

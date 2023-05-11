@@ -356,10 +356,9 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1291,10 +1290,9 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());

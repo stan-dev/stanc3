@@ -151,10 +151,9 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -608,10 +607,9 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1032,10 +1030,9 @@ class container_promotion_model final : public model_base_crtp<container_promoti
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2019,10 +2016,9 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2833,10 +2829,9 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3363,10 +3358,9 @@ class funcall_type_promotion_model final : public model_base_crtp<funcall_type_p
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3709,10 +3703,9 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -9750,10 +9743,9 @@ class mother_model final : public model_base_crtp<mother_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -14434,10 +14426,9 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -18356,10 +18347,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -22249,10 +22239,9 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -23801,10 +23790,9 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25346,10 +25334,9 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25780,10 +25767,9 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -26254,10 +26240,9 @@ class print_unicode_model final : public model_base_crtp<print_unicode_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -26593,10 +26578,9 @@ class promotion_model final : public model_base_crtp<promotion_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -27343,10 +27327,9 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -27932,10 +27915,9 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -29554,10 +29536,9 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -33710,10 +33691,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -35492,10 +35472,9 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -36811,10 +36790,9 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -37149,10 +37127,9 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -38372,10 +38349,9 @@ class transform_model final : public model_base_crtp<transform_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -40897,10 +40873,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -41356,10 +41331,9 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -41720,10 +41694,9 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -42106,10 +42079,9 @@ class variable_named_context_model final : public model_base_crtp<variable_named
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -43080,10 +43052,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::scalar_type_t<VecR>;
-    using local_scalar_t__ = T__;
-    T__ lp__(0.0);
-    stan::math::accumulator<T__> lp_accum__;
+    using local_scalar_t__ = stan::math::var;
+    stan::math::var lp__(0.0);
+    stan::math::accumulator<stan::math::var> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
