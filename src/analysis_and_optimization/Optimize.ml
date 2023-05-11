@@ -263,7 +263,7 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
             match suffix with
             | FnLpdf propto' when propto' && propto ->
                 ( Fun_kind.FnLpdf true
-                , Utils.with_unnormalized_suffix fname
+                , Fun_kind.with_unnormalized_suffix fname
                   |> Option.value ~default:fname )
             | FnLpdf _ -> (Fun_kind.FnLpdf false, fname)
             | _ -> (suffix, fname) in
@@ -470,7 +470,7 @@ let create_function_inline_map adt l =
               (UnsizedType.returntype_to_type_opt fdrt)
           , List.map ~f:(fun (_, name, _) -> name) fdargs
           , inline_function_statement propto adt accum fdbody ) in
-        match Middle.Utils.with_unnormalized_suffix fdname with
+        match Middle.Fun_kind.with_unnormalized_suffix fdname with
         | None -> (
             let data = create_data true in
             match Map.add accum ~key:fdname ~data with

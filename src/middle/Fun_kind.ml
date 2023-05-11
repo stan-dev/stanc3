@@ -31,13 +31,14 @@ let suffix_from_name fname =
   then FnLpdf false
   else FnPlain
 
+let with_unnormalized_suffix (name : string) =
+  Option.first_some
+    ( String.chop_suffix ~suffix:"_lpdf" name
+    |> Option.map ~f:(fun n -> n ^ "_lupdf") )
+    ( String.chop_suffix ~suffix:"_lpmf" name
+    |> Option.map ~f:(fun n -> n ^ "_lupmf") )
+
 let pp pp_expr ppf kind =
-  let with_unnormalized_suffix (name : string) =
-    Option.first_some
-      ( String.chop_suffix ~suffix:"_lpdf" name
-      |> Option.map ~f:(fun n -> n ^ "_lupdf") )
-      ( String.chop_suffix ~suffix:"_lpmf" name
-      |> Option.map ~f:(fun n -> n ^ "_lupmf") ) in
   match kind with
   | StanLib (s, FnLpdf true, _) | UserDefined (s, FnLpdf true) ->
       Fmt.string ppf (with_unnormalized_suffix s |> Option.value ~default:s)
