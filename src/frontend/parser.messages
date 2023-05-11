@@ -5665,7 +5665,7 @@ program: DATABLOCK LBRACE TUPLE LPAREN WHILE
 ## TUPLE LPAREN
 ##
 
-Incomplete type declaration. Expected comma seperated list of types between "("
+Incomplete type declaration. Expected comma separated list of types between "("
 and ")" to declare tuple variable.
 
 program: TRANSFORMEDDATABLOCK LBRACE LBRACE DOTNUMERAL SEMICOLON
