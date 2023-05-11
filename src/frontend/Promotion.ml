@@ -203,7 +203,7 @@ let rec get_type_promotion_exn (ad_requested, ty_requested)
   else
     Common.FatalError.fatal_error_msg
       [%message
-        "Tried to get promotion incompatible autodifftypes!"
+        "Tried to get promotion of incompatible autodifftypes!"
           (ad_current : UnsizedType.autodifftype)
           "cannot be promoted to "
           (ad_requested : UnsizedType.autodifftype)]

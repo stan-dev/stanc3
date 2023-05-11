@@ -61,7 +61,7 @@ let rec calculate_autodifftype cf origin ut =
   | _, UnsizedType.UTuple ts ->
       UnsizedType.TupleAD (List.map ~f:(calculate_autodifftype cf origin) ts)
   | Env.(Param | TParam | Model | Functions), _
-    when not (UnsizedType.is_int_type ut || cf.current_block = GQuant) ->
+    when not (UnsizedType.is_discrete_type ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
   | _, _ -> DataOnly
 
@@ -466,7 +466,7 @@ let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
     if is_cond_dist then CondDistApp (kind, name, args)
     else FunApp (kind, name, args) in
   let ad_type =
-    if UnsizedType.is_int_type type_ then UnsizedType.DataOnly
+    if UnsizedType.is_discrete_type type_ then UnsizedType.DataOnly
     else if UnsizedType.has_autodiff (expr_ad_lub args) then
       UnsizedType.AutoDiffable
     else DataOnly in
@@ -1606,14 +1606,14 @@ and verify_pdf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpdf" then
     let rt = List.hd arg_tys |> Option.map ~f:snd in
     match rt with
-    | Some rt when not (UnsizedType.is_int_type rt) -> ()
+    | Some rt when not (UnsizedType.is_discrete_type rt) -> ()
     | _ -> Semantic_error.prob_density_non_real_variate loc rt |> error
 
 and verify_pmf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpmf" then
     let rt = List.hd arg_tys |> Option.map ~f:snd in
     match rt with
-    | Some rt when UnsizedType.is_int_type rt -> ()
+    | Some rt when UnsizedType.is_discrete_type rt -> ()
     | _ -> Semantic_error.prob_mass_non_int_variate loc rt |> error
 
 and verify_fundef_distinct_arg_ids loc arg_names =

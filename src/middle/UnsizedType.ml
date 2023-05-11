@@ -122,9 +122,17 @@ let rec has_autodiff = function
   | AutoDiffable -> true
   | TupleAD ts -> List.exists ts ~f:has_autodiff
 
-let lub_ad_type xs =
-  List.max_elt ~compare:compare_autodifftype xs
-  |> Option.value ~default:DataOnly
+let rec lub_ad_type xs =
+  List.fold xs ~init:DataOnly ~f:(fun cur next ->
+      match (cur, next) with
+      | DataOnly, DataOnly -> DataOnly
+      | DataOnly, AutoDiffable | AutoDiffable, DataOnly -> AutoDiffable
+      | AutoDiffable, AutoDiffable -> AutoDiffable
+      | TupleAD ts, TupleAD ts2 ->
+          TupleAD (List.map2_exn ts ts2 ~f:(fun t1 t2 -> lub_ad_type [t1; t2]))
+      | TupleAD ts, DataOnly | DataOnly, TupleAD ts -> TupleAD ts
+      | TupleAD ts, AutoDiffable | AutoDiffable, TupleAD ts ->
+          TupleAD (List.map ts ~f:(fun t -> lub_ad_type [t; AutoDiffable])) )
 
 let%expect_test "lub_ad_type1" =
   let ads = [DataOnly; DataOnly; DataOnly; AutoDiffable] in
@@ -193,6 +201,15 @@ let promote_container ut scalar =
     | _, _ -> ut in
   loop ut
 
+(** Used to determine valid covariates for [_lpmf] functions *)
+let rec is_discrete_type ut =
+  match ut with
+  | UInt -> true
+  | UArray ut -> is_discrete_type ut
+  | UTuple ts -> List.for_all ~f:is_discrete_type ts
+  | _ -> false
+
+(** Used in code generation and other places, does _not_ include tuples of ints *)
 let rec is_int_type ut =
   match ut with UInt -> true | UArray ut -> is_int_type ut | _ -> false
 
