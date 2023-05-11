@@ -916,7 +916,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp --use-opencl"};
   }
-  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -3970,7 +3969,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
-  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -3978,9 +3976,10 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using local_scalar_t__ = stan::math::var;
-    stan::math::var lp__(0.0);
-    stan::math::accumulator<stan::math::var> lp_accum__;
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -10636,7 +10635,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp --use-opencl"};
   }
-  // Base log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -10743,7 +10741,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
-  // Reverse Mode log_prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -10751,9 +10748,10 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using local_scalar_t__ = stan::math::var;
-    stan::math::var lp__(0.0);
-    stan::math::accumulator<stan::math::var> lp_accum__;
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
