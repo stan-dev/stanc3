@@ -208,10 +208,7 @@ let rec internal_scalar ut =
   | UInt -> UInt
   | UComplex | UComplexVector | UComplexMatrix | UComplexRowVector -> UComplex
   | UArray ut -> internal_scalar ut
-  | UFun _ | UMathLibraryFunction -> ut
-  | _ ->
-      Common.FatalError.fatal_error_msg
-        [%message "Tried to get scalar type of " (ut : t)]
+  | UFun _ | UMathLibraryFunction | UTuple _ -> ut
 
 let is_eigen_type ut =
   match ut with

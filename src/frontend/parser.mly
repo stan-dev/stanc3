@@ -25,11 +25,6 @@ let rec iterate_n f x = function
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 
-(* $sloc and $symbolstartpos generates code using !=, which
-    Core_kernel considers to be an error.
-let (!=) = Stdlib.(!=)
- *)
-
 %}
 
 (* Token definitions. The quoted strings are aliases, used in the examples generated in
@@ -87,7 +82,7 @@ let (!=) = Stdlib.(!=)
 %nonassoc unary_over_binary
 %right HAT ELTPOW
 %left TRANSPOSE
-%nonassoc ARRAY
+%nonassoc ARRAY (* resolves shift-reduce with array keyword in declarations *)
 %left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE

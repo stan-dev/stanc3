@@ -1028,8 +1028,8 @@ let rec check_lvalue cf tenv = function
             ( {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
             , var
             , flat @ idcs )
-        | lval ->
-            (* TUPLE MAYBE: I think the right thing to do here is treat tuples like variables *)
+        | {lval= LVariable _ | LTupleProjection _; _} as lval ->
+            (*  I think the right thing to do here is treat tuples like variables *)
             let tval = check_lvalue cf tenv lval in
             (tval, tval, []) in
       let lval, var, flat = check_inner lval in

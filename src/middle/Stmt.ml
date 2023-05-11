@@ -197,14 +197,6 @@ module Helpers = struct
         (Expr.Helpers.add_int_index iteratee (Index.Single loopvar)) in
     mk_for upper bodyfn meta
 
-  let for_each_tuple bodyfn iteratee ts meta =
-    let stmt =
-      Fixed.Pattern.SList
-        (List.mapi ts ~f:(fun tuple_ix t ->
-             let e = Expr.Helpers.add_tuple_index iteratee (tuple_ix + 1) in
-             bodyfn t e ) ) in
-    Fixed.{meta; pattern= stmt}
-
   let rec for_each bodyfn iteratee smeta =
     let len (e : Expr.Typed.t) =
       let emeta = e.meta in
@@ -224,9 +216,7 @@ module Helpers = struct
         in
         mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
-    (* TUPLE MAYBE It's not clear that this should ever be called: *)
-    | UTuple ts -> for_each_tuple (const bodyfn) iteratee ts smeta
-    | UMathLibraryFunction | UFun _ ->
+    | UMathLibraryFunction | UFun _ | UTuple _ ->
         FatalError.fatal_error_msg
           [%message "Can't iterate over " (iteratee : Expr.Typed.t)]
 

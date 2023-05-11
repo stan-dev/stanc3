@@ -33,8 +33,7 @@ let suffix_from_name fname =
 
 let pp pp_expr ppf kind =
   let with_unnormalized_suffix (name : string) =
-    Option.merge
-      ~f:(fun x _ -> x)
+    Option.first_some
       ( String.chop_suffix ~suffix:"_lpdf" name
       |> Option.map ~f:(fun n -> n ^ "_lupdf") )
       ( String.chop_suffix ~suffix:"_lpmf" name
