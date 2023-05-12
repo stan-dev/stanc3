@@ -49,16 +49,19 @@ and free_vars_fnapp kind l =
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
   | _ -> Set.Poly.union_list arg_vars
 
+let rec free_vars_lval (l : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
+  match l with
+  | LVariable _ -> Set.Poly.empty
+  | LIndexed (_, l) -> Set.Poly.union_list (List.map ~f:free_vars_idx l)
+  | LTupleProjection (e, _) -> free_vars_lval e
+
 (** Calculate the free (non-bound) variables in a statement *)
 let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
     =
   match s with
-  | Assignment ((LVariable _ | LTupleProjection _), _, e)
-   |Return (Some e)
-   |TargetPE e ->
-      free_vars_expr e
-  | Assignment (LIndexed (_, l), _, e) ->
-      Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
+  | Return (Some e) | TargetPE e -> free_vars_expr e
+  | Assignment (l, _, e) ->
+      Set.Poly.union_list [free_vars_expr e; free_vars_lval l]
   | NRFunApp (kind, l) -> free_vars_fnapp kind l
   | IfElse (e, b1, Some b2) ->
       Set.Poly.union_list
