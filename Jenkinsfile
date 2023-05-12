@@ -135,6 +135,7 @@ pipeline {
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
                 }
             }
+            post { always { runShell("rm -rf ./*") }}
         }
 
         stage("Build") {
