@@ -1,4 +1,4 @@
-@Library('StanUtils')
+@Library('StanUtilsDev')
 import org.stan.Utils
 
 utils = new org.stan.Utils()
