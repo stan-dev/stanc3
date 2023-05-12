@@ -590,20 +590,22 @@ and used_expressions_idx_help f (i : Expr.Typed.t Index.t) =
   | Single e | Upfrom e | MultiIndex e -> f e
   | Between (e1, e2) -> Expr.Typed.Set.union (f e1) (f e2)
 
+let rec used_expressions_lval f (l : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
+  match l with
+  | LVariable _ -> Expr.Typed.Set.empty
+  | LTupleProjection (e, _) -> used_expressions_lval f e
+  | LIndexed (_, l) ->
+      Expr.Typed.Set.union_list (List.map ~f:(used_expressions_idx_help f) l)
+
 (** Calculate the set of expressions of an expression *)
 let used_expressions_expr e = Expr.Typed.Set.singleton e
 
 let rec used_expressions_stmt_help f
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
   match s with
-  | Assignment ((LVariable _ | LTupleProjection _), _, e)
-   |TargetPE e
-   |Return (Some e) ->
-      f e
-  | Assignment (LIndexed (_, l), _, e) ->
-      Expr.Typed.Set.union (f e)
-        (Expr.Typed.Set.union_list
-           (List.map ~f:(used_expressions_idx_help f) l) )
+  | TargetPE e | Return (Some e) -> f e
+  | Assignment (l, _, e) ->
+      Expr.Typed.Set.union (f e) (used_expressions_lval f l)
   | IfElse (e, b1, Some b2) ->
       Expr.Typed.Set.union_list
         [ f e; used_expressions_stmt_help f b1.pattern
@@ -636,14 +638,9 @@ let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 let top_used_expressions_stmt_help f
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
   match s with
-  | Assignment ((LVariable _ | LTupleProjection _), _, e)
-   |TargetPE e
-   |Return (Some e) ->
-      f e
-  | Assignment (LIndexed (_, l), _, e) ->
-      Expr.Typed.Set.union (f e)
-        (Expr.Typed.Set.union_list
-           (List.map ~f:(used_expressions_idx_help f) l) )
+  | TargetPE e | Return (Some e) -> f e
+  | Assignment (l, _, e) ->
+      Expr.Typed.Set.union (f e) (used_expressions_lval f l)
   | While (e, _) | IfElse (e, _, _) -> f e
   | NRFunApp (k, l) ->
       Expr.Typed.Set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
