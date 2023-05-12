@@ -90,6 +90,15 @@ let expr_loc_lub exprs =
 let expr_ad_lub exprs =
   exprs |> List.map ~f:(fun x -> x.emeta.ad_level) |> UnsizedType.lub_ad_type
 
+let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : typed_expression =
+  let fn =
+    if is_cond_dist then CondDistApp (kind, name, args)
+    else FunApp (kind, name, args) in
+  mk_typed_expression ~expr:fn ~loc ~type_
+    ~ad_level:
+      ( if UnsizedType.is_int_type type_ then UnsizedType.DataOnly
+      else expr_ad_lub args )
+
 (** Assignment operators *)
 type assignmentoperator =
   | Assign

@@ -26,8 +26,16 @@ type info =
 
 type t
 
-val stan_math_environment : t
-(** A type environment which contains the Stan math library functions
+val make_from_library :
+     ( string
+     , ( UnsizedType.returntype
+       * (UnsizedType.autodifftype * UnsizedType.t) list
+       * Mem_pattern.t )
+       list )
+     Core_kernel.Hashtbl.t
+  -> t
+(** Make a type environment from a hashtable of functions like those from
+    [Std_library_utils]
 *)
 
 val find : t -> string -> info list

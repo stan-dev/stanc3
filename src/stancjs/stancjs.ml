@@ -1,16 +1,24 @@
 open Core_kernel
 open Frontend
-open Stan_math_backend
-open Analysis_and_optimization
 open Middle
+open Analysis_and_optimization
+open Stan_math_backend
 open Js_of_ocaml
+
+(* Initialize functors with Stan Math C++ signatures *)
+module Typechecker = Typechecking.Make (Stan_math_library)
+module Deprecations = Deprecation_analysis.Make (Stan_math_library)
+module Canonicalizer = Canonicalize.Make (Deprecations)
+module ModelInfo = Info.Make (Stan_math_library)
+module Ast2Mir = Ast_to_Mir.Make (Stan_math_library)
+module Optimizer = Optimize.Make (Stan_math_library)
 
 let version = "%%NAME%% %%VERSION%%"
 
 let stan2cpp model_name model_string is_flag_set flag_val =
   Common.Gensym.reset_danger_use_cautiously () ;
-  Typechecker.model_name := model_name ;
-  Typechecker.check_that_all_functions_have_definition :=
+  Typechecking.model_name := model_name ;
+  Typechecking.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
   Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
   Lower_program.standalone_functions :=
@@ -33,7 +41,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
         >>| fun (typed_ast, type_warnings) ->
         let warnings = parser_warnings @ type_warnings in
         if is_flag_set "info" then
-          r.return (Result.Ok (Info.info typed_ast), warnings, []) ;
+          r.return (Result.Ok (ModelInfo.info typed_ast), warnings, []) ;
         let canonicalizer_settings =
           if is_flag_set "print-canonical" then Canonicalize.legacy
           else
@@ -56,11 +64,11 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           flag_val "max-line-length"
           |> Option.map ~f:int_of_string
           |> Option.value ~default:78 in
+        let mir = Ast2Mir.trans_prog model_name typed_ast in
         let deprecation_warnings =
           if canonicalizer_settings.deprecations then []
-          else Deprecation_analysis.collect_warnings typed_ast in
+          else Deprecations.collect_warnings typed_ast in
         let warnings = warnings @ deprecation_warnings in
-        let mir = Ast_to_Mir.trans_prog model_name typed_ast in
         let tx_mir = Transform_Mir.trans_prog mir in
         if is_flag_set "auto-format" || is_flag_set "print-canonical" then
           r.return
@@ -70,7 +78,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
                    ~line_length
                    ~inline_includes:canonicalizer_settings.inline_includes
                    ~strip_comments:canonicalizer_settings.strip_comments
-                   (Canonicalize.canonicalize_program typed_ast
+                   (Canonicalizer.canonicalize_program typed_ast
                       canonicalizer_settings ) )
             , warnings
             , [] ) ;
@@ -87,7 +95,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
             ( Result.map_error
                 ~f:(fun e -> Errors.DebugDataError e)
                 (Debug_data_generation.gen_values_json
-                   (Ast_to_Mir.gather_declarations typed_ast.datablock) )
+                   (Ast2Mir.gather_declarations typed_ast.datablock) )
             , warnings
             , [] ) ;
         if is_flag_set "debug-generate-inits" then
@@ -95,7 +103,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
             ( Result.map_error
                 ~f:(fun e -> Errors.DebugDataError e)
                 (Debug_data_generation.gen_values_json
-                   (Ast_to_Mir.gather_declarations typed_ast.parametersblock) )
+                   (Ast2Mir.gather_declarations typed_ast.parametersblock) )
             , warnings
             , [] ) ;
         let opt_mir =
@@ -105,7 +113,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
             else if is_flag_set "Oexperimental" || is_flag_set "O" then
               Optimize.Oexperimental
             else Optimize.O0 in
-          Optimize.optimization_suite
+          Optimizer.optimization_suite
             ~settings:(Optimize.level_optimizations opt_lvl)
             tx_mir in
         if is_flag_set "debug-optimized-mir" then
@@ -210,11 +218,11 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
   wrap_result ?printed_filename ~code result ~warnings
 
 let dump_stan_math_signatures () =
-  Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()
+  Js.string @@ Fmt.str "%a" Stan_math_library.pretty_print_all_math_sigs ()
 
 let dump_stan_math_distributions () =
   Js.string
-  @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_distributions ()
+  @@ Fmt.str "%a" Stan_math_library.pretty_print_all_math_distributions ()
 
 let () =
   Js.export "dump_stan_math_signatures" dump_stan_math_signatures ;

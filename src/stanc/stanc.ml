@@ -3,9 +3,17 @@
 open Core_kernel
 open Core_kernel.Poly
 open Frontend
-open Stan_math_backend
-open Analysis_and_optimization
 open Middle
+open Analysis_and_optimization
+open Stan_math_backend
+
+(* Initialize functor modules with the Stan Math Library *)
+module Typechecker = Typechecking.Make (Stan_math_library)
+module Deprecations = Deprecation_analysis.Make (Stan_math_library)
+module Canonicalizer = Canonicalize.Make (Deprecations)
+module ModelInfo = Info.Make (Stan_math_library)
+module Ast2Mir = Ast_to_Mir.Make (Stan_math_library)
+module Optimizer = Optimize.Make (Stan_math_library)
 
 (** The main program. *)
 let version = "%%NAME%%3 %%VERSION%%"
@@ -165,7 +173,7 @@ let options =
             exit 0 )
       , " Display stanc version number" )
     ; ( "--name"
-      , Arg.Set_string Typechecker.model_name
+      , Arg.Set_string Typechecking.model_name
       , " Take a string to set the model name (default = \
          \"$model_filename_model\")" )
     ; ( "--O0"
@@ -199,12 +207,11 @@ let options =
       , Arg.Set print_model_cpp
       , " If set, output the generated C++ Stan model class to stdout." )
     ; ( "--allow-undefined"
-      , Arg.Clear Typechecker.check_that_all_functions_have_definition
+      , Arg.Clear Typechecking.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
     ; ( "--include-paths"
       , Arg.String
-          (fun str ->
-            Preprocessor.include_paths := String.split_on_chars ~on:[','] str )
+          (fun str -> Preprocessor.include_paths := String.split ~on:',' str)
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
     ; ( "--use-opencl"
@@ -295,11 +302,11 @@ let use_file filename =
       ~print_warnings:(not !canonicalize_settings.deprecations)
       ~bare_functions:!bare_functions in
   (* must be before typecheck to fix up deprecated syntax which gets rejected *)
-  let ast = Canonicalize.repair_syntax ast !canonicalize_settings in
+  let ast = Canonicalizer.repair_syntax ast !canonicalize_settings in
   Debugging.ast_logger ast ;
   let typed_ast = type_ast_or_exit ?printed_filename ast in
   let canonical_ast =
-    Canonicalize.canonicalize_program typed_ast !canonicalize_settings in
+    Canonicalizer.canonicalize_program typed_ast !canonicalize_settings in
   if !pretty_print_program then
     print_or_write
       (Pretty_printing.pretty_print_typed_program
@@ -307,13 +314,13 @@ let use_file filename =
          ~inline_includes:!canonicalize_settings.inline_includes canonical_ast
          ~strip_comments:!canonicalize_settings.strip_comments ) ;
   if !print_info_json then (
-    print_endline (Info.info canonical_ast) ;
+    print_endline (ModelInfo.info canonical_ast) ;
     exit 0 ) ;
   if not !canonicalize_settings.deprecations then
     Warnings.pp_warnings Fmt.stderr ?printed_filename
-      (Deprecation_analysis.collect_warnings typed_ast) ;
+      (Deprecations.collect_warnings typed_ast) ;
   if !generate_data then (
-    let decls = Ast_to_Mir.gather_declarations typed_ast.datablock in
+    let decls = Ast2Mir.gather_declarations typed_ast.datablock in
     let context =
       match !data_file with
       | None -> Map.Poly.empty
@@ -331,11 +338,11 @@ let use_file filename =
       | None -> Map.Poly.empty
       | Some file ->
           Debug_data_generation.json_to_mir
-            (Ast_to_Mir.gather_declarations typed_ast.datablock)
+            (Ast2Mir.gather_declarations typed_ast.datablock)
             (Yojson.Basic.from_file file) in
     match
       Debug_data_generation.gen_values_json ~new_only:true ~context
-        (Ast_to_Mir.gather_declarations typed_ast.parametersblock)
+        (Ast2Mir.gather_declarations typed_ast.parametersblock)
     with
     | Ok s -> print_or_write s ; exit 0
     | Error e ->
@@ -347,7 +354,7 @@ let use_file filename =
     Fmt.pf Fmt.stderr "Warning: ignoring --debug-data-file" ;
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
-    let mir = Ast_to_Mir.trans_prog filename typed_ast in
+    let mir = Ast2Mir.trans_prog filename typed_ast in
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
@@ -367,7 +374,7 @@ let use_file filename =
         if !no_soa_opt then {base_optims with optimize_soa= false}
         else if !soa_opt then {base_optims with optimize_soa= true}
         else base_optims in
-      Optimize.optimization_suite ~settings:set_optims tx_mir in
+      Optimizer.optimization_suite ~settings:set_optims tx_mir in
     if !dump_mem_pattern then
       Memory_patterns.pp_mem_patterns Format.std_formatter opt_mir ;
     if !dump_opt_mir then
@@ -393,11 +400,11 @@ let main () =
   Arg.parse options add_file usage ;
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
-    Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
+    Stan_math_library.pretty_print_all_math_sigs Format.std_formatter () ;
     exit 0 ) ;
   if !dump_stan_math_distributions then (
-    Stan_math_signatures.pretty_print_all_math_distributions
-      Format.std_formatter () ;
+    Stan_math_library.pretty_print_all_math_distributions Format.std_formatter
+      () ;
     exit 0 ) ;
   if !model_file = "" then model_file_err () ;
   let stanc_args_to_print =
@@ -417,12 +424,12 @@ let main () =
     Lower_program.standalone_functions := true ;
     bare_functions := true ) ;
   (* Just translate a stan program *)
-  if !Typechecker.model_name = "" then
-    Typechecker.model_name :=
+  if !Typechecking.model_name = "" then
+    Typechecking.model_name :=
       mangle
         (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
       ^ "_model"
-  else Typechecker.model_name := mangle !Typechecker.model_name ;
+  else Typechecking.model_name := mangle !Typechecking.model_name ;
   use_file !model_file
 
 let () = main ()

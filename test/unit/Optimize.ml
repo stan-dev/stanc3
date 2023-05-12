@@ -1,8 +1,12 @@
 open Core_kernel
-open Analysis_and_optimization.Optimize
 open Middle
 open Common
 open Analysis_and_optimization.Mir_utils
+
+module Optimizer =
+  Analysis_and_optimization.Optimize.Make (Stan_math_backend.Stan_math_library)
+
+open Optimizer
 
 let reset_and_mir_of_string s =
   Gensym.reset_danger_use_cautiously () ;
@@ -448,8 +452,8 @@ let%expect_test "recursive functions" =
       } |}]
 
 let%expect_test "do not try to inline extern functions" =
-  let before = !Frontend.Typechecker.check_that_all_functions_have_definition in
-  Frontend.Typechecker.check_that_all_functions_have_definition := false ;
+  let before = !Frontend.Typechecking.check_that_all_functions_have_definition in
+  Frontend.Typechecking.check_that_all_functions_have_definition := false ;
   let mir =
     reset_and_mir_of_string
       {|
@@ -461,7 +465,7 @@ let%expect_test "do not try to inline extern functions" =
             }
             |}
   in
-  Frontend.Typechecker.check_that_all_functions_have_definition := before ;
+  Frontend.Typechecking.check_that_all_functions_have_definition := before ;
   let mir = function_inlining mir in
   Fmt.str "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect

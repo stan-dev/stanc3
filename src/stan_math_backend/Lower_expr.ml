@@ -45,9 +45,9 @@ type variadic = FixedArgs | ReduceSum | VariadicHOF of int
 [@@deriving compare, hash]
 
 let functor_type hof =
-  match Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures hof with
+  match Hashtbl.find Stan_math_library.variadic_signatures hof with
   | Some {required_fn_args; _} -> VariadicHOF (List.length required_fn_args)
-  | None when Stan_math_signatures.is_reduce_sum_fn hof -> ReduceSum
+  | None when Stan_math_library.is_reduce_sum_fn hof -> ReduceSum
   | None -> FixedArgs
 
 let functor_suffix_select = function
@@ -329,7 +329,7 @@ and lower_functionals fname suffix es mem_pattern =
         | ( x
           , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
             :: grainsize :: container :: tl )
-          when Stan_math_signatures.is_reduce_sum_fn x ->
+          when Stan_math_library.is_reduce_sum_fn x ->
             let chop_functor_suffix =
               String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix in
             let propto_template =
@@ -343,11 +343,9 @@ and lower_functionals fname suffix es mem_pattern =
               ^ reduce_sum_functor_suffix in
             ( Fmt.str "%s<%s%s>" fname normalized_dist_functor propto_template
             , grainsize :: container :: msgs :: tl )
-        | _, _
-          when Stan_math_signatures.is_stan_math_variadic_function_name fname ->
-            let Stan_math_signatures.{control_args; _} =
-              Hashtbl.find_exn
-                Stan_math_signatures.stan_math_variadic_signatures fname in
+        | _, _ when Stan_math_library.is_variadic_function_name fname ->
+            let Frontend.Std_library_utils.{control_args; _} =
+              Hashtbl.find_exn Stan_math_library.variadic_signatures fname in
             let hd, tl =
               List.split_n converted_es (List.length control_args + 1) in
             (fname, hd @ (msgs :: tl))

@@ -19,11 +19,17 @@ val legacy : canonicalizer_settings
 
 val none : canonicalizer_settings
 
-val repair_syntax : untyped_program -> canonicalizer_settings -> untyped_program
-(** When deprecation canonicalization is enabled, this runs before typechecking
+module type CANONICALIZER = sig
+  val repair_syntax :
+    untyped_program -> canonicalizer_settings -> untyped_program
+  (** When deprecation canonicalization is enabled, this runs before typechecking
     and removes suffixes from ~ statements, which are otherwise forbidden by the typechecker *)
 
-val canonicalize_program :
-  typed_program -> canonicalizer_settings -> typed_program
-(** "Canonicalize" the program by removing deprecations, adding or removing parenthesis
+  val canonicalize_program :
+    typed_program -> canonicalizer_settings -> typed_program
+  (** "Canonicalize" the program by removing deprecations, adding or removing parenthesis
     and braces, etc. *)
+end
+
+module Make (Deprecation : Deprecation_analysis.DEPRECATION_ANALYZER) :
+  CANONICALIZER

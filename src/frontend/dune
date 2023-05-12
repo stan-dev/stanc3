@@ -6,7 +6,7 @@
   (backend bisect_ppx))
  (inline_tests)
  (preprocess
-  (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))
+  (pps ppx_jane ppx_deriving.fold ppx_deriving.map ppx_deriving.create)))
 
 (ocamllex lexer)
 

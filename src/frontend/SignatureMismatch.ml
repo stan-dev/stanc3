@@ -243,6 +243,20 @@ let find_compatible_rt function_types args =
       let errors, omitted = List.split_n errors max_n_errors in
       SignatureErrors (errors, not (List.is_empty omitted))
 
+let find_matching_first_order_fn tenv matches (fname : Ast.identifier) =
+  let candidates =
+    Utils.stdlib_distribution_name fname.name
+    |> Environment.find tenv |> List.map ~f:matches in
+  let ok, errs = List.partition_map candidates ~f:Result.to_either in
+  match unique_minimum_promotion ok with
+  | Ok a -> UniqueMatch a
+  | Error (Some promotions) ->
+      List.filter_map promotions ~f:(function
+        | UnsizedType.UFun (args, rt, _, _) -> Some (rt, args)
+        | _ -> None )
+      |> AmbiguousMatch
+  | Error None -> SignatureErrors (List.hd_exn errs)
+
 let matching_function env name args =
   let name = Utils.stdlib_distribution_name name in
   let function_types =
@@ -251,9 +265,6 @@ let matching_function env name args =
     |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
            UnsizedType.compare_returntype ret1 ret2 ) in
   find_compatible_rt function_types args
-
-let matching_stanlib_function =
-  matching_function Environment.stan_math_environment
 
 let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
@@ -390,10 +401,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     (list ~sep:cut pp_signature)
     sigs pp_omitted ()
 
-let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
+let pp_assignmentoperator_sigs ppf (lt, errors) =
   let signatures =
-    let errors =
-      Stan_math_signatures.make_assignmentoperator_stan_math_signatures op in
     let errors =
       List.filter
         ~f:(fun (_, args, _) ->
@@ -405,7 +414,7 @@ let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
     | errors, _ -> Some (errors, true) in
   let pp_sigs ppf (signatures, omitted) =
     Fmt.pf ppf "@[<v>%a%a@]"
-      (Fmt.list ~sep:Fmt.cut Stan_math_signatures.pp_math_sig)
+      (Fmt.list ~sep:Fmt.cut Std_library_utils.pp_math_sig)
       signatures
       (if omitted then Fmt.pf else Fmt.nop)
       "@ (Additional signatures omitted)" in
