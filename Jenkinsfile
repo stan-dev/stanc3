@@ -1,4 +1,4 @@
-@Library('StanUtils')
+@Library('StanUtilsDev')
 import org.stan.Utils
 
 utils = new org.stan.Utils()
@@ -135,6 +135,7 @@ pipeline {
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
                 }
             }
+            post { always { runShell("rm -rf ./*") }}
         }
 
         stage("Build") {
