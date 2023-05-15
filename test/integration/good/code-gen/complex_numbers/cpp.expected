@@ -209,6 +209,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -720,6 +721,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse mode autodiff log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -728,7 +730,6 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
-    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -2738,6 +2739,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -2761,6 +2763,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse mode autodiff log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -2769,7 +2772,6 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
-    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -3953,6 +3955,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -4523,6 +4526,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse mode autodiff log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -4531,7 +4535,6 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
-    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -6619,6 +6622,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -6642,6 +6646,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse mode autodiff log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -6650,7 +6655,6 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
-    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -7848,6 +7852,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -8100,6 +8105,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse mode autodiff log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -8108,7 +8114,6 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
-    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -9836,6 +9841,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -9921,6 +9927,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse mode autodiff log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -9929,7 +9936,6 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
-    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -10660,6 +10666,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -10726,6 +10733,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     lp_accum__.add(lp__);
     return lp_accum__.sum();
   }
+  // Reverse mode autodiff log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
             stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
@@ -10734,7 +10742,6 @@ class user_function_templating_model final : public model_base_crtp<user_functio
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
-    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;

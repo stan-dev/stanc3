@@ -5458,6 +5458,7 @@
              ((InitializerExpr (StdVector (TypeLiteral std::string))
                ((Literal "\"stanc_version = %%NAME%%3 %%VERSION%%\"")
                 (Literal "\"stancflags = --debug-lir\""))))))))))
+       (GlobalComment "Base log prob")
        (FunDef
         ((templates_init
           ((((Bool propto__) (Bool jacobian__) (Typename VecR)
@@ -6790,6 +6791,7 @@
                  (Index (Var locations_array__) (Var current_statement__)))))))
             (Expression (MethodCall (Var lp_accum__) add () ((Var lp__))))
             (Return ((MethodCall (Var lp_accum__) sum () ()))))))))
+       (GlobalComment "Reverse mode autodiff log prob")
        (FunDef
         ((templates_init
           ((((Bool propto__) (Bool jacobian__) (Typename VecR)
@@ -6808,9 +6810,6 @@
          (body
           (((Using T__
              ((TypeTrait stan::scalar_type_t ((TemplateType VecR)))))
-            (Expression
-             (Literal
-              "static_assert(stan::is_var<T__>::value, \"T__ is not a var\")"))
             (Using local_scalar_t__ ((TypeLiteral T__)))
             (VariableDefn
              ((static false) (constexpr false) (type_ (TypeLiteral T__))
