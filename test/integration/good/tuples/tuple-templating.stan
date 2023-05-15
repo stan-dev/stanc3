@@ -2,20 +2,20 @@ functions {
   void foo(tuple(matrix,) test) {
     print(test.1);
   }
-  
+
   real tsum(tuple(array[] int, array[] real) s) {
     return sum(s.2);
   }
-  
+
   void foo2(array[] tuple(matrix,) test) {
     print(test[1].1);
   }
-  
+
   void foo3(tuple(real, matrix) test) {
     print(test.1);
   }
-  
-  void overly_complicated(tuple(array[] matrix, tuple(int, matrix)) t1,
+
+  void overly_complicated(tuple(array[] matrix, tuple(int, matrix), real) t1,
                           array[] tuple(int, matrix) t2) {
     print(t1.2.2);
   }
@@ -34,7 +34,7 @@ generated quantities {
   real s = tsum((a1, a2));
   // eigen expression inside tuple inside array
   foo2({(m1 + m2,)});
-  
+
   // a whole bunch of painful
-  overly_complicated(({m1 + m2}, (1, m1)), {(1, m1), (2, m2)});
+  overly_complicated(({m1 + m2}, (1, m1), 3.5), {(1, m1), (2, m2)});
 }

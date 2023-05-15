@@ -31,7 +31,9 @@ let%expect_test "format_number1" =
 
 let rec op_to_funapp op args type_ =
   let loc = Ast.expr_loc_lub args in
-  let adlevel = Ast.expr_ad_lub args in
+  let adlevel =
+    Ast.expr_ad_lub args |> Option.value_exn
+    (* correctness inherited from typechecking *) in
   Expr.
     { Fixed.pattern=
         FunApp (StanLib (Operator.to_string op, FnPlain, AoS), trans_exprs args)
@@ -546,13 +548,16 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           Fun_kind.UserDefined (name, FnLpdf true)
         else StanLib (name, FnLpdf true, AoS) in
       let add_dist =
+        let adlevel =
+          if
+            UnsizedType.any_autodiff
+              (List.map ~f:(fun x -> x.emeta.ad_level) (arg :: args))
+          then UnsizedType.AutoDiffable
+          else DataOnly in
         Stmt.Fixed.Pattern.TargetPE
           Expr.
             { Fixed.pattern= FunApp (kind, trans_exprs (arg :: args))
-            ; meta=
-                Typed.Meta.create ~type_:UReal ~loc:mloc
-                  ~adlevel:(Ast.expr_ad_lub (arg :: args))
-                  () } in
+            ; meta= Typed.Meta.create ~type_:UReal ~loc:mloc ~adlevel () } in
       swrap add_dist @ truncate_dist ud_dists distribution arg args truncation
   | Ast.Print ps ->
       NRFunApp (CompilerInternal FnPrint, trans_printables smeta ps) |> swrap

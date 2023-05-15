@@ -1,3 +1,14 @@
+  $ ../../../../../install/default/bin/stanc array_literal_mismatch.stan
+Semantic error in 'array_literal_mismatch.stan', line 2, column 43 to column 52:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    array[2] tuple(real, real) x = {(1, 2) , (3, 4, 5)};
+                                                    ^
+     3:  }
+   -------------------------------------------------
+
+Array expression must have entries of consistent type. Expected tuple(
+int, int) but found tuple(int, int, int).
   $ ../../../../../install/default/bin/stanc bad_addition.stan
 Semantic error in 'bad_addition.stan', line 3, column 2 to column 9:
    -------------------------------------------------
@@ -154,3 +165,14 @@ Available signatures:
   The first argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword 'data'.)
+  $ ../../../../../install/default/bin/stanc tuple_ternary.stan
+Semantic error in 'tuple_ternary.stan', line 2, column 25 to column 47:
+   -------------------------------------------------
+     1:  transformed data {
+     2:     tuple(real, real) x = 1 ? (1, 2) : (3, 4, 5);
+                                  ^
+     3:  }
+   -------------------------------------------------
+
+Type mismatch in ternary expression, expression when true is: tuple(int, int); expression when false is: tuple(
+int, int, int)

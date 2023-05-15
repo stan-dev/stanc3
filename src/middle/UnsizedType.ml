@@ -105,7 +105,9 @@ let rec autodifftype_can_convert at1 at2 =
   match (at1, at2) with
   | DataOnly, AutoDiffable -> false
   | TupleAD ts, TupleAD ts2 -> (
-    try List.for_all2_exn ts ts2 ~f:autodifftype_can_convert with _ -> false )
+    match List.for_all2 ts ts2 ~f:autodifftype_can_convert with
+    | Ok x -> x
+    | Unequal_lengths -> false )
   | DataOnly, TupleAD ts ->
       List.for_all ts ~f:(autodifftype_can_convert DataOnly)
   | _, _ -> true
@@ -122,35 +124,44 @@ let rec has_autodiff = function
   | AutoDiffable -> true
   | TupleAD ts -> List.exists ts ~f:has_autodiff
 
+let any_autodiff xs = List.exists xs ~f:has_autodiff
+
 let rec lub_ad_type xs =
-  List.fold xs ~init:DataOnly ~f:(fun cur next ->
-      match (cur, next) with
-      | DataOnly, DataOnly -> DataOnly
-      | DataOnly, AutoDiffable | AutoDiffable, DataOnly -> AutoDiffable
-      | AutoDiffable, AutoDiffable -> AutoDiffable
-      | TupleAD ts, TupleAD ts2 ->
-          TupleAD (List.map2_exn ts ts2 ~f:(fun t1 t2 -> lub_ad_type [t1; t2]))
-      | TupleAD ts, DataOnly | DataOnly, TupleAD ts -> TupleAD ts
-      | TupleAD ts, AutoDiffable | AutoDiffable, TupleAD ts ->
-          TupleAD (List.map ts ~f:(fun t -> lub_ad_type [t; AutoDiffable])) )
+  try
+    Some
+      (List.fold xs ~init:DataOnly ~f:(fun cur next ->
+           match (cur, next) with
+           | DataOnly, DataOnly -> DataOnly
+           | DataOnly, AutoDiffable | AutoDiffable, DataOnly -> AutoDiffable
+           | AutoDiffable, AutoDiffable -> AutoDiffable
+           | TupleAD ts, TupleAD ts2 ->
+               TupleAD
+                 (List.map2_exn ts ts2 ~f:(fun t1 t2 ->
+                      lub_ad_type [t1; t2] |> Option.value_exn ) )
+           | TupleAD ts, DataOnly | DataOnly, TupleAD ts -> TupleAD ts
+           | TupleAD ts, AutoDiffable | AutoDiffable, TupleAD ts ->
+               TupleAD
+                 (List.map ts ~f:(fun t ->
+                      lub_ad_type [t; AutoDiffable] |> Option.value_exn ) ) ) )
+  with _ -> None
 
 let%expect_test "lub_ad_type1" =
   let ads = [DataOnly; DataOnly; DataOnly; AutoDiffable] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype)] ;
-  [%expect "AutoDiffable"]
+  print_s [%sexp (lub : autodifftype option)] ;
+  [%expect "(AutoDiffable)"]
 
 let%expect_test "lub_ad_type2" =
   let ads = [DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype)] ;
-  [%expect "DataOnly"]
+  print_s [%sexp (lub : autodifftype option)] ;
+  [%expect "(DataOnly)"]
 
 let%expect_test "lub_ad_type3" =
   let ads = [AutoDiffable; DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype)] ;
-  [%expect "AutoDiffable"]
+  print_s [%sexp (lub : autodifftype option)] ;
+  [%expect "(AutoDiffable)"]
 
 (** Given two types find the minimal type both can convert to *)
 let rec common_type = function
@@ -164,8 +175,9 @@ let rec common_type = function
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | UTuple ts1, UTuple ts2 ->
-      ( try List.zip_exn ts1 ts2 |> List.map ~f:common_type |> Option.all
-        with _ -> None )
+      ( match List.zip ts1 ts2 with
+      | Ok ts -> List.map ts ~f:common_type |> Option.all
+      | Unequal_lengths -> None )
       |> Option.map ~f:(fun ts -> UTuple ts)
   | t1, t2 when t1 = t2 -> Some t1
   | _, _ -> None

@@ -176,7 +176,7 @@ let check_ternary_if loc pe te fe =
     , UnsizedType.common_type (te.emeta.type_, fe.emeta.type_)
     , expr_ad_lub [pe; te; fe] )
   with
-  | UInt, Some type_, ad_level when not (UnsizedType.is_fun_type type_) ->
+  | UInt, Some type_, Some ad_level when not (UnsizedType.is_fun_type type_) ->
       mk_typed_expression
         ~expr:
           (TernaryIf (pe, promote te type_ ad_level, promote fe type_ ad_level))
@@ -234,12 +234,11 @@ let assignmentoperator_stan_math_return_type assop arg_tys =
 
 let check_binop loc op le re =
   let rt = [le; re] |> get_arg_types |> operator_stan_math_return_type op in
-  match rt with
-  | Some (ReturnType type_, [p1; p2]) ->
+  match (rt, expr_ad_lub [le; re]) with
+  | Some (ReturnType type_, [p1; p2]), Some ad_level ->
       mk_typed_expression
         ~expr:(BinOp (Promotion.promote le p1, op, Promotion.promote re p2))
-        ~ad_level:(expr_ad_lub [le; re])
-        ~type_ ~loc
+        ~ad_level ~type_ ~loc
   | _ ->
       Semantic_error.illtyped_binary_op loc op le.emeta.type_ re.emeta.type_
       |> error
@@ -250,8 +249,7 @@ let check_prefixop loc op te =
   | Some (ReturnType type_, _) ->
       mk_typed_expression
         ~expr:(PrefixOp (op, te))
-        ~ad_level:(expr_ad_lub [te])
-        ~type_ ~loc
+        ~ad_level:te.emeta.ad_level ~type_ ~loc
   | _ -> Semantic_error.illtyped_prefix_op loc op te.emeta.type_ |> error
 
 let check_postfixop loc op te =
@@ -260,8 +258,7 @@ let check_postfixop loc op te =
   | Some (ReturnType type_, _) ->
       mk_typed_expression
         ~expr:(PostfixOp (te, op))
-        ~ad_level:(expr_ad_lub [te])
-        ~type_ ~loc
+        ~ad_level:te.emeta.ad_level ~type_ ~loc
   | _ -> Semantic_error.illtyped_postfix_op loc op te.emeta.type_ |> error
 
 let check_id cf loc tenv id =
@@ -299,8 +296,6 @@ let check_variable cf loc tenv id =
   mk_typed_expression ~expr:(Variable id) ~ad_level ~type_ ~loc
 
 let get_consistent_types type_ es =
-  let ad =
-    UnsizedType.lub_ad_type (List.map ~f:(fun e -> e.emeta.ad_level) es) in
   let f state e =
     Result.bind state ~f:(fun ty ->
         match UnsizedType.common_type (ty, e.emeta.type_) with
@@ -308,6 +303,10 @@ let get_consistent_types type_ es =
         | None -> Error (ty, e.emeta) ) in
   List.fold ~init:(Ok type_) ~f es
   |> Result.map ~f:(fun ty ->
+         let ad =
+           expr_ad_lub es |> Option.value_exn
+           (* correctness: Result.Ok case only contains tuples of same lengths, expr_ad_lub cannot fail *)
+         in
          let promotions =
            List.map (get_arg_types es)
              ~f:(Promotion.get_type_promotion_exn (ad, ty)) in
@@ -398,17 +397,20 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
 
 let inferred_ad_type_of_indexed at ut uindices =
   UnsizedType.fill_adtype_for_type
-    (UnsizedType.lub_ad_type
-       ( at
-       :: List.map
-            ~f:(function
-              | All -> UnsizedType.DataOnly
-              | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
-                  UnsizedType.lub_ad_type [at; ue1.emeta.ad_level]
-              | Between (ue1, ue2) ->
-                  UnsizedType.lub_ad_type
-                    [at; ue1.emeta.ad_level; ue2.emeta.ad_level] )
-            uindices ) )
+    (* correctness: index expressions only contain int types,
+       so lub_ad_tupe should never be [None]. *)
+    ( UnsizedType.lub_ad_type
+        ( at
+        :: List.map
+             ~f:(function
+               | All -> UnsizedType.DataOnly
+               | Single ue1 | Upfrom ue1 | Downfrom ue1 -> ue1.emeta.ad_level
+               | Between (ue1, ue2) ->
+                   UnsizedType.lub_ad_type
+                     [ue1.emeta.ad_level; ue2.emeta.ad_level]
+                   |> Option.value_exn )
+             uindices )
+    |> Option.value_exn )
     ut
 
 (* function checking *)
@@ -467,8 +469,9 @@ let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
     else FunApp (kind, name, args) in
   let ad_type =
     if UnsizedType.is_discrete_type type_ then UnsizedType.DataOnly
-    else if UnsizedType.has_autodiff (expr_ad_lub args) then
-      UnsizedType.AutoDiffable
+    else if
+      UnsizedType.any_autodiff (List.map ~f:(fun x -> x.emeta.ad_level) args)
+    then AutoDiffable
     else DataOnly in
   mk_typed_expression ~expr:fn ~loc ~type_
     ~ad_level:(UnsizedType.fill_adtype_for_type ad_type type_)

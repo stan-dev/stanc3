@@ -58,7 +58,10 @@ let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
 (**
  Get the dimensions with respect to sizes needed for IO.
  {b Note}: The main difference from get_dims is complex,
- where this function treats the complex type as a dual number.
+  where this function treats the complex type as a dual number.
+ {b Note}: Tuples are treated as scalars by this function due to the
+  inherent assumption of rectangularity. Carefully consider new usages and
+  used [io_size] when possible.
  *)
 let rec get_dims_io st =
   let two = Expr.Helpers.int 2 in
@@ -93,9 +96,13 @@ let rec io_size st =
         (Expr.Helpers.binop dim2 Operator.Times two)
   | SArray (t, dim) -> Expr.Helpers.binop dim Operator.Times (io_size t)
 
+(**
+ Get the dimensions of an object.
+ {b Note}: Tuples are treated as scalars by this function due to the
+  inherent assumption of rectangularity. Carefully consider new usages!
+*)
 let rec get_dims st =
   match st with
-  (* NOTE: tuples are treated as scalars by this function *)
   | STuple _ | SInt | SReal | SComplex -> []
   | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> [d1; d2]
   | SRowVector (_, dim)

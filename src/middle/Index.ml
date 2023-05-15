@@ -22,12 +22,6 @@ let pp_indices pp_e ppf indices =
     else Fmt.(list (pp pp_e) ~sep:comma |> brackets) )
     indices
 
-let pp_indexed pp_e ppf (ident, indices) =
-  Fmt.pf ppf "@[%s%a@]" ident
-    ( if List.is_empty indices then fun _ _ -> ()
-    else Fmt.(list (pp pp_e) ~sep:comma |> brackets) )
-    indices
-
 let bounds = function
   | All -> []
   | Single e | Upfrom e | MultiIndex e -> [e]
