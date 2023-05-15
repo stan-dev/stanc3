@@ -6808,6 +6808,9 @@
          (body
           (((Using T__
              ((TypeTrait stan::scalar_type_t ((TemplateType VecR)))))
+            (Expression
+             (Literal
+              "static_assert(stan::is_var<T__>::value, \"T__ is not a var\")"))
             (Using local_scalar_t__ ((TypeLiteral T__)))
             (VariableDefn
              ((static false) (constexpr false) (type_ (TypeLiteral T__))

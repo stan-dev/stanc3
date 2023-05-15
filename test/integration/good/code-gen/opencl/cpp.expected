@@ -3977,6 +3977,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
+    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -10749,6 +10750,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
+    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;

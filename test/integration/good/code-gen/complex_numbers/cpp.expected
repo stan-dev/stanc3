@@ -728,6 +728,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
+    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -2768,6 +2769,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
+    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -4529,6 +4531,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
+    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -6647,6 +6650,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
+    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -8104,6 +8108,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
+    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -9924,6 +9929,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
+    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -10728,6 +10734,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
     using T__ = stan::scalar_type_t<VecR>;
+    static_assert(stan::is_var<T__>::value, "T__ is not a var");
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
