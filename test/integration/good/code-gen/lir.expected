@@ -6806,7 +6806,8 @@
            ((Pointer (TypeLiteral std::ostream)) "pstream__ = nullptr")))
          (cv_qualifiers (Const))
          (body
-          (((Using T__ ((TypeLiteral stan::math::var)))
+          (((Using T__
+             ((TypeTrait stan::scalar_type_t ((TemplateType VecR)))))
             (Using local_scalar_t__ ((TypeLiteral T__)))
             (VariableDefn
              ((static false) (constexpr false) (type_ (TypeLiteral T__))

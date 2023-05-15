@@ -200,21 +200,10 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     [ (Ref (TemplateType "VecR"), "params_r__")
     ; (Ref (TemplateType "VecI"), "params_i__")
     ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
-  let intro_nonrev =
+  let intro =
     let t__ = TypeLiteral "T__" in
     [ Using
         ("T__", Some (TypeTrait ("stan::scalar_type_t", [TemplateType "VecR"])))
-    ; Using ("local_scalar_t__", Some t__)
-    ; VariableDefn
-        (make_variable_defn ~type_:t__ ~name:"lp__"
-           ~init:(Construction [Literal "0.0"])
-           () ); Decls.lp_accum t__; Decls.serializer_in
-    ; Decls.current_statement ]
-    @ Decls.dummy_var
-    @ gen_function__ prog_name "log_prob" in
-  let intro_rev =
-    let t__ = TypeLiteral "T__" in
-    [ Using ("T__", Some (TypeLiteral "stan::math::var"))
     ; Using ("local_scalar_t__", Some t__)
     ; VariableDefn
         (make_variable_defn ~type_:t__ ~name:"lp__"
@@ -237,7 +226,7 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     template_params @ [Require ("stan::require_not_st_var", ["VecR"])] in
   let template_rev =
     template_params @ [Require ("stan::require_st_var", ["VecR"])] in
-  let gen_ll intro template lp_lst =
+  let gen_ll template lp_lst =
     FunDef
       (make_fun_defn
          ~templates_init:([template], true)
@@ -246,8 +235,7 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
          ~name:"log_prob_impl" ~args
          ~body:(intro @ Stmts.rethrow_located (lower_statements lp_lst) @ outro)
          ~cv_qualifiers:[Const] () ) in
-  [ gen_ll intro_nonrev template_nonrev log_prob
-  ; gen_ll intro_rev template_rev reverse_mode_log_prob ]
+  [gen_ll template_nonrev log_prob; gen_ll template_rev reverse_mode_log_prob]
 
 let gen_write_array {Program.prog_name; generate_quantities; _} =
   let templates =

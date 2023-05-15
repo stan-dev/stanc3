@@ -155,7 +155,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -969,7 +969,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -1522,7 +1522,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -2031,7 +2031,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -2887,7 +2887,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -3870,7 +3870,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -4804,7 +4804,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -5128,7 +5128,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -5510,7 +5510,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -6011,7 +6011,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -6789,7 +6789,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -7805,7 +7805,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -8812,7 +8812,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -10244,7 +10244,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -11396,7 +11396,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -12111,7 +12111,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -13118,7 +13118,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -13787,7 +13787,7 @@ class function_in_function_inline_model final : public model_base_crtp<function_
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -14193,7 +14193,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -14534,7 +14534,7 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -15101,7 +15101,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -15629,7 +15629,7 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -16023,7 +16023,7 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -17154,7 +17154,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -18016,7 +18016,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -18335,7 +18335,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -18712,7 +18712,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -19449,7 +19449,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -20087,7 +20087,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -20691,7 +20691,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -21496,7 +21496,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -22630,7 +22630,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -23429,7 +23429,7 @@ class overloaded_fn_model final : public model_base_crtp<overloaded_fn_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -23800,7 +23800,7 @@ class overloaded_fn2_model final : public model_base_crtp<overloaded_fn2_model> 
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -24306,7 +24306,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -24975,7 +24975,7 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -25622,7 +25622,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -26206,7 +26206,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -26635,7 +26635,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -27051,7 +27051,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;

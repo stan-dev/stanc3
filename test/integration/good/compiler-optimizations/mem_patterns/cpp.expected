@@ -83,7 +83,7 @@ class complex_fails_model final : public model_base_crtp<complex_fails_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -1119,7 +1119,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -2959,7 +2959,7 @@ class deep_dependence_model final : public model_base_crtp<deep_dependence_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -4265,7 +4265,7 @@ class indexing_model final : public model_base_crtp<indexing_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -6291,7 +6291,7 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -6825,7 +6825,7 @@ class reductions_allowed_model final : public model_base_crtp<reductions_allowed
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -7502,7 +7502,7 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -8130,7 +8130,7 @@ class single_indexing_model final : public model_base_crtp<single_indexing_model
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -8719,7 +8719,7 @@ class tp_reused_model final : public model_base_crtp<tp_reused_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;

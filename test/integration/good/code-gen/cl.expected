@@ -1231,7 +1231,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
-    using T__ = stan::math::var;
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
