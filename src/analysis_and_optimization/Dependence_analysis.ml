@@ -234,22 +234,7 @@ let log_prob_build_dep_info_map (mir : Program.Typed.t) :
     Stmt.Fixed.{meta= Location_span.empty; pattern= SList mir.log_prob} in
   build_dep_info_map mir log_prob_stmt
 
-let reverse_mode_log_prob_build_dep_info_map (mir : Program.Typed.t) :
-    ( label
-    , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * node_dep_info )
-    Map.Poly.t =
-  let log_prob_stmt =
-    Stmt.Fixed.
-      {meta= Location_span.empty; pattern= SList mir.reverse_mode_log_prob}
-  in
-  build_dep_info_map mir log_prob_stmt
-
 let log_prob_dependency_graph (mir : Program.Typed.t) :
     (label, label Set.Poly.t) Map.Poly.t =
   let dep_info_map = log_prob_build_dep_info_map mir in
-  all_node_dependencies dep_info_map
-
-let reverse_mode_log_prob_dependency_graph (mir : Program.Typed.t) :
-    (label, label Set.Poly.t) Map.Poly.t =
-  let dep_info_map = reverse_mode_log_prob_build_dep_info_map mir in
   all_node_dependencies dep_info_map

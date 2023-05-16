@@ -131,7 +131,7 @@ let pp pp_e pp_s ppf
   Fmt.cut ppf () ;
   pp_log_prob pp_s ppf log_prob ;
   Fmt.cut ppf () ;
-  pp_log_prob pp_s ppf reverse_mode_log_prob ;
+  pp_reverse_mode_log_prob pp_s ppf reverse_mode_log_prob ;
   Fmt.cut ppf () ;
   pp_generate_quantities pp_s ppf generate_quantities ;
   Fmt.cut ppf () ;

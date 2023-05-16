@@ -718,7 +718,9 @@ let trans_prog (p : Program.Typed.t) =
         ~f:(fun (_, _, ov) -> ov.Program.out_block = Parameters)
         p.output_vars in
     { p with
-      log_prob= log_prob @ maybe_add_opencl_events_clear
+      log_prob=
+        log_prob @ maybe_add_opencl_events_clear
+        (*First initialization of reverse mode log prob *)
     ; reverse_mode_log_prob= log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
