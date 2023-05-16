@@ -127,22 +127,19 @@ let rec has_autodiff = function
 let any_autodiff xs = List.exists xs ~f:has_autodiff
 
 let lub_ad_type xs =
-  let rec internal xs =
-    List.fold_result xs ~init:DataOnly ~f:(fun cur next ->
-        match (cur, next) with
-        | DataOnly, DataOnly -> Ok DataOnly
-        | DataOnly, AutoDiffable | AutoDiffable, DataOnly -> Ok AutoDiffable
-        | AutoDiffable, AutoDiffable -> Ok AutoDiffable
-        | TupleAD ts, TupleAD ts2 -> (
-          match List.map2 ts ts2 ~f:(fun t1 t2 -> internal [t1; t2]) with
-          | Ok ts -> ts |> Result.all |> Result.map ~f:(fun ts -> TupleAD ts)
-          | _ -> Error () )
-        | TupleAD ts, DataOnly | DataOnly, TupleAD ts -> Ok (TupleAD ts)
-        | TupleAD ts, AutoDiffable | AutoDiffable, TupleAD ts ->
-            List.map ts ~f:(fun t -> internal [t; AutoDiffable])
-            |> Result.all
-            |> Result.map ~f:(fun ts -> TupleAD ts) ) in
-  match internal xs with Ok ad -> Some ad | _ -> None
+  let rec common_ad t1 t2 =
+    match (t1, t2) with
+    | DataOnly, ad | ad, DataOnly -> Ok ad
+    | AutoDiffable, AutoDiffable -> Ok AutoDiffable
+    | TupleAD ts1, TupleAD ts2 -> (
+      match List.map2 ts1 ts2 ~f:common_ad with
+      | Ok ts -> ts |> Result.all |> Result.map ~f:(fun ts -> TupleAD ts)
+      | Unequal_lengths -> Error () )
+    | TupleAD ts, AutoDiffable | AutoDiffable, TupleAD ts ->
+        List.map ts ~f:(common_ad AutoDiffable)
+        |> Result.all
+        |> Result.map ~f:(fun ts -> TupleAD ts) in
+  List.fold_result ~init:DataOnly ~f:common_ad xs |> Result.ok
 
 let%expect_test "lub_ad_type1" =
   let ads = [DataOnly; DataOnly; DataOnly; AutoDiffable] in
