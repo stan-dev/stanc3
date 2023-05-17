@@ -85,9 +85,51 @@ class operators_model final : public model_base_crtp<operators_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_not_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "operators_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      Eigen::Matrix<local_scalar_t__,-1,1> v =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 1;
+      v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      Eigen::Matrix<local_scalar_t__,1,-1> rv =
+        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 2;
+      rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      Eigen::Matrix<local_scalar_t__,-1,-1> A =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      current_statement__ = 3;
+      A = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  // Reverse mode autodiff log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -792,9 +834,35 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_not_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "simple_function_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  // Reverse mode autodiff log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {
@@ -1075,9 +1143,86 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_not_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "ternary_if_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      Eigen::Matrix<local_scalar_t__,-1,1> a =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      current_statement__ = 1;
+      a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      Eigen::Matrix<local_scalar_t__,-1,1> b =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      current_statement__ = 2;
+      b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      local_scalar_t__ r = DUMMY_VAR__;
+      current_statement__ = 3;
+      r = in__.template read<local_scalar_t__>();
+      std::complex<local_scalar_t__> zp =
+        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      current_statement__ = 4;
+      zp = in__.template read<std::complex<local_scalar_t__>>();
+      Eigen::Matrix<local_scalar_t__,-1,1> c =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      current_statement__ = 5;
+      stan::model::assign(c,
+        (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
+                                                           stan::math::add(
+                                                             stan::math::multiply(
+                                                               2.0, a), b)) : 
+        stan::math::eval(stan::math::multiply(2.0, a))),
+        "assigning variable c");
+      Eigen::Matrix<local_scalar_t__,-1,1> d =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
+      current_statement__ = 6;
+      stan::model::assign(d,
+        (stan::math::logical_gt(stan::math::sum(a), 1) ? stan::math::eval(
+                                                           stan::math::add(
+                                                             stan::math::multiply(
+                                                               2, a), b)) : 
+        stan::math::eval(stan::math::multiply(2, a))), "assigning variable d");
+      std::complex<local_scalar_t__> z =
+        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      current_statement__ = 7;
+      z = (1 ? stan::math::to_complex(0, 3) : stan::math::to_complex(2, 0));
+      {
+        std::complex<local_scalar_t__> z2 =
+          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+        current_statement__ = 8;
+        z2 = (1 ? r : 2);
+        current_statement__ = 9;
+        z2 = (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+                    0) : zp);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  // Reverse mode autodiff log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {

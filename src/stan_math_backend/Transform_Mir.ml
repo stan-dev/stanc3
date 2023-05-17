@@ -555,6 +555,7 @@ let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
   ; log_prob= f p.log_prob
+  ; reverse_mode_log_prob= f p.reverse_mode_log_prob
   ; generate_quantities= f p.generate_quantities
   ; transform_inits= f p.transform_inits
   ; unconstrain_array= f p.unconstrain_array }
@@ -717,7 +718,10 @@ let trans_prog (p : Program.Typed.t) =
         ~f:(fun (_, _, ov) -> ov.Program.out_block = Parameters)
         p.output_vars in
     { p with
-      log_prob= log_prob @ maybe_add_opencl_events_clear
+      log_prob=
+        log_prob @ maybe_add_opencl_events_clear
+        (*First initialization of reverse mode log prob *)
+    ; reverse_mode_log_prob= log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         (p.prepare_data |> add_reads p.input_vars var_context_read)
