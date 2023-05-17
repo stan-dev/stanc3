@@ -81,8 +81,7 @@ let%expect_test "all but last n" =
   [%expect {| (1 2) |}]
 
 (* Utilities for using Tuples and Transformations together *)
-
-let zip_tuple_trans_exn pst trans =
+let zip_stuple_trans_exn pst trans =
   let tms =
     match trans with
     | Transformation.TupleTransformation tms -> tms
@@ -92,10 +91,8 @@ let zip_tuple_trans_exn pst trans =
   in
   let rec tuple_psts pst =
     match pst with
-    | Type.Unsized (UTuple uts) -> List.map ~f:(fun ut -> Type.Unsized ut) uts
-    | Type.Unsized (UArray ut) -> tuple_psts (Type.Unsized ut)
-    | Type.Sized (STuple sts) -> List.map ~f:(fun st -> Type.Sized st) sts
-    | Type.Sized (SArray (st, _)) -> tuple_psts (Type.Sized st)
+    | SizedType.STuple sts -> sts
+    | SArray (st, _) -> tuple_psts st
     | _ ->
         Common.FatalError.fatal_error_msg
           [%message "Internal error: expected Tuple with TupleTransformation"]
@@ -103,18 +100,21 @@ let zip_tuple_trans_exn pst trans =
   let psts = tuple_psts pst in
   List.zip_exn psts tms
 
-let zip_stuple_trans_exn pst trans =
-  List.map (zip_tuple_trans_exn (Sized pst) trans) ~f:(fun (pst, trans) ->
-      match pst with
-      | Sized st -> (st, trans)
-      | _ ->
-          Common.FatalError.fatal_error_msg
-            [%message "Internal error in zip_tuple"] )
-
 let zip_utuple_trans_exn pst trans =
-  List.map (zip_tuple_trans_exn (Unsized pst) trans) ~f:(fun (pst, trans) ->
-      match pst with
-      | Unsized ut -> (ut, trans)
-      | _ ->
-          Common.FatalError.fatal_error_msg
-            [%message "Internal error in zip_tuple"] )
+  let tms =
+    match trans with
+    | Transformation.TupleTransformation tms -> tms
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message "Internal error: expected TupleTransformation with Tuple"]
+  in
+  let rec tuple_psts pst =
+    match pst with
+    | UnsizedType.UTuple uts -> uts
+    | UArray ut -> tuple_psts ut
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message "Internal error: expected Tuple with TupleTransformation"]
+  in
+  let psts = tuple_psts pst in
+  List.zip_exn psts tms
