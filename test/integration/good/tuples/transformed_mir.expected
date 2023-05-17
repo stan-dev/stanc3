@@ -1398,7 +1398,9 @@
                       ((pattern (Var arr_tuple_tuple_dot_3_temp__))
                        (meta
                         ((type_ (UTuple (UReal (UTuple (UInt UVector)))))
-                         (loc <opaque>) (adlevel DataOnly)))))))
+                         (loc <opaque>)
+                         (adlevel
+                          (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))))))))
                    (meta
                     ((type_
                       (UTuple
@@ -1849,7 +1851,8 @@
                       ((pattern (Var arr_tuple_arr_tuple_dot_2_temp__))
                        (meta
                         ((type_ (UArray (UTuple (UReal UVector))))
-                         (loc <opaque>) (adlevel DataOnly)))))))
+                         (loc <opaque>)
+                         (adlevel (TupleAD (DataOnly DataOnly)))))))))
                    (meta
                     ((type_
                       (UTuple (UInt (UArray (UTuple (UReal UVector))))))
@@ -2582,7 +2585,8 @@
                                    (meta
                                     ((type_
                                       (UArray (UTuple (UComplex UMatrix))))
-                                     (loc <opaque>) (adlevel DataOnly)))))))
+                                     (loc <opaque>)
+                                     (adlevel (TupleAD (DataOnly DataOnly)))))))))
                                (meta
                                 ((type_
                                   (UTuple
@@ -2618,7 +2622,9 @@
                           (UArray
                            (UTuple
                             (UReal (UArray (UTuple (UComplex UMatrix)))))))
-                         (loc <opaque>) (adlevel DataOnly)))))))
+                         (loc <opaque>)
+                         (adlevel
+                          (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))))))))
                    (meta
                     ((type_
                       (UTuple
@@ -7427,7 +7433,9 @@
                       ((pattern (Var arr_tuple_tuple_p_dot_3_temp__))
                        (meta
                         ((type_ (UTuple (UReal (UTuple (UComplex UVector)))))
-                         (loc <opaque>) (adlevel DataOnly)))))))
+                         (loc <opaque>)
+                         (adlevel
+                          (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))))))))
                    (meta
                     ((type_
                       (UTuple
@@ -8088,7 +8096,8 @@
                       ((pattern (Var arr_tuple_arr_tuple_p_dot_2_temp__))
                        (meta
                         ((type_ (UArray (UTuple (UReal UVector))))
-                         (loc <opaque>) (adlevel DataOnly)))))))
+                         (loc <opaque>)
+                         (adlevel (TupleAD (DataOnly DataOnly)))))))))
                    (meta
                     ((type_
                       (UTuple (UReal (UArray (UTuple (UReal UVector))))))
@@ -8980,7 +8989,8 @@
                                    (meta
                                     ((type_
                                       (UArray (UTuple (UComplex UMatrix))))
-                                     (loc <opaque>) (adlevel DataOnly)))))))
+                                     (loc <opaque>)
+                                     (adlevel (TupleAD (DataOnly DataOnly)))))))))
                                (meta
                                 ((type_
                                   (UTuple
@@ -9016,7 +9026,9 @@
                           (UArray
                            (UTuple
                             (UReal (UArray (UTuple (UComplex UMatrix)))))))
-                         (loc <opaque>) (adlevel DataOnly)))))))
+                         (loc <opaque>)
+                         (adlevel
+                          (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))))))))
                    (meta
                     ((type_
                       (UTuple
@@ -15312,7 +15324,8 @@
                       ((pattern (Var complicated_dot_2_temp__))
                        (meta
                         ((type_ (UArray (UTuple (UReal UVector UMatrix))))
-                         (loc <opaque>) (adlevel DataOnly)))))))
+                         (loc <opaque>)
+                         (adlevel (TupleAD (DataOnly DataOnly DataOnly)))))))))
                    (meta
                     ((type_
                       (UTuple

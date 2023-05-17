@@ -211,6 +211,12 @@ let rec base_type = function
 
 let pos = "pos__"
 
+let meta_from_sizedtype st =
+  let type_ = SizedType.to_unsized st in
+  { Expr.Typed.Meta.empty with
+    type_
+  ; adlevel= UnsizedType.fill_adtype_for_type DataOnly type_ }
+
 let munge_tuple_name name =
   Str.global_replace (Str.regexp_string ".") "_dot_" name
 
@@ -329,9 +335,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                      ~f:(fun n st ->
                        Expr.Fixed.
                          { pattern= Var (make_tuple_temp n)
-                         ; meta=
-                             { Expr.Typed.Meta.empty with
-                               type_= SizedType.to_unsized st } } )
+                         ; meta= meta_from_sizedtype st } )
                      tuple_component_names tuple_types ) )
             |> swrap ] in
         [ Stmt.Helpers.mk_nested_for (List.rev dims)
@@ -523,9 +527,7 @@ let rec var_context_read ?origin ?name
                      ~f:(fun n st ->
                        Expr.Fixed.
                          { pattern= Var (make_tuple_temp n)
-                         ; meta=
-                             { Expr.Typed.Meta.empty with
-                               type_= SizedType.to_unsized st } } )
+                         ; meta= meta_from_sizedtype st } )
                      tuple_component_names tuple_types ) )
             |> swrap ] in
         [ Stmt.Helpers.mk_nested_for (List.rev dims)

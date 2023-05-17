@@ -399,7 +399,7 @@ and lower_user_defined_fun f suffix es =
 
 and lower_compiler_internal ad ut f es =
   let open Expression_syntax in
-  let gen_tuple_literal es local_types : expr =
+  let gen_tuple_literal es : expr =
     (* NB: This causes some inefficencies such as eagerly
          evaluating eigen expressions and copying data vectors *)
     let is_simple (e : Expr.Typed.t) =
@@ -411,9 +411,10 @@ and lower_compiler_internal ad ut f es =
     if List.for_all ~f:is_simple es then
       fun_call "std::forward_as_tuple" (lower_exprs es)
     else
-      let tys, ads = List.unzip local_types in
       Constructor
-        ( Tuple (List.map2_exn ~f:lower_unsizedtype_local tys ads)
+        ( Tuple
+            (List.map es ~f:(fun {meta= {adlevel; type_; _}; _} ->
+                 lower_unsizedtype_local adlevel type_ ) )
         , lower_exprs es ) in
   match f with
   | Internal_fun.FnMakeArray ->
@@ -475,17 +476,7 @@ and lower_compiler_internal ad ut f es =
   | FnDeepCopy ->
       lower_fun_app Fun_kind.FnPlain "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
-  | FnMakeTuple ->
-      let local_types =
-        match (ad, ut) with
-        | TupleAD ads, UTuple ts -> List.zip_exn ads ts
-        | _ ->
-            Common.FatalError.fatal_error_msg
-              [%message
-                "Tuple literal must have tuple type and AD but found "
-                  (ut : UnsizedType.t)
-                  (ad : UnsizedType.autodifftype)] in
-      gen_tuple_literal es local_types
+  | FnMakeTuple -> gen_tuple_literal es
   | _ ->
       lower_fun_app FnPlain (Internal_fun.to_string f) es Mem_pattern.AoS
         (Some UnsizedType.Void)
