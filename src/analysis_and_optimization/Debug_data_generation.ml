@@ -259,7 +259,7 @@ let rec gen_array m st n t =
 
 and gen_tuple m st t =
   Expr.Helpers.tuple_expr
-    ( Utils.zip_stuple_trans_exn st t
+    ( Utils.(zip_stuple_trans_exn st (tuple_trans_exn t))
     |> List.map ~f:(fun (x, y) -> generate_value m x y) )
 
 and generate_value m st t =

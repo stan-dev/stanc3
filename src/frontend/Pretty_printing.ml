@@ -394,9 +394,9 @@ let rec pp_transformed_type ppf (st, trans) =
     | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
     | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
     | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
-    | TupleTransformation ts as trans ->
+    | TupleTransformation ts ->
         (* NB this calls the top-level function to handle internal arrays etc *)
-        let transTypes = Middle.Utils.zip_stuple_trans_exn st trans in
+        let transTypes = Middle.Utils.zip_stuple_trans_exn st ts in
         pf ppf "tuple(@[%a%s@])"
           (list ~sep:comma pp_transformed_type)
           transTypes

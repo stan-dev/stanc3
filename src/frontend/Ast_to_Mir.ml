@@ -325,9 +325,9 @@ let rec param_size transform sizedtype =
    |OffsetMultiplier (_, _)
    |Ordered | PositiveOrdered | UnitVector ->
       sizedtype
-  | TupleTransformation _ ->
+  | TupleTransformation tms ->
       let _, dims = SizedType.get_array_dims sizedtype in
-      let subtypes_transforms = Utils.zip_stuple_trans_exn sizedtype transform in
+      let subtypes_transforms = Utils.zip_stuple_trans_exn sizedtype tms in
       (* NB: [build_sarray] is a no-op if this was not originally an array *)
       SizedType.build_sarray (List.rev dims)
         (SizedType.STuple
@@ -364,7 +364,7 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
       @ check_decl var decl_type' (Upper ub) smeta adlevel
   | TupleTransformation ts when List.exists ~f:Transformation.has_check ts ->
       let _, dims = SizedType.get_array_dims decl_type' in
-      let sts = Utils.zip_stuple_trans_exn decl_type' decl_trans in
+      let sts = Utils.zip_stuple_trans_exn decl_type' ts in
       if List.is_empty dims then check_tuple var sts
       else
         [ Stmt.Helpers.mk_nested_for (List.rev dims)
@@ -744,7 +744,8 @@ let rec trans_sizedtype_decl declc tr name st =
           String.concat (List.init (n - 1) ~f:(fun _ -> "[]")) in
         let stmts, sts' =
           List.unzip
-            (List.mapi (Utils.zip_stuple_trans_exn tuple tr)
+            (List.mapi
+               Utils.(zip_stuple_trans_exn tuple (tuple_trans_exn tr))
                ~f:(fun ix (st, trans) ->
                  trans_sizedtype_decl declc trans
                    (name ^ former_array_indices ^ "." ^ string_of_int (ix + 1))

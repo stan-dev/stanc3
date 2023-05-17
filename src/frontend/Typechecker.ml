@@ -1512,8 +1512,8 @@ and check_transformation cf tenv ut trans =
   | CholeskyCov -> CholeskyCov
   | Correlation -> Correlation
   | Covariance -> Covariance
-  | TupleTransformation _ ->
-      let typesTrans = Utils.zip_utuple_trans_exn ut trans in
+  | TupleTransformation tms ->
+      let typesTrans = Utils.zip_utuple_trans_exn ut tms in
       let tes =
         List.map typesTrans ~f:(fun (ut, tm) ->
             check_transformation cf tenv ut tm ) in

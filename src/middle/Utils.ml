@@ -81,14 +81,15 @@ let%expect_test "all but last n" =
   [%expect {| (1 2) |}]
 
 (* Utilities for using Tuples and Transformations together *)
-let zip_stuple_trans_exn pst trans =
-  let tms =
-    match trans with
-    | Transformation.TupleTransformation tms -> tms
-    | _ ->
-        Common.FatalError.fatal_error_msg
-          [%message "Internal error: expected TupleTransformation with Tuple"]
-  in
+let tuple_trans_exn = function
+  | Transformation.TupleTransformation ts -> ts
+  | t ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Expected TupleTransformation but got"
+            (t : Expr.Typed.t Transformation.t)]
+
+let zip_stuple_trans_exn pst tms =
   let rec tuple_psts pst =
     match pst with
     | SizedType.STuple sts -> sts
@@ -100,14 +101,7 @@ let zip_stuple_trans_exn pst trans =
   let psts = tuple_psts pst in
   List.zip_exn psts tms
 
-let zip_utuple_trans_exn pst trans =
-  let tms =
-    match trans with
-    | Transformation.TupleTransformation tms -> tms
-    | _ ->
-        Common.FatalError.fatal_error_msg
-          [%message "Internal error: expected TupleTransformation with Tuple"]
-  in
+let zip_utuple_trans_exn pst tms =
   let rec tuple_psts pst =
     match pst with
     | UnsizedType.UTuple uts -> uts
