@@ -17,7 +17,7 @@ type type_ =
   | Array of type_ * int
   | Tuple of type_ list
   | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
-  | Matrix of type_ * int * int
+  | Matrix of type_ * int * int * Middle.Mem_pattern.t
   | Ref of type_
   | Const of type_
   | Pointer of type_
@@ -37,13 +37,16 @@ module Types = struct
   let complex s = Complex s
 
   (** An [Eigen::Matrix<s, -1, 1>]*)
-  let vector s = Matrix (s, -1, 1)
+  let vector ?(mem_pattern = Middle.Mem_pattern.AoS) s =
+    Matrix (s, -1, 1, mem_pattern)
 
   (** An [Eigen::Matrix<s, 1, -1>]*)
-  let row_vector s = Matrix (s, 1, -1)
+  let row_vector ?(mem_pattern = Middle.Mem_pattern.AoS) s =
+    Matrix (s, 1, -1, mem_pattern)
 
   (** An [Eigen::Matrix<s, -1, -1>]*)
-  let matrix s = Matrix (s, -1, -1)
+  let matrix ?(mem_pattern = Middle.Mem_pattern.AoS) s =
+    Matrix (s, -1, -1, mem_pattern)
 
   (** A [std::string]*)
   let string = TypeLiteral "std::string"
@@ -394,7 +397,12 @@ module Printing = struct
     | Array (t, i) -> pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ t i
     | Tuple ts -> pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) ts
     | TypeLiteral id -> pp_identifier ppf id
-    | Matrix (t, i, j) -> pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
+    | Matrix (t, i, j, mem_pattern) -> (
+      match mem_pattern with
+      | Middle.Mem_pattern.AoS ->
+          pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
+      | Middle.Mem_pattern.SoA ->
+          pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j )
     | Const t -> pf ppf "const %a" pp_type_ t
     | Ref t -> pf ppf "%a&" pp_type_ t
     | Pointer t -> pf ppf "%a*" pp_type_ t
@@ -743,7 +751,7 @@ module Tests = struct
       {|
           (MethodCall
            (Parens
-            (StreamInsertion (Constructor (Matrix Double 1 -1) ((Literal 3)))
+            (StreamInsertion (Constructor (Matrix Double 1 -1 AoS) ((Literal 3)))
              ((Literal 1) (Var a) (Literal 3))))
            finished () ())
 

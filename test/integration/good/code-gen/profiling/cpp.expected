@@ -123,9 +123,109 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
              "stancflags = --print-cpp"};
   }
+  // Base log prob
   template <bool propto__, bool jacobian__, typename VecR, typename VecI,
             stan::require_vector_like_t<VecR>* = nullptr,
-            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_not_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "simple_function_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      local_scalar_t__ rho = DUMMY_VAR__;
+      current_statement__ = 1;
+      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+              lp__);
+      local_scalar_t__ alpha = DUMMY_VAR__;
+      current_statement__ = 2;
+      alpha = in__.template read_constrain_lb<local_scalar_t__,
+                jacobian__>(0, lp__);
+      local_scalar_t__ sigma = DUMMY_VAR__;
+      current_statement__ = 3;
+      sigma = in__.template read_constrain_lb<local_scalar_t__,
+                jacobian__>(0, lp__);
+      {
+        current_statement__ = 4;
+        stan::math::validate_non_negative_index("cov", "N", N);
+        current_statement__ = 5;
+        stan::math::validate_non_negative_index("cov", "N", N);
+        Eigen::Matrix<local_scalar_t__,-1,-1> cov =
+          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+        current_statement__ = 7;
+        stan::math::validate_non_negative_index("L_cov", "N", N);
+        current_statement__ = 8;
+        stan::math::validate_non_negative_index("L_cov", "N", N);
+        Eigen::Matrix<local_scalar_t__,-1,-1> L_cov =
+          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+        current_statement__ = 11;
+        {
+          stan::math::profile<local_scalar_t__> profile__("cov_exp_quad",
+            const_cast<stan::math::profile_map&>(profiles__));
+          current_statement__ = 10;
+          stan::model::assign(cov,
+            stan::math::add(stan::math::gp_exp_quad_cov(x, alpha, rho),
+              stan::math::diag_matrix(stan::math::rep_vector(sigma, N))),
+            "assigning variable cov");
+        }
+        current_statement__ = 13;
+        {
+          stan::math::profile<local_scalar_t__>
+            profile__("cholesky_decompose",
+            const_cast<stan::math::profile_map&>(profiles__));
+          current_statement__ = 12;
+          stan::model::assign(L_cov, stan::math::cholesky_decompose(cov),
+            "assigning variable L_cov");
+        }
+        current_statement__ = 20;
+        {
+          stan::math::profile<local_scalar_t__> profile__("likelihood",
+            const_cast<stan::math::profile_map&>(profiles__));
+          current_statement__ = 17;
+          {
+            stan::math::profile<local_scalar_t__> profile__("priors",
+              const_cast<stan::math::profile_map&>(profiles__));
+            current_statement__ = 14;
+            lp_accum__.add(stan::math::gamma_lpdf<propto__>(rho, 25, 4));
+            current_statement__ = 15;
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(alpha, 0, 2));
+            current_statement__ = 16;
+            lp_accum__.add(stan::math::normal_lpdf<propto__>(sigma, 0, 1));
+          }
+          current_statement__ = 19;
+          {
+            stan::math::profile<local_scalar_t__>
+              profile__("multi_normal_cholesky",
+              const_cast<stan::math::profile_map&>(profiles__));
+            current_statement__ = 18;
+            lp_accum__.add(stan::math::multi_normal_cholesky_lpdf<propto__>(
+                             y, stan::math::rep_vector(0, N), L_cov));
+          }
+        }
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  // Reverse mode autodiff log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_st_var<VecR>* = nullptr>
   inline stan::scalar_type_t<VecR>
   log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
                 pstream__ = nullptr) const {

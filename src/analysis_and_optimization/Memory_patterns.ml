@@ -665,7 +665,7 @@ let collect_mem_pattern_variables stmts =
   Mir_utils.fold_stmts ~take_expr:(fun acc _ -> acc) ~take_stmt ~init:[] stmts
   |> List.rev
 
-let pp_mem_patterns ppf (Program.{log_prob; _} : Program.Typed.t) =
+let pp_mem_patterns ppf (Program.{reverse_mode_log_prob; _} : Program.Typed.t) =
   let pp_var ppf (name, stype) =
     Fmt.pf ppf "%a %s: %a"
       (SizedType.pp Expr.Typed.pp)
@@ -673,5 +673,5 @@ let pp_mem_patterns ppf (Program.{log_prob; _} : Program.Typed.t) =
       (SizedType.get_mem_pattern stype) in
   let mem_vars =
     (* Collect all the sizedtypes which have a mem pattern *)
-    collect_mem_pattern_variables log_prob in
+    collect_mem_pattern_variables reverse_mode_log_prob in
   Fmt.(pf ppf "@[<v>%a@.@]" (list pp_var)) mem_vars

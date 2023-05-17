@@ -9714,6 +9714,7 @@
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>)))))
     (meta <opaque>))))
+ (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_real) (decl_type (Sized SReal))

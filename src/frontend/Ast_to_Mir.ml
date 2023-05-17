@@ -945,6 +945,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   ; input_vars
   ; prepare_data
   ; log_prob
+  ; reverse_mode_log_prob= []
   ; generate_quantities
   ; transform_inits
   ; unconstrain_array

@@ -129,16 +129,17 @@ let plus_one e =
   let open Expression_syntax in
   Parens (e + Literal "1")
 
-let rec lower_type (t : UnsizedType.t) (scalar : type_) : type_ =
+let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
+    (scalar : type_) : type_ =
   match t with
   | UInt -> Int
   | UReal -> scalar
   | UComplex -> Types.complex scalar
   | UArray t -> StdVector (lower_type t scalar)
   | UTuple ts -> Tuple (List.map ~f:(fun t -> lower_type t scalar) ts)
-  | UVector -> Types.vector scalar
-  | URowVector -> Types.row_vector scalar
-  | UMatrix -> Types.matrix scalar
+  | UVector -> Types.vector ~mem_pattern scalar
+  | URowVector -> Types.row_vector ~mem_pattern scalar
+  | UMatrix -> Types.matrix ~mem_pattern scalar
   | UComplexVector -> Types.vector (Types.complex scalar)
   | UComplexRowVector -> Types.row_vector (Types.complex scalar)
   | UComplexMatrix -> Types.matrix (Types.complex scalar)
@@ -146,12 +147,12 @@ let rec lower_type (t : UnsizedType.t) (scalar : type_) : type_ =
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
 
-let rec lower_unsizedtype_local adtype ut =
+let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
   match (adtype, ut) with
   | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
-      Tuple (List.map2_exn ~f:lower_unsizedtype_local ads ts)
+      Tuple (List.map2_exn ~f:(lower_unsizedtype_local ~mem_pattern) ads ts)
   | UnsizedType.TupleAD _, UnsizedType.UArray t ->
-      Types.std_vector (lower_unsizedtype_local adtype t)
+      Types.std_vector (lower_unsizedtype_local ~mem_pattern adtype t)
   | _, UnsizedType.UTuple _ | TupleAD _, _ ->
       Common.FatalError.fatal_error_msg
         [%message
@@ -160,18 +161,13 @@ let rec lower_unsizedtype_local adtype ut =
             (adtype : UnsizedType.autodifftype)]
   | _, _ ->
       let s = local_scalar ut adtype in
-      lower_type ut s
+      lower_type ~mem_pattern ut s
 
 let rec lower_possibly_var_decl adtype ut mem_pattern =
-  let var_decl p_ut =
-    let scalar = local_scalar ut adtype in
-    if mem_pattern = Mem_pattern.SoA && adtype = UnsizedType.AutoDiffable then
-      TypeTrait
-        ( "stan::conditional_var_value_t"
-        , [scalar; lower_unsizedtype_local adtype p_ut] )
-    else lower_unsizedtype_local adtype p_ut in
+  let var_decl p_ut = lower_unsizedtype_local ~mem_pattern adtype p_ut in
   match ut with
-  | UArray t -> Types.std_vector (lower_possibly_var_decl adtype t mem_pattern)
+  | UnsizedType.UArray t ->
+      Types.std_vector (lower_possibly_var_decl adtype t mem_pattern)
   | UMatrix | UVector | URowVector | UComplexRowVector | UComplexVector
    |UComplexMatrix ->
       var_decl ut

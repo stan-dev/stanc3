@@ -189,6 +189,9 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
       (* log_prob scope: data, prep declarations *)
     ; stmt_uninitialized_variables globals_data_prep
         {pattern= SList mir.log_prob; meta= Location_span.empty}
+      (* log_prob scope: data, prep declarations *)
+    ; stmt_uninitialized_variables globals_data_prep
+        {pattern= SList mir.reverse_mode_log_prob; meta= Location_span.empty}
       (* gen quant scope: data, prep declarations *)
     ; stmt_uninitialized_variables globals_data_prep
         {pattern= SList mir.generate_quantities; meta= Location_span.empty}

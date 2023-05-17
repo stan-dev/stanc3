@@ -3369,6 +3369,740 @@
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable)))
+      (decl_id basic_p)
+      (decl_type
+       (Sized
+        (STuple
+         ((SArray SReal
+           ((pattern (Lit Int 10))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SReal))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable basic_p) 1) (UArray UReal)
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity)
+           (dims
+            (((pattern (Lit Int 10))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (mem_pattern AoS)))
+         ()))
+       (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable basic_p) 2) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))
+      (decl_id tuple_tuple_p)
+      (decl_type
+       (Sized
+        (STuple
+         (SReal
+          (STuple
+           (SReal
+            (SVector AoS
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable tuple_tuple_p) 1) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (LTupleProjection (LTupleProjection (LVariable tuple_tuple_p) 2) 1)
+      UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (LTupleProjection (LTupleProjection (LVariable tuple_tuple_p) 2) 2)
+      UVector
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity)
+           (dims
+            (((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))
+      (decl_id arr_tuple_p)
+      (decl_type
+       (Sized
+        (SArray
+         (STuple
+          (SComplex
+           (SArray SReal
+            ((pattern (Lit Int 4))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+           (SVector AoS
+            ((pattern (Lit Int 3))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         ((pattern (Lit Int 3))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 3))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable arr_tuple_p)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               1)
+              UComplex
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity) (dims ())
+                   (mem_pattern AoS)))
+                 ()))
+               (meta
+                ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable arr_tuple_p)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               2)
+              (UArray UReal)
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity)
+                   (dims
+                    (((pattern (Lit Int 4))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                   (mem_pattern AoS)))
+                 ()))
+               (meta
+                ((type_ (UArray UReal)) (loc <opaque>)
+                 (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable arr_tuple_p)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               3)
+              UVector
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity)
+                   (dims
+                    (((pattern (Lit Int 3))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                   (mem_pattern AoS)))
+                 ()))
+               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        (AutoDiffable AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))
+      (decl_id tuple_arr_tuple_p)
+      (decl_type
+       (Sized
+        (STuple
+         ((SArray SReal
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SReal
+          (SArray
+           (STuple
+            (SReal
+             (SArray SReal
+              ((pattern (Lit Int 4))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable tuple_arr_tuple_p) 1)
+      (UArray UReal)
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity)
+           (dims
+            (((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (mem_pattern AoS)))
+         ()))
+       (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable tuple_arr_tuple_p) 2) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 3))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LTupleProjection (LVariable tuple_arr_tuple_p) 3)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               1)
+              UReal
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity) (dims ())
+                   (mem_pattern AoS)))
+                 ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LTupleProjection (LVariable tuple_arr_tuple_p) 3)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               2)
+              (UArray UReal)
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity)
+                   (dims
+                    (((pattern (Lit Int 4))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                   (mem_pattern AoS)))
+                 ()))
+               (meta
+                ((type_ (UArray UReal)) (loc <opaque>)
+                 (adlevel AutoDiffable))))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        (AutoDiffable AutoDiffable
+         (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))))
+      (decl_id arr_tuple_tuple_p)
+      (decl_type
+       (Sized
+        (SArray
+         (STuple
+          (SReal SReal
+           (STuple
+            (SReal
+             (STuple
+              (SComplex
+               (SVector AoS
+                ((pattern (Lit Int 4))
+                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable arr_tuple_tuple_p)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               1)
+              UReal
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity) (dims ())
+                   (mem_pattern AoS)))
+                 ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable arr_tuple_tuple_p)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               2)
+              UReal
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity) (dims ())
+                   (mem_pattern AoS)))
+                 ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment
+              (LTupleProjection
+               (LTupleProjection
+                (LIndexed (LVariable arr_tuple_tuple_p)
+                 ((Single
+                   ((pattern (Var sym1__))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                3)
+               1)
+              UReal
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity) (dims ())
+                   (mem_pattern AoS)))
+                 ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment
+              (LTupleProjection
+               (LTupleProjection
+                (LTupleProjection
+                 (LIndexed (LVariable arr_tuple_tuple_p)
+                  ((Single
+                    ((pattern (Var sym1__))
+                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                 3)
+                2)
+               1)
+              UComplex
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity) (dims ())
+                   (mem_pattern AoS)))
+                 ()))
+               (meta
+                ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (Assignment
+              (LTupleProjection
+               (LTupleProjection
+                (LTupleProjection
+                 (LIndexed (LVariable arr_tuple_tuple_p)
+                  ((Single
+                    ((pattern (Var sym1__))
+                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                 3)
+                2)
+               2)
+              UVector
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity)
+                   (dims
+                    (((pattern (Lit Int 4))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                   (mem_pattern AoS)))
+                 ()))
+               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))
+      (decl_id arr_tuple_arr_tuple_p)
+      (decl_type
+       (Sized
+        (SArray
+         (STuple
+          (SReal
+           (SArray
+            (STuple
+             (SReal
+              (SVector AoS
+               ((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+            ((pattern (Lit Int 4))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         ((pattern (Lit Int 3))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 3))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable arr_tuple_arr_tuple_p)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               1)
+              UReal
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity) (dims ())
+                   (mem_pattern AoS)))
+                 ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 4))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment
+                      (LTupleProjection
+                       (LIndexed
+                        (LTupleProjection
+                         (LIndexed (LVariable arr_tuple_arr_tuple_p)
+                          ((Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))))
+                         2)
+                        ((Single
+                          ((pattern (Var sym2__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       1)
+                      UReal
+                      ((pattern
+                        (FunApp
+                         (CompilerInternal
+                          (FnReadParam (constrain Identity) (dims ())
+                           (mem_pattern AoS)))
+                         ()))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                    (meta <opaque>))
+                   ((pattern
+                     (Assignment
+                      (LTupleProjection
+                       (LIndexed
+                        (LTupleProjection
+                         (LIndexed (LVariable arr_tuple_arr_tuple_p)
+                          ((Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))))
+                         2)
+                        ((Single
+                          ((pattern (Var sym2__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       2)
+                      UVector
+                      ((pattern
+                        (FunApp
+                         (CompilerInternal
+                          (FnReadParam (constrain Identity)
+                           (dims
+                            (((pattern (Lit Int 5))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))))
+                           (mem_pattern AoS)))
+                         ()))
+                       (meta
+                        ((type_ UVector) (loc <opaque>)
+                         (adlevel AutoDiffable))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        (AutoDiffable
+         (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))))
+      (decl_id very_deep_p)
+      (decl_type
+       (Sized
+        (SArray
+         (STuple
+          (SReal
+           (SArray
+            (STuple
+             (SReal
+              (SArray
+               (STuple
+                (SComplex
+                 (SMatrix AoS
+                  ((pattern (Lit Int 6))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Int 7))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               ((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+            ((pattern (Lit Int 4))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         ((pattern (Lit Int 3))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 3))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable very_deep_p)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               1)
+              UReal
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity) (dims ())
+                   (mem_pattern AoS)))
+                 ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 4))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment
+                      (LTupleProjection
+                       (LIndexed
+                        (LTupleProjection
+                         (LIndexed (LVariable very_deep_p)
+                          ((Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))))
+                         2)
+                        ((Single
+                          ((pattern (Var sym2__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       1)
+                      UReal
+                      ((pattern
+                        (FunApp
+                         (CompilerInternal
+                          (FnReadParam (constrain Identity) (dims ())
+                           (mem_pattern AoS)))
+                         ()))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                    (meta <opaque>))
+                   ((pattern
+                     (For (loopvar sym3__)
+                      (lower
+                       ((pattern (Lit Int 1))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                      (upper
+                       ((pattern (Lit Int 5))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                      (body
+                       ((pattern
+                         (Block
+                          (((pattern
+                             (Assignment
+                              (LTupleProjection
+                               (LIndexed
+                                (LTupleProjection
+                                 (LIndexed
+                                  (LTupleProjection
+                                   (LIndexed (LVariable very_deep_p)
+                                    ((Single
+                                      ((pattern (Var sym1__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>)
+                                         (adlevel DataOnly)))))))
+                                   2)
+                                  ((Single
+                                    ((pattern (Var sym2__))
+                                     (meta
+                                      ((type_ UInt) (loc <opaque>)
+                                       (adlevel DataOnly)))))))
+                                 2)
+                                ((Single
+                                  ((pattern (Var sym3__))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>)
+                                     (adlevel DataOnly)))))))
+                               1)
+                              UComplex
+                              ((pattern
+                                (FunApp
+                                 (CompilerInternal
+                                  (FnReadParam (constrain Identity) (dims ())
+                                   (mem_pattern AoS)))
+                                 ()))
+                               (meta
+                                ((type_ UComplex) (loc <opaque>)
+                                 (adlevel AutoDiffable))))))
+                            (meta <opaque>))
+                           ((pattern
+                             (Assignment
+                              (LTupleProjection
+                               (LIndexed
+                                (LTupleProjection
+                                 (LIndexed
+                                  (LTupleProjection
+                                   (LIndexed (LVariable very_deep_p)
+                                    ((Single
+                                      ((pattern (Var sym1__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>)
+                                         (adlevel DataOnly)))))))
+                                   2)
+                                  ((Single
+                                    ((pattern (Var sym2__))
+                                     (meta
+                                      ((type_ UInt) (loc <opaque>)
+                                       (adlevel DataOnly)))))))
+                                 2)
+                                ((Single
+                                  ((pattern (Var sym3__))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>)
+                                     (adlevel DataOnly)))))))
+                               2)
+                              UMatrix
+                              ((pattern
+                                (FunApp
+                                 (CompilerInternal
+                                  (FnReadParam (constrain Identity)
+                                   (dims
+                                    (((pattern (Lit Int 6))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>)
+                                        (adlevel DataOnly))))
+                                     ((pattern (Lit Int 7))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>)
+                                        (adlevel DataOnly))))))
+                                   (mem_pattern AoS)))
+                                 ()))
+                               (meta
+                                ((type_ UMatrix) (loc <opaque>)
+                                 (adlevel AutoDiffable))))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
  (generate_quantities
   (((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id basic_p)
@@ -10499,6 +11233,81 @@
       ((pattern
         (FunApp
          (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable)))
+          (decl_id z)
+          (decl_type
+           (Sized
+            (SArray (STuple (SReal SReal))
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (initialize true)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (LVariable z) (UArray (UTuple (UReal UReal)))
+          ((pattern
+            (FunApp (CompilerInternal FnMakeArray)
+             (((pattern
+                (FunApp (CompilerInternal FnMakeTuple)
+                 (((pattern
+                    (Promotion
+                     ((pattern (Lit Int 1))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     UReal AutoDiffable))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (Promotion
+                     ((pattern (Var x))
+                      (meta
+                       ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                     UReal AutoDiffable))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                 (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+              ((pattern
+                (FunApp (CompilerInternal FnMakeTuple)
+                 (((pattern
+                    (Promotion
+                     ((pattern (Var x))
+                      (meta
+                       ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                     UReal AutoDiffable))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (Promotion
+                     ((pattern (Lit Int 1))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     UReal AutoDiffable))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                 (adlevel (TupleAD (AutoDiffable AutoDiffable)))))))))
+           (meta
+            ((type_ (UArray (UTuple (UReal UReal)))) (loc <opaque>)
+             (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized SReal))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable x) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
           (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -10712,7 +11521,7 @@
          ((type_ (UTuple (UReal))) (loc <opaque>)
           (adlevel (TupleAD (DataOnly)))))))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -10782,7 +11591,7 @@
           1))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -10870,7 +11679,7 @@
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -10985,7 +11794,7 @@
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -11774,7 +12583,7 @@
             (meta <opaque>)))))
         (meta <opaque>)))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -11922,6 +12731,340 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
  (log_prob
+  (((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable ps) 1) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam
+           (constrain
+            (Lower
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable ps) 2) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam
+           (constrain
+            (Lower
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray
+          (STuple
+           (SReal
+            (SVector AoS
+             ((pattern (Lit Int 4))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         ((pattern (Lit Int 3))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 3))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment
+                      (LTupleProjection
+                       (LIndexed (LVariable ps2)
+                        ((Single
+                          ((pattern (Var sym2__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                         (Single
+                          ((pattern (Var sym1__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       1)
+                      UReal
+                      ((pattern
+                        (FunApp
+                         (CompilerInternal
+                          (FnReadParam
+                           (constrain
+                            (Lower
+                             ((pattern (Lit Int 0))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))))
+                           (dims ()) (mem_pattern AoS)))
+                         ()))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                    (meta <opaque>))
+                   ((pattern
+                     (Assignment
+                      (LTupleProjection
+                       (LIndexed (LVariable ps2)
+                        ((Single
+                          ((pattern (Var sym2__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                         (Single
+                          ((pattern (Var sym1__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       2)
+                      UVector
+                      ((pattern
+                        (FunApp
+                         (CompilerInternal
+                          (FnReadParam (constrain Simplex)
+                           (dims
+                            (((pattern (Lit Int 4))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))))
+                           (mem_pattern AoS)))
+                         ()))
+                       (meta
+                        ((type_ UVector) (loc <opaque>)
+                         (adlevel AutoDiffable))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable t) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam
+           (constrain
+            (LowerUpper
+             ((pattern
+               (TupleProjection
+                ((pattern (FunApp (UserDefined foo FnPlain) ()))
+                 (meta
+                  ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                   (adlevel (TupleAD (DataOnly DataOnly))))))
+                1))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern
+               (TupleProjection
+                ((pattern (Var ps))
+                 (meta
+                  ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                   (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                2))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+           (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        (AutoDiffable (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))))
+      (decl_id complicated)
+      (decl_type
+       (Sized
+        (SArray
+         (STuple
+          (SReal
+           (SArray
+            (STuple
+             (SReal
+              (SVector AoS
+               ((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (SMatrix AoS
+               ((pattern (Lit Int 5))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 4))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+            ((pattern (Var complicated_brack_dot2_1dim__))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (Assignment
+              (LTupleProjection
+               (LIndexed (LVariable complicated)
+                ((Single
+                  ((pattern (Var sym1__))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               1)
+              UReal
+              ((pattern
+                (FunApp
+                 (CompilerInternal
+                  (FnReadParam (constrain Identity) (dims ())
+                   (mem_pattern AoS)))
+                 ()))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (meta <opaque>))
+           ((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Var complicated_brack_dot2_1dim__))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment
+                      (LTupleProjection
+                       (LIndexed
+                        (LTupleProjection
+                         (LIndexed (LVariable complicated)
+                          ((Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))))
+                         2)
+                        ((Single
+                          ((pattern (Var sym2__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       1)
+                      UReal
+                      ((pattern
+                        (FunApp
+                         (CompilerInternal
+                          (FnReadParam (constrain Identity) (dims ())
+                           (mem_pattern AoS)))
+                         ()))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                    (meta <opaque>))
+                   ((pattern
+                     (Assignment
+                      (LTupleProjection
+                       (LIndexed
+                        (LTupleProjection
+                         (LIndexed (LVariable complicated)
+                          ((Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))))
+                         2)
+                        ((Single
+                          ((pattern (Var sym2__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       2)
+                      UVector
+                      ((pattern
+                        (FunApp
+                         (CompilerInternal
+                          (FnReadParam (constrain Simplex)
+                           (dims
+                            (((pattern (Lit Int 5))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))))
+                           (mem_pattern AoS)))
+                         ()))
+                       (meta
+                        ((type_ UVector) (loc <opaque>)
+                         (adlevel AutoDiffable))))))
+                    (meta <opaque>))
+                   ((pattern
+                     (Assignment
+                      (LTupleProjection
+                       (LIndexed
+                        (LTupleProjection
+                         (LIndexed (LVariable complicated)
+                          ((Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))))
+                         2)
+                        ((Single
+                          ((pattern (Var sym2__))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                       3)
+                      UMatrix
+                      ((pattern
+                        (FunApp
+                         (CompilerInternal
+                          (FnReadParam (constrain CholeskyCov)
+                           (dims
+                            (((pattern (Lit Int 5))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((pattern (Lit Int 4))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))))
+                           (mem_pattern AoS)))
+                         ()))
+                       (meta
+                        ((type_ UMatrix) (loc <opaque>)
+                         (adlevel AutoDiffable))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
@@ -15300,6 +16443,20 @@
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>)))))
     (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (UserDefined foo FnPlain)
+             (((pattern (Var d))
+               (meta
+                ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                 (adlevel (TupleAD (DataOnly DataOnly)))))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
  (generate_quantities
   (((pattern
      (IfElse
@@ -15456,6 +16613,152 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
  (log_prob
+  (((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable ps) 1) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam
+           (constrain
+            (Lower
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable ps) 2) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam
+           (constrain
+            (Lower
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (StanLib bernoulli_lpmf (FnLpdf true) AoS)
+             (((pattern
+                (TupleProjection
+                 ((pattern (Var ds))
+                  (meta
+                   ((type_
+                     (UTuple (UInt (UTuple ((UArray UInt) (UArray UInt))))))
+                    (loc <opaque>)
+                    (adlevel
+                     (TupleAD (DataOnly (TupleAD (DataOnly DataOnly))))))))
+                 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (TupleProjection
+                 ((pattern (Var ps))
+                  (meta
+                   ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                    (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                 1))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>))
+       ((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (StanLib Plus__ FnPlain AoS)
+             (((pattern
+                (FunApp (StanLib Plus__ FnPlain AoS)
+                 (((pattern
+                    (TupleProjection
+                     ((pattern (Var ps))
+                      (meta
+                       ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                        (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                     2))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (Promotion
+                     ((pattern
+                       (Indexed
+                        ((pattern
+                          (TupleProjection
+                           ((pattern
+                             (TupleProjection
+                              ((pattern (Var ds))
+                               (meta
+                                ((type_
+                                  (UTuple
+                                   (UInt
+                                    (UTuple ((UArray UInt) (UArray UInt))))))
+                                 (loc <opaque>)
+                                 (adlevel
+                                  (TupleAD
+                                   (DataOnly (TupleAD (DataOnly DataOnly))))))))
+                              2))
+                            (meta
+                             ((type_ (UTuple ((UArray UInt) (UArray UInt))))
+                              (loc <opaque>)
+                              (adlevel (TupleAD (DataOnly DataOnly))))))
+                           1))
+                         (meta
+                          ((type_ (UArray UInt)) (loc <opaque>)
+                           (adlevel DataOnly))))
+                        ((Single
+                          ((pattern (Lit Int 1))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     UReal DataOnly))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+              ((pattern
+                (Promotion
+                 ((pattern
+                   (Indexed
+                    ((pattern
+                      (TupleProjection
+                       ((pattern
+                         (TupleProjection
+                          ((pattern (Var ds))
+                           (meta
+                            ((type_
+                              (UTuple
+                               (UInt (UTuple ((UArray UInt) (UArray UInt))))))
+                             (loc <opaque>)
+                             (adlevel
+                              (TupleAD
+                               (DataOnly (TupleAD (DataOnly DataOnly))))))))
+                          2))
+                        (meta
+                         ((type_ (UTuple ((UArray UInt) (UArray UInt))))
+                          (loc <opaque>)
+                          (adlevel (TupleAD (DataOnly DataOnly))))))
+                       2))
+                     (meta
+                      ((type_ (UArray UInt)) (loc <opaque>)
+                       (adlevel DataOnly))))
+                    ((Single
+                      ((pattern (Lit Int 2))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
@@ -15864,7 +17167,7 @@
       ((pattern (Lit Int 5))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -15928,7 +17231,7 @@
       ((pattern (Lit Int 5))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -15992,7 +17295,7 @@
       ((pattern (Lit Int 5))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -16064,7 +17367,7 @@
       ((pattern (Lit Int 5))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -16098,6 +17401,82 @@
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-nested-param.stan
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
+  (((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable ps) 1) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable ps) 2) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))
+      (decl_id ps2)
+      (decl_type
+       (Sized
+        (STuple
+         (SReal
+          (STuple
+           (SReal
+            (SMatrix AoS
+             ((pattern (Lit Int 10))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 10))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable ps2) 1) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LTupleProjection (LVariable ps2) 2) 1)
+      UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LTupleProjection (LVariable ps2) 2) 2)
+      UMatrix
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity)
+           (dims
+            (((pattern (Lit Int 10))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 10))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
       (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
@@ -16843,6 +18222,34 @@
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable ps) 1) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LTupleProjection (LVariable ps) 2) UReal
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam
+           (constrain
+            (Lower
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (dims ()) (mem_pattern AoS)))
+         ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))))
  (generate_quantities
   (((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
@@ -17417,6 +18824,195 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (log_prob
+  (((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id d2)
+      (decl_type
+       (Sized
+        (STuple
+         ((SArray SComplex
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (SArray SComplex
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable d2)
+      (UTuple ((UArray UComplex) (UArray UComplex)))
+      ((pattern
+        (Promotion
+         ((pattern (Var d))
+          (meta
+           ((type_ (UTuple ((UArray UInt) (UArray UInt)))) (loc <opaque>)
+            (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+         (UTuple (UComplex UComplex)) (TupleAD (AutoDiffable AutoDiffable))))
+       (meta
+        ((type_ (UTuple ((UArray UComplex) (UArray UComplex))))
+         (loc <opaque>) (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id V3)
+      (decl_type
+       (Sized
+        (STuple
+         ((SVector AoS
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          SReal))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable V3) (UTuple (UVector UReal))
+      ((pattern
+        (Promotion
+         ((pattern (Var V2))
+          (meta
+           ((type_ (UTuple (UVector UInt))) (loc <opaque>)
+            (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+         (UTuple (UReal UReal)) (TupleAD (AutoDiffable AutoDiffable))))
+       (meta
+        ((type_ (UTuple (UVector UReal))) (loc <opaque>)
+         (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable)))
+      (decl_id arrs2)
+      (decl_type
+       (Sized
+        (SArray
+         (STuple
+          (SReal
+           (SArray SComplex
+            ((pattern (Lit Int 2))
+             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+         ((pattern (Lit Int 4))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable arrs2)
+      (UArray (UTuple (UReal (UArray UComplex))))
+      ((pattern
+        (Promotion
+         ((pattern (Var arrs))
+          (meta
+           ((type_ (UArray (UTuple (UInt (UArray UInt))))) (loc <opaque>)
+            (adlevel AutoDiffable))))
+         (UTuple (UReal UComplex)) (TupleAD (AutoDiffable AutoDiffable))))
+       (meta
+        ((type_ (UArray (UTuple (UReal (UArray UComplex))))) (loc <opaque>)
+         (adlevel (TupleAD (AutoDiffable AutoDiffable))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+         (TupleAD (AutoDiffable AutoDiffable)))))
+      (decl_id nested2)
+      (decl_type
+       (Sized
+        (STuple
+         ((STuple
+           (SReal
+            (SArray SComplex
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          SReal
+          (STuple
+           ((SVector AoS
+             ((pattern (Lit Int 3))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            SReal))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable nested2)
+      (UTuple
+       ((UTuple (UReal (UArray UComplex))) UReal (UTuple (UVector UReal))))
+      ((pattern
+        (Promotion
+         ((pattern (Var nested))
+          (meta
+           ((type_
+             (UTuple
+              ((UTuple (UInt (UArray UInt))) UInt (UTuple (UVector UInt)))))
+            (loc <opaque>)
+            (adlevel
+             (TupleAD
+              ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+               (TupleAD (AutoDiffable AutoDiffable))))))))
+         (UTuple ((UTuple (UReal UComplex)) UReal (UTuple (UReal UReal))))
+         (TupleAD
+          ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+           (TupleAD (AutoDiffable AutoDiffable))))))
+       (meta
+        ((type_
+          (UTuple
+           ((UTuple (UReal (UArray UComplex))) UReal
+            (UTuple (UVector UReal)))))
+         (loc <opaque>)
+         (adlevel
+          (TupleAD
+           ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+            (TupleAD (AutoDiffable AutoDiffable))))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl
+      (decl_adtype
+       (TupleAD
+        ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+         (TupleAD (AutoDiffable AutoDiffable)))))
+      (decl_id nested3)
+      (decl_type
+       (Sized
+        (STuple
+         ((STuple
+           (SReal
+            (SArray SComplex
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          SReal
+          (STuple
+           ((SVector AoS
+             ((pattern (Lit Int 3))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            SReal))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable nested3)
+      (UTuple
+       ((UTuple (UReal (UArray UComplex))) UReal (UTuple (UVector UReal))))
+      ((pattern
+        (Promotion
+         ((pattern (Var nested))
+          (meta
+           ((type_
+             (UTuple
+              ((UTuple (UInt (UArray UInt))) UInt (UTuple (UVector UInt)))))
+            (loc <opaque>)
+            (adlevel
+             (TupleAD
+              ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+               (TupleAD (AutoDiffable AutoDiffable))))))))
+         (UTuple ((UTuple (UReal UComplex)) UReal (UTuple (UReal UReal))))
+         (TupleAD
+          ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+           (TupleAD (AutoDiffable AutoDiffable))))))
+       (meta
+        ((type_
+          (UTuple
+           ((UTuple (UReal (UArray UComplex))) UReal
+            (UTuple (UVector UReal)))))
+         (loc <opaque>)
+         (adlevel
+          (TupleAD
+           ((TupleAD (AutoDiffable AutoDiffable)) AutoDiffable
+            (TupleAD (AutoDiffable AutoDiffable))))))))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id d2)
       (decl_type
@@ -19163,7 +20759,7 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
- (log_prob ())
+ (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities
   (((pattern
      (IfElse
@@ -19542,6 +21138,57 @@
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (mem_pattern AoS)))
+         ()))
+       (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id sum2)
+      (decl_type (Sized SReal)) (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable sum2) UReal
+      ((pattern
+        (FunApp (StanLib reduce_sum FnPlain AoS)
+         (((pattern (Var fun))
+           (meta
+            ((type_
+              (UFun
+               ((AutoDiffable (UArray UReal)) (AutoDiffable UInt)
+                (AutoDiffable UInt)
+                (AutoDiffable (UTuple (UReal (UArray UInt)))))
+               (ReturnType UReal) FnPlain AoS))
+             (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Var param_y))
+           (meta
+            ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var data_m))
+           (meta
+            ((type_ (UTuple (UReal (UArray UInt)))) (loc <opaque>)
+             (adlevel (TupleAD (DataOnly DataOnly)))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id param_y)
+      (decl_type
+       (Sized
+        (SArray SReal
+         ((pattern (Var N))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (LVariable param_y) (UArray UReal)
+      ((pattern
+        (FunApp
+         (CompilerInternal
+          (FnReadParam (constrain Identity)
+           (dims
+            (((pattern (Var N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern SoA)))
          ()))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -19807,6 +21454,36 @@
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>)))))
     (meta <opaque>))))
+ (reverse_mode_log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (UserDefined foo_lpdf (FnLpdf true))
+             (((pattern
+                (FunApp (CompilerInternal FnMakeTuple)
+                 (((pattern (Lit Real 1.5))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Int 2))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta
+                ((type_ (UTuple (UReal UInt))) (loc <opaque>)
+                 (adlevel (TupleAD (DataOnly DataOnly))))))
+              ((pattern
+                (FunApp (CompilerInternal FnMakeTuple)
+                 (((pattern (Lit Real 1.2))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Real 1.5))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Real 4.5))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta
+                ((type_ (UTuple (UReal UReal UReal))) (loc <opaque>)
+                 (adlevel (TupleAD (DataOnly DataOnly DataOnly)))))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
  (generate_quantities
   (((pattern
      (IfElse
@@ -19887,6 +21564,27 @@
     (fdloc <opaque>))))
  (input_vars ()) (prepare_data ())
  (log_prob
+  (((pattern
+     (Block
+      (((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (UserDefined foo_lpmf (FnLpdf true))
+             (((pattern
+                (FunApp (CompilerInternal FnMakeTuple)
+                 (((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Int 3))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta
+                ((type_ (UTuple (UInt UInt))) (loc <opaque>)
+                 (adlevel (TupleAD (DataOnly DataOnly))))))
+              ((pattern (Lit Real 0.5))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (reverse_mode_log_prob
   (((pattern
      (Block
       (((pattern
