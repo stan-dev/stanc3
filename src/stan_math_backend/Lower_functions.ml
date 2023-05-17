@@ -4,19 +4,18 @@ open Lower_expr
 open Lower_stmt
 open Cpp
 
-let rec lower_type_eigen_expr (t : UnsizedType.t) (scalar : type_) : type_ =
+let rec lower_type_eigen_expr (t : UnsizedType.t) (inner_type : type_) : type_ =
   match t with
   | UInt -> Int
   | UReal | UMatrix | URowVector | UVector | UComplexVector | UComplexMatrix
-   |UComplexRowVector ->
-      scalar
-  | UComplex -> Types.complex scalar
+   |UComplexRowVector | UTuple _ ->
+      inner_type
+  | UComplex -> Types.complex inner_type
   | UArray t when UnsizedType.contains_tuple t ->
-      StdVector (lower_type_eigen_expr t scalar)
-  | UTuple _ -> scalar
+      StdVector (lower_type_eigen_expr t inner_type)
   | UArray t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
-      StdVector (lower_type t scalar)
+      StdVector (lower_type t inner_type)
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
@@ -91,28 +90,17 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
  *)
 let template_parameters (args : Program.fun_arg_decl) =
   let rec template_p start i (ad, typ) =
-    match (ad, typ) with
-    | _, t when UnsizedType.is_int_type t -> ([], [], arg_type None typ)
-    | _, ut when UnsizedType.contains_tuple ut -> (
-        let internal, _ = UnsizedType.unwind_array_type ut in
-        match internal with
-        | UTuple tys ->
-            let temps, reqs, sclrs =
-              List.map ~f:(fun ty -> (ad, ty)) tys
-              |> List.mapi ~f:(template_p (sprintf "%s%d__" start i))
-              |> List.unzip3 in
-            let templates = List.concat temps in
-            let requires = List.concat reqs in
-            let scalar = Tuple sclrs in
-            (templates, requires, arg_type (Some scalar) typ)
-        | _ ->
-            Common.FatalError.fatal_error_msg
-              [%message
-                "Impossible: type passes UnsizedType.contains_tuple but \
-                 unwrapped scalar is not tuple"
-                  (typ : UnsizedType.t)
-                  (internal : UnsizedType.t)
-                  (ad : UnsizedType.autodifftype)] )
+    match (ad, fst (UnsizedType.unwind_array_type typ)) with
+    | _, UInt -> ([], [], arg_type None typ)
+    | _, UTuple tys ->
+        let temps, reqs, sclrs =
+          List.map ~f:(fun ty -> (ad, ty)) tys
+          |> List.mapi ~f:(template_p (sprintf "%s%d__" start i))
+          |> List.unzip3 in
+        let templates = List.concat temps in
+        let requires = List.concat reqs in
+        let scalar = Tuple sclrs in
+        (templates, requires, arg_type (Some scalar) typ)
     | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) ->
         ([], [], arg_type None typ)
     | _ ->
