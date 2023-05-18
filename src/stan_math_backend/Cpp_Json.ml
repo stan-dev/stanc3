@@ -29,11 +29,11 @@ let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
       `Assoc
         [ ("name", `String "array"); ("length", `String (emit_cpp_expr d))
         ; ("element_type", sizedtype_to_json st) ]
-  | STuple ts ->
+  | STuple subtypes ->
       `Assoc
         [ ("name", `String "tuple")
-        ; ("num_elements", `String (string_of_int (List.length ts)))
-        ; ("element_types", `List (List.map ~f:sizedtype_to_json ts)) ]
+        ; ("num_elements", `String (string_of_int (List.length subtypes)))
+        ; ("element_types", `List (List.map ~f:sizedtype_to_json subtypes)) ]
 
 let out_var_json (name, st, block) : Yojson.Basic.t =
   `Assoc

@@ -82,7 +82,7 @@ let%expect_test "all but last n" =
 
 (* Utilities for using Tuples and Transformations together *)
 let tuple_trans_exn = function
-  | Transformation.TupleTransformation ts -> ts
+  | Transformation.TupleTransformation transforms -> transforms
   | t ->
       Common.FatalError.fatal_error_msg
         [%message
@@ -90,15 +90,15 @@ let tuple_trans_exn = function
             (t : Expr.Typed.t Transformation.t)]
 
 let zip_stuple_trans_exn pst tms =
-  let rec tuple_psts pst =
+  let rec tuple_subtypes pst =
     match pst with
-    | SizedType.STuple sts -> sts
-    | SArray (st, _) -> tuple_psts st
+    | SizedType.STuple subtypes -> subtypes
+    | SArray (st, _) -> tuple_subtypes st
     | _ ->
         Common.FatalError.fatal_error_msg
           [%message "Internal error: expected Tuple with TupleTransformation"]
   in
-  let psts = tuple_psts pst in
+  let psts = tuple_subtypes pst in
   List.zip_exn psts tms
 
 let zip_utuple_trans_exn pst tms =

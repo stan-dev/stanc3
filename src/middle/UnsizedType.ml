@@ -104,18 +104,18 @@ and pp_returntype ppf = function
 let rec autodifftype_can_convert at1 at2 =
   match (at1, at2) with
   | DataOnly, AutoDiffable -> false
-  | TupleAD ts, TupleAD ts2 -> (
-    match List.for_all2 ts ts2 ~f:autodifftype_can_convert with
+  | TupleAD ads1, TupleAD ads2 -> (
+    match List.for_all2 ads1 ads2 ~f:autodifftype_can_convert with
     | Ok x -> x
     | Unequal_lengths -> false )
-  | DataOnly, TupleAD ts ->
-      List.for_all ts ~f:(autodifftype_can_convert DataOnly)
+  | DataOnly, TupleAD ads ->
+      List.for_all ads ~f:(autodifftype_can_convert DataOnly)
   | _, _ -> true
 
 let rec has_autodiff = function
   | DataOnly -> false
   | AutoDiffable -> true
-  | TupleAD ts -> List.exists ts ~f:has_autodiff
+  | TupleAD ads -> List.exists ads ~f:has_autodiff
 
 let any_autodiff xs = List.exists xs ~f:has_autodiff
 
@@ -124,14 +124,14 @@ let lub_ad_type xs =
     match (t1, t2) with
     | DataOnly, ad | ad, DataOnly -> Ok ad
     | AutoDiffable, AutoDiffable -> Ok AutoDiffable
-    | TupleAD ts1, TupleAD ts2 -> (
-      match List.map2 ts1 ts2 ~f:common_ad with
-      | Ok ts -> ts |> Result.all |> Result.map ~f:(fun ts -> TupleAD ts)
+    | TupleAD ads1, TupleAD ads2 -> (
+      match List.map2 ads1 ads2 ~f:common_ad with
+      | Ok ads -> ads |> Result.all |> Result.map ~f:(fun ads -> TupleAD ads)
       | Unequal_lengths -> Error () )
-    | TupleAD ts, AutoDiffable | AutoDiffable, TupleAD ts ->
-        List.map ts ~f:(common_ad AutoDiffable)
+    | TupleAD ads, AutoDiffable | AutoDiffable, TupleAD ads ->
+        List.map ads ~f:(common_ad AutoDiffable)
         |> Result.all
-        |> Result.map ~f:(fun ts -> TupleAD ts) in
+        |> Result.map ~f:(fun ads -> TupleAD ads) in
   List.fold_result ~init:DataOnly ~f:common_ad xs |> Result.ok
 
 let%expect_test "lub_ad_type1" =
@@ -284,8 +284,8 @@ let rec is_indexing_matrix = function
 let rec fill_adtype_for_type ad ut =
   match (ad, ut) with
   | _, UArray t -> fill_adtype_for_type ad t
-  | TupleAD ad2, UTuple ts ->
-      TupleAD (List.map2_exn ~f:fill_adtype_for_type ad2 ts)
+  | TupleAD ads, UTuple ts ->
+      TupleAD (List.map2_exn ~f:fill_adtype_for_type ads ts)
   | _, UTuple ts -> TupleAD (List.map ~f:(fill_adtype_for_type ad) ts)
   | TupleAD _, _ ->
       Common.FatalError.fatal_error_msg

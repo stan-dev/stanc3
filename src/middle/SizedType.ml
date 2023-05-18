@@ -38,7 +38,8 @@ let rec pp pp_e ppf = function
       Fmt.pf ppf "array%a"
         Fmt.(pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e |> brackets)
         (st, expr)
-  | STuple ts -> Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma (pp pp_e)) ts
+  | STuple subtypes ->
+      Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma (pp pp_e)) subtypes
 
 let rec to_unsized = function
   | SInt -> UnsizedType.UInt
@@ -51,7 +52,7 @@ let rec to_unsized = function
   | SComplexRowVector _ -> UComplexRowVector
   | SComplexMatrix _ -> UComplexMatrix
   | SArray (t, _) -> UArray (to_unsized t)
-  | STuple ts -> UTuple (List.map ~f:to_unsized ts)
+  | STuple subtypes -> UTuple (List.map ~f:to_unsized subtypes)
 
 let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
 
@@ -83,9 +84,10 @@ let rec io_size st =
   let two = Expr.Helpers.int 2 in
   match st with
   | SInt | SReal -> Expr.Helpers.one
-  | STuple ts ->
-      Expr.Helpers.binop_list (List.map ~f:io_size ts) Operator.Plus
-        ~default:Expr.Helpers.zero
+  | STuple subtypes ->
+      Expr.Helpers.binop_list
+        (List.map ~f:io_size subtypes)
+        Operator.Plus ~default:Expr.Helpers.zero
   | SComplex -> two
   | SVector (_, d) | SRowVector (_, d) -> d
   | SMatrix (_, dim1, dim2) -> Expr.Helpers.binop dim1 Operator.Times dim2
@@ -190,7 +192,7 @@ let rec demote_sizedtype_mem st =
   | SVector (SoA, dim) -> SVector (AoS, dim)
   | SRowVector (SoA, dim) -> SRowVector (AoS, dim)
   | SMatrix (SoA, dim1, dim2) -> SMatrix (AoS, dim1, dim2)
-  | STuple ts -> STuple (List.map ~f:demote_sizedtype_mem ts)
+  | STuple subtypes -> STuple (List.map ~f:demote_sizedtype_mem subtypes)
 
 (*Given a sizedtype, promote it's mem pattern from AoS to SoA*)
 let rec promote_sizedtype_mem st =
@@ -213,7 +215,7 @@ let rec has_mem_pattern = function
       false
   | SVector _ | SRowVector _ | SMatrix _ -> true
   | SArray (t, _) -> has_mem_pattern t
-  | STuple ts -> List.exists ~f:has_mem_pattern ts
+  | STuple subtypes -> List.exists ~f:has_mem_pattern subtypes
 
 (** NB: This is not quite the inverse of [get_array_dims]
     you need to reverse [dims] first.
@@ -224,7 +226,7 @@ let rec build_sarray dims st =
 let flatten_tuple_io st =
   let rec loop st =
     match st with
-    | STuple ts -> List.concat_map ~f:loop ts
+    | STuple subtypes -> List.concat_map ~f:loop subtypes
     | SArray _ when contains_tuple st ->
         let tupl, dims = get_array_dims st in
         List.map ~f:(fun t -> build_sarray (List.rev dims) t) (loop tupl)

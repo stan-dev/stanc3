@@ -1468,9 +1468,9 @@ and check_sizedtype cf tenv sizedty =
       let tst = check_sizedtype cf tenv st in
       let te = check e "Array sizes" in
       SArray (tst, te)
-  | STuple sts ->
-      let tsts = List.map ~f:(check_sizedtype cf tenv) sts in
-      STuple tsts
+  | STuple subtypes ->
+      let typed_subtypes = List.map ~f:(check_sizedtype cf tenv) subtypes in
+      STuple typed_subtypes
 
 and check_var_decl_initial_value loc cf tenv {identifier; initial_value} =
   match initial_value with

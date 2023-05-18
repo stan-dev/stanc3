@@ -285,7 +285,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
       [Assignment (decl_id_lval, flat_type, origin) |> swrap; incr_tuple_pos]
   | UTuple _ ->
       let get_subtypes = match st with STuple subs -> subs | _ -> [] in
-      let sub_sts =
+      let elements =
         List.mapi
           ~f:(fun iter x ->
             ( Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1)
@@ -297,19 +297,20 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
           ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
           get_subtypes in
       List.map2_exn
-        ~f:(fun name sts -> var_context_read_inside_tuple name origin_type sts)
-        enclosing_names sub_sts
+        ~f:(fun name projection ->
+          var_context_read_inside_tuple name origin_type projection )
+        enclosing_names elements
       |> List.concat
   | UArray _ when UnsizedType.contains_tuple unsized ->
       let tupl, dims = SizedType.get_array_dims st in
       let tuple_component_names, tuple_types =
         match tupl with
-        | STuple sts ->
+        | STuple subtypes ->
             ( List.mapi
                 ~f:(fun i _ ->
                   enclosing_tuple_name ^ "." ^ string_of_int (i + 1) )
-                sts
-            , sts )
+                subtypes
+            , subtypes )
         | _ -> ([], []) in
       let temps =
         List.map2_exn
@@ -499,9 +500,11 @@ let rec var_context_read ?origin ?name
          calling [var_context_read_inside_tuple] *)
       let tuple_component_names, tuple_types =
         match tupl with
-        | STuple sts ->
-            ( List.mapi ~f:(fun i _ -> decl_id ^ "." ^ string_of_int (i + 1)) sts
-            , sts )
+        | STuple subtypes ->
+            ( List.mapi
+                ~f:(fun i _ -> decl_id ^ "." ^ string_of_int (i + 1))
+                subtypes
+            , subtypes )
         | _ -> ([], []) in
       let temps =
         List.map2_exn
@@ -769,13 +772,15 @@ let param_serializer_write ?(unconstrain = false)
     (decl_id, Program.{out_constrained_st; out_trans; _}) =
   let rec write (var, st, trans) =
     match (unconstrain, st, trans) with
-    | true, SizedType.STuple sts, Transformation.TupleTransformation ts ->
-        let sub_sts =
-          sts
+    | ( true
+      , SizedType.STuple subtypes
+      , Transformation.TupleTransformation transforms ) ->
+        let tuple_elements =
+          subtypes
           |> List.mapi ~f:(fun iter x ->
                  (Expr.Helpers.add_tuple_index var (iter + 1), x) )
-          |> List.map2_exn ~f:(fun t (v, st) -> (v, st, t)) ts in
-        List.concat_map ~f:write sub_sts
+          |> List.map2_exn ~f:(fun t (v, st) -> (v, st, t)) transforms in
+        List.concat_map ~f:write tuple_elements
     | true, SArray _, TupleTransformation _ ->
         let tupl, array_dims = SizedType.get_array_dims st in
         [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
@@ -819,12 +824,12 @@ let param_unconstrained_serializer_write
     (decl_id, smeta, Program.{out_constrained_st; _}) =
   let rec write (var, st) =
     match st with
-    | SizedType.STuple sts ->
-        let sub_sts =
+    | SizedType.STuple subtypes ->
+        let elements =
           List.mapi
             ~f:(fun iter x -> (Expr.Helpers.add_tuple_index var (iter + 1), x))
-            sts in
-        List.concat_map ~f:write sub_sts
+            subtypes in
+        List.concat_map ~f:write elements
     | _ when SizedType.is_recursive_container st ->
         let nonarray_st, array_dims = SizedType.get_array_dims st in
         [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
@@ -885,13 +890,13 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
       ; meta= smeta } in
   let rec read (lval, st) =
     match st with
-    | SizedType.STuple sts ->
-        let sub_sts =
+    | SizedType.STuple subtypes ->
+        let elements =
           List.mapi
             ~f:(fun iter x ->
               (Stmt.Fixed.Pattern.LTupleProjection (lval, iter + 1), x) )
-            sts in
-        List.concat_map ~f:read sub_sts
+            subtypes in
+        List.concat_map ~f:read elements
     | _ when SizedType.contains_tuple st ->
         let tupl, array_dims = SizedType.get_array_dims st in
         [ Stmt.Helpers.mk_nested_for (List.rev array_dims)

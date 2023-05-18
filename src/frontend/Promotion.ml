@@ -22,18 +22,18 @@ let rec promote_unsized_type ~scalar (typ : UnsizedType.t)
   | ToVar, (UReal | UInt), _ -> (UReal, AutoDiffable)
   | ToComplexVar, (UComplex | UReal | UInt), _ -> (UComplex, AutoDiffable)
   | IntToComplex, UInt, _ | RealToComplex, UReal, _ -> (UComplex, ad)
-  | TuplePromotion proms, UTuple ts, TupleAD ads ->
+  | TuplePromotion proms, UTuple types, TupleAD ads ->
       let typs, ads =
         List.unzip
-        @@ List.map3_exn ~f:(promote_unsized_type ~scalar) ts ads proms in
+        @@ List.map3_exn ~f:(promote_unsized_type ~scalar) types ads proms in
       (UTuple typs, TupleAD ads)
-  | TuplePromotion proms, UTuple ts, ad ->
-      let typs, ads =
+  | TuplePromotion proms, UTuple types, ad ->
+      let types', ads =
         List.unzip
         @@ List.map2_exn
-             ~f:(fun ts proms -> promote_unsized_type ~scalar ts ad proms)
-             ts proms in
-      (UTuple typs, TupleAD ads)
+             ~f:(fun ty proms -> promote_unsized_type ~scalar ty ad proms)
+             types proms in
+      (UTuple types', TupleAD ads)
   | _, UArray t, _ ->
       let t, ads = promote_unsized_type ~scalar t ad prom in
       if scalar then (t, ads) else (UArray t, ads)
@@ -140,14 +140,15 @@ let rec promote (exp : Ast.typed_expression) prom =
       {expr= RowVectorExpr pes; emeta= {exp.emeta with type_; ad_level}}
   | TupleExpr (_ :: _ as es) -> (
     match prom with
-    | TuplePromotion ts ->
-        let pes = List.map2_exn ~f:promote es ts in
+    | TuplePromotion sub_promotions ->
+        let promoted_exprs = List.map2_exn ~f:promote es sub_promotions in
         let type_ =
-          UnsizedType.UTuple (List.map ~f:(fun e -> e.emeta.type_) pes) in
+          UnsizedType.UTuple
+            (List.map ~f:(fun e -> e.emeta.type_) promoted_exprs) in
         let ad_level =
-          UnsizedType.TupleAD (List.map ~f:(fun e -> e.emeta.ad_level) pes)
-        in
-        {expr= TupleExpr pes; emeta= {exp.emeta with type_; ad_level}}
+          UnsizedType.TupleAD
+            (List.map ~f:(fun e -> e.emeta.ad_level) promoted_exprs) in
+        {expr= TupleExpr promoted_exprs; emeta= {exp.emeta with type_; ad_level}}
     | _ -> exp )
   | _ -> promote_inner exp prom
 
@@ -216,4 +217,5 @@ let rec promotion_cost p =
   | NoPromotion | ToVar | ToComplexVar -> 0
   | RealToComplex | IntToReal -> 1
   | IntToComplex -> 2
-  | TuplePromotion ts -> List.sum (module Int) ~f:promotion_cost ts
+  | TuplePromotion sub_promotions ->
+      List.sum (module Int) ~f:promotion_cost sub_promotions

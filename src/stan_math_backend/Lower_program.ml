@@ -97,8 +97,8 @@ let rec validate_dims ~stage name st =
     (* We know tuples are given as flattened names containing "." in var_contexts *)
     let names =
       UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st) in
-    let sts = SizedType.flatten_tuple_io st in
-    List.map2_exn ~f:(validate_dims ~stage) names sts |> List.concat
+    let subtypes = SizedType.flatten_tuple_io st in
+    List.map2_exn ~f:(validate_dims ~stage) names subtypes |> List.concat
   else
     let vector args =
       let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
@@ -207,9 +207,9 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     ; (Ref (TemplateType "VecI"), "params_i__")
     ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
   (*
-     NOTE: There is a bug in clang-6.0 where removing this T__ causes the 
+     NOTE: There is a bug in clang-6.0 where removing this T__ causes the
       reverse mode autodiff path to fail with an initializer list error
-      for validate_array_expr_primitives on line 930. Need to investigate 
+      for validate_array_expr_primitives on line 930. Need to investigate
       more into why this is happening
       *)
   let intro =
@@ -494,11 +494,11 @@ let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
     let idcs = outer_idcs @ idcs in
     let idcs_vars = List.map ~f:(fun (t, i) -> (t, Exprs.to_var i)) idcs in
     match st with
-    | SizedType.STuple sts ->
+    | SizedType.STuple subtypes ->
         let idxes_subtypes =
           List.mapi
             ~f:(fun i typ -> ((`Tuple, string_of_int (i + 1)), (name, typ)))
-            sts in
+            subtypes in
         List.concat_map
           ~f:(fun (idx, sub) -> gen_param_names ~outer_idcs:(idcs @ [idx]) sub)
           idxes_subtypes

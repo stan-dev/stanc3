@@ -80,9 +80,9 @@ let rec initialize_value st adtype =
         lower_possibly_var_decl adtype (SizedType.to_unsized st)
           (SizedType.get_mem_pattern t) in
       Constructor (typ, [lower_expr d; initialize_value t adtype])
-  | TupleAD ads, STuple ts ->
+  | TupleAD ads, STuple subts ->
       let typ = lower_st st adtype in
-      InitializerExpr (typ, List.map2_exn ~f:initialize_value ts ads)
+      InitializerExpr (typ, List.map2_exn ~f:initialize_value subts ads)
   | _, STuple _ | TupleAD _, _ ->
       Common.FatalError.fatal_error_msg
         [%message

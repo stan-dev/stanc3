@@ -345,8 +345,8 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
     let functors =
       Map.find_multi functor_required d.fdname
       |> List.stable_dedup
-      |> List.filter_map ~f:(fun (hof, ts) ->
-             if matching_argtypes d ts then Some hof else None ) in
+      |> List.filter_map ~f:(fun (hof, types) ->
+             if matching_argtypes d types then Some hof else None ) in
     let fn, st = lower_fun_def functors d in
     List.iter st ~f:(fun s ->
         (* Side effecting, collates functor structs *)

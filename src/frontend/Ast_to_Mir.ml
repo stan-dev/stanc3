@@ -362,10 +362,11 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
   | Transformation.LowerUpper (lb, ub) ->
       check_decl var decl_type' (Lower lb) smeta adlevel
       @ check_decl var decl_type' (Upper ub) smeta adlevel
-  | TupleTransformation ts when List.exists ~f:Transformation.has_check ts ->
+  | TupleTransformation transforms when Transformation.has_check decl_trans ->
       let _, dims = SizedType.get_array_dims decl_type' in
-      let sts = Utils.zip_stuple_trans_exn decl_type' ts in
-      if List.is_empty dims then check_tuple var sts
+      let subtypes_transforms =
+        Utils.zip_stuple_trans_exn decl_type' transforms in
+      if List.is_empty dims then check_tuple var subtypes_transforms
       else
         [ Stmt.Helpers.mk_nested_for (List.rev dims)
             (fun loopvars ->
@@ -373,7 +374,9 @@ let rec check_decl var decl_type' decl_trans smeta adlevel =
                 List.fold ~f:Expr.Helpers.add_int_index ~init:var
                   (List.map ~f:(fun e -> Index.Single e) (List.rev loopvars))
               in
-              Stmt.Fixed.{meta= smeta; pattern= Block (check_tuple var sts)} )
+              Stmt.Fixed.
+                { meta= smeta
+                ; pattern= Block (check_tuple var subtypes_transforms) } )
             smeta ]
   | _ when Transformation.has_check decl_trans ->
       let check_id id =
@@ -420,9 +423,9 @@ let check_sizedtype name st =
         let e = trans_expr s in
         let ll, t = sizedtype t in
         (check s e @ ll, SizedType.SArray (t, e))
-    | STuple ts ->
-        let checks, ts = List.unzip (List.map ~f:sizedtype ts) in
-        (List.concat checks, STuple ts) in
+    | STuple subtypes ->
+        let checks, subtypes = List.unzip (List.map ~f:sizedtype subtypes) in
+        (List.concat checks, STuple subtypes) in
   let ll, st = sizedtype st in
   (ll, Type.Sized st)
 
@@ -739,18 +742,18 @@ let rec trans_sizedtype_decl declc tr name st =
         let l, s = grab_size FnValidateSize n s in
         let ll, t = go (n + 1) t in
         (l @ ll, SizedType.SArray (t, s))
-    | STuple _ as tuple ->
+    | STuple subtypes ->
         let former_array_indices =
           String.concat (List.init (n - 1) ~f:(fun _ -> "[]")) in
-        let stmts, sts' =
+        let stmts, subtypes' =
           List.unzip
             (List.mapi
-               Utils.(zip_stuple_trans_exn tuple (tuple_trans_exn tr))
+               (List.zip_exn subtypes Utils.(tuple_trans_exn tr))
                ~f:(fun ix (st, trans) ->
                  trans_sizedtype_decl declc trans
                    (name ^ former_array_indices ^ "." ^ string_of_int (ix + 1))
                    st ) ) in
-        (List.concat stmts, SizedType.STuple sts') in
+        (List.concat stmts, SizedType.STuple subtypes') in
   go 1 st
 
 let trans_block ud_dists declc block prog =

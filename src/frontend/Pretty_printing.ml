@@ -330,10 +330,10 @@ let rec pp_sizedtype ppf = function
   | SRowVector (_, e) -> pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
       pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | STuple ts -> (
-    match ts with
+  | STuple subtypes -> (
+    match subtypes with
     | [t] -> pf ppf "tuple(@[%a,@])" pp_sizedtype t
-    | _ -> pf ppf "tuple(@[%a@])" (list ~sep:comma pp_sizedtype) ts )
+    | _ -> pf ppf "tuple(@[%a@])" (list ~sep:comma pp_sizedtype) subtypes )
   | SComplexVector e -> pf ppf "complex_vector[%a]" pp_expression e
   | SComplexRowVector e -> pf ppf "complex_row_vector[%a]" pp_expression e
   | SComplexMatrix (e1, e2) ->
@@ -394,13 +394,13 @@ let rec pp_transformed_type ppf (st, trans) =
     | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
     | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
     | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
-    | TupleTransformation ts ->
+    | TupleTransformation transforms ->
         (* NB this calls the top-level function to handle internal arrays etc *)
-        let transTypes = Middle.Utils.zip_stuple_trans_exn st ts in
+        let transTypes = Middle.Utils.zip_stuple_trans_exn st transforms in
         pf ppf "tuple(@[%a%s@])"
           (list ~sep:comma pp_transformed_type)
           transTypes
-          (if List.length ts = 1 then "," else "") in
+          (if List.length transforms = 1 then "," else "") in
   match st with
   (* array goes before something like cov_matrix *)
   | Middle.SizedType.SArray _ ->

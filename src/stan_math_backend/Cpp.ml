@@ -395,7 +395,8 @@ module Printing = struct
     | TemplateType id -> pp_identifier ppf id
     | StdVector t -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ t
     | Array (t, i) -> pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ t i
-    | Tuple ts -> pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) ts
+    | Tuple subtypes ->
+        pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) subtypes
     | TypeLiteral id -> pp_identifier ppf id
     | Matrix (t, i, j, mem_pattern) -> (
       match mem_pattern with
@@ -406,8 +407,8 @@ module Printing = struct
     | Const t -> pf ppf "const %a" pp_type_ t
     | Ref t -> pf ppf "%a&" pp_type_ t
     | Pointer t -> pf ppf "%a*" pp_type_ t
-    | TypeTrait (s, ts) ->
-        pf ppf "@[<2>%s<%a>@]" s (list ~sep:comma pp_type_) ts
+    | TypeTrait (s, types) ->
+        pf ppf "@[<2>%s<%a>@]" s (list ~sep:comma pp_type_) types
 
   let pp_requires ~default ppf requires =
     if not (List.is_empty requires) then
@@ -454,9 +455,9 @@ module Printing = struct
     | Or -> string ppf "||"
 
   let rec pp_expr ppf e =
-    let maybe_templates ppf ts =
-      if not (List.is_empty ts) then
-        pf ppf "<@,%a>" (list ~sep:comma pp_type_) ts in
+    let maybe_templates ppf types =
+      if not (List.is_empty types) then
+        pf ppf "<@,%a>" (list ~sep:comma pp_type_) types in
     match e with
     | Literal s -> pf ppf "%s" s
     | Var id -> string ppf id

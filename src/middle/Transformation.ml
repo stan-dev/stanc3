@@ -25,5 +25,5 @@ type 'e t =
 
 let rec has_check = function
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false
-  | TupleTransformation ts -> List.exists ~f:has_check ts
+  | TupleTransformation transforms -> List.exists ~f:has_check transforms
   | _ -> true
