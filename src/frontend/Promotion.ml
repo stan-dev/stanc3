@@ -15,7 +15,19 @@ type t =
   | TuplePromotion of t list
 [@@deriving sexp]
 
-let rec promote_unsized_type ~scalar (typ : UnsizedType.t)
+(** Our promotion nodes only store the scalar type to promote, e.g
+   to promote a [tuple(array int)] to a [tuple(array real)], we store
+   [tuple(real)], not [tuple(array real)]
+*)
+let rec scalarize type_ =
+  let type_, _ = UnsizedType.unwind_array_type type_ in
+  match type_ with
+  | UnsizedType.UTuple ts -> UnsizedType.UTuple (List.map ~f:scalarize ts)
+  | _ -> UnsizedType.internal_scalar type_
+
+(** Get the [UnsizedType.t] which is the result of promoting a given type.
+    See [promote] for the version which promotes expressions directly. *)
+let rec promote_unsized_type (typ : UnsizedType.t)
     (ad : UnsizedType.autodifftype) (prom : t) =
   match (prom, typ, ad) with
   | IntToReal, UInt, _ -> (UnsizedType.UReal, ad)
@@ -24,29 +36,25 @@ let rec promote_unsized_type ~scalar (typ : UnsizedType.t)
   | IntToComplex, UInt, _ | RealToComplex, UReal, _ -> (UComplex, ad)
   | TuplePromotion proms, UTuple types, TupleAD ads ->
       let typs, ads =
-        List.unzip
-        @@ List.map3_exn ~f:(promote_unsized_type ~scalar) types ads proms in
+        List.unzip @@ List.map3_exn ~f:promote_unsized_type types ads proms
+      in
       (UTuple typs, TupleAD ads)
   | TuplePromotion proms, UTuple types, ad ->
       let types', ads =
         List.unzip
         @@ List.map2_exn
-             ~f:(fun ty proms -> promote_unsized_type ~scalar ty ad proms)
+             ~f:(fun ty proms -> promote_unsized_type ty ad proms)
              types proms in
       (UTuple types', TupleAD ads)
   | _, UArray t, _ ->
-      let t, ads = promote_unsized_type ~scalar t ad prom in
-      if scalar then (t, ads) else (UArray t, ads)
-  | ToVar, _, _ when UnsizedType.is_eigen_type typ ->
-      if scalar then (UReal, AutoDiffable) else (typ, AutoDiffable)
+      let t, ads = promote_unsized_type t ad prom in
+      (UArray t, ads)
+  | ToVar, _, _ when UnsizedType.is_eigen_type typ -> (typ, AutoDiffable)
   | RealToComplex, _, _ when UnsizedType.is_eigen_type typ ->
-      if scalar then (UComplex, ad)
-      else (UnsizedType.promote_container typ UComplex, ad)
+      (UnsizedType.promote_container typ UComplex, ad)
   | ToComplexVar, _, _ when UnsizedType.is_eigen_type typ ->
-      if scalar then (UComplex, AutoDiffable)
-      else (UnsizedType.promote_container typ UComplex, AutoDiffable)
-  | NoPromotion, _, _ ->
-      if scalar then (UnsizedType.internal_scalar typ, ad) else (typ, ad)
+      (UnsizedType.promote_container typ UComplex, AutoDiffable)
+  | NoPromotion, _, _ -> (typ, ad)
   | (IntToReal | ToVar | ToComplexVar | IntToComplex), _, _ ->
       Common.FatalError.fatal_error_msg
         [%message
@@ -104,12 +112,11 @@ let promote_inner (exp : Ast.typed_expression) prom =
       let element, size = UnsizedType.unwind_array_type emeta.type_ in
       match element with
       | UTuple _ ->
-          let prom_type, prom_ad =
-            promote_unsized_type ~scalar:true element emeta.ad_level prom in
           let type_, ad_level =
-            promote_unsized_type ~scalar:false element emeta.ad_level prom in
+            promote_unsized_type element emeta.ad_level prom in
+          let prom_type = scalarize type_ in
           let type_ = UnsizedType.wind_array_type (type_, size) in
-          { expr= Promotion (exp, prom_type, prom_ad)
+          { expr= Promotion (exp, prom_type, ad_level)
           ; emeta= {emeta with type_; ad_level} }
       | _ -> exp
       (* TUPLE MAYBE: PROMOTION *) )
@@ -138,7 +145,7 @@ let rec promote (exp : Ast.typed_expression) prom =
         | UComplex -> UComplexRowVector
         | _ -> URowVector in
       {expr= RowVectorExpr pes; emeta= {exp.emeta with type_; ad_level}}
-  | TupleExpr (_ :: _ as es) -> (
+  | TupleExpr es -> (
     match prom with
     | TuplePromotion sub_promotions ->
         let promoted_exprs = List.map2_exn ~f:promote es sub_promotions in
