@@ -302,10 +302,10 @@ module Helpers = struct
     match expr.pattern with
     | Var s -> Some (LVariable s)
     | Indexed (l, i) ->
-        Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
+        Option.bind (lvalue_of_expr_opt l) ~f:(fun lv ->
             Some (Fixed.Pattern.LIndexed (lv, i)) )
     | TupleProjection (l, i) ->
-        Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
+        Option.bind (lvalue_of_expr_opt l) ~f:(fun lv ->
             Some (Fixed.Pattern.LTupleProjection (lv, i)) )
     | _ -> None
 

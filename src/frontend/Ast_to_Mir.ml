@@ -437,39 +437,36 @@ let var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
       @ check_decl decl_var st trans loc adlevel
   | _ -> []
 
-let trans_decl {transform_action; dadlevel} smeta decl_type transform identifier
-    initial_value =
-  let decl_id = identifier.Ast.name in
+let create_decl_with_assign decl_id declc decl_type initial_value transform
+    smeta =
   let rhs = Option.map ~f:trans_expr initial_value in
-  let size_checks, dt = check_sizedtype identifier.name decl_type in
   let decl_adtype =
-    UnsizedType.fill_adtype_for_type dadlevel (SizedType.to_unsized decl_type)
+    UnsizedType.fill_adtype_for_type declc.dadlevel (Type.to_unsized decl_type)
   in
   let decl_var =
     Expr.
       { Fixed.pattern= Var decl_id
       ; meta=
           Typed.Meta.create ~adlevel:decl_adtype ~loc:smeta
-            ~type_:(SizedType.to_unsized decl_type)
+            ~type_:(Type.to_unsized decl_type)
             () } in
   let decl =
     Stmt.
-      { Fixed.pattern=
-          Decl {decl_adtype; decl_id; decl_type= dt; initialize= true}
+      { Fixed.pattern= Decl {decl_adtype; decl_id; decl_type; initialize= true}
       ; meta= smeta } in
   let rhs_assignment =
     Option.map
-      ~f:(fun e ->
+      ~f:(fun (e : Expr.Typed.t) ->
         Stmt.Fixed.
           {pattern= Assignment (LVariable decl_id, e.meta.type_, e); meta= smeta}
         )
       rhs
     |> Option.to_list in
   if Utils.is_user_ident decl_id then
-    size_checks @ (decl :: rhs_assignment)
-    @ var_constrain_check_stmts (Some transform_action) smeta decl_adtype
-        decl_id decl_var transform dt
-  else size_checks @ (decl :: rhs_assignment)
+    (decl :: rhs_assignment)
+    @ var_constrain_check_stmts (Some declc.transform_action) smeta decl_adtype
+        decl_id decl_var transform decl_type
+  else decl :: rhs_assignment
 
 let unwrap_block_or_skip = function
   | [({Stmt.Fixed.pattern= Block _; _} as b)] -> Some b
@@ -618,9 +615,12 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.VarDecl {decl_type; transformation; variables; is_global= _} ->
       List.concat_map
         ~f:(fun {identifier; initial_value} ->
-          trans_decl declc smeta decl_type
-            (Transformation.map trans_expr transformation)
-            identifier initial_value )
+          let transform = Transformation.map trans_expr transformation in
+          let decl_id = identifier.Ast.name in
+          let size_checks, dt = check_sizedtype decl_id decl_type in
+          size_checks
+          @ create_decl_with_assign decl_id declc dt initial_value transform
+              smeta )
         variables
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
@@ -755,7 +755,6 @@ let rec trans_sizedtype_decl declc tr name st =
 
 let trans_block ud_dists declc block prog =
   let f stmt (accum1, accum2, accum3) =
-    (* TODO The level of code duplication between this and trans_decl is too much! *)
     match stmt with
     | { Ast.stmt=
           VarDecl {decl_type= type_; variables; transformation; is_global= true}
@@ -766,54 +765,20 @@ let trans_block ud_dists declc block prog =
                ~f:(fun {identifier; initial_value} ->
                  let decl_id = identifier.Ast.name in
                  let transform = Transformation.map trans_expr transformation in
-                 let rhs = Option.map ~f:trans_expr initial_value in
                  let size, type_ =
                    trans_sizedtype_decl declc transform identifier.name type_
                  in
-                 let decl_adtype =
-                   UnsizedType.fill_adtype_for_type declc.dadlevel
-                     (SizedType.to_unsized type_) in
-                 let decl_var =
-                   Expr.
-                     { Fixed.pattern= Var decl_id
-                     ; meta=
-                         Typed.Meta.create ~adlevel:decl_adtype
-                           ~loc:smeta.Ast.loc
-                           ~type_:(SizedType.to_unsized type_)
-                           () } in
-                 let decl =
-                   Stmt.
-                     { Fixed.pattern=
-                         Decl
-                           { decl_adtype
-                           ; decl_id
-                           ; decl_type= Sized type_
-                           ; initialize= true }
-                     ; meta= smeta.loc } in
-                 let rhs_assignment =
-                   Option.map
-                     ~f:(fun e ->
-                       Stmt.Fixed.
-                         { pattern=
-                             Assignment (LVariable decl_id, e.meta.type_, e)
-                         ; meta= smeta.loc } )
-                     rhs
-                   |> Option.to_list in
                  let outvar =
-                   ( identifier.name
-                   , smeta.loc
+                   ( decl_id
+                   , smeta.Ast.loc
                    , Program.
                        { out_constrained_st= type_
                        ; out_unconstrained_st= param_size transform type_
                        ; out_block= block
                        ; out_trans= transform } ) in
                  let stmts =
-                   if Utils.is_user_ident decl_id then
-                     (decl :: rhs_assignment)
-                     @ var_constrain_check_stmts (Some declc.transform_action)
-                         smeta.loc decl_adtype decl_id decl_var transform
-                         (Type.Sized type_)
-                   else decl :: rhs_assignment in
+                   create_decl_with_assign decl_id declc (Sized type_)
+                     initial_value transform smeta.loc in
                  (outvar, size, stmts) )
                variables in
         ( outvars @ accum1
