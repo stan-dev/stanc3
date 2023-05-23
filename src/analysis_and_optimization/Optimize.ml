@@ -1142,6 +1142,7 @@ let optimize_minimal_variables
   map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
     (Map.find_exn flowgraph_to_mir 1)
 
+(* XXX: This optimization current promotes/demotes entire tuples at once. This could be signficantly better *)
 let optimize_ad_levels (mir : Program.Typed.t) =
   let gen_ad_variables
       (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
@@ -1171,11 +1172,20 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   let extra_variables v = Set.Poly.singleton (v ^ "_in__") in
   let update_stmt stmt_pattern variable_set =
     match stmt_pattern with
-    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as decl)
+    | Stmt.Fixed.Pattern.Decl ({decl_id; decl_type; _} as decl)
       when Set.mem variable_set decl_id ->
-        Stmt.Fixed.Pattern.Decl {decl with decl_adtype= UnsizedType.AutoDiffable}
-    | Decl ({decl_id; _} as decl) when not (Set.mem variable_set decl_id) ->
-        Decl {decl with decl_adtype= DataOnly}
+        Stmt.Fixed.Pattern.Decl
+          { decl with
+            decl_adtype=
+              UnsizedType.fill_adtype_for_type UnsizedType.AutoDiffable
+                (Type.to_unsized decl_type) }
+    | Decl ({decl_id; decl_type; _} as decl)
+      when not (Set.mem variable_set decl_id) ->
+        Decl
+          { decl with
+            decl_adtype=
+              UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
+                (Type.to_unsized decl_type) }
     | s -> s in
   let transform fundef_opt stmt =
     optimize_minimal_variables ~gen_variables:gen_ad_variables

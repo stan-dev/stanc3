@@ -129,13 +129,23 @@ let is_recursive_container st =
 (** Return a type's array dimensions and the type inside the (possibly nested) array *)
 let rec get_array_dims st =
   match st with
+  | SInt | SReal | SComplex | STuple _ | SVector _ | SRowVector _ | SMatrix _
+   |SComplexMatrix _ | SComplexVector _ | SComplexRowVector _ ->
+      (st, [])
+  | SArray (st, dim) ->
+      let st', dims = get_array_dims st in
+      (st', dim :: dims)
+
+(** Differs from [get_array_dims] in that this also breaks down vectors or matrices *)
+let rec get_scalar_dims st =
+  match st with
   | SInt | SReal | SComplex | STuple _ -> (st, [])
   | SVector (_, d) | SRowVector (_, d) | SComplexVector d | SComplexRowVector d
     ->
       (st, [d])
   | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> (st, [d1; d2])
   | SArray (st, dim) ->
-      let st', dims = get_array_dims st in
+      let st', dims = get_scalar_dims st in
       (st', dim :: dims)
 
 let rec internal_scalar st =

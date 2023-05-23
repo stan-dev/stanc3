@@ -274,6 +274,10 @@ model {
   y = ((((y_raw > 0) ? 1 : -1))) - y_raw;
   
   int bool = 1 < 2 > 3 < 4;
+  
+  tuple(real, real) t = (((3, 4)));
+  t.2 = (t).1;
+  t.2 = (3, (4)).1;
 }
 
 Warning in 'parenthesize.stan', line 25, column 13: Found 1 < 2 < 3. This is

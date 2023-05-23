@@ -183,16 +183,6 @@ let indented_box ?(offset = 0) pp_v ppf v =
 let pp_unsizedtype = Middle.UnsizedType.pp
 let pp_autodifftype = Middle.UnsizedType.pp_autodifftype
 
-let rec unwind_sized_array_type st =
-  match st with
-  | Middle.SizedType.SInt | SReal | SComplex | STuple _ | SVector _
-   |SRowVector _ | SMatrix _ | SComplexMatrix _ | SComplexVector _
-   |SComplexRowVector _ ->
-      (st, [])
-  | SArray (st, dim) ->
-      let st', dims = unwind_sized_array_type st in
-      (st', dim :: dims)
-
 let pp_returntype ppf = function
   | Middle.UnsizedType.ReturnType x -> pp_unsizedtype ppf x
   | Void -> pf ppf "void"
@@ -288,10 +278,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | RowVectorExpr es -> pf ppf "[@[%a]@]" pp_list_of_expression (es, loc)
   | Paren e -> pf ppf "(%a)" pp_expression e
   | Promotion (e, _, _) -> pp_expression ppf e
-  | Indexed (e, l) -> (
-    match l with
-    | [] -> pf ppf "%a" pp_expression e
-    | l -> pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
+  | Indexed (e, l) -> pf ppf "%a[%a]" pp_expression e pp_list_of_indices l
   | TupleProjection (e, i) -> pf ppf "%a.%d" pp_expression e i
   | TupleExpr es ->
       pf ppf "(@[%a%s@])" pp_list_of_expression (es, loc)
@@ -321,28 +308,6 @@ let pp_printable ppf = function
   | PExpr e -> pp_expression ppf e
 
 let pp_list_of_printables ppf l = (hovbox @@ list ~sep:comma pp_printable) ppf l
-
-let rec pp_sizedtype ppf = function
-  | Middle.SizedType.SInt -> pf ppf "int"
-  | SReal -> pf ppf "real"
-  | SComplex -> pf ppf "complex"
-  | SVector (_, e) -> pf ppf "vector[%a]" pp_expression e
-  | SRowVector (_, e) -> pf ppf "row_vector[%a]" pp_expression e
-  | SMatrix (_, e1, e2) ->
-      pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | STuple subtypes -> (
-    match subtypes with
-    | [t] -> pf ppf "tuple(@[%a,@])" pp_sizedtype t
-    | _ -> pf ppf "tuple(@[%a@])" (list ~sep:comma pp_sizedtype) subtypes )
-  | SComplexVector e -> pf ppf "complex_vector[%a]" pp_expression e
-  | SComplexRowVector e -> pf ppf "complex_row_vector[%a]" pp_expression e
-  | SComplexMatrix (e1, e2) ->
-      pf ppf "complex_matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | SArray _ as arr ->
-      let ty, ixs = unwind_sized_array_type arr in
-      pf ppf "array[@[%a@]]@ %a"
-        (list ~sep:comma pp_expression)
-        ixs pp_sizedtype ty
 
 let pp_bracketed_transform ppf = function
   | Middle.Transformation.Lower e -> pf ppf "<@[lower=%a@]>" pp_expression e
@@ -381,7 +346,8 @@ let rec pp_transformed_type ppf (st, trans) =
               e2
       | _ -> nop in
     match trans with
-    | Transformation.Identity -> pf ppf "%a" pp_sizedtype st
+    | Transformation.Identity ->
+        pf ppf "%a" (Middle.SizedType.pp pp_expression) st
     | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
      |OffsetMultiplier _ ->
         pf ppf "%a%a%a" pp_unsizedtype (SizedType.to_unsized st)
@@ -404,7 +370,7 @@ let rec pp_transformed_type ppf (st, trans) =
   match st with
   (* array goes before something like cov_matrix *)
   | Middle.SizedType.SArray _ ->
-      let ty, ixs = unwind_sized_array_type st in
+      let ty, ixs = Middle.SizedType.get_array_dims st in
       let ({emeta= {loc= {end_loc; _}; _}; _} : untyped_expression) =
         List.last_exn ixs in
       let ({emeta= {loc= {begin_loc; _}; _}; _} : untyped_expression) =

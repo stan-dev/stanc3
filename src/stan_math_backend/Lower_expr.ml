@@ -165,22 +165,23 @@ let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
 
 let rec lower_possibly_var_decl adtype ut mem_pattern =
   let var_decl p_ut = lower_unsizedtype_local ~mem_pattern adtype p_ut in
-  match ut with
-  | UnsizedType.UArray t ->
+  match (ut, adtype) with
+  | UnsizedType.UArray t, _ ->
       Types.std_vector (lower_possibly_var_decl adtype t mem_pattern)
-  | UMatrix | UVector | URowVector | UComplexRowVector | UComplexVector
-   |UComplexMatrix ->
+  | ( ( UMatrix | UVector | URowVector | UComplexRowVector | UComplexVector
+      | UComplexMatrix )
+    , _ ) ->
       var_decl ut
-  | UReal | UInt | UComplex -> lower_unsizedtype_local adtype ut
-  | UTuple t_lst ->
-      let ad_tuple_type = match adtype with TupleAD xx -> xx | xx -> [xx] in
+  | (UReal | UInt | UComplex), _ -> lower_unsizedtype_local adtype ut
+  | UTuple t_lst, TupleAD ads ->
       Tuple
         (List.map2_exn
            ~f:(fun ad t -> lower_possibly_var_decl ad t mem_pattern)
-           ad_tuple_type t_lst )
-  | x ->
+           ads t_lst )
+  | x, ad ->
       Common.FatalError.fatal_error_msg
-        [%message (x : UnsizedType.t) "not implemented yet"]
+        [%message
+          "Cannot lower" (x : UnsizedType.t) (ad : UnsizedType.autodifftype)]
 
 let rec lower_logical_op op e1 e2 =
   let prim e = Exprs.fun_call "stan::math::primitive_value" [lower_expr e] in
