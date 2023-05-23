@@ -6477,13 +6477,11 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert, std::ostream*
     stan::model::assign(o, mat, "assigning variable o");
     current_statement__ = 733;
     stan::model::assign(o,
-      stan::model::deep_copy(
-        stan::model::rvalue(o, "o", stan::model::index_uni(2))),
+      stan::model::rvalue(o, "o", stan::model::index_uni(2)),
       "assigning variable o", stan::model::index_uni(1));
     current_statement__ = 734;
     stan::model::assign(o,
-      stan::model::deep_copy(
-        stan::model::rvalue(o, "o", stan::model::index_min_max(1, 2))),
+      stan::model::rvalue(o, "o", stan::model::index_min_max(1, 2)),
       "assigning variable o", stan::model::index_min_max(3, 4));
     current_statement__ = 735;
     return o;

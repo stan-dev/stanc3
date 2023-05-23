@@ -461,8 +461,8 @@ let create_decl_with_assign decl_id declc decl_type initial_value transform
     Option.map
       ~f:(fun (e : Expr.Typed.t) ->
         Stmt.Fixed.
-          {pattern= Assignment (LVariable decl_id, e.meta.type_, e); meta= smeta}
-        )
+          { pattern= Assignment (Stmt.Helpers.lvariable decl_id, e.meta.type_, e)
+          ; meta= smeta } )
       rhs
     |> Option.to_list in
   if Utils.is_user_ident decl_id then
@@ -512,12 +512,12 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let grouped_lhs = group_lvalue [] assign_lhs in
       let rec trans_lvalue lv =
         match lv.Ast.lval with
-        | LVariable v -> Middle.Stmt.Fixed.Pattern.LVariable v.name
+        | LVariable v -> Stmt.Helpers.lvariable v.name
         | LTupleProjection (lv, ix) ->
-            Middle.Stmt.Fixed.Pattern.LTupleProjection (trans_lvalue lv, ix)
+            (Stmt.Fixed.Pattern.LTupleProjection (trans_lvalue lv, ix), [])
         | LIndexed (lv, idcs) ->
-            Middle.Stmt.Fixed.Pattern.LIndexed
-              (trans_lvalue lv, List.map ~f:trans_idx idcs) in
+            let lbase, idxs = trans_lvalue lv in
+            (lbase, idxs @ List.map ~f:trans_idx idcs) in
       let lhs = trans_lvalue grouped_lhs in
       (* The type of the assignee if it weren't indexed
          e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
@@ -604,7 +604,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                 ; initialize= true } } in
       let assignment var =
         Stmt.Fixed.
-          { pattern= Assignment (LVariable loopvar.name, decl_type, var)
+          { pattern=
+              Assignment (Stmt.Helpers.lvariable loopvar.name, decl_type, var)
           ; meta= smeta } in
       let bodyfn var =
         Stmt.Fixed.
@@ -686,7 +687,8 @@ let rec trans_sizedtype_decl declc tr name st =
                 ; initialize= true }
           ; meta= e.meta.loc } in
         let assign =
-          { Stmt.Fixed.pattern= Assignment (LVariable decl_id, UInt, e)
+          { Stmt.Fixed.pattern=
+              Assignment (Stmt.Helpers.lvariable decl_id, UInt, e)
           ; meta= e.meta.loc } in
         let var =
           Expr.

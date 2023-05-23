@@ -25,10 +25,10 @@ module Fixed : sig
           ; initialize: bool }
     [@@deriving sexp, hash, compare]
 
-    and 'e lvalue =
-      | LVariable of string
-      | LIndexed of 'e lvalue * 'e Index.t list
-      | LTupleProjection of 'e lvalue * int
+    and 'e lvalue = 'e lbase * 'e Index.t list
+    [@@deriving sexp, hash, map, compare, fold]
+
+    and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
 
     include Pattern.S2 with type ('a, 'b) t := ('a, 'b) t
@@ -142,6 +142,8 @@ module Helpers : sig
   val get_lhs_name : 'a Fixed.Pattern.lvalue -> string
   (** The name of the lhs.
   This adds "." and an index to tuple projections *)
+
+  val lvariable : string -> 'e Fixed.Pattern.lvalue
 
   val lvalue_of_expr_opt :
     'e Expr.Fixed.t -> 'e Expr.Fixed.t Fixed.Pattern.lvalue option

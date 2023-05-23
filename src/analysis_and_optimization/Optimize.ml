@@ -145,7 +145,7 @@ let handle_early_returns (fname : string) opt_var stmt =
             [ Stmt.Fixed.
                 { pattern=
                     Assignment
-                      ( LVariable returned
+                      ( Stmt.Helpers.lvariable returned
                       , UInt
                       , Expr.Fixed.
                           { pattern= Lit (Int, "1")
@@ -156,10 +156,13 @@ let handle_early_returns (fname : string) opt_var stmt =
                                 ; loc= Location_span.empty } } )
                 ; meta= Location_span.empty }
             ; Stmt.Fixed.
-                { pattern= Assignment (LVariable name, Expr.Typed.type_of e, e)
+                { pattern=
+                    Assignment
+                      (Stmt.Helpers.lvariable name, Expr.Typed.type_of e, e)
                 ; meta= Location_span.empty }
             ; {pattern= Break; meta= Location_span.empty} ]
-      | Some name, Some e -> Assignment (LVariable name, Expr.Typed.type_of e, e)
+      | Some name, Some e ->
+          Assignment (Stmt.Helpers.lvariable name, Expr.Typed.type_of e, e)
       | Some _, None ->
           Common.FatalError.fatal_error_msg
             [%message
@@ -203,7 +206,7 @@ let handle_early_returns (fname : string) opt_var stmt =
       ; Stmt.Fixed.
           { pattern=
               Assignment
-                ( LVariable returned
+                ( Stmt.Helpers.lvariable returned
                 , UInt
                 , Expr.Fixed.
                     { pattern= Lit (Int, "0")
@@ -992,13 +995,15 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
             Stmt.Fixed.
               { pattern=
                   Assignment
-                    (LVariable (Map.find_exn expression_map e), e.meta.type_, e)
+                    ( Stmt.Helpers.lvariable (Map.find_exn expression_map e)
+                    , e.meta.type_
+                    , e )
               ; meta= Location_span.empty } )
           to_assign_in_s in
       let expr_subst_stmt_except_initial_assign m =
         let f stmt =
           match stmt with
-          | Stmt.Fixed.Pattern.Assignment (LVariable x, _, e')
+          | Stmt.Fixed.Pattern.Assignment ((LVariable x, []), _, e')
             when Map.mem m e'
                  && Expr.Typed.equal {e' with pattern= Var x}
                       (Map.find_exn m e') ->

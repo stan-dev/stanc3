@@ -337,7 +337,7 @@ let%expect_test "list collapsing" =
        ((pattern
          (Block
           (((pattern
-             (Assignment (LVariable inline_g_return_sym2__) UReal
+             (Assignment ((LVariable inline_g_return_sym2__) ()) UReal
               ((pattern
                 (FunApp (StanLib Pow__ FnPlain AoS)
                  (((pattern (Lit Int 53))
@@ -3311,7 +3311,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (Assignment (LVariable y) UReal
+                (Assignment ((LVariable y) ()) UReal
                  ((pattern
                    (FunApp (StanLib Plus__ FnPlain AoS)
                     (((pattern (Var y))
@@ -3325,7 +3325,7 @@ let%expect_test "adlevel_optimization expressions" =
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
               (((pattern
-                 (Assignment (LVariable y) UReal
+                 (Assignment ((LVariable y) ()) UReal
                   ((pattern
                     (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var y))
@@ -3345,7 +3345,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (Assignment (LVariable z) UReal
+                (Assignment ((LVariable z) ()) UReal
                  ((pattern (Var y))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
@@ -3361,7 +3361,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (Assignment (LVariable z_data) UReal
+                (Assignment ((LVariable z_data) ()) UReal
                  ((pattern
                    (Promotion
                     ((pattern (Var x))

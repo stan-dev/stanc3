@@ -311,9 +311,7 @@ let fn_subst_idx m = Index.map (fn_subst_expr m)
 let fn_subst_stmt_base_helper g h b =
   Stmt.Fixed.Pattern.(
     match b with
-    | Assignment (LIndexed (x, l), ut, e2) ->
-        Assignment (LIndexed (x, List.map ~f:h l), ut, g e2)
-    | Assignment (lhs, ut, e2) -> Assignment (lhs, ut, g e2)
+    | Assignment ((x, l), ut, e2) -> Assignment ((x, List.map ~f:h l), ut, g e2)
     | x -> map g (fun y -> y) x)
 
 let fn_subst_stmt_base m =

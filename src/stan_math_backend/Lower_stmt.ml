@@ -145,17 +145,20 @@ let lower_bool_expr expr =
   | _ -> lower_expr expr
 
 let rec lower_nonrange_lvalue lvalue =
-  let open Exprs in
   match lvalue with
+  | lbase, [] -> lower_nonrange_lbase lbase
+  | lv, idcs when List.for_all ~f:is_single_index idcs ->
+      lower_indexed_simple (lower_nonrange_lbase lv) idcs
+  | _, _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Multi-index must be the last (rightmost) index."]
+
+and lower_nonrange_lbase = function
   | Stmt.Fixed.Pattern.LVariable v -> Var v
   | LTupleProjection (lv, ix) ->
-      templated_fun_call "std::get"
+      Exprs.templated_fun_call "std::get"
         [TypeLiteral (string_of_int (ix - 1))]
         [lower_nonrange_lvalue lv]
-  | LIndexed (lv, idcs) when List.for_all ~f:is_single_index idcs ->
-      lower_indexed_simple (lower_nonrange_lvalue lv) idcs
-  | LIndexed (_, _) ->
-      raise_s [%message "Multi-index must be the last (rightmost) index."]
 
 (* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
    This is 'shallow' in the sense that it doesn't recurse into expressions *)
@@ -189,14 +192,13 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   @
   match pattern with
   | Assignment
-      ( ((LVariable _ | LTupleProjection _) as lhs)
+      ( (((LVariable _ | LTupleProjection _) as lhs), [])
       , _
       , ( ( {meta= {Expr.Typed.Meta.type_= UInt | UReal | UComplex; _}; _}
           | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
             ; _ } ) as rhs ) ) ->
-      Assign (lower_nonrange_lvalue lhs, lower_expr rhs) |> wrap_e
-  | Assignment
-      (LIndexed (LVariable assignee, idcs), (UInt | UReal | UComplex), rhs)
+      Assign (lower_nonrange_lbase lhs, lower_expr rhs) |> wrap_e
+  | Assignment ((LVariable assignee, idcs), (UInt | UReal | UComplex), rhs)
     when List.for_all ~f:is_single_index idcs ->
       Assign (lower_indexed_simple (Var assignee) idcs, lower_expr rhs)
       |> wrap_e
@@ -224,12 +226,11 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
                 Expr.Fixed.Pattern.map maybe_deep_copy e.pattern } in
       let rhs = maybe_deep_copy (remove_promotions rhs) in
       (* Split up the top-level lvalue to fit in the assign call *)
-      let lhs_base, lhs_idcs =
-        match lhs with LIndexed (lv, idcs) -> (lv, idcs) | _ -> (lhs, []) in
+      let lhs_base, lhs_idcs = lhs in
       Exprs.fun_call "stan::model::assign"
-        ( [ lower_nonrange_lvalue lhs_base; lower_expr rhs
+        ( [ lower_nonrange_lbase lhs_base; lower_expr rhs
           ; Exprs.literal_string
-              ("assigning variable " ^ Stmt.Helpers.get_lhs_name lhs_base) ]
+              ("assigning variable " ^ Stmt.Helpers.get_lhs_name lhs) ]
         @ List.map ~f:lower_index lhs_idcs )
       |> wrap_e
   | TargetPE e ->

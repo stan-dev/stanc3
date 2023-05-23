@@ -63,7 +63,7 @@
            (meta <opaque>))
           ((pattern
             (Assignment
-             (LIndexed (LVariable dydt)
+             ((LVariable dydt)
               ((Single
                 ((pattern (Lit Int 1))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -81,7 +81,7 @@
            (meta <opaque>))
           ((pattern
             (Assignment
-             (LIndexed (LVariable dydt)
+             ((LVariable dydt)
               ((Single
                 ((pattern (Lit Int 2))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -330,7 +330,7 @@
                     (decl_type (Sized SInt)) (initialize true)))
                   (meta <opaque>))
                  ((pattern
-                   (Assignment (LVariable b) UInt
+                   (Assignment ((LVariable b) ()) UInt
                     ((pattern (Lit Int 5))
                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                   (meta <opaque>))
@@ -438,7 +438,7 @@
                                 (initialize true)))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable v) (UArray UInt)
+                               (Assignment ((LVariable v) ()) (UArray UInt)
                                 ((pattern
                                   (Indexed
                                    ((pattern (Var vs))
@@ -455,7 +455,7 @@
                                    (adlevel DataOnly))))))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable z) UInt
+                               (Assignment ((LVariable z) ()) UInt
                                 ((pattern (Lit Int 0))
                                  (meta
                                   ((type_ UInt) (loc <opaque>)
@@ -489,7 +489,7 @@
                                 (initialize true)))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable v) (UArray UInt)
+                               (Assignment ((LVariable v) ()) (UArray UInt)
                                 ((pattern
                                   (Indexed
                                    ((pattern (Var vs))
@@ -506,7 +506,7 @@
                                    (adlevel DataOnly))))))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable z) UInt
+                               (Assignment ((LVariable z) ()) UInt
                                 ((pattern (Lit Int 0))
                                  (meta
                                   ((type_ UInt) (loc <opaque>)
@@ -540,7 +540,7 @@
                                 (initialize true)))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable v) (UArray UInt)
+                               (Assignment ((LVariable v) ()) (UArray UInt)
                                 ((pattern
                                   (Indexed
                                    ((pattern (Var vs))
@@ -585,7 +585,8 @@
                                             (initialize true)))
                                           (meta <opaque>))
                                          ((pattern
-                                           (Assignment (LVariable vv) UInt
+                                           (Assignment ((LVariable vv) ())
+                                            UInt
                                             ((pattern
                                               (Indexed
                                                ((pattern (Var v))
@@ -604,7 +605,8 @@
                                                (adlevel DataOnly))))))
                                           (meta <opaque>))
                                          ((pattern
-                                           (Assignment (LVariable z) UInt
+                                           (Assignment ((LVariable z) ())
+                                            UInt
                                             ((pattern (Lit Int 0))
                                              (meta
                                               ((type_ UInt) (loc <opaque>)
@@ -615,7 +617,7 @@
                                   (meta <opaque>)))))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable z) UInt
+                               (Assignment ((LVariable z) ()) UInt
                                 ((pattern (Lit Int 1))
                                  (meta
                                   ((type_ UInt) (loc <opaque>)
@@ -705,7 +707,7 @@
                                         (initialize true)))
                                       (meta <opaque>))
                                      ((pattern
-                                       (Assignment (LVariable v) UReal
+                                       (Assignment ((LVariable v) ()) UReal
                                         ((pattern
                                           (Indexed
                                            ((pattern (Var vs))
@@ -727,7 +729,7 @@
                                            (adlevel AutoDiffable))))))
                                       (meta <opaque>))
                                      ((pattern
-                                       (Assignment (LVariable z) UReal
+                                       (Assignment ((LVariable z) ()) UReal
                                         ((pattern
                                           (Promotion
                                            ((pattern (Lit Int 0))
@@ -801,7 +803,7 @@
                                         (initialize true)))
                                       (meta <opaque>))
                                      ((pattern
-                                       (Assignment (LVariable v) UReal
+                                       (Assignment ((LVariable v) ()) UReal
                                         ((pattern
                                           (Indexed
                                            ((pattern (Var vs))
@@ -823,7 +825,7 @@
                                            (adlevel AutoDiffable))))))
                                       (meta <opaque>))
                                      ((pattern
-                                       (Assignment (LVariable z) UReal
+                                       (Assignment ((LVariable z) ()) UReal
                                         ((pattern (Lit Real 3.1))
                                          (meta
                                           ((type_ UReal) (loc <opaque>)
@@ -882,7 +884,7 @@
                                 (initialize true)))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable v) UReal
+                               (Assignment ((LVariable v) ()) UReal
                                 ((pattern
                                   (Indexed
                                    ((pattern (Var vs))
@@ -899,7 +901,7 @@
                                    (adlevel AutoDiffable))))))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable z) UReal
+                               (Assignment ((LVariable z) ()) UReal
                                 ((pattern
                                   (Promotion
                                    ((pattern (Lit Int 0))
@@ -940,7 +942,7 @@
                                 (initialize true)))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable v) UReal
+                               (Assignment ((LVariable v) ()) UReal
                                 ((pattern
                                   (Indexed
                                    ((pattern (Var vs))
@@ -957,7 +959,7 @@
                                    (adlevel AutoDiffable))))))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable z) UReal
+                               (Assignment ((LVariable z) ()) UReal
                                 ((pattern (Lit Real 3.2))
                                  (meta
                                   ((type_ UReal) (loc <opaque>)
@@ -1014,7 +1016,7 @@
                                 (initialize true)))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable v) UReal
+                               (Assignment ((LVariable v) ()) UReal
                                 ((pattern
                                   (Indexed
                                    ((pattern (Var vs))
@@ -1031,7 +1033,7 @@
                                    (adlevel AutoDiffable))))))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable z) UReal
+                               (Assignment ((LVariable z) ()) UReal
                                 ((pattern
                                   (Promotion
                                    ((pattern (Lit Int 0))
@@ -1072,7 +1074,7 @@
                                 (initialize true)))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable v) UReal
+                               (Assignment ((LVariable v) ()) UReal
                                 ((pattern
                                   (Indexed
                                    ((pattern (Var vs))
@@ -1089,7 +1091,7 @@
                                    (adlevel AutoDiffable))))))
                               (meta <opaque>))
                              ((pattern
-                               (Assignment (LVariable z) UReal
+                               (Assignment ((LVariable z) ()) UReal
                                 ((pattern (Lit Real 3.3))
                                  (meta
                                   ((type_ UReal) (loc <opaque>)
@@ -1112,7 +1114,7 @@
                     (decl_type (Sized SInt)) (initialize true)))
                   (meta <opaque>))
                  ((pattern
-                   (Assignment (LVariable b) UInt
+                   (Assignment ((LVariable b) ()) UInt
                     ((pattern (Lit Int 5))
                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                   (meta <opaque>))
@@ -1123,7 +1125,7 @@
                         (decl_type (Sized SInt)) (initialize true)))
                       (meta <opaque>))
                      ((pattern
-                       (Assignment (LVariable c) UInt
+                       (Assignment ((LVariable c) ()) UInt
                         ((pattern (Lit Int 6))
                          (meta
                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -1179,7 +1181,7 @@
                          (decl_type (Unsized UInt)) (initialize true)))
                        (meta <opaque>))
                       ((pattern
-                        (Assignment (LVariable v) UInt
+                        (Assignment ((LVariable v) ()) UInt
                          ((pattern
                            (Indexed
                             ((pattern (Var vs))
@@ -1195,7 +1197,7 @@
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                        (meta <opaque>))
                       ((pattern
-                        (Assignment (LVariable y) UInt
+                        (Assignment ((LVariable y) ()) UInt
                          ((pattern (Var v))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -1293,7 +1295,7 @@
              (decl_type (Sized SReal)) (initialize true)))
            (meta <opaque>))
           ((pattern
-            (Assignment (LVariable abs_diff) UReal
+            (Assignment ((LVariable abs_diff) ()) UReal
              ((pattern
                (FunApp (StanLib abs FnPlain AoS)
                 (((pattern
@@ -1309,7 +1311,7 @@
               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
            (meta <opaque>))
           ((pattern
-            (Assignment (LVariable avg_scale) UReal
+            (Assignment ((LVariable avg_scale) ()) UReal
              ((pattern
                (FunApp (StanLib Divide__ FnPlain AoS)
                 (((pattern
@@ -1555,13 +1557,13 @@
              (initialize true)))
            (meta <opaque>))
           ((pattern
-            (Assignment (LVariable o) UMatrix
+            (Assignment ((LVariable o) ()) UMatrix
              ((pattern (Var mat))
               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
            (meta <opaque>))
           ((pattern
             (Assignment
-             (LIndexed (LVariable o)
+             ((LVariable o)
               ((Single
                 ((pattern (Lit Int 1))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -1579,7 +1581,7 @@
            (meta <opaque>))
           ((pattern
             (Assignment
-             (LIndexed (LVariable o)
+             ((LVariable o)
               ((Between
                 ((pattern (Lit Int 3))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -1926,7 +1928,7 @@
            (meta <opaque>))
           ((pattern
             (Assignment
-             (LIndexed (LVariable ar_mat)
+             ((LVariable ar_mat)
               ((Single
                 ((pattern (Lit Int 1))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2322,7 +2324,7 @@
              (initialize true)))
            (meta <opaque>))
           ((pattern
-            (Assignment (LVariable l) UVector
+            (Assignment ((LVariable l) ()) UVector
              ((pattern
                (FunApp (StanLib Times__ FnPlain AoS)
                 (((pattern (Var mu))
@@ -2354,7 +2356,7 @@
              (initialize true)))
            (meta <opaque>))
           ((pattern
-            (Assignment (LVariable l) UVector
+            (Assignment ((LVariable l) ()) UVector
              ((pattern
                (FunApp (StanLib Times__ FnPlain AoS)
                 (((pattern (Var mu))
@@ -2509,7 +2511,7 @@
            (meta <opaque>))
           ((pattern
             (Assignment
-             (LIndexed (LVariable f_x)
+             ((LVariable f_x)
               ((Single
                 ((pattern (Lit Int 1))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -2542,7 +2544,7 @@
            (meta <opaque>))
           ((pattern
             (Assignment
-             (LIndexed (LVariable f_x)
+             ((LVariable f_x)
               ((Single
                 ((pattern (Lit Int 2))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -2598,7 +2600,7 @@
            (meta <opaque>))
           ((pattern
             (Assignment
-             (LIndexed (LVariable lpmf)
+             ((LVariable lpmf)
               ((Single
                 ((pattern (Lit Int 1))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -4378,7 +4380,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_1dk) (UArray UInt)
+     (Assignment ((LVariable td_1dk) ()) (UArray UInt)
       ((pattern
         (FunApp (StanLib rep_array FnPlain AoS)
          (((pattern (Lit Int 1))
@@ -4392,7 +4394,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_a) UInt
+     (Assignment ((LVariable td_a) ()) UInt
       ((pattern (Var N))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -4401,7 +4403,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_b) UReal
+     (Assignment ((LVariable td_b) ()) UReal
       ((pattern
         (FunApp (StanLib Times__ FnPlain AoS)
          (((pattern
@@ -4419,7 +4421,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_c) UReal
+     (Assignment ((LVariable td_c) ()) UReal
       ((pattern
         (FunApp (UserDefined foo_bar1 FnPlain)
          (((pattern (Var td_b))
@@ -4628,7 +4630,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_int) UInt
+     (Assignment ((LVariable td_int) ()) UInt
       ((pattern
         (EOr
          ((pattern (Lit Int 1))
@@ -4638,7 +4640,7 @@
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_int) UInt
+     (Assignment ((LVariable td_int) ()) UInt
       ((pattern
         (EAnd
          ((pattern (Lit Int 1))
@@ -4699,7 +4701,7 @@
                                  (Block
                                   (((pattern
                                      (Assignment
-                                      (LIndexed (LVariable td_ar_mat)
+                                      ((LVariable td_ar_mat)
                                        ((Single
                                          ((pattern (Var m))
                                           (meta
@@ -4747,7 +4749,7 @@
          (Block
           (((pattern
              (Assignment
-              (LIndexed (LVariable td_simplex)
+              ((LVariable td_simplex)
                ((Single
                  ((pattern (Var i))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -4777,7 +4779,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (LIndexed (LVariable td_1d_simplex)
+                      ((LVariable td_1d_simplex)
                        ((Single
                          ((pattern (Var n))
                           (meta
@@ -4834,7 +4836,7 @@
                                  (Block
                                   (((pattern
                                      (Assignment
-                                      (LIndexed (LVariable td_3d_simplex)
+                                      ((LVariable td_3d_simplex)
                                        ((Single
                                          ((pattern (Var n))
                                           (meta
@@ -4921,7 +4923,7 @@
                       (initialize true)))
                     (meta <opaque>))
                    ((pattern
-                     (Assignment (LVariable l_mat) UMatrix
+                     (Assignment ((LVariable l_mat) ()) UMatrix
                       ((pattern
                         (Indexed
                          ((pattern (Var d_ar_mat))
@@ -4965,7 +4967,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_cfcov_54) UMatrix
+     (Assignment ((LVariable td_cfcov_54) ()) UMatrix
       ((pattern
         (FunApp (StanLib diag_matrix FnPlain AoS)
          (((pattern
@@ -4985,7 +4987,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_cfcov_33) UMatrix
+     (Assignment ((LVariable td_cfcov_33) ()) UMatrix
       ((pattern
         (FunApp (StanLib diag_matrix FnPlain AoS)
          (((pattern
@@ -5040,7 +5042,7 @@
                       (decl_type (Unsized UReal)) (initialize true)))
                     (meta <opaque>))
                    ((pattern
-                     (Assignment (LVariable v) UReal
+                     (Assignment ((LVariable v) ()) UReal
                       ((pattern
                         (Indexed
                          ((pattern (Var blocked_tdata_vs))
@@ -5055,7 +5057,7 @@
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                     (meta <opaque>))
                    ((pattern
-                     (Assignment (LVariable z) UReal
+                     (Assignment ((LVariable z) ()) UReal
                       ((pattern
                         (Promotion
                          ((pattern (Lit Int 0))
@@ -5078,7 +5080,7 @@
           (initialize true)))
         (meta <opaque>))
        ((pattern
-         (Assignment (LVariable indices) (UArray UInt)
+         (Assignment ((LVariable indices) ()) (UArray UInt)
           ((pattern
             (FunApp (CompilerInternal FnMakeArray)
              (((pattern (Lit Int 1))
@@ -5098,7 +5100,7 @@
               (decl_type (Unsized (UArray UInt))) (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Assignment (LVariable sym1__) (UArray UInt)
+             (Assignment ((LVariable sym1__) ()) (UArray UInt)
               ((pattern
                 (Indexed
                  ((pattern (Var indices))
@@ -5135,7 +5137,7 @@
                           (decl_type (Unsized UInt)) (initialize true)))
                         (meta <opaque>))
                        ((pattern
-                         (Assignment (LVariable i) UInt
+                         (Assignment ((LVariable i) ()) UInt
                           ((pattern
                             (Indexed
                              ((pattern (Var sym1__))
@@ -5151,7 +5153,7 @@
                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
                         (meta <opaque>))
                        ((pattern
-                         (Assignment (LVariable z) UReal
+                         (Assignment ((LVariable z) ()) UReal
                           ((pattern
                             (Promotion
                              ((pattern (Var i))
@@ -5168,7 +5170,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_1dk) (UArray UInt)
+     (Assignment ((LVariable td_1dk) ()) (UArray UInt)
       ((pattern
         (Indexed
          ((pattern (Var td_1d))
@@ -5179,7 +5181,7 @@
        (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_simplex) UVector
+     (Assignment ((LVariable td_simplex) ()) UVector
       ((pattern
         (Indexed
          ((pattern (Var td_1d_simplex))
@@ -5191,7 +5193,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_simplex) UVector
+     (Assignment ((LVariable td_simplex) ()) UVector
       ((pattern
         (Indexed
          ((pattern (Var td_1d_simplex))
@@ -5203,7 +5205,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_simplex) UVector
+     (Assignment ((LVariable td_simplex) ()) UVector
       ((pattern
         (Indexed
          ((pattern (Var td_1d_simplex))
@@ -5232,7 +5234,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment
-      (LIndexed (LVariable arr_mul_ind)
+      ((LVariable arr_mul_ind)
        ((Single
          ((pattern (Lit Int 1))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -5260,7 +5262,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable x_mul_ind) (UArray UReal)
+     (Assignment ((LVariable x_mul_ind) ()) (UArray UReal)
       ((pattern
         (FunApp (CompilerInternal FnMakeArray)
          (((pattern
@@ -5742,7 +5744,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real) UReal
+     (Assignment ((LVariable transformed_data_real) ()) UReal
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -5752,7 +5754,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real) UReal
+     (Assignment ((LVariable transformed_data_real) ()) UReal
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -5762,7 +5764,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real) UReal
+     (Assignment ((LVariable transformed_data_real) ()) UReal
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -5772,7 +5774,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real) UReal
+     (Assignment ((LVariable transformed_data_real) ()) UReal
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -5782,7 +5784,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int_array))
@@ -5792,7 +5794,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int_array))
@@ -5802,7 +5804,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5816,7 +5818,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5830,7 +5832,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5845,7 +5847,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5860,7 +5862,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -5870,7 +5872,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -5880,7 +5882,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5894,7 +5896,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5908,7 +5910,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5923,7 +5925,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5938,7 +5940,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -5948,7 +5950,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -5958,7 +5960,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5972,7 +5974,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -5986,7 +5988,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6001,7 +6003,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6016,7 +6018,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real_array))
@@ -6026,7 +6028,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real_array))
@@ -6036,7 +6038,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6050,7 +6052,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6064,7 +6066,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6079,7 +6081,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6094,7 +6096,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int_array))
@@ -6104,7 +6106,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array) (UArray UReal)
+     (Assignment ((LVariable transformed_data_real_array) ()) (UArray UReal)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real_array))
@@ -6114,7 +6116,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6130,7 +6132,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_2d)
+     (Assignment ((LVariable transformed_data_real_array_2d) ())
       (UArray (UArray UReal))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6146,7 +6148,7 @@
         ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6163,7 +6165,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real_array_3d)
+     (Assignment ((LVariable transformed_data_real_array_3d) ())
       (UArray (UArray (UArray UReal)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6180,7 +6182,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_vector))
@@ -6190,7 +6192,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_vector))
@@ -6200,7 +6202,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_vector))
@@ -6212,7 +6214,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_vector))
@@ -6224,7 +6226,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_real))
@@ -6236,7 +6238,8 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array) (UArray UVector)
+     (Assignment ((LVariable transformed_data_vector_array) ())
+      (UArray UVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_vector_array))
@@ -6247,7 +6250,8 @@
        (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array) (UArray UVector)
+     (Assignment ((LVariable transformed_data_vector_array) ())
+      (UArray UVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_vector_array))
@@ -6258,7 +6262,7 @@
        (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_2d)
+     (Assignment ((LVariable transformed_data_vector_array_2d) ())
       (UArray (UArray UVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6272,7 +6276,7 @@
         ((type_ (UArray (UArray UVector))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_2d)
+     (Assignment ((LVariable transformed_data_vector_array_2d) ())
       (UArray (UArray UVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6286,7 +6290,7 @@
         ((type_ (UArray (UArray UVector))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_3d)
+     (Assignment ((LVariable transformed_data_vector_array_3d) ())
       (UArray (UArray (UArray UVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6301,7 +6305,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_3d)
+     (Assignment ((LVariable transformed_data_vector_array_3d) ())
       (UArray (UArray (UArray UVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6316,7 +6320,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -6326,7 +6330,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -6336,7 +6340,8 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array) (UArray UVector)
+     (Assignment ((LVariable transformed_data_vector_array) ())
+      (UArray UVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -6347,7 +6352,8 @@
        (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array) (UArray UVector)
+     (Assignment ((LVariable transformed_data_vector_array) ())
+      (UArray UVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -6358,7 +6364,7 @@
        (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_2d)
+     (Assignment ((LVariable transformed_data_vector_array_2d) ())
       (UArray (UArray UVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6372,7 +6378,7 @@
         ((type_ (UArray (UArray UVector))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_2d)
+     (Assignment ((LVariable transformed_data_vector_array_2d) ())
       (UArray (UArray UVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6386,7 +6392,7 @@
         ((type_ (UArray (UArray UVector))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_3d)
+     (Assignment ((LVariable transformed_data_vector_array_3d) ())
       (UArray (UArray (UArray UVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6401,7 +6407,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_3d)
+     (Assignment ((LVariable transformed_data_vector_array_3d) ())
       (UArray (UArray (UArray UVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6416,7 +6422,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_vector))
@@ -6426,7 +6432,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_vector))
@@ -6438,7 +6444,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector) UVector
+     (Assignment ((LVariable transformed_data_vector) ()) UVector
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_vector))
@@ -6450,7 +6456,8 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array) (UArray UVector)
+     (Assignment ((LVariable transformed_data_vector_array) ())
+      (UArray UVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_vector_array))
@@ -6462,7 +6469,7 @@
        (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_2d)
+     (Assignment ((LVariable transformed_data_vector_array_2d) ())
       (UArray (UArray UVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6478,7 +6485,7 @@
         ((type_ (UArray (UArray UVector))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_vector_array_3d)
+     (Assignment ((LVariable transformed_data_vector_array_3d) ())
       (UArray (UArray (UArray UVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6495,7 +6502,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector) URowVector
+     (Assignment ((LVariable transformed_data_row_vector) ()) URowVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_row_vector))
@@ -6505,7 +6512,7 @@
        (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector) URowVector
+     (Assignment ((LVariable transformed_data_row_vector) ()) URowVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_row_vector))
@@ -6515,7 +6522,7 @@
        (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array)
+     (Assignment ((LVariable transformed_data_row_vector_array) ())
       (UArray URowVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6527,7 +6534,7 @@
        (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array)
+     (Assignment ((LVariable transformed_data_row_vector_array) ())
       (UArray URowVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6539,7 +6546,7 @@
        (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_2d)
+     (Assignment ((LVariable transformed_data_row_vector_array_2d) ())
       (UArray (UArray URowVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6554,7 +6561,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_2d)
+     (Assignment ((LVariable transformed_data_row_vector_array_2d) ())
       (UArray (UArray URowVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6569,7 +6576,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_3d)
+     (Assignment ((LVariable transformed_data_row_vector_array_3d) ())
       (UArray (UArray (UArray URowVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6584,7 +6591,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_3d)
+     (Assignment ((LVariable transformed_data_row_vector_array_3d) ())
       (UArray (UArray (UArray URowVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6599,7 +6606,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector) URowVector
+     (Assignment ((LVariable transformed_data_row_vector) ()) URowVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -6609,7 +6616,7 @@
        (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector) URowVector
+     (Assignment ((LVariable transformed_data_row_vector) ()) URowVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -6619,7 +6626,7 @@
        (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array)
+     (Assignment ((LVariable transformed_data_row_vector_array) ())
       (UArray URowVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6631,7 +6638,7 @@
        (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array)
+     (Assignment ((LVariable transformed_data_row_vector_array) ())
       (UArray URowVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6643,7 +6650,7 @@
        (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_2d)
+     (Assignment ((LVariable transformed_data_row_vector_array_2d) ())
       (UArray (UArray URowVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6658,7 +6665,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_2d)
+     (Assignment ((LVariable transformed_data_row_vector_array_2d) ())
       (UArray (UArray URowVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6673,7 +6680,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_3d)
+     (Assignment ((LVariable transformed_data_row_vector_array_3d) ())
       (UArray (UArray (UArray URowVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6688,7 +6695,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_3d)
+     (Assignment ((LVariable transformed_data_row_vector_array_3d) ())
       (UArray (UArray (UArray URowVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6703,7 +6710,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector) URowVector
+     (Assignment ((LVariable transformed_data_row_vector) ()) URowVector
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_row_vector))
@@ -6713,7 +6720,7 @@
        (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array)
+     (Assignment ((LVariable transformed_data_row_vector_array) ())
       (UArray URowVector)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6726,7 +6733,7 @@
        (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_2d)
+     (Assignment ((LVariable transformed_data_row_vector_array_2d) ())
       (UArray (UArray URowVector))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6743,7 +6750,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_row_vector_array_3d)
+     (Assignment ((LVariable transformed_data_row_vector_array_3d) ())
       (UArray (UArray (UArray URowVector)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6760,7 +6767,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix) UMatrix
+     (Assignment ((LVariable transformed_data_matrix) ()) UMatrix
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_matrix))
@@ -6770,7 +6777,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix) UMatrix
+     (Assignment ((LVariable transformed_data_matrix) ()) UMatrix
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_matrix))
@@ -6780,7 +6787,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix) UMatrix
+     (Assignment ((LVariable transformed_data_matrix) ()) UMatrix
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_matrix))
@@ -6792,7 +6799,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix) UMatrix
+     (Assignment ((LVariable transformed_data_matrix) ()) UMatrix
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_matrix))
@@ -6804,7 +6811,8 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array) (UArray UMatrix)
+     (Assignment ((LVariable transformed_data_matrix_array) ())
+      (UArray UMatrix)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_matrix_array))
@@ -6815,7 +6823,8 @@
        (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array) (UArray UMatrix)
+     (Assignment ((LVariable transformed_data_matrix_array) ())
+      (UArray UMatrix)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_matrix_array))
@@ -6826,7 +6835,7 @@
        (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_2d)
+     (Assignment ((LVariable transformed_data_matrix_array_2d) ())
       (UArray (UArray UMatrix))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6840,7 +6849,7 @@
         ((type_ (UArray (UArray UMatrix))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_2d)
+     (Assignment ((LVariable transformed_data_matrix_array_2d) ())
       (UArray (UArray UMatrix))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6854,7 +6863,7 @@
         ((type_ (UArray (UArray UMatrix))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_3d)
+     (Assignment ((LVariable transformed_data_matrix_array_3d) ())
       (UArray (UArray (UArray UMatrix)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6869,7 +6878,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_3d)
+     (Assignment ((LVariable transformed_data_matrix_array_3d) ())
       (UArray (UArray (UArray UMatrix)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6884,7 +6893,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix) UMatrix
+     (Assignment ((LVariable transformed_data_matrix) ()) UMatrix
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -6894,7 +6903,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix) UMatrix
+     (Assignment ((LVariable transformed_data_matrix) ()) UMatrix
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -6904,7 +6913,8 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array) (UArray UMatrix)
+     (Assignment ((LVariable transformed_data_matrix_array) ())
+      (UArray UMatrix)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -6915,7 +6925,8 @@
        (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array) (UArray UMatrix)
+     (Assignment ((LVariable transformed_data_matrix_array) ())
+      (UArray UMatrix)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -6926,7 +6937,7 @@
        (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_2d)
+     (Assignment ((LVariable transformed_data_matrix_array_2d) ())
       (UArray (UArray UMatrix))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6940,7 +6951,7 @@
         ((type_ (UArray (UArray UMatrix))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_2d)
+     (Assignment ((LVariable transformed_data_matrix_array_2d) ())
       (UArray (UArray UMatrix))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6954,7 +6965,7 @@
         ((type_ (UArray (UArray UMatrix))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_3d)
+     (Assignment ((LVariable transformed_data_matrix_array_3d) ())
       (UArray (UArray (UArray UMatrix)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6969,7 +6980,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_3d)
+     (Assignment ((LVariable transformed_data_matrix_array_3d) ())
       (UArray (UArray (UArray UMatrix)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -6984,7 +6995,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix) UMatrix
+     (Assignment ((LVariable transformed_data_matrix) ()) UMatrix
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_matrix))
@@ -6994,7 +7005,8 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array) (UArray UMatrix)
+     (Assignment ((LVariable transformed_data_matrix_array) ())
+      (UArray UMatrix)
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
          (((pattern (Var d_matrix_array))
@@ -7006,7 +7018,7 @@
        (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_2d)
+     (Assignment ((LVariable transformed_data_matrix_array_2d) ())
       (UArray (UArray UMatrix))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -7022,7 +7034,7 @@
         ((type_ (UArray (UArray UMatrix))) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_matrix_array_3d)
+     (Assignment ((LVariable transformed_data_matrix_array_3d) ())
       (UArray (UArray (UArray UMatrix)))
       ((pattern
         (FunApp (StanLib EltPow__ FnPlain AoS)
@@ -7039,7 +7051,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable td_int) UInt
+     (Assignment ((LVariable td_int) ()) UInt
       ((pattern
         (FunApp (StanLib EltTimes__ FnPlain AoS)
          (((pattern (Var d_int))
@@ -7049,7 +7061,7 @@
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable transformed_data_real) UReal
+     (Assignment ((LVariable transformed_data_real) ()) UReal
       ((pattern
         (FunApp (StanLib EltTimes__ FnPlain AoS)
          (((pattern (Var d_real))
@@ -8356,66 +8368,69 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_real_1d_ar) (UArray UReal)
+     (Assignment ((LVariable tp_real_1d_ar) ()) (UArray UReal)
       ((pattern (Var p_real_1d_ar))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_real_3d_ar) (UArray (UArray (UArray UReal)))
+     (Assignment ((LVariable tp_real_3d_ar) ())
+      (UArray (UArray (UArray UReal)))
       ((pattern (Var p_real_3d_ar))
        (meta
         ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_1d_vec) (UArray UVector)
+     (Assignment ((LVariable tp_1d_vec) ()) (UArray UVector)
       ((pattern (Var p_1d_vec))
        (meta
         ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_3d_vec) (UArray (UArray (UArray UVector)))
+     (Assignment ((LVariable tp_3d_vec) ())
+      (UArray (UArray (UArray UVector)))
       ((pattern (Var p_3d_vec))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_simplex) UVector
+     (Assignment ((LVariable tp_simplex) ()) UVector
       ((pattern (Var p_simplex))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_1d_simplex) (UArray UVector)
+     (Assignment ((LVariable tp_1d_simplex) ()) (UArray UVector)
       ((pattern (Var p_1d_simplex))
        (meta
         ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_3d_simplex) (UArray (UArray (UArray UVector)))
+     (Assignment ((LVariable tp_3d_simplex) ())
+      (UArray (UArray (UArray UVector)))
       ((pattern (Var p_3d_simplex))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_cfcov_54) UMatrix
+     (Assignment ((LVariable tp_cfcov_54) ()) UMatrix
       ((pattern (Var p_cfcov_54))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_cfcov_33) UMatrix
+     (Assignment ((LVariable tp_cfcov_33) ()) UMatrix
       ((pattern (Var p_cfcov_33))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_cfcov_33_ar) (UArray UMatrix)
+     (Assignment ((LVariable tp_cfcov_33_ar) ()) (UArray UMatrix)
       ((pattern (Var p_cfcov_33_ar))
        (meta
         ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_mat) UMatrix
+     (Assignment ((LVariable tp_mat) ()) UMatrix
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_cfcov_54))
@@ -8427,7 +8442,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_vec) UVector
+     (Assignment ((LVariable tp_vec) ()) UVector
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_vec))
@@ -8490,7 +8505,7 @@
                                  (Block
                                   (((pattern
                                      (Assignment
-                                      (LIndexed (LVariable tp_ar_mat)
+                                      ((LVariable tp_ar_mat)
                                        ((Single
                                          ((pattern (Var m))
                                           (meta
@@ -8538,7 +8553,7 @@
          (Block
           (((pattern
              (Assignment
-              (LIndexed (LVariable tp_vec)
+              ((LVariable tp_vec)
                ((Single
                  ((pattern (Var i))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -8568,7 +8583,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_row_vec) URowVector
+     (Assignment ((LVariable tp_row_vec) ()) URowVector
       ((pattern
         (FunApp (StanLib Transpose__ FnPlain AoS)
          (((pattern
@@ -8584,13 +8599,13 @@
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_1d_row_vec) (UArray URowVector)
+     (Assignment ((LVariable tp_1d_row_vec) ()) (UArray URowVector)
       ((pattern (Var p_1d_row_vec))
        (meta
         ((type_ (UArray URowVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_3d_row_vec)
+     (Assignment ((LVariable tp_3d_row_vec) ())
       (UArray (UArray (UArray URowVector)))
       ((pattern (Var p_3d_row_vec))
        (meta
@@ -8598,7 +8613,7 @@
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -8620,7 +8635,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -8652,7 +8667,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -8684,7 +8699,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -8706,7 +8721,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -8738,7 +8753,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -8760,7 +8775,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -8792,7 +8807,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_real) UReal
+     (Assignment ((LVariable tp_real) ()) UReal
       ((pattern
         (FunApp (StanLib EltTimes__ FnPlain AoS)
          (((pattern (Var p_real))
@@ -8802,7 +8817,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_real) UReal
+     (Assignment ((LVariable tp_real) ()) UReal
       ((pattern
         (FunApp (StanLib EltDivide__ FnPlain AoS)
          (((pattern (Var p_real))
@@ -8979,7 +8994,7 @@
           (decl_type (Sized SReal)) (initialize true)))
         (meta <opaque>))
        ((pattern
-         (Assignment (LVariable r1) UReal
+         (Assignment ((LVariable r1) ()) UReal
           ((pattern
             (FunApp (UserDefined foo_bar1 FnPlain)
              (((pattern (Var p_real))
@@ -8991,7 +9006,7 @@
           (decl_type (Sized SReal)) (initialize true)))
         (meta <opaque>))
        ((pattern
-         (Assignment (LVariable r2) UReal
+         (Assignment ((LVariable r2) ()) UReal
           ((pattern
             (FunApp (UserDefined foo_bar1 FnPlain)
              (((pattern (Var J))
@@ -10211,66 +10226,69 @@
       ((pattern (Return ())) (meta <opaque>)) ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_real_1d_ar) (UArray UReal)
+     (Assignment ((LVariable tp_real_1d_ar) ()) (UArray UReal)
       ((pattern (Var p_real_1d_ar))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_real_3d_ar) (UArray (UArray (UArray UReal)))
+     (Assignment ((LVariable tp_real_3d_ar) ())
+      (UArray (UArray (UArray UReal)))
       ((pattern (Var p_real_3d_ar))
        (meta
         ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_1d_vec) (UArray UVector)
+     (Assignment ((LVariable tp_1d_vec) ()) (UArray UVector)
       ((pattern (Var p_1d_vec))
        (meta
         ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_3d_vec) (UArray (UArray (UArray UVector)))
+     (Assignment ((LVariable tp_3d_vec) ())
+      (UArray (UArray (UArray UVector)))
       ((pattern (Var p_3d_vec))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_simplex) UVector
+     (Assignment ((LVariable tp_simplex) ()) UVector
       ((pattern (Var p_simplex))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_1d_simplex) (UArray UVector)
+     (Assignment ((LVariable tp_1d_simplex) ()) (UArray UVector)
       ((pattern (Var p_1d_simplex))
        (meta
         ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_3d_simplex) (UArray (UArray (UArray UVector)))
+     (Assignment ((LVariable tp_3d_simplex) ())
+      (UArray (UArray (UArray UVector)))
       ((pattern (Var p_3d_simplex))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_cfcov_54) UMatrix
+     (Assignment ((LVariable tp_cfcov_54) ()) UMatrix
       ((pattern (Var p_cfcov_54))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_cfcov_33) UMatrix
+     (Assignment ((LVariable tp_cfcov_33) ()) UMatrix
       ((pattern (Var p_cfcov_33))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_cfcov_33_ar) (UArray UMatrix)
+     (Assignment ((LVariable tp_cfcov_33_ar) ()) (UArray UMatrix)
       ((pattern (Var p_cfcov_33_ar))
        (meta
         ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_mat) UMatrix
+     (Assignment ((LVariable tp_mat) ()) UMatrix
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_cfcov_54))
@@ -10282,7 +10300,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_vec) UVector
+     (Assignment ((LVariable tp_vec) ()) UVector
       ((pattern
         (FunApp (StanLib fma FnPlain AoS)
          (((pattern (Var d_vec))
@@ -10345,7 +10363,7 @@
                                  (Block
                                   (((pattern
                                      (Assignment
-                                      (LIndexed (LVariable tp_ar_mat)
+                                      ((LVariable tp_ar_mat)
                                        ((Single
                                          ((pattern (Var m))
                                           (meta
@@ -10393,7 +10411,7 @@
          (Block
           (((pattern
              (Assignment
-              (LIndexed (LVariable tp_vec)
+              ((LVariable tp_vec)
                ((Single
                  ((pattern (Var i))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10423,7 +10441,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_row_vec) URowVector
+     (Assignment ((LVariable tp_row_vec) ()) URowVector
       ((pattern
         (FunApp (StanLib Transpose__ FnPlain AoS)
          (((pattern
@@ -10439,13 +10457,13 @@
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_1d_row_vec) (UArray URowVector)
+     (Assignment ((LVariable tp_1d_row_vec) ()) (UArray URowVector)
       ((pattern (Var p_1d_row_vec))
        (meta
         ((type_ (UArray URowVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_3d_row_vec)
+     (Assignment ((LVariable tp_3d_row_vec) ())
       (UArray (UArray (UArray URowVector)))
       ((pattern (Var p_3d_row_vec))
        (meta
@@ -10453,7 +10471,7 @@
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -10475,7 +10493,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -10507,7 +10525,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -10539,7 +10557,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -10561,7 +10579,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -10593,7 +10611,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -10615,7 +10633,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable theta_p) UVector
+     (Assignment ((LVariable theta_p) ()) UVector
       ((pattern
         (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
@@ -10647,7 +10665,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_real) UReal
+     (Assignment ((LVariable tp_real) ()) UReal
       ((pattern
         (FunApp (StanLib EltTimes__ FnPlain AoS)
          (((pattern (Var p_real))
@@ -10657,7 +10675,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable tp_real) UReal
+     (Assignment ((LVariable tp_real) ()) UReal
       ((pattern
         (FunApp (StanLib EltDivide__ FnPlain AoS)
          (((pattern (Var p_real))
@@ -10817,7 +10835,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_r1) UReal
+     (Assignment ((LVariable gq_r1) ()) UReal
       ((pattern
         (FunApp (UserDefined foo_bar1 FnPlain)
          (((pattern (Var p_real))
@@ -10829,7 +10847,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_r2) UReal
+     (Assignment ((LVariable gq_r2) ()) UReal
       ((pattern
         (FunApp (UserDefined foo_bar1 FnPlain)
          (((pattern (Var J))
@@ -11040,7 +11058,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable indices) (UArray UInt)
+     (Assignment ((LVariable indices) ()) (UArray UInt)
       ((pattern
         (FunApp (CompilerInternal FnMakeArray)
          (((pattern (Lit Int 2))
@@ -11174,7 +11192,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_real_1d_ar) (UArray UReal)
+     (Assignment ((LVariable gq_real_1d_ar) ()) (UArray UReal)
       ((pattern
         (Indexed
          ((pattern (Var p_1d_simplex))
@@ -11186,36 +11204,38 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_real_3d_ar) (UArray (UArray (UArray UReal)))
+     (Assignment ((LVariable gq_real_3d_ar) ())
+      (UArray (UArray (UArray UReal)))
       ((pattern (Var p_real_3d_ar))
        (meta
         ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_1d_vec) (UArray UVector)
+     (Assignment ((LVariable gq_1d_vec) ()) (UArray UVector)
       ((pattern (Var p_1d_vec))
        (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_3d_vec) (UArray (UArray (UArray UVector)))
+     (Assignment ((LVariable gq_3d_vec) ())
+      (UArray (UArray (UArray UVector)))
       ((pattern (Var p_3d_vec))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_row_vec) URowVector
+     (Assignment ((LVariable gq_row_vec) ()) URowVector
       ((pattern (Var p_row_vec))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_1d_row_vec) (UArray URowVector)
+     (Assignment ((LVariable gq_1d_row_vec) ()) (UArray URowVector)
       ((pattern (Var p_1d_row_vec))
        (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_3d_row_vec)
+     (Assignment ((LVariable gq_3d_row_vec) ())
       (UArray (UArray (UArray URowVector)))
       ((pattern (Var p_3d_row_vec))
        (meta
@@ -11223,7 +11243,7 @@
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_simplex) UVector
+     (Assignment ((LVariable gq_simplex) ()) UVector
       ((pattern
         (Indexed
          ((pattern (Var p_1d_simplex))
@@ -11239,29 +11259,30 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_1d_simplex) (UArray UVector)
+     (Assignment ((LVariable gq_1d_simplex) ()) (UArray UVector)
       ((pattern (Var p_1d_simplex))
        (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_3d_simplex) (UArray (UArray (UArray UVector)))
+     (Assignment ((LVariable gq_3d_simplex) ())
+      (UArray (UArray (UArray UVector)))
       ((pattern (Var p_3d_simplex))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
          (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_cfcov_54) UMatrix
+     (Assignment ((LVariable gq_cfcov_54) ()) UMatrix
       ((pattern (Var p_cfcov_54))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_cfcov_33) UMatrix
+     (Assignment ((LVariable gq_cfcov_33) ()) UMatrix
       ((pattern (Var p_cfcov_33))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable gq_cfcov_33_ar) (UArray UMatrix)
+     (Assignment ((LVariable gq_cfcov_33_ar) ()) (UArray UMatrix)
       ((pattern (Var p_cfcov_33_ar))
        (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -11317,7 +11338,7 @@
                                  (Block
                                   (((pattern
                                      (Assignment
-                                      (LIndexed (LVariable gq_ar_mat)
+                                      ((LVariable gq_ar_mat)
                                        ((Single
                                          ((pattern (Var m))
                                           (meta
@@ -11365,7 +11386,7 @@
          (Block
           (((pattern
              (Assignment
-              (LIndexed (LVariable gq_vec)
+              ((LVariable gq_vec)
                ((Single
                  ((pattern (Var i))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -11429,7 +11450,7 @@
                          (Block
                           (((pattern
                              (Assignment
-                              (LIndexed (LVariable indexing_mat)
+                              ((LVariable indexing_mat)
                                ((Single
                                  ((pattern (Var k))
                                   (meta
@@ -11498,7 +11519,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (LIndexed (LVariable idx_res1)
+                      ((LVariable idx_res1)
                        ((Single
                          ((pattern (Var i))
                           (meta
@@ -11551,7 +11572,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable idx_res11) (UArray UMatrix)
+     (Assignment ((LVariable idx_res11) ()) (UArray UMatrix)
       ((pattern
         (Indexed
          ((pattern (Var indexing_mat))
@@ -11648,7 +11669,7 @@
                  (Block
                   (((pattern
                      (Assignment
-                      (LIndexed (LVariable idx_res2)
+                      ((LVariable idx_res2)
                        ((Single
                          ((pattern (Var i))
                           (meta
@@ -11691,7 +11712,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable idx_res21) (UArray UMatrix)
+     (Assignment ((LVariable idx_res21) ()) (UArray UMatrix)
       ((pattern
         (Indexed
          ((pattern (Var indexing_mat))
@@ -11799,7 +11820,7 @@
                          (Block
                           (((pattern
                              (Assignment
-                              (LIndexed (LVariable idx_res3)
+                              ((LVariable idx_res3)
                                ((Single
                                  ((pattern (Var i))
                                   (meta
@@ -11868,7 +11889,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable idx_res31) (UArray UMatrix)
+     (Assignment ((LVariable idx_res31) ()) (UArray UMatrix)
       ((pattern
         (Indexed
          ((pattern (Var indexing_mat))
@@ -11939,7 +11960,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable idx_res4) (UArray URowVector)
+     (Assignment ((LVariable idx_res4) ()) (UArray URowVector)
       ((pattern
         (Indexed
          ((pattern (Var indexing_mat))
@@ -11956,7 +11977,7 @@
        (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (LVariable idx_res5) (UArray UVector)
+     (Assignment ((LVariable idx_res5) ()) (UArray UVector)
       ((pattern
         (Indexed
          ((pattern (Var indexing_mat))

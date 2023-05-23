@@ -49,11 +49,11 @@ and free_vars_fnapp kind l =
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
   | _ -> Set.Poly.union_list arg_vars
 
-let rec free_vars_lval (l : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
-  match l with
-  | LVariable _ -> Set.Poly.empty
-  | LIndexed (_, l) -> Set.Poly.union_list (List.map ~f:free_vars_idx l)
-  | LTupleProjection (e, _) -> free_vars_lval e
+let rec free_vars_lval ((lval, idxs) : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
+  let free_idx = Set.Poly.union_list (List.map ~f:free_vars_idx idxs) in
+  match lval with
+  | LVariable _ -> free_idx
+  | LTupleProjection (e, _) -> Set.Poly.union free_idx (free_vars_lval e)
 
 (** Calculate the free (non-bound) variables in a statement *)
 let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
@@ -331,7 +331,7 @@ let constant_propagation_transfer ?(preserve_stability = false)
             (* TODO: we are currently only propagating constants for scalars.
                We could do the same for matrix and array expressions if we wanted. *)
             (* TODO: We could propagate tuple elements if we make the map more flexible *)
-            | Assignment (LVariable s, t, e) -> (
+            | Assignment ((LVariable s, []), t, e) -> (
               match Partial_evaluator.try_eval_expr (subst_expr m e) with
               | { pattern=
                     Promotion ({pattern= Lit (_, _); _}, _, _) | Lit (_, _)
@@ -384,7 +384,7 @@ let expression_propagation_transfer ?(preserve_stability = false)
             ( match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
                We could do the same for matrix and array expressions if we wanted. *)
-            | Middle.Stmt.Fixed.Pattern.Assignment (LVariable s, t, e) ->
+            | Middle.Stmt.Fixed.Pattern.Assignment ((LVariable s, []), t, e) ->
                 let m' = kill_var m s in
                 if
                   can_side_effect_expr e
@@ -427,8 +427,8 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                 not (key = var_name || data.pattern = Var var_name) ) in
           Some
             ( match mir_node with
-            | Assignment (LVariable assignee, _, {pattern= Var assigner; meta})
-              ->
+            | Assignment
+                ((LVariable assignee, []), _, {pattern= Var assigner; meta}) ->
                 let m' = kill_var expr_map assignee in
                 if Set.Poly.mem globals assignee then expr_map
                 else
@@ -502,7 +502,7 @@ let reaching_definitions_transfer
       let kill =
         match mir_node with
         | Decl {decl_id= x; _}
-         |Assignment (LVariable x, _, _)
+         |Assignment ((LVariable x, []), _, _)
          |For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
         | TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
@@ -545,7 +545,7 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
       let gen = top_free_vars_stmt flowgraph_to_mir mir_node in
       let kill =
         match mir_node with
-        | Assignment (LVariable x, _, _) | Decl {decl_id= x; _} ->
+        | Assignment ((LVariable x, []), _, _) | Decl {decl_id= x; _} ->
             Set.Poly.singleton x
         | TargetPE _
          |NRFunApp (_, _)
@@ -590,12 +590,15 @@ and used_expressions_idx_help f (i : Expr.Typed.t Index.t) =
   | Single e | Upfrom e | MultiIndex e -> f e
   | Between (e1, e2) -> Expr.Typed.Set.union (f e1) (f e2)
 
-let rec used_expressions_lval f (l : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
-  match l with
-  | LVariable _ -> Expr.Typed.Set.empty
-  | LTupleProjection (e, _) -> used_expressions_lval f e
-  | LIndexed (_, l) ->
-      Expr.Typed.Set.union_list (List.map ~f:(used_expressions_idx_help f) l)
+let rec used_expressions_lval f
+    ((lval, idxs) : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
+  let used_idx =
+    Expr.Typed.Set.union_list (List.map ~f:(used_expressions_idx_help f) idxs)
+  in
+  match lval with
+  | LVariable _ -> used_idx
+  | LTupleProjection (e, _) ->
+      Expr.Typed.Set.union used_idx (used_expressions_lval f e)
 
 (** Calculate the set of expressions of an expression *)
 let used_expressions_expr e = Expr.Typed.Set.singleton e

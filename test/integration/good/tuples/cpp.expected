@@ -4753,9 +4753,7 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           current_statement__ = 3;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            stan::model::assign(z_dot_1_temp__,
-              z_dot_1_flat__[(z_dot_1_flat__pos__ - 1)],
-              "assigning variable z_dot_1_temp__");
+            z_dot_1_temp__ = z_dot_1_flat__[(z_dot_1_flat__pos__ - 1)];
             z_dot_1_flat__pos__ = (z_dot_1_flat__pos__ + 1);
             {
               std::vector<local_scalar_t__> z_dot_2_temp___flat__;
@@ -5766,9 +5764,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           current_statement__ = 2;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            stan::model::assign(ps2_dot_1_temp__,
-              ps2_dot_1_flat__[(ps2_dot_1_flat__pos__ - 1)],
-              "assigning variable ps2_dot_1_temp__");
+            ps2_dot_1_temp__ = ps2_dot_1_flat__[(ps2_dot_1_flat__pos__ - 1)];
             ps2_dot_1_flat__pos__ = (ps2_dot_1_flat__pos__ + 1);
             {
               std::vector<local_scalar_t__> ps2_dot_2_temp___flat__;

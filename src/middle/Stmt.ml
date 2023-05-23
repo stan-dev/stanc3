@@ -27,20 +27,20 @@ module Fixed = struct
           ; initialize: bool }
     [@@deriving sexp, hash, map, fold, compare]
 
-    and 'e lvalue =
-      | LVariable of string
-      | LIndexed of 'e lvalue * 'e Index.t list
-      | LTupleProjection of 'e lvalue * int
+    and 'e lvalue = 'e lbase * 'e Index.t list
+    [@@deriving sexp, hash, map, compare, fold]
+
+    and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e pp_s ppf = function
       | Assignment (lvalue, _, rhs) ->
-          let rec pp_lvalue ppf = function
-            | LVariable v -> Fmt.string ppf v
-            | LIndexed (lv, idcs) ->
-                Fmt.pf ppf "%a%a" pp_lvalue lv (Index.pp_indices pp_e) idcs
-            | LTupleProjection (lv, ix) -> Fmt.pf ppf "%a.%d" pp_lvalue lv ix
-          in
+          let rec pp_lvalue ppf (lbase, idcs) =
+            match lbase with
+            | LVariable v -> Fmt.pf ppf "%s%a" v (Index.pp_indices pp_e) idcs
+            | LTupleProjection (lv, ix) ->
+                Fmt.pf ppf "%a.%d%a" pp_lvalue lv ix (Index.pp_indices pp_e)
+                  idcs in
           Fmt.pf ppf "@[<hov>%a =@[<h>@ %a@];@]" pp_lvalue lvalue pp_e rhs
       | TargetPE expr -> Fmt.pf ppf "@[<h>target +=@ %a;@]" pp_e expr
       | NRFunApp (kind, args) ->
@@ -143,8 +143,9 @@ module Helpers = struct
             ; meta= e.meta.loc } in
           let assign =
             { decl with
-              Fixed.pattern= Assignment (LVariable sym, Expr.Typed.type_of e, e)
-            } in
+              Fixed.pattern=
+                Assignment ((LVariable sym, []), Expr.Typed.type_of e, e) }
+          in
           loop es (Gensym.generate ()) (decl :: assign :: inits)
             ({e with pattern= Var sym} :: vars) in
     let setups, exprs = loop (List.rev exprs) sym [] [] in
@@ -283,59 +284,65 @@ module Helpers = struct
       | _ -> for_scalar st bodyfn var smeta in
     go st (fun st var -> bodyfn st (invert_index_order var)) var smeta
 
-  let assign_indexed decl_type lval meta varfn var =
+  let assign_indexed decl_type (lval, idxs) meta varfn var =
     let indices = Expr.Helpers.collect_indices var in
     Fixed.
-      { meta
-      ; pattern= Assignment (LIndexed (lval, indices), decl_type, varfn var) }
+      {meta; pattern= Assignment ((lval, idxs @ indices), decl_type, varfn var)}
+
+  let lvariable v = (Fixed.Pattern.LVariable v, [])
 
   let rec get_lhs_name (lval : 'a Fixed.Pattern.lvalue) =
     match lval with
-    | LVariable name -> name
-    | LIndexed (sub_lval, _) -> get_lhs_name sub_lval
-    | LTupleProjection (sub_lval, num) ->
+    | LVariable name, _ -> name
+    | LTupleProjection (sub_lval, num), _ ->
         get_lhs_name sub_lval ^ "." ^ string_of_int num
 
   (* Copied from AST's version in AST.ml *)
   let rec lvalue_of_expr_opt (expr : 'e Expr.Fixed.t) :
       'e Expr.Fixed.t Fixed.Pattern.lvalue option =
+    let lbase_of_expr_opt (expr : 'e Expr.Fixed.t) =
+      match expr.pattern with
+      | Var s -> Some (Fixed.Pattern.LVariable s)
+      | TupleProjection (l, i) ->
+          Option.bind (lvalue_of_expr_opt l) ~f:(fun lv ->
+              Some (Fixed.Pattern.LTupleProjection (lv, i)) )
+      | _ -> None in
     match expr.pattern with
-    | Var s -> Some (LVariable s)
+    | Var s -> Some (lvariable s)
     | Indexed (l, i) ->
-        Option.bind (lvalue_of_expr_opt l) ~f:(fun lv ->
-            Some (Fixed.Pattern.LIndexed (lv, i)) )
+        Option.bind (lbase_of_expr_opt l) ~f:(fun lv -> Some (lv, i))
     | TupleProjection (l, i) ->
         Option.bind (lvalue_of_expr_opt l) ~f:(fun lv ->
-            Some (Fixed.Pattern.LTupleProjection (lv, i)) )
+            Some (Fixed.Pattern.LTupleProjection (lv, i), []) )
     | _ -> None
 
   let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Fixed.Pattern.lvalue)
       ~(meta : 'e) : 'e Expr.Fixed.t =
-    let pattern =
-      match lhs with
-      | LVariable v -> Expr.Fixed.Pattern.Var v
-      | LIndexed (lv, ix) -> Indexed (expr_of_lvalue ~meta lv, ix)
+    let expr_of_lbase = function
+      | Fixed.Pattern.LVariable v -> Expr.Fixed.Pattern.Var v
       | LTupleProjection (lv, ix) ->
           TupleProjection (expr_of_lvalue ~meta lv, ix) in
+    let pattern =
+      match lhs with
+      | lv, [] -> expr_of_lbase lv
+      | lv, ix ->
+          Expr.Fixed.Pattern.Indexed ({pattern= expr_of_lbase lv; meta}, ix)
+    in
     {pattern; meta}
 
   let rec map_lhs_variable ~(f : string -> string)
       (lhs : 'e Fixed.Pattern.lvalue) : 'e Fixed.Pattern.lvalue =
     match lhs with
-    | LVariable v -> LVariable (f v)
-    | LIndexed (lv, ix) -> LIndexed (map_lhs_variable ~f lv, ix)
-    | LTupleProjection (lv, ix) -> LTupleProjection (map_lhs_variable ~f lv, ix)
+    | LVariable v, idxs -> (LVariable (f v), idxs)
+    | LTupleProjection (lv, ix), idxs ->
+        (LTupleProjection (map_lhs_variable ~f lv, ix), idxs)
 
-  let rec lhs_indices (lhs : 'e Fixed.Pattern.lvalue) : 'e Index.t list =
-    match lhs with
-    | LVariable _ -> []
-    | LIndexed (lv, idcs) -> idcs @ lhs_indices lv
-    | LTupleProjection (lv, _) -> lhs_indices lv
+  let lhs_indices ((_, idxs) : 'e Fixed.Pattern.lvalue) : 'e Index.t list = idxs
 
   let rec lhs_variable (lhs : 'e Fixed.Pattern.lvalue) : string =
     match lhs with
-    | LVariable v -> v
-    | LIndexed (lv, _) | LTupleProjection (lv, _) -> lhs_variable lv
+    | LVariable v, _ -> v
+    | LTupleProjection (lv, _), _ -> lhs_variable lv
 
   (* Reduce an lvalue down to its "base reference", which is a variable with maximum tuple indices after it.
      For example:
@@ -346,9 +353,8 @@ module Helpers = struct
   let lvalue_base_reference (lvalue : 'e Fixed.Pattern.lvalue) =
     let rec go (lv : 'e Fixed.Pattern.lvalue) wrap =
       match lv with
-      | LVariable _ | LTupleProjection (LVariable _, _) -> wrap lv
-      | LIndexed (lv, _) -> go lv Fn.id
-      | LTupleProjection (lv, ix) ->
-          go lv (fun lv -> wrap (LTupleProjection (lv, ix))) in
+      | LVariable _, _ | LTupleProjection ((LVariable _, _), _), _ -> wrap lv
+      | LTupleProjection (lv, ix), idx ->
+          go lv (fun lv -> wrap (LTupleProjection (lv, ix), idx)) in
     go lvalue Fn.id
 end

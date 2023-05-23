@@ -382,7 +382,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
         else Set.Poly.union idx_demotable rhs_demotable_names in
       let tuple_demotes =
         match lval with
-        | LTupleProjection _ ->
+        | LTupleProjection _, _ ->
             Set.Poly.add
               (Set.Poly.union assign_demotes (query_var_eigen_names rhs))
               name
