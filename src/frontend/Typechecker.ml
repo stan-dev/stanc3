@@ -1005,12 +1005,13 @@ let rec check_lvalue cf tenv = function
   | {lval= LTupleProjection (lval, idx); lmeta= ({loc} : located_meta)} -> (
       let tlval = check_lvalue cf tenv lval in
       match (tlval.lmeta.type_, tlval.lmeta.ad_level) with
-      | UTuple tys, TupleAD ads -> (
-        match (List.nth tys (idx - 1), List.nth ads (idx - 1)) with
+      | UTuple types_, TupleAD ads -> (
+        match (List.nth types_ (idx - 1), List.nth ads (idx - 1)) with
         | Some type_, Some ad_level ->
             {lval= LTupleProjection (tlval, idx); lmeta= {ad_level; type_; loc}}
         | None, None ->
-            Semantic_error.tuple_index_invalid_index loc (List.length tys) idx
+            Semantic_error.tuple_index_invalid_index loc (List.length types_)
+              idx
             |> error
         | _ ->
             raise_s

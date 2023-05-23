@@ -298,11 +298,10 @@ let rec lvalue_of_expr_opt {expr; emeta} =
     match expr with
     | Variable s -> Some (LVariable s)
     | Indexed (l, i) ->
-        Option.bind (lvalue_of_expr_opt l) ~f:(fun lv ->
-            Some (LIndexed (lv, i)) )
+        Option.map (lvalue_of_expr_opt l) ~f:(fun lv -> LIndexed (lv, i))
     | TupleProjection (l, i) ->
-        Option.bind (lvalue_of_expr_opt l) ~f:(fun lv ->
-            Some (LTupleProjection (lv, i)) )
+        Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
+            LTupleProjection (lv, i) )
     | _ -> None in
   Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta})
 

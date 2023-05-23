@@ -703,7 +703,7 @@ Semantic error in 'err-decl-matrix-2.stan', line 2, column 13 to column 17:
      4:  model {
    -------------------------------------------------
 
-Too many indexes, expression dimensions=0, indexes found=1.
+Tried to index a scalar type. Expression has type int.
   $ ../../../../install/default/bin/stanc err-decl-matrix.stan
 Syntax error in 'err-decl-matrix.stan', line 2, column 10 to column 11, parsing error:
    -------------------------------------------------
@@ -2429,7 +2429,7 @@ Semantic error in 'validate_add_expression_dimss_bad.stan', line 4, column 6 to 
      6:  parameters {
    -------------------------------------------------
 
-Too many indexes, expression dimensions=0, indexes found=1.
+Tried to index a scalar type. Expression has type real.
   $ ../../../../install/default/bin/stanc validate_add_var_bad1.stan
 Semantic error in 'validate_add_var_bad1.stan', line 3, column 7 to column 8:
    -------------------------------------------------

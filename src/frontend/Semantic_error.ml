@@ -152,13 +152,14 @@ module TypeError = struct
           signatures
     | TupleIndexInvalidIndex (ix_max, ix) ->
         Fmt.pf ppf
-          "Found tuple index expression with index %d, but the tuple only \
-           indices 1-%d are valid."
-          ix ix_max
+          "Tried to access index %d for a tuple of length %d.@ Only indicies \
+           indices between 1 and %d are valid."
+          ix ix_max ix_max
     | TupleIndexNotTuple ut ->
-        Fmt.pf ppf
-          "Only tuple expressions can be indexed as a tuple. Instead, found \
-           type %a."
+        Fmt.pf ppf "Tried to index a non-tuple type. Expression has type %a."
+          UnsizedType.pp ut
+    | NotIndexable (ut, _) when UnsizedType.is_scalar_type ut ->
+        Fmt.pf ppf "Tried to index a scalar type. Expression has type %a."
           UnsizedType.pp ut
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf

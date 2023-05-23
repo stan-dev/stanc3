@@ -9,6 +9,74 @@ Semantic error in 'array_literal_mismatch.stan', line 2, column 43 to column 52:
 
 Array expression must have entries of consistent type. Expected tuple(
 int, int) but found tuple(int, int, int).
+  $ ../../../../../install/default/bin/stanc bad-arg.stan
+Syntax error in 'bad-arg.stan', line 2, column 23 to column 27, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:    void foo(tuple(real, data real) x) {
+                                ^
+     3:      print(x.1);
+     4:    }
+   -------------------------------------------------
+
+Expected comma-separated list of types followed by ")" to declare tuple type.
+  $ ../../../../../install/default/bin/stanc bad-index1.stan
+Semantic error in 'bad-index1.stan', line 3, column 9 to column 12:
+   -------------------------------------------------
+     1:  transformed data {
+     2:     real x = 3.4;
+     3:     print(x.1);
+                  ^
+     4:  }
+   -------------------------------------------------
+
+Tried to index a non-tuple type. Expression has type real.
+  $ ../../../../../install/default/bin/stanc bad-index2.stan
+Semantic error in 'bad-index2.stan', line 3, column 11 to column 17:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    tuple(real, real) pair = (3.14, 34.2);
+     3:    real x = pair.3;
+                    ^
+     4:  }
+   -------------------------------------------------
+
+Tried to access index 3 for a tuple of length 2.
+Only indicies indices between 1 and 2 are valid.
+  $ ../../../../../install/default/bin/stanc bad-index3.stan
+Semantic error in 'bad-index3.stan', line 3, column 3 to column 6:
+   -------------------------------------------------
+     1:  transformed data {
+     2:     real x = 3.14;
+     3:     x.1 = 6.28;
+            ^
+     4:  }
+   -------------------------------------------------
+
+Tried to index a non-tuple type. Expression has type real.
+  $ ../../../../../install/default/bin/stanc bad-index4.stan
+Semantic error in 'bad-index4.stan', line 3, column 2 to column 8:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    tuple(real, real) pair = (3.14, 34.2);
+     3:    pair.3 = 6.28;
+           ^
+     4:  }
+   -------------------------------------------------
+
+Tried to access index 3 for a tuple of length 2.
+Only indicies indices between 1 and 2 are valid.
+  $ ../../../../../install/default/bin/stanc bad-index5.stan
+Semantic error in 'bad-index5.stan', line 3, column 11 to column 18:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    tuple(real, real) pair = (3.14, 34.2);
+     3:    real x = pair[1];
+                    ^
+     4:  }
+   -------------------------------------------------
+
+Too many indexes, expression dimensions=0, indexes found=1.
   $ ../../../../../install/default/bin/stanc bad_addition.stan
 Semantic error in 'bad_addition.stan', line 3, column 2 to column 9:
    -------------------------------------------------
@@ -44,6 +112,17 @@ Syntax error in 'empty_tuple_type.stan', line 2, column 8 to column 9, parsing e
 
 Incomplete type declaration. Expected comma separated list of types between "("
 and ")" to declare tuple variable.
+  $ ../../../../../install/default/bin/stanc function-mismatch1.stan
+Syntax error in 'function-mismatch1.stan', line 2, column 23 to column 27, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:    void foo(tuple(real, data real) x) {
+                                ^
+     3:      print(x.1);
+     4:    }
+   -------------------------------------------------
+
+Expected comma-separated list of types followed by ")" to declare tuple type.
   $ ../../../../../install/default/bin/stanc incomplete1.stan
 Syntax error in 'incomplete1.stan', line 2, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -108,7 +187,7 @@ Syntax error in 'incomplete7.stan', line 2, column 20 to column 21, parsing erro
      3:  }
    -------------------------------------------------
 
-Expected comma-separated list of types followed by ")" to declare tuple return type.
+Expected comma-separated list of types followed by ")" to declare tuple type.
   $ ../../../../../install/default/bin/stanc onepl_expr_missing_comma.stan
 Semantic error in 'onepl_expr_missing_comma.stan', line 2, column 2 to column 23:
    -------------------------------------------------

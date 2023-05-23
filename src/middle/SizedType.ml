@@ -62,7 +62,7 @@ let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
   where this function treats the complex type as a dual number.
  {b Note}: Tuples are treated as scalars by this function due to the
   inherent assumption of rectangularity. Carefully consider new usages and
-  used [io_size] when possible.
+  use [io_size] when possible.
  *)
 let rec get_dims_io st =
   let two = Expr.Helpers.int 2 in
@@ -217,11 +217,12 @@ let rec has_mem_pattern = function
   | SArray (t, _) -> has_mem_pattern t
   | STuple subtypes -> List.exists ~f:has_mem_pattern subtypes
 
-(** NB: This is not quite the inverse of [get_array_dims]
-    you need to reverse [dims] first.
+(** The inverse of [get_array_dims]
 *)
-let rec build_sarray dims st =
-  match dims with [] -> st | d :: dims -> build_sarray dims (SArray (st, d))
+let build_sarray dims st =
+  let rec loop dims st =
+    match dims with [] -> st | d :: dims -> loop dims (SArray (st, d)) in
+  loop (List.rev dims) st
 
 let flatten_tuple_io st =
   let rec loop st =
@@ -229,7 +230,7 @@ let flatten_tuple_io st =
     | STuple subtypes -> List.concat_map ~f:loop subtypes
     | SArray _ when contains_tuple st ->
         let tupl, dims = get_array_dims st in
-        List.map ~f:(fun t -> build_sarray (List.rev dims) t) (loop tupl)
+        List.map ~f:(fun t -> build_sarray dims t) (loop tupl)
     | _ -> [st] in
   loop st
 
@@ -237,7 +238,7 @@ let%expect_test "dims" =
   let st : Expr.Typed.t t =
     SArray (SArray (SReal, Expr.Helpers.variable "N"), Expr.Helpers.one) in
   let sclr, dims = get_array_dims st in
-  let st2 = build_sarray (List.rev dims) sclr in
+  let st2 = build_sarray dims sclr in
   let open Fmt in
   pf stdout "%a = %a" (pp Expr.Typed.pp) st (pp Expr.Typed.pp) st2 ;
   [%expect {| array[array[real, N], 1] = array[array[real, N], 1] |}]

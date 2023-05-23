@@ -81,7 +81,7 @@ Semantic error in 'assign_to_loop_var7.stan', line 4, column 4 to column 8:
      6:  }
    -------------------------------------------------
 
-Too many indexes, expression dimensions=0, indexes found=1.
+Tried to index a scalar type. Expression has type real.
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices0.stan
 Semantic error in 'for_statements_bad_indices0.stan', line 5, column 20 to column 28:
    -------------------------------------------------
@@ -105,7 +105,7 @@ Semantic error in 'for_statements_bad_indices1.stan', line 5, column 20 to colum
      7:      return 0;
    -------------------------------------------------
 
-Too many indexes, expression dimensions=0, indexes found=1.
+Tried to index a scalar type. Expression has type int.
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices2.stan
 Semantic error in 'for_statements_bad_indices2.stan', line 5, column 20 to column 26:
    -------------------------------------------------

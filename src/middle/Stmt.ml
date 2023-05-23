@@ -304,16 +304,15 @@ module Helpers = struct
       match expr.pattern with
       | Var s -> Some (Fixed.Pattern.LVariable s)
       | TupleProjection (l, i) ->
-          Option.bind (lvalue_of_expr_opt l) ~f:(fun lv ->
-              Some (Fixed.Pattern.LTupleProjection (lv, i)) )
+          Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
+              Fixed.Pattern.LTupleProjection (lv, i) )
       | _ -> None in
     match expr.pattern with
     | Var s -> Some (lvariable s)
-    | Indexed (l, i) ->
-        Option.bind (lbase_of_expr_opt l) ~f:(fun lv -> Some (lv, i))
+    | Indexed (l, i) -> Option.map (lbase_of_expr_opt l) ~f:(fun lv -> (lv, i))
     | TupleProjection (l, i) ->
-        Option.bind (lvalue_of_expr_opt l) ~f:(fun lv ->
-            Some (Fixed.Pattern.LTupleProjection (lv, i), []) )
+        Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
+            (Fixed.Pattern.LTupleProjection (lv, i), []) )
     | _ -> None
 
   let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Fixed.Pattern.lvalue)

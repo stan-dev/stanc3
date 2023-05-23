@@ -5915,7 +5915,7 @@ functions_only: ARRAY LBRACK RBRACK TUPLE LPAREN WHILE
 ## ARRAY unsized_dims TUPLE LPAREN
 ##
 
-Expected comma-separated list of types followed by ")" to declare tuple return type.
+Expected comma-separated list of types followed by ")" to declare tuple type.
 
 program: TRANSFORMEDDATABLOCK LBRACE DOTNUMERAL WHILE
 ##
