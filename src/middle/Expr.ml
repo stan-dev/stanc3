@@ -221,13 +221,14 @@ module Helpers = struct
       | Var _ | TupleProjection _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
-          (* rybern: shouldn't we also handle adding an index to e.g. container literals? *)
           Common.FatalError.fatal_error_msg
             [%message "Expected Var or Indexed but found " (e : Typed.t)] in
     Fixed.{meta; pattern}
 
-  (** [add_index expression index] returns an expression that (additionally)
-      indexes into the input [expression] by [index].*)
+  (** [add_tuple_index expression index] returns an expression that (additionally)
+      projects into the input [expression] by the tuple index [index].
+      This will raise an error at runtime if [expression] does not have a tuple type.
+    *)
   let add_tuple_index e i =
     let mtype =
       match Typed.(type_of e) with
