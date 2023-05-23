@@ -33,15 +33,17 @@ module Fixed = struct
     and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
 
+    let rec pp_lvalue pp_e ppf (lbase, idcs) =
+      match lbase with
+      | LVariable v -> Fmt.pf ppf "%s%a" v (Index.pp_indices pp_e) idcs
+      | LTupleProjection (lv, ix) ->
+          Fmt.pf ppf "%a.%d%a" (pp_lvalue pp_e) lv ix (Index.pp_indices pp_e)
+            idcs
+
     let pp pp_e pp_s ppf = function
       | Assignment (lvalue, _, rhs) ->
-          let rec pp_lvalue ppf (lbase, idcs) =
-            match lbase with
-            | LVariable v -> Fmt.pf ppf "%s%a" v (Index.pp_indices pp_e) idcs
-            | LTupleProjection (lv, ix) ->
-                Fmt.pf ppf "%a.%d%a" pp_lvalue lv ix (Index.pp_indices pp_e)
-                  idcs in
-          Fmt.pf ppf "@[<hov>%a =@[<h>@ %a@];@]" pp_lvalue lvalue pp_e rhs
+          Fmt.pf ppf "@[<hov>%a =@[<h>@ %a@];@]" (pp_lvalue pp_e) lvalue pp_e
+            rhs
       | TargetPE expr -> Fmt.pf ppf "@[<h>target +=@ %a;@]" pp_e expr
       | NRFunApp (kind, args) ->
           Fmt.pf ppf "@[%a%a;@]" (Fun_kind.pp pp_e) kind
@@ -350,10 +352,39 @@ module Helpers = struct
      x.1.2[1,2][3].3 -> x.1.2
   *)
   let lvalue_base_reference (lvalue : 'e Fixed.Pattern.lvalue) =
-    let rec go (lv : 'e Fixed.Pattern.lvalue) wrap =
-      match lv with
-      | LVariable _, _ | LTupleProjection ((LVariable _, _), _), _ -> wrap lv
-      | LTupleProjection (lv, ix), idx ->
-          go lv (fun lv -> wrap (LTupleProjection (lv, ix), idx)) in
-    go lvalue Fn.id
+    let get_tuple_idxs lv =
+      let rec go lv acc =
+        match lv with
+        | Fixed.Pattern.LVariable _, _ -> acc
+        | LTupleProjection (lv, ix), _ -> go lv (ix :: acc) in
+      go lv [] in
+    let rec build_base_reference lv acc =
+      match acc with
+      | [] -> lv
+      | ix :: idxs ->
+          build_base_reference
+            (Fixed.Pattern.LTupleProjection (lv, ix), [])
+            idxs in
+    let idxs = get_tuple_idxs lvalue in
+    let base = lvariable (lhs_variable lvalue) in
+    build_base_reference base idxs
+
+  let%expect_test "lvalue base reference" =
+    let lvals =
+      [ ( Fixed.Pattern.LVariable "x"
+        , [Index.Single 1; Index.Single 2; Index.Single 3] )
+      ; (Fixed.Pattern.LTupleProjection (lvariable "x", 1), [])
+      ; (LTupleProjection (lvariable "x", 2), [Index.Single 3])
+      ; ( LTupleProjection
+            ((LTupleProjection (lvariable "x", 3), [Index.Single 4]), 5)
+        , [] ) ] in
+    let pp = Fmt.(list ~sep:comma (Fixed.Pattern.pp_lvalue int)) in
+    Fmt.(str "Before: @[<hov>%a@]" pp) lvals |> print_endline ;
+    List.map ~f:lvalue_base_reference lvals
+    |> Fmt.(str "After: @[<hov>%a@]" pp)
+    |> print_endline ;
+    [%expect
+      {|
+      Before: x[1, 2, 3], x.1, x.2[3], x.3[4].5
+      After: x, x.1, x.2, x.3.5 |}]
 end
