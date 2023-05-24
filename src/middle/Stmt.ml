@@ -69,7 +69,7 @@ module Fixed = struct
           Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
       | SList stmts -> Fmt.(list pp_s ~sep:cut |> vbox) ppf stmts
       | Decl {decl_adtype; decl_id; decl_type; _} ->
-          Fmt.pf ppf "@[<hov 2>%a@,%a@, %s;@]" UnsizedType.pp_autodifftype
+          Fmt.pf ppf "@[<hov 2>%a%a@ %s;@]" UnsizedType.pp_autodifftype
             decl_adtype (Type.pp pp_e) decl_type decl_id
 
     include Foldable.Make2 (struct

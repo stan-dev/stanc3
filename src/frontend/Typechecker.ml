@@ -855,7 +855,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
               i
             |> error
         | _ ->
-            raise_s
+            Common.FatalError.fatal_error_msg
               [%message
                 "Error in internal representation: tuple types don't match AD"]
         )
@@ -1014,7 +1014,7 @@ let rec check_lvalue cf tenv = function
               idx
             |> error
         | _ ->
-            raise_s
+            Common.FatalError.fatal_error_msg
               [%message
                 "Error in internal representation: tuple types don't match AD"]
         )

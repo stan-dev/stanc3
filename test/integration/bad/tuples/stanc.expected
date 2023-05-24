@@ -113,16 +113,20 @@ Syntax error in 'empty_tuple_type.stan', line 2, column 8 to column 9, parsing e
 Incomplete type declaration. Expected comma separated list of types between "("
 and ")" to declare tuple variable.
   $ ../../../../../install/default/bin/stanc function-mismatch1.stan
-Syntax error in 'function-mismatch1.stan', line 2, column 23 to column 27, parsing error:
+Semantic error in 'function-mismatch1.stan', line 8, column 2 to column 17:
    -------------------------------------------------
-     1:  functions {
-     2:    void foo(tuple(real, data real) x) {
-                                ^
-     3:      print(x.1);
-     4:    }
+     6:  
+     7:  model {
+     8:    foo((1, 2, 3));
+           ^
+     9:  }
    -------------------------------------------------
 
-Expected comma-separated list of types followed by ")" to declare tuple type.
+Ill-typed arguments supplied to function 'foo':
+(tuple(int, int, int))
+Available signatures:
+(tuple(real, real)) => void
+  The first argument must be tuple(real, real) but got tuple(int, int, int)
   $ ../../../../../install/default/bin/stanc incomplete1.stan
 Syntax error in 'incomplete1.stan', line 2, column 30 to column 35, parsing error:
    -------------------------------------------------

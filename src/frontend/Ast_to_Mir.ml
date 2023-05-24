@@ -239,8 +239,7 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 
 (** These types signal the context for a declaration during statement translation.
    They are only interpreted by trans_decl.*)
-type transform_action = Check | Constrain | Unconstrain | IgnoreTransform
-[@@deriving sexp]
+type transform_action = Check | Constrain | IgnoreTransform [@@deriving sexp]
 
 type decl_context =
   {transform_action: transform_action; dadlevel: UnsizedType.autodifftype}
@@ -433,7 +432,7 @@ let check_sizedtype name st =
 let var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
     type_ =
   match (dconstrain, type_) with
-  | (Some Constrain | Some Unconstrain), Type.Sized _ ->
+  | Some Constrain, Type.Sized _ ->
       check_transform_shape decl_id decl_var loc trans
   | Some Check, Type.Sized st ->
       check_transform_shape decl_id decl_var loc trans

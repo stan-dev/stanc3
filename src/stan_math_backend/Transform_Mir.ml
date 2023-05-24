@@ -278,30 +278,29 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
     Stmt.Fixed.Pattern.Assignment
       (Stmt.Helpers.lvariable enclosing_tuple_pos, UInt, type_size)
     |> swrap in
-  match unsized with
-  | UInt | UReal | UComplex ->
+  match st with
+  | SInt | SReal | SComplex ->
       [Assignment (decl_id_lval, unsized, origin) |> swrap; incr_tuple_pos]
-  | UArray UInt | UArray UReal ->
+  | SArray ((SInt | SReal), _) ->
       [Assignment (decl_id_lval, flat_type, origin) |> swrap; incr_tuple_pos]
-  | UTuple _ ->
-      let get_subtypes = match st with STuple subs -> subs | _ -> [] in
+  | STuple subtypes ->
       let elements =
         List.mapi
           ~f:(fun iter x ->
             ( (Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1), [])
             , smeta
             , x ) )
-          get_subtypes in
+          subtypes in
       let enclosing_names =
         List.mapi
           ~f:(fun i _ -> enclosing_tuple_name ^ "." ^ string_of_int (i + 1))
-          get_subtypes in
+          subtypes in
       List.map2_exn
         ~f:(fun name projection ->
           var_context_read_inside_tuple name origin_type projection )
         enclosing_names elements
       |> List.concat
-  | UArray _ when UnsizedType.contains_tuple unsized ->
+  | SArray _ when SizedType.contains_tuple st ->
       let tupl, dims = SizedType.get_array_dims st in
       let tuple_component_names, tuple_types =
         match tupl with
@@ -360,11 +359,8 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                       @ final_assignment loopvars ) } )
             smeta ] in
       [Block (temps @ loop) |> swrap]
-  | UFun _ | UMathLibraryFunction ->
-      Common.FatalError.fatal_error_msg
-        [%message "Cannot read a function type."]
-  | UVector | URowVector | UMatrix | UComplexMatrix | UComplexRowVector
-   |UComplexVector | UArray _ ->
+  | SVector _ | SRowVector _ | SMatrix _ | SComplexMatrix _
+   |SComplexRowVector _ | SComplexVector _ | SArray _ ->
       let decl, assign, flat_var =
         let decl_id_flat = flat_name decl_id in
         ( Stmt.Fixed.Pattern.Decl
@@ -404,7 +400,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
           ]
         |> swrap ]
 
-let rec var_context_read ?origin ?name
+let rec var_context_read
     ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), smeta, st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
@@ -418,41 +414,30 @@ let rec var_context_read ?origin ?name
   let pos_var = {Expr.Fixed.pattern= Var pos; meta= Expr.Typed.Meta.empty} in
   let flat_name decl_id = munge_tuple_name decl_id ^ "_flat__" in
   let readfnapp decl_id flat_type =
-    match origin with
-    | Some expr -> expr
-    | None ->
-        Expr.Helpers.internal_funapp FnReadData
-          [ { decl_var with
-              pattern=
-                Lit (Str, remove_prefix (Option.value name ~default:decl_id)) }
-          ]
-          Expr.Typed.Meta.{decl_var.meta with type_= flat_type} in
-  match unsized with
-  | UInt | UReal | UComplex ->
+    Expr.Helpers.internal_funapp FnReadData
+      [{decl_var with pattern= Lit (Str, remove_prefix decl_id)}]
+      Expr.Typed.Meta.{decl_var.meta with type_= flat_type} in
+  match st with
+  | SInt | SReal | SComplex ->
       let e =
-        match origin with
-        | Some expr -> expr
-        | None ->
-            { Expr.Fixed.pattern=
-                Indexed
-                  ( readfnapp decl_id flat_type
-                  , [Single Expr.Helpers.loop_bottom] )
-            ; meta= {decl_var.meta with type_= unsized} } in
+        { Expr.Fixed.pattern=
+            Indexed
+              (readfnapp decl_id flat_type, [Single Expr.Helpers.loop_bottom])
+        ; meta= {decl_var.meta with type_= unsized} } in
       [Assignment (decl_id_lval, unsized, e) |> swrap]
-  | UArray UInt | UArray UReal ->
+  | SArray ((SInt | SReal), _) ->
       [ Assignment (decl_id_lval, flat_type, readfnapp decl_id flat_type)
         |> swrap ]
-  | UTuple _ ->
-      let get_subtypes = match st with STuple subs -> subs | _ -> [] in
+  | STuple subtypes ->
       let sub_sts =
         List.mapi
           ~f:(fun iter x ->
             ( (Stmt.Fixed.Pattern.LTupleProjection (decl_id_lval, iter + 1), [])
             , smeta
             , x ) )
-          get_subtypes in
+          subtypes in
       List.concat_map ~f:var_context_read sub_sts
-  | UArray _ when UnsizedType.contains_tuple unsized ->
+  | SArray _ when SizedType.contains_tuple st ->
       (* The IO format for tuples is complicated in this case.
          Therefore, we need to do the following
          1. Make "_flat__" decls for everything
@@ -509,7 +494,7 @@ let rec var_context_read ?origin ?name
                 ~f:(fun i _ -> decl_id ^ "." ^ string_of_int (i + 1))
                 subtypes
             , subtypes )
-        | _ -> ([], []) in
+        | _ -> (* impossible by above pattern patch *) ([], []) in
       let temps =
         List.map2_exn
           ~f:(fun name t ->
@@ -558,11 +543,8 @@ let rec var_context_read ?origin ?name
                       @ final_assignment loopvars ) } )
             smeta ] in
       [Block (flat_decls @ temps @ loop) |> swrap]
-  | UFun _ | UMathLibraryFunction ->
-      Common.FatalError.fatal_error_msg
-        [%message "Cannot read a function type."]
-  | UVector | URowVector | UMatrix | UComplexMatrix | UComplexRowVector
-   |UComplexVector | UArray _ ->
+  | SVector _ | SRowVector _ | SMatrix _ | SComplexMatrix _
+   |SComplexRowVector _ | SComplexVector _ | SArray _ ->
       let decl, assign, flat_var =
         let decl_id_flat = flat_name decl_id in
         ( Stmt.Fixed.Pattern.Decl

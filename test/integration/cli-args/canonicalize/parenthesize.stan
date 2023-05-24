@@ -11,10 +11,12 @@ parameters {
 model {
   matrix[N - 3, 4] n;
   row_vector[N] v = (((1.0) + (m))')[1];
+
+  v = ([(1), ((2)), (((3)))]);
   for (i in (1) : (N - 3)) {
     n[i] = (m[i : (i + 3), (((i)))]');
   }
-  if (((b < x) && (x < 1)))
+  if (((b < x) && (!(x < 1))))
     (x + 4) ~ normal(0, (1 + 1)) T[0, (8)];
 
   real y_raw;

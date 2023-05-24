@@ -54,8 +54,6 @@ let rec to_unsized = function
   | SArray (t, _) -> UArray (to_unsized t)
   | STuple subtypes -> UTuple (List.map ~f:to_unsized subtypes)
 
-let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
-
 (**
  Get the dimensions with respect to sizes needed for IO.
  {b Note}: The main difference from get_dims is complex,
