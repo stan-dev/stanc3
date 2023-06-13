@@ -824,7 +824,7 @@ let param_unconstrained_serializer_write
             subtypes in
         List.concat_map ~f:write elements
     | _ when SizedType.is_recursive_container st ->
-        let nonarray_st, array_dims = SizedType.get_scalar_dims st in
+        let nonarray_st, array_dims = SizedType.get_scalar_and_dims st in
         [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
             (fun loopvars ->
               Stmt.Fixed.
@@ -891,7 +891,7 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
             subtypes in
         List.concat_map ~f:read elements
     | _ when SizedType.contains_tuple st ->
-        let tupl, array_dims = SizedType.get_scalar_dims st in
+        let tupl, array_dims = SizedType.get_scalar_and_dims st in
         [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
             (fun loopvars ->
               Stmt.Fixed.
@@ -909,7 +909,7 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
             smeta ]
     | _ when SizedType.is_recursive_container st ->
         (* non-tuple containing array *)
-        let nonarray_st, array_dims = SizedType.get_scalar_dims st in
+        let nonarray_st, array_dims = SizedType.get_scalar_and_dims st in
         [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
             (fun loopvars ->
               let assign_lval =

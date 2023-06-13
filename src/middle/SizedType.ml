@@ -134,8 +134,11 @@ let rec get_array_dims st =
       let st', dims = get_array_dims st in
       (st', dim :: dims)
 
-(** Differs from [get_array_dims] in that this also breaks down vectors or matrices *)
-let rec get_scalar_dims st =
+(** Return a type's dimensions and inner scalar.
+    Differs from [get_array_dims] in that this also breaks down vectors or matrices, so
+    a [SVector d] is returned as [(SReal, [d])] rather than [(SVector d, [])]
+  *)
+let rec get_scalar_and_dims st =
   match st with
   | SInt | SReal | SComplex | STuple _ -> (st, [])
   | SVector (_, d) | SRowVector (_, d) | SComplexVector d | SComplexRowVector d
@@ -143,7 +146,7 @@ let rec get_scalar_dims st =
       (st, [d])
   | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) -> (st, [d1; d2])
   | SArray (st, dim) ->
-      let st', dims = get_scalar_dims st in
+      let st', dims = get_scalar_and_dims st in
       (st', dim :: dims)
 
 let rec internal_scalar st =
