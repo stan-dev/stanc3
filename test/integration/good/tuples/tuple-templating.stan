@@ -1,5 +1,5 @@
 functions {
-  void foo(tuple(matrix,) test) {
+  void foo(tuple(matrix,int) test) {
     print(test.1);
   }
 
@@ -7,7 +7,7 @@ functions {
     return sum(s.2);
   }
 
-  void foo2(array[] tuple(matrix,) test) {
+  void foo2(array[] tuple(matrix,int) test) {
     print(test[1].1);
   }
 
@@ -29,11 +29,11 @@ data {
 }
 generated quantities {
   // eigen expression inside tuple
-  foo((m1 + m2,));
+  foo((m1 + m2,1));
   // different types inside tuple
   real s = tsum((a1, a2));
   // eigen expression inside tuple inside array
-  foo2({(m1 + m2,)});
+  foo2({(m1 + m2,1)});
 
   // a whole bunch of painful
   overly_complicated(({m1 + m2}, (1, m1), 3.5), {(1, m1), (2, m2)});

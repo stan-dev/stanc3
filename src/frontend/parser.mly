@@ -274,7 +274,7 @@ unsized_type:
     { t }
 
 %inline unsized_tuple_type:
-  | TUPLE LPAREN hd=unsized_type COMMA ts=separated_list(COMMA, unsized_type) RPAREN
+  | TUPLE LPAREN hd=unsized_type COMMA ts=separated_nonempty_list(COMMA, unsized_type) RPAREN
     {  UnsizedType.UTuple (hd::ts)
     }
 
@@ -400,7 +400,7 @@ array_type(type_rule):
   }
 
 tuple_type(type_rule):
-  | TUPLE LPAREN head=higher_type(type_rule) COMMA rest=separated_list(COMMA, higher_type(type_rule)) RPAREN
+  | TUPLE LPAREN head=higher_type(type_rule) COMMA rest=separated_nonempty_list(COMMA, higher_type(type_rule)) RPAREN
   { grammar_logger "tuple_type" ;
     let ts = head::rest in
     let types, trans = List.unzip ts in
@@ -645,7 +645,7 @@ common_expression:
     {  grammar_logger ("imagnumeral " ^ z) ; ImagNumeral (String.drop_suffix z 1) }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
-   | LPAREN x_head=expression COMMA xs=separated_list(COMMA, expression) RPAREN
+   | LPAREN x_head=expression COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
     {  grammar_logger "tuple_expression" ; TupleExpr (x_head::xs)  }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }

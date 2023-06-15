@@ -11673,77 +11673,6 @@
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters) (out_trans Identity)))))
  (prog_name infer_tuple_ad_model) (prog_path infer_tuple_ad.stan))
-  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir onepl.stan
-((functions_block
-  (((fdrt Void) (fdname foo) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable x (UTuple (UReal)))))
-    (fdbody
-     (((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
-       (meta <opaque>))))
-    (fdloc <opaque>))))
- (input_vars ())
- (prepare_data
-  (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment ((LVariable pos__) ()) UInt
-      ((pattern (Lit Int 1))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
-     (Decl (decl_adtype (TupleAD (DataOnly))) (decl_id x)
-      (decl_type (Sized (STuple (SReal)))) (initialize true)))
-    (meta <opaque>))
-   ((pattern
-     (Assignment ((LVariable x) ()) (UTuple (UReal))
-      ((pattern
-        (FunApp (CompilerInternal FnMakeTuple)
-         (((pattern (Lit Real 3.5))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta
-        ((type_ (UTuple (UReal))) (loc <opaque>)
-         (adlevel (TupleAD (DataOnly))))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (UserDefined foo FnPlain)
-      (((pattern (Var x))
-        (meta
-         ((type_ (UTuple (UReal))) (loc <opaque>)
-          (adlevel (TupleAD (DataOnly)))))))))
-    (meta <opaque>))))
- (log_prob ()) (reverse_mode_log_prob ())
- (generate_quantities
-  (((pattern
-     (IfElse
-      ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
-         (((pattern
-            (EOr
-             ((pattern (Var emit_transformed_parameters__))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Var emit_generated_quantities__))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
-       (meta <opaque>))
-      ()))
-    (meta <opaque>))
-   ((pattern
-     (IfElse
-      ((pattern
-        (FunApp (StanLib PNot__ FnPlain AoS)
-         (((pattern (Var emit_generated_quantities__))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
-       (meta <opaque>))
-      ()))
-    (meta <opaque>))))
- (transform_inits ()) (unconstrain_array ()) (output_vars ())
- (prog_name onepl_model) (prog_path onepl.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
@@ -20514,7 +20443,7 @@
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-templating.stan
 ((functions_block
   (((fdrt Void) (fdname foo) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable test (UTuple (UMatrix)))))
+    (fdargs ((AutoDiffable test (UTuple (UMatrix UInt)))))
     (fdbody
      (((pattern
         (Block
@@ -20524,8 +20453,8 @@
                 (TupleProjection
                  ((pattern (Var test))
                   (meta
-                   ((type_ (UTuple (UMatrix))) (loc <opaque>)
-                    (adlevel (TupleAD (AutoDiffable))))))
+                   ((type_ (UTuple (UMatrix UInt))) (loc <opaque>)
+                    (adlevel (TupleAD (AutoDiffable DataOnly))))))
                  1))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
@@ -20556,7 +20485,7 @@
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt Void) (fdname foo2) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable test (UArray (UTuple (UMatrix))))))
+    (fdargs ((AutoDiffable test (UArray (UTuple (UMatrix UInt))))))
     (fdbody
      (((pattern
         (Block
@@ -20568,15 +20497,15 @@
                    (Indexed
                     ((pattern (Var test))
                      (meta
-                      ((type_ (UArray (UTuple (UMatrix)))) (loc <opaque>)
-                       (adlevel AutoDiffable))))
+                      ((type_ (UArray (UTuple (UMatrix UInt))))
+                       (loc <opaque>) (adlevel AutoDiffable))))
                     ((Single
                       ((pattern (Lit Int 1))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                   (meta
-                   ((type_ (UTuple (UMatrix))) (loc <opaque>)
-                    (adlevel (TupleAD (AutoDiffable))))))
+                   ((type_ (UTuple (UMatrix UInt))) (loc <opaque>)
+                    (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
                  1))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
@@ -21041,10 +20970,12 @@
                 (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                ((pattern (Var m2))
                 (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta
-         ((type_ (UTuple (UMatrix))) (loc <opaque>)
-          (adlevel (TupleAD (DataOnly)))))))))
+         ((type_ (UTuple (UMatrix UInt))) (loc <opaque>)
+          (adlevel (TupleAD (DataOnly DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id s) (decl_type (Sized SReal))
@@ -21081,13 +21012,15 @@
                    ((pattern (Var m2))
                     (meta
                      ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
-                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
             (meta
-             ((type_ (UTuple (UMatrix))) (loc <opaque>)
-              (adlevel (TupleAD (DataOnly)))))))))
+             ((type_ (UTuple (UMatrix UInt))) (loc <opaque>)
+              (adlevel (TupleAD (DataOnly DataOnly)))))))))
         (meta
-         ((type_ (UArray (UTuple (UMatrix)))) (loc <opaque>)
-          (adlevel (TupleAD (DataOnly)))))))))
+         ((type_ (UArray (UTuple (UMatrix UInt)))) (loc <opaque>)
+          (adlevel (TupleAD (DataOnly DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (UserDefined overly_complicated FnPlain)

@@ -192,17 +192,37 @@ Syntax error in 'incomplete7.stan', line 2, column 20 to column 21, parsing erro
    -------------------------------------------------
 
 Expected comma-separated list of types followed by ")" to declare tuple type.
-  $ ../../../../../install/default/bin/stanc onepl_expr_missing_comma.stan
-Semantic error in 'onepl_expr_missing_comma.stan', line 2, column 2 to column 23:
+  $ ../../../../../install/default/bin/stanc onepl_expr.stan
+Syntax error in 'onepl_expr.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  model {
-     2:    tuple(real,) y = (1);
-           ^
+     2:    print((3.5,));
+                      ^
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type tuple(
-real,) and rhs has type int
+Expression or comma separated list of expressions followed by ")" expected after "(".
+  $ ../../../../../install/default/bin/stanc onepl_type.stan
+Syntax error in 'onepl_type.stan', line 2, column 22 to column 23, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:    void foo(tuple(real,) x) {
+                               ^
+     3:      return;
+     4:    }
+   -------------------------------------------------
+
+Expected comma-separated list of types followed by ")" to declare tuple type.
+  $ ../../../../../install/default/bin/stanc onepl_type2.stan
+Syntax error in 'onepl_type2.stan', line 2, column 13 to column 14, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    tuple(real,) x;
+                      ^
+     3:  }
+   -------------------------------------------------
+
+Incomplete type specification, expected further types followed by ")" to complete tuple.
   $ ../../../../../install/default/bin/stanc onepl_type_missing_comma.stan
 Syntax error in 'onepl_type_missing_comma.stan', line 2, column 12 to column 13, parsing error:
    -------------------------------------------------
