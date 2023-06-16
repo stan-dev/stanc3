@@ -57,8 +57,9 @@ let context block =
   ; loop_depth= 0 }
 
 let rec calculate_autodifftype cf origin ut =
+  let ut, _ = UnsizedType.unwind_array_type ut in
   match (origin, ut) with
-  | _, UnsizedType.UTuple ts ->
+  | _, UTuple ts ->
       UnsizedType.TupleAD (List.map ~f:(calculate_autodifftype cf origin) ts)
   | Env.(Param | TParam | Model | Functions), _
     when not (UnsizedType.is_discrete_type ut || cf.current_block = GQuant) ->

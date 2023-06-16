@@ -118,8 +118,12 @@ let promote_inner (exp : Ast.typed_expression) prom =
           let type_ = UnsizedType.wind_array_type (type_, size) in
           { expr= Promotion (exp, prom_type, ad_level)
           ; emeta= {emeta with type_; ad_level} }
-      | _ -> exp
-      (* TUPLE MAYBE: PROMOTION *) )
+      | _ ->
+          Common.FatalError.fatal_error_msg
+            [%message
+              "Tuple promotion on non-tuple"
+                (exp : Ast.typed_expression)
+                (prom : t)] )
   | _ -> exp
 
 let rec promote (exp : Ast.typed_expression) prom =

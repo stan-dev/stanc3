@@ -1150,8 +1150,8 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
     match mir_node with
     | Assignment (lval, _, e)
-      when Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e)
-           = AutoDiffable ->
+      when UnsizedType.is_autodifftype
+           @@ Expr.Typed.adlevel_of (update_expr_ad_levels ad_variables e) ->
         Set.Poly.singleton (Stmt.Helpers.lhs_variable lval)
     | _ -> Set.Poly.empty in
   let global_initial_ad_variables =

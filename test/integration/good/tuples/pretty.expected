@@ -86,6 +86,14 @@ model {
   target += foo(d);
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-foreach.stan
+transformed data {
+  array[100] tuple(real, real) arr;
+  for (t in arr) {
+    
+  }
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format tuple-full.stan
 data {
   tuple(int<lower=0, upper=1>, tuple(array[2] int, array[2] int)) ds;

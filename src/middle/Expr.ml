@@ -153,7 +153,7 @@ module Helpers = struct
     { Fixed.meta=
         { Typed.Meta.empty with
           type_
-        ; adlevel= UnsizedType.fill_adtype_for_type DataOnly type_ }
+        ; adlevel= TupleAD (List.map ~f:Typed.adlevel_of l) }
     ; pattern= FunApp (CompilerInternal FnMakeTuple, l) }
 
   let try_unpack e =
