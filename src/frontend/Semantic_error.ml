@@ -16,6 +16,8 @@ module TypeError = struct
     | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
     | IllTypedAssignment of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
+    | IllTypedReduceSumNotArray of UnsizedType.t
+    | IllTypedReduceSumSlice of UnsizedType.t
     | IllTypedReduceSum of
         string
         * UnsizedType.t list
@@ -120,6 +122,17 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
+    | IllTypedReduceSumNotArray ty ->
+      Fmt.pf ppf "The second argument to reduce_sum must be an array but found %a" UnsizedType.pp ty
+    | IllTypedReduceSumSlice ty ->
+        let rec pp ppf = function
+          | [] -> Fmt.pf ppf "<error>"
+          | [t] -> UnsizedType.pp ppf t
+          | [t1; t2] ->
+              Fmt.pf ppf "%a, or %a" UnsizedType.pp t1 UnsizedType.pp t2
+          | t :: ts -> Fmt.pf ppf "%a, %a" UnsizedType.pp t pp ts in
+        Fmt.pf ppf "The inner type in reduce_sum array must be %a but found %a"
+          pp Stan_math_signatures.reduce_sum_slice_types UnsizedType.pp ty
     | IllTypedReduceSum (name, arg_tys, expected_args, error) ->
         SignatureMismatch.pp_signature_mismatch ppf
           (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
@@ -527,6 +540,12 @@ let illtyped_ternary_if loc predt lt rt =
 
 let returning_fn_expected_nonreturning_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
+
+let illtyped_reduce_sum_not_array loc ty =
+  TypeError (loc, TypeError.IllTypedReduceSumNotArray ty)
+
+let illtyped_reduce_sum_slice loc ty =
+  TypeError (loc, TypeError.IllTypedReduceSumSlice ty)
 
 let illtyped_reduce_sum loc name arg_tys args error =
   TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args, error))
