@@ -123,7 +123,9 @@ module TypeError = struct
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
     | IllTypedReduceSumNotArray ty ->
-      Fmt.pf ppf "The second argument to reduce_sum must be an array but found %a" UnsizedType.pp ty
+        Fmt.pf ppf
+          "The second argument to reduce_sum must be an array but found %a"
+          UnsizedType.pp ty
     | IllTypedReduceSumSlice ty ->
         let rec pp ppf = function
           | [] -> Fmt.pf ppf "<error>"

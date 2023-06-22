@@ -609,9 +609,9 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
   | {expr= Variable fname; _}
     :: ({emeta= {type_= slice_type; _}; _} :: _ as remaining_es) -> (
       let slice_type, n = UnsizedType.unwind_array_type slice_type in
-      if n = 0 then (
+      if n = 0 then
         Semantic_error.illtyped_reduce_sum_not_array loc slice_type |> error
-      ) else if 
+      else if
         not
         @@ List.mem Stan_math_signatures.reduce_sum_slice_types slice_type
              ~equal:( = )
