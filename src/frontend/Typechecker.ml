@@ -594,14 +594,8 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
       mandatory_fun_args UReal (get_arg_types tes) in
   let matching remaining_es fn =
     match fn with
-    | Env.
-        { type_=
-            UnsizedType.UFun
-              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _, _) as
-            ftype
-        ; _ }
-      when List.mem Stan_math_signatures.reduce_sum_slice_types
-             sliced_arg_fun_type ~equal:( = ) ->
+    | Env.{type_= UnsizedType.UFun (sliced_arg_fun :: _, _, _, _) as ftype; _}
+      ->
         let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
         let mandatory_fun_args =
           [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)] in
@@ -612,22 +606,31 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
           mandatory_fun_args UReal arg_types
     | _ -> basic_mismatch () in
   match tes with
-  | {expr= Variable fname; _} :: remaining_es -> (
-    match find_matching_first_order_fn tenv (matching remaining_es) fname with
-    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
-        (* a valid signature exists *)
-        let tes = make_function_variable cf loc fname ftype :: remaining_es in
-        mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id
-          (Promotion.promote_list tes promotions)
-          ~type_:UnsizedType.UReal
-    | AmbiguousMatch ps ->
-        Semantic_error.ambiguous_function_promotion loc fname.name None ps
-        |> error
-    | SignatureErrors (expected_args, err) ->
-        Semantic_error.illtyped_reduce_sum loc id.name
-          (List.map ~f:type_of_expr_typed tes)
-          expected_args err
-        |> error )
+  | {expr= Variable fname; _}
+    :: ({emeta= {type_= slice_type; _}; _} :: _ as remaining_es) -> (
+      let slice_type, n = UnsizedType.unwind_array_type slice_type in
+      if n = 0 then
+        Semantic_error.illtyped_reduce_sum_not_array loc slice_type |> error
+      else if
+        not
+        @@ List.mem Stan_math_signatures.reduce_sum_slice_types slice_type
+             ~equal:( = )
+      then Semantic_error.illtyped_reduce_sum_slice loc slice_type |> error ;
+      match find_matching_first_order_fn tenv (matching remaining_es) fname with
+      | SignatureMismatch.UniqueMatch (ftype, promotions) ->
+          (* a valid signature exists *)
+          let tes = make_function_variable cf loc fname ftype :: remaining_es in
+          mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id
+            (Promotion.promote_list tes promotions)
+            ~type_:UnsizedType.UReal
+      | AmbiguousMatch ps ->
+          Semantic_error.ambiguous_function_promotion loc fname.name None ps
+          |> error
+      | SignatureErrors (expected_args, err) ->
+          Semantic_error.illtyped_reduce_sum loc id.name
+            (List.map ~f:type_of_expr_typed tes)
+            expected_args err
+          |> error )
   | _ ->
       let expected_args, err =
         basic_mismatch () |> Result.error |> Option.value_exn in

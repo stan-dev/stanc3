@@ -9,5 +9,5 @@ parameters {
 }
 
 model {
-  target += reduce_sum_static(my_func, a, 1, 0.0);
+  target += reduce_sum_static(my_func, a, 1, 0.0, 1.0);
 }
