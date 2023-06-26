@@ -7319,10 +7319,9 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         current_statement__ = 15;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym2__ =
-          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
-            DUMMY_VAR__);
+        Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_chi_sym2__ =
+          Eigen::Matrix<double,-1,-1>::Constant(nind, n_occasions,
+            std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 24;
         if (lcm_sym46__) {
           current_statement__ = 17;
@@ -14808,8 +14807,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       int lcm_sym70__;
       double lcm_sym69__;
       double lcm_sym68__;
-      local_scalar_t__ lcm_sym67__;
-      local_scalar_t__ lcm_sym66__;
+      double lcm_sym67__;
+      double lcm_sym66__;
       double lcm_sym65__;
       double lcm_sym64__;
       double lcm_sym63__;
@@ -14953,10 +14952,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         current_statement__ = 19;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym2__ =
-          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
-            DUMMY_VAR__);
+        Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_chi_sym2__ =
+          Eigen::Matrix<double,-1,-1>::Constant(nind, n_occasions,
+            std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 28;
         if (lcm_sym46__) {
           current_statement__ = 21;
@@ -18490,7 +18488,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     try {
       int lcm_sym184__;
       int lcm_sym183__;
-      local_scalar_t__ lcm_sym182__;
+      double lcm_sym182__;
       int lcm_sym181__;
       int lcm_sym180__;
       int lcm_sym179__;
@@ -18665,10 +18663,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 29;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           lcm_sym158__);
-        Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym4__ =
-          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(lcm_sym167__,
-            lcm_sym158__, DUMMY_VAR__);
+        Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_chi_sym4__ =
+          Eigen::Matrix<double,-1,-1>::Constant(lcm_sym167__, lcm_sym158__,
+            std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 38;
         if (stan::math::logical_gte(lcm_sym167__, 1)) {
           current_statement__ = 31;
@@ -23267,10 +23264,9 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         current_statement__ = 15;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym2__ =
-          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
-            DUMMY_VAR__);
+        Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_chi_sym2__ =
+          Eigen::Matrix<double,-1,-1>::Constant(nind, n_occasions,
+            std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 24;
         if (lcm_sym46__) {
           current_statement__ = 17;
@@ -24367,16 +24363,15 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         stan::model::assign(lcm_sym41__, stan::math::rep_vector(0.0, N),
           "assigning variable lcm_sym41__");
         double out = std::numeric_limits<double>::quiet_NaN();
-        local_scalar_t__ inline_summer_return_sym15__;
+        double inline_summer_return_sym15__;
         {
           int inline_summer_N_sym16__ = std::numeric_limits<int>::min();
           lcm_sym42__ = stan::math::size(lcm_sym41__);
-          local_scalar_t__ inline_summer_running_sum_sym17__;
+          double inline_summer_running_sum_sym17__;
           inline_summer_running_sum_sym17__ = 0;
           current_statement__ = 9;
           if (stan::math::logical_gte(lcm_sym42__, 1)) {
-            local_scalar_t__
-              inline_summer_inline_do_something_return_sym4___sym18__;
+            double inline_summer_inline_do_something_return_sym4___sym18__;
             int
               inline_summer_inline_do_something_early_ret_check_sym5___sym19__ =
               std::numeric_limits<int>::min();
@@ -24394,8 +24389,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
               inline_summer_inline_do_something_return_sym4___sym18__);
             for (int inline_summer_n_sym21__ = 2; inline_summer_n_sym21__ <=
                  lcm_sym42__; ++inline_summer_n_sym21__) {
-              local_scalar_t__
-                inline_summer_inline_do_something_return_sym4___sym18__;
+              double inline_summer_inline_do_something_return_sym4___sym18__;
               int
                 inline_summer_inline_do_something_early_ret_check_sym5___sym19__ =
                 std::numeric_limits<int>::min();
@@ -24463,16 +24457,15 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
         stan::model::assign(lcm_sym33__, stan::math::rep_vector(0.0, N),
           "assigning variable lcm_sym33__");
         double out = std::numeric_limits<double>::quiet_NaN();
-        local_scalar_t__ inline_summer_return_sym7__;
+        double inline_summer_return_sym7__;
         {
           int inline_summer_N_sym8__ = std::numeric_limits<int>::min();
           lcm_sym34__ = stan::math::size(lcm_sym33__);
-          local_scalar_t__ inline_summer_running_sum_sym9__;
+          double inline_summer_running_sum_sym9__;
           inline_summer_running_sum_sym9__ = 0;
           current_statement__ = 9;
           if (stan::math::logical_gte(lcm_sym34__, 1)) {
-            local_scalar_t__
-              inline_summer_inline_do_something_return_sym4___sym10__;
+            double inline_summer_inline_do_something_return_sym4___sym10__;
             int
               inline_summer_inline_do_something_early_ret_check_sym5___sym11__ =
               std::numeric_limits<int>::min();
@@ -24490,8 +24483,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
               inline_summer_inline_do_something_return_sym4___sym10__);
             for (int inline_summer_n_sym13__ = 2; inline_summer_n_sym13__ <=
                  lcm_sym34__; ++inline_summer_n_sym13__) {
-              local_scalar_t__
-                inline_summer_inline_do_something_return_sym4___sym10__;
+              double inline_summer_inline_do_something_return_sym4___sym10__;
               int
                 inline_summer_inline_do_something_early_ret_check_sym5___sym11__ =
                 std::numeric_limits<int>::min();
@@ -24947,7 +24939,7 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> lcm_sym12__;
+      Eigen::Matrix<double,-1,1> lcm_sym12__;
       double lcm_sym11__;
       double lcm_sym10__;
       double lcm_sym9__;
@@ -30037,8 +30029,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       int lcm_sym187__;
       Eigen::Matrix<double,-1,-1> lcm_sym186__;
       std::vector<std::vector<int>> lcm_sym185__;
-      local_scalar_t__ lcm_sym184__;
-      local_scalar_t__ lcm_sym183__;
+      double lcm_sym184__;
+      double lcm_sym183__;
       double lcm_sym182__;
       double lcm_sym181__;
       double lcm_sym180__;
@@ -30169,10 +30161,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 22;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           lcm_sym173__);
-        Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym4__ =
-          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(lcm_sym188__,
-            lcm_sym173__, DUMMY_VAR__);
+        Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_chi_sym4__ =
+          Eigen::Matrix<double,-1,-1>::Constant(lcm_sym188__, lcm_sym173__,
+            std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 31;
         if (stan::math::logical_gte(lcm_sym188__, 1)) {
           current_statement__ = 24;
@@ -30452,12 +30443,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           current_statement__ = 45;
           stan::math::validate_non_negative_index("log_cprob", "N",
             lcm_sym187__);
-          Eigen::Matrix<local_scalar_t__,-1,1>
-            inline_seq_cprob_log_cprob_sym12__ =
-            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(lcm_sym187__,
-              DUMMY_VAR__);
-          local_scalar_t__ inline_seq_cprob_log_residual_prob_sym13__ =
-            DUMMY_VAR__;
+          Eigen::Matrix<double,-1,1> inline_seq_cprob_log_cprob_sym12__ =
+            Eigen::Matrix<double,-1,1>::Constant(lcm_sym187__,
+              std::numeric_limits<double>::quiet_NaN());
+          double inline_seq_cprob_log_residual_prob_sym13__ =
+            std::numeric_limits<double>::quiet_NaN();
           current_statement__ = 51;
           if (stan::math::logical_gte(lcm_sym187__, 1)) {
             lcm_sym172__ = stan::model::rvalue(gamma, "gamma",
@@ -33662,10 +33652,9 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
         current_statement__ = 15;
         stan::math::validate_non_negative_index("chi", "n_occasions",
           n_occasions);
-        Eigen::Matrix<local_scalar_t__,-1,-1>
-          inline_prob_uncaptured_chi_sym2__ =
-          Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(nind, n_occasions,
-            DUMMY_VAR__);
+        Eigen::Matrix<double,-1,-1> inline_prob_uncaptured_chi_sym2__ =
+          Eigen::Matrix<double,-1,-1>::Constant(nind, n_occasions,
+            std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 24;
         if (lcm_sym42__) {
           current_statement__ = 17;
@@ -45281,9 +45270,10 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       local_scalar_t__ param;
       current_statement__ = 1;
       param = in__.template read<local_scalar_t__>();
-      std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> local =
-        std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(2,
-          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__));
+      std::vector<Eigen::Matrix<double,-1,1>> local =
+        std::vector<Eigen::Matrix<double,-1,1>>(2,
+          Eigen::Matrix<double,-1,1>::Constant(5,
+            std::numeric_limits<double>::quiet_NaN()));
       stan::model::assign(lcm_sym22__,
         stan::math::rep_array(stan::math::zeros_vector(5), 2),
         "assigning variable lcm_sym22__");
@@ -45403,10 +45393,9 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       current_statement__ = 1;
       param = in__.template read<local_scalar_t__>();
       std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>> local =
-        std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>>(2,
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(5,
-                                                              std::numeric_limits<double>::quiet_NaN(
-                                                                ))));
+        std::vector<Eigen::Matrix<double,-1,1>>(2,
+          Eigen::Matrix<double,-1,1>::Constant(5,
+            std::numeric_limits<double>::quiet_NaN()));
       stan::model::assign(lcm_sym16__,
         stan::math::rep_array(stan::math::zeros_vector(5), 2),
         "assigning variable lcm_sym16__");

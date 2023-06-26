@@ -374,15 +374,16 @@ and idx_depth i =
   | Single e | Upfrom e | MultiIndex e -> expr_depth e
   | Between (e1, e2) -> max (expr_depth e1) (expr_depth e2)
 
-let ad_level_sup l =
-  if
-    List.exists l ~f:(fun x ->
-        UnsizedType.is_autodifftype @@ Expr.Typed.adlevel_of x )
-  then UnsizedType.AutoDiffable
-  else DataOnly
-
 let rec update_expr_ad_levels autodiffable_variables
     (Expr.Fixed.{pattern; _} as e) =
+  let max_adlevel l =
+    let base =
+      if
+        List.exists l ~f:(fun x ->
+            UnsizedType.is_autodifftype @@ Expr.Typed.adlevel_of x )
+      then UnsizedType.AutoDiffable
+      else DataOnly in
+    UnsizedType.fill_adtype_for_type base Expr.Typed.Meta.(e.meta.type_) in
   match pattern with
   | Var x ->
       if Set.Poly.mem autodiffable_variables x then e
@@ -396,35 +397,31 @@ let rec update_expr_ad_levels autodiffable_variables
       let kind' =
         Fun_kind.map (update_expr_ad_levels autodiffable_variables) kind in
       let l = List.map ~f:(update_expr_ad_levels autodiffable_variables) l in
-      {pattern= FunApp (kind', l); meta= {e.meta with adlevel= ad_level_sup l}}
+      {pattern= FunApp (kind', l); meta= {e.meta with adlevel= max_adlevel l}}
   | TernaryIf (e1, e2, e3) ->
       let e1 = update_expr_ad_levels autodiffable_variables e1 in
       let e2 = update_expr_ad_levels autodiffable_variables e2 in
       let e3 = update_expr_ad_levels autodiffable_variables e3 in
       { pattern= TernaryIf (e1, e2, e3)
-      ; meta= {e.meta with adlevel= ad_level_sup [e1; e2; e3]} }
+      ; meta= {e.meta with adlevel= max_adlevel [e1; e2; e3]} }
   | EAnd (e1, e2) ->
       let e1 = update_expr_ad_levels autodiffable_variables e1 in
       let e2 = update_expr_ad_levels autodiffable_variables e2 in
-      { pattern= EAnd (e1, e2)
-      ; meta= {e.meta with adlevel= ad_level_sup [e1; e2]} }
+      {pattern= EAnd (e1, e2); meta= {e.meta with adlevel= max_adlevel [e1; e2]}}
   | EOr (e1, e2) ->
       let e1 = update_expr_ad_levels autodiffable_variables e1 in
       let e2 = update_expr_ad_levels autodiffable_variables e2 in
-      {pattern= EOr (e1, e2); meta= {e.meta with adlevel= ad_level_sup [e1; e2]}}
+      {pattern= EOr (e1, e2); meta= {e.meta with adlevel= max_adlevel [e1; e2]}}
   | Promotion (expr, ut, ad) ->
       let expr' = update_expr_ad_levels autodiffable_variables expr in
       { pattern= Promotion (expr', ut, ad)
-      ; meta= {e.meta with adlevel= ad_level_sup [expr']} }
+      ; meta= {e.meta with adlevel= max_adlevel [expr']} }
   | Indexed (ixed, i_list) ->
       let ixed = update_expr_ad_levels autodiffable_variables ixed in
       let i_list =
         List.map ~f:(update_idx_ad_levels autodiffable_variables) i_list in
       { pattern= Indexed (ixed, i_list)
-      ; meta=
-          { e.meta with
-            adlevel= ad_level_sup (e :: List.concat_map ~f:Index.bounds i_list)
-          } }
+      ; meta= {e.meta with adlevel= ixed.meta.adlevel} }
   | TupleProjection (e, ix) ->
       (* TODO For the purposes of program analysis, tuples
          _should_ be treated as n Vars. So for example,
