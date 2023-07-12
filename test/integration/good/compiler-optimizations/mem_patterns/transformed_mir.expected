@@ -23337,7 +23337,7 @@ matrix[1, 1] x: AoS
       ((filename tuple_test.stan) (line_num 3) (col_num 4)
        (included_from ())))
      (end_loc
-      ((filename tuple_test.stan) (line_num 3) (col_num 60)
+      ((filename tuple_test.stan) (line_num 3) (col_num 61)
        (included_from ()))))
     ((out_unconstrained_st
       (STuple
@@ -23383,10 +23383,10 @@ matrix[1, 1] x: AoS
      (out_trans (TupleTransformation (Identity Identity Identity)))))
    (x
     ((begin_loc
-      ((filename tuple_test.stan) (line_num 7) (col_num 4)
+      ((filename tuple_test.stan) (line_num 6) (col_num 4)
        (included_from ())))
      (end_loc
-      ((filename tuple_test.stan) (line_num 7) (col_num 28)
+      ((filename tuple_test.stan) (line_num 6) (col_num 28)
        (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS

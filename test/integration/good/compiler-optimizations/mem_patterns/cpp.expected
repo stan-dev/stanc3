@@ -9142,15 +9142,15 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 10> locations_array__ =
   {" (found before start of program)",
-  " (in 'tuple_test.stan', line 3, column 4 to column 60)",
-  " (in 'tuple_test.stan', line 7, column 4 to column 28)",
+  " (in 'tuple_test.stan', line 3, column 4 to column 61)",
+  " (in 'tuple_test.stan', line 6, column 4 to column 28)",
   " (in 'tuple_test.stan', line 3, column 16 to column 17)",
   " (in 'tuple_test.stan', line 3, column 26 to column 27)",
   " (in 'tuple_test.stan', line 3, column 28 to column 29)",
   " (in 'tuple_test.stan', line 3, column 39 to column 40)",
   " (in 'tuple_test.stan', line 3, column 52 to column 53)",
-  " (in 'tuple_test.stan', line 7, column 11 to column 12)",
-  " (in 'tuple_test.stan', line 7, column 13 to column 14)"};
+  " (in 'tuple_test.stan', line 6, column 11 to column 12)",
+  " (in 'tuple_test.stan', line 6, column 13 to column 14)"};
 class tuple_test_model final : public model_base_crtp<tuple_test_model> {
  private:
   
