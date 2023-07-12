@@ -328,37 +328,27 @@ Available signatures:
 (<F1>, array[] real, int, real, real) => real
   The 5th argument must be real but got vector
   $ ../../../../../install/default/bin/stanc bad_not_slice_type.stan
-Semantic error in 'bad_not_slice_type.stan', line 12, column 12 to column 42:
+Semantic error in 'bad_not_slice_type.stan', line 12, column 12 to column 47:
    -------------------------------------------------
     10:  
     11:  model {
-    12:    target += reduce_sum(my_func, a, 1, 0.0);
+    12:    target += reduce_sum(my_func, a, 1, 0.0, 1.0);
                      ^
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum':
-(<F1>, real, int, real)
-where F1 = (array[] real, int, int, real, real) => real
-Available signatures:
-(<F1>, array[] real, int, real, real) => real
-  Expected 5 arguments but found 4 arguments.
+The second argument to reduce_sum must be an array but found real
   $ ../../../../../install/default/bin/stanc bad_not_slice_type_static.stan
-Semantic error in 'bad_not_slice_type_static.stan', line 12, column 12 to column 49:
+Semantic error in 'bad_not_slice_type_static.stan', line 12, column 12 to column 54:
    -------------------------------------------------
     10:  
     11:  model {
-    12:    target += reduce_sum_static(my_func, a, 1, 0.0);
+    12:    target += reduce_sum_static(my_func, a, 1, 0.0, 1.0);
                      ^
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static':
-(<F1>, real, int, real)
-where F1 = (array[] real, int, int, real, real) => real
-Available signatures:
-(<F1>, array[] real, int, real, real) => real
-  Expected 5 arguments but found 4 arguments.
+The second argument to reduce_sum must be an array but found real
   $ ../../../../../install/default/bin/stanc bad_reduce_sum_multiple.stan
 Semantic error in 'bad_reduce_sum_multiple.stan', line 27, column 18 to column 51:
    -------------------------------------------------
@@ -418,6 +408,17 @@ where F2 = (array[] real, data int, data int) => real
   but got
    (array[] real, int, int) => int
   The return types are not compatible.
+  $ ../../../../../install/default/bin/stanc bad_slice_type.stan
+Semantic error in 'bad_slice_type.stan', line 12, column 12 to column 47:
+   -------------------------------------------------
+    10:  
+    11:  model {
+    12:    target += reduce_sum(my_func, a, 1, 0.0, 1.0);
+                     ^
+    13:  }
+   -------------------------------------------------
+
+The inner type in reduce_sum array must be real, int, matrix, vector, or row_vector but found complex
   $ ../../../../../install/default/bin/stanc bad_suffix.stan
 Semantic error in 'bad_suffix.stan', line 27, column 12 to line 28, column 45:
    -------------------------------------------------
