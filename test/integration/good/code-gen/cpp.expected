@@ -35174,14 +35174,15 @@ namespace return_position_types_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 7> locations_array__ =
+static constexpr std::array<const char*, 8> locations_array__ =
   {" (found before start of program)",
-  " (in 'return-position-types.stan', line 13, column 2 to column 9)",
-  " (in 'return-position-types.stan', line 16, column 2 to column 27)",
-  " (in 'return-position-types.stan', line 4, column 4 to column 17)",
-  " (in 'return-position-types.stan', line 2, column 27 to line 5, column 3)",
-  " (in 'return-position-types.stan', line 9, column 6 to column 26)",
-  " (in 'return-position-types.stan', line 7, column 30 to line 10, column 3)"};
+  " (in 'return-position-types.stan', line 11, column 2 to column 9)",
+  " (in 'return-position-types.stan', line 14, column 2 to column 27)",
+  " (in 'return-position-types.stan', line 15, column 2 to column 31)",
+  " (in 'return-position-types.stan', line 3, column 4 to column 17)",
+  " (in 'return-position-types.stan', line 2, column 27 to line 4, column 3)",
+  " (in 'return-position-types.stan', line 7, column 4 to column 24)",
+  " (in 'return-position-types.stan', line 6, column 30 to line 8, column 3)"};
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
 std::vector<stan::promote_args_t<T0__>>
@@ -35202,8 +35203,8 @@ foo(const T0__& a, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 3;
-    return std::vector<double>{0.1};
+    current_statement__ = 4;
+    return std::vector<local_scalar_t__>{0.1};
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -35220,9 +35221,12 @@ bar(const T0__& a, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 5;
-    return std::vector<std::complex<double>>{(0.1 +
-             stan::math::to_complex(0, 0.3))};
+    current_statement__ = 6;
+    return std::vector<std::complex<local_scalar_t__>>{stan::math::promote_scalar<
+                                                         std::complex<local_scalar_t__>>(
+                                                         (0.1 +
+                                                         stan::math::to_complex(
+                                                           0, 0.3)))};
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -35287,6 +35291,11 @@ class return_position_types_model final : public model_base_crtp<return_position
           std::vector<local_scalar_t__>(1, DUMMY_VAR__);
         current_statement__ = 2;
         stan::model::assign(z, foo(a, pstream__), "assigning variable z");
+        std::vector<std::complex<local_scalar_t__>> z2 =
+          std::vector<std::complex<local_scalar_t__>>(1,
+            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+        current_statement__ = 3;
+        stan::model::assign(z2, bar(a, pstream__), "assigning variable z2");
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -35324,6 +35333,11 @@ class return_position_types_model final : public model_base_crtp<return_position
           std::vector<local_scalar_t__>(1, DUMMY_VAR__);
         current_statement__ = 2;
         stan::model::assign(z, foo(a, pstream__), "assigning variable z");
+        std::vector<std::complex<local_scalar_t__>> z2 =
+          std::vector<std::complex<local_scalar_t__>>(1,
+            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+        current_statement__ = 3;
+        stan::model::assign(z2, bar(a, pstream__), "assigning variable z2");
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
