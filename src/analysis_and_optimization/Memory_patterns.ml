@@ -18,7 +18,7 @@ let rec matrix_set Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{type_; _} as meta
         else Set.Poly.empty
     | TernaryIf (_, expr2, expr3) -> union_recur [expr2; expr3]
     | Indexed (expr, _) | Promotion (expr, _, _) | TupleProjection (expr, _) ->
-        (* TUPLE MAYBE *) matrix_set expr
+        matrix_set expr
     | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
   else Set.Poly.empty
 
@@ -144,8 +144,7 @@ let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       acc
   | Promotion (expr, _, _) -> query_expr acc expr
-  | TupleProjection (expr, _) ->
-      query_expr acc expr (* TUPLE MAYBE: does this need to be smarter? *)
+  | TupleProjection (expr, _) -> query_expr acc expr
   | TernaryIf (predicate, texpr, fexpr) ->
       let predicate_demotes = query_expr acc predicate in
       Set.Poly.union
@@ -590,7 +589,6 @@ let rec modify_stmt_pattern
   | NRFunApp (kind, (exprs : Expr.Typed.t list)) ->
       let kind', exprs' = modify_kind modifiable_set kind exprs in
       NRFunApp (kind', exprs')
-      (* TUPLE MAYBE - lhs changes may have affected this code? *)
   | Assignment
       ( lval
       , ut
