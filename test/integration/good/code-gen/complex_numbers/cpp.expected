@@ -7435,8 +7435,12 @@ std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 414;
-    return std::vector<std::complex<double>>{stan::math::to_complex(),
-             stan::math::to_complex()};
+    return std::vector<std::complex<local_scalar_t__>>{stan::math::promote_scalar<
+                                                         std::complex<local_scalar_t__>>(
+                                                         stan::math::to_complex(
+                                                           )),
+             stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+               stan::math::to_complex())};
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }

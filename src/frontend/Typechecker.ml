@@ -1222,11 +1222,24 @@ let check_continue loc cf =
   else mk_typed_statement ~stmt:Continue ~return_type:NoReturnType ~loc
 
 let check_return loc cf tenv e =
+  let ensure_var (e : Ast.typed_expression) =
+    (* return position should always use local_scalar_t,
+       even if e.g. it is just a hard-coded array literal *)
+    let open Promotion in
+    let typ = e.emeta.type_ in
+    if
+      UnsizedType.is_autodifftype e.emeta.ad_level
+      || UnsizedType.is_int_type typ
+      || not (UnsizedType.is_array typ)
+    then e
+    else if UnsizedType.is_complex_type typ then promote e ToComplexVar
+    else promote e ToVar in
   if not cf.in_returning_fun_def then
     Semantic_error.expression_return_outside_returning_fn loc |> error
   else
     let te = check_expression cf tenv e in
-    mk_typed_statement ~stmt:(Return te)
+    let promoted = ensure_var te in
+    mk_typed_statement ~stmt:(Return promoted)
       ~return_type:(Complete (ReturnType te.emeta.type_)) ~loc
 
 let check_returnvoid loc cf =
