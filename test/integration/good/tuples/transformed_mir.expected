@@ -12753,13 +12753,25 @@
             (Return
              (((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
-                 (((pattern (Lit Real 1.0))
-                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                  ((pattern (Lit Real 2.0))
-                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                 (((pattern
+                    (Promotion
+                     ((pattern (Lit Real 1.0))
+                      (meta
+                       ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                     UReal AutoDiffable))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (Promotion
+                     ((pattern (Lit Real 2.0))
+                      (meta
+                       ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                     UReal AutoDiffable))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta
                 ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                 (adlevel (TupleAD (DataOnly DataOnly)))))))))
+                 (adlevel (TupleAD (AutoDiffable AutoDiffable)))))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))))

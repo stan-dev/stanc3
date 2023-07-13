@@ -1227,13 +1227,12 @@ let check_return loc cf tenv e =
        even if e.g. it is just a hard-coded array literal *)
     let open Promotion in
     let typ = e.emeta.type_ in
-    if
-      UnsizedType.is_autodifftype e.emeta.ad_level
-      || UnsizedType.is_int_type typ
-      || not (UnsizedType.is_array typ)
-    then e
-    else if UnsizedType.is_complex_type typ then promote e ToComplexVar
-    else promote e ToVar in
+    if UnsizedType.contains_tuple typ || UnsizedType.is_array typ then
+      promote e
+        (get_type_promotion_exn
+           (UnsizedType.fill_adtype_for_type UnsizedType.AutoDiffable typ, typ)
+           (e.emeta.ad_level, typ) )
+    else e in
   if not cf.in_returning_fun_def then
     Semantic_error.expression_return_outside_returning_fn loc |> error
   else
