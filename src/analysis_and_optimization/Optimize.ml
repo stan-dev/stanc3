@@ -289,7 +289,9 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                   Option.map ~f:Mir_utils.unsafe_unsized_to_sized_type rt
                   |> Option.value_exn in
                 ( [ Stmt.Fixed.Pattern.Decl
-                      { decl_adtype= adt
+                      { decl_adtype=
+                          UnsizedType.fill_adtype_for_type adt
+                            (Type.to_unsized decl_type)
                       ; decl_id= inline_return_name
                       ; decl_type
                       ; initialize= false } ]
