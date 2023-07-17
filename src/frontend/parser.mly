@@ -559,9 +559,10 @@ lhs:
     { grammar_logger "lhs_tuple_index" ;
       match int_of_string_opt (String.drop_prefix ix_str 1) with
       | None ->
-         raise (Failure ("Could not parse integer from string " ^ ix_str
-                         ^ " in from tuple index. This should never happen,"
-                         ^ " please file a bug."))
+         raise (Errors.SyntaxError (Errors.Parsing
+            ("Failed to parse integer from string '" ^ ix_str
+              ^ "' in tuple index. \nThe index is likely too large.\n",
+              location_span_of_positions $loc)))
       | Some ix ->
          build_expr (TupleProjection (l, ix)) $loc
     }
@@ -617,9 +618,10 @@ constr_expression:
     {  grammar_logger "constr_id_tuple_index" ;
        match int_of_string_opt (String.drop_prefix ix_str 1) with
        | None ->
-          raise (Failure ("Could not parse integer from string " ^ ix_str
-                          ^ " in from tuple index. This should never happen,"
-                          ^ " please file a bug."))
+         raise (Errors.SyntaxError (Errors.Parsing
+                  ("Failed to parse integer from string '" ^ ix_str
+                    ^ "' in tuple index. \nThe index is likely too large.\n",
+                    location_span_of_positions $loc)))
        | Some ix ->
         build_expr (TupleProjection (build_expr (Variable e) $loc, ix)) $loc
     }
@@ -666,10 +668,10 @@ common_expression:
   | e=common_expression ix_str=DOTNUMERAL
     {  grammar_logger "common_expression_tuple_index" ;
        match int_of_string_opt (String.drop_prefix ix_str 1) with
-       | None ->
-          raise (Failure ("Could not parse integer from string " ^ ix_str
-                          ^ " in from tuple index. This should never happen,"
-                          ^ " please file a bug."))
+       | None -> raise (Errors.SyntaxError (Errors.Parsing
+            ("Failed to parse integer from string '" ^ ix_str
+              ^ "' in tuple index.\nThe index is likely too large.\n",
+              location_span_of_positions $loc)))
        | Some ix ->
           TupleProjection (build_expr e $loc, ix)
     }

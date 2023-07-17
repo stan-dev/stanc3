@@ -127,6 +127,33 @@ Ill-typed arguments supplied to function 'foo':
 Available signatures:
 (tuple(real, real)) => void
   The first argument must be tuple(real, real) but got tuple(int, int, int)
+  $ ../../../../../install/default/bin/stanc fuzz-tuple-idx1.stan
+Syntax error in 'fuzz-tuple-idx1.stan', line 1, column 36 to column 58, parsing error:
+   -------------------------------------------------
+     1:  functions{void f(tuple(matrix,int)t)t.40000000000000000000
+                                             ^
+   -------------------------------------------------
+
+Failed to parse integer from string '.40000000000000000000' in tuple index. 
+The index is likely too large.
+  $ ../../../../../install/default/bin/stanc fuzz-tuple-idx2.stan
+Syntax error in 'fuzz-tuple-idx2.stan', line 1, column 61 to column 83, parsing error:
+   -------------------------------------------------
+     1:  transformed data{tuple(array[0]tuple(int,array[0]real),int)x;x.10000000000000000000
+                                                                      ^
+   -------------------------------------------------
+
+Failed to parse integer from string '.10000000000000000000' in tuple index. 
+The index is likely too large.
+  $ ../../../../../install/default/bin/stanc fuzz-tuple-idx3.stan
+Syntax error in 'fuzz-tuple-idx3.stan', line 1, column 45 to column 66, parsing error:
+   -------------------------------------------------
+     1:  transformed data{matrix[0,0]v;row_vector[0]m;m.6000000000000000000
+                                                      ^
+   -------------------------------------------------
+
+Failed to parse integer from string '.6000000000000000000' in tuple index. 
+The index is likely too large.
   $ ../../../../../install/default/bin/stanc incomplete1.stan
 Syntax error in 'incomplete1.stan', line 2, column 30 to column 35, parsing error:
    -------------------------------------------------
