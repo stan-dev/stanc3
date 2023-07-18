@@ -22576,15 +22576,15 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           lp_accum__.add(2);
         }
         current_statement__ = 73;
-        if ((24 * 2)) {} else {}
+        if ((24 * 2)) {}
         current_statement__ = 76;
-        if ((24 * 2)) {} else {}
+        if ((24 * 2)) {}
         current_statement__ = 78;
         if ((24 * 2)) {}
         current_statement__ = 80;
         if ((20 * 2)) {}
         current_statement__ = 83;
-        if (rfun_lp<propto__>(lp__, lp_accum__, pstream__)) {} else {}
+        if (rfun_lp<propto__>(lp__, lp_accum__, pstream__)) {}
         current_statement__ = 86;
         while (0) {
           current_statement__ = 84;
@@ -22870,15 +22870,15 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           lp_accum__.add(2);
         }
         current_statement__ = 73;
-        if ((24 * 2)) {} else {}
+        if ((24 * 2)) {}
         current_statement__ = 76;
-        if ((24 * 2)) {} else {}
+        if ((24 * 2)) {}
         current_statement__ = 78;
         if ((24 * 2)) {}
         current_statement__ = 80;
         if ((20 * 2)) {}
         current_statement__ = 83;
-        if (rfun_lp<propto__>(lp__, lp_accum__, pstream__)) {} else {}
+        if (rfun_lp<propto__>(lp__, lp_accum__, pstream__)) {}
         current_statement__ = 86;
         while (0) {
           current_statement__ = 84;

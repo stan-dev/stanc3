@@ -14041,6 +14041,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                            stan::model::index_uni(i));
           lcm_sym128__ = (lcm_sym154__ - 1);
           if (stan::math::logical_gte(lcm_sym128__, 1)) {
+            current_statement__ = 11;
             stan::model::assign(phi, 0, "assigning variable phi",
               stan::model::index_uni(i), stan::model::index_uni(1));
             current_statement__ = 10;
@@ -14472,6 +14473,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                            stan::model::index_uni(i));
           lcm_sym85__ = (lcm_sym111__ - 1);
           if (stan::math::logical_gte(lcm_sym85__, 1)) {
+            current_statement__ = 11;
             stan::model::assign(phi, 0, "assigning variable phi",
               stan::model::index_uni(i), stan::model::index_uni(1));
             current_statement__ = 10;
