@@ -21722,10 +21722,14 @@
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Real 1.5))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                  ((pattern (Lit Int 2))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  ((pattern
+                    (Promotion
+                     ((pattern (Lit Int 2))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     UReal DataOnly))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                (meta
-                ((type_ (UTuple (UReal UInt))) (loc <opaque>)
+                ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                  (adlevel (TupleAD (DataOnly DataOnly))))))
               ((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
@@ -21752,10 +21756,14 @@
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Real 1.5))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                  ((pattern (Lit Int 2))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  ((pattern
+                    (Promotion
+                     ((pattern (Lit Int 2))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     UReal DataOnly))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                (meta
-                ((type_ (UTuple (UReal UInt))) (loc <opaque>)
+                ((type_ (UTuple (UReal UReal))) (loc <opaque>)
                  (adlevel (TupleAD (DataOnly DataOnly))))))
               ((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
