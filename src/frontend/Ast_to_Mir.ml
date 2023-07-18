@@ -14,7 +14,7 @@ let drop_leading_zeros s =
   match String.lfindi ~f:(fun _ c -> c <> '0') s with
   | Some p when p > 0 -> (
     match s.[p] with
-    | 'e' | '.' -> String.drop_prefix s (p - 1)
+    | 'e' | 'E' | '.' -> String.drop_prefix s (p - 1)
     | _ -> String.drop_prefix s p )
   | Some _ -> s
   | None -> "0"

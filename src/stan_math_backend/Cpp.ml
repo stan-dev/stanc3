@@ -530,7 +530,7 @@ module Printing = struct
     | While (e, s) ->
         let pp ppf () = pf ppf "while (@[%a@])" pp_expr e in
         pp_with_block pp ppf s
-    | IfElse (cond, thn, None) ->
+    | IfElse (cond, thn, None) | IfElse (cond, thn, Some (Block [])) ->
         let pp_if ppf () = pf ppf "if (@[%a@])" pp_expr cond in
         pp_with_block pp_if ppf thn
     | IfElse (cond, thn, Some els) ->

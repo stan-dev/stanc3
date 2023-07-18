@@ -1132,21 +1132,23 @@ let verify_valid_sampling_pos loc cf =
   if cf.in_lp_fun_def || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
-let verify_sampling_distribution loc tenv id arguments =
+let check_sampling_distribution loc tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
   let name_w_suffix_sampling_dist suffix =
     SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
   let sampling_dists =
     List.map ~f:name_w_suffix_sampling_dist Utils.distribution_suffices in
-  let is_sampling_dist_defined =
-    List.exists
-      ~f:(function UniqueMatch (ReturnType UReal, _, _) -> true | _ -> false)
-      sampling_dists
-    && name <> "binomial_coefficient"
-    && name <> "multiply" in
-  if is_sampling_dist_defined then ()
-  else
+  let sampling_dist_match =
+    if name = "binomial_coefficient" || name = "multiply" then None
+    else
+      List.find_map
+        ~f:(function
+          | UniqueMatch (ReturnType UReal, _, p) -> Some p | _ -> None )
+        sampling_dists in
+  match sampling_dist_match with
+  | Some p -> Promotion.promote_list arguments p
+  | None -> (
     match
       List.max_elt sampling_dists
         ~compare:SignatureMismatch.compare_match_results
@@ -1164,7 +1166,7 @@ let verify_sampling_distribution loc tenv id arguments =
         arguments
         |> List.map ~f:(fun e -> e.emeta.type_)
         |> Semantic_error.illtyped_fn_app loc id.name (l, b)
-        |> error
+        |> error )
 
 let is_cumulative_density_defined tenv id arguments =
   let name = id.name in
@@ -1207,7 +1209,9 @@ let check_tilde loc cf tenv distribution truncation arg args =
   verify_sampling_pdf_pmf distribution ;
   verify_valid_sampling_pos loc cf ;
   verify_sampling_cdf_ccdf loc distribution ;
-  verify_sampling_distribution loc tenv distribution (te :: tes) ;
+  let promoted_args =
+    check_sampling_distribution loc tenv distribution (te :: tes) in
+  let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
   verify_sampling_cdf_defined loc tenv distribution ttrunc tes ;
   let stmt = Tilde {arg= te; distribution; args= tes; truncation= ttrunc} in
   mk_typed_statement ~stmt ~loc ~return_type:NoReturnType
