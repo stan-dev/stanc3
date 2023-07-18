@@ -2634,8 +2634,12 @@ vector[Nr] h_sigma: SoA
             (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
              (((pattern (Var ar))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-              ((pattern (Lit Int 0))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Real .2))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -2646,8 +2650,12 @@ vector[Nr] h_sigma: SoA
             (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
              (((pattern (Var ma))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-              ((pattern (Lit Int 0))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Real .2))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -2670,12 +2678,24 @@ vector[Nr] h_sigma: SoA
             (FunApp (StanLib student_t_lpdf (FnLpdf true) AoS)
              (((pattern (Var sigma_price))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-              ((pattern (Lit Int 3))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Lit Int 1))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Lit Int 1))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 3))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
        ((pattern
@@ -3941,8 +3961,12 @@ vector[Nr] h_sigma: SoA
             (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
              (((pattern (Var ar))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-              ((pattern (Lit Int 0))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Real .2))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -3953,8 +3977,12 @@ vector[Nr] h_sigma: SoA
             (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
              (((pattern (Var ma))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-              ((pattern (Lit Int 0))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Lit Real .2))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -3977,12 +4005,24 @@ vector[Nr] h_sigma: SoA
             (FunApp (StanLib student_t_lpdf (FnLpdf true) SoA)
              (((pattern (Var sigma_price))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-              ((pattern (Lit Int 3))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Lit Int 1))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Lit Int 1))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 3))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (Promotion
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
        ((pattern
