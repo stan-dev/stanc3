@@ -144,7 +144,7 @@ let options =
               List.fold ~f:parse_canonical_options ~init:!canonicalize_settings
                 (String.split s ~on:',') in
             canonicalize_settings := settings )
-      , " Enable specific canonicalizations in a comma seperated list. Options \
+      , " Enable specific canonicalizations in a comma separated list. Options \
          are 'deprecations', 'parentheses', 'braces', 'includes', \
          'strip-comments'." )
     ; ( "--max-line-length"

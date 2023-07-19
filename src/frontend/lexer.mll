@@ -55,7 +55,7 @@ let newline = '\r' | '\n' | '\r'*'\n'
 let non_space_or_newline =  [^ ' ' '\t' '\012' '\r' '\n' ]
 
 rule token = parse
-(* White space, line numers and comments *)
+(* White space, line numbers and comments *)
   | newline                   { lexer_logger "newline" ;
                                 incr_linenum lexbuf ; token lexbuf }
   | space                     { lexer_logger "space" ; token lexbuf }
@@ -218,7 +218,7 @@ rule token = parse
   | real_constant as r        { lexer_logger ("real_constant " ^ r) ;
                                 Parser.REALNUMERAL (lexeme lexbuf) }
   | real_constant_dot as r    { lexer_logger ("real_constant_dot " ^ r) ;
-                                (* Seperated out because ".1" could be a number or a tuple projection *)
+                                (* Separated out because ".1" could be a number or a tuple projection *)
                                 Parser.DOTNUMERAL (lexeme lexbuf) }
   | imag_constant as z        { lexer_logger ("imag_constant " ^ z) ;
                                 Parser.IMAGNUMERAL (lexeme lexbuf) }

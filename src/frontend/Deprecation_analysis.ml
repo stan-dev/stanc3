@@ -180,7 +180,7 @@ let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
       @ [ ( funname.id_loc
           , "Functions do not need to be declared before definition; all user \
              defined function names are always in scope regardless of \
-             defintion order." ) ]
+             definition order." ) ]
   | FunDef
       { body
       ; funname= {name; id_loc}

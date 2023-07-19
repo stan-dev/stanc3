@@ -59,7 +59,7 @@ let functor_suffix_select = function
   | ReduceSum -> reduce_sum_functor_suffix
   | FixedArgs -> functor_suffix
 
-(* retun true if the type of the expression
+(* return true if the type of the expression
    is integer, real, or complex (e.g. not a container) *)
 let is_scalar e =
   match Expr.Typed.type_of e with UInt | UReal | UComplex -> true | _ -> false

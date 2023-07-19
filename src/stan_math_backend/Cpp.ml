@@ -254,7 +254,7 @@ module Stmts = struct
 
   let if_block cond stmts = IfElse (cond, block stmts, None)
 
-  (** Supress warnings for a variable which may not be used. *)
+  (** Suppress warnings for a variable which may not be used. *)
   let unused s =
     [Comment "suppress unused var warning"; Expression (Cast (Void, Var s))]
 end
