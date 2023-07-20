@@ -77,7 +77,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 std::numeric_limits<int>::min()};
       current_statement__ = 8;
       std::get<0>(basic) = context__.vals_r("basic.1");
-      current_statement__ = 8;
       std::get<1>(basic) = context__.vals_i("basic.2")[(1 - 1)];
       current_statement__ = 9;
       context__.validate_dims("data initialization", "tuple_tuple.1", "int",
@@ -95,23 +94,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                           std::numeric_limits<double>::quiet_NaN())}};
       current_statement__ = 9;
       std::get<0>(tuple_tuple) = context__.vals_i("tuple_tuple.1")[(1 - 1)];
-      current_statement__ = 9;
       std::get<0>(std::get<1>(tuple_tuple)) = context__.vals_r("tuple_tuple.2.1")[(1
         - 1)];
       {
         std::vector<local_scalar_t__> tuple_tuple_dot_2_dot_2_flat__;
-        current_statement__ = 9;
         tuple_tuple_dot_2_dot_2_flat__ = context__.vals_r("tuple_tuple.2.2");
-        current_statement__ = 9;
         pos__ = 1;
-        current_statement__ = 9;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 9;
           stan::model::assign(std::get<1>(std::get<1>(tuple_tuple)),
             tuple_tuple_dot_2_dot_2_flat__[(pos__ - 1)],
             "assigning variable tuple_tuple.2.2",
             stan::model::index_uni(sym1__));
-          current_statement__ = 9;
           pos__ = (pos__ + 1);
         }
       }
@@ -137,19 +130,16 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         current_statement__ = 10;
         arr_tuple_dot_1_flat__ = context__.vals_i("arr_tuple.1");
         int arr_tuple_dot_1_flat__pos__;
-        current_statement__ = 10;
         arr_tuple_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_dot_2_flat__;
         current_statement__ = 10;
         arr_tuple_dot_2_flat__ = context__.vals_r("arr_tuple.2");
         int arr_tuple_dot_2_flat__pos__;
-        current_statement__ = 10;
         arr_tuple_dot_2_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_dot_3_flat__;
         current_statement__ = 10;
         arr_tuple_dot_3_flat__ = context__.vals_r("arr_tuple.3");
         int arr_tuple_dot_3_flat__pos__;
-        current_statement__ = 10;
         arr_tuple_dot_3_flat__pos__ = 1;
         int arr_tuple_dot_1_temp__ = std::numeric_limits<int>::min();
         std::vector<double> arr_tuple_dot_2_temp__ =
@@ -157,7 +147,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         Eigen::Matrix<double,-1,1> arr_tuple_dot_3_temp__ =
           Eigen::Matrix<double,-1,1>::Constant(3,
             std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 10;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           arr_tuple_dot_1_temp__ = arr_tuple_dot_1_flat__[(arr_tuple_dot_1_flat__pos__
             - 1)];
@@ -187,7 +176,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             }
             arr_tuple_dot_3_flat__pos__ = (arr_tuple_dot_3_flat__pos__ + 3);
           }
-          current_statement__ = 10;
           stan::model::assign(arr_tuple,
             std::tuple<int, std::vector<double>, Eigen::Matrix<double,-1,1>>(arr_tuple_dot_1_temp__,
               arr_tuple_dot_2_temp__, arr_tuple_dot_3_temp__),
@@ -216,27 +204,21 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                 std::numeric_limits<int>::min())})};
       current_statement__ = 11;
       std::get<0>(tuple_arr_tuple) = context__.vals_r("tuple_arr_tuple.1");
-      current_statement__ = 11;
       std::get<1>(tuple_arr_tuple) = context__.vals_i("tuple_arr_tuple.2")[(1
         - 1)];
       {
         std::vector<local_scalar_t__> tuple_arr_tuple_dot_3_dot_1_flat__;
-        current_statement__ = 11;
         tuple_arr_tuple_dot_3_dot_1_flat__ = context__.vals_r("tuple_arr_tuple.3.1");
         int tuple_arr_tuple_dot_3_dot_1_flat__pos__;
-        current_statement__ = 11;
         tuple_arr_tuple_dot_3_dot_1_flat__pos__ = 1;
         std::vector<int> tuple_arr_tuple_dot_3_dot_2_flat__;
-        current_statement__ = 11;
         tuple_arr_tuple_dot_3_dot_2_flat__ = context__.vals_i("tuple_arr_tuple.3.2");
         int tuple_arr_tuple_dot_3_dot_2_flat__pos__;
-        current_statement__ = 11;
         tuple_arr_tuple_dot_3_dot_2_flat__pos__ = 1;
         double tuple_arr_tuple_dot_3_dot_1_temp__ =
           std::numeric_limits<double>::quiet_NaN();
         std::vector<int> tuple_arr_tuple_dot_3_dot_2_temp__ =
           std::vector<int>(4, std::numeric_limits<int>::min());
-        current_statement__ = 11;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           tuple_arr_tuple_dot_3_dot_1_temp__ = tuple_arr_tuple_dot_3_dot_1_flat__[(tuple_arr_tuple_dot_3_dot_1_flat__pos__
             - 1)];
@@ -251,7 +233,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             "assigning variable tuple_arr_tuple_dot_3_dot_2_temp__");
           tuple_arr_tuple_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_dot_3_dot_2_flat__pos__
             + 4);
-          current_statement__ = 11;
           stan::model::assign(std::get<2>(tuple_arr_tuple),
             std::tuple<double, std::vector<int>>(tuple_arr_tuple_dot_3_dot_1_temp__,
               tuple_arr_tuple_dot_3_dot_2_temp__),
@@ -292,32 +273,27 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         current_statement__ = 12;
         arr_tuple_tuple_dot_1_flat__ = context__.vals_r("arr_tuple_tuple.1");
         int arr_tuple_tuple_dot_1_flat__pos__;
-        current_statement__ = 12;
         arr_tuple_tuple_dot_1_flat__pos__ = 1;
         std::vector<int> arr_tuple_tuple_dot_2_flat__;
         current_statement__ = 12;
         arr_tuple_tuple_dot_2_flat__ = context__.vals_i("arr_tuple_tuple.2");
         int arr_tuple_tuple_dot_2_flat__pos__;
-        current_statement__ = 12;
         arr_tuple_tuple_dot_2_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_tuple_dot_3_dot_1_flat__;
         current_statement__ = 12;
         arr_tuple_tuple_dot_3_dot_1_flat__ = context__.vals_r("arr_tuple_tuple.3.1");
         int arr_tuple_tuple_dot_3_dot_1_flat__pos__;
-        current_statement__ = 12;
         arr_tuple_tuple_dot_3_dot_1_flat__pos__ = 1;
         std::vector<int> arr_tuple_tuple_dot_3_dot_2_dot_1_flat__;
         current_statement__ = 12;
         arr_tuple_tuple_dot_3_dot_2_dot_1_flat__ = context__.vals_i("arr_tuple_tuple.3.2.1");
         int arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__;
-        current_statement__ = 12;
         arr_tuple_tuple_dot_3_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__>
           arr_tuple_tuple_dot_3_dot_2_dot_2_flat__;
         current_statement__ = 12;
         arr_tuple_tuple_dot_3_dot_2_dot_2_flat__ = context__.vals_r("arr_tuple_tuple.3.2.2");
         int arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__;
-        current_statement__ = 12;
         arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__ = 1;
         double arr_tuple_tuple_dot_1_temp__ =
           std::numeric_limits<double>::quiet_NaN();
@@ -330,7 +306,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                                           ),
               Eigen::Matrix<double,-1,1>::Constant(4,
                 std::numeric_limits<double>::quiet_NaN())}};
-        current_statement__ = 12;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           arr_tuple_tuple_dot_1_temp__ = arr_tuple_tuple_dot_1_flat__[(arr_tuple_tuple_dot_1_flat__pos__
             - 1)];
@@ -374,7 +349,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__ = (arr_tuple_tuple_dot_3_dot_2_dot_2_flat__pos__
               + 4);
           }
-          current_statement__ = 12;
           stan::model::assign(arr_tuple_tuple,
             std::tuple<double, int,
               std::tuple<double, std::tuple<int, Eigen::Matrix<double,-1,1>>>>(arr_tuple_tuple_dot_1_temp__,
@@ -416,19 +390,16 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         current_statement__ = 13;
         arr_tuple_arr_tuple_dot_1_flat__ = context__.vals_i("arr_tuple_arr_tuple.1");
         int arr_tuple_arr_tuple_dot_1_flat__pos__;
-        current_statement__ = 13;
         arr_tuple_arr_tuple_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_arr_tuple_dot_2_dot_1_flat__;
         current_statement__ = 13;
         arr_tuple_arr_tuple_dot_2_dot_1_flat__ = context__.vals_r("arr_tuple_arr_tuple.2.1");
         int arr_tuple_arr_tuple_dot_2_dot_1_flat__pos__;
-        current_statement__ = 13;
         arr_tuple_arr_tuple_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_arr_tuple_dot_2_dot_2_flat__;
         current_statement__ = 13;
         arr_tuple_arr_tuple_dot_2_dot_2_flat__ = context__.vals_r("arr_tuple_arr_tuple.2.2");
         int arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__;
-        current_statement__ = 13;
         arr_tuple_arr_tuple_dot_2_dot_2_flat__pos__ = 1;
         int arr_tuple_arr_tuple_dot_1_temp__ =
           std::numeric_limits<int>::min();
@@ -439,7 +410,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                                              ),
               Eigen::Matrix<double,-1,1>::Constant(5,
                 std::numeric_limits<double>::quiet_NaN())});
-        current_statement__ = 13;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           arr_tuple_arr_tuple_dot_1_temp__ = arr_tuple_arr_tuple_dot_1_flat__[(arr_tuple_arr_tuple_dot_1_flat__pos__
             - 1)];
@@ -487,7 +457,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 stan::model::index_uni(sym2__));
             }
           }
-          current_statement__ = 13;
           stan::model::assign(arr_tuple_arr_tuple,
             std::tuple<int,
               std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>>(arr_tuple_arr_tuple_dot_1_temp__,
@@ -551,26 +520,22 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         current_statement__ = 14;
         very_deep_dot_1_flat__ = context__.vals_i("very_deep.1");
         int very_deep_dot_1_flat__pos__;
-        current_statement__ = 14;
         very_deep_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> very_deep_dot_2_dot_1_flat__;
         current_statement__ = 14;
         very_deep_dot_2_dot_1_flat__ = context__.vals_r("very_deep.2.1");
         int very_deep_dot_2_dot_1_flat__pos__;
-        current_statement__ = 14;
         very_deep_dot_2_dot_1_flat__pos__ = 1;
         std::vector<std::complex<local_scalar_t__>>
           very_deep_dot_2_dot_2_dot_1_flat__;
         current_statement__ = 14;
         very_deep_dot_2_dot_2_dot_1_flat__ = context__.vals_c("very_deep.2.2.1");
         int very_deep_dot_2_dot_2_dot_1_flat__pos__;
-        current_statement__ = 14;
         very_deep_dot_2_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> very_deep_dot_2_dot_2_dot_2_flat__;
         current_statement__ = 14;
         very_deep_dot_2_dot_2_dot_2_flat__ = context__.vals_r("very_deep.2.2.2");
         int very_deep_dot_2_dot_2_dot_2_flat__pos__;
-        current_statement__ = 14;
         very_deep_dot_2_dot_2_dot_2_flat__pos__ = 1;
         int very_deep_dot_1_temp__ = std::numeric_limits<int>::min();
         std::vector<
@@ -593,7 +558,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                     std::numeric_limits<double>::quiet_NaN()),
                   Eigen::Matrix<double,-1,-1>::Constant(6, 7,
                     std::numeric_limits<double>::quiet_NaN())})});
-        current_statement__ = 14;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           very_deep_dot_1_temp__ = very_deep_dot_1_flat__[(very_deep_dot_1_flat__pos__
             - 1)];
@@ -675,7 +639,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 stan::model::index_uni(sym2__));
             }
           }
-          current_statement__ = 14;
           stan::model::assign(very_deep,
             std::tuple<int,
               std::vector<
@@ -1933,7 +1896,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           DUMMY_VAR__};
       current_statement__ = 1;
       std::get<0>(basic_p) = context__.vals_r("basic_p.1");
-      current_statement__ = 1;
       std::get<1>(basic_p) = context__.vals_r("basic_p.2")[(1 - 1)];
       out__.write(std::get<0>(basic_p));
       out__.write(std::get<1>(basic_p));
@@ -1947,23 +1909,17 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
       current_statement__ = 2;
       std::get<0>(tuple_tuple_p) = context__.vals_r("tuple_tuple_p.1")[(1 -
         1)];
-      current_statement__ = 2;
       std::get<0>(std::get<1>(tuple_tuple_p)) = context__.vals_r("tuple_tuple_p.2.1")[(1
         - 1)];
       {
         std::vector<local_scalar_t__> tuple_tuple_p_dot_2_dot_2_flat__;
-        current_statement__ = 2;
         tuple_tuple_p_dot_2_dot_2_flat__ = context__.vals_r("tuple_tuple_p.2.2");
-        current_statement__ = 2;
         pos__ = 1;
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 2;
           stan::model::assign(std::get<1>(std::get<1>(tuple_tuple_p)),
             tuple_tuple_p_dot_2_dot_2_flat__[(pos__ - 1)],
             "assigning variable tuple_tuple_p.2.2",
             stan::model::index_uni(sym1__));
-          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -1989,19 +1945,16 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         current_statement__ = 3;
         arr_tuple_p_dot_1_flat__ = context__.vals_c("arr_tuple_p.1");
         int arr_tuple_p_dot_1_flat__pos__;
-        current_statement__ = 3;
         arr_tuple_p_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_p_dot_2_flat__;
         current_statement__ = 3;
         arr_tuple_p_dot_2_flat__ = context__.vals_r("arr_tuple_p.2");
         int arr_tuple_p_dot_2_flat__pos__;
-        current_statement__ = 3;
         arr_tuple_p_dot_2_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_p_dot_3_flat__;
         current_statement__ = 3;
         arr_tuple_p_dot_3_flat__ = context__.vals_r("arr_tuple_p.3");
         int arr_tuple_p_dot_3_flat__pos__;
-        current_statement__ = 3;
         arr_tuple_p_dot_3_flat__pos__ = 1;
         std::complex<double> arr_tuple_p_dot_1_temp__ =
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
@@ -2011,7 +1964,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         Eigen::Matrix<double,-1,1> arr_tuple_p_dot_3_temp__ =
           Eigen::Matrix<double,-1,1>::Constant(3,
             std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           arr_tuple_p_dot_1_temp__ = arr_tuple_p_dot_1_flat__[(arr_tuple_p_dot_1_flat__pos__
             - 1)];
@@ -2044,7 +1996,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             arr_tuple_p_dot_3_flat__pos__ = (arr_tuple_p_dot_3_flat__pos__ +
               3);
           }
-          current_statement__ = 3;
           stan::model::assign(arr_tuple_p,
             std::tuple<std::complex<double>, std::vector<double>,
               Eigen::Matrix<double,-1,1>>(arr_tuple_p_dot_1_temp__,
@@ -2071,27 +2022,21 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               std::vector<local_scalar_t__>(4, DUMMY_VAR__)})};
       current_statement__ = 4;
       std::get<0>(tuple_arr_tuple_p) = context__.vals_r("tuple_arr_tuple_p.1");
-      current_statement__ = 4;
       std::get<1>(tuple_arr_tuple_p) = context__.vals_r("tuple_arr_tuple_p.2")[(1
         - 1)];
       {
         std::vector<local_scalar_t__> tuple_arr_tuple_p_dot_3_dot_1_flat__;
-        current_statement__ = 4;
         tuple_arr_tuple_p_dot_3_dot_1_flat__ = context__.vals_r("tuple_arr_tuple_p.3.1");
         int tuple_arr_tuple_p_dot_3_dot_1_flat__pos__;
-        current_statement__ = 4;
         tuple_arr_tuple_p_dot_3_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> tuple_arr_tuple_p_dot_3_dot_2_flat__;
-        current_statement__ = 4;
         tuple_arr_tuple_p_dot_3_dot_2_flat__ = context__.vals_r("tuple_arr_tuple_p.3.2");
         int tuple_arr_tuple_p_dot_3_dot_2_flat__pos__;
-        current_statement__ = 4;
         tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ = 1;
         double tuple_arr_tuple_p_dot_3_dot_1_temp__ =
           std::numeric_limits<double>::quiet_NaN();
         std::vector<double> tuple_arr_tuple_p_dot_3_dot_2_temp__ =
           std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           tuple_arr_tuple_p_dot_3_dot_1_temp__ = tuple_arr_tuple_p_dot_3_dot_1_flat__[(tuple_arr_tuple_p_dot_3_dot_1_flat__pos__
             - 1)];
@@ -2106,7 +2051,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             "assigning variable tuple_arr_tuple_p_dot_3_dot_2_temp__");
           tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_p_dot_3_dot_2_flat__pos__
             + 4);
-          current_statement__ = 4;
           stan::model::assign(std::get<2>(tuple_arr_tuple_p),
             std::tuple<double, std::vector<double>>(tuple_arr_tuple_p_dot_3_dot_1_temp__,
               tuple_arr_tuple_p_dot_3_dot_2_temp__),
@@ -2148,33 +2092,28 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         current_statement__ = 5;
         arr_tuple_tuple_p_dot_1_flat__ = context__.vals_r("arr_tuple_tuple_p.1");
         int arr_tuple_tuple_p_dot_1_flat__pos__;
-        current_statement__ = 5;
         arr_tuple_tuple_p_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_tuple_p_dot_2_flat__;
         current_statement__ = 5;
         arr_tuple_tuple_p_dot_2_flat__ = context__.vals_r("arr_tuple_tuple_p.2");
         int arr_tuple_tuple_p_dot_2_flat__pos__;
-        current_statement__ = 5;
         arr_tuple_tuple_p_dot_2_flat__pos__ = 1;
         std::vector<local_scalar_t__> arr_tuple_tuple_p_dot_3_dot_1_flat__;
         current_statement__ = 5;
         arr_tuple_tuple_p_dot_3_dot_1_flat__ = context__.vals_r("arr_tuple_tuple_p.3.1");
         int arr_tuple_tuple_p_dot_3_dot_1_flat__pos__;
-        current_statement__ = 5;
         arr_tuple_tuple_p_dot_3_dot_1_flat__pos__ = 1;
         std::vector<std::complex<local_scalar_t__>>
           arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__;
         current_statement__ = 5;
         arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__ = context__.vals_c("arr_tuple_tuple_p.3.2.1");
         int arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__;
-        current_statement__ = 5;
         arr_tuple_tuple_p_dot_3_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__>
           arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__;
         current_statement__ = 5;
         arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__ = context__.vals_r("arr_tuple_tuple_p.3.2.2");
         int arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__;
-        current_statement__ = 5;
         arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__ = 1;
         double arr_tuple_tuple_p_dot_1_temp__ =
           std::numeric_limits<double>::quiet_NaN();
@@ -2191,7 +2130,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 std::numeric_limits<double>::quiet_NaN()),
               Eigen::Matrix<double,-1,1>::Constant(4,
                 std::numeric_limits<double>::quiet_NaN())}};
-        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           arr_tuple_tuple_p_dot_1_temp__ = arr_tuple_tuple_p_dot_1_flat__[(arr_tuple_tuple_p_dot_1_flat__pos__
             - 1)];
@@ -2235,7 +2173,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__ = (arr_tuple_tuple_p_dot_3_dot_2_dot_2_flat__pos__
               + 4);
           }
-          current_statement__ = 5;
           stan::model::assign(arr_tuple_tuple_p,
             std::tuple<double, double,
               std::tuple<double,
@@ -2283,21 +2220,18 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         current_statement__ = 6;
         arr_tuple_arr_tuple_p_dot_1_flat__ = context__.vals_r("arr_tuple_arr_tuple_p.1");
         int arr_tuple_arr_tuple_p_dot_1_flat__pos__;
-        current_statement__ = 6;
         arr_tuple_arr_tuple_p_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__>
           arr_tuple_arr_tuple_p_dot_2_dot_1_flat__;
         current_statement__ = 6;
         arr_tuple_arr_tuple_p_dot_2_dot_1_flat__ = context__.vals_r("arr_tuple_arr_tuple_p.2.1");
         int arr_tuple_arr_tuple_p_dot_2_dot_1_flat__pos__;
-        current_statement__ = 6;
         arr_tuple_arr_tuple_p_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__>
           arr_tuple_arr_tuple_p_dot_2_dot_2_flat__;
         current_statement__ = 6;
         arr_tuple_arr_tuple_p_dot_2_dot_2_flat__ = context__.vals_r("arr_tuple_arr_tuple_p.2.2");
         int arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__;
-        current_statement__ = 6;
         arr_tuple_arr_tuple_p_dot_2_dot_2_flat__pos__ = 1;
         double arr_tuple_arr_tuple_p_dot_1_temp__ =
           std::numeric_limits<double>::quiet_NaN();
@@ -2308,7 +2242,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                                                              ),
               Eigen::Matrix<double,-1,1>::Constant(5,
                 std::numeric_limits<double>::quiet_NaN())});
-        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           arr_tuple_arr_tuple_p_dot_1_temp__ = arr_tuple_arr_tuple_p_dot_1_flat__[(arr_tuple_arr_tuple_p_dot_1_flat__pos__
             - 1)];
@@ -2359,7 +2292,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 stan::model::index_uni(sym2__));
             }
           }
-          current_statement__ = 6;
           stan::model::assign(arr_tuple_arr_tuple_p,
             std::tuple<double,
               std::vector<std::tuple<double, Eigen::Matrix<double,-1,1>>>>(arr_tuple_arr_tuple_p_dot_1_temp__,
@@ -2421,26 +2353,22 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
         current_statement__ = 7;
         very_deep_p_dot_1_flat__ = context__.vals_r("very_deep_p.1");
         int very_deep_p_dot_1_flat__pos__;
-        current_statement__ = 7;
         very_deep_p_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> very_deep_p_dot_2_dot_1_flat__;
         current_statement__ = 7;
         very_deep_p_dot_2_dot_1_flat__ = context__.vals_r("very_deep_p.2.1");
         int very_deep_p_dot_2_dot_1_flat__pos__;
-        current_statement__ = 7;
         very_deep_p_dot_2_dot_1_flat__pos__ = 1;
         std::vector<std::complex<local_scalar_t__>>
           very_deep_p_dot_2_dot_2_dot_1_flat__;
         current_statement__ = 7;
         very_deep_p_dot_2_dot_2_dot_1_flat__ = context__.vals_c("very_deep_p.2.2.1");
         int very_deep_p_dot_2_dot_2_dot_1_flat__pos__;
-        current_statement__ = 7;
         very_deep_p_dot_2_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> very_deep_p_dot_2_dot_2_dot_2_flat__;
         current_statement__ = 7;
         very_deep_p_dot_2_dot_2_dot_2_flat__ = context__.vals_r("very_deep_p.2.2.2");
         int very_deep_p_dot_2_dot_2_dot_2_flat__pos__;
-        current_statement__ = 7;
         very_deep_p_dot_2_dot_2_dot_2_flat__pos__ = 1;
         double very_deep_p_dot_1_temp__ =
           std::numeric_limits<double>::quiet_NaN();
@@ -2464,7 +2392,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                     std::numeric_limits<double>::quiet_NaN()),
                   Eigen::Matrix<double,-1,-1>::Constant(6, 7,
                     std::numeric_limits<double>::quiet_NaN())})});
-        current_statement__ = 7;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           very_deep_p_dot_1_temp__ = very_deep_p_dot_1_flat__[(very_deep_p_dot_1_flat__pos__
             - 1)];
@@ -2548,7 +2475,6 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                 stan::model::index_uni(sym2__));
             }
           }
-          current_statement__ = 7;
           stan::model::assign(very_deep_p,
             std::tuple<double,
               std::vector<
@@ -4340,9 +4266,7 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
               std::numeric_limits<int>::min()}};
       current_statement__ = 1;
       std::get<0>(y) = context__.vals_i("y.1")[(1 - 1)];
-      current_statement__ = 1;
       std::get<0>(std::get<1>(y)) = context__.vals_r("y.2.1")[(1 - 1)];
-      current_statement__ = 1;
       std::get<1>(std::get<1>(y)) = context__.vals_i("y.2.2")[(1 - 1)];
       current_statement__ = 1;
       stan::math::check_greater_or_equal(function__, "y.1", std::get<0>(y), 0);
@@ -4366,20 +4290,14 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
               std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 2;
       std::get<0>(x) = context__.vals_i("x.1")[(1 - 1)];
-      current_statement__ = 2;
       std::get<1>(x) = context__.vals_r("x.2")[(1 - 1)];
       {
         std::vector<local_scalar_t__> x_dot_3_flat__;
-        current_statement__ = 2;
         x_dot_3_flat__ = context__.vals_r("x.3");
-        current_statement__ = 2;
         pos__ = 1;
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 2;
           stan::model::assign(std::get<2>(x), x_dot_3_flat__[(pos__ - 1)],
             "assigning variable x.3", stan::model::index_uni(sym1__));
-          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -4407,21 +4325,17 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
         current_statement__ = 3;
         z_dot_1_flat__ = context__.vals_r("z.1");
         int z_dot_1_flat__pos__;
-        current_statement__ = 3;
         z_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> z_dot_2_flat__;
         current_statement__ = 3;
         z_dot_2_flat__ = context__.vals_r("z.2");
         int z_dot_2_flat__pos__;
-        current_statement__ = 3;
         z_dot_2_flat__pos__ = 1;
         double z_dot_1_temp__ = std::numeric_limits<double>::quiet_NaN();
         Eigen::Matrix<double,-1,1> z_dot_2_temp__ =
           Eigen::Matrix<double,-1,1>::Constant(4,
             std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 3;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
             z_dot_1_temp__ = z_dot_1_flat__[(z_dot_1_flat__pos__ - 1)];
             z_dot_1_flat__pos__ = (z_dot_1_flat__pos__ + 1);
@@ -4442,7 +4356,6 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
               }
               z_dot_2_flat__pos__ = (z_dot_2_flat__pos__ + 4);
             }
-            current_statement__ = 3;
             stan::model::assign(z,
               std::tuple<double, Eigen::Matrix<double,-1,1>>(z_dot_1_temp__,
                 z_dot_2_temp__), "assigning variable z",
@@ -4452,7 +4365,6 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
       }
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 3;
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           current_statement__ = 3;
           stan::math::check_greater_or_equal(function__,
@@ -4867,7 +4779,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__)}));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 2;
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           current_statement__ = 2;
           std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.template read_constrain_lb<
@@ -4987,7 +4898,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__)}));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 2;
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           current_statement__ = 2;
           std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.template read_constrain_lb<
@@ -5113,7 +5023,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                 std::numeric_limits<double>::quiet_NaN())}));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 2;
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           current_statement__ = 2;
           std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.template read_constrain_lb<
@@ -5181,7 +5090,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
       out__.write(std::get<1>(ps));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 2;
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           out__.write(std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]));
           out__.write(std::get<1>(ps2[(sym2__ - 1)][(sym1__ - 1)]));
@@ -5253,7 +5161,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__)}));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 2;
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           current_statement__ = 2;
           std::get<0>(ps2[(sym2__ - 1)][(sym1__ - 1)]) = in__.read<
@@ -5395,7 +5302,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
           DUMMY_VAR__};
       current_statement__ = 1;
       std::get<0>(ps) = context__.vals_r("ps.1")[(1 - 1)];
-      current_statement__ = 1;
       std::get<1>(ps) = context__.vals_r("ps.2")[(1 - 1)];
       out__.write_free_lb(0, std::get<0>(ps));
       out__.write_free_lb(0, std::get<1>(ps));
@@ -5418,21 +5324,17 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
         current_statement__ = 2;
         ps2_dot_1_flat__ = context__.vals_r("ps2.1");
         int ps2_dot_1_flat__pos__;
-        current_statement__ = 2;
         ps2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> ps2_dot_2_flat__;
         current_statement__ = 2;
         ps2_dot_2_flat__ = context__.vals_r("ps2.2");
         int ps2_dot_2_flat__pos__;
-        current_statement__ = 2;
         ps2_dot_2_flat__pos__ = 1;
         double ps2_dot_1_temp__ = std::numeric_limits<double>::quiet_NaN();
         Eigen::Matrix<double,-1,1> ps2_dot_2_temp__ =
           Eigen::Matrix<double,-1,1>::Constant(4,
             std::numeric_limits<double>::quiet_NaN());
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 2;
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
             ps2_dot_1_temp__ = ps2_dot_1_flat__[(ps2_dot_1_flat__pos__ - 1)];
             ps2_dot_1_flat__pos__ = (ps2_dot_1_flat__pos__ + 1);
@@ -5453,7 +5355,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               }
               ps2_dot_2_flat__pos__ = (ps2_dot_2_flat__pos__ + 4);
             }
-            current_statement__ = 2;
             stan::model::assign(ps2,
               std::tuple<double, Eigen::Matrix<double,-1,1>>(ps2_dot_1_temp__,
                 ps2_dot_2_temp__), "assigning variable ps2",
@@ -5506,25 +5407,21 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
         current_statement__ = 4;
         complicated_dot_1_flat__ = context__.vals_r("complicated.1");
         int complicated_dot_1_flat__pos__;
-        current_statement__ = 4;
         complicated_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> complicated_dot_2_dot_1_flat__;
         current_statement__ = 4;
         complicated_dot_2_dot_1_flat__ = context__.vals_r("complicated.2.1");
         int complicated_dot_2_dot_1_flat__pos__;
-        current_statement__ = 4;
         complicated_dot_2_dot_1_flat__pos__ = 1;
         std::vector<local_scalar_t__> complicated_dot_2_dot_2_flat__;
         current_statement__ = 4;
         complicated_dot_2_dot_2_flat__ = context__.vals_r("complicated.2.2");
         int complicated_dot_2_dot_2_flat__pos__;
-        current_statement__ = 4;
         complicated_dot_2_dot_2_flat__pos__ = 1;
         std::vector<local_scalar_t__> complicated_dot_2_dot_3_flat__;
         current_statement__ = 4;
         complicated_dot_2_dot_3_flat__ = context__.vals_r("complicated.2.3");
         int complicated_dot_2_dot_3_flat__pos__;
-        current_statement__ = 4;
         complicated_dot_2_dot_3_flat__pos__ = 1;
         double complicated_dot_1_temp__ =
           std::numeric_limits<double>::quiet_NaN();
@@ -5541,7 +5438,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                 std::numeric_limits<double>::quiet_NaN()),
               Eigen::Matrix<double,-1,-1>::Constant(5, 4,
                 std::numeric_limits<double>::quiet_NaN())});
-        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           complicated_dot_1_temp__ = complicated_dot_1_flat__[(complicated_dot_1_flat__pos__
             - 1)];
@@ -5616,7 +5512,6 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                 stan::model::index_uni(sym2__));
             }
           }
-          current_statement__ = 4;
           stan::model::assign(complicated,
             std::tuple<double,
               std::vector<
@@ -5938,7 +5833,6 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
             std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 2;
       std::get<0>(d) = context__.vals_r("d.1")[(1 - 1)];
-      current_statement__ = 2;
       std::get<1>(d) = context__.vals_r("d.2")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6574,9 +6468,7 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
                std::vector<int>(2, std::numeric_limits<int>::min())}};
       current_statement__ = 4;
       std::get<0>(ds) = context__.vals_i("ds.1")[(1 - 1)];
-      current_statement__ = 4;
       std::get<0>(std::get<1>(ds)) = context__.vals_i("ds.2.1");
-      current_statement__ = 4;
       std::get<1>(std::get<1>(ds)) = context__.vals_i("ds.2.2");
       current_statement__ = 4;
       stan::math::check_greater_or_equal(function__, "ds.1", std::get<0>(ds),
@@ -6797,7 +6689,6 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
           DUMMY_VAR__};
       current_statement__ = 1;
       std::get<0>(ps) = context__.vals_r("ps.1")[(1 - 1)];
-      current_statement__ = 1;
       std::get<1>(ps) = context__.vals_r("ps.2")[(1 - 1)];
       out__.write_free_lb(0, std::get<0>(ps));
       out__.write_free_lb(0, std::get<1>(ps));
@@ -8455,7 +8346,6 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
           DUMMY_VAR__};
       current_statement__ = 1;
       std::get<0>(ps) = context__.vals_r("ps.1")[(1 - 1)];
-      current_statement__ = 1;
       std::get<1>(ps) = context__.vals_r("ps.2")[(1 - 1)];
       out__.write(std::get<0>(ps));
       out__.write(std::get<1>(ps));
@@ -8469,24 +8359,17 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
               DUMMY_VAR__)}};
       current_statement__ = 2;
       std::get<0>(ps2) = context__.vals_r("ps2.1")[(1 - 1)];
-      current_statement__ = 2;
       std::get<0>(std::get<1>(ps2)) = context__.vals_r("ps2.2.1")[(1 - 1)];
       {
         std::vector<local_scalar_t__> ps2_dot_2_dot_2_flat__;
-        current_statement__ = 2;
         ps2_dot_2_dot_2_flat__ = context__.vals_r("ps2.2.2");
-        current_statement__ = 2;
         pos__ = 1;
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          current_statement__ = 2;
           for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            current_statement__ = 2;
             stan::model::assign(std::get<1>(std::get<1>(ps2)),
               ps2_dot_2_dot_2_flat__[(pos__ - 1)],
               "assigning variable ps2.2.2", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 2;
             pos__ = (pos__ + 1);
           }
         }
@@ -8882,7 +8765,6 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
           DUMMY_VAR__};
       current_statement__ = 1;
       std::get<0>(ps) = context__.vals_r("ps.1")[(1 - 1)];
-      current_statement__ = 1;
       std::get<1>(ps) = context__.vals_r("ps.2")[(1 - 1)];
       out__.write(std::get<0>(ps));
       out__.write_free_lb(0, std::get<1>(ps));
@@ -9132,14 +9014,10 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         std::vector<local_scalar_t__> V_flat__;
         current_statement__ = 11;
         V_flat__ = context__.vals_r("V");
-        current_statement__ = 11;
         pos__ = 1;
-        current_statement__ = 11;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 11;
           stan::model::assign(V, V_flat__[(pos__ - 1)],
             "assigning variable V", stan::model::index_uni(sym1__));
-          current_statement__ = 11;
           pos__ = (pos__ + 1);
         }
       }
@@ -9154,7 +9032,6 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
             std::vector<int>(3, std::numeric_limits<int>::min())};
       current_statement__ = 12;
       std::get<0>(d) = context__.vals_i("d.1");
-      current_statement__ = 12;
       std::get<1>(d) = context__.vals_i("d.2");
       current_statement__ = 13;
       arrs = std::vector<std::tuple<int, std::vector<int>>>(4,
@@ -10306,17 +10183,12 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
         std::vector<local_scalar_t__> m1_flat__;
         current_statement__ = 8;
         m1_flat__ = context__.vals_r("m1");
-        current_statement__ = 8;
         pos__ = 1;
-        current_statement__ = 8;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 8;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 8;
             stan::model::assign(m1, m1_flat__[(pos__ - 1)],
               "assigning variable m1", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 8;
             pos__ = (pos__ + 1);
           }
         }
@@ -10336,17 +10208,12 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
         std::vector<local_scalar_t__> m2_flat__;
         current_statement__ = 11;
         m2_flat__ = context__.vals_r("m2");
-        current_statement__ = 11;
         pos__ = 1;
-        current_statement__ = 11;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 11;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 11;
             stan::model::assign(m2, m2_flat__[(pos__ - 1)],
               "assigning variable m2", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 11;
             pos__ = (pos__ + 1);
           }
         }
@@ -10784,7 +10651,6 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
                  std::vector<int>(N, std::numeric_limits<int>::min())};
       current_statement__ = 7;
       std::get<0>(data_m) = context__.vals_r("data_m.1")[(1 - 1)];
-      current_statement__ = 7;
       std::get<1>(data_m) = context__.vals_i("data_m.2");
       current_statement__ = 8;
       sum1 = std::numeric_limits<double>::quiet_NaN();

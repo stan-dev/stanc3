@@ -189,7 +189,7 @@ module Helpers = struct
           (fun loopvar ->
             mk_nested_for uppers'
               (fun loopvars -> bodyfn (loopvar :: loopvars))
-              meta )
+              Location_span.empty )
           meta
 
   (** [mk_for_iteratee] returns a MIR For statement that iterates over the given expression

@@ -854,14 +854,10 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         std::vector<local_scalar_t__> d_vector_flat__;
         current_statement__ = 763;
         d_vector_flat__ = context__.vals_r("d_vector");
-        current_statement__ = 763;
         pos__ = 1;
-        current_statement__ = 763;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 763;
           stan::model::assign(d_vector, d_vector_flat__[(pos__ - 1)],
             "assigning variable d_vector", stan::model::index_uni(sym1__));
-          current_statement__ = 763;
           pos__ = (pos__ + 1);
         }
       }
@@ -879,14 +875,10 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         std::vector<local_scalar_t__> d_row_vector_flat__;
         current_statement__ = 765;
         d_row_vector_flat__ = context__.vals_r("d_row_vector");
-        current_statement__ = 765;
         pos__ = 1;
-        current_statement__ = 765;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 765;
           stan::model::assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
             "assigning variable d_row_vector", stan::model::index_uni(sym1__));
-          current_statement__ = 765;
           pos__ = (pos__ + 1);
         }
       }
@@ -10203,17 +10195,12 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         std::vector<local_scalar_t__> p_matrix_flat__;
         current_statement__ = 3;
         p_matrix_flat__ = context__.vals_r("p_matrix");
-        current_statement__ = 3;
         pos__ = 1;
-        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 3;
           for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-            current_statement__ = 3;
             stan::model::assign(p_matrix, p_matrix_flat__[(pos__ - 1)],
               "assigning variable p_matrix", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 3;
             pos__ = (pos__ + 1);
           }
         }
@@ -10225,14 +10212,10 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         std::vector<local_scalar_t__> p_vector_flat__;
         current_statement__ = 4;
         p_vector_flat__ = context__.vals_r("p_vector");
-        current_statement__ = 4;
         pos__ = 1;
-        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 4;
           stan::model::assign(p_vector, p_vector_flat__[(pos__ - 1)],
             "assigning variable p_vector", stan::model::index_uni(sym1__));
-          current_statement__ = 4;
           pos__ = (pos__ + 1);
         }
       }
@@ -10243,14 +10226,10 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         std::vector<local_scalar_t__> p_row_vector_flat__;
         current_statement__ = 5;
         p_row_vector_flat__ = context__.vals_r("p_row_vector");
-        current_statement__ = 5;
         pos__ = 1;
-        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 5;
           stan::model::assign(p_row_vector, p_row_vector_flat__[(pos__ - 1)],
             "assigning variable p_row_vector", stan::model::index_uni(sym1__));
-          current_statement__ = 5;
           pos__ = (pos__ + 1);
         }
       }
@@ -10578,14 +10557,10 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         std::vector<local_scalar_t__> d_vector_flat__;
         current_statement__ = 32;
         d_vector_flat__ = context__.vals_r("d_vector");
-        current_statement__ = 32;
         pos__ = 1;
-        current_statement__ = 32;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 32;
           stan::model::assign(d_vector, d_vector_flat__[(pos__ - 1)],
             "assigning variable d_vector", stan::model::index_uni(sym1__));
-          current_statement__ = 32;
           pos__ = (pos__ + 1);
         }
       }
@@ -10603,14 +10578,10 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         std::vector<local_scalar_t__> d_row_vector_flat__;
         current_statement__ = 34;
         d_row_vector_flat__ = context__.vals_r("d_row_vector");
-        current_statement__ = 34;
         pos__ = 1;
-        current_statement__ = 34;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 34;
           stan::model::assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
             "assigning variable d_row_vector", stan::model::index_uni(sym1__));
-          current_statement__ = 34;
           pos__ = (pos__ + 1);
         }
       }
@@ -11086,17 +11057,12 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         std::vector<local_scalar_t__> p_matrix_flat__;
         current_statement__ = 3;
         p_matrix_flat__ = context__.vals_r("p_matrix");
-        current_statement__ = 3;
         pos__ = 1;
-        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 3;
           for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-            current_statement__ = 3;
             stan::model::assign(p_matrix, p_matrix_flat__[(pos__ - 1)],
               "assigning variable p_matrix", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 3;
             pos__ = (pos__ + 1);
           }
         }
@@ -11108,14 +11074,10 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         std::vector<local_scalar_t__> p_vector_flat__;
         current_statement__ = 4;
         p_vector_flat__ = context__.vals_r("p_vector");
-        current_statement__ = 4;
         pos__ = 1;
-        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 4;
           stan::model::assign(p_vector, p_vector_flat__[(pos__ - 1)],
             "assigning variable p_vector", stan::model::index_uni(sym1__));
-          current_statement__ = 4;
           pos__ = (pos__ + 1);
         }
       }
@@ -11126,14 +11088,10 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         std::vector<local_scalar_t__> p_row_vector_flat__;
         current_statement__ = 5;
         p_row_vector_flat__ = context__.vals_r("p_row_vector");
-        current_statement__ = 5;
         pos__ = 1;
-        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 5;
           stan::model::assign(p_row_vector, p_row_vector_flat__[(pos__ - 1)],
             "assigning variable p_row_vector", stan::model::index_uni(sym1__));
-          current_statement__ = 5;
           pos__ = (pos__ + 1);
         }
       }
