@@ -907,7 +907,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + (d_int * 1) + (d_int * d_int) + d_int + d_int + 1;
+    num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
   }
   inline std::string model_name() const final {
     return "distributions_model";
@@ -10365,8 +10365,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + (d_int * 1)) + (d_int * d_int)) +
-      d_int) + d_int) + 1);
+    const size_t num_params__ = (((((1 + d_int) + (d_int * d_int)) + d_int) +
+      d_int) + 1);
     const size_t num_transformed = emit_transformed_parameters * (1);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -10383,8 +10383,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + (d_int * 1)) + (d_int * d_int)) +
-      d_int) + d_int) + 1);
+    const size_t num_params__ = (((((1 + d_int) + (d_int * d_int)) + d_int) +
+      d_int) + 1);
     const size_t num_transformed = emit_transformed_parameters * (1);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -10628,7 +10628,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + (d_int * 1) + (d_int * d_int) + d_int + d_int + 1;
+    num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
   }
   inline std::string model_name() const final {
     return "restricted_model";
@@ -11248,8 +11248,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + (d_int * 1)) + (d_int * d_int)) +
-      d_int) + d_int) + 1);
+    const size_t num_params__ = (((((1 + d_int) + (d_int * d_int)) + d_int) +
+      d_int) + 1);
     const size_t num_transformed = emit_transformed_parameters * (1);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -11266,8 +11266,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((1 + (d_int * 1)) + (d_int * d_int)) +
-      d_int) + d_int) + 1);
+    const size_t num_params__ = (((((1 + d_int) + (d_int * d_int)) + d_int) +
+      d_int) + 1);
     const size_t num_transformed = emit_transformed_parameters * (1);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +

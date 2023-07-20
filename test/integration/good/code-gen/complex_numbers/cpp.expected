@@ -9739,8 +9739,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     const size_t num_transformed = emit_transformed_parameters * ((((1 + 2) +
       (2 * 2)) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities *
-      ((((((((((((1 + 1) + 2) + (2 * 2)) + (2 * (3 * 2))) + 2) + 2) + (0 *
-      1)) + (1 * 1)) + 2) + 2) + 1));
+      ((((((((((((1 + 1) + 2) + (2 * 2)) + (2 * (3 * 2))) + 2) + 2) + 0) + 1)
+      + 2) + 2) + 1));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -9759,8 +9759,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     const size_t num_transformed = emit_transformed_parameters * ((((1 + 2) +
       (2 * 2)) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities *
-      ((((((((((((1 + 1) + 2) + (2 * 2)) + (2 * (3 * 2))) + 2) + 2) + (0 *
-      1)) + (1 * 1)) + 2) + 2) + 1));
+      ((((((((((((1 + 1) + 2) + (2 * 2)) + (2 * (3 * 2))) + 2) + 2) + 0) + 1)
+      + 2) + 2) + 1));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,

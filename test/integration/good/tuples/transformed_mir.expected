@@ -458,16 +458,7 @@
                                 (meta
                                  ((type_ UInt) (loc <opaque>)
                                   (adlevel DataOnly))))
-                               ((pattern
-                                 (FunApp (StanLib Times__ FnPlain AoS)
-                                  (((pattern (Lit Int 4))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly))))
-                                   ((pattern (Lit Int 1))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly)))))))
+                               ((pattern (Lit Int 4))
                                 (meta
                                  ((type_ UInt) (loc <opaque>)
                                   (adlevel DataOnly)))))))
@@ -490,14 +481,7 @@
                      (((pattern (Var arr_tuple_dot_2_flat__pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (FunApp (StanLib Times__ FnPlain AoS)
-                         (((pattern (Lit Int 4))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 1))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      ((pattern (Lit Int 4))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -837,16 +821,7 @@
                                 (meta
                                  ((type_ UInt) (loc <opaque>)
                                   (adlevel DataOnly))))
-                               ((pattern
-                                 (FunApp (StanLib Times__ FnPlain AoS)
-                                  (((pattern (Lit Int 4))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly))))
-                                   ((pattern (Lit Int 1))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly)))))))
+                               ((pattern (Lit Int 4))
                                 (meta
                                  ((type_ UInt) (loc <opaque>)
                                   (adlevel DataOnly)))))))
@@ -871,14 +846,7 @@
                         (Var tuple_arr_tuple_dot_3_dot_2_flat__pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (FunApp (StanLib Times__ FnPlain AoS)
-                         (((pattern (Lit Int 4))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 1))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      ((pattern (Lit Int 4))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -6379,16 +6347,7 @@
                                 (meta
                                  ((type_ UInt) (loc <opaque>)
                                   (adlevel DataOnly))))
-                               ((pattern
-                                 (FunApp (StanLib Times__ FnPlain AoS)
-                                  (((pattern (Lit Int 4))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly))))
-                                   ((pattern (Lit Int 1))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly)))))))
+                               ((pattern (Lit Int 4))
                                 (meta
                                  ((type_ UInt) (loc <opaque>)
                                   (adlevel DataOnly)))))))
@@ -6411,14 +6370,7 @@
                      (((pattern (Var arr_tuple_p_dot_2_flat__pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (FunApp (StanLib Times__ FnPlain AoS)
-                         (((pattern (Lit Int 4))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 1))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      ((pattern (Lit Int 4))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -6851,16 +6803,7 @@
                                 (meta
                                  ((type_ UInt) (loc <opaque>)
                                   (adlevel DataOnly))))
-                               ((pattern
-                                 (FunApp (StanLib Times__ FnPlain AoS)
-                                  (((pattern (Lit Int 4))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly))))
-                                   ((pattern (Lit Int 1))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly)))))))
+                               ((pattern (Lit Int 4))
                                 (meta
                                  ((type_ UInt) (loc <opaque>)
                                   (adlevel DataOnly)))))))
@@ -6885,14 +6828,7 @@
                         (Var tuple_arr_tuple_p_dot_3_dot_2_flat__pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (FunApp (StanLib Times__ FnPlain AoS)
-                         (((pattern (Lit Int 4))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                          ((pattern (Lit Int 1))
-                           (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      ((pattern (Lit Int 4))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))

@@ -94,6 +94,7 @@ let rec io_size st =
   | SComplexMatrix (dim1, dim2) ->
       Expr.Helpers.binop dim1 Operator.Times
         (Expr.Helpers.binop dim2 Operator.Times two)
+  | SArray ((SReal | SInt), dim) -> dim
   | SArray (t, dim) -> Expr.Helpers.binop dim Operator.Times (io_size t)
 
 (**

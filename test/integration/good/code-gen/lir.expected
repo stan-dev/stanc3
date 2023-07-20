@@ -17133,32 +17133,16 @@
                                                               (Literal 1) Add
                                                               (Literal 1)))
                                                             Add (Literal 1)))
-                                                          Add
-                                                          (Parens
-                                                           (BinOp (Literal 5)
-                                                            Multiply
-                                                            (Literal 1)))))
-                                                        Add
-                                                        (Parens
-                                                         (BinOp (Literal 5)
-                                                          Multiply
-                                                          (Literal 1)))))
-                                                      Add
-                                                      (Parens
-                                                       (BinOp (Literal 5)
-                                                        Multiply (Literal 1)))))
-                                                    Add
-                                                    (Parens
-                                                     (BinOp (Var N) Multiply
-                                                      (Literal 1)))))
+                                                          Add (Literal 5)))
+                                                        Add (Literal 5)))
+                                                      Add (Literal 5)))
+                                                    Add (Var N)))
                                                   Add
                                                   (Parens
                                                    (BinOp (Var N) Multiply
                                                     (Parens
                                                      (BinOp (Var M) Multiply
-                                                      (Parens
-                                                       (BinOp (Var K)
-                                                        Multiply (Literal 1)))))))))
+                                                      (Var K)))))))
                                                 Add (Var N)))
                                               Add
                                               (Parens
@@ -17252,20 +17236,12 @@
                                                 (Parens
                                                  (BinOp
                                                   (Parens
-                                                   (BinOp
-                                                    (Parens
-                                                     (BinOp (Var N) Multiply
-                                                      (Literal 1)))
-                                                    Add
+                                                   (BinOp (Var N) Add
                                                     (Parens
                                                      (BinOp (Var N) Multiply
                                                       (Parens
                                                        (BinOp (Var M)
-                                                        Multiply
-                                                        (Parens
-                                                         (BinOp (Var K)
-                                                          Multiply
-                                                          (Literal 1)))))))))
+                                                        Multiply (Var K)))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -17384,12 +17360,7 @@
                                                                     1) Add
                                                                     (Literal
                                                                     1))) Add
-                                                                    (Parens
-                                                                    (BinOp
-                                                                    (Var N)
-                                                                    Multiply
-                                                                    (Literal
-                                                                    1)))))
+                                                                    (Var N)))
                                                                   Add
                                                                   (Parens
                                                                    (BinOp
@@ -17399,12 +17370,7 @@
                                                                     (BinOp
                                                                     (Var M)
                                                                     Multiply
-                                                                    (Parens
-                                                                    (BinOp
-                                                                    (Var K)
-                                                                    Multiply
-                                                                    (Literal
-                                                                    1)))))))))
+                                                                    (Var K)))))))
                                                                 Add (Var N)))
                                                               Add
                                                               (Parens
@@ -17479,10 +17445,7 @@
                                           (Parens
                                            (BinOp (Literal 3) Multiply
                                             (Literal 3)))))))
-                                      Add
-                                      (Parens
-                                       (BinOp (Literal 3) Multiply
-                                        (Literal 1)))))
+                                      Add (Literal 3)))
                                     Add
                                     (Parens
                                      (BinOp (Literal 5) Multiply
@@ -17605,32 +17568,16 @@
                                                               (Literal 1) Add
                                                               (Literal 1)))
                                                             Add (Literal 1)))
-                                                          Add
-                                                          (Parens
-                                                           (BinOp (Literal 5)
-                                                            Multiply
-                                                            (Literal 1)))))
-                                                        Add
-                                                        (Parens
-                                                         (BinOp (Literal 5)
-                                                          Multiply
-                                                          (Literal 1)))))
-                                                      Add
-                                                      (Parens
-                                                       (BinOp (Literal 5)
-                                                        Multiply (Literal 1)))))
-                                                    Add
-                                                    (Parens
-                                                     (BinOp (Var N) Multiply
-                                                      (Literal 1)))))
+                                                          Add (Literal 5)))
+                                                        Add (Literal 5)))
+                                                      Add (Literal 5)))
+                                                    Add (Var N)))
                                                   Add
                                                   (Parens
                                                    (BinOp (Var N) Multiply
                                                     (Parens
                                                      (BinOp (Var M) Multiply
-                                                      (Parens
-                                                       (BinOp (Var K)
-                                                        Multiply (Literal 1)))))))))
+                                                      (Var K)))))))
                                                 Add (Var N)))
                                               Add
                                               (Parens
@@ -17724,20 +17671,12 @@
                                                 (Parens
                                                  (BinOp
                                                   (Parens
-                                                   (BinOp
-                                                    (Parens
-                                                     (BinOp (Var N) Multiply
-                                                      (Literal 1)))
-                                                    Add
+                                                   (BinOp (Var N) Add
                                                     (Parens
                                                      (BinOp (Var N) Multiply
                                                       (Parens
                                                        (BinOp (Var M)
-                                                        Multiply
-                                                        (Parens
-                                                         (BinOp (Var K)
-                                                          Multiply
-                                                          (Literal 1)))))))))
+                                                        Multiply (Var K)))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -17856,12 +17795,7 @@
                                                                     1) Add
                                                                     (Literal
                                                                     1))) Add
-                                                                    (Parens
-                                                                    (BinOp
-                                                                    (Var N)
-                                                                    Multiply
-                                                                    (Literal
-                                                                    1)))))
+                                                                    (Var N)))
                                                                   Add
                                                                   (Parens
                                                                    (BinOp
@@ -17871,12 +17805,7 @@
                                                                     (BinOp
                                                                     (Var M)
                                                                     Multiply
-                                                                    (Parens
-                                                                    (BinOp
-                                                                    (Var K)
-                                                                    Multiply
-                                                                    (Literal
-                                                                    1)))))))))
+                                                                    (Var K)))))))
                                                                 Add (Var N)))
                                                               Add
                                                               (Parens
@@ -17951,10 +17880,7 @@
                                           (Parens
                                            (BinOp (Literal 3) Multiply
                                             (Literal 3)))))))
-                                      Add
-                                      (Parens
-                                       (BinOp (Literal 3) Multiply
-                                        (Literal 1)))))
+                                      Add (Literal 3)))
                                     Add
                                     (Parens
                                      (BinOp (Literal 5) Multiply
@@ -22572,23 +22498,14 @@
                                (BinOp
                                 (BinOp (BinOp (Literal 1) Add (Literal 1))
                                  Add (Literal 1))
-                                Add
-                                (Parens
-                                 (BinOp (Literal 5) Multiply (Literal 1))))
-                               Add
-                               (Parens
-                                (BinOp (Literal 5) Multiply (Literal 1))))
-                              Add
-                              (Parens
-                               (BinOp (Literal 5) Multiply (Literal 1))))
-                             Add
-                             (Parens (BinOp (Var N) Multiply (Literal 1))))
+                                Add (Literal 5))
+                               Add (Literal 5))
+                              Add (Literal 5))
+                             Add (Var N))
                             Add
                             (Parens
                              (BinOp (Var N) Multiply
-                              (Parens
-                               (BinOp (Var M) Multiply
-                                (Parens (BinOp (Var K) Multiply (Literal 1))))))))
+                              (Parens (BinOp (Var M) Multiply (Var K))))))
                            Add (Var N))
                           Add (Parens (BinOp (Var N) Multiply (Var N))))
                          Add

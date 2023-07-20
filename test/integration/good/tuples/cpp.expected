@@ -166,10 +166,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             stan::model::rvalue(arr_tuple_dot_2_flat__,
               "arr_tuple_dot_2_flat__",
               stan::model::index_min_max(arr_tuple_dot_2_flat__pos__,
-                ((arr_tuple_dot_2_flat__pos__ + (4 * 1)) - 1))),
+                ((arr_tuple_dot_2_flat__pos__ + 4) - 1))),
             "assigning variable arr_tuple_dot_2_temp__");
-          arr_tuple_dot_2_flat__pos__ = (arr_tuple_dot_2_flat__pos__ + (4 *
-            1));
+          arr_tuple_dot_2_flat__pos__ = (arr_tuple_dot_2_flat__pos__ + 4);
           {
             std::vector<local_scalar_t__> arr_tuple_dot_3_temp___flat__;
             stan::model::assign(arr_tuple_dot_3_temp___flat__,
@@ -248,10 +247,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               "tuple_arr_tuple_dot_3_dot_2_flat__",
               stan::model::index_min_max(
                 tuple_arr_tuple_dot_3_dot_2_flat__pos__,
-                ((tuple_arr_tuple_dot_3_dot_2_flat__pos__ + (4 * 1)) - 1))),
+                ((tuple_arr_tuple_dot_3_dot_2_flat__pos__ + 4) - 1))),
             "assigning variable tuple_arr_tuple_dot_3_dot_2_temp__");
           tuple_arr_tuple_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_dot_3_dot_2_flat__pos__
-            + (4 * 1));
+            + 4);
           current_statement__ = 11;
           stan::model::assign(std::get<2>(tuple_arr_tuple),
             std::tuple<double, std::vector<int>>(tuple_arr_tuple_dot_3_dot_1_temp__,
@@ -691,10 +690,9 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = ((10 * 1) + 1) + (1 + (1 + 2)) + (3 * ((2 + (4 * 1)) +
-      3)) + (((2 * 1) + 1) + (3 * (1 + (4 * 1)))) + (2 * ((1 + 1) + (1 + (2 +
-      4)))) + (3 * (1 + (4 * (1 + 5)))) + (3 * (1 + (4 * (1 + (5 * (2 + (6 *
-      7)))))));
+    num_params_r__ = (10 + 1) + (1 + (1 + 2)) + (3 * ((2 + 4) + 3)) + ((2 +
+      1) + (3 * (1 + 4))) + (2 * ((1 + 1) + (1 + (2 + 4)))) + (3 * (1 + (4 *
+      (1 + 5)))) + (3 * (1 + (4 * (1 + (5 * (2 + (6 * 7)))))));
   }
   inline std::string model_name() const final {
     return "arrays_tuples_nested_model";
@@ -2023,10 +2021,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             stan::model::rvalue(arr_tuple_p_dot_2_flat__,
               "arr_tuple_p_dot_2_flat__",
               stan::model::index_min_max(arr_tuple_p_dot_2_flat__pos__,
-                ((arr_tuple_p_dot_2_flat__pos__ + (4 * 1)) - 1))),
+                ((arr_tuple_p_dot_2_flat__pos__ + 4) - 1))),
             "assigning variable arr_tuple_p_dot_2_temp__");
-          arr_tuple_p_dot_2_flat__pos__ = (arr_tuple_p_dot_2_flat__pos__ + (4
-            * 1));
+          arr_tuple_p_dot_2_flat__pos__ = (arr_tuple_p_dot_2_flat__pos__ +
+            4);
           {
             std::vector<local_scalar_t__> arr_tuple_p_dot_3_temp___flat__;
             stan::model::assign(arr_tuple_p_dot_3_temp___flat__,
@@ -2104,10 +2102,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               "tuple_arr_tuple_p_dot_3_dot_2_flat__",
               stan::model::index_min_max(
                 tuple_arr_tuple_p_dot_3_dot_2_flat__pos__,
-                ((tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ + (4 * 1)) - 1))),
+                ((tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ + 4) - 1))),
             "assigning variable tuple_arr_tuple_p_dot_3_dot_2_temp__");
           tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_p_dot_3_dot_2_flat__pos__
-            + (4 * 1));
+            + 4);
           current_statement__ = 4;
           stan::model::assign(std::get<2>(tuple_arr_tuple_p),
             std::tuple<double, std::vector<double>>(tuple_arr_tuple_p_dot_3_dot_1_temp__,
@@ -2895,10 +2893,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((((((10 * 1) + 1) + (1 + (1 + 2))) + (3 *
-      ((2 + (4 * 1)) + 3))) + (((2 * 1) + 1) + (3 * (1 + (4 * 1))))) + (2 *
-      ((1 + 1) + (1 + (2 + 4))))) + (3 * (1 + (4 * (1 + 5))))) + (3 * (1 + (4
-      * (1 + (5 * (2 + (6 * 7))))))));
+    const size_t num_params__ = (((((((10 + 1) + (1 + (1 + 2))) + (3 * ((2 +
+      4) + 3))) + ((2 + 1) + (3 * (1 + 4)))) + (2 * ((1 + 1) + (1 + (2 +
+      4))))) + (3 * (1 + (4 * (1 + 5))))) + (3 * (1 + (4 * (1 + (5 * (2 + (6
+      * 7))))))));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -2915,10 +2913,10 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((((((10 * 1) + 1) + (1 + (1 + 2))) + (3 *
-      ((2 + (4 * 1)) + 3))) + (((2 * 1) + 1) + (3 * (1 + (4 * 1))))) + (2 *
-      ((1 + 1) + (1 + (2 + 4))))) + (3 * (1 + (4 * (1 + 5))))) + (3 * (1 + (4
-      * (1 + (5 * (2 + (6 * 7))))))));
+    const size_t num_params__ = (((((((10 + 1) + (1 + (1 + 2))) + (3 * ((2 +
+      4) + 3))) + ((2 + 1) + (3 * (1 + 4)))) + (2 * ((1 + 1) + (1 + (2 +
+      4))))) + (3 * (1 + (4 * (1 + 5))))) + (3 * (1 + (4 * (1 + (5 * (2 + (6
+      * 7))))))));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -10798,7 +10796,7 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (N * 1);
+    num_params_r__ = N;
   }
   inline std::string model_name() const final {
     return "tuple_hof_model";
@@ -11048,7 +11046,7 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (N * 1);
+    const size_t num_params__ = N;
     const size_t num_transformed = emit_transformed_parameters * (1);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -11065,7 +11063,7 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (N * 1);
+    const size_t num_params__ = N;
     const size_t num_transformed = emit_transformed_parameters * (1);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
