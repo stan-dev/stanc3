@@ -330,4 +330,4 @@ stan::math::profile_map& get_stan_profile_data() {
 STAN_REGISTER_MAP_RECT(1, external_model_namespace::external_map_rectable_functor__)
 Warning in 'external.stan', line 7, column 7: Functions do not need to be
     declared before definition; all user defined function names are always in
-    scope regardless of defintion order.
+    scope regardless of definition order.

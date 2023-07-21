@@ -199,8 +199,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (N * N * 2) + (N * 2) + (N * 2) + 2 + (N * N) + N + N +
-      1;
+    num_params_r__ = (N * (N * 2)) + (N * 2) + (N * 2) + 2 + (N * N) + N + N
+      + 1;
   }
   inline std::string model_name() const final {
     return "basic_op_param_model";
@@ -1780,6 +1780,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         out__.write(tp_c_vector);
         out__.write(tp_c_rowvector);
         out__.write(tp_c);
+        current_statement__ = 13;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
@@ -1911,17 +1912,12 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         std::vector<std::complex<local_scalar_t__>> cmat_flat__;
         current_statement__ = 1;
         cmat_flat__ = context__.vals_c("cmat");
-        current_statement__ = 1;
         pos__ = 1;
-        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 1;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 1;
             stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
               "assigning variable cmat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 1;
             pos__ = (pos__ + 1);
           }
         }
@@ -1934,14 +1930,10 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         std::vector<std::complex<local_scalar_t__>> cvec_flat__;
         current_statement__ = 2;
         cvec_flat__ = context__.vals_c("cvec");
-        current_statement__ = 2;
         pos__ = 1;
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 2;
           stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
             "assigning variable cvec", stan::model::index_uni(sym1__));
-          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -1953,14 +1945,10 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         std::vector<std::complex<local_scalar_t__>> crowvec_flat__;
         current_statement__ = 3;
         crowvec_flat__ = context__.vals_c("crowvec");
-        current_statement__ = 3;
         pos__ = 1;
-        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 3;
           stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
             "assigning variable crowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 3;
           pos__ = (pos__ + 1);
         }
       }
@@ -1976,17 +1964,12 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         std::vector<local_scalar_t__> mat_flat__;
         current_statement__ = 5;
         mat_flat__ = context__.vals_r("mat");
-        current_statement__ = 5;
         pos__ = 1;
-        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 5;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 5;
             stan::model::assign(mat, mat_flat__[(pos__ - 1)],
               "assigning variable mat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 5;
             pos__ = (pos__ + 1);
           }
         }
@@ -1998,14 +1981,10 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         std::vector<local_scalar_t__> vec_flat__;
         current_statement__ = 6;
         vec_flat__ = context__.vals_r("vec");
-        current_statement__ = 6;
         pos__ = 1;
-        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 6;
           stan::model::assign(vec, vec_flat__[(pos__ - 1)],
             "assigning variable vec", stan::model::index_uni(sym1__));
-          current_statement__ = 6;
           pos__ = (pos__ + 1);
         }
       }
@@ -2016,14 +1995,10 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
         std::vector<local_scalar_t__> rowvec_flat__;
         current_statement__ = 7;
         rowvec_flat__ = context__.vals_r("rowvec");
-        current_statement__ = 7;
         pos__ = 1;
-        current_statement__ = 7;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 7;
           stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
             "assigning variable rowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 7;
           pos__ = (pos__ + 1);
         }
       }
@@ -2259,10 +2234,10 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((N * N) * 2) + (N * 2)) + (N * 2)) +
+    const size_t num_params__ = ((((((((N * (N * 2)) + (N * 2)) + (N * 2)) +
       2) + (N * N)) + N) + N) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((N * (N
+      * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -2278,10 +2253,10 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((N * N) * 2) + (N * 2)) + (N * 2)) +
+    const size_t num_params__ = ((((((((N * (N * 2)) + (N * 2)) + (N * 2)) +
       2) + (N * N)) + N) + N) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((N * (N
+      * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -2556,17 +2531,12 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         std::vector<std::complex<local_scalar_t__>> cmat_flat__;
         current_statement__ = 113;
         cmat_flat__ = context__.vals_c("cmat");
-        current_statement__ = 113;
         pos__ = 1;
-        current_statement__ = 113;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 113;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 113;
             stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
               "assigning variable cmat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 113;
             pos__ = (pos__ + 1);
           }
         }
@@ -2587,14 +2557,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         std::vector<std::complex<local_scalar_t__>> cvec_flat__;
         current_statement__ = 115;
         cvec_flat__ = context__.vals_c("cvec");
-        current_statement__ = 115;
         pos__ = 1;
-        current_statement__ = 115;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 115;
           stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
             "assigning variable cvec", stan::model::index_uni(sym1__));
-          current_statement__ = 115;
           pos__ = (pos__ + 1);
         }
       }
@@ -2614,14 +2580,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         std::vector<std::complex<local_scalar_t__>> crowvec_flat__;
         current_statement__ = 117;
         crowvec_flat__ = context__.vals_c("crowvec");
-        current_statement__ = 117;
         pos__ = 1;
-        current_statement__ = 117;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 117;
           stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
             "assigning variable crowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 117;
           pos__ = (pos__ + 1);
         }
       }
@@ -2647,17 +2609,12 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         std::vector<local_scalar_t__> mat_flat__;
         current_statement__ = 121;
         mat_flat__ = context__.vals_r("mat");
-        current_statement__ = 121;
         pos__ = 1;
-        current_statement__ = 121;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 121;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 121;
             stan::model::assign(mat, mat_flat__[(pos__ - 1)],
               "assigning variable mat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 121;
             pos__ = (pos__ + 1);
           }
         }
@@ -2674,14 +2631,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         std::vector<local_scalar_t__> vec_flat__;
         current_statement__ = 123;
         vec_flat__ = context__.vals_r("vec");
-        current_statement__ = 123;
         pos__ = 1;
-        current_statement__ = 123;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 123;
           stan::model::assign(vec, vec_flat__[(pos__ - 1)],
             "assigning variable vec", stan::model::index_uni(sym1__));
-          current_statement__ = 123;
           pos__ = (pos__ + 1);
         }
       }
@@ -2698,14 +2651,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
         std::vector<local_scalar_t__> rowvec_flat__;
         current_statement__ = 125;
         rowvec_flat__ = context__.vals_r("rowvec");
-        current_statement__ = 125;
         pos__ = 1;
-        current_statement__ = 125;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 125;
           stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
             "assigning variable rowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 125;
           pos__ = (pos__ + 1);
         }
       }
@@ -3263,6 +3212,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       out__.write(gq_c_vector);
       out__.write(gq_c_rowvector);
       out__.write(gq_c);
+      current_statement__ = 5;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
@@ -3430,8 +3380,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_gen_quantities = emit_generated_quantities * ((((((N *
+      (N * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -3448,8 +3398,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_gen_quantities = emit_generated_quantities * ((((((N *
+      (N * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -3755,17 +3705,12 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<std::complex<local_scalar_t__>> cmat_flat__;
         current_statement__ = 137;
         cmat_flat__ = context__.vals_c("cmat");
-        current_statement__ = 137;
         pos__ = 1;
-        current_statement__ = 137;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 137;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 137;
             stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
               "assigning variable cmat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 137;
             pos__ = (pos__ + 1);
           }
         }
@@ -3786,14 +3731,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<std::complex<local_scalar_t__>> cvec_flat__;
         current_statement__ = 139;
         cvec_flat__ = context__.vals_c("cvec");
-        current_statement__ = 139;
         pos__ = 1;
-        current_statement__ = 139;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 139;
           stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
             "assigning variable cvec", stan::model::index_uni(sym1__));
-          current_statement__ = 139;
           pos__ = (pos__ + 1);
         }
       }
@@ -3813,14 +3754,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<std::complex<local_scalar_t__>> crowvec_flat__;
         current_statement__ = 141;
         crowvec_flat__ = context__.vals_c("crowvec");
-        current_statement__ = 141;
         pos__ = 1;
-        current_statement__ = 141;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 141;
           stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
             "assigning variable crowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 141;
           pos__ = (pos__ + 1);
         }
       }
@@ -3846,17 +3783,12 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<local_scalar_t__> mat_flat__;
         current_statement__ = 145;
         mat_flat__ = context__.vals_r("mat");
-        current_statement__ = 145;
         pos__ = 1;
-        current_statement__ = 145;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 145;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 145;
             stan::model::assign(mat, mat_flat__[(pos__ - 1)],
               "assigning variable mat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 145;
             pos__ = (pos__ + 1);
           }
         }
@@ -3873,14 +3805,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<local_scalar_t__> vec_flat__;
         current_statement__ = 147;
         vec_flat__ = context__.vals_r("vec");
-        current_statement__ = 147;
         pos__ = 1;
-        current_statement__ = 147;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 147;
           stan::model::assign(vec, vec_flat__[(pos__ - 1)],
             "assigning variable vec", stan::model::index_uni(sym1__));
-          current_statement__ = 147;
           pos__ = (pos__ + 1);
         }
       }
@@ -3897,14 +3825,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<local_scalar_t__> rowvec_flat__;
         current_statement__ = 149;
         rowvec_flat__ = context__.vals_r("rowvec");
-        current_statement__ = 149;
         pos__ = 1;
-        current_statement__ = 149;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 149;
           stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
             "assigning variable rowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 149;
           pos__ = (pos__ + 1);
         }
       }
@@ -3945,8 +3869,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (N * N * 2) + (N * 2) + (N * 2) + 2 + (N * N) + N + N +
-      1;
+    num_params_r__ = (N * (N * 2)) + (N * 2) + (N * 2) + 2 + (N * N) + N + N
+      + 1;
   }
   inline std::string model_name() const final {
     return "basic_ops_mix_model";
@@ -5703,6 +5627,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         out__.write(tp_c_vector);
         out__.write(tp_c_rowvector);
         out__.write(tp_c);
+        current_statement__ = 13;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             out__.write(carray[(sym2__ - 1)][(sym1__ - 1)]);
@@ -5834,17 +5759,12 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<std::complex<local_scalar_t__>> cvmat_flat__;
         current_statement__ = 1;
         cvmat_flat__ = context__.vals_c("cvmat");
-        current_statement__ = 1;
         pos__ = 1;
-        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 1;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 1;
             stan::model::assign(cvmat, cvmat_flat__[(pos__ - 1)],
               "assigning variable cvmat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 1;
             pos__ = (pos__ + 1);
           }
         }
@@ -5857,14 +5777,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<std::complex<local_scalar_t__>> cvvec_flat__;
         current_statement__ = 2;
         cvvec_flat__ = context__.vals_c("cvvec");
-        current_statement__ = 2;
         pos__ = 1;
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 2;
           stan::model::assign(cvvec, cvvec_flat__[(pos__ - 1)],
             "assigning variable cvvec", stan::model::index_uni(sym1__));
-          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -5876,14 +5792,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<std::complex<local_scalar_t__>> cvrowvec_flat__;
         current_statement__ = 3;
         cvrowvec_flat__ = context__.vals_c("cvrowvec");
-        current_statement__ = 3;
         pos__ = 1;
-        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 3;
           stan::model::assign(cvrowvec, cvrowvec_flat__[(pos__ - 1)],
             "assigning variable cvrowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 3;
           pos__ = (pos__ + 1);
         }
       }
@@ -5899,17 +5811,12 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<local_scalar_t__> vmat_flat__;
         current_statement__ = 5;
         vmat_flat__ = context__.vals_r("vmat");
-        current_statement__ = 5;
         pos__ = 1;
-        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 5;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 5;
             stan::model::assign(vmat, vmat_flat__[(pos__ - 1)],
               "assigning variable vmat", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 5;
             pos__ = (pos__ + 1);
           }
         }
@@ -5921,14 +5828,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<local_scalar_t__> vvec_flat__;
         current_statement__ = 6;
         vvec_flat__ = context__.vals_r("vvec");
-        current_statement__ = 6;
         pos__ = 1;
-        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 6;
           stan::model::assign(vvec, vvec_flat__[(pos__ - 1)],
             "assigning variable vvec", stan::model::index_uni(sym1__));
-          current_statement__ = 6;
           pos__ = (pos__ + 1);
         }
       }
@@ -5939,14 +5842,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
         std::vector<local_scalar_t__> vrowvec_flat__;
         current_statement__ = 7;
         vrowvec_flat__ = context__.vals_r("vrowvec");
-        current_statement__ = 7;
         pos__ = 1;
-        current_statement__ = 7;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 7;
           stan::model::assign(vrowvec, vrowvec_flat__[(pos__ - 1)],
             "assigning variable vrowvec", stan::model::index_uni(sym1__));
-          current_statement__ = 7;
           pos__ = (pos__ + 1);
         }
       }
@@ -6182,10 +6081,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((N * N) * 2) + (N * 2)) + (N * 2)) +
+    const size_t num_params__ = ((((((((N * (N * 2)) + (N * 2)) + (N * 2)) +
       2) + (N * N)) + N) + N) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((N * (N
+      * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -6201,10 +6100,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((((((((N * N) * 2) + (N * 2)) + (N * 2)) +
+    const size_t num_params__ = ((((((((N * (N * 2)) + (N * 2)) + (N * 2)) +
       2) + (N * N)) + N) + N) + 1);
-    const size_t num_transformed = emit_transformed_parameters * (((((((N *
-      N) * 2) + (N * 2)) + (N * 2)) + 2) + ((N * N) * 2)));
+    const size_t num_transformed = emit_transformed_parameters * ((((((N * (N
+      * 2)) + (N * 2)) + (N * 2)) + 2) + (N * (N * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -6376,14 +6275,10 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
         std::vector<std::complex<local_scalar_t__>> z1_flat__;
         current_statement__ = 4;
         z1_flat__ = context__.vals_c("z1");
-        current_statement__ = 4;
         pos__ = 1;
-        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 4;
           stan::model::assign(z1, z1_flat__[(pos__ - 1)],
             "assigning variable z1", stan::model::index_uni(sym1__));
-          current_statement__ = 4;
           pos__ = (pos__ + 1);
         }
       }
@@ -6403,14 +6298,10 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
         std::vector<std::complex<local_scalar_t__>> z2_flat__;
         current_statement__ = 6;
         z2_flat__ = context__.vals_c("z2");
-        current_statement__ = 6;
         pos__ = 1;
-        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 6;
           stan::model::assign(z2, z2_flat__[(pos__ - 1)],
             "assigning variable z2", stan::model::index_uni(sym1__));
-          current_statement__ = 6;
           pos__ = (pos__ + 1);
         }
       }
@@ -6433,17 +6324,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
         std::vector<std::complex<local_scalar_t__>> z3_flat__;
         current_statement__ = 9;
         z3_flat__ = context__.vals_c("z3");
-        current_statement__ = 9;
         pos__ = 1;
-        current_statement__ = 9;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 9;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 9;
             stan::model::assign(z3, z3_flat__[(pos__ - 1)],
               "assigning variable z3", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 9;
             pos__ = (pos__ + 1);
           }
         }
@@ -6466,14 +6352,10 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
         std::vector<std::complex<local_scalar_t__>> z4_flat__;
         current_statement__ = 12;
         z4_flat__ = context__.vals_c("z4");
-        current_statement__ = 12;
         pos__ = 1;
-        current_statement__ = 12;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 12;
           stan::model::assign(z4, z4_flat__[(pos__ - 1)],
             "assigning variable z4", stan::model::index_uni(sym1__));
-          current_statement__ = 12;
           pos__ = (pos__ + 1);
         }
       }
@@ -6493,17 +6375,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
         std::vector<std::complex<local_scalar_t__>> z5_flat__;
         current_statement__ = 15;
         z5_flat__ = context__.vals_c("z5");
-        current_statement__ = 15;
         pos__ = 1;
-        current_statement__ = 15;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 15;
           for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            current_statement__ = 15;
             stan::model::assign(z5, z5_flat__[(pos__ - 1)],
               "assigning variable z5", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 15;
             pos__ = (pos__ + 1);
           }
         }
@@ -6524,17 +6401,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
         std::vector<std::complex<local_scalar_t__>> z6_flat__;
         current_statement__ = 18;
         z6_flat__ = context__.vals_c("z6");
-        current_statement__ = 18;
         pos__ = 1;
-        current_statement__ = 18;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 18;
           for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            current_statement__ = 18;
             stan::model::assign(z6, z6_flat__[(pos__ - 1)],
               "assigning variable z6", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 18;
             pos__ = (pos__ + 1);
           }
         }
@@ -6557,20 +6429,14 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
         std::vector<std::complex<local_scalar_t__>> z7_flat__;
         current_statement__ = 22;
         z7_flat__ = context__.vals_c("z7");
-        current_statement__ = 22;
         pos__ = 1;
-        current_statement__ = 22;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 22;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 22;
             for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              current_statement__ = 22;
               stan::model::assign(z7, z7_flat__[(pos__ - 1)],
                 "assigning variable z7", stan::model::index_uni(sym3__),
                 stan::model::index_uni(sym2__),
                 stan::model::index_uni(sym1__));
-              current_statement__ = 22;
               pos__ = (pos__ + 1);
             }
           }
@@ -6595,17 +6461,12 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
         std::vector<std::complex<local_scalar_t__>> z8_flat__;
         current_statement__ = 25;
         z8_flat__ = context__.vals_c("z8");
-        current_statement__ = 25;
         pos__ = 1;
-        current_statement__ = 25;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 25;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 25;
             stan::model::assign(z8, z8_flat__[(pos__ - 1)],
               "assigning variable z8", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 25;
             pos__ = (pos__ + 1);
           }
         }
@@ -7625,15 +7486,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         std::vector<std::complex<local_scalar_t__>> d_complex_array_flat__;
         current_statement__ = 348;
         d_complex_array_flat__ = context__.vals_c("d_complex_array");
-        current_statement__ = 348;
         pos__ = 1;
-        current_statement__ = 348;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 348;
           stan::model::assign(d_complex_array, d_complex_array_flat__[(pos__
             - 1)], "assigning variable d_complex_array",
             stan::model::index_uni(sym1__));
-          current_statement__ = 348;
           pos__ = (pos__ + 1);
         }
       }
@@ -7651,18 +7508,13 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         std::vector<std::complex<local_scalar_t__>> d_complex_array_2d_flat__;
         current_statement__ = 349;
         d_complex_array_2d_flat__ = context__.vals_c("d_complex_array_2d");
-        current_statement__ = 349;
         pos__ = 1;
-        current_statement__ = 349;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 349;
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            current_statement__ = 349;
             stan::model::assign(d_complex_array_2d,
               d_complex_array_2d_flat__[(pos__ - 1)],
               "assigning variable d_complex_array_2d",
               stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
-            current_statement__ = 349;
             pos__ = (pos__ + 1);
           }
         }
@@ -7691,17 +7543,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                                                        ),
                                   std::numeric_limits<double>::quiet_NaN())));
       current_statement__ = 355;
-      td_complex = td_i;
+      td_complex = stan::math::to_complex(td_i, 0);
       current_statement__ = 356;
-      td_complex = td_r;
+      td_complex = stan::math::to_complex(td_r, 0);
       current_statement__ = 357;
-      td_complex = d_i;
+      td_complex = stan::math::to_complex(d_i, 0);
       current_statement__ = 358;
-      td_complex = d_r;
+      td_complex = stan::math::to_complex(d_r, 0);
       current_statement__ = 359;
-      td_complex = 1;
+      td_complex = stan::math::to_complex(1, 0);
       current_statement__ = 360;
-      td_complex = 1.1;
+      td_complex = stan::math::to_complex(1.1, 0);
       current_statement__ = 361;
       td_complex = d_complex;
       current_statement__ = 362;
@@ -7847,7 +7699,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = 1 + 2 + (2 * 2) + (2 * 3 * 2);
+    num_params_r__ = 1 + 2 + (2 * 2) + (2 * (3 * 2));
   }
   inline std::string model_name() const final {
     return "complex_scalar_model";
@@ -7915,17 +7767,23 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
           std::vector<std::complex<local_scalar_t__>>(3,
             std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
       current_statement__ = 21;
-      tp_complex = tp_r;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(tp_r);
       current_statement__ = 22;
-      tp_complex = d_i;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(d_i);
       current_statement__ = 23;
-      tp_complex = d_r;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(d_r);
       current_statement__ = 24;
-      tp_complex = p_r;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(p_r);
       current_statement__ = 25;
-      tp_complex = 1;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(1);
       current_statement__ = 26;
-      tp_complex = 1.1;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(1.1);
       current_statement__ = 27;
       tp_complex = d_complex;
       current_statement__ = 28;
@@ -8168,17 +8026,23 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
           std::vector<std::complex<local_scalar_t__>>(3,
             std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
       current_statement__ = 21;
-      tp_complex = tp_r;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(tp_r);
       current_statement__ = 22;
-      tp_complex = d_i;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(d_i);
       current_statement__ = 23;
-      tp_complex = d_r;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(d_r);
       current_statement__ = 24;
-      tp_complex = p_r;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(p_r);
       current_statement__ = 25;
-      tp_complex = 1;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(1);
       current_statement__ = 26;
-      tp_complex = 1.1;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(1.1);
       current_statement__ = 27;
       tp_complex = d_complex;
       current_statement__ = 28;
@@ -8435,9 +8299,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
               std::numeric_limits<double>::quiet_NaN())));
       out__.write(p_r);
       out__.write(p_complex);
+      current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         out__.write(p_complex_array[(sym1__ - 1)]);
       }
+      current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           out__.write(p_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
@@ -8451,17 +8317,23 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 5;
       tp_r = 1.1;
       current_statement__ = 21;
-      tp_complex = tp_r;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(tp_r);
       current_statement__ = 22;
-      tp_complex = d_i;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(d_i);
       current_statement__ = 23;
-      tp_complex = d_r;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(d_r);
       current_statement__ = 24;
-      tp_complex = p_r;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(p_r);
       current_statement__ = 25;
-      tp_complex = 1;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(1);
       current_statement__ = 26;
-      tp_complex = 1.1;
+      tp_complex = stan::math::promote_scalar<
+                     std::complex<local_scalar_t__>>(1.1);
       current_statement__ = 27;
       tp_complex = d_complex;
       current_statement__ = 28;
@@ -8627,9 +8499,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       if (emit_transformed_parameters__) {
         out__.write(tp_r);
         out__.write(tp_complex);
+        current_statement__ = 7;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           out__.write(tp_complex_array[(sym1__ - 1)]);
         }
+        current_statement__ = 8;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
             out__.write(tp_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
@@ -8658,19 +8532,19 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
             std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
               std::numeric_limits<double>::quiet_NaN())));
       current_statement__ = 74;
-      gq_complex = gq_i;
+      gq_complex = stan::math::to_complex(gq_i, 0);
       current_statement__ = 75;
-      gq_complex = gq_r;
+      gq_complex = stan::math::to_complex(gq_r, 0);
       current_statement__ = 76;
-      gq_complex = d_i;
+      gq_complex = stan::math::to_complex(d_i, 0);
       current_statement__ = 77;
-      gq_complex = d_r;
+      gq_complex = stan::math::to_complex(d_r, 0);
       current_statement__ = 78;
-      gq_complex = p_r;
+      gq_complex = stan::math::to_complex(p_r, 0);
       current_statement__ = 79;
-      gq_complex = 1;
+      gq_complex = stan::math::to_complex(1, 0);
       current_statement__ = 80;
-      gq_complex = 1.1;
+      gq_complex = stan::math::to_complex(1.1, 0);
       current_statement__ = 81;
       gq_complex = d_complex;
       current_statement__ = 82;
@@ -8959,17 +8833,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 189;
       gq_complex = -z;
       current_statement__ = 190;
-      gq_complex = -gq_r;
+      gq_complex = stan::math::to_complex(-gq_r, 0);
       current_statement__ = 191;
-      gq_complex = -gq_i;
+      gq_complex = stan::math::to_complex(-gq_i, 0);
       current_statement__ = 192;
       gq_complex = -d_complex;
       current_statement__ = 193;
-      gq_complex = -d_r;
+      gq_complex = stan::math::to_complex(-d_r, 0);
       current_statement__ = 194;
       gq_complex = -p_complex;
       current_statement__ = 195;
-      gq_complex = -p_r;
+      gq_complex = stan::math::to_complex(-p_r, 0);
       current_statement__ = 196;
       gq_complex = (gq_i ? z : y);
       current_statement__ = 197;
@@ -9302,9 +9176,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       out__.write(gq_i);
       out__.write(gq_r);
       out__.write(gq_complex);
+      current_statement__ = 12;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         out__.write(gq_complex_array[(sym1__ - 1)]);
       }
+      current_statement__ = 13;
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           out__.write(gq_complex_array_2d[(sym2__ - 1)][(sym1__ - 1)]);
@@ -9350,10 +9226,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         current_statement__ = 3;
-        stan::model::assign(p_complex_array,
-          in__.read<std::complex<local_scalar_t__>>(),
-          "assigning variable p_complex_array",
-          stan::model::index_uni(sym1__));
+        p_complex_array[(sym1__ -
+          1)] = in__.read<std::complex<local_scalar_t__>>();
       }
       out__.write(p_complex_array);
       std::vector<std::vector<std::complex<local_scalar_t__>>>
@@ -9363,13 +9237,10 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
             std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 4;
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           current_statement__ = 4;
-          stan::model::assign(p_complex_array_2d,
-            in__.read<std::complex<local_scalar_t__>>(),
-            "assigning variable p_complex_array_2d",
-            stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
+          p_complex_array_2d[(sym2__ - 1)][(sym1__ -
+            1)] = in__.read<std::complex<local_scalar_t__>>();
         }
       }
       out__.write(p_complex_array_2d);
@@ -9421,15 +9292,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         std::vector<std::complex<local_scalar_t__>> p_complex_array_flat__;
         current_statement__ = 3;
         p_complex_array_flat__ = context__.vals_c("p_complex_array");
-        current_statement__ = 3;
         pos__ = 1;
-        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 3;
           stan::model::assign(p_complex_array, p_complex_array_flat__[(pos__
             - 1)], "assigning variable p_complex_array",
             stan::model::index_uni(sym1__));
-          current_statement__ = 3;
           pos__ = (pos__ + 1);
         }
       }
@@ -9443,18 +9310,13 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         std::vector<std::complex<local_scalar_t__>> p_complex_array_2d_flat__;
         current_statement__ = 4;
         p_complex_array_2d_flat__ = context__.vals_c("p_complex_array_2d");
-        current_statement__ = 4;
         pos__ = 1;
-        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 4;
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            current_statement__ = 4;
             stan::model::assign(p_complex_array_2d,
               p_complex_array_2d_flat__[(pos__ - 1)],
               "assigning variable p_complex_array_2d",
               stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
-            current_statement__ = 4;
             pos__ = (pos__ + 1);
           }
         }
@@ -9706,11 +9568,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
+    const size_t num_params__ = (((1 + 2) + (2 * 2)) + (2 * (3 * 2)));
     const size_t num_transformed = emit_transformed_parameters * ((((1 + 2) +
-      (2 * 2)) + ((2 * 3) * 2)));
+      (2 * 2)) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities *
-      ((((((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1)
+      ((((((((((((1 + 1) + 2) + (2 * 2)) + (2 * (3 * 2))) + 2) + 2) + 0) + 1)
       + 2) + 2) + 1));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -9726,11 +9588,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
+    const size_t num_params__ = (((1 + 2) + (2 * 2)) + (2 * (3 * 2)));
     const size_t num_transformed = emit_transformed_parameters * ((((1 + 2) +
-      (2 * 2)) + ((2 * 3) * 2)));
+      (2 * 2)) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities *
-      ((((((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1)
+      ((((((((((((1 + 1) + 2) + (2 * 2)) + (2 * (3 * 2))) + 2) + 2) + 0) + 1)
       + 2) + 2) + 1));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -10293,7 +10155,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * ((((((3 * 2)
-      + ((2 * 2) * 2)) + 2) + (2 * 2)) + ((2 * 2) * 2)));
+      + (2 * (2 * 2))) + 2) + (2 * 2)) + (2 * (2 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -10311,7 +10173,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * ((((((3 * 2)
-      + ((2 * 2) * 2)) + 2) + (2 * 2)) + ((2 * 2) * 2)));
+      + (2 * (2 * 2))) + 2) + (2 * 2)) + (2 * (2 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;

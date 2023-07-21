@@ -35,7 +35,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (pos__ UInt ())
+     (Assignment ((LVariable pos__) ()) UInt
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
@@ -44,7 +44,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (N UInt ())
+     (Assignment ((LVariable N) ()) UInt
       ((pattern
         (Indexed
          ((pattern
@@ -91,7 +91,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (x (UArray UReal) ())
+     (Assignment ((LVariable x) ()) (UArray UReal)
       ((pattern
         (FunApp (CompilerInternal FnReadData)
          (((pattern (Lit Str x))
@@ -123,7 +123,7 @@
           (decl_type (Unsized (UArray UReal))) (initialize false)))
         (meta <opaque>))
        ((pattern
-         (Assignment (y_flat__ (UArray UReal) ())
+         (Assignment ((LVariable y_flat__) ()) (UArray UReal)
           ((pattern
             (FunApp (CompilerInternal FnReadData)
              (((pattern (Lit Str y))
@@ -131,7 +131,7 @@
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Assignment (pos__ UInt ())
+         (Assignment ((LVariable pos__) ()) UInt
           ((pattern (Lit Int 1))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -148,10 +148,11 @@
              (Block
               (((pattern
                  (Assignment
-                  (y UVector
+                  ((LVariable y)
                    ((Single
                      ((pattern (Var sym1__))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
                   ((pattern
                     (Indexed
                      ((pattern (Var y_flat__))
@@ -165,7 +166,7 @@
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                 (meta <opaque>))
                ((pattern
-                 (Assignment (pos__ UInt ())
+                 (Assignment ((LVariable pos__) ()) UInt
                   ((pattern
                     (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
@@ -186,7 +187,7 @@
    ((pattern
      (Profile "\"sum\""
       (((pattern
-         (Assignment (sum_y UReal ())
+         (Assignment ((LVariable sum_y) ()) UReal
           ((pattern
             (FunApp (StanLib sum FnPlain AoS)
              (((pattern (Var y))
@@ -200,7 +201,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (rho UReal ())
+     (Assignment ((LVariable rho) ()) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -218,7 +219,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment ((LVariable alpha) ()) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -236,7 +237,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma UReal ())
+     (Assignment ((LVariable sigma) ()) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -312,7 +313,7 @@
        ((pattern
          (Profile "\"cov_exp_quad\""
           (((pattern
-             (Assignment (cov UMatrix ())
+             (Assignment ((LVariable cov) ()) UMatrix
               ((pattern
                 (FunApp (StanLib Plus__ FnPlain AoS)
                  (((pattern
@@ -351,7 +352,7 @@
        ((pattern
          (Profile "\"cholesky_decompose\""
           (((pattern
-             (Assignment (L_cov UMatrix ())
+             (Assignment ((LVariable L_cov) ()) UMatrix
               ((pattern
                 (FunApp (StanLib cholesky_decompose FnPlain AoS)
                  (((pattern (Var cov))
@@ -485,7 +486,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (rho UReal ())
+     (Assignment ((LVariable rho) ()) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -503,7 +504,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment ((LVariable alpha) ()) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -521,7 +522,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma UReal ())
+     (Assignment ((LVariable sigma) ()) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -597,7 +598,7 @@
        ((pattern
          (Profile "\"cov_exp_quad\""
           (((pattern
-             (Assignment (cov UMatrix ())
+             (Assignment ((LVariable cov) ()) UMatrix
               ((pattern
                 (FunApp (StanLib Plus__ FnPlain AoS)
                  (((pattern
@@ -636,7 +637,7 @@
        ((pattern
          (Profile "\"cholesky_decompose\""
           (((pattern
-             (Assignment (L_cov UMatrix ())
+             (Assignment ((LVariable L_cov) ()) UMatrix
               ((pattern
                 (FunApp (StanLib cholesky_decompose FnPlain AoS)
                  (((pattern (Var cov))
@@ -770,7 +771,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (rho UReal ())
+     (Assignment ((LVariable rho) ()) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -788,7 +789,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment ((LVariable alpha) ()) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -806,7 +807,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma UReal ())
+     (Assignment ((LVariable sigma) ()) UReal
       ((pattern
         (FunApp
          (CompilerInternal
@@ -879,7 +880,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (rho UReal ())
+     (Assignment ((LVariable rho) ()) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -910,7 +911,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment ((LVariable alpha) ()) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -941,7 +942,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma UReal ())
+     (Assignment ((LVariable sigma) ()) UReal
       ((pattern
         (Indexed
          ((pattern
@@ -973,7 +974,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (rho UReal ())
+     (Assignment ((LVariable rho) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -995,7 +996,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (alpha UReal ())
+     (Assignment ((LVariable alpha) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -1017,7 +1018,7 @@
       (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma UReal ())
+     (Assignment ((LVariable sigma) ()) UReal
       ((pattern (FunApp (CompilerInternal FnReadDeserializer) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))

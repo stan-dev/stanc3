@@ -30,81 +30,65 @@ let math_fn_translations = function
 let trans_math_fn f =
   Option.value ~default:(Internal_fun.to_string f) (math_fn_translations f)
 
-let nan_type st adtype =
-  match (adtype, st) with
-  | UnsizedType.AutoDiffable, _ -> Var "DUMMY_VAR__"
-  | DataOnly, _ -> Exprs.quiet_NaN
-
-(*Pretty printer for the right hand side of expressions to initialize objects.
-  * For scalar types this sets the value to NaN and for containers initializes the memory.
+(* Code generation for the right hand side of expressions to initialize objects.
+   For scalar types this sets the value to NaN and for containers initializes the memory.
 *)
 let rec initialize_value st adtype =
   let open Expression_syntax in
-  let init_nan = nan_type st adtype in
-  if adtype = UnsizedType.DataOnly then
-    match st with
-    | SizedType.SInt -> Exprs.int_min
-    | SReal -> init_nan
-    | SComplex ->
-        let scalar = local_scalar (SizedType.to_unsized st) adtype in
-        Constructor (Types.complex scalar, [init_nan; init_nan])
-    | SComplexVector size | SComplexRowVector size ->
-        let typ = lower_st st adtype in
-        typ
-        |::? ("Constant", [lower_expr size; initialize_value SComplex adtype])
-    | SVector (_, size) | SRowVector (_, size) ->
-        let typ = lower_st st adtype in
-        typ |::? ("Constant", [lower_expr size; init_nan])
-    | SMatrix (_, d1, d2) ->
-        let typ = lower_st st adtype in
-        typ |::? ("Constant", [lower_expr d1; lower_expr d2; init_nan])
-    | SComplexMatrix (d1, d2) ->
-        let typ = lower_st st adtype in
-        typ
-        |::? ( "Constant"
-             , [lower_expr d1; lower_expr d2; initialize_value SComplex adtype]
-             )
-    | SArray (t, d) ->
-        let typ = lower_st st adtype in
-        Constructor (typ, [lower_expr d; initialize_value t adtype])
-  else
-    let ut = SizedType.to_unsized st in
-    match st with
-    | SizedType.SInt -> Exprs.int_min
-    | SReal -> init_nan
-    | SComplex ->
-        let scalar = local_scalar (SizedType.to_unsized st) adtype in
-        Constructor (Types.complex scalar, [init_nan; init_nan])
-    | SVector (AoS, size) | SRowVector (AoS, size) ->
-        let typ = lower_st st adtype in
-        typ |::? ("Constant", [lower_expr size; init_nan])
-    | SComplexVector size | SComplexRowVector size ->
-        let typ = lower_st st adtype in
-        typ
-        |::? ("Constant", [lower_expr size; initialize_value SComplex adtype])
-    | SMatrix (AoS, d1, d2) ->
-        let typ = lower_st st adtype in
-        typ |::? ("Constant", [lower_expr d1; lower_expr d2; init_nan])
-    | SComplexMatrix (d1, d2) ->
-        let typ = lower_st st adtype in
-        typ
-        |::? ( "Constant"
-             , [lower_expr d1; lower_expr d2; initialize_value SComplex adtype]
-             )
-    | SVector (SoA, size) ->
-        let typ = lower_possibly_var_decl adtype ut SoA in
-        Constructor (typ, [initialize_value (SVector (AoS, size)) DataOnly])
-    | SRowVector (SoA, size) ->
-        let typ = lower_possibly_var_decl adtype ut SoA in
-        Constructor (typ, [initialize_value (SRowVector (AoS, size)) DataOnly])
-    | SMatrix (SoA, d1, d2) ->
-        let typ = lower_possibly_var_decl adtype ut SoA in
-        Constructor (typ, [initialize_value (SMatrix (AoS, d1, d2)) DataOnly])
-    | SArray (t, d) ->
-        let typ =
-          lower_possibly_var_decl adtype (SizedType.to_unsized st)
-            (SizedType.get_mem_pattern t) in
-        Constructor (typ, [lower_expr d; initialize_value t adtype])
+  let init_nan =
+    (* NB: Never used by TupleAD directly *)
+    if adtype = UnsizedType.DataOnly then Exprs.quiet_NaN else Var "DUMMY_VAR__"
+  in
+  match (adtype, st) with
+  | UnsizedType.(DataOnly | AutoDiffable), SizedType.SInt -> Exprs.int_min
+  | (DataOnly | AutoDiffable), SReal -> init_nan
+  | (DataOnly | AutoDiffable), SComplex ->
+      let scalar = local_scalar (SizedType.to_unsized st) adtype in
+      Constructor (Types.complex scalar, [init_nan; init_nan])
+  | (DataOnly | AutoDiffable), SComplexVector size
+   |(DataOnly | AutoDiffable), SComplexRowVector size ->
+      let typ = lower_st st adtype in
+      typ |::? ("Constant", [lower_expr size; initialize_value SComplex adtype])
+  | DataOnly, SVector (_, size)
+   |DataOnly, SRowVector (_, size)
+   |AutoDiffable, SVector (AoS, size)
+   |AutoDiffable, SRowVector (AoS, size) ->
+      let typ = lower_st st adtype in
+      typ |::? ("Constant", [lower_expr size; init_nan])
+  | DataOnly, SMatrix (_, d1, d2) | AutoDiffable, SMatrix (AoS, d1, d2) ->
+      let typ = lower_st st adtype in
+      typ |::? ("Constant", [lower_expr d1; lower_expr d2; init_nan])
+  | (DataOnly | AutoDiffable), SComplexMatrix (d1, d2) ->
+      let typ = lower_st st adtype in
+      typ
+      |::? ( "Constant"
+           , [lower_expr d1; lower_expr d2; initialize_value SComplex adtype] )
+  | AutoDiffable, SVector (SoA, size) ->
+      let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
+      Constructor (typ, [initialize_value (SVector (AoS, size)) DataOnly])
+  | AutoDiffable, SRowVector (SoA, size) ->
+      let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
+      Constructor (typ, [initialize_value (SRowVector (AoS, size)) DataOnly])
+  | AutoDiffable, SMatrix (SoA, d1, d2) ->
+      let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
+      Constructor (typ, [initialize_value (SMatrix (AoS, d1, d2)) DataOnly])
+  | DataOnly, SArray (t, d) ->
+      let typ = lower_st st adtype in
+      Constructor (typ, [lower_expr d; initialize_value t adtype])
+  | (AutoDiffable | TupleAD _), SArray (t, d) ->
+      let typ =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st)
+          (SizedType.get_mem_pattern t) in
+      Constructor (typ, [lower_expr d; initialize_value t adtype])
+  | TupleAD ads, STuple subts ->
+      let typ = lower_st st adtype in
+      InitializerExpr (typ, List.map2_exn ~f:initialize_value subts ads)
+  | _, STuple _ | TupleAD _, _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Mismatch between Tuple type and Tuple AD in code gen"
+            (st : Expr.Typed.t SizedType.t)
+            (adtype : UnsizedType.autodifftype)]
 
 (*Initialize an object of a given size.*)
 let lower_assign_sized st adtype initialize =
@@ -160,10 +144,44 @@ let lower_bool_expr expr =
   | UReal -> Exprs.fun_call "stan::math::as_bool" [lower_expr expr]
   | _ -> lower_expr expr
 
+let rec lower_nonrange_lvalue lvalue =
+  match lvalue with
+  | lbase, [] -> lower_nonrange_lbase lbase
+  | lv, idcs when List.for_all ~f:is_single_index idcs ->
+      lower_indexed_simple (lower_nonrange_lbase lv) idcs
+  | _, _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Multi-index must be the last (rightmost) index."]
+
+and lower_nonrange_lbase = function
+  | Stmt.Fixed.Pattern.LVariable v -> Var v
+  | LTupleProjection (lv, ix) ->
+      Exprs.templated_fun_call "std::get"
+        [TypeLiteral (string_of_int (ix - 1))]
+        [lower_nonrange_lvalue lv]
+
+(* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
+   This is 'shallow' in the sense that it doesn't recurse into expressions *)
+let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Fixed.Pattern.lvalue)
+    (expr : 'a Expr.Fixed.t) : bool =
+  Option.value_map
+    (* Convert the expression to an lvalue to get rid of everything but variables and indices *)
+    (Stmt.Helpers.lvalue_of_expr_opt expr)
+    (* If we can't, this expression can't be deep copied *)
+    ~default:
+      false
+      (* If we can, then find it's base reference and see if it overlaps with the LHS *)
+    ~f:(fun expr_lv ->
+      let expr_base_ref = Stmt.Helpers.lvalue_base_reference expr_lv in
+      expr_base_ref = lhs_base_ref )
+
 let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   let remove_promotions (e : 'a Expr.Fixed.t) =
     (* assignment handles one level of promotion internally, don't do it twice *)
-    match e.pattern with Promotion (e, _, _) -> e | _ -> e in
+    match e.pattern with
+    | Promotion (_, UTuple _, _) -> e
+    | Promotion (e, _, _) -> e
+    | _ -> e in
   let location =
     match pattern with
     | Block _ | SList _ | Decl _ | Skip | Break | Continue -> []
@@ -174,45 +192,46 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   @
   match pattern with
   | Assignment
-      ( (vident, _, [])
-      , ( {pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _); _}
-        as rhs ) ) ->
-      Assign (Var vident, lower_expr rhs) |> wrap_e
-  | Assignment
-      ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as rhs))
-   |Assignment
-      ((vident, _, []), ({meta= Expr.Typed.Meta.{type_= UComplex; _}; _} as rhs))
-   |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
-      Assign (Var vident, lower_expr (remove_promotions rhs)) |> wrap_e
-  | Assignment ((assignee, UInt, idcs), rhs)
-   |Assignment ((assignee, UReal, idcs), rhs)
+      ( (((LVariable _ | LTupleProjection _) as lhs), [])
+      , _
+      , ( ( {meta= {Expr.Typed.Meta.type_= UInt | UReal | UComplex; _}; _}
+          | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
+            ; _ } ) as rhs ) ) ->
+      Assign (lower_nonrange_lbase lhs, lower_expr rhs) |> wrap_e
+  | Assignment ((LVariable assignee, idcs), (UInt | UReal | UComplex), rhs)
     when List.for_all ~f:is_single_index idcs ->
-      Assign
-        ( lower_indexed_simple (Middle.Expr.Helpers.variable assignee) idcs
-        , lower_expr rhs )
+      Assign (lower_indexed_simple (Var assignee) idcs, lower_expr rhs)
       |> wrap_e
-  | Assignment ((assignee, _, idcs), rhs) ->
+  | Assignment (lhs, _, rhs) ->
+      (* Assignments of arrays, vectors etc. need to use `assign()` and worry about deep copies *)
       (* XXX I think in general we don't need to do a deepcopy if e is nested
          inside some function call - the function should get its own copy
          (in all cases???) *)
+      let lhs_ref = Stmt.Helpers.lvalue_base_reference lhs in
       let rec maybe_deep_copy e =
-        let recurse (e : 'a Expr.Fixed.t) =
-          { e with
-            Expr.Fixed.pattern= Expr.Fixed.Pattern.map maybe_deep_copy e.pattern
-          } in
-        match e.pattern with
+        match e.Expr.Fixed.pattern with
+        (* Never need to copy a scalar type *)
         | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
+        (* Never need to copy exprs inside a compiler FunApp *)
         | FunApp (CompilerInternal _, _) -> e
-        | (Indexed ({Expr.Fixed.pattern= Var v; _}, _) | Var v)
-          when v = assignee ->
+        (* When the expression overlaps with the LHS, *)
+        | _ when expr_overlaps_lhs_ref lhs_ref e ->
+            (* then wrap it in a deep copy. *)
             { e with
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
-        | _ -> recurse e in
+        | _ ->
+            (* Otherwise recurse on subexpressions *)
+            { e with
+              Expr.Fixed.pattern=
+                Expr.Fixed.Pattern.map maybe_deep_copy e.pattern } in
       let rhs = maybe_deep_copy (remove_promotions rhs) in
+      (* Split up the top-level lvalue to fit in the assign call *)
+      let lhs_base, lhs_idcs = lhs in
       Exprs.fun_call "stan::model::assign"
-        ( [ Var assignee; lower_expr rhs
-          ; Exprs.literal_string ("assigning variable " ^ assignee) ]
-        @ List.map ~f:lower_index idcs )
+        ( [ lower_nonrange_lbase lhs_base; lower_expr rhs
+          ; Exprs.literal_string
+              ("assigning variable " ^ Stmt.Helpers.get_lhs_name lhs) ]
+        @ List.map ~f:lower_index lhs_idcs )
       |> wrap_e
   | TargetPE e ->
       let accum = Var "lp_accum__" in

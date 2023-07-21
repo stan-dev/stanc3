@@ -8841,6 +8841,7 @@
                (MethodCall (Var out__) write () ((Var offset_no_multiplier))))
               (Expression
                (MethodCall (Var out__) write () ((Var p_real_1d_ar))))
+              (Expression (Assign (Var current_statement__) (Literal 8)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -8868,6 +8869,7 @@
                              (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))))))))))))
               (Expression (MethodCall (Var out__) write () ((Var p_vec))))
+              (Expression (Assign (Var current_statement__) (Literal 10)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -8884,6 +8886,7 @@
                         (Index (Var p_1d_vec)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 11)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -8922,6 +8925,7 @@
                                (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))))))))
               (Expression
                (MethodCall (Var out__) write () ((Var p_row_vec))))
+              (Expression (Assign (Var current_statement__) (Literal 13)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -8938,6 +8942,7 @@
                         (Index (Var p_1d_row_vec)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 14)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -8975,6 +8980,7 @@
                               (Parens
                                (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))))))))
               (Expression (MethodCall (Var out__) write () ((Var p_mat))))
+              (Expression (Assign (Var current_statement__) (Literal 16)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -9012,6 +9018,7 @@
                                 ((Var sym1__))))))))))))))))))))
               (Expression
                (MethodCall (Var out__) write () ((Var p_simplex))))
+              (Expression (Assign (Var current_statement__) (Literal 18)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -9028,6 +9035,7 @@
                         (Index (Var p_1d_simplex)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 19)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -9068,6 +9076,7 @@
                (MethodCall (Var out__) write () ((Var p_cfcov_54))))
               (Expression
                (MethodCall (Var out__) write () ((Var p_cfcov_33))))
+              (Expression (Assign (Var current_statement__) (Literal 22)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -9370,6 +9379,7 @@
                (Block
                 ((Expression
                   (MethodCall (Var out__) write () ((Var tp_real_1d_ar))))
+                 (Expression (Assign (Var current_statement__) (Literal 26)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name sym1__)
                    (init (Assignment (Literal 1))))
@@ -9400,6 +9410,7 @@
                                (BinOp (Var sym1__) Subtract (Literal 1))))))))))))))))
                  (Expression
                   (MethodCall (Var out__) write () ((Var tp_vec))))
+                 (Expression (Assign (Var current_statement__) (Literal 28)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name sym1__)
                    (init (Assignment (Literal 1))))
@@ -9418,6 +9429,7 @@
                             (Parens
                              (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+                 (Expression (Assign (Var current_statement__) (Literal 29)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name sym1__)
                    (init (Assignment (Literal 1))))
@@ -9458,6 +9470,7 @@
                                   (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))))))))
                  (Expression
                   (MethodCall (Var out__) write () ((Var tp_row_vec))))
+                 (Expression (Assign (Var current_statement__) (Literal 31)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name sym1__)
                    (init (Assignment (Literal 1))))
@@ -9476,6 +9489,7 @@
                             (Parens
                              (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+                 (Expression (Assign (Var current_statement__) (Literal 32)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name sym1__)
                    (init (Assignment (Literal 1))))
@@ -9516,6 +9530,7 @@
                                   (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))))))))
                  (Expression
                   (MethodCall (Var out__) write () ((Var tp_mat))))
+                 (Expression (Assign (Var current_statement__) (Literal 34)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name sym1__)
                    (init (Assignment (Literal 1))))
@@ -9554,6 +9569,7 @@
                                    ((Var sym1__))))))))))))))))))))
                  (Expression
                   (MethodCall (Var out__) write () ((Var tp_simplex))))
+                 (Expression (Assign (Var current_statement__) (Literal 36)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name sym1__)
                    (init (Assignment (Literal 1))))
@@ -9572,6 +9588,7 @@
                             (Parens
                              (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+                 (Expression (Assign (Var current_statement__) (Literal 37)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name sym1__)
                    (init (Assignment (Literal 1))))
@@ -9614,6 +9631,7 @@
                   (MethodCall (Var out__) write () ((Var tp_cfcov_54))))
                  (Expression
                   (MethodCall (Var out__) write () ((Var tp_cfcov_33))))
+                 (Expression (Assign (Var current_statement__) (Literal 40)))
                  (For
                   ((static false) (constexpr false) (type_ Int) (name sym1__)
                    (init (Assignment (Literal 1))))
@@ -10437,6 +10455,7 @@
               (Expression (MethodCall (Var out__) write () ((Var gq_r2))))
               (Expression
                (MethodCall (Var out__) write () ((Var gq_real_1d_ar))))
+              (Expression (Assign (Var current_statement__) (Literal 46)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10464,6 +10483,7 @@
                              (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))))))))))))
               (Expression (MethodCall (Var out__) write () ((Var gq_vec))))
+              (Expression (Assign (Var current_statement__) (Literal 48)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10480,6 +10500,7 @@
                         (Index (Var gq_1d_vec)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 49)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10518,6 +10539,7 @@
                                (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))))))))
               (Expression
                (MethodCall (Var out__) write () ((Var gq_row_vec))))
+              (Expression (Assign (Var current_statement__) (Literal 51)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10534,6 +10556,7 @@
                         (Index (Var gq_1d_row_vec)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 52)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10570,6 +10593,7 @@
                                 (BinOp (Var sym2__) Subtract (Literal 1))))
                               (Parens
                                (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 53)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10607,6 +10631,7 @@
                                 ((Var sym1__))))))))))))))))))))
               (Expression
                (MethodCall (Var out__) write () ((Var gq_simplex))))
+              (Expression (Assign (Var current_statement__) (Literal 55)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10623,6 +10648,7 @@
                         (Index (Var gq_1d_simplex)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 56)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10663,6 +10689,7 @@
                (MethodCall (Var out__) write () ((Var gq_cfcov_54))))
               (Expression
                (MethodCall (Var out__) write () ((Var gq_cfcov_33))))
+              (Expression (Assign (Var current_statement__) (Literal 59)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10692,6 +10719,7 @@
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__)))))))))))))))))
               (Expression (MethodCall (Var out__) write () ((Var indices))))
+              (Expression (Assign (Var current_statement__) (Literal 61)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10719,6 +10747,7 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__)))))))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 62)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10746,6 +10775,7 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__)))))))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 63)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10773,6 +10803,7 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__)))))))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 64)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10800,6 +10831,7 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__)))))))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 65)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10827,6 +10859,7 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__)))))))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 66)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10854,6 +10887,7 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__)))))))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 67)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10881,6 +10915,7 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__)))))))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 68)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -10898,6 +10933,7 @@
                         (Index (Var idx_res4)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
+              (Expression (Assign (Var current_statement__) (Literal 69)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
                 (init (Assignment (Literal 1))))
@@ -11089,15 +11125,12 @@
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var K)) (Increment (Var sym1__))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 8)))
-                 (For
+                ((For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var M)) (Increment (Var sym2__))
                   (Block
-                   ((Expression
-                     (Assign (Var current_statement__) (Literal 8)))
-                    (For
+                   ((For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var N))
@@ -11159,8 +11192,7 @@
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 10)))
-                 (For
+                ((For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
@@ -11210,23 +11242,18 @@
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 11)))
-                 (For
+                ((For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                   (Block
-                   ((Expression
-                     (Assign (Var current_statement__) (Literal 11)))
-                    (For
+                   ((For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var M))
                      (Increment (Var sym3__))
                      (Block
-                      ((Expression
-                        (Assign (Var current_statement__) (Literal 11)))
-                       (For
+                      ((For
                         ((static false) (constexpr false) (type_ Int)
                          (name sym4__) (init (Assignment (Literal 1))))
                         (BinOp (Var sym4__) LEq (Var N))
@@ -11288,8 +11315,7 @@
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 13)))
-                 (For
+                ((For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
@@ -11340,23 +11366,18 @@
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 14)))
-                 (For
+                ((For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                   (Block
-                   ((Expression
-                     (Assign (Var current_statement__) (Literal 14)))
-                    (For
+                   ((For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var M))
                      (Increment (Var sym3__))
                      (Block
-                      ((Expression
-                        (Assign (Var current_statement__) (Literal 14)))
-                       (For
+                      ((For
                         ((static false) (constexpr false) (type_ Int)
                          (name sym4__) (init (Assignment (Literal 1))))
                         (BinOp (Var sym4__) LEq (Var N))
@@ -11426,24 +11447,19 @@
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 16)))
-                 (For
+                ((For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Literal 2))
                   (Increment (Var sym2__))
                   (Block
-                   ((Expression
-                     (Assign (Var current_statement__) (Literal 16)))
-                    (For
+                   ((For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Literal 5))
                      (Increment (Var sym3__))
                      (Block
-                      ((Expression
-                        (Assign (Var current_statement__) (Literal 16)))
-                       (For
+                      ((For
                         ((static false) (constexpr false) (type_ Int)
                          (name sym4__) (init (Assignment (Literal 1))))
                         (BinOp (Var sym4__) LEq (Literal 4))
@@ -11508,8 +11524,7 @@
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 18)))
-                 (For
+                ((For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
@@ -11561,23 +11576,18 @@
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 19)))
-                 (For
+                ((For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                   (Block
-                   ((Expression
-                     (Assign (Var current_statement__) (Literal 19)))
-                    (For
+                   ((For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var M))
                      (Increment (Var sym3__))
                      (Block
-                      ((Expression
-                        (Assign (Var current_statement__) (Literal 19)))
-                       (For
+                      ((For
                         ((static false) (constexpr false) (type_ Int)
                          (name sym4__) (init (Assignment (Literal 1))))
                         (BinOp (Var sym4__) LEq (Var N))
@@ -11663,16 +11673,13 @@
                 (init (Assignment (Literal 1))))
                (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
                (Block
-                ((Expression (Assign (Var current_statement__) (Literal 22)))
-                 (For
+                ((For
                   ((static false) (constexpr false) (type_ Int) (name sym2__)
                    (init (Assignment (Literal 1))))
                   (BinOp (Var sym2__) LEq (Literal 3))
                   (Increment (Var sym2__))
                   (Block
-                   ((Expression
-                     (Assign (Var current_statement__) (Literal 22)))
-                    (For
+                   ((For
                      ((static false) (constexpr false) (type_ Int)
                       (name sym3__) (init (Assignment (Literal 1))))
                      (BinOp (Var sym3__) LEq (Var K))
@@ -12086,32 +12093,24 @@
                  (Assign (Var p_real_3d_ar_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_real_3d_ar\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 8)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 8)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var K)) (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 8)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var M)) (Increment (Var sym2__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 8)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var N))
                        (Increment (Var sym3__))
                        (Block
                         ((Expression
-                          (Assign (Var current_statement__) (Literal 8)))
-                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var p_real_3d_ar)
                             (Index (Var p_real_3d_ar_flat__)
@@ -12124,8 +12123,6 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var current_statement__) (Literal 8)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -12151,25 +12148,19 @@
                  (Assign (Var p_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_vec\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 9)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 9)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 9)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var p_vec)
                       (Index (Var p_vec_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable p_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 9)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -12200,24 +12191,18 @@
                  (Assign (Var p_1d_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_1d_vec\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 10)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 10)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 10)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 10)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_1d_vec)
                          (Index (Var p_1d_vec_flat__)
@@ -12225,8 +12210,6 @@
                          (Literal "\"assigning variable p_1d_vec\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 10)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -12269,40 +12252,30 @@
                  (Assign (Var p_3d_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_3d_vec\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 11)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 11)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 11)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 11)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var M))
                        (Increment (Var sym3__))
                        (Block
-                        ((Expression
-                          (Assign (Var current_statement__) (Literal 11)))
-                         (For
+                        ((For
                           ((static false) (constexpr false) (type_ Int)
                            (name sym4__) (init (Assignment (Literal 1))))
                           (BinOp (Var sym4__) LEq (Var N))
                           (Increment (Var sym4__))
                           (Block
                            ((Expression
-                             (Assign (Var current_statement__) (Literal 11)))
-                            (Expression
                              (FunCall stan::model::assign ()
                               ((Var p_3d_vec)
                                (Index (Var p_3d_vec_flat__)
@@ -12317,8 +12290,6 @@
                                 ((Var sym2__)))
                                (FunCall stan::model::index_uni ()
                                 ((Var sym1__))))))
-                            (Expression
-                             (Assign (Var current_statement__) (Literal 11)))
                             (Expression
                              (Assign (Var pos__)
                               (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -12342,25 +12313,19 @@
                  (Assign (Var p_row_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_row_vec\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 12)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 12)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 12)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var p_row_vec)
                       (Index (Var p_row_vec_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable p_row_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 12)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -12390,24 +12355,18 @@
                  (Assign (Var p_1d_row_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_1d_row_vec\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 13)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 13)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 13)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 13)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_1d_row_vec)
                          (Index (Var p_1d_row_vec_flat__)
@@ -12415,8 +12374,6 @@
                          (Literal "\"assigning variable p_1d_row_vec\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 13)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -12460,40 +12417,30 @@
                  (Assign (Var p_3d_row_vec_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_3d_row_vec\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 14)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 14)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 14)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 14)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var M))
                        (Increment (Var sym3__))
                        (Block
-                        ((Expression
-                          (Assign (Var current_statement__) (Literal 14)))
-                         (For
+                        ((For
                           ((static false) (constexpr false) (type_ Int)
                            (name sym4__) (init (Assignment (Literal 1))))
                           (BinOp (Var sym4__) LEq (Var N))
                           (Increment (Var sym4__))
                           (Block
                            ((Expression
-                             (Assign (Var current_statement__) (Literal 14)))
-                            (Expression
                              (FunCall stan::model::assign ()
                               ((Var p_3d_row_vec)
                                (Index (Var p_3d_row_vec_flat__)
@@ -12509,8 +12456,6 @@
                                 ((Var sym2__)))
                                (FunCall stan::model::index_uni ()
                                 ((Var sym1__))))))
-                            (Expression
-                             (Assign (Var current_statement__) (Literal 14)))
                             (Expression
                              (Assign (Var pos__)
                               (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -12535,26 +12480,20 @@
                  (Assign (Var p_mat_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_mat\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 15)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 15)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 4))
                  (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 15)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 5))
                     (Increment (Var sym2__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 15)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_mat)
                          (Index (Var p_mat_flat__)
@@ -12562,8 +12501,6 @@
                          (Literal "\"assigning variable p_mat\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 15)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -12600,42 +12537,32 @@
                  (Assign (Var p_ar_mat_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_ar_mat\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 16)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 16)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 3))
                  (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 16)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 2))
                     (Increment (Var sym2__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 16)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Literal 5))
                        (Increment (Var sym3__))
                        (Block
-                        ((Expression
-                          (Assign (Var current_statement__) (Literal 16)))
-                         (For
+                        ((For
                           ((static false) (constexpr false) (type_ Int)
                            (name sym4__) (init (Assignment (Literal 1))))
                           (BinOp (Var sym4__) LEq (Literal 4))
                           (Increment (Var sym4__))
                           (Block
                            ((Expression
-                             (Assign (Var current_statement__) (Literal 16)))
-                            (Expression
                              (FunCall stan::model::assign ()
                               ((Var p_ar_mat)
                                (Index (Var p_ar_mat_flat__)
@@ -12650,8 +12577,6 @@
                                 ((Var sym2__)))
                                (FunCall stan::model::index_uni ()
                                 ((Var sym1__))))))
-                            (Expression
-                             (Assign (Var current_statement__) (Literal 16)))
                             (Expression
                              (Assign (Var pos__)
                               (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -12677,25 +12602,19 @@
                  (Assign (Var p_simplex_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_simplex\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 17)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 17)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 17)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var p_simplex)
                       (Index (Var p_simplex_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable p_simplex\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 17)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -12726,24 +12645,18 @@
                  (Assign (Var p_1d_simplex_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_1d_simplex\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 18)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 18)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 18)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 18)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_1d_simplex)
                          (Index (Var p_1d_simplex_flat__)
@@ -12751,8 +12664,6 @@
                          (Literal "\"assigning variable p_1d_simplex\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 18)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -12797,40 +12708,30 @@
                  (Assign (Var p_3d_simplex_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_3d_simplex\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 19)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 19)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 19)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 19)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var M))
                        (Increment (Var sym3__))
                        (Block
-                        ((Expression
-                          (Assign (Var current_statement__) (Literal 19)))
-                         (For
+                        ((For
                           ((static false) (constexpr false) (type_ Int)
                            (name sym4__) (init (Assignment (Literal 1))))
                           (BinOp (Var sym4__) LEq (Var N))
                           (Increment (Var sym4__))
                           (Block
                            ((Expression
-                             (Assign (Var current_statement__) (Literal 19)))
-                            (Expression
                              (FunCall stan::model::assign ()
                               ((Var p_3d_simplex)
                                (Index (Var p_3d_simplex_flat__)
@@ -12846,8 +12747,6 @@
                                 ((Var sym2__)))
                                (FunCall stan::model::index_uni ()
                                 ((Var sym1__))))))
-                            (Expression
-                             (Assign (Var current_statement__) (Literal 19)))
                             (Expression
                              (Assign (Var pos__)
                               (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -12873,26 +12772,20 @@
                  (Assign (Var p_cfcov_54_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_cfcov_54\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 20)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 20)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 4))
                  (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 20)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 5))
                     (Increment (Var sym2__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 20)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_cfcov_54)
                          (Index (Var p_cfcov_54_flat__)
@@ -12900,8 +12793,6 @@
                          (Literal "\"assigning variable p_cfcov_54\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 20)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -12927,26 +12818,20 @@
                  (Assign (Var p_cfcov_33_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_cfcov_33\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 21)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 21)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 3))
                  (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 21)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 3))
                     (Increment (Var sym2__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 21)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var p_cfcov_33)
                          (Index (Var p_cfcov_33_flat__)
@@ -12954,8 +12839,6 @@
                          (Literal "\"assigning variable p_cfcov_33\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 21)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -12987,34 +12870,26 @@
                  (Assign (Var p_cfcov_33_ar_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"p_cfcov_33_ar\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 22)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 22)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym1__) LEq (Literal 3))
                  (Increment (Var sym1__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 22)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym2__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym2__) LEq (Literal 3))
                     (Increment (Var sym2__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 22)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym3__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym3__) LEq (Var K))
                        (Increment (Var sym3__))
                        (Block
                         ((Expression
-                          (Assign (Var current_statement__) (Literal 22)))
-                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var p_cfcov_33_ar)
                             (Index (Var p_cfcov_33_ar_flat__)
@@ -13027,8 +12902,6 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var current_statement__) (Literal 22)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -13054,9 +12927,7 @@
                  (Assign (Var x_p_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"x_p\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 23)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 23)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
@@ -13064,16 +12935,12 @@
                  (Increment (Var sym1__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 23)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var x_p)
                       (Index (Var x_p_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable x_p\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 23)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -13097,9 +12964,7 @@
                  (Assign (Var y_p_flat__)
                   (MethodCall (Var context__) vals_r ()
                    ((Literal "\"y_p\"")))))
-                (Expression (Assign (Var current_statement__) (Literal 24)))
                 (Expression (Assign (Var pos__) (Literal 1)))
-                (Expression (Assign (Var current_statement__) (Literal 24)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
                   (init (Assignment (Literal 1))))
@@ -13107,16 +12972,12 @@
                  (Increment (Var sym1__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 24)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var y_p)
                       (Index (Var y_p_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable y_p\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 24)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -16984,11 +16845,10 @@
                                                     Add (Var N)))
                                                   Add
                                                   (Parens
-                                                   (BinOp
+                                                   (BinOp (Var N) Multiply
                                                     (Parens
-                                                     (BinOp (Var N) Multiply
-                                                      (Var M)))
-                                                    Multiply (Var K)))))
+                                                     (BinOp (Var M) Multiply
+                                                      (Var K)))))))
                                                 Add (Var N)))
                                               Add
                                               (Parens
@@ -16996,58 +16856,50 @@
                                                 (Var N)))))
                                             Add
                                             (Parens
-                                             (BinOp
+                                             (BinOp (Var N) Multiply
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var M) Multiply
                                                 (Parens
-                                                 (BinOp (Var N) Multiply
-                                                  (Var M)))
-                                                Multiply (Var K)))
-                                              Multiply (Var N)))))
+                                                 (BinOp (Var K) Multiply
+                                                  (Var N)))))))))
                                           Add (Var N)))
                                         Add
                                         (Parens
                                          (BinOp (Var N) Multiply (Var N)))))
                                       Add
                                       (Parens
-                                       (BinOp
+                                       (BinOp (Var N) Multiply
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var M) Multiply
                                           (Parens
-                                           (BinOp (Var N) Multiply (Var M)))
-                                          Multiply (Var K)))
-                                        Multiply (Var N)))))
+                                           (BinOp (Var K) Multiply (Var N)))))))))
                                     Add
                                     (Parens
                                      (BinOp (Literal 5) Multiply (Literal 4)))))
                                   Add
                                   (Parens
-                                   (BinOp
+                                   (BinOp (Literal 4) Multiply
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 5) Multiply
                                       (Parens
-                                       (BinOp (Literal 4) Multiply
-                                        (Literal 5)))
-                                      Multiply (Literal 2)))
-                                    Multiply (Literal 3)))))
+                                       (BinOp (Literal 2) Multiply
+                                        (Literal 3)))))))))
                                 Add (Var N)))
                               Add (Parens (BinOp (Var N) Multiply (Var N)))))
                             Add
                             (Parens
-                             (BinOp
+                             (BinOp (Var N) Multiply
                               (Parens
-                               (BinOp
-                                (Parens (BinOp (Var N) Multiply (Var M)))
-                                Multiply (Var K)))
-                              Multiply (Var N)))))
+                               (BinOp (Var M) Multiply
+                                (Parens (BinOp (Var K) Multiply (Var N)))))))))
                           Add
                           (Parens (BinOp (Literal 5) Multiply (Literal 4)))))
                         Add
                         (Parens (BinOp (Literal 3) Multiply (Literal 3)))))
                       Add
                       (Parens
-                       (BinOp (Parens (BinOp (Var K) Multiply (Literal 3)))
-                        Multiply (Literal 3)))))
+                       (BinOp (Var K) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                     Add (Literal 2)))
                   Add (Literal 2)))))))
             (VariableDefn
@@ -17092,11 +16944,10 @@
                                                   (Parens
                                                    (BinOp (Var N) Add
                                                     (Parens
-                                                     (BinOp
+                                                     (BinOp (Var N) Multiply
                                                       (Parens
-                                                       (BinOp (Var N)
-                                                        Multiply (Var M)))
-                                                      Multiply (Var K)))))
+                                                       (BinOp (Var M)
+                                                        Multiply (Var K)))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -17104,60 +16955,52 @@
                                                   (Var N)))))
                                               Add
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var N) Multiply
                                                 (Parens
-                                                 (BinOp
+                                                 (BinOp (Var M) Multiply
                                                   (Parens
-                                                   (BinOp (Var N) Multiply
-                                                    (Var M)))
-                                                  Multiply (Var K)))
-                                                Multiply (Var N)))))
+                                                   (BinOp (Var K) Multiply
+                                                    (Var N)))))))))
                                             Add (Var N)))
                                           Add
                                           (Parens
                                            (BinOp (Var N) Multiply (Var N)))))
                                         Add
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var N) Multiply
                                           (Parens
-                                           (BinOp
+                                           (BinOp (Var M) Multiply
                                             (Parens
-                                             (BinOp (Var N) Multiply (Var M)))
-                                            Multiply (Var K)))
-                                          Multiply (Var N)))))
+                                             (BinOp (Var K) Multiply (Var N)))))))))
                                       Add
                                       (Parens
                                        (BinOp (Literal 5) Multiply
                                         (Literal 4)))))
                                     Add
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 4) Multiply
                                       (Parens
-                                       (BinOp
+                                       (BinOp (Literal 5) Multiply
                                         (Parens
-                                         (BinOp (Literal 4) Multiply
-                                          (Literal 5)))
-                                        Multiply (Literal 2)))
-                                      Multiply (Literal 3)))))
+                                         (BinOp (Literal 2) Multiply
+                                          (Literal 3)))))))))
                                   Add (Var N)))
                                 Add
                                 (Parens (BinOp (Var N) Multiply (Var N)))))
                               Add
                               (Parens
-                               (BinOp
+                               (BinOp (Var N) Multiply
                                 (Parens
-                                 (BinOp
-                                  (Parens (BinOp (Var N) Multiply (Var M)))
-                                  Multiply (Var K)))
-                                Multiply (Var N)))))
+                                 (BinOp (Var M) Multiply
+                                  (Parens (BinOp (Var K) Multiply (Var N)))))))))
                             Add
                             (Parens (BinOp (Literal 5) Multiply (Literal 4)))))
                           Add
                           (Parens (BinOp (Literal 3) Multiply (Literal 3)))))
                         Add
                         (Parens
-                         (BinOp (Parens (BinOp (Var K) Multiply (Literal 3)))
-                          Multiply (Literal 3)))))
+                         (BinOp (Var K) Multiply
+                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                       Add (Literal 2)))
                     Add (Literal 1)))))))))
             (VariableDefn
@@ -17227,13 +17070,13 @@
                                                                   Add
                                                                   (Parens
                                                                    (BinOp
-                                                                    (Parens
-                                                                    (BinOp
                                                                     (Var N)
                                                                     Multiply
-                                                                    (Var M)))
+                                                                    (Parens
+                                                                    (BinOp
+                                                                    (Var M)
                                                                     Multiply
-                                                                    (Var K)))))
+                                                                    (Var K)))))))
                                                                 Add (Var N)))
                                                               Add
                                                               (Parens
@@ -17243,18 +17086,17 @@
                                                                 (Var N)))))
                                                             Add
                                                             (Parens
-                                                             (BinOp
+                                                             (BinOp (Var N)
+                                                              Multiply
                                                               (Parens
-                                                               (BinOp
+                                                               (BinOp 
+                                                                (Var M)
+                                                                Multiply
                                                                 (Parens
                                                                  (BinOp
-                                                                  (Var N)
+                                                                  (Var K)
                                                                   Multiply
-                                                                  (Var M)))
-                                                                Multiply
-                                                                (Var K)))
-                                                              Multiply
-                                                              (Var N)))))
+                                                                  (Var N)))))))))
                                                           Add (Var N)))
                                                         Add
                                                         (Parens
@@ -17262,26 +17104,26 @@
                                                           Multiply (Var N)))))
                                                       Add
                                                       (Parens
-                                                       (BinOp
+                                                       (BinOp (Var N)
+                                                        Multiply
                                                         (Parens
-                                                         (BinOp
+                                                         (BinOp (Var M)
+                                                          Multiply
                                                           (Parens
-                                                           (BinOp (Var N)
+                                                           (BinOp (Var K)
                                                             Multiply 
-                                                            (Var M)))
-                                                          Multiply (Var K)))
-                                                        Multiply (Var N)))))
+                                                            (Var N)))))))))
                                                     Add
                                                     (Parens
-                                                     (BinOp
+                                                     (BinOp (Literal 4)
+                                                      Multiply
                                                       (Parens
-                                                       (BinOp
+                                                       (BinOp (Literal 5)
+                                                        Multiply
                                                         (Parens
-                                                         (BinOp (Literal 4)
+                                                         (BinOp (Literal 2)
                                                           Multiply
-                                                          (Literal 5)))
-                                                        Multiply (Literal 2)))
-                                                      Multiply (Literal 3)))))
+                                                          (Literal 3)))))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -17289,14 +17131,12 @@
                                                   (Var N)))))
                                               Add
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var N) Multiply
                                                 (Parens
-                                                 (BinOp
+                                                 (BinOp (Var M) Multiply
                                                   (Parens
-                                                   (BinOp (Var N) Multiply
-                                                    (Var M)))
-                                                  Multiply (Var K)))
-                                                Multiply (Var N)))))
+                                                   (BinOp (Var K) Multiply
+                                                    (Var N)))))))))
                                             Add
                                             (Parens
                                              (BinOp (Literal 5) Multiply
@@ -17307,53 +17147,45 @@
                                             (Literal 3)))))
                                         Add
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var K) Multiply
                                           (Parens
-                                           (BinOp (Var K) Multiply
-                                            (Literal 3)))
-                                          Multiply (Literal 3)))))
+                                           (BinOp (Literal 3) Multiply
+                                            (Literal 3)))))))
                                       Add (Literal 3)))
                                     Add
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 5) Multiply
                                       (Parens
-                                       (BinOp (Literal 5) Multiply
-                                        (Literal 3)))
-                                      Multiply (Literal 4)))))
+                                       (BinOp (Literal 3) Multiply
+                                        (Literal 4)))))))
                                   Add
                                   (Parens
-                                   (BinOp
+                                   (BinOp (Literal 3) Multiply
                                     (Parens
-                                     (BinOp (Literal 3) Multiply (Literal 3)))
-                                    Multiply (Literal 4)))))
+                                     (BinOp (Literal 3) Multiply (Literal 4)))))))
                                 Add
                                 (Parens
-                                 (BinOp
+                                 (BinOp (Literal 5) Multiply
                                   (Parens
-                                   (BinOp (Literal 5) Multiply (Literal 3)))
-                                  Multiply (Literal 4)))))
+                                   (BinOp (Literal 3) Multiply (Literal 4)))))))
                               Add
                               (Parens
-                               (BinOp
+                               (BinOp (Literal 3) Multiply
                                 (Parens
-                                 (BinOp (Literal 3) Multiply (Literal 3)))
-                                Multiply (Literal 3)))))
+                                 (BinOp (Literal 3) Multiply (Literal 3)))))))
                             Add
                             (Parens
-                             (BinOp
+                             (BinOp (Literal 3) Multiply
                               (Parens
-                               (BinOp (Literal 3) Multiply (Literal 3)))
-                              Multiply (Literal 4)))))
+                               (BinOp (Literal 3) Multiply (Literal 4)))))))
                           Add
                           (Parens
-                           (BinOp
-                            (Parens (BinOp (Literal 5) Multiply (Literal 3)))
-                            Multiply (Literal 4)))))
+                           (BinOp (Literal 5) Multiply
+                            (Parens (BinOp (Literal 3) Multiply (Literal 4)))))))
                         Add
                         (Parens
-                         (BinOp
-                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))
-                          Multiply (Literal 3)))))
+                         (BinOp (Literal 3) Multiply
+                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                       Add (Parens (BinOp (Literal 3) Multiply (Literal 4)))))
                     Add (Parens (BinOp (Literal 2) Multiply (Literal 2)))))))))))
             (VariableDefn
@@ -17448,11 +17280,10 @@
                                                     Add (Var N)))
                                                   Add
                                                   (Parens
-                                                   (BinOp
+                                                   (BinOp (Var N) Multiply
                                                     (Parens
-                                                     (BinOp (Var N) Multiply
-                                                      (Var M)))
-                                                    Multiply (Var K)))))
+                                                     (BinOp (Var M) Multiply
+                                                      (Var K)))))))
                                                 Add (Var N)))
                                               Add
                                               (Parens
@@ -17460,58 +17291,50 @@
                                                 (Var N)))))
                                             Add
                                             (Parens
-                                             (BinOp
+                                             (BinOp (Var N) Multiply
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var M) Multiply
                                                 (Parens
-                                                 (BinOp (Var N) Multiply
-                                                  (Var M)))
-                                                Multiply (Var K)))
-                                              Multiply (Var N)))))
+                                                 (BinOp (Var K) Multiply
+                                                  (Var N)))))))))
                                           Add (Var N)))
                                         Add
                                         (Parens
                                          (BinOp (Var N) Multiply (Var N)))))
                                       Add
                                       (Parens
-                                       (BinOp
+                                       (BinOp (Var N) Multiply
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var M) Multiply
                                           (Parens
-                                           (BinOp (Var N) Multiply (Var M)))
-                                          Multiply (Var K)))
-                                        Multiply (Var N)))))
+                                           (BinOp (Var K) Multiply (Var N)))))))))
                                     Add
                                     (Parens
                                      (BinOp (Literal 5) Multiply (Literal 4)))))
                                   Add
                                   (Parens
-                                   (BinOp
+                                   (BinOp (Literal 4) Multiply
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 5) Multiply
                                       (Parens
-                                       (BinOp (Literal 4) Multiply
-                                        (Literal 5)))
-                                      Multiply (Literal 2)))
-                                    Multiply (Literal 3)))))
+                                       (BinOp (Literal 2) Multiply
+                                        (Literal 3)))))))))
                                 Add (Var N)))
                               Add (Parens (BinOp (Var N) Multiply (Var N)))))
                             Add
                             (Parens
-                             (BinOp
+                             (BinOp (Var N) Multiply
                               (Parens
-                               (BinOp
-                                (Parens (BinOp (Var N) Multiply (Var M)))
-                                Multiply (Var K)))
-                              Multiply (Var N)))))
+                               (BinOp (Var M) Multiply
+                                (Parens (BinOp (Var K) Multiply (Var N)))))))))
                           Add
                           (Parens (BinOp (Literal 5) Multiply (Literal 4)))))
                         Add
                         (Parens (BinOp (Literal 3) Multiply (Literal 3)))))
                       Add
                       (Parens
-                       (BinOp (Parens (BinOp (Var K) Multiply (Literal 3)))
-                        Multiply (Literal 3)))))
+                       (BinOp (Var K) Multiply
+                        (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                     Add (Literal 2)))
                   Add (Literal 2)))))))
             (VariableDefn
@@ -17556,11 +17379,10 @@
                                                   (Parens
                                                    (BinOp (Var N) Add
                                                     (Parens
-                                                     (BinOp
+                                                     (BinOp (Var N) Multiply
                                                       (Parens
-                                                       (BinOp (Var N)
-                                                        Multiply (Var M)))
-                                                      Multiply (Var K)))))
+                                                       (BinOp (Var M)
+                                                        Multiply (Var K)))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -17568,60 +17390,52 @@
                                                   (Var N)))))
                                               Add
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var N) Multiply
                                                 (Parens
-                                                 (BinOp
+                                                 (BinOp (Var M) Multiply
                                                   (Parens
-                                                   (BinOp (Var N) Multiply
-                                                    (Var M)))
-                                                  Multiply (Var K)))
-                                                Multiply (Var N)))))
+                                                   (BinOp (Var K) Multiply
+                                                    (Var N)))))))))
                                             Add (Var N)))
                                           Add
                                           (Parens
                                            (BinOp (Var N) Multiply (Var N)))))
                                         Add
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var N) Multiply
                                           (Parens
-                                           (BinOp
+                                           (BinOp (Var M) Multiply
                                             (Parens
-                                             (BinOp (Var N) Multiply (Var M)))
-                                            Multiply (Var K)))
-                                          Multiply (Var N)))))
+                                             (BinOp (Var K) Multiply (Var N)))))))))
                                       Add
                                       (Parens
                                        (BinOp (Literal 5) Multiply
                                         (Literal 4)))))
                                     Add
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 4) Multiply
                                       (Parens
-                                       (BinOp
+                                       (BinOp (Literal 5) Multiply
                                         (Parens
-                                         (BinOp (Literal 4) Multiply
-                                          (Literal 5)))
-                                        Multiply (Literal 2)))
-                                      Multiply (Literal 3)))))
+                                         (BinOp (Literal 2) Multiply
+                                          (Literal 3)))))))))
                                   Add (Var N)))
                                 Add
                                 (Parens (BinOp (Var N) Multiply (Var N)))))
                               Add
                               (Parens
-                               (BinOp
+                               (BinOp (Var N) Multiply
                                 (Parens
-                                 (BinOp
-                                  (Parens (BinOp (Var N) Multiply (Var M)))
-                                  Multiply (Var K)))
-                                Multiply (Var N)))))
+                                 (BinOp (Var M) Multiply
+                                  (Parens (BinOp (Var K) Multiply (Var N)))))))))
                             Add
                             (Parens (BinOp (Literal 5) Multiply (Literal 4)))))
                           Add
                           (Parens (BinOp (Literal 3) Multiply (Literal 3)))))
                         Add
                         (Parens
-                         (BinOp (Parens (BinOp (Var K) Multiply (Literal 3)))
-                          Multiply (Literal 3)))))
+                         (BinOp (Var K) Multiply
+                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                       Add (Literal 2)))
                     Add (Literal 1)))))))))
             (VariableDefn
@@ -17691,13 +17505,13 @@
                                                                   Add
                                                                   (Parens
                                                                    (BinOp
-                                                                    (Parens
-                                                                    (BinOp
                                                                     (Var N)
                                                                     Multiply
-                                                                    (Var M)))
+                                                                    (Parens
+                                                                    (BinOp
+                                                                    (Var M)
                                                                     Multiply
-                                                                    (Var K)))))
+                                                                    (Var K)))))))
                                                                 Add (Var N)))
                                                               Add
                                                               (Parens
@@ -17707,18 +17521,17 @@
                                                                 (Var N)))))
                                                             Add
                                                             (Parens
-                                                             (BinOp
+                                                             (BinOp (Var N)
+                                                              Multiply
                                                               (Parens
-                                                               (BinOp
+                                                               (BinOp 
+                                                                (Var M)
+                                                                Multiply
                                                                 (Parens
                                                                  (BinOp
-                                                                  (Var N)
+                                                                  (Var K)
                                                                   Multiply
-                                                                  (Var M)))
-                                                                Multiply
-                                                                (Var K)))
-                                                              Multiply
-                                                              (Var N)))))
+                                                                  (Var N)))))))))
                                                           Add (Var N)))
                                                         Add
                                                         (Parens
@@ -17726,26 +17539,26 @@
                                                           Multiply (Var N)))))
                                                       Add
                                                       (Parens
-                                                       (BinOp
+                                                       (BinOp (Var N)
+                                                        Multiply
                                                         (Parens
-                                                         (BinOp
+                                                         (BinOp (Var M)
+                                                          Multiply
                                                           (Parens
-                                                           (BinOp (Var N)
+                                                           (BinOp (Var K)
                                                             Multiply 
-                                                            (Var M)))
-                                                          Multiply (Var K)))
-                                                        Multiply (Var N)))))
+                                                            (Var N)))))))))
                                                     Add
                                                     (Parens
-                                                     (BinOp
+                                                     (BinOp (Literal 4)
+                                                      Multiply
                                                       (Parens
-                                                       (BinOp
+                                                       (BinOp (Literal 5)
+                                                        Multiply
                                                         (Parens
-                                                         (BinOp (Literal 4)
+                                                         (BinOp (Literal 2)
                                                           Multiply
-                                                          (Literal 5)))
-                                                        Multiply (Literal 2)))
-                                                      Multiply (Literal 3)))))
+                                                          (Literal 3)))))))))
                                                   Add (Var N)))
                                                 Add
                                                 (Parens
@@ -17753,14 +17566,12 @@
                                                   (Var N)))))
                                               Add
                                               (Parens
-                                               (BinOp
+                                               (BinOp (Var N) Multiply
                                                 (Parens
-                                                 (BinOp
+                                                 (BinOp (Var M) Multiply
                                                   (Parens
-                                                   (BinOp (Var N) Multiply
-                                                    (Var M)))
-                                                  Multiply (Var K)))
-                                                Multiply (Var N)))))
+                                                   (BinOp (Var K) Multiply
+                                                    (Var N)))))))))
                                             Add
                                             (Parens
                                              (BinOp (Literal 5) Multiply
@@ -17771,53 +17582,45 @@
                                             (Literal 3)))))
                                         Add
                                         (Parens
-                                         (BinOp
+                                         (BinOp (Var K) Multiply
                                           (Parens
-                                           (BinOp (Var K) Multiply
-                                            (Literal 3)))
-                                          Multiply (Literal 3)))))
+                                           (BinOp (Literal 3) Multiply
+                                            (Literal 3)))))))
                                       Add (Literal 3)))
                                     Add
                                     (Parens
-                                     (BinOp
+                                     (BinOp (Literal 5) Multiply
                                       (Parens
-                                       (BinOp (Literal 5) Multiply
-                                        (Literal 3)))
-                                      Multiply (Literal 4)))))
+                                       (BinOp (Literal 3) Multiply
+                                        (Literal 4)))))))
                                   Add
                                   (Parens
-                                   (BinOp
+                                   (BinOp (Literal 3) Multiply
                                     (Parens
-                                     (BinOp (Literal 3) Multiply (Literal 3)))
-                                    Multiply (Literal 4)))))
+                                     (BinOp (Literal 3) Multiply (Literal 4)))))))
                                 Add
                                 (Parens
-                                 (BinOp
+                                 (BinOp (Literal 5) Multiply
                                   (Parens
-                                   (BinOp (Literal 5) Multiply (Literal 3)))
-                                  Multiply (Literal 4)))))
+                                   (BinOp (Literal 3) Multiply (Literal 4)))))))
                               Add
                               (Parens
-                               (BinOp
+                               (BinOp (Literal 3) Multiply
                                 (Parens
-                                 (BinOp (Literal 3) Multiply (Literal 3)))
-                                Multiply (Literal 3)))))
+                                 (BinOp (Literal 3) Multiply (Literal 3)))))))
                             Add
                             (Parens
-                             (BinOp
+                             (BinOp (Literal 3) Multiply
                               (Parens
-                               (BinOp (Literal 3) Multiply (Literal 3)))
-                              Multiply (Literal 4)))))
+                               (BinOp (Literal 3) Multiply (Literal 4)))))))
                           Add
                           (Parens
-                           (BinOp
-                            (Parens (BinOp (Literal 5) Multiply (Literal 3)))
-                            Multiply (Literal 4)))))
+                           (BinOp (Literal 5) Multiply
+                            (Parens (BinOp (Literal 3) Multiply (Literal 4)))))))
                         Add
                         (Parens
-                         (BinOp
-                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))
-                          Multiply (Literal 3)))))
+                         (BinOp (Literal 3) Multiply
+                          (Parens (BinOp (Literal 3) Multiply (Literal 3)))))))
                       Add (Parens (BinOp (Literal 3) Multiply (Literal 4)))))
                     Add (Parens (BinOp (Literal 2) Multiply (Literal 2)))))))))))
             (VariableDefn
@@ -18112,30 +17915,23 @@
               (Assign (Var d_int_3d_ar_flat__)
                (MethodCall (Var context__) vals_i ()
                 ((Literal "\"d_int_3d_ar\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 198)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 198)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var K)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 198)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var M)) (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 198)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var N)) (Increment (Var sym3__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 198)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var d_int_3d_ar)
                          (Index (Var d_int_3d_ar_flat__)
@@ -18144,8 +17940,6 @@
                          (FunCall stan::model::index_uni () ((Var sym3__)))
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 198)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -18239,30 +18033,23 @@
               (Assign (Var d_real_3d_ar_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_real_3d_ar\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 205)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 205)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var K)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 205)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var M)) (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 205)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var N)) (Increment (Var sym3__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 205)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var d_real_3d_ar)
                          (Index (Var d_real_3d_ar_flat__)
@@ -18271,8 +18058,6 @@
                          (FunCall stan::model::index_uni () ((Var sym3__)))
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 205)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -18305,23 +18090,19 @@
              (Expression
               (Assign (Var d_vec_flat__)
                (MethodCall (Var context__) vals_r () ((Literal "\"d_vec\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 207)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 207)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 207)))
-                (Expression
+               ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_vec)
                    (Index (Var d_vec_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_vec\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression (Assign (Var current_statement__) (Literal 207)))
                 (Expression
                  (Assign (Var pos__)
                   (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -18358,23 +18139,18 @@
               (Assign (Var d_1d_vec_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_1d_vec\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 210)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 210)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 210)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 210)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_1d_vec)
                       (Index (Var d_1d_vec_flat__)
@@ -18382,8 +18158,6 @@
                       (Literal "\"assigning variable d_1d_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 210)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -18435,38 +18209,29 @@
               (Assign (Var d_3d_vec_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_3d_vec\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 215)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 215)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 215)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 215)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var M)) (Increment (Var sym3__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 215)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym4__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym4__) LEq (Var N))
                        (Increment (Var sym4__))
                        (Block
                         ((Expression
-                          (Assign (Var current_statement__) (Literal 215)))
-                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var d_3d_vec)
                             (Index (Var d_3d_vec_flat__)
@@ -18481,8 +18246,6 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var current_statement__) (Literal 215)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -18516,23 +18279,19 @@
               (Assign (Var d_row_vec_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_row_vec\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 217)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 217)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 217)))
-                (Expression
+               ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_row_vec)
                    (Index (Var d_row_vec_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_row_vec\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression (Assign (Var current_statement__) (Literal 217)))
                 (Expression
                  (Assign (Var pos__)
                   (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -18569,23 +18328,18 @@
               (Assign (Var d_1d_row_vec_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_1d_row_vec\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 220)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 220)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 220)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 220)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_1d_row_vec)
                       (Index (Var d_1d_row_vec_flat__)
@@ -18593,8 +18347,6 @@
                       (Literal "\"assigning variable d_1d_row_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 220)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -18646,38 +18398,29 @@
               (Assign (Var d_3d_row_vec_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_3d_row_vec\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 225)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 225)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 225)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 225)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var M)) (Increment (Var sym3__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 225)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym4__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym4__) LEq (Var N))
                        (Increment (Var sym4__))
                        (Block
                         ((Expression
-                          (Assign (Var current_statement__) (Literal 225)))
-                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var d_3d_row_vec)
                             (Index (Var d_3d_row_vec_flat__)
@@ -18692,8 +18435,6 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var current_statement__) (Literal 225)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -18726,40 +18467,31 @@
               (Assign (Var d_ar_mat_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_ar_mat\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 226)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 226)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 226)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 2))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 226)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Literal 5))
                     (Increment (Var sym3__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 226)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym4__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym4__) LEq (Literal 4))
                        (Increment (Var sym4__))
                        (Block
                         ((Expression
-                          (Assign (Var current_statement__) (Literal 226)))
-                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var d_ar_mat)
                             (Index (Var d_ar_mat_flat__)
@@ -18774,8 +18506,6 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var current_statement__) (Literal 226)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -18819,23 +18549,19 @@
               (Assign (Var d_simplex_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_simplex\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 228)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 228)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 228)))
-                (Expression
+               ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_simplex)
                    (Index (Var d_simplex_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_simplex\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression (Assign (Var current_statement__) (Literal 228)))
                 (Expression
                  (Assign (Var pos__)
                   (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -18876,23 +18602,18 @@
               (Assign (Var d_1d_simplex_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_1d_simplex\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 231)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 231)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 231)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 231)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_1d_simplex)
                       (Index (Var d_1d_simplex_flat__)
@@ -18900,8 +18621,6 @@
                       (Literal "\"assigning variable d_1d_simplex\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 231)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -18958,38 +18677,29 @@
               (Assign (Var d_3d_simplex_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_3d_simplex\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 236)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 236)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 236)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 236)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var M)) (Increment (Var sym3__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 236)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym4__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym4__) LEq (Var N))
                        (Increment (Var sym4__))
                        (Block
                         ((Expression
-                          (Assign (Var current_statement__) (Literal 236)))
-                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var d_3d_simplex)
                             (Index (Var d_3d_simplex_flat__)
@@ -19004,8 +18714,6 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var current_statement__) (Literal 236)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -19042,24 +18750,19 @@
               (Assign (Var d_cfcov_54_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_cfcov_54\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 237)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 237)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Literal 4)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 237)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 5))
                  (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 237)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_cfcov_54)
                       (Index (Var d_cfcov_54_flat__)
@@ -19067,8 +18770,6 @@
                       (Literal "\"assigning variable d_cfcov_54\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 237)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -19104,24 +18805,19 @@
               (Assign (Var d_cfcov_33_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_cfcov_33\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 238)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 238)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 238)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 3))
                  (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 238)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_cfcov_33)
                       (Index (Var d_cfcov_33_flat__)
@@ -19129,8 +18825,6 @@
                       (Literal "\"assigning variable d_cfcov_33\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 238)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -19168,31 +18862,24 @@
               (Assign (Var d_cfcov_33_ar_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_cfcov_33_ar\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 240)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 240)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 240)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 3))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 240)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var K)) (Increment (Var sym3__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 240)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var d_cfcov_33_ar)
                          (Index (Var d_cfcov_33_ar_flat__)
@@ -19201,8 +18888,6 @@
                          (FunCall stan::model::index_uni () ((Var sym3__)))
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 240)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -19274,24 +18959,19 @@
               (Assign (Var d_int_array_2d_flat__)
                (MethodCall (Var context__) vals_i ()
                 ((Literal "\"d_int_array_2d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 245)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 245)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Literal 2)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 245)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var d_int))
                  (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 245)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_int_array_2d)
                       (Index (Var d_int_array_2d_flat__)
@@ -19299,8 +18979,6 @@
                       (Literal "\"assigning variable d_int_array_2d\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 245)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -19335,32 +19013,25 @@
               (Assign (Var d_int_array_3d_flat__)
                (MethodCall (Var context__) vals_i ()
                 ((Literal "\"d_int_array_3d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 247)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 247)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 247)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 2))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 247)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var d_int))
                     (Increment (Var sym3__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 247)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var d_int_array_3d)
                          (Index (Var d_int_array_3d_flat__)
@@ -19369,8 +19040,6 @@
                          (FunCall stan::model::index_uni () ((Var sym3__)))
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 247)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -19440,24 +19109,19 @@
               (Assign (Var d_real_array_2d_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_real_array_2d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 252)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 252)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Literal 2)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 252)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var d_int))
                  (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 252)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_real_array_2d)
                       (Index (Var d_real_array_2d_flat__)
@@ -19465,8 +19129,6 @@
                       (Literal "\"assigning variable d_real_array_2d\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 252)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -19503,32 +19165,25 @@
               (Assign (Var d_real_array_3d_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_real_array_3d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 254)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 254)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 254)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 2))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 254)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var d_int))
                     (Increment (Var sym3__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 254)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var d_real_array_3d)
                          (Index (Var d_real_array_3d_flat__)
@@ -19537,8 +19192,6 @@
                          (FunCall stan::model::index_uni () ((Var sym3__)))
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 254)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -19578,24 +19231,19 @@
               (Assign (Var d_matrix_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_matrix\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 257)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 257)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 257)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var d_int))
                  (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 257)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_matrix)
                       (Index (Var d_matrix_flat__)
@@ -19603,8 +19251,6 @@
                       (Literal "\"assigning variable d_matrix\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 257)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -19649,32 +19295,25 @@
               (Assign (Var d_matrix_array_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_matrix_array\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 261)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 261)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 261)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var d_int))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 261)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var d_int))
                     (Increment (Var sym3__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 261)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var d_matrix_array)
                          (Index (Var d_matrix_array_flat__)
@@ -19683,8 +19322,6 @@
                          (FunCall stan::model::index_uni () ((Var sym3__)))
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 261)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -19732,40 +19369,31 @@
               (Assign (Var d_matrix_array_2d_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_matrix_array_2d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 265)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 265)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 265)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var d_int))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 265)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Literal 2))
                     (Increment (Var sym3__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 265)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym4__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym4__) LEq (Var d_int))
                        (Increment (Var sym4__))
                        (Block
                         ((Expression
-                          (Assign (Var current_statement__) (Literal 265)))
-                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var d_matrix_array_2d)
                             (Index (Var d_matrix_array_2d_flat__)
@@ -19781,8 +19409,6 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var current_statement__) (Literal 265)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -19834,48 +19460,37 @@
               (Assign (Var d_matrix_array_3d_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_matrix_array_3d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 269)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 269)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 269)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var d_int))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 269)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Literal 3))
                     (Increment (Var sym3__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 269)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym4__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym4__) LEq (Literal 2))
                        (Increment (Var sym4__))
                        (Block
-                        ((Expression
-                          (Assign (Var current_statement__) (Literal 269)))
-                         (For
+                        ((For
                           ((static false) (constexpr false) (type_ Int)
                            (name sym5__) (init (Assignment (Literal 1))))
                           (BinOp (Var sym5__) LEq (Var d_int))
                           (Increment (Var sym5__))
                           (Block
                            ((Expression
-                             (Assign (Var current_statement__) (Literal 269)))
-                            (Expression
                              (FunCall stan::model::assign ()
                               ((Var d_matrix_array_3d)
                                (Index (Var d_matrix_array_3d_flat__)
@@ -19893,8 +19508,6 @@
                                 ((Var sym2__)))
                                (FunCall stan::model::index_uni ()
                                 ((Var sym1__))))))
-                            (Expression
-                             (Assign (Var current_statement__) (Literal 269)))
                             (Expression
                              (Assign (Var pos__)
                               (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))))))))
@@ -19928,23 +19541,19 @@
               (Assign (Var d_vector_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_vector\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 271)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 271)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 271)))
-                (Expression
+               ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_vector)
                    (Index (Var d_vector_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_vector\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression (Assign (Var current_statement__) (Literal 271)))
                 (Expression
                  (Assign (Var pos__)
                   (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -19983,24 +19592,19 @@
               (Assign (Var d_vector_array_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_vector_array\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 274)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 274)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 274)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var d_int))
                  (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 274)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_vector_array)
                       (Index (Var d_vector_array_flat__)
@@ -20008,8 +19612,6 @@
                       (Literal "\"assigning variable d_vector_array\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 274)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -20051,32 +19653,25 @@
               (Assign (Var d_vector_array_2d_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_vector_array_2d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 277)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 277)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 277)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 2))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 277)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var d_int))
                     (Increment (Var sym3__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 277)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var d_vector_array_2d)
                          (Index (Var d_vector_array_2d_flat__)
@@ -20085,8 +19680,6 @@
                          (FunCall stan::model::index_uni () ((Var sym3__)))
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 277)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -20132,40 +19725,31 @@
               (Assign (Var d_vector_array_3d_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_vector_array_3d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 280)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 280)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 280)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 3))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 280)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Literal 2))
                     (Increment (Var sym3__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 280)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym4__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym4__) LEq (Var d_int))
                        (Increment (Var sym4__))
                        (Block
                         ((Expression
-                          (Assign (Var current_statement__) (Literal 280)))
-                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var d_vector_array_3d)
                             (Index (Var d_vector_array_3d_flat__)
@@ -20181,8 +19765,6 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var current_statement__) (Literal 280)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -20216,23 +19798,19 @@
               (Assign (Var d_row_vector_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_row_vector\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 282)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 282)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 282)))
-                (Expression
+               ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_row_vector)
                    (Index (Var d_row_vector_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_row_vector\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression (Assign (Var current_statement__) (Literal 282)))
                 (Expression
                  (Assign (Var pos__)
                   (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
@@ -20271,24 +19849,19 @@
               (Assign (Var d_row_vector_array_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_row_vector_array\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 285)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 285)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 285)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Var d_int))
                  (Increment (Var sym2__))
                  (Block
                   ((Expression
-                    (Assign (Var current_statement__) (Literal 285)))
-                   (Expression
                     (FunCall stan::model::assign ()
                      ((Var d_row_vector_array)
                       (Index (Var d_row_vector_array_flat__)
@@ -20296,8 +19869,6 @@
                       (Literal "\"assigning variable d_row_vector_array\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var current_statement__) (Literal 285)))
                    (Expression
                     (Assign (Var pos__)
                      (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
@@ -20339,32 +19910,25 @@
               (Assign (Var d_row_vector_array_2d_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_row_vector_array_2d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 288)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 288)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 288)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 2))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 288)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Var d_int))
                     (Increment (Var sym3__))
                     (Block
                      ((Expression
-                       (Assign (Var current_statement__) (Literal 288)))
-                      (Expression
                        (FunCall stan::model::assign ()
                         ((Var d_row_vector_array_2d)
                          (Index (Var d_row_vector_array_2d_flat__)
@@ -20374,8 +19938,6 @@
                          (FunCall stan::model::index_uni () ((Var sym3__)))
                          (FunCall stan::model::index_uni () ((Var sym2__)))
                          (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var current_statement__) (Literal 288)))
                       (Expression
                        (Assign (Var pos__)
                         (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
@@ -20421,40 +19983,31 @@
               (Assign (Var d_row_vector_array_3d_flat__)
                (MethodCall (Var context__) vals_r ()
                 ((Literal "\"d_row_vector_array_3d\"")))))
-             (Expression (Assign (Var current_statement__) (Literal 291)))
              (Expression (Assign (Var pos__) (Literal 1)))
-             (Expression (Assign (Var current_statement__) (Literal 291)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
                (init (Assignment (Literal 1))))
               (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
               (Block
-               ((Expression (Assign (Var current_statement__) (Literal 291)))
-                (For
+               ((For
                  ((static false) (constexpr false) (type_ Int) (name sym2__)
                   (init (Assignment (Literal 1))))
                  (BinOp (Var sym2__) LEq (Literal 3))
                  (Increment (Var sym2__))
                  (Block
-                  ((Expression
-                    (Assign (Var current_statement__) (Literal 291)))
-                   (For
+                  ((For
                     ((static false) (constexpr false) (type_ Int)
                      (name sym3__) (init (Assignment (Literal 1))))
                     (BinOp (Var sym3__) LEq (Literal 2))
                     (Increment (Var sym3__))
                     (Block
-                     ((Expression
-                       (Assign (Var current_statement__) (Literal 291)))
-                      (For
+                     ((For
                        ((static false) (constexpr false) (type_ Int)
                         (name sym4__) (init (Assignment (Literal 1))))
                        (BinOp (Var sym4__) LEq (Var d_int))
                        (Increment (Var sym4__))
                        (Block
                         ((Expression
-                          (Assign (Var current_statement__) (Literal 291)))
-                         (Expression
                           (FunCall stan::model::assign ()
                            ((Var d_row_vector_array_3d)
                             (Index (Var d_row_vector_array_3d_flat__)
@@ -20470,8 +20023,6 @@
                              ((Var sym2__)))
                             (FunCall stan::model::index_uni ()
                              ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var current_statement__) (Literal 291)))
                          (Expression
                           (Assign (Var pos__)
                            (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
@@ -22407,31 +21958,31 @@
                              Add (Var N))
                             Add
                             (Parens
-                             (BinOp (BinOp (Var N) Multiply (Var M)) Multiply
-                              (Var K))))
+                             (BinOp (Var N) Multiply
+                              (Parens (BinOp (Var M) Multiply (Var K))))))
                            Add (Var N))
                           Add (Parens (BinOp (Var N) Multiply (Var N))))
                          Add
                          (Parens
-                          (BinOp
-                           (BinOp (BinOp (Var N) Multiply (Var M)) Multiply
-                            (Var K))
-                           Multiply (Var N))))
+                          (BinOp (Var N) Multiply
+                           (Parens
+                            (BinOp (Var M) Multiply
+                             (Parens (BinOp (Var K) Multiply (Var N))))))))
                         Add (Var N))
                        Add (Parens (BinOp (Var N) Multiply (Var N))))
                       Add
                       (Parens
-                       (BinOp
-                        (BinOp (BinOp (Var N) Multiply (Var M)) Multiply
-                         (Var K))
-                        Multiply (Var N))))
+                       (BinOp (Var N) Multiply
+                        (Parens
+                         (BinOp (Var M) Multiply
+                          (Parens (BinOp (Var K) Multiply (Var N))))))))
                      Add (Parens (BinOp (Literal 5) Multiply (Literal 4))))
                     Add
                     (Parens
-                     (BinOp
-                      (BinOp (BinOp (Literal 4) Multiply (Literal 5))
-                       Multiply (Literal 2))
-                      Multiply (Literal 3))))
+                     (BinOp (Literal 4) Multiply
+                      (Parens
+                       (BinOp (Literal 5) Multiply
+                        (Parens (BinOp (Literal 2) Multiply (Literal 3))))))))
                    Add (Parens (BinOp (Var N) Subtract (Literal 1))))
                   Add
                   (Parens
@@ -22439,9 +21990,12 @@
                     (Parens (BinOp (Var N) Subtract (Literal 1))))))
                  Add
                  (Parens
-                  (BinOp
-                   (BinOp (BinOp (Var N) Multiply (Var M)) Multiply (Var K))
-                   Multiply (Parens (BinOp (Var N) Subtract (Literal 1))))))
+                  (BinOp (Var N) Multiply
+                   (Parens
+                    (BinOp (Var M) Multiply
+                     (Parens
+                      (BinOp (Var K) Multiply
+                       (Parens (BinOp (Var N) Subtract (Literal 1))))))))))
                 Add
                 (Parens
                  (BinOp

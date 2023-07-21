@@ -326,14 +326,10 @@ class operators_model final : public model_base_crtp<operators_model> {
         std::vector<local_scalar_t__> v_flat__;
         current_statement__ = 1;
         v_flat__ = context__.vals_r("v");
-        current_statement__ = 1;
         pos__ = 1;
-        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 1;
           stan::model::assign(v, v_flat__[(pos__ - 1)],
             "assigning variable v", stan::model::index_uni(sym1__));
-          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
@@ -344,14 +340,10 @@ class operators_model final : public model_base_crtp<operators_model> {
         std::vector<local_scalar_t__> rv_flat__;
         current_statement__ = 2;
         rv_flat__ = context__.vals_r("rv");
-        current_statement__ = 2;
         pos__ = 1;
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 2;
           stan::model::assign(rv, rv_flat__[(pos__ - 1)],
             "assigning variable rv", stan::model::index_uni(sym1__));
-          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -362,17 +354,12 @@ class operators_model final : public model_base_crtp<operators_model> {
         std::vector<local_scalar_t__> A_flat__;
         current_statement__ = 3;
         A_flat__ = context__.vals_r("A");
-        current_statement__ = 3;
         pos__ = 1;
-        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 3;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 3;
             stan::model::assign(A, A_flat__[(pos__ - 1)],
               "assigning variable A", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 3;
             pos__ = (pos__ + 1);
           }
         }
@@ -807,17 +794,12 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         std::vector<local_scalar_t__> m_flat__;
         current_statement__ = 4;
         m_flat__ = context__.vals_r("m");
-        current_statement__ = 4;
         pos__ = 1;
-        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 4;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 4;
             stan::model::assign(m, m_flat__[(pos__ - 1)],
               "assigning variable m", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 4;
             pos__ = (pos__ + 1);
           }
         }
@@ -1207,7 +1189,8 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         std::complex<local_scalar_t__> z2 =
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         current_statement__ = 8;
-        z2 = (1 ? r : 2);
+        z2 = stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+               (1 ? r : 2));
         current_statement__ = 9;
         z2 = (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                     0) : zp);
@@ -1282,7 +1265,8 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         std::complex<local_scalar_t__> z2 =
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
         current_statement__ = 8;
-        z2 = (1 ? r : 2);
+        z2 = stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+               (1 ? r : 2));
         current_statement__ = 9;
         z2 = (1 ? stan::math::promote_scalar<std::complex<local_scalar_t__>>(
                     0) : zp);
@@ -1463,14 +1447,10 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         std::vector<local_scalar_t__> a_flat__;
         current_statement__ = 1;
         a_flat__ = context__.vals_r("a");
-        current_statement__ = 1;
         pos__ = 1;
-        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 1;
           stan::model::assign(a, a_flat__[(pos__ - 1)],
             "assigning variable a", stan::model::index_uni(sym1__));
-          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
@@ -1481,14 +1461,10 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
         std::vector<local_scalar_t__> b_flat__;
         current_statement__ = 2;
         b_flat__ = context__.vals_r("b");
-        current_statement__ = 2;
         pos__ = 1;
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 2;
           stan::model::assign(b, b_flat__[(pos__ - 1)],
             "assigning variable b", stan::model::index_uni(sym1__));
-          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }

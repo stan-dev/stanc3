@@ -7,7 +7,7 @@ module Fixed = struct
 
   module Pattern = struct
     type ('a, 'b) t =
-      | Assignment of 'a lvalue * 'a
+      | Assignment of 'a lvalue * UnsizedType.t * 'a
       | TargetPE of 'a
       | NRFunApp of 'a Fun_kind.t * 'a list
       | Break
@@ -27,13 +27,23 @@ module Fixed = struct
           ; initialize: bool }
     [@@deriving sexp, hash, map, fold, compare]
 
-    and 'a lvalue = string * UnsizedType.t * 'a Index.t list
+    and 'e lvalue = 'e lbase * 'e Index.t list
     [@@deriving sexp, hash, map, compare, fold]
 
+    and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
+    [@@deriving sexp, hash, map, compare, fold]
+
+    let rec pp_lvalue pp_e ppf (lbase, idcs) =
+      match lbase with
+      | LVariable v -> Fmt.pf ppf "%s%a" v (Index.pp_indices pp_e) idcs
+      | LTupleProjection (lv, ix) ->
+          Fmt.pf ppf "%a.%d%a" (pp_lvalue pp_e) lv ix (Index.pp_indices pp_e)
+            idcs
+
     let pp pp_e pp_s ppf = function
-      | Assignment ((assignee, _, idcs), rhs) ->
-          Fmt.pf ppf "@[<h>%a =@ %a;@]" (Index.pp_indexed pp_e) (assignee, idcs)
-            pp_e rhs
+      | Assignment (lvalue, _, rhs) ->
+          Fmt.pf ppf "@[<hov>%a =@[<h>@ %a@];@]" (pp_lvalue pp_e) lvalue pp_e
+            rhs
       | TargetPE expr -> Fmt.pf ppf "@[<h>target +=@ %a;@]" pp_e expr
       | NRFunApp (kind, args) ->
           Fmt.pf ppf "@[%a%a;@]" (Fun_kind.pp pp_e) kind
@@ -59,8 +69,8 @@ module Fixed = struct
           Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
       | SList stmts -> Fmt.(list pp_s ~sep:cut |> vbox) ppf stmts
       | Decl {decl_adtype; decl_id; decl_type; _} ->
-          Fmt.pf ppf "%a%a %s;" UnsizedType.pp_autodifftype decl_adtype
-            (Type.pp pp_e) decl_type decl_id
+          Fmt.pf ppf "@[<hov 2>%a%a@ %s;@]" UnsizedType.pp_autodifftype
+            decl_adtype (Type.pp pp_e) decl_type decl_id
 
     include Foldable.Make2 (struct
       type nonrec ('a, 'b) t = ('a, 'b) t
@@ -135,7 +145,8 @@ module Helpers = struct
             ; meta= e.meta.loc } in
           let assign =
             { decl with
-              Fixed.pattern= Assignment ((sym, Expr.Typed.type_of e, []), e) }
+              Fixed.pattern=
+                Assignment ((LVariable sym, []), Expr.Typed.type_of e, e) }
           in
           loop es (Gensym.generate ()) (decl :: assign :: inits)
             ({e with pattern= Var sym} :: vars) in
@@ -178,7 +189,7 @@ module Helpers = struct
           (fun loopvar ->
             mk_nested_for uppers'
               (fun loopvars -> bodyfn (loopvar :: loopvars))
-              meta )
+              Location_span.empty )
           meta
 
   (** [mk_for_iteratee] returns a MIR For statement that iterates over the given expression
@@ -208,7 +219,7 @@ module Helpers = struct
         in
         mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
-    | UMathLibraryFunction | UFun _ ->
+    | UMathLibraryFunction | UFun _ | UTuple _ ->
         FatalError.fatal_error_msg
           [%message "Can't iterate over " (iteratee : Expr.Typed.t)]
 
@@ -234,12 +245,12 @@ module Helpers = struct
 *)
   let rec for_scalar st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal | SComplex -> bodyfn var
+    | SizedType.SInt | SReal | SComplex -> bodyfn st var
     | SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d
      |SComplexRowVector d ->
-        mk_for_iteratee d bodyfn var smeta
+        mk_for_iteratee d (bodyfn st) var smeta
     | SMatrix (mem_pattern, d1, d2) ->
         mk_for_iteratee d1
           (fun e -> for_scalar (SRowVector (mem_pattern, d2)) bodyfn e smeta)
@@ -250,6 +261,7 @@ module Helpers = struct
           var smeta
     | SArray (t, d) ->
         mk_for_iteratee d (fun e -> for_scalar t bodyfn e smeta) var smeta
+    | STuple _ -> bodyfn st var
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)
@@ -263,18 +275,116 @@ module Helpers = struct
     let rec go st bodyfn var smeta =
       match st with
       | SizedType.SArray (t, d) ->
-          let bodyfn' var = mk_for_iteratee d bodyfn var smeta in
+          let bodyfn' _ var = mk_for_iteratee d (bodyfn st) var smeta in
           go t bodyfn' var smeta
       | SMatrix (mem_pattern, d1, d2) ->
-          let bodyfn' var = mk_for_iteratee d1 bodyfn var smeta in
+          let bodyfn' _ var = mk_for_iteratee d1 (bodyfn st) var smeta in
           go (SRowVector (mem_pattern, d2)) bodyfn' var smeta
       | SComplexMatrix (d1, d2) ->
-          let bodyfn' var = mk_for_iteratee d1 bodyfn var smeta in
+          let bodyfn' _ var = mk_for_iteratee d1 (bodyfn st) var smeta in
           go (SComplexRowVector d2) bodyfn' var smeta
       | _ -> for_scalar st bodyfn var smeta in
-    go st (Fn.compose bodyfn invert_index_order) var smeta
+    go st (fun st var -> bodyfn st (invert_index_order var)) var smeta
 
-  let assign_indexed decl_type vident meta varfn var =
+  let assign_indexed decl_type (lval, idxs) meta varfn var =
     let indices = Expr.Helpers.collect_indices var in
-    Fixed.{meta; pattern= Assignment ((vident, decl_type, indices), varfn var)}
+    Fixed.
+      {meta; pattern= Assignment ((lval, idxs @ indices), decl_type, varfn var)}
+
+  let lvariable v = (Fixed.Pattern.LVariable v, [])
+
+  let rec get_lhs_name (lval : 'a Fixed.Pattern.lvalue) =
+    match lval with
+    | LVariable name, _ -> name
+    | LTupleProjection (sub_lval, num), _ ->
+        get_lhs_name sub_lval ^ "." ^ string_of_int num
+
+  (* Copied from AST's version in AST.ml *)
+  let rec lvalue_of_expr_opt (expr : 'e Expr.Fixed.t) :
+      'e Expr.Fixed.t Fixed.Pattern.lvalue option =
+    let lbase_of_expr_opt (expr : 'e Expr.Fixed.t) =
+      match expr.pattern with
+      | Var s -> Some (Fixed.Pattern.LVariable s)
+      | TupleProjection (l, i) ->
+          Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
+              Fixed.Pattern.LTupleProjection (lv, i) )
+      | _ -> None in
+    match expr.pattern with
+    | Var s -> Some (lvariable s)
+    | Indexed (l, i) -> Option.map (lbase_of_expr_opt l) ~f:(fun lv -> (lv, i))
+    | TupleProjection (l, i) ->
+        Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
+            (Fixed.Pattern.LTupleProjection (lv, i), []) )
+    | _ -> None
+
+  let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Fixed.Pattern.lvalue)
+      ~(meta : 'e) : 'e Expr.Fixed.t =
+    let expr_of_lbase = function
+      | Fixed.Pattern.LVariable v -> Expr.Fixed.Pattern.Var v
+      | LTupleProjection (lv, ix) ->
+          TupleProjection (expr_of_lvalue ~meta lv, ix) in
+    let pattern =
+      match lhs with
+      | lv, [] -> expr_of_lbase lv
+      | lv, ix ->
+          Expr.Fixed.Pattern.Indexed ({pattern= expr_of_lbase lv; meta}, ix)
+    in
+    {pattern; meta}
+
+  let rec map_lhs_variable ~(f : string -> string)
+      (lhs : 'e Fixed.Pattern.lvalue) : 'e Fixed.Pattern.lvalue =
+    match lhs with
+    | LVariable v, idxs -> (LVariable (f v), idxs)
+    | LTupleProjection (lv, ix), idxs ->
+        (LTupleProjection (map_lhs_variable ~f lv, ix), idxs)
+
+  let lhs_indices ((_, idxs) : 'e Fixed.Pattern.lvalue) : 'e Index.t list = idxs
+
+  let rec lhs_variable (lhs : 'e Fixed.Pattern.lvalue) : string =
+    match lhs with
+    | LVariable v, _ -> v
+    | LTupleProjection (lv, _), _ -> lhs_variable lv
+
+  (* Reduce an lvalue down to its "base reference", which is a variable with maximum tuple indices after it.
+     For example:
+     x[1,2][3] -> x
+     x.1[1,2].2[3].3 -> x.1
+     x.1.2[1,2][3].3 -> x.1.2
+  *)
+  let lvalue_base_reference (lvalue : 'e Fixed.Pattern.lvalue) =
+    let get_tuple_idxs lv =
+      let rec go lv acc =
+        match lv with
+        | Fixed.Pattern.LVariable _, _ -> acc
+        | LTupleProjection (lv, ix), _ -> go lv (ix :: acc) in
+      go lv [] in
+    let rec build_base_reference lv acc =
+      match acc with
+      | [] -> lv
+      | ix :: idxs ->
+          build_base_reference
+            (Fixed.Pattern.LTupleProjection (lv, ix), [])
+            idxs in
+    let idxs = get_tuple_idxs lvalue in
+    let base = lvariable (lhs_variable lvalue) in
+    build_base_reference base idxs
+
+  let%expect_test "lvalue base reference" =
+    let lvals =
+      [ ( Fixed.Pattern.LVariable "x"
+        , [Index.Single 1; Index.Single 2; Index.Single 3] )
+      ; (Fixed.Pattern.LTupleProjection (lvariable "x", 1), [])
+      ; (LTupleProjection (lvariable "x", 2), [Index.Single 3])
+      ; ( LTupleProjection
+            ((LTupleProjection (lvariable "x", 3), [Index.Single 4]), 5)
+        , [] ) ] in
+    let pp = Fmt.(list ~sep:comma (Fixed.Pattern.pp_lvalue int)) in
+    Fmt.(str "Before: @[<hov>%a@]" pp) lvals |> print_endline ;
+    List.map ~f:lvalue_base_reference lvals
+    |> Fmt.(str "After: @[<hov>%a@]" pp)
+    |> print_endline ;
+    [%expect
+      {|
+      Before: x[1, 2, 3], x.1, x.2[3], x.3[4].5
+      After: x, x.1, x.2, x.3.5 |}]
 end

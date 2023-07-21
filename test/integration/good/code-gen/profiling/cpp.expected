@@ -91,14 +91,10 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         std::vector<local_scalar_t__> y_flat__;
         current_statement__ = 25;
         y_flat__ = context__.vals_r("y");
-        current_statement__ = 25;
         pos__ = 1;
-        current_statement__ = 25;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 25;
           stan::model::assign(y, y_flat__[(pos__ - 1)],
             "assigning variable y", stan::model::index_uni(sym1__));
-          current_statement__ = 25;
           pos__ = (pos__ + 1);
         }
       }

@@ -303,7 +303,7 @@ v2.25.0 (26 October 2020)
     - owens_t
     - rising_factorial
 
-Code contributions were made by @andrjohns @nhuurre @rok-cesnovar @rybern and @seantalts 
+Code contributions were made by @andrjohns @nhuurre @rok-cesnovar @rybern and @seantalts
 
 v2.24.1 (11 August 2020)
 ======================================================================
@@ -318,22 +318,22 @@ Bugfixes:
 v2.24.0 (28 July 2020)
 ======================================================================
 
-New functions: 
+New functions:
    `algebra_solver_newton`
 
    `matrix hmm_hidden_state_prob(matrix, matrix, vector)`
    `int[] hmm_latent_rng(matrix, matrix, vector)`
    `real hmm_marginal(matrix, matrix, vector)`
-    
+
    `T lambert_w0(T)`, for any T
    `T lambert_w1(T)`, for any T
-    
+
    `matrix matrix_power(matrix, int)`
-   
+
    `real multinomial_logit_log(int[], vector)`
    `real multinomial_logit_lpmf(int[], vector)`
    `int[] multinomial_logit_rng(vector, int)`
-    
+
    `ode_adams`, `ode_adams_tol`
    `ode_bdf`, `ode_bdf_tol`
    `ode_rk45`, `ode_rk45_tol`
@@ -345,7 +345,7 @@ New functions:
     (previously only real pow(real, real) was available)
 
    `T reverse(T)`, where T is vector, row_vector or an array of any type
-   
+
    `matrix identity_matrix(int)`
    `real[] linspaced_array(int, real, real); row_vector linspaced_row_vector(int, real, real); vector linspaced_vector(int, real, real)`
    `int[] one_hot_int_array(int, int); real[] one_hot_array(int, int); row_vector one_hot_row_vector(int, int); vector one_hot_vector(int, int)`
@@ -380,7 +380,7 @@ Bugfixes:
 - fixed a bug that caused tilde statements to conflict with userdef functions
 - rng functions are no longer allowed in size declarations
 - fixed the _lpdf functor struct so that UDF with _log and int argument now compile
-- fixed array literal type-checking 
+- fixed array literal type-checking
 - fixed the error messages for missing input (line number is now displayed properly)
 - fixed indexing in transform_init()
 - fixed emitting generated quantities only (for gq_writer)

@@ -503,6 +503,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           interpolation_polynomial, solver_f, solver_b, pstream__, i, y),
         "assigning variable z");
       if (emit_transformed_parameters__) {
+        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
             out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
@@ -590,14 +591,10 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
         std::vector<local_scalar_t__> y0_flat__;
         current_statement__ = 2;
         y0_flat__ = context__.vals_r("y0");
-        current_statement__ = 2;
         pos__ = 1;
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 2;
           stan::model::assign(y0, y0_flat__[(pos__ - 1)],
             "assigning variable y0", stan::model::index_uni(sym1__));
-          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -1100,14 +1097,10 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
         std::vector<local_scalar_t__> y0_flat__;
         current_statement__ = 30;
         y0_flat__ = context__.vals_r("y0");
-        current_statement__ = 30;
         pos__ = 1;
-        current_statement__ = 30;
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          current_statement__ = 30;
           stan::model::assign(y0, y0_flat__[(pos__ - 1)],
             "assigning variable y0", stan::model::index_uni(sym1__));
-          current_statement__ = 30;
           pos__ = (pos__ + 1);
         }
       }
@@ -1498,11 +1491,13 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       current_statement__ = 6;
       stan::math::check_greater_or_equal(function__, "y2", y2, 0);
       if (emit_transformed_parameters__) {
+        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
             out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
           }
         }
+        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N_t; ++sym2__) {
             out__.write(y2[(sym2__ - 1)][(sym1__ - 1)]);

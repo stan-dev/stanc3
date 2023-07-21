@@ -52,6 +52,8 @@ type ('e, 'f) expression =
   | RowVectorExpr of 'e list
   | Paren of 'e
   | Indexed of 'e * 'e index list
+  | TupleProjection of 'e * int
+  | TupleExpr of 'e list
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
@@ -113,6 +115,7 @@ type 'e printable = PString of string | PExpr of 'e
 type ('l, 'e) lvalue =
   | LVariable of identifier
   | LIndexed of 'l * 'e index list
+  | LTupleProjection of 'l * int
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
@@ -286,21 +289,31 @@ let rec expr_of_lvalue {lval; lmeta} =
   { expr=
       ( match lval with
       | LVariable s -> Variable s
-      | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i) )
+      | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i)
+      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i) )
   ; emeta= lmeta }
 
-let rec lvalue_of_expr {expr; emeta} =
-  { lval=
-      ( match expr with
-      | Variable s -> LVariable s
-      | Indexed (l, i) -> LIndexed (lvalue_of_expr l, i)
-      | _ ->
-          Common.FatalError.fatal_error_msg
-            [%message "Trying to convert illegal expression to lval."] )
-  ; lmeta= emeta }
+let rec lvalue_of_expr_opt {expr; emeta} =
+  let lval_opt =
+    match expr with
+    | Variable s -> Some (LVariable s)
+    | Indexed (l, i) ->
+        Option.map (lvalue_of_expr_opt l) ~f:(fun lv -> LIndexed (lv, i))
+    | TupleProjection (l, i) ->
+        Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
+            LTupleProjection (lv, i) )
+    | _ -> None in
+  Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta})
+
+let lvalue_of_expr expr =
+  Option.value_exn ~message:"Trying to convert illegal expression to lval."
+    (lvalue_of_expr_opt expr)
 
 let rec id_of_lvalue {lval; _} =
-  match lval with LVariable s -> s | LIndexed (l, _) -> id_of_lvalue l
+  match lval with
+  | LVariable s -> s
+  | LIndexed (l, _) -> id_of_lvalue l
+  | LTupleProjection (l, _) -> id_of_lvalue l
 
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list
@@ -317,7 +330,7 @@ let type_of_arguments :
 
 let get_loc_dt (t : untyped_expression SizedType.t) =
   match t with
-  | SInt | SReal | SComplex -> None
+  | SInt | SReal | SComplex | STuple _ -> None
   | SVector (_, e)
    |SRowVector (_, e)
    |SMatrix (_, e, _)

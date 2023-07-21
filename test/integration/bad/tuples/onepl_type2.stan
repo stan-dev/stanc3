@@ -1,0 +1,3 @@
+model {
+  tuple(real,) x;
+}

@@ -24,6 +24,12 @@ data {
   array[7] vector[1] h;
   array[2] matrix[2,2] i;
   array[3,1,3] int j;
+  array[2] complex cplx;
+  complex_vector[4] cplx_vec;
+  complex_row_vector[a] cplx_row;
+  complex_matrix[2,4] cplx_mat;
+  
+  array[2] tuple(int, real, tuple(real, array[10] int)) tuples;
 }
 
 transformed data {

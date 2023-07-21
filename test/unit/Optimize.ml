@@ -141,9 +141,10 @@ let%expect_test "inline functions" =
         {
           {
             FnPrint__(3);
-            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(promote(3, real),
-                      promote(2, real)), FnMakeRowVec__(promote(4, real),
-                      promote(6, real))));
+            FnPrint__(FnMakeRowVec__(FnMakeRowVec__(promote(3, real, data),
+                                                    promote(2, real, data)),
+                                     FnMakeRowVec__(promote(4, real, data),
+                                                    promote(6, real, data))));
           }
           real inline_g_return_sym2__;
           {
@@ -336,7 +337,7 @@ let%expect_test "list collapsing" =
        ((pattern
          (Block
           (((pattern
-             (Assignment (inline_g_return_sym2__ UReal ())
+             (Assignment ((LVariable inline_g_return_sym2__) ()) UReal
               ((pattern
                 (FunApp (StanLib Pow__ FnPlain AoS)
                  (((pattern (Lit Int 53))
@@ -2966,26 +2967,26 @@ let%expect_test "lazy code motion, 13" =
   [%expect
     {|
       log_prob {
-        data real lcm_sym7__;
-        data real lcm_sym6__;
+        real lcm_sym7__;
+        real lcm_sym6__;
         data int lcm_sym5__;
         data int lcm_sym4__;
         data int lcm_sym3__;
         {
           real temp;
           if((2 > 3)) {
-            lcm_sym6__ = promote((2 * 2), real);
+            lcm_sym6__ = promote((2 * 2), real, var);
             temp = lcm_sym6__;
             ;
           } else {
             FnPrint__("hello");
-            lcm_sym6__ = promote((2 * 2), real);
+            lcm_sym6__ = promote((2 * 2), real, var);
             ;
           }
           temp = lcm_sym6__;
           real temp2;
           if((3 >= 2)) {
-            lcm_sym7__ = promote((2 * 3), real);
+            lcm_sym7__ = promote((2 * 3), real, var);
             temp2 = lcm_sym7__;
             target += temp;
             lcm_sym5__ = (2 + 1);
@@ -3216,9 +3217,9 @@ let%expect_test "adlevel_optimization" =
           real y;
           real z;
           data real z_data;
-          if((1 > 2)) y = (y + promote(x, real)); else y = (y + w);
+          if((1 > 2)) y = (y + promote(x, real, data)); else y = (y + w);
           if((2 > 1)) z = y;
-          if((3 > 1)) z_data = promote(x, real);
+          if((3 > 1)) z_data = promote(x, real, var);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3233,9 +3234,9 @@ let%expect_test "adlevel_optimization" =
           data real y;
           data real z;
           data real z_data;
-          if((1 > 2)) y = (y + promote(x, real)); else y = (y + w);
+          if((1 > 2)) y = (y + promote(x, real, data)); else y = (y + w);
           if((2 > 1)) z = y;
-          if((3 > 1)) z_data = promote(x, real);
+          if((3 > 1)) z_data = promote(x, real, var);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3310,7 +3311,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (Assignment (y UReal ())
+                (Assignment ((LVariable y) ()) UReal
                  ((pattern
                    (FunApp (StanLib Plus__ FnPlain AoS)
                     (((pattern (Var y))
@@ -3324,7 +3325,7 @@ let%expect_test "adlevel_optimization expressions" =
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
               (((pattern
-                 (Assignment (y UReal ())
+                 (Assignment ((LVariable y) ()) UReal
                   ((pattern
                     (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var y))
@@ -3344,7 +3345,7 @@ let%expect_test "adlevel_optimization expressions" =
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (Assignment (z UReal ())
+                (Assignment ((LVariable z) ()) UReal
                  ((pattern (Var y))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                (meta <opaque>))
@@ -3360,12 +3361,12 @@ let%expect_test "adlevel_optimization expressions" =
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (Assignment (z_data UReal ())
+                (Assignment ((LVariable z_data) ()) UReal
                  ((pattern
                    (Promotion
                     ((pattern (Var x))
                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                    UReal DataOnly))
+                    UReal AutoDiffable))
                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
                (meta <opaque>))
               ()))
@@ -3417,15 +3418,15 @@ let%expect_test "adlevel_optimization 2" =
       log_prob {
         real w;
         data real w_trans;
-        w_trans = promote(1, real);
+        w_trans = promote(1, real, var);
         {
           data int x;
           array[real, 2] y;
           real z;
           data real z_data;
-          if((1 > 2)) y[1] = (y[1] + promote(x, real)); else y[2] = (y[2] + w);
+          if((1 > 2)) y[1] = (y[1] + promote(x, real, data)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
-          if((3 > 1)) z_data = promote(x, real);
+          if((3 > 1)) z_data = promote(x, real, var);
           FnPrint__(z);
           FnPrint__(z_data);
         }
@@ -3436,15 +3437,15 @@ let%expect_test "adlevel_optimization 2" =
         data real w;
         data real w_trans;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        w_trans = promote(1, real);
+        w_trans = promote(1, real, var);
         {
           data int x;
           data array[real, 2] y;
           data real z;
           data real z_data;
-          if((1 > 2)) y[1] = (y[1] + promote(x, real)); else y[2] = (y[2] + w);
+          if((1 > 2)) y[1] = (y[1] + promote(x, real, data)); else y[2] = (y[2] + w);
           if((2 > 1)) z = y[1];
-          if((3 > 1)) z_data = promote(x, real);
+          if((3 > 1)) z_data = promote(x, real, var);
           FnPrint__(z);
           FnPrint__(z_data);
         }

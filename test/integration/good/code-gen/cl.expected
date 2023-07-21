@@ -308,17 +308,12 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> X_d_flat__;
         current_statement__ = 180;
         X_d_flat__ = context__.vals_r("X_d");
-        current_statement__ = 180;
         pos__ = 1;
-        current_statement__ = 180;
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 180;
           for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            current_statement__ = 180;
             stan::model::assign(X_d, X_d_flat__[(pos__ - 1)],
               "assigning variable X_d", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 180;
             pos__ = (pos__ + 1);
           }
         }
@@ -338,20 +333,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> X_d_a_flat__;
         current_statement__ = 183;
         X_d_a_flat__ = context__.vals_r("X_d_a");
-        current_statement__ = 183;
         pos__ = 1;
-        current_statement__ = 183;
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 183;
           for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            current_statement__ = 183;
             for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-              current_statement__ = 183;
               stan::model::assign(X_d_a, X_d_a_flat__[(pos__ - 1)],
                 "assigning variable X_d_a", stan::model::index_uni(sym3__),
                 stan::model::index_uni(sym2__),
                 stan::model::index_uni(sym1__));
-              current_statement__ = 183;
               pos__ = (pos__ + 1);
             }
           }
@@ -370,14 +359,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> y_v_d_flat__;
         current_statement__ = 185;
         y_v_d_flat__ = context__.vals_r("y_v_d");
-        current_statement__ = 185;
         pos__ = 1;
-        current_statement__ = 185;
         for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-          current_statement__ = 185;
           stan::model::assign(y_v_d, y_v_d_flat__[(pos__ - 1)],
             "assigning variable y_v_d", stan::model::index_uni(sym1__));
-          current_statement__ = 185;
           pos__ = (pos__ + 1);
         }
       }
@@ -394,14 +379,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> X_rv_d_flat__;
         current_statement__ = 187;
         X_rv_d_flat__ = context__.vals_r("X_rv_d");
-        current_statement__ = 187;
         pos__ = 1;
-        current_statement__ = 187;
         for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-          current_statement__ = 187;
           stan::model::assign(X_rv_d, X_rv_d_flat__[(pos__ - 1)],
             "assigning variable X_rv_d", stan::model::index_uni(sym1__));
-          current_statement__ = 187;
           pos__ = (pos__ + 1);
         }
       }
@@ -2153,14 +2134,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> alpha_v_flat__;
         current_statement__ = 1;
         alpha_v_flat__ = context__.vals_r("alpha_v");
-        current_statement__ = 1;
         pos__ = 1;
-        current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 1;
           stan::model::assign(alpha_v, alpha_v_flat__[(pos__ - 1)],
             "assigning variable alpha_v", stan::model::index_uni(sym1__));
-          current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
       }
@@ -2171,14 +2148,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> beta_flat__;
         current_statement__ = 2;
         beta_flat__ = context__.vals_r("beta");
-        current_statement__ = 2;
         pos__ = 1;
-        current_statement__ = 2;
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 2;
           stan::model::assign(beta, beta_flat__[(pos__ - 1)],
             "assigning variable beta", stan::model::index_uni(sym1__));
-          current_statement__ = 2;
           pos__ = (pos__ + 1);
         }
       }
@@ -2189,14 +2162,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> cuts_flat__;
         current_statement__ = 3;
         cuts_flat__ = context__.vals_r("cuts");
-        current_statement__ = 3;
         pos__ = 1;
-        current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 3;
           stan::model::assign(cuts, cuts_flat__[(pos__ - 1)],
             "assigning variable cuts", stan::model::index_uni(sym1__));
-          current_statement__ = 3;
           pos__ = (pos__ + 1);
         }
       }
@@ -2219,17 +2188,12 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> X_p_flat__;
         current_statement__ = 7;
         X_p_flat__ = context__.vals_r("X_p");
-        current_statement__ = 7;
         pos__ = 1;
-        current_statement__ = 7;
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 7;
           for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            current_statement__ = 7;
             stan::model::assign(X_p, X_p_flat__[(pos__ - 1)],
               "assigning variable X_p", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 7;
             pos__ = (pos__ + 1);
           }
         }
@@ -2241,17 +2205,12 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> beta_m_flat__;
         current_statement__ = 8;
         beta_m_flat__ = context__.vals_r("beta_m");
-        current_statement__ = 8;
         pos__ = 1;
-        current_statement__ = 8;
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 8;
           for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            current_statement__ = 8;
             stan::model::assign(beta_m, beta_m_flat__[(pos__ - 1)],
               "assigning variable beta_m", stan::model::index_uni(sym2__),
               stan::model::index_uni(sym1__));
-            current_statement__ = 8;
             pos__ = (pos__ + 1);
           }
         }
@@ -2263,14 +2222,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<local_scalar_t__> X_rv_p_flat__;
         current_statement__ = 9;
         X_rv_p_flat__ = context__.vals_r("X_rv_p");
-        current_statement__ = 9;
         pos__ = 1;
-        current_statement__ = 9;
         for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-          current_statement__ = 9;
           stan::model::assign(X_rv_p, X_rv_p_flat__[(pos__ - 1)],
             "assigning variable X_rv_p", stan::model::index_uni(sym1__));
-          current_statement__ = 9;
           pos__ = (pos__ + 1);
         }
       }

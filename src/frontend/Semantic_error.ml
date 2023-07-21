@@ -50,6 +50,8 @@ module TypeError = struct
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
+    | TupleIndexInvalidIndex of int * int
+    | TupleIndexNotTuple of UnsizedType.t
     | NotIndexable of UnsizedType.t * int
 
   let pp ppf = function
@@ -163,6 +165,17 @@ module TypeError = struct
           arg_tys
           (Fmt.list ~sep:Fmt.cut pp_sig)
           signatures
+    | TupleIndexInvalidIndex (ix_max, ix) ->
+        Fmt.pf ppf
+          "Tried to access index %d for a tuple of length %d.@ Only indices \
+           indices between 1 and %d are valid."
+          ix ix_max ix_max
+    | TupleIndexNotTuple ut ->
+        Fmt.pf ppf "Tried to index a non-tuple type. Expression has type %a."
+          UnsizedType.pp ut
+    | NotIndexable (ut, _) when UnsizedType.is_scalar_type ut ->
+        Fmt.pf ppf "Tried to index a scalar type. Expression has type %a."
+          UnsizedType.pp ut
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
           "Too many indexes, expression dimensions=%d, indexes found=%d."
@@ -301,6 +314,7 @@ module ExpressionError = struct
     | ConditioningRequired
     | NotPrintable
     | EmptyArray
+    | EmptyTuple
     | IntTooLarge
 
   let pp ppf = function
@@ -337,6 +351,8 @@ module ExpressionError = struct
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
+    | EmptyTuple ->
+        Fmt.pf ppf "Tuple expressions must contain at least one element."
     | IntTooLarge ->
         Fmt.pf ppf "Integer literal cannot be larger than 2_147_483_647."
 end
@@ -599,6 +615,12 @@ let illtyped_postfix_op loc op ut =
 let not_indexable loc ut nidcs =
   TypeError (loc, TypeError.NotIndexable (ut, nidcs))
 
+let tuple_index_invalid_index loc ix_max ix =
+  TypeError (loc, TypeError.TupleIndexInvalidIndex (ix_max, ix))
+
+let tuple_index_not_tuple loc ut =
+  TypeError (loc, TypeError.TupleIndexNotTuple ut)
+
 let ident_is_keyword loc name =
   IdentifierError (loc, IdentifierError.IsKeyword name)
 
@@ -636,6 +658,7 @@ let conditioning_required loc =
 
 let not_printable loc = ExpressionError (loc, ExpressionError.NotPrintable)
 let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
+let empty_tuple loc = ExpressionError (loc, ExpressionError.EmptyTuple)
 let bad_int_literal loc = ExpressionError (loc, ExpressionError.IntTooLarge)
 
 let cannot_assign_to_read_only loc name =

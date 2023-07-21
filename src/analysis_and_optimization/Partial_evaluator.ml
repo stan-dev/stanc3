@@ -1048,6 +1048,10 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
             let r1, r2 = (Float.of_string s1, Float.of_string s2) in
             Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. || r2 <> 0.)))
         | e1', e2' -> EOr (e1', e2') )
+      | TupleProjection
+          ({pattern= FunApp (CompilerInternal FnMakeTuple, ts); _}, ix) ->
+          (List.nth_exn ts (ix - 1)).pattern
+      | TupleProjection (e, ix) -> TupleProjection (eval_expr e, ix)
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
              Note  that we could also constant fold array sizes if we keep those around on declarations. *)
