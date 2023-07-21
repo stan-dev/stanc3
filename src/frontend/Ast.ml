@@ -116,6 +116,7 @@ type ('l, 'e) lvalue =
   | LVariable of identifier
   | LIndexed of 'l * 'e index list
   | LTupleProjection of 'l * int
+  | LTuplePacking of 'l list
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
@@ -289,7 +290,8 @@ let rec expr_of_lvalue {lval; lmeta} =
       ( match lval with
       | LVariable s -> Variable s
       | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i)
-      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i) )
+      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i)
+      | LTuplePacking l -> TupleExpr (List.map ~f:expr_of_lvalue l) )
   ; emeta= lmeta }
 
 let rec lvalue_of_expr_opt {expr; emeta} =
@@ -301,6 +303,10 @@ let rec lvalue_of_expr_opt {expr; emeta} =
     | TupleProjection (l, i) ->
         Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
             LTupleProjection (lv, i) )
+    | TupleExpr l ->
+        Option.map
+          (List.map ~f:lvalue_of_expr_opt l |> Option.all)
+          ~f:(fun lv -> LTuplePacking lv)
     | _ -> None in
   Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta})
 
@@ -309,10 +315,12 @@ let lvalue_of_expr expr =
     (lvalue_of_expr_opt expr)
 
 let rec id_of_lvalue {lval; _} =
+  (* TUPLE UNPACKING TODO: this needs to return a list *)
   match lval with
-  | LVariable s -> s
+  | LVariable s -> [s]
   | LIndexed (l, _) -> id_of_lvalue l
   | LTupleProjection (l, _) -> id_of_lvalue l
+  | LTuplePacking ls -> List.concat_map ~f:id_of_lvalue ls
 
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list
