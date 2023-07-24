@@ -1,0 +1,268 @@
+  $ ../../../../../install/default/bin/stanc --auto-format arrays-tuples-nested.stan
+data {
+  tuple(array[10] real, int) basic;
+  tuple(int, tuple(real, vector[2])) tuple_tuple;
+  array[3] tuple(int, array[4] real, vector[3]) arr_tuple;
+  tuple(array[2] real, int, array[3] tuple(real, array[4] int)) tuple_arr_tuple;
+  array[2] tuple(real, int, tuple(real, tuple(int, vector[4]))) arr_tuple_tuple;
+  array[3] tuple(int, array[4] tuple(real, vector[5])) arr_tuple_arr_tuple;
+  array[3] tuple(int, array[4]
+                 tuple(real, array[5] tuple(complex, matrix[6, 7]))) very_deep;
+}
+parameters {
+  tuple(array[10] real, real) basic_p;
+  tuple(real, tuple(real, vector[2])) tuple_tuple_p;
+  array[3] tuple(complex, array[4] real, vector[3]) arr_tuple_p;
+  tuple(array[2] real, real, array[3] tuple(real, array[4] real)) tuple_arr_tuple_p;
+  array[2] tuple(real, real, tuple(real, tuple(complex, vector[4]))) arr_tuple_tuple_p;
+  array[3] tuple(real, array[4] tuple(real, vector[5])) arr_tuple_arr_tuple_p;
+  array[3] tuple(real, array[4]
+                 tuple(real, array[5] tuple(complex, matrix[6, 7]))) very_deep_p;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format infer_tuple_ad.stan
+parameters {
+  real x;
+}
+model {
+  array[2] tuple(real, real) z = {(1, x), (x, 1)};
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format simple.stan
+transformed data {
+  tuple(real, int) x = (3.14, 2);
+  print(x.1);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format simple2.stan
+transformed data {
+  tuple(array[2] real, int) x = ({1.01, 3.14}, 2);
+  print(x.1[2]);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format simple3.stan
+transformed data {
+  tuple(array[2, 3] real, int) x = ({{1.01, 3.14}, {1.01, 3.14},
+                                     {1.01, 3.14}},
+                                    2);
+  print(x.1[2]);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-constraints-data.stan
+data {
+  tuple(int<lower=0>, tuple(real<lower=1>, int<upper=2>)) y;
+  tuple(int<lower=0>, real<lower=1>, simplex[2]) x;
+  array[3, 2] tuple(real<lower=0>, simplex[4]) z;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-constraints-params.stan
+functions {
+  tuple(real, real) foo() {
+    return (1.0, 2.0);
+  }
+}
+data {
+  int<lower=0, upper=1> indicator;
+}
+parameters {
+  tuple(real<lower=0>, real<lower=0>) ps;
+  array[3, 2] tuple(real<lower=0>, simplex[4]) ps2;
+  real<lower=foo().1, upper=ps.2> t;
+  
+  array[2] tuple(real, array[indicator ? 3 : 0]
+                 tuple(real, simplex[5], cholesky_factor_cov[5, 4])) complicated;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-dataonly.stan
+functions {
+  real foo(data tuple(real, real) x) {
+    return x.1;
+  }
+}
+data {
+  tuple(real, real) d;
+}
+model {
+  target += foo(d);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-foreach.stan
+transformed data {
+  array[100] tuple(real, real) arr;
+  for (t in arr) {
+    
+  }
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-full.stan
+data {
+  tuple(int<lower=0, upper=1>, tuple(array[2] int, array[2] int)) ds;
+}
+parameters {
+  tuple(real<lower=0>, real<lower=0>) ps;
+}
+model {
+  ds.1 ~ bernoulli(ps.1);
+  
+  target += ps.2 + ds.2.1[1] + ds.2.2[2];
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-ix-assign.stan
+transformed data {
+  tuple(int, int) x;
+  x.1 = 5;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-ix-assign2.stan
+transformed data {
+  tuple(array[10] int, int) x;
+  x.1[1] = 5;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-ix-assign3.stan
+transformed data {
+  array[10] tuple(int, int) x;
+  x[1].1 = 5;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-ix-assign4.stan
+transformed data {
+  tuple(array[10] tuple(int, array[100] real), int) x;
+  x.1[1].1 = 5;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-nested-param.stan
+parameters {
+  tuple(real, real) ps;
+  tuple(real, tuple(real, matrix[10, 10])) ps2;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-params.stan
+parameters {
+  tuple(real, real<lower=0>) ps;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-promotion.stan
+functions {
+  real dummy(tuple(array[] real, array[] real) test) {
+    return sum(test.1) + sum(test.2);
+  }
+}
+data {
+  vector[3] V;
+  tuple(array[3] int, array[3] int) d;
+}
+transformed data {
+  array[4] tuple(int, array[2] int) arrs;
+  
+  tuple(tuple(int, array[2] int), int, tuple(vector[3], int)) nested;
+  
+  tuple(array[2] real, complex) basic = ({1, 2}, 3);
+  
+  tuple(complex_vector[3], real) CV = (V, 2);
+  tuple(vector[3], int) V2 = (V, 2);
+  CV = V2;
+  
+  real t = dummy(d);
+}
+transformed parameters {
+  tuple(array[3] complex, array[3] complex) d2 = d;
+  tuple(vector[3], real) V3 = V2;
+  
+  array[4] tuple(real, array[2] complex) arrs2 = arrs;
+  
+  tuple(tuple(real, array[2] complex), real, tuple(vector[3], real)) nested2 = nested;
+  tuple(tuple(real, array[2] complex), real, tuple(vector[3], real)) nested3;
+  nested3 = nested;
+}
+generated quantities {
+  int y = 1;
+  tuple(real, real) x = (y, 3);
+  tuple(complex, real) z = x;
+  tuple(complex, real) z2 = z;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-templating.stan
+functions {
+  void foo(tuple(matrix, int) test) {
+    print(test.1);
+  }
+  
+  real tsum(tuple(array[] int, array[] real) s) {
+    return sum(s.2);
+  }
+  
+  void foo2(array[] tuple(matrix, int) test) {
+    print(test[1].1);
+  }
+  
+  void foo3(tuple(real, matrix) test) {
+    print(test.1);
+  }
+  
+  void overly_complicated(tuple(array[] matrix, tuple(int, matrix), real) t1,
+                          array[] tuple(int, matrix) t2) {
+    print(t1.2.2);
+  }
+}
+data {
+  int N;
+  matrix[N, N] m1;
+  matrix[N, N] m2;
+  array[N] int a1;
+  array[N] real a2;
+}
+generated quantities {
+  // eigen expression inside tuple
+  foo((m1 + m2, 1));
+  // different types inside tuple
+  real s = tsum((a1, a2));
+  // eigen expression inside tuple inside array
+  foo2({(m1 + m2, 1)});
+  
+  // a whole bunch of painful
+  overly_complicated(({m1 + m2}, (1, m1), 3.5), {(1, m1), (2, m2)});
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple_hof.stan
+functions {
+  real fun(array[] real y_slice, int start, int end,
+           tuple(real, array[] int) m) {
+    return sum(y_slice) * m.1;
+  }
+}
+data {
+  int N;
+  array[N] real data_y;
+  tuple(real, array[N] int) data_m;
+}
+transformed data {
+  real sum1 = reduce_sum(fun, data_y, 1, data_m);
+}
+parameters {
+  array[N] real param_y;
+}
+transformed parameters {
+  real sum2 = reduce_sum(fun, param_y, 1, data_m);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple_lpdf.stan
+functions {
+  real foo_lpdf(tuple(real, real) x, tuple(real, real, real) y) {
+    return 0;
+  }
+}
+model {
+  (1.5, 2) ~ foo((1.2, 1.5, 4.5));
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple_lpmf.stan
+functions {
+  real foo_lpmf(tuple(int, int) x, real y) {
+    return x.1 + x.2 * y;
+  }
+}
+model {
+  (1, 3) ~ foo(0.5);
+}
+

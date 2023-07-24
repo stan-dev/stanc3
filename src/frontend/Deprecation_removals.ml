@@ -57,7 +57,7 @@ let collect_removed_lval acc (l : Ast.typed_lval) =
   match l.lval with
   | LIndexed (l, _) ->
       let rec flatten = function
-        | {lval= LVariable _; _} -> []
+        | {lval= LVariable _; _} | {lval= LTupleProjection _; _} -> []
         | {lval= LIndexed (l, idxs); _} ->
             let flat = flatten l in
             flat @ idxs in

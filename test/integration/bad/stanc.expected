@@ -20,7 +20,8 @@ Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 10, pars
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, ordered, positive_ordered,
-  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
+  tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
 Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
@@ -34,7 +35,8 @@ Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsi
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, ordered, positive_ordered,
-  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
+  tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-multi-decl-bad.stan
 Syntax error in 'array-multi-decl-bad.stan', line 2, column 11 to column 12, parsing error:
@@ -688,7 +690,8 @@ Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing er
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, ordered, positive_ordered,
-  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
+  tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan
 Semantic error in 'err-decl-matrix-2.stan', line 2, column 13 to column 17:
@@ -700,7 +703,7 @@ Semantic error in 'err-decl-matrix-2.stan', line 2, column 13 to column 17:
      4:  model {
    -------------------------------------------------
 
-Too many indexes, expression dimensions=0, indexes found=1.
+Tried to index a scalar type. Expression has type int.
   $ ../../../../install/default/bin/stanc err-decl-matrix.stan
 Syntax error in 'err-decl-matrix.stan', line 2, column 10 to column 11, parsing error:
    -------------------------------------------------
@@ -711,7 +714,7 @@ Syntax error in 'err-decl-matrix.stan', line 2, column 10 to column 11, parsing 
      4:  model {
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for sizes of matrix.
+"[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../install/default/bin/stanc err-decl-no-expression.stan
 Syntax error in 'err-decl-no-expression.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
@@ -843,7 +846,7 @@ Syntax error in 'err-if-else.stan', line 3, column 8 to column 9, parsing error:
      5:  model {
    -------------------------------------------------
 
-Expected ")" after test expression of conditional control flow construct.
+Ill-formed expression. Found part of an expression, expected either an operator or the end of the expression.
   $ ../../../../install/default/bin/stanc err-integrate-ode-comma.stan
 Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, parsing error:
    -------------------------------------------------
@@ -900,7 +903,7 @@ Syntax error in 'err-nested-parens-close.stan', line 3, column 12 to column 13, 
      4:  }
    -------------------------------------------------
 
-Expression or range of expressions followed by ")" expected after "(".
+Expression or comma separated list of expressions followed by ")" expected after "(".
   $ ../../../../install/default/bin/stanc err-nested-parens.stan
 Syntax error in 'err-nested-parens.stan', line 3, column 12 to column 13, parsing error:
    -------------------------------------------------
@@ -911,7 +914,7 @@ Syntax error in 'err-nested-parens.stan', line 3, column 12 to column 13, parsin
      4:  }
    -------------------------------------------------
 
-Expression expected after "(".
+Expression or comma separated list of expressions followed by ")" expected after "(".
   $ ../../../../install/default/bin/stanc err-no-cond-else-if.stan
 Syntax error in 'err-no-cond-else-if.stan', line 5, column 12 to column 13, parsing error:
    -------------------------------------------------
@@ -1317,7 +1320,7 @@ Syntax error in 'functions-bad25.stan', line 5, column 2 to column 3, parsing er
      6:  }
    -------------------------------------------------
 
-";" or expression followed by ";" expected after "return".
+Ill-formed return statement. ";" or expression followed by ";" expected after "return".
   $ ../../../../install/default/bin/stanc functions-bad26.stan
 Syntax error in 'functions-bad26.stan', line 5, column 2 to column 3, parsing error:
    -------------------------------------------------
@@ -1455,7 +1458,7 @@ Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, par
      7:  }
    -------------------------------------------------
 
-Expected "[" expression "]" for row vector size.
+"[" expression "]" expected for row_vector size.
   $ ../../../../install/default/bin/stanc local_var_constraint2.stan
 Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, parsing error:
    -------------------------------------------------
@@ -1479,7 +1482,7 @@ Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, pars
      7:  }
    -------------------------------------------------
 
-Expected "[" expression "," expression "]" for sizes of matrix.
+"[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../install/default/bin/stanc local_var_constraint4.stan
 Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, parsing error:
    -------------------------------------------------
@@ -2449,7 +2452,7 @@ Semantic error in 'validate_add_expression_dimss_bad.stan', line 4, column 6 to 
      6:  parameters {
    -------------------------------------------------
 
-Too many indexes, expression dimensions=0, indexes found=1.
+Tried to index a scalar type. Expression has type real.
   $ ../../../../install/default/bin/stanc validate_add_var_bad1.stan
 Semantic error in 'validate_add_var_bad1.stan', line 3, column 7 to column 8:
    -------------------------------------------------

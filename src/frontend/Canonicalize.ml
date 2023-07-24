@@ -117,12 +117,16 @@ and replace_boolean_real ?(parens = false) deprecated_userdefined e =
                   ; ad_level= DataOnly } } ) }
   | _ -> replace_deprecated_expr deprecated_userdefined e
 
-let replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
+let rec replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
   let is_multiindex = function
     | Single {emeta= {type_= Middle.UnsizedType.UInt; _}; _} -> false
     | _ -> true in
   let rec flatten_multi = function
     | LVariable id -> (LVariable id, None)
+    | LTupleProjection (lval, idx) ->
+        ( LTupleProjection
+            (replace_deprecated_lval deprecated_userdefined lval, idx)
+        , None )
     | LIndexed ({lval; lmeta}, idcs) -> (
         let outer =
           List.map idcs
@@ -202,7 +206,9 @@ let rec no_parens {expr; emeta} =
                   | i -> map_index keep_parens i )
                 l )
       ; emeta }
-  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | Promotion _ ->
+  | TupleProjection (e, i) -> {expr= TupleProjection (keep_parens e, i); emeta}
+  | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | TupleExpr _
+   |Promotion _ ->
       {expr= map_expression no_parens ident expr; emeta}
 
 and keep_parens {expr; emeta} =

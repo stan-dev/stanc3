@@ -1,3 +1,5 @@
+open Core_kernel
+
 (** Transformations (constraints) for global variable declarations *)
 
 (** Types of transformations. Polymorphic type is filled
@@ -18,8 +20,10 @@ type 'e t =
   | CholeskyCov
   | Correlation
   | Covariance
+  | TupleTransformation of 'e t list
 [@@deriving sexp, compare, map, hash, fold]
 
-let has_check = function
+let rec has_check = function
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false
+  | TupleTransformation transforms -> List.exists ~f:has_check transforms
   | _ -> true

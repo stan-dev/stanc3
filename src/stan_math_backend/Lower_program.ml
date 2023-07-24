@@ -12,14 +12,8 @@ let stanc_args_to_print = ref ""
 let get_unconstrained_param_st lst =
   match lst with
   | _, _, {Program.out_block= Parameters; out_unconstrained_st= st; _} ->
-      Some (SizedType.get_dims_io st)
+      Some (SizedType.io_size st)
   | _ -> None
-
-let lower_num_param (dims : Expr.Typed.t list) =
-  match List.reduce ~f:Expression_syntax.( * ) (lower_exprs dims) with
-  | Some d when List.length dims = 1 -> d
-  | Some d -> Parens d
-  | None -> Literal "1"
 
 (** Create a variable for the name of model function.
   @param prog_name Name of the Stan program.
@@ -49,7 +43,9 @@ let lower_data_decl (vident, ut) : defn =
     if UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var vident)
     then vident ^ "_data__"
     else vident in
-  GlobalVariableDefn (lower_unsized_decl data_vident ut DataOnly)
+  GlobalVariableDefn
+    (lower_unsized_decl data_vident ut
+       (UnsizedType.fill_adtype_for_type DataOnly ut) )
 
 (** Create maps of Eigen types*)
 let lower_map_decl (vident, ut) : defn =
@@ -95,8 +91,14 @@ let lower_model_private {Program.prepare_data; _} =
   List.map ~f:lower_data_decl data_decls
   @ List.map ~f:lower_map_decl eigen_map_decls
 
-let validate_dims ~stage name st =
+let rec validate_dims ~stage name st =
   if String.is_suffix ~suffix:"__" name then []
+  else if SizedType.contains_tuple st then
+    (* We know tuples are given as flattened names containing "." in var_contexts *)
+    let names =
+      UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st) in
+    let subtypes = SizedType.flatten_tuple_io st in
+    List.map2_exn ~f:(validate_dims ~stage) names subtypes |> List.concat
   else
     let vector args =
       let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
@@ -141,8 +143,13 @@ let gen_assign_data decl_id st =
     | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
      |SComplexRowVector _ | SComplexMatrix _ ->
         Var (decl_id ^ "_data__")
-    | SInt | SReal | SComplex | SArray _ -> Var decl_id in
-  Expression (Assign (underlying_var decl_id st, initialize_value st DataOnly))
+    | SInt | SReal | SComplex | SArray _ | STuple _ -> Var decl_id in
+  Expression
+    (Assign
+       ( underlying_var decl_id st
+       , initialize_value st
+           (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
+              (SizedType.to_unsized st) ) ) )
   :: lower_placement_new decl_id st
 
 let lower_constructor
@@ -185,8 +192,7 @@ let lower_constructor
     let output_params =
       List.filter_map ~f:get_unconstrained_param_st output_vars in
     match
-      List.map ~f:lower_num_param output_params
-      |> List.reduce ~f:Expression_syntax.( + )
+      lower_exprs output_params |> List.reduce ~f:Expression_syntax.( + )
     with
     | None -> Expression (Assign (Var "num_params_r__", Literal "0U"))
     | Some pars -> Expression (Assign (Var "num_params_r__", pars)) in
@@ -195,16 +201,17 @@ let lower_constructor
     ~body:(preamble @ data @ [set_num_params])
     ()
 
-let gen_log_prob Program.{prog_name; log_prob; _} =
-  let templates =
-    [ Bool "propto__"; Bool "jacobian__"; Typename "VecR"; Typename "VecI"
-    ; Require ("stan::require_vector_like_t", ["VecR"])
-    ; Require ("stan::require_vector_like_vt", ["std::is_integral"; "VecI"]) ]
-  in
+let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
   let args : (type_ * string) list =
     [ (Ref (TemplateType "VecR"), "params_r__")
     ; (Ref (TemplateType "VecI"), "params_i__")
     ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+  (*
+     NOTE: There is a bug in clang-6.0 where removing this T__ causes the
+      reverse mode autodiff path to fail with an initializer list error
+      for validate_array_expr_primitives on line 930. Need to investigate
+      more into why this is happening
+      *)
   let intro =
     let t__ = TypeLiteral "T__" in
     [ Using
@@ -222,14 +229,27 @@ let gen_log_prob Program.{prog_name; log_prob; _} =
     let lp_accum__ = Var "lp_accum__" in
     [ Expression lp_accum__.@?(("add", [Var "lp__"]))
     ; Return (Some lp_accum__.@!("sum")) ] in
-  FunDef
-    (make_fun_defn
-       ~templates_init:([templates], true)
-       ~inline:true
-       ~return_type:(TypeTrait ("stan::scalar_type_t", [TemplateType "VecR"]))
-       ~name:"log_prob_impl" ~args
-       ~body:(intro @ Stmts.rethrow_located (lower_statements log_prob) @ outro)
-       ~cv_qualifiers:[Const] () )
+  let template_params =
+    [ Bool "propto__"; Bool "jacobian__"; Typename "VecR"; Typename "VecI"
+    ; Require ("stan::require_vector_like_t", ["VecR"])
+    ; Require ("stan::require_vector_like_vt", ["std::is_integral"; "VecI"]) ]
+  in
+  let template_nonrev =
+    template_params @ [Require ("stan::require_not_st_var", ["VecR"])] in
+  let template_rev =
+    template_params @ [Require ("stan::require_st_var", ["VecR"])] in
+  let gen_ll template lp_lst =
+    FunDef
+      (make_fun_defn
+         ~templates_init:([template], true)
+         ~inline:true
+         ~return_type:(TypeTrait ("stan::scalar_type_t", [TemplateType "VecR"]))
+         ~name:"log_prob_impl" ~args
+         ~body:(intro @ Stmts.rethrow_located (lower_statements lp_lst) @ outro)
+         ~cv_qualifiers:[Const] () ) in
+  [ GlobalComment "Base log prob"; gen_ll template_nonrev log_prob
+  ; GlobalComment "Reverse mode autodiff log prob"
+  ; gen_ll template_rev reverse_mode_log_prob ]
 
 let gen_write_array {Program.prog_name; generate_quantities; _} =
   let templates =
@@ -340,40 +360,61 @@ let gen_extend_vector name type_ elts =
     ]
 
 let gen_get_param_names {Program.output_vars; _} =
+  let param_to_names name st =
+    List.map
+      ~f:(fun id -> Exprs.literal_string (Mangle.remove_prefix id))
+      (UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st))
+  in
   let params, tparams, gqs =
     List.partition3_map output_vars ~f:(function
-      | id, _, {Program.out_block= Parameters; _} ->
-          `Fst (Exprs.literal_string (Mangle.remove_prefix id))
-      | id, _, {out_block= TransformedParameters; _} ->
-          `Snd (Exprs.literal_string (Mangle.remove_prefix id))
-      | id, _, {out_block= GeneratedQuantities; _} ->
-          `Trd (Exprs.literal_string (Mangle.remove_prefix id)) ) in
+      | id, _, {Program.out_block= Parameters; out_constrained_st= st; _} ->
+          `Fst (param_to_names id st)
+      | id, _, {out_block= TransformedParameters; out_constrained_st= st; _} ->
+          `Snd (param_to_names id st)
+      | id, _, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
+          `Trd (param_to_names id st) ) in
   let args =
     [ (Ref (Types.std_vector Types.string), "names__")
     ; (Const Types.bool, "emit_transformed_parameters__ = true")
     ; (Const Types.bool, "emit_generated_quantities__ = true") ] in
   let names = Var "names__" in
   let body =
-    [Expression (Assign (names, Exprs.std_vector_init_expr Types.string params))]
+    [ Expression
+        (Assign
+           (names, Exprs.std_vector_init_expr Types.string (List.concat params))
+        ) ]
     @ [ IfElse
           ( Var "emit_transformed_parameters__"
           , Stmts.block
-              (gen_extend_vector names (Types.std_vector Types.string) tparams)
+              (gen_extend_vector names
+                 (Types.std_vector Types.string)
+                 (List.concat tparams) )
           , None )
       ; IfElse
           ( Var "emit_generated_quantities__"
           , Stmts.block
-              (gen_extend_vector names (Types.std_vector Types.string) gqs)
+              (gen_extend_vector names
+                 (Types.std_vector Types.string)
+                 (List.concat gqs) )
           , None ) ] in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Void ~name:"get_param_names" ~args
        ~body ~cv_qualifiers:[Const] () )
 
 let gen_get_dims {Program.output_vars; _} =
+  (* NOTE: for tuples this is a mirror of how we give dims in var context.
+      This won't generalize to ragged arrays, I don't think.
+
+      We should probably deprecate get_dims and replace it with a
+      new function later on which returns a more structured type
+  *)
   let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
   let pack inner_dims =
-    Exprs.std_vector_init_expr Types.size_t
-      (List.map ~f:cast (SizedType.get_dims_io inner_dims)) in
+    List.map
+      ~f:(fun x -> Exprs.std_vector_init_expr Types.size_t x)
+      (List.map
+         ~f:(fun dim -> SizedType.get_dims_io dim |> List.map ~f:cast)
+         (SizedType.flatten_tuple_io inner_dims) ) in
   let params, tparams, gqs =
     List.partition3_map output_vars ~f:(function
       | _, _, {Program.out_block= Parameters; Program.out_constrained_st= st; _}
@@ -396,48 +437,26 @@ let gen_get_dims {Program.output_vars; _} =
     [ Expression
         (Assign
            ( dimss
-           , Exprs.std_vector_init_expr (Types.std_vector Types.size_t) params
-           ) )
+           , Exprs.std_vector_init_expr
+               (Types.std_vector Types.size_t)
+               (List.concat params) ) )
     ; IfElse
         ( Var "emit_transformed_parameters__"
         , Stmts.block
             (gen_extend_vector dimss
                (Types.std_vector (Types.std_vector Types.size_t))
-               tparams )
+               (List.concat tparams) )
         , None )
     ; IfElse
         ( Var "emit_generated_quantities__"
         , Stmts.block
             (gen_extend_vector dimss
                (Types.std_vector (Types.std_vector Types.size_t))
-               gqs )
+               (List.concat gqs) )
         , None ) ] in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Void ~name:"get_dims" ~args ~body
        ~cv_qualifiers:[Const] () )
-
-let emplace_name_stmt name idcs =
-  let null_string = Constructor (Types.string, []) in
-  let dot = Literal "'.'" in
-  let to_string e =
-    match e with Literal _ -> e | _ -> Exprs.fun_call "std::to_string" [e] in
-  let open Expression_syntax in
-  let param_names__ = Var "param_names__" in
-  Expression
-    param_names__.@?(( "emplace_back"
-                     , [ null_string
-                         + List.fold ~init:(literal_string name)
-                             ~f:(fun acc idx -> acc + dot + to_string idx)
-                             idcs ] ))
-
-let emplace_name name idcs =
-  let name = Mangle.remove_prefix name in
-  [emplace_name_stmt name (List.map ~f:Exprs.to_var idcs)]
-
-let emplace_complex_name name idcs =
-  let idcs_vars = List.map ~f:Exprs.to_var idcs in
-  [ emplace_name_stmt name (idcs_vars @ [Exprs.literal_string "real"])
-  ; emplace_name_stmt name (idcs_vars @ [Exprs.literal_string "imag"]) ]
 
 let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
   let iter d gen_body =
@@ -446,7 +465,8 @@ let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
       Stmts.fori loopvar
         (lower_expr Expr.Helpers.loop_bottom)
         d
-        (Stmts.block @@ gen_body iteratee (loopvar :: index_ids)) in
+        (Stmts.block @@ gen_body iteratee ((`Array, loopvar) :: index_ids))
+    in
     gensym_exit () ; forloop in
   match dims with
   | [] -> gen_body iteratee index_ids
@@ -454,17 +474,54 @@ let rec gen_indexing_loop ?(index_ids = []) iteratee dims gen_body =
       [ iter dim (fun i idcs ->
             gen_indexing_loop ~index_ids:idcs i dims gen_body ) ]
 
+let emplace_name_stmt name idcs =
+  let null_string = Constructor (Types.string, []) in
+  let sep = function `Array -> Literal "'.'" | `Tuple -> Literal "':'" in
+  let to_string e =
+    match e with Literal _ -> e | _ -> Exprs.fun_call "std::to_string" [e] in
+  let open Expression_syntax in
+  let param_names__ = Var "param_names__" in
+  Expression
+    param_names__.@?(( "emplace_back"
+                     , [ null_string
+                         + List.fold ~init:(literal_string name)
+                             ~f:(fun acc (typ, idx) ->
+                               acc + sep typ + to_string idx )
+                             idcs ] ))
+
+let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
+  let gen_name name idcs =
+    let idcs = outer_idcs @ idcs in
+    let idcs_vars = List.map ~f:(fun (t, i) -> (t, Exprs.to_var i)) idcs in
+    match st with
+    | SizedType.STuple subtypes ->
+        let idxes_subtypes =
+          List.mapi
+            ~f:(fun i typ -> ((`Tuple, string_of_int (i + 1)), (name, typ)))
+            subtypes in
+        List.concat_map
+          ~f:(fun (idx, sub) -> gen_param_names ~outer_idcs:(idcs @ [idx]) sub)
+          idxes_subtypes
+    (* same name, different idcs going forward. would also cover the above case but generate worse code? *)
+    | SizedType.SArray _ when SizedType.contains_tuple st ->
+        gen_param_names ~outer_idcs:idcs
+          (name, fst (SizedType.get_array_dims st))
+    | _ when SizedType.is_complex_type st ->
+        [ emplace_name_stmt name
+            (idcs_vars @ [(`Array, Exprs.literal_string "real")])
+        ; emplace_name_stmt name
+            (idcs_vars @ [(`Array, Exprs.literal_string "imag")]) ]
+    | _ ->
+        let name = Mangle.remove_prefix name in
+        [emplace_name_stmt name idcs_vars] in
+  let dims = lower_exprs (List.rev (SizedType.get_dims st)) in
+  gen_indexing_loop decl_id dims gen_name
+
 let gen_param_names_fn name (paramvars, tparamvars, gqvars) =
   let args =
     [ (Ref (Types.std_vector Types.string), "param_names__")
     ; (Types.bool, "emit_transformed_parameters__ = true")
     ; (Types.bool, "emit_generated_quantities__ = true") ] in
-  let gen_param_names (decl_id, st) =
-    let gen_name =
-      if SizedType.contains_complex st then emplace_complex_name
-      else emplace_name in
-    let dims = lower_exprs (List.rev (SizedType.get_dims st)) in
-    gen_indexing_loop decl_id dims gen_name in
   let body =
     List.concat_map ~f:gen_param_names paramvars
     @ [ IfElse
@@ -550,7 +607,7 @@ let gen_overloads {Program.output_vars; _} =
         Expr.Helpers.binop_list
           (List.map
              ~f:(fun outvar ->
-               SizedType.num_elems_expr outvar.Program.out_constrained_st )
+               SizedType.io_size outvar.Program.out_constrained_st )
              outvars )
           Operator.Plus ~default:Expr.Helpers.zero
         |> lower_expr in
@@ -750,11 +807,12 @@ let gen_overloads {Program.output_vars; _} =
   @ log_probs @ transform_inits @ unconstrain_array
 
 let lower_model_public p =
-  [ gen_log_prob p; gen_write_array p; gen_unconstrain_array_impl p
-  ; gen_transform_inits_impl p; (* Begin metadata methods *)
-    gen_get_param_names p; (* Post-data metadata methods *) gen_get_dims p
-  ; gen_constrained_param_names p; gen_unconstrained_param_names p
-  ; gen_constrained_types p; gen_unconstrained_types p ]
+  gen_log_prob p
+  @ [ gen_write_array p; gen_unconstrain_array_impl p; gen_transform_inits_impl p
+    ; (* Begin metadata methods *) gen_get_param_names p
+    ; (* Post-data metadata methods *) gen_get_dims p
+    ; gen_constrained_param_names p; gen_unconstrained_param_names p
+    ; gen_constrained_types p; gen_unconstrained_types p ]
   (* Boilerplate *)
   @ gen_overloads p
 
@@ -884,29 +942,55 @@ module Testing = struct
         }
         #endif |}]
 
-  let%expect_test "emplace names" =
-    gen_indexing_loop "foo" [Var "N"] emplace_name
-    |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
-    |> print_endline ;
-    [%expect
-      {|
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        param_names__.emplace_back(std::string() + "foo" + '.' +
-          std::to_string(sym1__));
-      } |}]
-
   let%expect_test "complex names" =
-    gen_indexing_loop "foo" [Var "N"; Var "D"] emplace_complex_name
+    gen_param_names
+      ("foo", SizedType.SArray (SComplex, Middle.Expr.Helpers.variable "N"))
     |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
     |> print_endline ;
     [%expect
       {|
           for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-            for (int sym2__ = 1; sym2__ <= D; ++sym2__) {
-              param_names__.emplace_back(std::string() + "foo" + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "real");
-              param_names__.emplace_back(std::string() + "foo" + '.' +
-                std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' + "imag");
-            }
+            param_names__.emplace_back(std::string() + "foo" + '.' +
+              std::to_string(sym1__) + '.' + "real");
+            param_names__.emplace_back(std::string() + "foo" + '.' +
+              std::to_string(sym1__) + '.' + "imag");
           } |}]
+
+  let%expect_test "tuple names" =
+    gen_param_names
+      ( "tuple"
+      , SizedType.(
+          STuple [SInt; SArray (SReal, Middle.Expr.Helpers.variable "nested")])
+      )
+    |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
+    |> print_endline ;
+    [%expect
+      {|
+      param_names__.emplace_back(std::string() + "tuple" + ':' + std::to_string(1));
+      for (int sym1__ = 1; sym1__ <= nested; ++sym1__) {
+        param_names__.emplace_back(std::string() + "tuple" + ':' +
+          std::to_string(2) + '.' + std::to_string(sym1__));
+      } |}]
+
+  let%expect_test "array of tuple names" =
+    gen_param_names
+      ( "arr_tuple"
+      , SizedType.(
+          SArray
+            ( STuple
+                [SInt; SArray (SReal, Middle.Expr.Helpers.variable "nested")]
+            , Middle.Expr.Helpers.variable "N" )) )
+    |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
+    |> print_endline ;
+    [%expect
+      {|
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          param_names__.emplace_back(std::string() + "arr_tuple" + '.' +
+            std::to_string(sym1__) + ':' + std::to_string(1));
+          for (int sym2__ = 1; sym2__ <= nested; ++sym2__) {
+            param_names__.emplace_back(std::string() + "arr_tuple" + '.' +
+              std::to_string(sym1__) + ':' + std::to_string(2) + '.' +
+              std::to_string(sym2__));
+          }
+        } |}]
 end

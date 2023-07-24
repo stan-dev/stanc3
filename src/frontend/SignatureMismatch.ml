@@ -17,8 +17,8 @@ let pp_unsized_type ctx ppf =
   let rec pp ppf ty =
     match ty with
     | UnsizedType.UInt | UReal | UVector | URowVector | UMatrix | UComplex
-     |UComplexRowVector | UComplexVector | UComplexMatrix | UMathLibraryFunction
-      ->
+     |UMathLibraryFunction | UTuple _ | UComplexRowVector | UComplexVector
+     |UComplexMatrix ->
         UnsizedType.pp ppf ty
     | UArray ut ->
         let ut2, d = UnsizedType.unwind_array_type ut in
@@ -34,7 +34,7 @@ let pp_fundef ctx ppf =
   let pp_fun_arg ppf (ad, ty) =
     match ad with
     | UnsizedType.DataOnly -> Fmt.pf ppf "data %a" (pp_unsized_type ctx) ty
-    | AutoDiffable -> pp_unsized_type ctx ppf ty in
+    | AutoDiffable | TupleAD _ -> pp_unsized_type ctx ppf ty in
   function
   | UnsizedType.UFun (args, rt, _, _) ->
       Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -176,6 +176,15 @@ let rec check_same_type depth t1 t2 =
       |> Result.map_error ~f:(function
            | TypeMismatch _ -> TypeMismatch (t1, t2, None)
            | e -> e )
+  | UTuple nts1, UTuple nts2 -> (
+    match List.map2 ~f:(check_same_type depth) nts1 nts2 with
+    | List.Or_unequal_lengths.Unequal_lengths ->
+        Error (TypeMismatch (t1, t2, None))
+    | Ok proms_res -> (
+      match Result.all proms_res with
+      | Ok proms -> Ok (TuplePromotion proms)
+      | Error (TypeMismatch _) -> Error (TypeMismatch (t1, t2, None))
+      | Error e -> Error e ) )
   | UFun (_, _, s1, _), UFun (_, _, s2, _)
     when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
       Error

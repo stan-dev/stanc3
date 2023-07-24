@@ -1150,4 +1150,4 @@ Syntax error in 'unreserved-array-keyword.stan', line 2, column 40 to column 45,
      4:  
    -------------------------------------------------
 
-";" or expression followed by ";" expected after "return".
+Ill-formed return statement. ";" or expression followed by ";" expected after "return".

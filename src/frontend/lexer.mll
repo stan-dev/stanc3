@@ -50,16 +50,17 @@ let integer_constant =  ['0'-'9']+ ('_' ['0'-'9']+)*
 
 let exp_literal = ['e' 'E'] ['+' '-']? integer_constant
 let real_constant1 = integer_constant '.' integer_constant? exp_literal?
-let real_constant2 = '.' integer_constant exp_literal?
+let real_constant2 = '.' integer_constant exp_literal
 let real_constant3 = integer_constant exp_literal
+let real_constant_dot = '.' integer_constant
 let real_constant = real_constant1 | real_constant2 | real_constant3
-let imag_constant = (integer_constant | real_constant) 'i'
+let imag_constant = (integer_constant | real_constant | real_constant_dot) 'i'
 let space = ' ' | '\t' | '\012'
 let newline = '\r' | '\n' | '\r'*'\n'
 let non_space_or_newline =  [^ ' ' '\t' '\012' '\r' '\n' ]
 
 rule token = parse
-(* White space, line numers and comments *)
+(* White space, line numbers and comments *)
   | newline                   { lexer_logger "newline" ;
                                 incr_linenum lexbuf ; token lexbuf }
   | space                     { lexer_logger "space" ; token lexbuf }
@@ -132,6 +133,7 @@ rule token = parse
   | "row_vector"              { lexer_logger "row_vector" ; Parser.ROWVECTOR }
   | "complex_vector"          { lexer_logger "complex_vector" ; Parser.COMPLEXVECTOR }
   | "complex_row_vector"      { lexer_logger "complex_row_vector" ; Parser.COMPLEXROWVECTOR }
+  | "tuple"                   { lexer_logger "tuple" ; Parser.TUPLE }
   | "array"                   { lexer_logger "array" ; Parser.ARRAY }
   | "matrix"                  { lexer_logger "matrix" ; Parser.MATRIX }
   | "complex_matrix"          { lexer_logger "complex_matrix" ; Parser.COMPLEXMATRIX }
@@ -195,6 +197,9 @@ rule token = parse
                                 Parser.INTNUMERAL (lexeme lexbuf) }
   | real_constant as r        { lexer_logger ("real_constant " ^ r) ;
                                 Parser.REALNUMERAL (lexeme lexbuf) }
+  | real_constant_dot as r    { lexer_logger ("real_constant_dot " ^ r) ;
+                                (* Separated out because ".1" could be a number or a tuple projection *)
+                                Parser.DOTNUMERAL (lexeme lexbuf) }
   | imag_constant as z        { lexer_logger ("imag_constant " ^ z) ;
                                 Parser.IMAGNUMERAL (lexeme lexbuf) }
   | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)

@@ -56,12 +56,15 @@ let context block =
   ; in_udf_dist_def= false
   ; loop_depth= 0 }
 
-let calculate_autodifftype cf origin ut =
-  match origin with
-  | Env.(Param | TParam | Model | Functions)
-    when not (UnsizedType.is_int_type ut || cf.current_block = GQuant) ->
+let rec calculate_autodifftype cf origin ut =
+  let ut, _ = UnsizedType.unwind_array_type ut in
+  match (origin, ut) with
+  | _, UTuple ts ->
+      UnsizedType.TupleAD (List.map ~f:(calculate_autodifftype cf origin) ts)
+  | Env.(Param | TParam | Model | Functions), _
+    when not (UnsizedType.is_discrete_type ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
-  | _ -> DataOnly
+  | _, _ -> DataOnly
 
 let arg_type x = (x.emeta.ad_level, x.emeta.type_)
 let get_arg_types = List.map ~f:arg_type
@@ -174,7 +177,7 @@ let check_ternary_if loc pe te fe =
     , UnsizedType.common_type (te.emeta.type_, fe.emeta.type_)
     , expr_ad_lub [pe; te; fe] )
   with
-  | UInt, Some type_, ad_level when not (UnsizedType.is_fun_type type_) ->
+  | UInt, Some type_, Some ad_level when not (UnsizedType.is_fun_type type_) ->
       mk_typed_expression
         ~expr:
           (TernaryIf (pe, promote te type_ ad_level, promote fe type_ ad_level))
@@ -232,12 +235,11 @@ let assignmentoperator_stan_math_return_type assop arg_tys =
 
 let check_binop loc op le re =
   let rt = [le; re] |> get_arg_types |> operator_stan_math_return_type op in
-  match rt with
-  | Some (ReturnType type_, [p1; p2]) ->
+  match (rt, expr_ad_lub [le; re]) with
+  | Some (ReturnType type_, [p1; p2]), Some ad_level ->
       mk_typed_expression
         ~expr:(BinOp (Promotion.promote le p1, op, Promotion.promote re p2))
-        ~ad_level:(expr_ad_lub [le; re])
-        ~type_ ~loc
+        ~ad_level ~type_ ~loc
   | _ ->
       Semantic_error.illtyped_binary_op loc op le.emeta.type_ re.emeta.type_
       |> error
@@ -248,8 +250,7 @@ let check_prefixop loc op te =
   | Some (ReturnType type_, _) ->
       mk_typed_expression
         ~expr:(PrefixOp (op, te))
-        ~ad_level:(expr_ad_lub [te])
-        ~type_ ~loc
+        ~ad_level:te.emeta.ad_level ~type_ ~loc
   | _ -> Semantic_error.illtyped_prefix_op loc op te.emeta.type_ |> error
 
 let check_postfixop loc op te =
@@ -258,8 +259,7 @@ let check_postfixop loc op te =
   | Some (ReturnType type_, _) ->
       mk_typed_expression
         ~expr:(PostfixOp (te, op))
-        ~ad_level:(expr_ad_lub [te])
-        ~type_ ~loc
+        ~ad_level:te.emeta.ad_level ~type_ ~loc
   | _ -> Semantic_error.illtyped_postfix_op loc op te.emeta.type_ |> error
 
 let check_id cf loc tenv id =
@@ -297,17 +297,17 @@ let check_variable cf loc tenv id =
   mk_typed_expression ~expr:(Variable id) ~ad_level ~type_ ~loc
 
 let get_consistent_types type_ es =
-  let ad =
-    UnsizedType.lub_ad_type (List.map ~f:(fun e -> e.emeta.ad_level) es) in
   let f state e =
-    match state with
-    | Error e -> Error e
-    | Ok ty -> (
-      match UnsizedType.common_type (ty, e.emeta.type_) with
-      | Some ty -> Ok ty
-      | None -> Error (ty, e.emeta) ) in
+    Result.bind state ~f:(fun ty ->
+        match UnsizedType.common_type (ty, e.emeta.type_) with
+        | Some ty -> Ok ty
+        | None -> Error (ty, e.emeta) ) in
   List.fold ~init:(Ok type_) ~f es
   |> Result.map ~f:(fun ty ->
+         let ad =
+           expr_ad_lub es |> Option.value_exn
+           (* correctness: Result.Ok case only contains tuples of same lengths, expr_ad_lub cannot fail *)
+         in
          let promotions =
            List.map (get_arg_types es)
              ~f:(Promotion.get_type_promotion_exn (ad, ty)) in
@@ -391,22 +391,28 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | (UMatrix | UComplexMatrix), [`Multi; `Single] -> vec
     | (UMatrix | UComplexMatrix), _ :: _ :: _ :: _
      |(UVector | URowVector | UComplexRowVector | UComplexVector), _ :: _ :: _
-     |(UInt | UReal | UComplex | UFun _ | UMathLibraryFunction), _ :: _ ->
+     |( (UInt | UReal | UComplex | UFun _ | UMathLibraryFunction | UTuple _)
+      , _ :: _ ) ->
         Semantic_error.not_indexable loc ut (List.length indices) |> error in
   aux ut (List.map ~f:indexing_type indices)
 
-let inferred_ad_type_of_indexed at uindices =
-  UnsizedType.lub_ad_type
-    ( at
-    :: List.map
-         ~f:(function
-           | All -> UnsizedType.DataOnly
-           | Single ue1 | Upfrom ue1 | Downfrom ue1 ->
-               UnsizedType.lub_ad_type [at; ue1.emeta.ad_level]
-           | Between (ue1, ue2) ->
-               UnsizedType.lub_ad_type
-                 [at; ue1.emeta.ad_level; ue2.emeta.ad_level] )
-         uindices )
+let inferred_ad_type_of_indexed at ut uindices =
+  UnsizedType.fill_adtype_for_type
+    (* correctness: index expressions only contain int types,
+       so lub_ad_tupe should never be [None]. *)
+    ( UnsizedType.lub_ad_type
+        ( at
+        :: List.map
+             ~f:(function
+               | All -> UnsizedType.DataOnly
+               | Single ue1 | Upfrom ue1 | Downfrom ue1 -> ue1.emeta.ad_level
+               | Between (ue1, ue2) ->
+                   UnsizedType.lub_ad_type
+                     [ue1.emeta.ad_level; ue2.emeta.ad_level]
+                   |> Option.value_exn )
+             uindices )
+    |> Option.value_exn )
+    ut
 
 (* function checking *)
 
@@ -462,10 +468,14 @@ let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
   let fn =
     if is_cond_dist then CondDistApp (kind, name, args)
     else FunApp (kind, name, args) in
+  let ad_type =
+    if UnsizedType.is_discrete_type type_ then UnsizedType.DataOnly
+    else if
+      UnsizedType.any_autodiff (List.map ~f:(fun x -> x.emeta.ad_level) args)
+    then AutoDiffable
+    else DataOnly in
   mk_typed_expression ~expr:fn ~loc ~type_
-    ~ad_level:
-      ( if UnsizedType.is_int_type type_ then UnsizedType.DataOnly
-      else expr_ad_lub args )
+    ~ad_level:(UnsizedType.fill_adtype_for_type ad_type type_)
 
 let check_normal_fn ~is_cond_dist loc tenv id es =
   match Env.find tenv (Utils.normalized_name id.name) with
@@ -594,14 +604,8 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
       mandatory_fun_args UReal (get_arg_types tes) in
   let matching remaining_es fn =
     match fn with
-    | Env.
-        { type_=
-            UnsizedType.UFun
-              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _, _) as
-            ftype
-        ; _ }
-      when List.mem Stan_math_signatures.reduce_sum_slice_types
-             sliced_arg_fun_type ~equal:( = ) ->
+    | Env.{type_= UnsizedType.UFun (sliced_arg_fun :: _, _, _, _) as ftype; _}
+      ->
         let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
         let mandatory_fun_args =
           [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)] in
@@ -612,22 +616,31 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
           mandatory_fun_args UReal arg_types
     | _ -> basic_mismatch () in
   match tes with
-  | {expr= Variable fname; _} :: remaining_es -> (
-    match find_matching_first_order_fn tenv (matching remaining_es) fname with
-    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
-        (* a valid signature exists *)
-        let tes = make_function_variable cf loc fname ftype :: remaining_es in
-        mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id
-          (Promotion.promote_list tes promotions)
-          ~type_:UnsizedType.UReal
-    | AmbiguousMatch ps ->
-        Semantic_error.ambiguous_function_promotion loc fname.name None ps
-        |> error
-    | SignatureErrors (expected_args, err) ->
-        Semantic_error.illtyped_reduce_sum loc id.name
-          (List.map ~f:type_of_expr_typed tes)
-          expected_args err
-        |> error )
+  | {expr= Variable fname; _}
+    :: ({emeta= {type_= slice_type; _}; _} :: _ as remaining_es) -> (
+      let slice_type, n = UnsizedType.unwind_array_type slice_type in
+      if n = 0 then
+        Semantic_error.illtyped_reduce_sum_not_array loc slice_type |> error
+      else if
+        not
+        @@ List.mem Stan_math_signatures.reduce_sum_slice_types slice_type
+             ~equal:( = )
+      then Semantic_error.illtyped_reduce_sum_slice loc slice_type |> error ;
+      match find_matching_first_order_fn tenv (matching remaining_es) fname with
+      | SignatureMismatch.UniqueMatch (ftype, promotions) ->
+          (* a valid signature exists *)
+          let tes = make_function_variable cf loc fname ftype :: remaining_es in
+          mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id
+            (Promotion.promote_list tes promotions)
+            ~type_:UnsizedType.UReal
+      | AmbiguousMatch ps ->
+          Semantic_error.ambiguous_function_promotion loc fname.name None ps
+          |> error
+      | SignatureErrors (expected_args, err) ->
+          Semantic_error.illtyped_reduce_sum loc id.name
+            (List.map ~f:type_of_expr_typed tes)
+            expected_args err
+          |> error )
   | _ ->
       let expected_args, err =
         basic_mismatch () |> Result.error |> Option.value_exn in
@@ -687,8 +700,8 @@ and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
 and check_indexed loc cf tenv e indices =
   let tindices = List.map ~f:(check_index cf tenv) indices in
   let te = check_expression cf tenv e in
-  let ad_level = inferred_ad_type_of_indexed te.emeta.ad_level tindices in
   let type_ = inferred_unsizedtype_of_indexed ~loc te.emeta.type_ tindices in
+  let ad_level = inferred_ad_type_of_indexed te.emeta.ad_level type_ tindices in
   mk_typed_expression ~expr:(Indexed (te, tindices)) ~ad_level ~type_ ~loc
 
 and check_index cf tenv = function
@@ -832,6 +845,40 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       mk_typed_expression ~expr:(Paren te) ~ad_level:te.emeta.ad_level
         ~type_:te.emeta.type_ ~loc
   | Indexed (e, indices) -> check_indexed loc cf tenv e indices
+  | TupleProjection (e, i) -> (
+      let te = ce e in
+      match (te.emeta.type_, te.emeta.ad_level) with
+      | UTuple ts, TupleAD ads -> (
+        match (List.nth ts (i - 1), List.nth ads (i - 1)) with
+        | Some t, Some ad ->
+            mk_typed_expression
+              ~expr:(TupleProjection (te, i))
+              ~ad_level:ad ~type_:t ~loc:emeta.loc
+        | None, None ->
+            Semantic_error.tuple_index_invalid_index emeta.loc (List.length ts)
+              i
+            |> error
+        | _ ->
+            Common.FatalError.fatal_error_msg
+              [%message
+                "Error in internal representation: tuple types don't match AD"]
+        )
+      | UTuple _, ad ->
+          Common.FatalError.fatal_error_msg
+            [%message
+              "Error in internal representation: tuple doesn't have tupleAD"
+                (ad : UnsizedType.autodifftype)]
+      | _, _ ->
+          Semantic_error.tuple_index_not_tuple emeta.loc te.emeta.type_ |> error
+      )
+  | TupleExpr es ->
+      let tes = List.map ~f:ce es in
+      if List.is_empty tes then Semantic_error.empty_tuple emeta.loc |> error
+      else
+        mk_typed_expression ~expr:(TupleExpr tes)
+          ~ad_level:(TupleAD (List.map ~f:(fun e -> e.emeta.ad_level) tes))
+          ~type_:(UTuple (List.map ~f:(fun e -> e.emeta.type_) tes))
+          ~loc:emeta.loc
   | FunApp ((), id, es) ->
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:false id
   | CondDistApp ((), id, es) ->
@@ -943,39 +990,61 @@ let check_assignment_operator loc assop lhs rhs =
       SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
         rhs.emeta.type_
     with
-    | Ok p -> Promotion.promote rhs p
+    | Ok p ->
+        let rhs =
+          (* Hack: need RHS to properly get promoted to var if needed *)
+          {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}} in
+        Promotion.promote rhs p
     | Error _ -> err Operator.Equals |> error )
   | OperatorAssign op -> (
       let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
       let return_type = assignmentoperator_stan_math_return_type op args in
       match return_type with Some Void -> rhs | _ -> err op |> error )
 
-let check_lvalue cf tenv = function
+let rec check_lvalue cf tenv = function
   | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
       verify_identifier id ;
       let ad_level, type_ = check_id cf loc tenv id in
       {lval= LVariable id; lmeta= {ad_level; type_; loc}}
+  | {lval= LTupleProjection (lval, idx); lmeta= ({loc} : located_meta)} -> (
+      let tlval = check_lvalue cf tenv lval in
+      match (tlval.lmeta.type_, tlval.lmeta.ad_level) with
+      | UTuple types_, TupleAD ads -> (
+        match (List.nth types_ (idx - 1), List.nth ads (idx - 1)) with
+        | Some type_, Some ad_level ->
+            {lval= LTupleProjection (tlval, idx); lmeta= {ad_level; type_; loc}}
+        | None, None ->
+            Semantic_error.tuple_index_invalid_index loc (List.length types_)
+              idx
+            |> error
+        | _ ->
+            Common.FatalError.fatal_error_msg
+              [%message
+                "Error in internal representation: tuple types don't match AD"]
+        )
+      | _, _ ->
+          Semantic_error.tuple_index_not_tuple loc tlval.lmeta.type_ |> error )
   | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
       let rec check_inner = function
-        | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
-            verify_identifier id ;
-            let ad_level, type_ = check_id cf loc tenv id in
-            let var = {lval= LVariable id; lmeta= {ad_level; type_; loc}} in
-            (var, var, [])
-        | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
+        | {lval= LIndexed (lval, idcs); lmeta= ({loc} : located_meta)} ->
             let lval, var, flat = check_inner lval in
             let idcs = List.map ~f:(check_index cf tenv) idcs in
-            let ad_level =
-              inferred_ad_type_of_indexed lval.lmeta.ad_level idcs in
             let type_ =
               inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
+            let ad_level =
+              inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
             ( {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
             , var
-            , flat @ idcs ) in
+            , flat @ idcs )
+        | {lval= LVariable _ | LTupleProjection _; _} as lval ->
+            (*  I think the right thing to do here is treat tuples like variables *)
+            let tval = check_lvalue cf tenv lval in
+            (tval, tval, []) in
       let lval, var, flat = check_inner lval in
       let idcs = List.map ~f:(check_index cf tenv) idcs in
-      let ad_level = inferred_ad_type_of_indexed lval.lmeta.ad_level idcs in
       let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
+      let ad_level =
+        inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
       ( if List.exists ~f:is_multiindex flat then
         (* TODO: prevent in 2.34 *)
         let lvalue_rvalue_types_differ =
@@ -1058,7 +1127,7 @@ let verify_valid_sampling_pos loc cf =
   if cf.in_lp_fun_def || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
-let verify_sampling_distribution loc tenv id arguments =
+let check_sampling_distribution loc tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
   let name_w_suffix_sampling_dist suffix =
@@ -1068,8 +1137,9 @@ let verify_sampling_distribution loc tenv id arguments =
   match
     List.min_elt sampling_dists ~compare:SignatureMismatch.compare_match_results
   with
-  | Some (UniqueMatch _) ->
-      (* real return type is enforced by [verify_fundef_dist_rt] *) ()
+  | Some (UniqueMatch (_, _, p)) ->
+      Promotion.promote_list arguments p
+      (* real return type is enforced by [verify_fundef_dist_rt] *)
   | None | Some (SignatureErrors ([], _)) ->
       (* Function is non existent *)
       Semantic_error.invalid_sampling_no_such_dist loc name
@@ -1127,7 +1197,9 @@ let check_tilde loc cf tenv distribution truncation arg args =
   verify_sampling_pdf_pmf distribution ;
   verify_valid_sampling_pos loc cf ;
   verify_sampling_cdf_ccdf loc distribution ;
-  verify_sampling_distribution loc tenv distribution (te :: tes) ;
+  let promoted_args =
+    check_sampling_distribution loc tenv distribution (te :: tes) in
+  let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
   verify_sampling_cdf_defined loc tenv distribution ttrunc tes ;
   let stmt = Tilde {arg= te; distribution; args= tes; truncation= ttrunc} in
   mk_typed_statement ~stmt ~loc ~return_type:NoReturnType
@@ -1142,11 +1214,23 @@ let check_continue loc cf =
   else mk_typed_statement ~stmt:Continue ~return_type:NoReturnType ~loc
 
 let check_return loc cf tenv e =
+  let ensure_var (e : Ast.typed_expression) =
+    (* return position should always use local_scalar_t,
+       even if e.g. it is just a hard-coded array literal *)
+    let open Promotion in
+    let typ = e.emeta.type_ in
+    if UnsizedType.contains_tuple typ || UnsizedType.is_array typ then
+      promote e
+        (get_type_promotion_exn
+           (UnsizedType.fill_adtype_for_type UnsizedType.AutoDiffable typ, typ)
+           (e.emeta.ad_level, typ) )
+    else e in
   if not cf.in_returning_fun_def then
     Semantic_error.expression_return_outside_returning_fn loc |> error
   else
     let te = check_expression cf tenv e in
-    mk_typed_statement ~stmt:(Return te)
+    let promoted = ensure_var te in
+    mk_typed_statement ~stmt:(Return promoted)
       ~return_type:(Complete (ReturnType te.emeta.type_)) ~loc
 
 let check_returnvoid loc cf =
@@ -1353,14 +1437,14 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     Semantic_error.non_int_bounds loc |> error ;
   let is_transformation =
     match trans with Transformation.Identity -> false | _ -> true in
-  if is_global && SizedType.(contains_complex sized_ty) && is_transformation
-  then Semantic_error.complex_transform loc |> error
+  if is_global && SizedType.(is_complex_type sized_ty) && is_transformation then
+    Semantic_error.complex_transform loc |> error
 
 and verify_transformed_param_ty loc cf is_global unsized_ty =
   if
     is_global
     && (cf.current_block = Param || cf.current_block = TParam)
-    && UnsizedType.is_int_type unsized_ty
+    && UnsizedType.contains_int unsized_ty
   then Semantic_error.transformed_params_int loc |> error
 
 and check_sizedtype cf tenv sizedty =
@@ -1393,6 +1477,9 @@ and check_sizedtype cf tenv sizedty =
       let tst = check_sizedtype cf tenv st in
       let te = check e "Array sizes" in
       SArray (tst, te)
+  | STuple subtypes ->
+      let typed_subtypes = List.map ~f:(check_sizedtype cf tenv) subtypes in
+      STuple typed_subtypes
 
 and check_var_decl_initial_value loc cf tenv {identifier; initial_value} =
   match initial_value with
@@ -1400,6 +1487,9 @@ and check_var_decl_initial_value loc cf tenv {identifier; initial_value} =
       let lhs =
         check_lvalue cf tenv {lval= LVariable identifier; lmeta= {loc}} in
       let rhs = check_expression cf tenv e in
+      let rhs =
+        (* Hack: need the RHS to be promoted correctly to vars if needed *)
+        {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}} in
       match
         SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
           rhs.emeta.type_
@@ -1431,6 +1521,12 @@ and check_transformation cf tenv ut trans =
   | CholeskyCov -> CholeskyCov
   | Correlation -> Correlation
   | Covariance -> Covariance
+  | TupleTransformation tms ->
+      let typesTrans = Utils.zip_utuple_trans_exn ut tms in
+      let tes =
+        List.map typesTrans ~f:(fun (ut, tm) ->
+            check_transformation cf tenv ut tm ) in
+      TupleTransformation tes
 
 and check_var_decl loc cf tenv sized_ty trans
     (variables : untyped_expression Ast.variable list) is_global =
@@ -1522,14 +1618,14 @@ and verify_pdf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpdf" then
     let rt = List.hd arg_tys |> Option.map ~f:snd in
     match rt with
-    | Some rt when not (UnsizedType.is_int_type rt) -> ()
+    | Some rt when not (UnsizedType.is_discrete_type rt) -> ()
     | _ -> Semantic_error.prob_density_non_real_variate loc rt |> error
 
 and verify_pmf_fundef_first_arg_ty loc id arg_tys =
   if String.is_suffix id.name ~suffix:"_lpmf" then
     let rt = List.hd arg_tys |> Option.map ~f:snd in
     match rt with
-    | Some rt when UnsizedType.is_int_type rt -> ()
+    | Some rt when UnsizedType.is_discrete_type rt -> ()
     | _ -> Semantic_error.prob_mass_non_int_variate loc rt |> error
 
 and verify_fundef_distinct_arg_ids loc arg_names =
@@ -1580,7 +1676,11 @@ and check_fundef loc cf tenv return_ty id args body =
     List.map
       ~f:(function
         | UnsizedType.DataOnly, ut -> (Env.Data, ut)
-        | AutoDiffable, ut -> (Param, ut) )
+        | AutoDiffable, ut -> (Param, ut)
+        | TupleAD _, _ ->
+            Common.FatalError.fatal_error_msg
+              [%message "TupleAD in function definition, this is unexpected!"]
+        )
       arg_types in
   let tenv_body =
     List.fold2_exn arg_names arg_types_internal ~init:tenv

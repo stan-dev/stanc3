@@ -36,6 +36,10 @@ let constraint_to_string = function
   | LowerUpper _ -> Some "lub"
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
   | Identity -> None
+  | TupleTransformation _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Cannot generate tuple transformation directly; should not be called"]
 
 let functor_suffix = "_functor__"
 let reduce_sum_functor_suffix = "_rsfunctor__"
@@ -55,7 +59,7 @@ let functor_suffix_select = function
   | ReduceSum -> reduce_sum_functor_suffix
   | FixedArgs -> functor_suffix
 
-(* retun true if the type of the expression
+(* return true if the type of the expression
    is integer, real, or complex (e.g. not a container) *)
 let is_scalar e =
   match Expr.Typed.type_of e with UInt | UReal | UComplex -> true | _ -> false
@@ -110,6 +114,12 @@ let rec local_scalar ut ad =
   | UnsizedType.UArray t, _ -> local_scalar t ad
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim ut
   | _, AutoDiffable -> Types.local_scalar
+  | _, TupleAD _ ->
+      Common.FatalError.fatal_error_msg
+        [%message
+          "Attempting to make a local scalar tuple"
+            (ut : UnsizedType.t)
+            (ad : UnsizedType.autodifftype)]
 
 let minus_one e =
   let open Expression_syntax in
@@ -119,15 +129,17 @@ let plus_one e =
   let open Expression_syntax in
   Parens (e + Literal "1")
 
-let rec lower_type (t : UnsizedType.t) (scalar : type_) : type_ =
+let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
+    (scalar : type_) : type_ =
   match t with
   | UInt -> Int
   | UReal -> scalar
   | UComplex -> Types.complex scalar
   | UArray t -> StdVector (lower_type t scalar)
-  | UVector -> Types.vector scalar
-  | URowVector -> Types.row_vector scalar
-  | UMatrix -> Types.matrix scalar
+  | UTuple ts -> Tuple (List.map ~f:(fun t -> lower_type t scalar) ts)
+  | UVector -> Types.vector ~mem_pattern scalar
+  | URowVector -> Types.row_vector ~mem_pattern scalar
+  | UMatrix -> Types.matrix ~mem_pattern scalar
   | UComplexVector -> Types.vector (Types.complex scalar)
   | UComplexRowVector -> Types.row_vector (Types.complex scalar)
   | UComplexMatrix -> Types.matrix (Types.complex scalar)
@@ -135,41 +147,41 @@ let rec lower_type (t : UnsizedType.t) (scalar : type_) : type_ =
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
 
-let lower_type_eigen_expr (t : UnsizedType.t) (scalar : type_) : type_ =
-  match t with
-  | UInt -> Int
-  | UReal | UMatrix | URowVector | UVector | UComplexVector | UComplexMatrix
-   |UComplexRowVector ->
-      scalar
-  | UComplex -> Types.complex scalar
-  | UArray t ->
-      (* Expressions are not accepted for arrays of Eigen::Matrix *)
-      StdVector (lower_type t scalar)
-  | UMathLibraryFunction | UFun _ ->
+let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
+  match (adtype, ut) with
+  | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
+      Tuple (List.map2_exn ~f:(lower_unsizedtype_local ~mem_pattern) ads ts)
+  | UnsizedType.TupleAD _, UnsizedType.UArray t ->
+      Types.std_vector (lower_unsizedtype_local ~mem_pattern adtype t)
+  | _, UnsizedType.UTuple _ | TupleAD _, _ ->
       Common.FatalError.fatal_error_msg
-        [%message "Function types not implemented"]
-
-let lower_unsizedtype_local adtype ut =
-  let s = local_scalar ut adtype in
-  lower_type ut s
+        [%message
+          "Tuple and Tuple AD type not matching!"
+            (ut : UnsizedType.t)
+            (adtype : UnsizedType.autodifftype)]
+  | _, _ ->
+      let s = local_scalar ut adtype in
+      lower_type ~mem_pattern ut s
 
 let rec lower_possibly_var_decl adtype ut mem_pattern =
-  let scalar = local_scalar ut adtype in
-  let var_decl p_ut =
-    if mem_pattern = Mem_pattern.SoA && adtype = UnsizedType.AutoDiffable then
-      TypeTrait
-        ( "stan::conditional_var_value_t"
-        , [scalar; lower_unsizedtype_local adtype p_ut] )
-    else lower_unsizedtype_local adtype p_ut in
-  match ut with
-  | UArray t -> Types.std_vector (lower_possibly_var_decl adtype t mem_pattern)
-  | UMatrix | UVector | URowVector | UComplexRowVector | UComplexVector
-   |UComplexMatrix ->
+  let var_decl p_ut = lower_unsizedtype_local ~mem_pattern adtype p_ut in
+  match (ut, adtype) with
+  | UnsizedType.UArray t, _ ->
+      Types.std_vector (lower_possibly_var_decl adtype t mem_pattern)
+  | ( ( UMatrix | UVector | URowVector | UComplexRowVector | UComplexVector
+      | UComplexMatrix )
+    , _ ) ->
       var_decl ut
-  | UReal | UInt | UComplex -> lower_unsizedtype_local adtype ut
-  | x ->
+  | (UReal | UInt | UComplex), _ -> lower_unsizedtype_local adtype ut
+  | UTuple t_lst, TupleAD ads ->
+      Tuple
+        (List.map2_exn
+           ~f:(fun ad t -> lower_possibly_var_decl ad t mem_pattern)
+           ads t_lst )
+  | x, ad ->
       Common.FatalError.fatal_error_msg
-        [%message (x : UnsizedType.t) "not implemented yet"]
+        [%message
+          "Cannot lower" (x : UnsizedType.t) (ad : UnsizedType.autodifftype)]
 
 let rec lower_logical_op op e1 e2 =
   let prim e = Exprs.fun_call "stan::math::primitive_value" [lower_expr e] in
@@ -194,7 +206,7 @@ and read_data ut es =
     | UnsizedType.UArray UInt -> "vals_i"
     | UArray UReal -> "vals_r"
     | UArray UComplex -> "vals_c"
-    | UInt | UReal | UComplex | UVector | URowVector | UMatrix
+    | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UTuple _
      |UComplexMatrix | UComplexRowVector | UComplexVector | UArray _ | UFun _
      |UMathLibraryFunction ->
         Common.FatalError.fatal_error_msg
@@ -274,7 +286,9 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
               match List.exists ~f:is_autodiffable es with
               | true ->
                   Exprs.templated_fun_call (stan_namespace_qualify f)
-                    [lower_possibly_var_decl AutoDiffable t mem_pattern]
+                    [ lower_possibly_var_decl
+                        (UnsizedType.fill_adtype_for_type AutoDiffable t)
+                        t mem_pattern ]
                     (lower_exprs es)
               | false ->
                   Exprs.fun_call (stan_namespace_qualify f) (lower_exprs es) )
@@ -386,6 +400,23 @@ and lower_user_defined_fun f suffix es =
 
 and lower_compiler_internal ad ut f es =
   let open Expression_syntax in
+  let gen_tuple_literal es : expr =
+    (* NB: This causes some inefficencies such as eagerly
+         evaluating eigen expressions and copying data vectors *)
+    let is_simple (e : Expr.Typed.t) =
+      match e.pattern with
+      | Var _ -> e.meta.adlevel <> DataOnly
+      | Lit _ -> true
+      | Promotion ({pattern= Var _ | Lit _; _}, _, _) -> is_scalar e
+      | _ -> false in
+    if List.for_all ~f:is_simple es then
+      fun_call "std::forward_as_tuple" (lower_exprs es)
+    else
+      Constructor
+        ( Tuple
+            (List.map es ~f:(fun {meta= {adlevel; type_; _}; _} ->
+                 lower_unsizedtype_local adlevel type_ ) )
+        , lower_exprs es ) in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =
@@ -446,6 +477,7 @@ and lower_compiler_internal ad ut f es =
   | FnDeepCopy ->
       lower_fun_app Fun_kind.FnPlain "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
+  | FnMakeTuple -> gen_tuple_literal es
   | _ ->
       lower_fun_app FnPlain (Internal_fun.to_string f) es Mem_pattern.AoS
         (Some UnsizedType.Void)
@@ -464,24 +496,23 @@ and lower_indexed e indices pretty =
     ( [lower_expr e; Exprs.literal_string pretty]
     @ List.map ~f:lower_index indices )
 
-and lower_indexed_simple e idcs =
+and lower_indexed_simple (e : expr) idcs =
   let idx_minus_one = function
-    | Index.Single e -> minus_one (lower_expr e)
+    | Index.Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->
         Common.FatalError.fatal_error_msg
           [%message
             "No non-Single indices allowed"
-              (e : Expr.Typed.t)
-              (idcs : Expr.Typed.t Index.t list)
-              (Expr.Typed.loc_of e : Location_span.t)]
+              (e : expr)
+              (idcs : Expr.Typed.t Index.t list)]
     | All ->
         Common.FatalError.fatal_error_msg
           [%message
             "No non-Single indices allowed"
-              (e : Expr.Typed.t)
+              (e : expr)
               (idcs : Expr.Typed.t Index.t list)] in
-  List.fold idcs ~init:(lower_expr e) ~f:(fun e id ->
-      Index (e, idx_minus_one id) )
+  List.fold idcs ~init:e ~f:(fun e id ->
+      Index (e, idx_minus_one (Index.map lower_expr id)) )
 
 and lower_expr ?(promote_reals = false)
     (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
@@ -536,13 +567,18 @@ and lower_expr ?(promote_reals = false)
   | Indexed (e, []) -> lower_expr e
   | Indexed (e, idx) -> (
     match e.pattern with
-    | FunApp (CompilerInternal FnReadData, _) -> lower_indexed_simple e idx
+    | FunApp (CompilerInternal FnReadData, _) ->
+        lower_indexed_simple (lower_expr e) idx
     | _
       when List.for_all ~f:dont_need_range_check idx
            && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
       ->
-        lower_indexed_simple e idx
+        lower_indexed_simple (lower_expr e) idx
     | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e) )
+  | TupleProjection (t, ix) ->
+      templated_fun_call "std::get"
+        [TypeLiteral (string_of_int (ix - 1))]
+        [lower_expr t]
 
 and lower_exprs ?(promote_reals = false) =
   List.map ~f:(lower_expr ~promote_reals)

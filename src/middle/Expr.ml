@@ -16,6 +16,7 @@ module Fixed = struct
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
       | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
+      | TupleProjection of 'a * int
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e ppf = function
@@ -28,7 +29,7 @@ module Fixed = struct
             (Option.value_exn (Operator.of_string_opt name))
             pp_e rhs
       | FunApp (fun_kind, args) ->
-          Fmt.pf ppf "%a(%a)" (Fun_kind.pp pp_e) fun_kind
+          Fmt.pf ppf "%a(@[<hov>%a@])" (Fun_kind.pp pp_e) fun_kind
             Fmt.(list pp_e ~sep:Fmt.comma)
             args
       | TernaryIf (pred, texpr, fexpr) ->
@@ -38,10 +39,12 @@ module Fixed = struct
             ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
             indices
+      | TupleProjection (expr, ix) -> Fmt.pf ppf "@[%a.%d@]" pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
-      | Promotion (from, ut, _) ->
-          Fmt.pf ppf "promote(@[%a,@ %a@])" pp_e from UnsizedType.pp ut
+      | Promotion (from, ut, ad) ->
+          Fmt.pf ppf "promote(@[<hov>%a,@ %a,@ %a@])" pp_e from UnsizedType.pp
+            ut UnsizedType.pp_tuple_autodifftype ad
 
     include Foldable.Make (struct
       type nonrec 'a t = 'a t
@@ -145,6 +148,14 @@ module Helpers = struct
     { Fixed.meta= {Typed.Meta.empty with type_= UArray type_}
     ; pattern= FunApp (CompilerInternal FnMakeArray, l) }
 
+  let tuple_expr l =
+    let type_ = UnsizedType.UTuple (List.map ~f:Typed.type_of l) in
+    { Fixed.meta=
+        { Typed.Meta.empty with
+          type_
+        ; adlevel= TupleAD (List.map ~f:Typed.adlevel_of l) }
+    ; pattern= FunApp (CompilerInternal FnMakeTuple, l) }
+
   let try_unpack e =
     match e.Fixed.pattern with
     | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l) -> Some l
@@ -207,12 +218,29 @@ module Helpers = struct
     let meta = Typed.Meta.{e.meta with type_= mtype}
     and pattern =
       match e.pattern with
-      | Var _ -> Fixed.Pattern.Indexed (e, [i])
+      | Var _ | TupleProjection _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
-          (* These should go away with Ryan's LHS *)
           Common.FatalError.fatal_error_msg
             [%message "Expected Var or Indexed but found " (e : Typed.t)] in
+    Fixed.{meta; pattern}
+
+  (** [add_tuple_index expression index] returns an expression that (additionally)
+      projects into the input [expression] by the tuple index [index].
+      This will raise an error at runtime if [expression] does not have a tuple type.
+    *)
+  let add_tuple_index e i =
+    let mtype =
+      match Typed.(type_of e) with
+      | UTuple ts -> List.nth_exn ts (i - 1)
+      | t ->
+          Common.FatalError.fatal_error_msg
+            [%message
+              "Internal error: Attempted to apply tuple index to a non-tuple \
+               type:"
+                (t : UnsizedType.t)] in
+    let meta = Typed.Meta.{e.meta with type_= mtype} in
+    let pattern = Fixed.Pattern.TupleProjection (e, i) in
     Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)

@@ -11,7 +11,25 @@
     "g": { "type": "real", "dimensions": 1 },
     "h": { "type": "real", "dimensions": 2 },
     "i": { "type": "real", "dimensions": 3 },
-    "j": { "type": "int", "dimensions": 3 }
+    "j": { "type": "int", "dimensions": 3 },
+    "cplx": { "type": "complex", "dimensions": 1 },
+    "cplx_vec": { "type": "complex", "dimensions": 1 },
+    "cplx_row": { "type": "complex", "dimensions": 1 },
+    "cplx_mat": { "type": "complex", "dimensions": 2 },
+    "tuples": {
+      "type": [
+        { "type": "int", "dimensions": 0 },
+        { "type": "real", "dimensions": 0 },
+        {
+          "type": [
+            { "type": "real", "dimensions": 0 },
+            { "type": "int", "dimensions": 1 }
+          ],
+          "dimensions": 0
+        }
+      ],
+      "dimensions": 1
+    }
   },
   "parameters": {
     "l": { "type": "real", "dimensions": 1 },

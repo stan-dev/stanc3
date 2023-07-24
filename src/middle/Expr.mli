@@ -16,6 +16,7 @@ module Fixed : sig
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
       | Promotion of 'a * UnsizedType.t * UnsizedType.autodifftype
+      | TupleProjection of 'a * int
     [@@deriving sexp, hash, compare]
 
     include Pattern.S with type 'a t := 'a t
@@ -62,6 +63,7 @@ module Helpers : sig
   val complex_vector : (float * float) list -> Typed.t
   val complex_matrix_from_rows : Typed.t list -> Typed.t
   val array_expr : Typed.t list -> Typed.t
+  val tuple_expr : Typed.t list -> Typed.t
   val try_unpack : Typed.t -> Typed.t list option
   val loop_bottom : Typed.t
 
@@ -73,5 +75,6 @@ module Helpers : sig
 
   val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t
+  val add_tuple_index : Typed.t -> int -> Typed.t
   val collect_indices : 'a Fixed.t -> 'a Fixed.t Index.t list
 end

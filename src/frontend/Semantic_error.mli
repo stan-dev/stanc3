@@ -42,6 +42,9 @@ val returning_fn_expected_undeclared_dist_suffix_found :
 val returning_fn_expected_wrong_dist_suffix_found :
   Location_span.t -> string * string -> t
 
+val illtyped_reduce_sum_not_array : Location_span.t -> UnsizedType.t -> t
+val illtyped_reduce_sum_slice : Location_span.t -> UnsizedType.t -> t
+
 val illtyped_reduce_sum :
      Location_span.t
   -> string
@@ -85,6 +88,8 @@ val illtyped_binary_op :
 
 val illtyped_prefix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
 val illtyped_postfix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
+val tuple_index_invalid_index : Location_span.t -> int -> int -> t
+val tuple_index_not_tuple : Location_span.t -> UnsizedType.t -> t
 val not_indexable : Location_span.t -> UnsizedType.t -> int -> t
 val ident_is_keyword : Location_span.t -> string -> t
 val ident_is_model_name : Location_span.t -> string -> t
@@ -100,6 +105,7 @@ val conditional_notation_not_allowed : Location_span.t -> t
 val conditioning_required : Location_span.t -> t
 val not_printable : Location_span.t -> t
 val empty_array : Location_span.t -> t
+val empty_tuple : Location_span.t -> t
 val bad_int_literal : Location_span.t -> t
 val cannot_assign_to_read_only : Location_span.t -> string -> t
 val cannot_assign_to_global : Location_span.t -> string -> t

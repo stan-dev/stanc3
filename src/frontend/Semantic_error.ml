@@ -16,6 +16,8 @@ module TypeError = struct
     | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
     | IllTypedAssignment of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
+    | IllTypedReduceSumNotArray of UnsizedType.t
+    | IllTypedReduceSumSlice of UnsizedType.t
     | IllTypedReduceSum of
         string
         * UnsizedType.t list
@@ -48,6 +50,8 @@ module TypeError = struct
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
+    | TupleIndexInvalidIndex of int * int
+    | TupleIndexNotTuple of UnsizedType.t
     | NotIndexable of UnsizedType.t * int
 
   let pp ppf = function
@@ -120,6 +124,19 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
+    | IllTypedReduceSumNotArray ty ->
+        Fmt.pf ppf
+          "The second argument to reduce_sum must be an array but found %a"
+          UnsizedType.pp ty
+    | IllTypedReduceSumSlice ty ->
+        let rec pp ppf = function
+          | [] -> Fmt.pf ppf "<error>"
+          | [t] -> UnsizedType.pp ppf t
+          | [t1; t2] ->
+              Fmt.pf ppf "%a, or %a" UnsizedType.pp t1 UnsizedType.pp t2
+          | t :: ts -> Fmt.pf ppf "%a, %a" UnsizedType.pp t pp ts in
+        Fmt.pf ppf "The inner type in reduce_sum array must be %a but found %a"
+          pp Stan_math_signatures.reduce_sum_slice_types UnsizedType.pp ty
     | IllTypedReduceSum (name, arg_tys, expected_args, error) ->
         SignatureMismatch.pp_signature_mismatch ppf
           (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
@@ -148,6 +165,17 @@ module TypeError = struct
           arg_tys
           (Fmt.list ~sep:Fmt.cut pp_sig)
           signatures
+    | TupleIndexInvalidIndex (ix_max, ix) ->
+        Fmt.pf ppf
+          "Tried to access index %d for a tuple of length %d.@ Only indices \
+           indices between 1 and %d are valid."
+          ix ix_max ix_max
+    | TupleIndexNotTuple ut ->
+        Fmt.pf ppf "Tried to index a non-tuple type. Expression has type %a."
+          UnsizedType.pp ut
+    | NotIndexable (ut, _) when UnsizedType.is_scalar_type ut ->
+        Fmt.pf ppf "Tried to index a scalar type. Expression has type %a."
+          UnsizedType.pp ut
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
           "Too many indexes, expression dimensions=%d, indexes found=%d."
@@ -286,6 +314,7 @@ module ExpressionError = struct
     | ConditioningRequired
     | NotPrintable
     | EmptyArray
+    | EmptyTuple
     | IntTooLarge
 
   let pp ppf = function
@@ -322,6 +351,8 @@ module ExpressionError = struct
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
+    | EmptyTuple ->
+        Fmt.pf ppf "Tuple expressions must contain at least one element."
     | IntTooLarge ->
         Fmt.pf ppf "Integer literal cannot be larger than 2_147_483_647."
 end
@@ -533,6 +564,12 @@ let illtyped_ternary_if loc predt lt rt =
 let returning_fn_expected_nonreturning_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
 
+let illtyped_reduce_sum_not_array loc ty =
+  TypeError (loc, TypeError.IllTypedReduceSumNotArray ty)
+
+let illtyped_reduce_sum_slice loc ty =
+  TypeError (loc, TypeError.IllTypedReduceSumSlice ty)
+
 let illtyped_reduce_sum loc name arg_tys args error =
   TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args, error))
 
@@ -583,6 +620,12 @@ let illtyped_postfix_op loc op ut =
 let not_indexable loc ut nidcs =
   TypeError (loc, TypeError.NotIndexable (ut, nidcs))
 
+let tuple_index_invalid_index loc ix_max ix =
+  TypeError (loc, TypeError.TupleIndexInvalidIndex (ix_max, ix))
+
+let tuple_index_not_tuple loc ut =
+  TypeError (loc, TypeError.TupleIndexNotTuple ut)
+
 let ident_is_keyword loc name =
   IdentifierError (loc, IdentifierError.IsKeyword name)
 
@@ -620,6 +663,7 @@ let conditioning_required loc =
 
 let not_printable loc = ExpressionError (loc, ExpressionError.NotPrintable)
 let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
+let empty_tuple loc = ExpressionError (loc, ExpressionError.EmptyTuple)
 let bad_int_literal loc = ExpressionError (loc, ExpressionError.IntTooLarge)
 
 let cannot_assign_to_read_only loc name =

@@ -25,7 +25,7 @@ let extract_factors_statement stmt =
   | NRFunApp (CompilerInternal FnReject, _) -> [Reject]
   | NRFunApp ((UserDefined (s, FnTarget) | StanLib (s, FnTarget, _)), args) ->
       [LPFunction (s, args)]
-  | Assignment (_, _)
+  | Assignment (_, _, _)
    |NRFunApp (_, _)
    |Break | Continue | Return _ | Skip
    |IfElse (_, _, _)

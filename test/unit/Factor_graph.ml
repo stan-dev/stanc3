@@ -122,8 +122,12 @@ let%expect_test "Factor graph complex example" =
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var b))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
      10)
     ((VVar a) (VVar b)))
@@ -132,10 +136,18 @@ let%expect_test "Factor graph complex example" =
         (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
          (((pattern (Var b))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Lit Int 0))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
      9)
     ((VVar b)))
@@ -146,8 +158,12 @@ let%expect_test "Factor graph complex example" =
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var x))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
      17)
     ((VVar a) (VVar c)))
@@ -181,8 +197,12 @@ let%expect_test "Factor graph complex example" =
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern (Var b))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
       10)
      ((TargetTerm
@@ -192,8 +212,12 @@ let%expect_test "Factor graph complex example" =
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern (Var x))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
       17)))
    ((VVar b)
@@ -213,8 +237,12 @@ let%expect_test "Factor graph complex example" =
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern (Var b))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
       10)
      ((TargetTerm
@@ -222,10 +250,18 @@ let%expect_test "Factor graph complex example" =
          (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
           (((pattern (Var b))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-           ((pattern (Lit Int 0))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 0))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
       9)
      ((TargetTerm
@@ -256,8 +292,12 @@ let%expect_test "Factor graph complex example" =
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
            ((pattern (Var x))
             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           ((pattern
+             (Promotion
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              UReal DataOnly))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
       17)
      ((TargetTerm
@@ -354,10 +394,18 @@ let%expect_test "Priors complex example" =
         (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
          (((pattern (Var a))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Lit Int 0))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 0))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
      9)
     ((TargetTerm
@@ -367,8 +415,12 @@ let%expect_test "Priors complex example" =
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var a))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
      14)
     ((TargetTerm
@@ -378,8 +430,12 @@ let%expect_test "Priors complex example" =
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var a))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
      15))))
  ((VVar b)
@@ -390,8 +446,12 @@ let%expect_test "Priors complex example" =
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var a))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
      10)
     ((TargetTerm
@@ -401,8 +461,12 @@ let%expect_test "Priors complex example" =
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var b))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          ((pattern
+            (Promotion
+             ((pattern (Lit Int 1))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             UReal DataOnly))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
      13))))
  ((VVar c) (())) ((VVar d) (())) ((VVar e) (())) ((VVar f) (())))

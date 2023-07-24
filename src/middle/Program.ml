@@ -31,6 +31,13 @@ type ('a, 'b, 'm) t =
   ; input_vars: (string * 'm * 'a SizedType.t) list
   ; prepare_data: 'b list (* data & transformed data decls and statements *)
   ; log_prob: 'b list (*assumes data & params are in scope and ready*)
+  ; reverse_mode_log_prob: 'b list
+        (* assumes data & params ready & in scope.
+           A copy of log_prob but with optimizations which are specific
+           to reverse-mode autodiff. This is used in the C++ backend,
+           but can be ignored if not needed. It is initialized
+            to [[]] in [Ast_to_Mir], set it equal to log_prob
+           before calling into the optimization suite if desired. *)
   ; generate_quantities: 'b list
         (* assumes data & params ready & in scope*)
         (* NOTE: the following two items are really backend-specific,
@@ -82,6 +89,9 @@ let pp_prepare_data pp_s ppf prepare_data =
 
 let pp_log_prob pp_s ppf log_prob = pp_block "log_prob" pp_s ppf log_prob
 
+let pp_reverse_mode_log_prob pp_s ppf log_prob =
+  pp_block "rev_log_prob" pp_s ppf log_prob
+
 let pp_generate_quantities pp_s ppf generate_quantities =
   pp_block "generate_quantities" pp_s ppf generate_quantities
 
@@ -90,8 +100,9 @@ let pp_transform_inits pp_s ppf transform_inits =
 
 let pp_output_var pp_e ppf
     (name, _, {out_unconstrained_st; out_constrained_st; out_block; _}) =
-  Fmt.pf ppf "@[<h>%a %a %s; //%a@]" pp_io_block out_block (SizedType.pp pp_e)
-    out_constrained_st name (SizedType.pp pp_e) out_unconstrained_st
+  Fmt.pf ppf "@[<hov 2>%a %a %s;@ //%a@]" pp_io_block out_block
+    (SizedType.pp pp_e) out_constrained_st name (SizedType.pp pp_e)
+    out_unconstrained_st
 
 let pp_input_var pp_e ppf (name, _, sized_ty) =
   Fmt.pf ppf "@[<h>%a %s;@]" (SizedType.pp pp_e) sized_ty name
@@ -107,6 +118,7 @@ let pp pp_e pp_s ppf
     ; input_vars
     ; prepare_data
     ; log_prob
+    ; reverse_mode_log_prob
     ; generate_quantities
     ; transform_inits
     ; output_vars
@@ -119,6 +131,8 @@ let pp pp_e pp_s ppf
   pp_prepare_data pp_s ppf prepare_data ;
   Fmt.cut ppf () ;
   pp_log_prob pp_s ppf log_prob ;
+  Fmt.cut ppf () ;
+  pp_reverse_mode_log_prob pp_s ppf reverse_mode_log_prob ;
   Fmt.cut ppf () ;
   pp_generate_quantities pp_s ppf generate_quantities ;
   Fmt.cut ppf () ;

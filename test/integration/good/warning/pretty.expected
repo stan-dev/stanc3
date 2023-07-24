@@ -79,7 +79,7 @@ model {
 
 Warning in 'fun_log_forward_decl.stan', line 6, column 7: Functions do not
     need to be declared before definition; all user defined function names
-    are always in scope regardless of defintion order.
+    are always in scope regardless of definition order.
   $ ../../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
@@ -99,7 +99,7 @@ model {
 
 Warning in 'functions-fwd-ref.stan', line 3, column 6: Functions do not need
     to be declared before definition; all user defined function names are
-    always in scope regardless of defintion order.
+    always in scope regardless of definition order.
   $ ../../../../../install/default/bin/stanc --auto-format int_div_user.stan
 data {
   array[4] int a;
@@ -559,10 +559,10 @@ transformed data {
 
 Warning in 'overloaded_forward_decl.stan', line 2, column 6: Functions do not
     need to be declared before definition; all user defined function names
-    are always in scope regardless of defintion order.
+    are always in scope regardless of definition order.
 Warning in 'overloaded_forward_decl.stan', line 3, column 6: Functions do not
     need to be declared before definition; all user defined function names
-    are always in scope regardless of defintion order.
+    are always in scope regardless of definition order.
   $ ../../../../../install/default/bin/stanc --auto-format unreachable_statement.stan
 functions {
   void foo(real x) {

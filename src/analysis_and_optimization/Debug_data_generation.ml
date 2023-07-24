@@ -257,6 +257,11 @@ let rec gen_array m st n t =
       Expr.Helpers.array_expr (gen_ul_bounded m (generate_value m st) e1 e2)
   | _ -> Expr.Helpers.array_expr (repeat_th n elt)
 
+and gen_tuple m st t =
+  Expr.Helpers.tuple_expr
+    ( Utils.(zip_stuple_trans_exn st (tuple_trans_exn t))
+    |> List.map ~f:(fun (x, y) -> generate_value m x y) )
+
 and generate_value m st t =
   match st with
   | SizedType.SInt -> Expr.Helpers.int (gen_num_int m t)
@@ -271,6 +276,7 @@ and generate_value m st t =
   | SComplexMatrix (e1, e2) ->
       gen_complex_matrix (unwrap_int_exn m e1) (unwrap_int_exn m e2)
   | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
+  | STuple _ -> gen_tuple m st t
 
 let generate_expressions input data =
   List.fold data ~init:([], input)
@@ -318,6 +324,13 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
         try_map
           (create_expr UComplexRowVector)
           l Expr.Helpers.complex_matrix_from_rows
+    | `Assoc l, UTuple ts ->
+        l
+        |> List.sort ~compare:(fun (x, _) (y, _) ->
+               Int.compare (int_of_string x) (int_of_string y) )
+        |> List.map2_exn ~f:(fun typ_ (_, json) -> create_expr typ_ json) ts
+        |> Option.all
+        |> Option.map ~f:(fun l -> Expr.Helpers.tuple_expr l)
     | _ -> None in
   let map =
     match json with
@@ -339,6 +352,9 @@ let generate_json_entries (name, expr) : string * t =
     | FunApp (CompilerInternal (FnMakeRowVec | FnMakeArray), l)
      |FunApp (StanLib ("to_complex", _, _), l) ->
         `List (List.map ~f:expr_to_json l)
+    | FunApp (CompilerInternal FnMakeTuple, l) ->
+        `Assoc
+          (List.mapi ~f:(fun i t -> (string_of_int (i + 1), expr_to_json t)) l)
     | FunApp (StanLib (transpose, _, _), [e])
       when String.equal transpose (Operator.to_string Transpose) ->
         expr_to_json e
