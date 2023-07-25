@@ -1065,6 +1065,9 @@ let rec check_lvalue cf tenv = function
       {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
 
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
+  (* match assign_lhs with
+      | LTuplePacking -> (*...*)
+     | other -> *)
   let assign_id = Ast.id_of_lvalue assign_lhs in
   let lhs = check_lvalue cf tenv assign_lhs in
   let rhs = check_expression cf tenv assign_rhs in

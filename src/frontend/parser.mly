@@ -575,6 +575,10 @@ lhs:
        {expr=Variable id
        ;emeta = {loc=id.id_loc}}
     }
+  | LPAREN head=lhs COMMA pack=separated_nonempty_list(COMMA, lhs) RPAREN
+    { grammar_logger "lhs_paren" ;
+      build_expr (TupleExpr (head::pack)) $loc
+    }
   | v=indexed(lhs) { v }
   | l=lhs ix_str=DOTNUMERAL
     { grammar_logger "lhs_tuple_index" ;
@@ -609,6 +613,8 @@ non_lhs:
     { grammar_logger "postfix_expr" ; build_expr (PostfixOp (e, op)) $loc}
   | e=indexed(non_lhs)
     { e }
+  | LPAREN x_head=non_lhs COMMA xs=separated_nonempty_list(COMMA, non_lhs) RPAREN
+    {  grammar_logger "tuple_expression" ; build_expr (TupleExpr (x_head::xs)) $loc  }
   | e=common_expression
     { grammar_logger "common_expr" ; build_expr e $loc }
 
@@ -666,8 +672,6 @@ common_expression:
     {  grammar_logger ("imagnumeral " ^ z) ; ImagNumeral (String.drop_suffix z 1) }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
-   | LPAREN x_head=expression COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
-    {  grammar_logger "tuple_expression" ; TupleExpr (x_head::xs)  }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
     {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
