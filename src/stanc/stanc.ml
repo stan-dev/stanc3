@@ -375,7 +375,7 @@ let use_file filename =
         [%sexp (opt_mir : Middle.Program.Typed.t)] ;
     if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt_mir ;
     if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
-    let cpp = Lower_program.lower_program opt_mir in
+    let cpp = Lower_program.lower_program ?printed_filename opt_mir in
     if !dump_lir then
       Sexp.pp_hum Format.std_formatter [%sexp (cpp : Cpp.program)] ;
     let cpp_str = Fmt.(to_to_string Cpp.Printing.pp_program) cpp in

@@ -131,7 +131,10 @@ let stan2cpp model_name model_string is_flag_set flag_val =
         if is_flag_set "debug-transformed-mir-pretty" then
           r.return
             (Result.Ok (Fmt.str "%a" Program.Typed.pp tx_mir), warnings, []) ;
-        let cpp = Lower_program.lower_program opt_mir in
+        let cpp =
+          Lower_program.lower_program
+            ?printed_filename:(flag_val "filename-in-msg")
+            opt_mir in
         if is_flag_set "debug-lir" then
           r.return
             ( Result.Ok (Sexp.to_string_hum [%sexp (cpp : Cpp.program)])
