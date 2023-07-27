@@ -885,12 +885,13 @@ let new_model_boilerplate prog_name =
       (IfNDef ("USING_R", [GlobalComment "Boilerplate"; new_model; profile_data])
       ) ]
 
-let lower_program (p : Program.Typed.t) : Cpp.program =
+let lower_program ?printed_filename (p : Program.Typed.t) : Cpp.program =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s, map_rect_calls = Numbering.prepare_prog p in
   let model_namespace_str = namespace p in
   let model_contents =
-    usings @ Numbering.gen_globals s
+    usings
+    @ Numbering.gen_globals ?printed_filename s
     @ collect_functors_functions p
     @ if !standalone_functions then [] else [lower_model p] in
   let model_namespace = Namespace (model_namespace_str, model_contents) in

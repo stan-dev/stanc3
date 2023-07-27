@@ -7,8 +7,8 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 3> locations_array__ =
   {" (found before start of program)",
-  " (in 'filename_good.stan', line 2, column 4 to column 11)",
-  " (in 'filename_good.stan', line 3, column 4 to column 19)"};
+  " (in 'foo.stan', line 2, column 4 to column 11)",
+  " (in 'foo.stan', line 3, column 4 to column 19)"};
 class filename_good_model final : public model_base_crtp<filename_good_model> {
  private:
   double p;
