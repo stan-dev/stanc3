@@ -14,11 +14,11 @@ let to_string ?printed_filename {begin_loc; end_loc} =
     match begin_loc.included_from with
     | None ->
         " to "
-        ^ Location.to_string
+        ^ Location.to_string ?printed_filename
             ~print_file:(not @@ String.equal begin_loc.filename end_loc.filename)
             ~print_line:(begin_loc.line_num <> end_loc.line_num)
             end_loc
-    | Some _ -> "" in
+    | _ -> "" in
   Location.to_string ?printed_filename begin_loc ^ end_loc_str
 
 module Comparator = Comparator.Make (struct
