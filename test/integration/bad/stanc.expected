@@ -1584,6 +1584,28 @@ Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
    -------------------------------------------------
 
 Ill-typed arguments to '~' statement. No distribution 'multiply' was found.
+  $ ../../../../install/default/bin/stanc noninfinite_loop_return1.stan
+Semantic error in 'noninfinite_loop_return1.stan', line 2, column 2 to line 15, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    int bin_search(real x, int min_val, int max_val) {
+           ^
+     3:      if (min_val > x || max_val < x)
+     4:        reject("require min < x < max, found min = ", min_val, "; max = ",
+   -------------------------------------------------
+
+Function bodies must contain a return statement of correct type in every branch.
+  $ ../../../../install/default/bin/stanc noninfinite_loop_return2.stan
+Semantic error in 'noninfinite_loop_return2.stan', line 2, column 2 to line 15, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    int bin_search(real x, int min_val, int max_val) {
+           ^
+     3:      if (min_val > x || max_val < x)
+     4:        reject("require min < x < max, found min = ", min_val, "; max = ",
+   -------------------------------------------------
+
+Function bodies must contain a return statement of correct type in every branch.
   $ ../../../../install/default/bin/stanc oneline-error.stan
 Syntax error in 'oneline-error.stan', line 1, column 20 to column 21, parsing error:
    -------------------------------------------------

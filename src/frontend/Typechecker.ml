@@ -1362,14 +1362,24 @@ let rec check_if_then_else loc cf tenv pred_e s_true s_false_opt =
   mk_typed_statement ~stmt ~return_type ~loc
 
 and check_while loc cf tenv cond_e loop_body =
+  let hardcoded_true e =
+    (* heuristic for "will this loop forever" *)
+    match e.expr with
+    | Ast.IntNumeral s -> String.count s ~f:(fun c -> c > '0' && c <= '9') >= 1
+    | _ -> false in
   let _, ts =
-    check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body
-  and te =
+    check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body in
+  let te =
     check_expression_of_int_or_real_type cf tenv cond_e
       "Condition in while-loop" in
-  mk_typed_statement
-    ~stmt:(While (te, ts))
-    ~return_type:ts.smeta.return_type ~loc
+  let return_type =
+    match (hardcoded_true te, ts.smeta.return_type) with
+    | true, Incomplete r ->
+        (* if the only way out of the loop is a return,
+            we can consider that like a return statement *)
+        Complete r
+    | _, rt -> rt in
+  mk_typed_statement ~stmt:(While (te, ts)) ~return_type ~loc
 
 and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
   let te1 =
