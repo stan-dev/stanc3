@@ -1606,6 +1606,17 @@ Semantic error in 'noninfinite_loop_return2.stan', line 2, column 2 to line 15, 
    -------------------------------------------------
 
 Function bodies must contain a return statement of correct type in every branch.
+  $ ../../../../install/default/bin/stanc noninfinite_loop_return3.stan
+Semantic error in 'noninfinite_loop_return3.stan', line 2, column 2 to line 8, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real not_endless() {
+           ^
+     3:      while (1) {
+     4:        if (0) return 1.0;
+   -------------------------------------------------
+
+Function bodies must contain a return statement of correct type in every branch.
   $ ../../../../install/default/bin/stanc oneline-error.stan
 Syntax error in 'oneline-error.stan', line 1, column 20 to column 21, parsing error:
    -------------------------------------------------
