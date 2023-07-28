@@ -16467,13 +16467,17 @@
          (((pattern
             (Return
              (((pattern
-                (TupleProjection
-                 ((pattern (Var x))
-                  (meta
-                   ((type_ (UTuple (UReal UReal))) (loc <opaque>)
-                    (adlevel (TupleAD (DataOnly DataOnly))))))
-                 1))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                (Promotion
+                 ((pattern
+                   (TupleProjection
+                    ((pattern (Var x))
+                     (meta
+                      ((type_ (UTuple (UReal UReal))) (loc <opaque>)
+                       (adlevel (TupleAD (DataOnly DataOnly))))))
+                    1))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))))
@@ -21641,8 +21645,12 @@
         (Block
          (((pattern
             (Return
-             (((pattern (Lit Int 0))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+             (((pattern
+                (Promotion
+                 ((pattern (Lit Int 0))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))))

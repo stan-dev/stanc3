@@ -5847,7 +5847,7 @@ sho(const T0__& t, const std::vector<T1__>& y, const std::vector<T2__>&
       "assigning variable dydt", stan::model::index_uni(1));
     current_statement__ = 599;
     stan::model::assign(dydt,
-      (-stan::model::rvalue(y, "y", stan::model::index_uni(1)) -
+      (-(stan::model::rvalue(y, "y", stan::model::index_uni(1))) -
       (stan::model::rvalue(theta, "theta", stan::model::index_uni(1)) *
       stan::model::rvalue(y, "y", stan::model::index_uni(2)))),
       "assigning variable dydt", stan::model::index_uni(2));
@@ -5998,7 +5998,7 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
     current_statement__ = 616;
     lp_accum__.add(stan::math::normal_lpdf<false>(u, 0, 1));
     current_statement__ = 617;
-    lp_accum__.add(stan::math::uniform_lpdf<propto__>(u, -100, 100));
+    lp_accum__.add(stan::math::uniform_lpdf<propto__>(u, -(100), 100));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -6372,7 +6372,8 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 723;
-    return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
+    return stan::math::promote_scalar<local_scalar_t__>(
+             (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -7104,13 +7105,14 @@ Eigen::Matrix<double,-1,-1> matfoo(std::ostream* pstream__) {
   try {
     current_statement__ = 769;
     return stan::math::to_matrix(
-             std::vector<Eigen::Matrix<double,1,-1>>{(Eigen::Matrix<double,1,-1>(10) <<
-                                                        1, 2, 3, 4, 5, 6, 7,
-                                                       8, 9, 10).finished(),
-               (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                                                 10).finished(),
-               (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                                                 10).finished()});
+             std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>{(Eigen::Matrix<local_scalar_t__,1,-1>(10) <<
+                                                                  1, 2, 3, 4,
+                                                                 5, 6, 7, 8,
+                                                                 9, 10).finished(),
+               (Eigen::Matrix<local_scalar_t__,1,-1>(10) << 1, 2, 3, 4, 5, 6,
+                                                           7, 8, 9, 10).finished(),
+               (Eigen::Matrix<local_scalar_t__,1,-1>(10) << 1, 2, 3, 4, 5, 6,
+                                                           7, 8, 9, 10).finished()});
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -7126,7 +7128,8 @@ Eigen::Matrix<double,-1,1> vecfoo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 771;
-    return (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10).finished();
+    return stan::math::promote_scalar<local_scalar_t__>(
+             (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9, 10).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -7463,7 +7466,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 199;
       J = context__.vals_r("J")[(1 - 1)];
       current_statement__ = 199;
-      stan::math::check_greater_or_equal(function__, "J", J, -2.0);
+      stan::math::check_greater_or_equal(function__, "J", J, -(2.0));
       current_statement__ = 199;
       stan::math::check_less_or_equal(function__, "J", J, 2.0);
       current_statement__ = 200;
@@ -9774,7 +9777,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 92;
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 91;
-        stan::model::assign(tp_vec, (-1.0 *
+        stan::model::assign(tp_vec, (-(1.0) *
           stan::model::rvalue(p_vec, "p_vec", stan::model::index_uni(i))),
           "assigning variable tp_vec", stan::model::index_uni(i));
       }
@@ -10291,7 +10294,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 92;
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 91;
-        stan::model::assign(tp_vec, (-1.0 *
+        stan::model::assign(tp_vec, (-(1.0) *
           stan::model::rvalue(p_vec, "p_vec", stan::model::index_uni(i))),
           "assigning variable tp_vec", stan::model::index_uni(i));
       }
@@ -10939,7 +10942,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 92;
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 91;
-        stan::model::assign(tp_vec, (-1.0 *
+        stan::model::assign(tp_vec, (-(1.0) *
           stan::model::rvalue(p_vec, "p_vec", stan::model::index_uni(i))),
           "assigning variable tp_vec", stan::model::index_uni(i));
       }
@@ -11284,7 +11287,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 128;
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 127;
-        stan::model::assign(gq_vec, (-1.0 *
+        stan::model::assign(gq_vec, (-(1.0) *
           stan::model::rvalue(p_vec, "p_vec", stan::model::index_uni(i))),
           "assigning variable gq_vec", stan::model::index_uni(i));
       }
@@ -13920,7 +13923,7 @@ sho(const T0__& t, const std::vector<T1__>& y, const std::vector<T2__>&
       "assigning variable dydt", stan::model::index_uni(1));
     current_statement__ = 142;
     stan::model::assign(dydt,
-      (-stan::model::rvalue(y, "y", stan::model::index_uni(1)) -
+      (-(stan::model::rvalue(y, "y", stan::model::index_uni(1))) -
       (stan::model::rvalue(theta, "theta", stan::model::index_uni(1)) *
       stan::model::rvalue(y, "y", stan::model::index_uni(2)))),
       "assigning variable dydt", stan::model::index_uni(2));
@@ -13978,7 +13981,8 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 147;
-    return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
+    return stan::math::promote_scalar<local_scalar_t__>(
+             (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -14007,7 +14011,8 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 149;
-    return (Eigen::Matrix<double,-1,1>(3) << 4, 5, 6).finished();
+    return stan::math::promote_scalar<local_scalar_t__>(
+             (Eigen::Matrix<double,-1,1>(3) << 4, 5, 6).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -22185,7 +22190,7 @@ dz_dt(const T0__& t, const std::vector<T1__>& z, const std::vector<T2__>&
     du_dt = ((alpha - (beta * v)) * u);
     local_scalar_t__ dv_dt = DUMMY_VAR__;
     current_statement__ = 32;
-    dv_dt = ((-gamma + (delta * u)) * v);
+    dv_dt = ((-(gamma) + (delta * u)) * v);
     current_statement__ = 33;
     return std::vector<local_scalar_t__>{du_dt, dv_dt};
   } catch (const std::exception& e) {
@@ -22346,7 +22351,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
         current_statement__ = 11;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(delta, 0.05, 0.05));
         current_statement__ = 12;
-        lp_accum__.add(stan::math::lognormal_lpdf<propto__>(sigma, -1, 1));
+        lp_accum__.add(stan::math::lognormal_lpdf<propto__>(sigma, -(1), 1));
         current_statement__ = 13;
         lp_accum__.add(stan::math::lognormal_lpdf<propto__>(z_init,
                          stan::math::log(10), 1));
@@ -22447,7 +22452,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
         current_statement__ = 11;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(delta, 0.05, 0.05));
         current_statement__ = 12;
-        lp_accum__.add(stan::math::lognormal_lpdf<propto__>(sigma, -1, 1));
+        lp_accum__.add(stan::math::lognormal_lpdf<propto__>(sigma, -(1), 1));
         current_statement__ = 13;
         lp_accum__.add(stan::math::lognormal_lpdf<propto__>(z_init,
                          stan::math::log(10), 1));
@@ -27090,7 +27095,8 @@ test2(const T0__& gamma_arg__, std::ostream* pstream__) {
     current_statement__ = 11;
     if (stan::math::logical_eq(D, 1)) {
       current_statement__ = 10;
-      return stan::math::rep_vector(D, 0);
+      return stan::math::promote_scalar<local_scalar_t__>(
+               stan::math::rep_vector(D, 0));
     } else {
       current_statement__ = 9;
       return test2(
@@ -27120,8 +27126,9 @@ matrix_pow(const T0__& a_arg__, const int& n, std::ostream* pstream__) {
     current_statement__ = 17;
     if (stan::math::logical_eq(n, 0)) {
       current_statement__ = 15;
-      return stan::math::diag_matrix(
-               stan::math::rep_vector(1, stan::math::rows(a)));
+      return stan::math::promote_scalar<local_scalar_t__>(
+               stan::math::diag_matrix(
+                 stan::math::rep_vector(1, stan::math::rows(a))));
     } else {
       current_statement__ = 13;
       return stan::math::multiply(a,
@@ -27202,7 +27209,8 @@ test4(const T0__& gamma_arg__, std::ostream* pstream__) {
     current_statement__ = 27;
     if (stan::math::logical_eq(D, 1)) {
       current_statement__ = 26;
-      return stan::math::rep_vector(D, 0);
+      return stan::math::promote_scalar<local_scalar_t__>(
+               stan::math::rep_vector(D, 0));
     } else {
       current_statement__ = 25;
       return test3(
@@ -27291,7 +27299,8 @@ test7(const T0__& gamma_arg__, std::ostream* pstream__) {
     current_statement__ = 39;
     if (stan::math::logical_eq(D, 1)) {
       current_statement__ = 38;
-      return stan::math::rep_vector(D, 0);
+      return stan::math::promote_scalar<local_scalar_t__>(
+               stan::math::rep_vector(D, 0));
     } else {
       current_statement__ = 37;
       return test7(stan::math::eval(stan::math::head(gamma, (D - 1))),
@@ -35547,7 +35556,7 @@ rhs(const T0__& t, const T1__& y_arg__, const T2__& alpha, std::ostream*
     Eigen::Matrix<local_scalar_t__,-1,1> yp =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(1, DUMMY_VAR__);
     current_statement__ = 49;
-    stan::model::assign(yp, stan::math::multiply(-alpha, y),
+    stan::model::assign(yp, stan::math::multiply(-(alpha), y),
       "assigning variable yp");
     current_statement__ = 50;
     return yp;
@@ -36978,7 +36987,7 @@ foo0_lpmf(const int& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 1;
-    return -5;
+    return -(5);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -36992,7 +37001,7 @@ foo1_lpmf(const int& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 3;
-    return -5;
+    return -(5);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -37007,7 +37016,7 @@ foo4_lp(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 5;
-    return -5;
+    return -(5);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -37022,7 +37031,7 @@ stan::promote_args_t<T0__> foo2_lpdf(const T0__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 7;
-    return -5;
+    return -(5);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -37037,7 +37046,7 @@ stan::promote_args_t<T0__> foo3_lpdf(const T0__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 9;
-    return -5;
+    return -(5);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -37055,7 +37064,7 @@ foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 11;
-    return -5;
+    return -(5);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -37433,7 +37442,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 6;
-            lp_accum__.add(-stan::math::student_t_lccdf(0, 10, 0, 1));
+            lp_accum__.add(-(stan::math::student_t_lccdf(0, 10, 0, 1)));
           }
         } else {
           current_statement__ = 2;
@@ -37444,7 +37453,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 3;
-            lp_accum__.add(-stan::math::normal_lccdf(0, 0, 1));
+            lp_accum__.add(-(stan::math::normal_lccdf(0, 0, 1)));
           }
         }
       }
@@ -37491,7 +37500,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 6;
-            lp_accum__.add(-stan::math::student_t_lccdf(0, 10, 0, 1));
+            lp_accum__.add(-(stan::math::student_t_lccdf(0, 10, 0, 1)));
           }
         } else {
           current_statement__ = 2;
@@ -37502,7 +37511,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 3;
-            lp_accum__.add(-stan::math::normal_lccdf(0, 0, 1));
+            lp_accum__.add(-(stan::math::normal_lccdf(0, 0, 1)));
           }
         }
       }
@@ -41056,7 +41065,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 5;
-          lp_accum__.add(-stan::math::normal_lccdf(0.0, m, 1));
+          lp_accum__.add(-(stan::math::normal_lccdf(0.0, m, 1)));
         }
         current_statement__ = 6;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
@@ -41066,7 +41075,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 7;
-          lp_accum__.add(-stan::math::normal_lcdf(10.0, m, 1));
+          lp_accum__.add(-(stan::math::normal_lcdf(10.0, m, 1)));
         }
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
@@ -41081,9 +41090,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 9;
-            lp_accum__.add(-stan::math::log_diff_exp(
-                              stan::math::normal_lcdf(10.0, m, 1),
-                              stan::math::normal_lcdf(0.0, m, 1)));
+            lp_accum__.add(-(stan::math::log_diff_exp(
+                               stan::math::normal_lcdf(10.0, m, 1),
+                               stan::math::normal_lcdf(0.0, m, 1))));
           }
         }
         current_statement__ = 11;
@@ -41096,7 +41105,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 13;
-          lp_accum__.add(-stan::math::poisson_lccdf((10 - 1), y));
+          lp_accum__.add(-(stan::math::poisson_lccdf((10 - 1), y)));
         }
         current_statement__ = 14;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(n, y));
@@ -41106,7 +41115,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 15;
-          lp_accum__.add(-stan::math::poisson_lcdf(20, y));
+          lp_accum__.add(-(stan::math::poisson_lcdf(20, y)));
         }
         current_statement__ = 16;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(n, y));
@@ -41121,9 +41130,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 17;
-            lp_accum__.add(-stan::math::log_diff_exp(
-                              stan::math::poisson_lcdf(20, y),
-                              stan::math::poisson_lcdf((10 - 1), y)));
+            lp_accum__.add(-(stan::math::log_diff_exp(
+                               stan::math::poisson_lcdf(20, y),
+                               stan::math::poisson_lcdf((10 - 1), y))));
           }
         }
       }
@@ -41173,7 +41182,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 5;
-          lp_accum__.add(-stan::math::normal_lccdf(0.0, m, 1));
+          lp_accum__.add(-(stan::math::normal_lccdf(0.0, m, 1)));
         }
         current_statement__ = 6;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
@@ -41183,7 +41192,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 7;
-          lp_accum__.add(-stan::math::normal_lcdf(10.0, m, 1));
+          lp_accum__.add(-(stan::math::normal_lcdf(10.0, m, 1)));
         }
         current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(x, m, 1));
@@ -41198,9 +41207,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 9;
-            lp_accum__.add(-stan::math::log_diff_exp(
-                              stan::math::normal_lcdf(10.0, m, 1),
-                              stan::math::normal_lcdf(0.0, m, 1)));
+            lp_accum__.add(-(stan::math::log_diff_exp(
+                               stan::math::normal_lcdf(10.0, m, 1),
+                               stan::math::normal_lcdf(0.0, m, 1))));
           }
         }
         current_statement__ = 11;
@@ -41213,7 +41222,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 13;
-          lp_accum__.add(-stan::math::poisson_lccdf((10 - 1), y));
+          lp_accum__.add(-(stan::math::poisson_lccdf((10 - 1), y)));
         }
         current_statement__ = 14;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(n, y));
@@ -41223,7 +41232,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 15;
-          lp_accum__.add(-stan::math::poisson_lcdf(20, y));
+          lp_accum__.add(-(stan::math::poisson_lcdf(20, y)));
         }
         current_statement__ = 16;
         lp_accum__.add(stan::math::poisson_lpmf<propto__>(n, y));
@@ -41238,9 +41247,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 17;
-            lp_accum__.add(-stan::math::log_diff_exp(
-                              stan::math::poisson_lcdf(20, y),
-                              stan::math::poisson_lcdf((10 - 1), y)));
+            lp_accum__.add(-(stan::math::log_diff_exp(
+                               stan::math::poisson_lcdf(20, y),
+                               stan::math::poisson_lcdf((10 - 1), y))));
           }
         }
       }
@@ -42853,8 +42862,8 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 6;
-          lp_accum__.add(-(stan::math::normal_lccdf(L, mu, sigma) *
-            stan::math::size(y)));
+          lp_accum__.add(-((stan::math::normal_lccdf(L, mu, sigma) *
+            stan::math::size(y))));
         }
         current_statement__ = 10;
         for (int n = 1; n <= N; ++n) {
@@ -42869,7 +42878,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 8;
-            lp_accum__.add(-stan::math::normal_lccdf(L, mu, sigma));
+            lp_accum__.add(-(stan::math::normal_lccdf(L, mu, sigma)));
           }
         }
         current_statement__ = 11;
@@ -42880,8 +42889,8 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 12;
-          lp_accum__.add(-(stan::math::normal_lcdf(U, mu, sigma) *
-            stan::math::size(y)));
+          lp_accum__.add(-((stan::math::normal_lcdf(U, mu, sigma) *
+            stan::math::size(y))));
         }
         current_statement__ = 16;
         for (int n = 1; n <= N; ++n) {
@@ -42896,7 +42905,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 14;
-            lp_accum__.add(-stan::math::normal_lcdf(U, mu, sigma));
+            lp_accum__.add(-(stan::math::normal_lcdf(U, mu, sigma)));
           }
         }
         current_statement__ = 17;
@@ -42912,10 +42921,10 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 18;
-            lp_accum__.add(-(stan::math::log_diff_exp(
-                               stan::math::normal_lcdf(U, mu, sigma),
-                               stan::math::normal_lcdf(L, mu, sigma)) *
-              stan::math::size(y)));
+            lp_accum__.add(-((stan::math::log_diff_exp(
+                                stan::math::normal_lcdf(U, mu, sigma),
+                                stan::math::normal_lcdf(L, mu, sigma)) *
+              stan::math::size(y))));
           }
         }
         current_statement__ = 24;
@@ -42937,9 +42946,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
               lp_accum__.add(stan::math::negative_infinity());
             } else {
               current_statement__ = 21;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, mu, sigma),
-                                stan::math::normal_lcdf(L, mu, sigma)));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, mu, sigma),
+                                 stan::math::normal_lcdf(L, mu, sigma))));
             }
           }
         }
@@ -42951,7 +42960,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 26;
-          lp_accum__.add(-stan::math::normal_lccdf(L, vector_mu, sigma));
+          lp_accum__.add(-(stan::math::normal_lccdf(L, vector_mu, sigma)));
         }
         current_statement__ = 30;
         for (int n = 1; n <= N; ++n) {
@@ -42968,9 +42977,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 28;
-            lp_accum__.add(-stan::math::normal_lccdf(L,
-                              stan::model::rvalue(vector_mu, "vector_mu",
-                                stan::model::index_uni(n)), sigma));
+            lp_accum__.add(-(stan::math::normal_lccdf(L,
+                               stan::model::rvalue(vector_mu, "vector_mu",
+                                 stan::model::index_uni(n)), sigma)));
           }
         }
         current_statement__ = 31;
@@ -42981,7 +42990,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 32;
-          lp_accum__.add(-stan::math::normal_lcdf(U, vector_mu, sigma));
+          lp_accum__.add(-(stan::math::normal_lcdf(U, vector_mu, sigma)));
         }
         current_statement__ = 36;
         for (int n = 1; n <= N; ++n) {
@@ -42998,9 +43007,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 34;
-            lp_accum__.add(-stan::math::normal_lcdf(U,
-                              stan::model::rvalue(vector_mu, "vector_mu",
-                                stan::model::index_uni(n)), sigma));
+            lp_accum__.add(-(stan::math::normal_lcdf(U,
+                               stan::model::rvalue(vector_mu, "vector_mu",
+                                 stan::model::index_uni(n)), sigma)));
           }
         }
         current_statement__ = 37;
@@ -43019,11 +43028,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             for (int sym2__ = 1; sym2__ <=
                  stan::math::size(vector_mu); ++sym2__) {
               current_statement__ = 38;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, vector_mu[(sym2__
-                                  - 1)], sigma),
-                                stan::math::normal_lcdf(L, vector_mu[(sym2__
-                                  - 1)], sigma)));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, vector_mu[(sym2__
+                                   - 1)], sigma),
+                                 stan::math::normal_lcdf(L, vector_mu[(sym2__
+                                   - 1)], sigma))));
             }
           }
         }
@@ -43048,13 +43057,15 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
               lp_accum__.add(stan::math::negative_infinity());
             } else {
               current_statement__ = 41;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U,
-                                  stan::model::rvalue(vector_mu, "vector_mu",
-                                    stan::model::index_uni(n)), sigma),
-                                stan::math::normal_lcdf(L,
-                                  stan::model::rvalue(vector_mu, "vector_mu",
-                                    stan::model::index_uni(n)), sigma)));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U,
+                                   stan::model::rvalue(vector_mu,
+                                     "vector_mu", stan::model::index_uni(n)),
+                                   sigma),
+                                 stan::math::normal_lcdf(L,
+                                   stan::model::rvalue(vector_mu,
+                                     "vector_mu", stan::model::index_uni(n)),
+                                   sigma))));
             }
           }
         }
@@ -43066,7 +43077,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 46;
-          lp_accum__.add(-stan::math::normal_lccdf(L, mu, vector_sigma));
+          lp_accum__.add(-(stan::math::normal_lccdf(L, mu, vector_sigma)));
         }
         current_statement__ = 50;
         for (int n = 1; n <= N; ++n) {
@@ -43083,9 +43094,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 48;
-            lp_accum__.add(-stan::math::normal_lccdf(L, mu,
-                              stan::model::rvalue(vector_sigma,
-                                "vector_sigma", stan::model::index_uni(n))));
+            lp_accum__.add(-(stan::math::normal_lccdf(L, mu,
+                               stan::model::rvalue(vector_sigma,
+                                 "vector_sigma", stan::model::index_uni(n)))));
           }
         }
         current_statement__ = 51;
@@ -43096,7 +43107,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 52;
-          lp_accum__.add(-stan::math::normal_lcdf(U, mu, vector_sigma));
+          lp_accum__.add(-(stan::math::normal_lcdf(U, mu, vector_sigma)));
         }
         current_statement__ = 56;
         for (int n = 1; n <= N; ++n) {
@@ -43113,9 +43124,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 54;
-            lp_accum__.add(-stan::math::normal_lcdf(U, mu,
-                              stan::model::rvalue(vector_sigma,
-                                "vector_sigma", stan::model::index_uni(n))));
+            lp_accum__.add(-(stan::math::normal_lcdf(U, mu,
+                               stan::model::rvalue(vector_sigma,
+                                 "vector_sigma", stan::model::index_uni(n)))));
           }
         }
         current_statement__ = 57;
@@ -43134,11 +43145,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             for (int sym2__ = 1; sym2__ <=
                  stan::math::size(vector_sigma); ++sym2__) {
               current_statement__ = 58;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, mu,
-                                  vector_sigma[(sym2__ - 1)]),
-                                stan::math::normal_lcdf(L, mu,
-                                  vector_sigma[(sym2__ - 1)])));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, mu,
+                                   vector_sigma[(sym2__ - 1)]),
+                                 stan::math::normal_lcdf(L, mu,
+                                   vector_sigma[(sym2__ - 1)]))));
             }
           }
         }
@@ -43163,13 +43174,15 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
               lp_accum__.add(stan::math::negative_infinity());
             } else {
               current_statement__ = 61;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, mu,
-                                  stan::model::rvalue(vector_sigma,
-                                    "vector_sigma", stan::model::index_uni(n))),
-                                stan::math::normal_lcdf(L, mu,
-                                  stan::model::rvalue(vector_sigma,
-                                    "vector_sigma", stan::model::index_uni(n)))));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, mu,
+                                   stan::model::rvalue(vector_sigma,
+                                     "vector_sigma",
+                                     stan::model::index_uni(n))),
+                                 stan::math::normal_lcdf(L, mu,
+                                   stan::model::rvalue(vector_sigma,
+                                     "vector_sigma",
+                                     stan::model::index_uni(n))))));
             }
           }
         }
@@ -43182,7 +43195,8 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 66;
-          lp_accum__.add(-stan::math::normal_lccdf(L, vector_mu, vector_sigma));
+          lp_accum__.add(-(stan::math::normal_lccdf(L, vector_mu,
+                             vector_sigma)));
         }
         current_statement__ = 70;
         for (int n = 1; n <= N; ++n) {
@@ -43201,11 +43215,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 68;
-            lp_accum__.add(-stan::math::normal_lccdf(L,
-                              stan::model::rvalue(vector_mu, "vector_mu",
-                                stan::model::index_uni(n)),
-                              stan::model::rvalue(vector_sigma,
-                                "vector_sigma", stan::model::index_uni(n))));
+            lp_accum__.add(-(stan::math::normal_lccdf(L,
+                               stan::model::rvalue(vector_mu, "vector_mu",
+                                 stan::model::index_uni(n)),
+                               stan::model::rvalue(vector_sigma,
+                                 "vector_sigma", stan::model::index_uni(n)))));
           }
         }
         current_statement__ = 71;
@@ -43217,7 +43231,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 72;
-          lp_accum__.add(-stan::math::normal_lcdf(U, vector_mu, vector_sigma));
+          lp_accum__.add(-(stan::math::normal_lcdf(U, vector_mu, vector_sigma)));
         }
         current_statement__ = 76;
         for (int n = 1; n <= N; ++n) {
@@ -43236,11 +43250,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 74;
-            lp_accum__.add(-stan::math::normal_lcdf(U,
-                              stan::model::rvalue(vector_mu, "vector_mu",
-                                stan::model::index_uni(n)),
-                              stan::model::rvalue(vector_sigma,
-                                "vector_sigma", stan::model::index_uni(n))));
+            lp_accum__.add(-(stan::math::normal_lcdf(U,
+                               stan::model::rvalue(vector_mu, "vector_mu",
+                                 stan::model::index_uni(n)),
+                               stan::model::rvalue(vector_sigma,
+                                 "vector_sigma", stan::model::index_uni(n)))));
           }
         }
         current_statement__ = 77;
@@ -43268,11 +43282,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             current_statement__ = 80;
             for (int sym4__ = 1; sym4__ <= stan::math::size(sym2__); ++sym4__) {
               current_statement__ = 80;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, sym2__[(sym4__ -
-                                  1)], sym1__[(sym4__ - 1)]),
-                                stan::math::normal_lcdf(L, sym2__[(sym4__ -
-                                  1)], sym1__[(sym4__ - 1)])));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, sym2__[(sym4__ -
+                                   1)], sym1__[(sym4__ - 1)]),
+                                 stan::math::normal_lcdf(L, sym2__[(sym4__ -
+                                   1)], sym1__[(sym4__ - 1)]))));
             }
           }
         }
@@ -43299,17 +43313,19 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
               lp_accum__.add(stan::math::negative_infinity());
             } else {
               current_statement__ = 83;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U,
-                                  stan::model::rvalue(vector_mu, "vector_mu",
-                                    stan::model::index_uni(n)),
-                                  stan::model::rvalue(vector_sigma,
-                                    "vector_sigma", stan::model::index_uni(n))),
-                                stan::math::normal_lcdf(L,
-                                  stan::model::rvalue(vector_mu, "vector_mu",
-                                    stan::model::index_uni(n)),
-                                  stan::model::rvalue(vector_sigma,
-                                    "vector_sigma", stan::model::index_uni(n)))));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U,
+                                   stan::model::rvalue(vector_mu,
+                                     "vector_mu", stan::model::index_uni(n)),
+                                   stan::model::rvalue(vector_sigma,
+                                     "vector_sigma",
+                                     stan::model::index_uni(n))),
+                                 stan::math::normal_lcdf(L,
+                                   stan::model::rvalue(vector_mu,
+                                     "vector_mu", stan::model::index_uni(n)),
+                                   stan::model::rvalue(vector_sigma,
+                                     "vector_sigma",
+                                     stan::model::index_uni(n))))));
             }
           }
         }
@@ -43367,8 +43383,8 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 6;
-          lp_accum__.add(-(stan::math::normal_lccdf(L, mu, sigma) *
-            stan::math::size(y)));
+          lp_accum__.add(-((stan::math::normal_lccdf(L, mu, sigma) *
+            stan::math::size(y))));
         }
         current_statement__ = 10;
         for (int n = 1; n <= N; ++n) {
@@ -43383,7 +43399,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 8;
-            lp_accum__.add(-stan::math::normal_lccdf(L, mu, sigma));
+            lp_accum__.add(-(stan::math::normal_lccdf(L, mu, sigma)));
           }
         }
         current_statement__ = 11;
@@ -43394,8 +43410,8 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 12;
-          lp_accum__.add(-(stan::math::normal_lcdf(U, mu, sigma) *
-            stan::math::size(y)));
+          lp_accum__.add(-((stan::math::normal_lcdf(U, mu, sigma) *
+            stan::math::size(y))));
         }
         current_statement__ = 16;
         for (int n = 1; n <= N; ++n) {
@@ -43410,7 +43426,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 14;
-            lp_accum__.add(-stan::math::normal_lcdf(U, mu, sigma));
+            lp_accum__.add(-(stan::math::normal_lcdf(U, mu, sigma)));
           }
         }
         current_statement__ = 17;
@@ -43426,10 +43442,10 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 18;
-            lp_accum__.add(-(stan::math::log_diff_exp(
-                               stan::math::normal_lcdf(U, mu, sigma),
-                               stan::math::normal_lcdf(L, mu, sigma)) *
-              stan::math::size(y)));
+            lp_accum__.add(-((stan::math::log_diff_exp(
+                                stan::math::normal_lcdf(U, mu, sigma),
+                                stan::math::normal_lcdf(L, mu, sigma)) *
+              stan::math::size(y))));
           }
         }
         current_statement__ = 24;
@@ -43451,9 +43467,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
               lp_accum__.add(stan::math::negative_infinity());
             } else {
               current_statement__ = 21;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, mu, sigma),
-                                stan::math::normal_lcdf(L, mu, sigma)));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, mu, sigma),
+                                 stan::math::normal_lcdf(L, mu, sigma))));
             }
           }
         }
@@ -43465,7 +43481,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 26;
-          lp_accum__.add(-stan::math::normal_lccdf(L, vector_mu, sigma));
+          lp_accum__.add(-(stan::math::normal_lccdf(L, vector_mu, sigma)));
         }
         current_statement__ = 30;
         for (int n = 1; n <= N; ++n) {
@@ -43482,9 +43498,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 28;
-            lp_accum__.add(-stan::math::normal_lccdf(L,
-                              stan::model::rvalue(vector_mu, "vector_mu",
-                                stan::model::index_uni(n)), sigma));
+            lp_accum__.add(-(stan::math::normal_lccdf(L,
+                               stan::model::rvalue(vector_mu, "vector_mu",
+                                 stan::model::index_uni(n)), sigma)));
           }
         }
         current_statement__ = 31;
@@ -43495,7 +43511,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 32;
-          lp_accum__.add(-stan::math::normal_lcdf(U, vector_mu, sigma));
+          lp_accum__.add(-(stan::math::normal_lcdf(U, vector_mu, sigma)));
         }
         current_statement__ = 36;
         for (int n = 1; n <= N; ++n) {
@@ -43512,9 +43528,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 34;
-            lp_accum__.add(-stan::math::normal_lcdf(U,
-                              stan::model::rvalue(vector_mu, "vector_mu",
-                                stan::model::index_uni(n)), sigma));
+            lp_accum__.add(-(stan::math::normal_lcdf(U,
+                               stan::model::rvalue(vector_mu, "vector_mu",
+                                 stan::model::index_uni(n)), sigma)));
           }
         }
         current_statement__ = 37;
@@ -43533,11 +43549,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             for (int sym2__ = 1; sym2__ <=
                  stan::math::size(vector_mu); ++sym2__) {
               current_statement__ = 38;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, vector_mu[(sym2__
-                                  - 1)], sigma),
-                                stan::math::normal_lcdf(L, vector_mu[(sym2__
-                                  - 1)], sigma)));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, vector_mu[(sym2__
+                                   - 1)], sigma),
+                                 stan::math::normal_lcdf(L, vector_mu[(sym2__
+                                   - 1)], sigma))));
             }
           }
         }
@@ -43562,13 +43578,15 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
               lp_accum__.add(stan::math::negative_infinity());
             } else {
               current_statement__ = 41;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U,
-                                  stan::model::rvalue(vector_mu, "vector_mu",
-                                    stan::model::index_uni(n)), sigma),
-                                stan::math::normal_lcdf(L,
-                                  stan::model::rvalue(vector_mu, "vector_mu",
-                                    stan::model::index_uni(n)), sigma)));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U,
+                                   stan::model::rvalue(vector_mu,
+                                     "vector_mu", stan::model::index_uni(n)),
+                                   sigma),
+                                 stan::math::normal_lcdf(L,
+                                   stan::model::rvalue(vector_mu,
+                                     "vector_mu", stan::model::index_uni(n)),
+                                   sigma))));
             }
           }
         }
@@ -43580,7 +43598,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 46;
-          lp_accum__.add(-stan::math::normal_lccdf(L, mu, vector_sigma));
+          lp_accum__.add(-(stan::math::normal_lccdf(L, mu, vector_sigma)));
         }
         current_statement__ = 50;
         for (int n = 1; n <= N; ++n) {
@@ -43597,9 +43615,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 48;
-            lp_accum__.add(-stan::math::normal_lccdf(L, mu,
-                              stan::model::rvalue(vector_sigma,
-                                "vector_sigma", stan::model::index_uni(n))));
+            lp_accum__.add(-(stan::math::normal_lccdf(L, mu,
+                               stan::model::rvalue(vector_sigma,
+                                 "vector_sigma", stan::model::index_uni(n)))));
           }
         }
         current_statement__ = 51;
@@ -43610,7 +43628,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 52;
-          lp_accum__.add(-stan::math::normal_lcdf(U, mu, vector_sigma));
+          lp_accum__.add(-(stan::math::normal_lcdf(U, mu, vector_sigma)));
         }
         current_statement__ = 56;
         for (int n = 1; n <= N; ++n) {
@@ -43627,9 +43645,9 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 54;
-            lp_accum__.add(-stan::math::normal_lcdf(U, mu,
-                              stan::model::rvalue(vector_sigma,
-                                "vector_sigma", stan::model::index_uni(n))));
+            lp_accum__.add(-(stan::math::normal_lcdf(U, mu,
+                               stan::model::rvalue(vector_sigma,
+                                 "vector_sigma", stan::model::index_uni(n)))));
           }
         }
         current_statement__ = 57;
@@ -43648,11 +43666,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             for (int sym2__ = 1; sym2__ <=
                  stan::math::size(vector_sigma); ++sym2__) {
               current_statement__ = 58;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, mu,
-                                  vector_sigma[(sym2__ - 1)]),
-                                stan::math::normal_lcdf(L, mu,
-                                  vector_sigma[(sym2__ - 1)])));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, mu,
+                                   vector_sigma[(sym2__ - 1)]),
+                                 stan::math::normal_lcdf(L, mu,
+                                   vector_sigma[(sym2__ - 1)]))));
             }
           }
         }
@@ -43677,13 +43695,15 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
               lp_accum__.add(stan::math::negative_infinity());
             } else {
               current_statement__ = 61;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, mu,
-                                  stan::model::rvalue(vector_sigma,
-                                    "vector_sigma", stan::model::index_uni(n))),
-                                stan::math::normal_lcdf(L, mu,
-                                  stan::model::rvalue(vector_sigma,
-                                    "vector_sigma", stan::model::index_uni(n)))));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, mu,
+                                   stan::model::rvalue(vector_sigma,
+                                     "vector_sigma",
+                                     stan::model::index_uni(n))),
+                                 stan::math::normal_lcdf(L, mu,
+                                   stan::model::rvalue(vector_sigma,
+                                     "vector_sigma",
+                                     stan::model::index_uni(n))))));
             }
           }
         }
@@ -43696,7 +43716,8 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 66;
-          lp_accum__.add(-stan::math::normal_lccdf(L, vector_mu, vector_sigma));
+          lp_accum__.add(-(stan::math::normal_lccdf(L, vector_mu,
+                             vector_sigma)));
         }
         current_statement__ = 70;
         for (int n = 1; n <= N; ++n) {
@@ -43715,11 +43736,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 68;
-            lp_accum__.add(-stan::math::normal_lccdf(L,
-                              stan::model::rvalue(vector_mu, "vector_mu",
-                                stan::model::index_uni(n)),
-                              stan::model::rvalue(vector_sigma,
-                                "vector_sigma", stan::model::index_uni(n))));
+            lp_accum__.add(-(stan::math::normal_lccdf(L,
+                               stan::model::rvalue(vector_mu, "vector_mu",
+                                 stan::model::index_uni(n)),
+                               stan::model::rvalue(vector_sigma,
+                                 "vector_sigma", stan::model::index_uni(n)))));
           }
         }
         current_statement__ = 71;
@@ -43731,7 +43752,7 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
           lp_accum__.add(stan::math::negative_infinity());
         } else {
           current_statement__ = 72;
-          lp_accum__.add(-stan::math::normal_lcdf(U, vector_mu, vector_sigma));
+          lp_accum__.add(-(stan::math::normal_lcdf(U, vector_mu, vector_sigma)));
         }
         current_statement__ = 76;
         for (int n = 1; n <= N; ++n) {
@@ -43750,11 +43771,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             current_statement__ = 74;
-            lp_accum__.add(-stan::math::normal_lcdf(U,
-                              stan::model::rvalue(vector_mu, "vector_mu",
-                                stan::model::index_uni(n)),
-                              stan::model::rvalue(vector_sigma,
-                                "vector_sigma", stan::model::index_uni(n))));
+            lp_accum__.add(-(stan::math::normal_lcdf(U,
+                               stan::model::rvalue(vector_mu, "vector_mu",
+                                 stan::model::index_uni(n)),
+                               stan::model::rvalue(vector_sigma,
+                                 "vector_sigma", stan::model::index_uni(n)))));
           }
         }
         current_statement__ = 77;
@@ -43782,11 +43803,11 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             current_statement__ = 80;
             for (int sym4__ = 1; sym4__ <= stan::math::size(sym2__); ++sym4__) {
               current_statement__ = 80;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U, sym2__[(sym4__ -
-                                  1)], sym1__[(sym4__ - 1)]),
-                                stan::math::normal_lcdf(L, sym2__[(sym4__ -
-                                  1)], sym1__[(sym4__ - 1)])));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U, sym2__[(sym4__ -
+                                   1)], sym1__[(sym4__ - 1)]),
+                                 stan::math::normal_lcdf(L, sym2__[(sym4__ -
+                                   1)], sym1__[(sym4__ - 1)]))));
             }
           }
         }
@@ -43813,17 +43834,19 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
               lp_accum__.add(stan::math::negative_infinity());
             } else {
               current_statement__ = 83;
-              lp_accum__.add(-stan::math::log_diff_exp(
-                                stan::math::normal_lcdf(U,
-                                  stan::model::rvalue(vector_mu, "vector_mu",
-                                    stan::model::index_uni(n)),
-                                  stan::model::rvalue(vector_sigma,
-                                    "vector_sigma", stan::model::index_uni(n))),
-                                stan::math::normal_lcdf(L,
-                                  stan::model::rvalue(vector_mu, "vector_mu",
-                                    stan::model::index_uni(n)),
-                                  stan::model::rvalue(vector_sigma,
-                                    "vector_sigma", stan::model::index_uni(n)))));
+              lp_accum__.add(-(stan::math::log_diff_exp(
+                                 stan::math::normal_lcdf(U,
+                                   stan::model::rvalue(vector_mu,
+                                     "vector_mu", stan::model::index_uni(n)),
+                                   stan::model::rvalue(vector_sigma,
+                                     "vector_sigma",
+                                     stan::model::index_uni(n))),
+                                 stan::math::normal_lcdf(L,
+                                   stan::model::rvalue(vector_mu,
+                                     "vector_mu", stan::model::index_uni(n)),
+                                   stan::model::rvalue(vector_sigma,
+                                     "vector_sigma",
+                                     stan::model::index_uni(n))))));
             }
           }
         }

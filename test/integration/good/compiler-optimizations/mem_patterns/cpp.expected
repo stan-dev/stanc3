@@ -955,7 +955,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                              jacobian__>(lp__, K);
       local_scalar_t__ phi = DUMMY_VAR__;
       current_statement__ = 23;
-      phi = stan::math::fma(phi_beta, 2.0, -1.0);
+      phi = stan::math::fma(phi_beta, 2.0, -(1.0));
       local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 24;
       sigma = stan::math::sqrt(sigma2);
@@ -1021,7 +1021,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         stan::model::index_uni(1));
       current_statement__ = 37;
       stan::model::assign(h_i_sigma,
-        stan::math::pow((1 - stan::math::square(phi)), -0.5),
+        stan::math::pow((1 - stan::math::square(phi)), -(0.5)),
         "assigning variable h_i_sigma", stan::model::index_uni(1));
       current_statement__ = 38;
       stan::model::assign(h_i_sigma, stan::math::rep_vector(1.0, (Nr - 1)),
@@ -1047,7 +1047,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
               stan::math::multiply(0.5, mu))), 0.000001),
         "assigning variable h_sigma");
       current_statement__ = 23;
-      stan::math::check_greater_or_equal(function__, "phi", phi, -1);
+      stan::math::check_greater_or_equal(function__, "phi", phi, -(1));
       current_statement__ = 23;
       stan::math::check_less_or_equal(function__, "phi", phi, 1);
       current_statement__ = 24;
@@ -1057,7 +1057,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         0);
       {
         current_statement__ = 40;
-        lp_accum__.add(stan::math::multiply(-2, stan::math::log(sigma_price)));
+        lp_accum__.add(stan::math::multiply(-(2),
+                         stan::math::log(sigma_price)));
         current_statement__ = 41;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(Intercept,
                          mu_prior_mu, mu_prior_sigma));
@@ -1300,7 +1301,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                              jacobian__>(lp__, K);
       local_scalar_t__ phi = DUMMY_VAR__;
       current_statement__ = 23;
-      phi = stan::math::fma(phi_beta, 2.0, -1.0);
+      phi = stan::math::fma(phi_beta, 2.0, -(1.0));
       local_scalar_t__ sigma = DUMMY_VAR__;
       current_statement__ = 24;
       sigma = stan::math::sqrt(sigma2);
@@ -1378,7 +1379,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         stan::model::index_uni(1));
       current_statement__ = 37;
       stan::model::assign(h_i_sigma,
-        stan::math::pow((1 - stan::math::square(phi)), -0.5),
+        stan::math::pow((1 - stan::math::square(phi)), -(0.5)),
         "assigning variable h_i_sigma", stan::model::index_uni(1));
       current_statement__ = 38;
       stan::model::assign(h_i_sigma, stan::math::rep_vector(1.0, (Nr - 1)),
@@ -1406,7 +1407,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
               stan::math::multiply(0.5, mu))), 0.000001),
         "assigning variable h_sigma");
       current_statement__ = 23;
-      stan::math::check_greater_or_equal(function__, "phi", phi, -1);
+      stan::math::check_greater_or_equal(function__, "phi", phi, -(1));
       current_statement__ = 23;
       stan::math::check_less_or_equal(function__, "phi", phi, 1);
       current_statement__ = 24;
@@ -1416,7 +1417,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         0);
       {
         current_statement__ = 40;
-        lp_accum__.add(stan::math::multiply(-2, stan::math::log(sigma_price)));
+        lp_accum__.add(stan::math::multiply(-(2),
+                         stan::math::log(sigma_price)));
         current_statement__ = 41;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(Intercept,
                          mu_prior_mu, mu_prior_sigma));
@@ -1694,7 +1696,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         return ;
       }
       current_statement__ = 23;
-      phi = stan::math::fma(phi_beta, 2.0, -1.0);
+      phi = stan::math::fma(phi_beta, 2.0, -(1.0));
       current_statement__ = 24;
       sigma = stan::math::sqrt(sigma2);
       current_statement__ = 25;
@@ -1747,7 +1749,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         stan::model::index_uni(1));
       current_statement__ = 37;
       stan::model::assign(h_i_sigma,
-        stan::math::pow((1 - stan::math::square(phi)), -0.5),
+        stan::math::pow((1 - stan::math::square(phi)), -(0.5)),
         "assigning variable h_i_sigma", stan::model::index_uni(1));
       current_statement__ = 38;
       stan::model::assign(h_i_sigma, stan::math::rep_vector(1.0, (Nr - 1)),
@@ -1771,7 +1773,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
               stan::math::multiply(0.5, mu))), 0.000001),
         "assigning variable h_sigma");
       current_statement__ = 23;
-      stan::math::check_greater_or_equal(function__, "phi", phi, -1);
+      stan::math::check_greater_or_equal(function__, "phi", phi, -(1));
       current_statement__ = 23;
       stan::math::check_less_or_equal(function__, "phi", phi, 1);
       current_statement__ = 24;
