@@ -155,16 +155,8 @@ let verify_name_fresh tenv id ~is_udf =
 let is_of_compatible_return_type rt1 srt2 =
   UnsizedType.(
     match (rt1, srt2) with
-    | Void, NoReturnType
-     |Void, Incomplete Void
-     |Void, Complete Void
-     |Void, AnyReturnType ->
-        true
-    | ReturnType UReal, Complete (ReturnType UInt) -> true
-    | ReturnType UComplex, Complete (ReturnType UReal) -> true
-    | ReturnType UComplex, Complete (ReturnType UInt) -> true
-    | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
-    | ReturnType _, AnyReturnType -> true
+    | Void, _ -> true
+    | ReturnType _, Complete -> true
     | _ -> false)
 
 (* -- Expressions ------------------------------------------------- *)
@@ -943,7 +935,7 @@ let check_nrfn loc tenv id es =
                ( fnk (Fun_kind.suffix_from_name id.name)
                , id
                , Promotion.promote_list es promotions ) )
-          ~return_type:NoReturnType ~loc
+          ~return_type:Incomplete ~loc
     | UniqueMatch (ReturnType _, _, _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
@@ -1091,7 +1083,7 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   verify_assignment_read_only loc readonly assign_id ;
   verify_assignment_non_function loc rhs.emeta.type_ assign_id ;
   let rhs' = check_assignment_operator loc assign_op lhs rhs in
-  mk_typed_statement ~return_type:NoReturnType ~loc
+  mk_typed_statement ~return_type:Incomplete ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
 
 (* target plus-equals / increment log-prob *)
@@ -1108,13 +1100,13 @@ let check_target_pe loc cf tenv e =
   let te = check_expression cf tenv e in
   verify_target_pe_usage loc cf ;
   verify_target_pe_expr_type loc te ;
-  mk_typed_statement ~stmt:(TargetPE te) ~return_type:NoReturnType ~loc
+  mk_typed_statement ~stmt:(TargetPE te) ~return_type:Incomplete ~loc
 
 let check_incr_logprob loc cf tenv e =
   let te = check_expression cf tenv e in
   verify_target_pe_usage loc cf ;
   verify_target_pe_expr_type loc te ;
-  mk_typed_statement ~stmt:(IncrementLogProb te) ~return_type:NoReturnType ~loc
+  mk_typed_statement ~stmt:(IncrementLogProb te) ~return_type:Incomplete ~loc
 
 (* tilde/sampling notation*)
 let verify_sampling_pdf_pmf id =
@@ -1219,16 +1211,16 @@ let check_tilde loc cf tenv distribution truncation arg args =
   let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
   verify_sampling_cdf_defined loc tenv distribution ttrunc tes ;
   let stmt = Tilde {arg= te; distribution; args= tes; truncation= ttrunc} in
-  mk_typed_statement ~stmt ~loc ~return_type:NoReturnType
+  mk_typed_statement ~stmt ~loc ~return_type:Incomplete
 
 (* Break and continue only occur in loops. *)
 let check_break loc cf =
   if cf.loop_depth = 0 then Semantic_error.break_outside_loop loc |> error
-  else mk_typed_statement ~stmt:Break ~return_type:NoReturnType ~loc
+  else mk_typed_statement ~stmt:Break ~return_type:UnclearControlFlow ~loc
 
 let check_continue loc cf =
   if cf.loop_depth = 0 then Semantic_error.continue_outside_loop loc |> error
-  else mk_typed_statement ~stmt:Continue ~return_type:NoReturnType ~loc
+  else mk_typed_statement ~stmt:Continue ~return_type:Incomplete ~loc
 
 let check_return loc cf tenv e =
   match cf.in_fun with
@@ -1248,14 +1240,13 @@ let check_return loc cf tenv e =
               , expected )
               (te.emeta.ad_level, actual) in
           let promoted = Promotion.promote te promotions in
-          mk_typed_statement ~stmt:(Return promoted)
-            ~return_type:(Complete (ReturnType expected)) ~loc
+          mk_typed_statement ~stmt:(Return promoted) ~return_type:Complete ~loc
       | _ -> Semantic_error.invalid_return loc expected actual |> error )
 
 let check_returnvoid loc cf =
   match cf.in_fun with
   | NonReturning ->
-      mk_typed_statement ~stmt:ReturnVoid ~return_type:(Complete Void) ~loc
+      mk_typed_statement ~stmt:ReturnVoid ~return_type:Complete ~loc
   | _ -> Semantic_error.void_outside_nonreturning_fn loc |> error
 
 let check_printable cf tenv = function
@@ -1270,14 +1261,13 @@ let check_printable cf tenv = function
 
 let check_print loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
-  mk_typed_statement ~stmt:(Print tps) ~return_type:NoReturnType ~loc
+  mk_typed_statement ~stmt:(Print tps) ~return_type:Incomplete ~loc
 
 let check_reject loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
-  mk_typed_statement ~stmt:(Reject tps) ~return_type:AnyReturnType ~loc
+  mk_typed_statement ~stmt:(Reject tps) ~return_type:Complete ~loc
 
-let check_skip loc =
-  mk_typed_statement ~stmt:Skip ~return_type:NoReturnType ~loc
+let check_skip loc = mk_typed_statement ~stmt:Skip ~return_type:Incomplete ~loc
 
 let rec stmt_is_escape {stmt; _} =
   match stmt with
@@ -1296,59 +1286,20 @@ and list_until_escape xs =
     | [] -> List.rev accu in
   aux [] xs
 
-let returntype_leastupperbound loc rt1 rt2 =
-  match (rt1, rt2) with
-  | UnsizedType.ReturnType UReal, UnsizedType.ReturnType UInt
-   |ReturnType UInt, ReturnType UReal ->
-      UnsizedType.ReturnType UReal
-  | _, _ when rt1 = rt2 -> rt2
-  | _ ->
-      (* should no longer be possible with improved return statement type checking *)
-      Semantic_error.mismatched_return_types loc rt1 rt2 |> error
-
-let try_compute_block_statement_returntype loc srt1 srt2 =
+let try_compute_block_statement_returntype srt1 srt2 =
   match (srt1, srt2) with
-  | Complete rt1, Complete rt2 | Incomplete rt1, Complete rt2 ->
-      Complete (returntype_leastupperbound loc rt1 rt2)
-  | Incomplete rt1, Incomplete rt2 | Complete rt1, Incomplete rt2 ->
-      Incomplete (returntype_leastupperbound loc rt1 rt2)
-  | NoReturnType, NoReturnType -> NoReturnType
-  | AnyReturnType, Incomplete rt
-   |Complete rt, NoReturnType
-   |NoReturnType, Incomplete rt
-   |Incomplete rt, NoReturnType ->
-      Incomplete rt
-  | NoReturnType, Complete rt
-   |Complete rt, AnyReturnType
-   |Incomplete rt, AnyReturnType
-   |AnyReturnType, Complete rt ->
-      Complete rt
-  | AnyReturnType, NoReturnType
-   |NoReturnType, AnyReturnType
-   |AnyReturnType, AnyReturnType ->
-      AnyReturnType
+  | Complete, Complete | Incomplete, Complete -> Complete
+  | UnclearControlFlow, _ | _, UnclearControlFlow -> UnclearControlFlow
+  | _ -> Incomplete
 
-let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
+let try_compute_ifthenelse_statement_returntype srt1 srt2 =
   match (srt1, srt2) with
-  | Complete rt1, Complete rt2 ->
-      returntype_leastupperbound loc rt1 rt2 |> Complete
-  | Incomplete rt1, Incomplete rt2
-   |Complete rt1, Incomplete rt2
-   |Incomplete rt1, Complete rt2 ->
-      returntype_leastupperbound loc rt1 rt2 |> Incomplete
-  | AnyReturnType, NoReturnType
-   |NoReturnType, AnyReturnType
-   |NoReturnType, NoReturnType ->
-      NoReturnType
-  | AnyReturnType, Incomplete rt
-   |Incomplete rt, AnyReturnType
-   |Complete rt, NoReturnType
-   |NoReturnType, Complete rt
-   |NoReturnType, Incomplete rt
-   |Incomplete rt, NoReturnType ->
-      Incomplete rt
-  | Complete rt, AnyReturnType | AnyReturnType, Complete rt -> Complete rt
-  | AnyReturnType, AnyReturnType -> AnyReturnType
+  | Complete, Complete -> Complete
+  | UnclearControlFlow, _ | _, UnclearControlFlow -> UnclearControlFlow
+  | _ -> Incomplete
+
+(* when we exit a loop, the loop's entire return type is either complete or not *)
+let prevent_break_escape = function Complete -> Complete | _ -> Incomplete
 
 (* statements which contain statements, and therefore need to be mutually recursive
    with check_statement
@@ -1367,19 +1318,29 @@ let rec check_if_then_else loc cf tenv pred_e s_true s_false_opt =
   let srt2 =
     ts_false_opt
     |> Option.map ~f:(fun s -> s.smeta.return_type)
-    |> Option.value ~default:NoReturnType in
-  let return_type = try_compute_ifthenelse_statement_returntype loc srt1 srt2 in
+    |> Option.value ~default:Incomplete in
+  let return_type = try_compute_ifthenelse_statement_returntype srt1 srt2 in
   mk_typed_statement ~stmt ~return_type ~loc
 
 and check_while loc cf tenv cond_e loop_body =
+  let hardcoded_true e =
+    (* heuristic for "will this loop forever" *)
+    match e.expr with
+    | Ast.IntNumeral s -> String.exists s ~f:(fun c -> c > '0' && c <= '9')
+    | _ -> false in
   let _, ts =
-    check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body
-  and te =
+    check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body in
+  let te =
     check_expression_of_int_or_real_type cf tenv cond_e
       "Condition in while-loop" in
-  mk_typed_statement
-    ~stmt:(While (te, ts))
-    ~return_type:ts.smeta.return_type ~loc
+  let return_type =
+    match (hardcoded_true te, ts.smeta.return_type) with
+    | true, Incomplete ->
+        (* if the only way out of the loop is a return,
+            we can consider that like a return statement *)
+        Complete
+    | _, rt -> prevent_break_escape rt in
+  mk_typed_statement ~stmt:(While (te, ts)) ~return_type ~loc
 
 and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
   let te1 =
@@ -1396,7 +1357,8 @@ and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
          ; lower_bound= te1
          ; upper_bound= te2
          ; loop_body= ts } )
-    ~return_type:ts.smeta.return_type ~loc
+    ~return_type:(prevent_break_escape ts.smeta.return_type)
+    ~loc
 
 and check_foreach_loop_identifier_type loc ty =
   match ty with
@@ -1412,7 +1374,8 @@ and check_foreach loc cf tenv loop_var foreach_e loop_body =
   let ts = check_loop_body cf tenv loop_var loop_var_ty loop_body in
   mk_typed_statement
     ~stmt:(ForEach (loop_var, te, ts))
-    ~return_type:ts.smeta.return_type ~loc
+    ~return_type:(prevent_break_escape ts.smeta.return_type)
+    ~loc
 
 and check_loop_body cf tenv loop_var loop_var_ty loop_body =
   verify_name_fresh tenv loop_var ~is_udf:false ;
@@ -1432,8 +1395,8 @@ and check_block loc cf tenv stmts =
   let return_type =
     checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
-    |> List.fold ~init:NoReturnType
-         ~f:(try_compute_block_statement_returntype loc) in
+    |> List.fold ~init:Incomplete ~f:try_compute_block_statement_returntype
+  in
   mk_typed_statement ~stmt:(Block checked_stmts) ~return_type ~loc
 
 and check_profile loc cf tenv name stmts =
@@ -1442,8 +1405,8 @@ and check_profile loc cf tenv name stmts =
   let return_type =
     checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
-    |> List.fold ~init:NoReturnType
-         ~f:(try_compute_block_statement_returntype loc) in
+    |> List.fold ~init:Incomplete ~f:try_compute_block_statement_returntype
+  in
   mk_typed_statement ~stmt:(Profile (name, checked_stmts)) ~return_type ~loc
 
 (* variable declarations *)
@@ -1576,7 +1539,7 @@ and check_var_decl loc cf tenv sized_ty trans
       ; transformation= checked_trans
       ; variables= tvariables
       ; is_global } in
-  (tenv, mk_typed_statement ~stmt ~loc ~return_type:NoReturnType)
+  (tenv, mk_typed_statement ~stmt ~loc ~return_type:Incomplete)
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
@@ -1730,7 +1693,7 @@ and check_fundef loc cf tenv return_ty id args body =
       {returntype= return_ty; funname= id; arguments= args; body= checked_body}
   in
   (* NB: **not** tenv_body, so args don't leak out *)
-  (tenv, mk_typed_statement ~return_type:NoReturnType ~loc ~stmt)
+  (tenv, mk_typed_statement ~return_type:Incomplete ~loc ~stmt)
 
 and check_statement (cf : context_flags_record) (tenv : Env.t)
     (s : Ast.untyped_statement) : Env.t * typed_statement =

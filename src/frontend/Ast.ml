@@ -176,18 +176,16 @@ type ('e, 's, 'l, 'f) statement =
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Statement return types which we will decorate statements with during type
-    checking: the purpose is to check that function bodies have the correct
-    return type in every possible execution branch.
-    NoReturnType corresponds to not having a return statement in it.
-    Incomplete rt corresponds to having some return statement(s) of type rt
+    checking:
+    Incomplete corresponds to having some return statement(s)
     in it, but not one in every branch
-    Complete rt corresponds to having a return statement of type rt in every branch
-    AnyReturnType corresponds to statements which have an error in every branch  *)
+    UnclearControlFlow is used when breaks are present in loops, meaning
+    we may exit a while loop without hitting any returns in it.
+    Complete corresponds to statements return or error in every branch  *)
 type statement_returntype =
-  | NoReturnType
-  | Incomplete of Middle.UnsizedType.returntype
-  | Complete of Middle.UnsizedType.returntype
-  | AnyReturnType
+  | Incomplete
+  | UnclearControlFlow (* is any break present *)
+  | Complete
 [@@deriving sexp, hash, compare]
 
 type ('e, 'm, 'l, 'f) statement_with =

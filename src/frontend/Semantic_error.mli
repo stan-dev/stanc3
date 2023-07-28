@@ -6,9 +6,6 @@ val pp : Format.formatter -> t -> unit
 val location : t -> Location_span.t
 val invalid_return : Location_span.t -> UnsizedType.t -> UnsizedType.t -> t
 
-val mismatched_return_types :
-  Location_span.t -> UnsizedType.returntype -> UnsizedType.returntype -> t
-
 val mismatched_array_types :
   Location_span.t -> UnsizedType.t -> UnsizedType.t -> t
 
