@@ -4,6 +4,7 @@ open Middle
 (** Type errors that may arise during semantic check *)
 module TypeError = struct
   type t =
+    | IncorrectReturnType of UnsizedType.t * UnsizedType.t
     | MismatchedReturnTypes of UnsizedType.returntype * UnsizedType.returntype
     | MismatchedArrayTypes of UnsizedType.t * UnsizedType.t
     | InvalidRowVectorTypes of UnsizedType.t
@@ -55,6 +56,11 @@ module TypeError = struct
     | NotIndexable of UnsizedType.t * int
 
   let pp ppf = function
+    | IncorrectReturnType (t1, t2) ->
+        Fmt.pf ppf
+          "Invalid return statement. Function is declared to return %a, but \
+           this statement returns %a instead."
+          UnsizedType.pp t1 UnsizedType.pp t2
     | MismatchedReturnTypes (rt1, rt2) ->
         Fmt.pf ppf
           "Branches of function definition need to have the same return type. \
@@ -520,6 +526,9 @@ let location = function
   | StatementError (loc, _) -> loc
 
 (* -- Constructors ---------------------------------------------------------- *)
+
+let invalid_return loc t1 t2 =
+  TypeError (loc, TypeError.IncorrectReturnType (t1, t2))
 
 let mismatched_return_types loc rt1 rt2 =
   TypeError (loc, TypeError.MismatchedReturnTypes (rt1, rt2))

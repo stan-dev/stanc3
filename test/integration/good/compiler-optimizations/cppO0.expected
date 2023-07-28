@@ -15359,7 +15359,8 @@ foo(const int& N, const int& M, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
-    return stan::math::rep_matrix(1, N, M);
+    return stan::math::promote_scalar<local_scalar_t__>(
+             stan::math::rep_matrix(1, N, M));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }

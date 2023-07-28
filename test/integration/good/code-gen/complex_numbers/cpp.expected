@@ -7220,7 +7220,8 @@ std::complex<double> foo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 406;
-    return stan::math::to_complex();
+    return stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+             stan::math::to_complex());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }

@@ -34,23 +34,28 @@ let attach_warnings x = (x, List.rev !warnings)
 let model_name = ref ""
 let check_that_all_functions_have_definition = ref true
 
+type function_indicator =
+  | NotInFunction
+  | NonReturning
+  | Returning of UnsizedType.t
+
 (* Record structure holding flags and other markers about context to be
    used for error reporting. *)
 type context_flags_record =
   { current_block: Env.originblock
   ; in_toplevel_decl: bool
-  ; in_fun_def: bool
-  ; in_returning_fun_def: bool
+  ; in_fun: function_indicator
   ; in_rng_fun_def: bool
   ; in_lp_fun_def: bool
   ; in_udf_dist_def: bool
   ; loop_depth: int }
 
+let in_function cf = cf.in_fun <> NotInFunction
+
 let context block =
   { current_block= block
   ; in_toplevel_decl= false
-  ; in_fun_def= false
-  ; in_returning_fun_def= false
+  ; in_fun= NotInFunction
   ; in_rng_fun_def= false
   ; in_lp_fun_def= false
   ; in_udf_dist_def= false
@@ -277,7 +282,7 @@ let check_id cf loc tenv id =
   | _ :: _
     when Utils.is_unnormalized_distribution id.name
          && not
-              ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
+              ( (in_function cf && (cf.in_udf_dist_def || cf.in_lp_fun_def))
               || cf.current_block = Model ) ->
       Semantic_error.invalid_unnormalized_fn loc |> error
   | {kind= `Variable {origin; _}; type_} :: _ ->
@@ -451,7 +456,7 @@ let verify_fn_rng cf loc id =
     Semantic_error.invalid_decl_rng_fn loc |> error
   else if
     String.is_suffix id.name ~suffix:"_rng"
-    && ( (cf.in_fun_def && not cf.in_rng_fun_def)
+    && ( (in_function cf && not cf.in_rng_fun_def)
        || cf.current_block = TParam || cf.current_block = Model )
   then Semantic_error.invalid_rng_fn loc |> error
 
@@ -461,7 +466,7 @@ let verify_fn_rng cf loc id =
 let verify_unnormalized cf loc id =
   if
     Utils.is_unnormalized_distribution id.name
-    && not ((cf.in_fun_def && cf.in_udf_dist_def) || cf.current_block = Model)
+    && not ((in_function cf && cf.in_udf_dist_def) || cf.current_block = Model)
   then Semantic_error.invalid_unnormalized_fn loc |> error
 
 let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
@@ -1226,29 +1231,32 @@ let check_continue loc cf =
   else mk_typed_statement ~stmt:Continue ~return_type:NoReturnType ~loc
 
 let check_return loc cf tenv e =
-  let ensure_var (e : Ast.typed_expression) =
-    (* return position should always use local_scalar_t,
-       even if e.g. it is just a hard-coded array literal *)
-    let open Promotion in
-    let typ = e.emeta.type_ in
-    if UnsizedType.contains_tuple typ || UnsizedType.is_array typ then
-      promote e
-        (get_type_promotion_exn
-           (UnsizedType.fill_adtype_for_type UnsizedType.AutoDiffable typ, typ)
-           (e.emeta.ad_level, typ) )
-    else e in
-  if not cf.in_returning_fun_def then
-    Semantic_error.expression_return_outside_returning_fn loc |> error
-  else
-    let te = check_expression cf tenv e in
-    let promoted = ensure_var te in
-    mk_typed_statement ~stmt:(Return promoted)
-      ~return_type:(Complete (ReturnType te.emeta.type_)) ~loc
+  match cf.in_fun with
+  | NotInFunction | NonReturning ->
+      Semantic_error.expression_return_outside_returning_fn loc |> error
+  | Returning expected -> (
+      let te = check_expression cf tenv e in
+      let actual = te.emeta.type_ in
+      match SignatureMismatch.check_of_same_type_mod_conv expected actual with
+      | Ok _ ->
+          (* we ignore the promotion from SignatureMismatch so we can get one that _also_
+             ensures our returns use local_scalar_t *)
+          let promotions =
+            Promotion.get_type_promotion_exn
+              ( UnsizedType.fill_adtype_for_type UnsizedType.AutoDiffable
+                  expected
+              , expected )
+              (te.emeta.ad_level, actual) in
+          let promoted = Promotion.promote te promotions in
+          mk_typed_statement ~stmt:(Return promoted)
+            ~return_type:(Complete (ReturnType expected)) ~loc
+      | _ -> Semantic_error.invalid_return loc expected actual |> error )
 
 let check_returnvoid loc cf =
-  if (not cf.in_fun_def) || cf.in_returning_fun_def then
-    Semantic_error.void_outside_nonreturning_fn loc |> error
-  else mk_typed_statement ~stmt:ReturnVoid ~return_type:(Complete Void) ~loc
+  match cf.in_fun with
+  | NonReturning ->
+      mk_typed_statement ~stmt:ReturnVoid ~return_type:(Complete Void) ~loc
+  | _ -> Semantic_error.void_outside_nonreturning_fn loc |> error
 
 let check_printable cf tenv = function
   | PString s -> PString s
@@ -1294,7 +1302,9 @@ let returntype_leastupperbound loc rt1 rt2 =
    |ReturnType UInt, ReturnType UReal ->
       UnsizedType.ReturnType UReal
   | _, _ when rt1 = rt2 -> rt2
-  | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> error
+  | _ ->
+      (* should no longer be possible with improved return statement type checking *)
+      Semantic_error.mismatched_return_types loc rt1 rt2 |> error
 
 let try_compute_block_statement_returntype loc srt1 srt2 =
   match (srt1, srt2) with
@@ -1707,11 +1717,12 @@ and check_fundef loc cf tenv return_ty id args body =
         ~f:(fun suffix -> String.is_suffix name ~suffix)
         Utils.distribution_suffices in
     { cf with
-      in_fun_def= true
+      in_fun=
+        UnsizedType.returntype_to_type_opt return_ty
+        |> Option.value_map ~default:NonReturning ~f:(fun r -> Returning r)
     ; in_rng_fun_def= String.is_suffix id.name ~suffix:"_rng"
     ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
-    ; in_udf_dist_def= is_udf_dist id.name
-    ; in_returning_fun_def= return_ty <> Void } in
+    ; in_udf_dist_def= is_udf_dist id.name } in
   let _, checked_body = check_statement context tenv_body body in
   verify_fundef_return_tys loc return_ty checked_body ;
   let stmt =

@@ -130,7 +130,7 @@ let%expect_test "inline functions" =
         }
         real g(int z) {
           {
-            return (z ^ 2);
+            return promote((z ^ 2), real, var);
           }
         }
       }
@@ -148,7 +148,7 @@ let%expect_test "inline functions" =
           }
           real inline_g_return_sym2__;
           {
-            inline_g_return_sym2__ = (53 ^ 2);
+            inline_g_return_sym2__ = promote((53 ^ 2), real, var);
           }
           FnReject__(inline_g_return_sym2__);
         }
@@ -263,12 +263,16 @@ let%expect_test "list collapsing" =
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Pow__ FnPlain AoS)
-                 (((pattern (Var z))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                  ((pattern (Lit Int 2))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                (Promotion
+                 ((pattern
+                   (FunApp (StanLib Pow__ FnPlain AoS)
+                    (((pattern (Var z))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 2))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))))
@@ -339,12 +343,16 @@ let%expect_test "list collapsing" =
           (((pattern
              (Assignment ((LVariable inline_g_return_sym2__) ()) UReal
               ((pattern
-                (FunApp (StanLib Pow__ FnPlain AoS)
-                 (((pattern (Lit Int 53))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                  ((pattern (Lit Int 2))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                (Promotion
+                 ((pattern
+                   (FunApp (StanLib Pow__ FnPlain AoS)
+                    (((pattern (Lit Int 53))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 2))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
             (meta <opaque>)))))
         (meta <opaque>))
        ((pattern
