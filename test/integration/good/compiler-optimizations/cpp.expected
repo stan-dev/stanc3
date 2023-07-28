@@ -1947,8 +1947,8 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
         std::vector<local_scalar_t__>(4, DUMMY_VAR__);
       current_statement__ = 30;
       stan::model::assign(dydt,
-        (((-stan::model::rvalue(theta, "theta", stan::model::index_uni(1)) *
-        stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
+        (((-(stan::model::rvalue(theta, "theta", stan::model::index_uni(1)))
+        * stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
         (stan::model::rvalue(y, "y", stan::model::index_uni(4)) +
         stan::model::rvalue(theta, "theta", stan::model::index_uni(2)))) *
         stan::model::rvalue(y, "y", stan::model::index_uni(1))),
@@ -11847,7 +11847,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, lcm_sym31__));
       current_statement__ = 14;
-      stan::model::assign(phi, -stan::math::sum(phi_std_raw),
+      stan::model::assign(phi, -(stan::math::sum(phi_std_raw)),
         "assigning variable phi", stan::model::index_uni(N));
       current_statement__ = 15;
       stan::model::assign(phi,
@@ -11923,7 +11923,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, lcm_sym24__));
       current_statement__ = 14;
-      stan::model::assign(phi, -stan::math::sum(phi_std_raw),
+      stan::model::assign(phi, -(stan::math::sum(phi_std_raw)),
         "assigning variable phi", stan::model::index_uni(N));
       current_statement__ = 15;
       stan::model::assign(phi,
@@ -12019,7 +12019,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, lcm_sym17__));
       current_statement__ = 14;
-      stan::model::assign(phi, -stan::math::sum(phi_std_raw),
+      stan::model::assign(phi, -(stan::math::sum(phi_std_raw)),
         "assigning variable phi", stan::model::index_uni(N));
       current_statement__ = 15;
       stan::model::assign(phi,
