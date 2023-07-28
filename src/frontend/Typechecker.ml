@@ -1365,15 +1365,28 @@ and check_while loc cf tenv cond_e loop_body =
   let hardcoded_true e =
     (* heuristic for "will this loop forever" *)
     match e.expr with
-    | Ast.IntNumeral s -> String.count s ~f:(fun c -> c > '0' && c <= '9') >= 1
+    | Ast.IntNumeral s -> String.exists s ~f:(fun c -> c > '0' && c <= '9')
     | _ -> false in
+  let rec could_break s =
+    match s.stmt with
+    | Break -> true
+    | For _ | ForEach _ | While _ ->
+        (* inner loop could break, that's fine *)
+        false
+    | Tilde _ | TargetPE _ | IncrementLogProb _ | Continue | Print _
+     |Reject _ | VarDecl _ | Skip | Assignment _ | Return _ | ReturnVoid
+     |NRFunApp _ | FunDef _ ->
+        false
+    | IfThenElse (_, s1, s2) ->
+        could_break s1 || Option.value_map ~default:false ~f:could_break s2
+    | Block stmts | Profile (_, stmts) -> List.exists stmts ~f:could_break in
   let _, ts =
     check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body in
   let te =
     check_expression_of_int_or_real_type cf tenv cond_e
       "Condition in while-loop" in
   let return_type =
-    match (hardcoded_true te, ts.smeta.return_type) with
+    match (hardcoded_true te && not (could_break ts), ts.smeta.return_type) with
     | true, Incomplete r ->
         (* if the only way out of the loop is a return,
             we can consider that like a return statement *)
