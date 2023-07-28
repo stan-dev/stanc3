@@ -177,14 +177,15 @@ type ('e, 's, 'l, 'f) statement =
 
 (** Statement return types which we will decorate statements with during type
     checking:
-    Incomplete corresponds to having some return statement(s)
-    in it, but not one in every branch
-    UnclearControlFlow is used when breaks are present in loops, meaning
-    we may exit a while loop without hitting any returns in it.
-    Complete corresponds to statements return or error in every branch  *)
+    - [Complete] corresponds to statements that exit the function (return or error) in every branch
+    - [Incomplete] corresponds to statements which pass control flow to following statements in at least some branches
+    - [NonlocalControlFlow] is simila to [Incomplete] but specifically used when breaks are present in loops.
+      Normally, an infinite loop with [Incomplete] return type is fine (and considered [Complete]),
+      since it either returns or diverges. However, in the presence of break statements, control flow
+      may jump to the end of the loop. *)
 type statement_returntype =
   | Incomplete
-  | UnclearControlFlow (* is any break present *)
+  | NonlocalControlFlow (* is any break present *)
   | Complete
 [@@deriving sexp, hash, compare]
 

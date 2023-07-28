@@ -1225,7 +1225,7 @@ let check_tilde loc cf tenv distribution truncation arg args =
 (* Break and continue only occur in loops. *)
 let check_break loc cf =
   if cf.loop_depth = 0 then Semantic_error.break_outside_loop loc |> error
-  else mk_typed_statement ~stmt:Break ~return_type:UnclearControlFlow ~loc
+  else mk_typed_statement ~stmt:Break ~return_type:NonlocalControlFlow ~loc
 
 let check_continue loc cf =
   if cf.loop_depth = 0 then Semantic_error.continue_outside_loop loc |> error
@@ -1298,13 +1298,13 @@ and list_until_escape xs =
 let try_compute_block_statement_returntype srt1 srt2 =
   match (srt1, srt2) with
   | Complete, Complete | Incomplete, Complete -> Complete
-  | UnclearControlFlow, _ | _, UnclearControlFlow -> UnclearControlFlow
+  | NonlocalControlFlow, _ | _, NonlocalControlFlow -> NonlocalControlFlow
   | _ -> Incomplete
 
 let try_compute_ifthenelse_statement_returntype srt1 srt2 =
   match (srt1, srt2) with
   | Complete, Complete -> Complete
-  | UnclearControlFlow, _ | _, UnclearControlFlow -> UnclearControlFlow
+  | NonlocalControlFlow, _ | _, NonlocalControlFlow -> NonlocalControlFlow
   | _ -> Incomplete
 
 (* when we exit a loop, the loop's entire return type is either complete or not *)
