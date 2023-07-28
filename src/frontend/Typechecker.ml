@@ -36,29 +36,38 @@ let check_that_all_functions_have_definition = ref true
 
 type function_indicator =
   | NotInFunction
-  | NonReturning
-  | Returning of UnsizedType.t
+  | NonReturning of unit Fun_kind.suffix
+  | Returning of unit Fun_kind.suffix * UnsizedType.t
 
 (* Record structure holding flags and other markers about context to be
    used for error reporting. *)
 type context_flags_record =
   { current_block: Env.originblock
   ; in_toplevel_decl: bool
-  ; in_fun: function_indicator
-  ; in_rng_fun_def: bool
-  ; in_lp_fun_def: bool
-  ; in_udf_dist_def: bool
+  ; containing_function: function_indicator
   ; loop_depth: int }
 
-let in_function cf = cf.in_fun <> NotInFunction
+let in_function cf = cf.containing_function <> NotInFunction
+
+let in_rng_function cf =
+  match cf.containing_function with
+  | NonReturning FnRng | Returning (FnRng, _) -> true
+  | _ -> false
+
+let in_lp_function cf =
+  match cf.containing_function with
+  | NonReturning FnTarget | Returning (FnTarget, _) -> true
+  | _ -> false
+
+let in_udf_distribution cf =
+  match cf.containing_function with
+  | NonReturning (FnLpdf ()) | Returning (FnLpdf (), _) -> true
+  | _ -> false
 
 let context block =
   { current_block= block
   ; in_toplevel_decl= false
-  ; in_fun= NotInFunction
-  ; in_rng_fun_def= false
-  ; in_lp_fun_def= false
-  ; in_udf_dist_def= false
+  ; containing_function= NotInFunction
   ; loop_depth= 0 }
 
 let rec calculate_autodifftype cf origin ut =
@@ -274,7 +283,7 @@ let check_id cf loc tenv id =
   | _ :: _
     when Utils.is_unnormalized_distribution id.name
          && not
-              ( (in_function cf && (cf.in_udf_dist_def || cf.in_lp_fun_def))
+              ( (in_udf_distribution cf || in_lp_function cf)
               || cf.current_block = Model ) ->
       Semantic_error.invalid_unnormalized_fn loc |> error
   | {kind= `Variable {origin; _}; type_} :: _ ->
@@ -436,7 +445,7 @@ let verify_fn_target_plus_equals cf loc id =
   if
     String.is_suffix id.name ~suffix:"_lp"
     && not
-         ( cf.in_lp_fun_def || cf.current_block = Model
+         ( in_lp_function cf || cf.current_block = Model
          || cf.current_block = TParam )
   then Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
@@ -448,7 +457,7 @@ let verify_fn_rng cf loc id =
     Semantic_error.invalid_decl_rng_fn loc |> error
   else if
     String.is_suffix id.name ~suffix:"_rng"
-    && ( (in_function cf && not cf.in_rng_fun_def)
+    && ( (in_function cf && not (in_rng_function cf))
        || cf.current_block = TParam || cf.current_block = Model )
   then Semantic_error.invalid_rng_fn loc |> error
 
@@ -458,7 +467,7 @@ let verify_fn_rng cf loc id =
 let verify_unnormalized cf loc id =
   if
     Utils.is_unnormalized_distribution id.name
-    && not ((in_function cf && cf.in_udf_dist_def) || cf.current_block = Model)
+    && not (in_udf_distribution cf || cf.current_block = Model)
   then Semantic_error.invalid_unnormalized_fn loc |> error
 
 let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
@@ -815,7 +824,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       if
         not
-          ( cf.in_lp_fun_def || cf.current_block = Model
+          ( in_lp_function cf || cf.current_block = Model
           || cf.current_block = TParam )
       then
         Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
@@ -827,7 +836,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       if
         not
-          ( cf.in_lp_fun_def || cf.current_block = Model
+          ( in_lp_function cf || cf.current_block = Model
           || cf.current_block = TParam )
       then
         Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
@@ -910,7 +919,7 @@ let verify_nrfn_target loc cf id =
   if
     String.is_suffix id.name ~suffix:"_lp"
     && not
-         ( cf.in_lp_fun_def || cf.current_block = Model
+         ( in_lp_function cf || cf.current_block = Model
          || cf.current_block = TParam )
   then Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
@@ -1093,7 +1102,7 @@ let verify_target_pe_expr_type loc e =
     Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
 
 let verify_target_pe_usage loc cf =
-  if cf.in_lp_fun_def || cf.current_block = Model then ()
+  if in_lp_function cf || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 let check_target_pe loc cf tenv e =
@@ -1126,7 +1135,7 @@ let verify_sampling_cdf_ccdf loc id =
 
 (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
 let verify_valid_sampling_pos loc cf =
-  if cf.in_lp_fun_def || cf.current_block = Model then ()
+  if in_lp_function cf || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 let check_sampling_distribution loc tenv id arguments =
@@ -1223,10 +1232,10 @@ let check_continue loc cf =
   else mk_typed_statement ~stmt:Continue ~return_type:Incomplete ~loc
 
 let check_return loc cf tenv e =
-  match cf.in_fun with
-  | NotInFunction | NonReturning ->
+  match cf.containing_function with
+  | NotInFunction | NonReturning _ ->
       Semantic_error.expression_return_outside_returning_fn loc |> error
-  | Returning expected -> (
+  | Returning (_, expected) -> (
       let te = check_expression cf tenv e in
       let actual = te.emeta.type_ in
       match SignatureMismatch.check_of_same_type_mod_conv expected actual with
@@ -1244,8 +1253,8 @@ let check_return loc cf tenv e =
       | _ -> Semantic_error.invalid_return loc expected actual |> error )
 
 let check_returnvoid loc cf =
-  match cf.in_fun with
-  | NonReturning ->
+  match cf.containing_function with
+  | NonReturning _ ->
       mk_typed_statement ~stmt:ReturnVoid ~return_type:Complete ~loc
   | _ -> Semantic_error.void_outside_nonreturning_fn loc |> error
 
@@ -1679,13 +1688,16 @@ and check_fundef loc cf tenv return_ty id args body =
       List.exists
         ~f:(fun suffix -> String.is_suffix name ~suffix)
         Utils.distribution_suffices in
+    let kind =
+      if is_udf_dist id.name then Fun_kind.FnLpdf ()
+      else if String.is_suffix id.name ~suffix:"_rng" then FnRng
+      else if String.is_suffix id.name ~suffix:"_lp" then FnTarget
+      else FnPlain in
     { cf with
-      in_fun=
+      containing_function=
         UnsizedType.returntype_to_type_opt return_ty
-        |> Option.value_map ~default:NonReturning ~f:(fun r -> Returning r)
-    ; in_rng_fun_def= String.is_suffix id.name ~suffix:"_rng"
-    ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
-    ; in_udf_dist_def= is_udf_dist id.name } in
+        |> Option.value_map ~default:(NonReturning kind) ~f:(fun r ->
+               Returning (kind, r) ) } in
   let _, checked_body = check_statement context tenv_body body in
   verify_fundef_return_tys loc return_ty checked_body ;
   let stmt =
