@@ -1295,20 +1295,22 @@ and list_until_escape xs =
     | [] -> List.rev accu in
   aux [] xs
 
-let try_compute_block_statement_returntype srt1 srt2 =
+let compute_block_statement_returntype srt1 srt2 =
   match (srt1, srt2) with
   | Complete, Complete | Incomplete, Complete -> Complete
   | NonlocalControlFlow, _ | _, NonlocalControlFlow -> NonlocalControlFlow
   | _ -> Incomplete
 
-let try_compute_ifthenelse_statement_returntype srt1 srt2 =
+let compute_ifthenelse_statement_returntype srt1 srt2 =
   match (srt1, srt2) with
   | Complete, Complete -> Complete
   | NonlocalControlFlow, _ | _, NonlocalControlFlow -> NonlocalControlFlow
   | _ -> Incomplete
 
 (* when we exit a loop, the loop's entire return type is either complete or not *)
-let prevent_break_escape = function Complete -> Complete | _ -> Incomplete
+let compute_loop_statement_returntype = function
+  | Complete -> Complete
+  | Incomplete | NonlocalControlFlow -> Incomplete
 
 (* statements which contain statements, and therefore need to be mutually recursive
    with check_statement
@@ -1328,7 +1330,7 @@ let rec check_if_then_else loc cf tenv pred_e s_true s_false_opt =
     ts_false_opt
     |> Option.map ~f:(fun s -> s.smeta.return_type)
     |> Option.value ~default:Incomplete in
-  let return_type = try_compute_ifthenelse_statement_returntype srt1 srt2 in
+  let return_type = compute_ifthenelse_statement_returntype srt1 srt2 in
   mk_typed_statement ~stmt ~return_type ~loc
 
 and check_while loc cf tenv cond_e loop_body =
@@ -1343,12 +1345,13 @@ and check_while loc cf tenv cond_e loop_body =
     check_expression_of_int_or_real_type cf tenv cond_e
       "Condition in while-loop" in
   let return_type =
-    match (hardcoded_true te, ts.smeta.return_type) with
-    | true, Incomplete ->
-        (* if the only way out of the loop is a return,
+    match ts.smeta.return_type with
+    | Complete -> Complete
+    | Incomplete when hardcoded_true te ->
+        (* if the only way out of the loop is a return or reject,
             we can consider that like a return statement *)
         Complete
-    | _, rt -> prevent_break_escape rt in
+    | Incomplete | NonlocalControlFlow -> Incomplete in
   mk_typed_statement ~stmt:(While (te, ts)) ~return_type ~loc
 
 and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
@@ -1366,7 +1369,7 @@ and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
          ; lower_bound= te1
          ; upper_bound= te2
          ; loop_body= ts } )
-    ~return_type:(prevent_break_escape ts.smeta.return_type)
+    ~return_type:(compute_loop_statement_returntype ts.smeta.return_type)
     ~loc
 
 and check_foreach_loop_identifier_type loc ty =
@@ -1383,7 +1386,7 @@ and check_foreach loc cf tenv loop_var foreach_e loop_body =
   let ts = check_loop_body cf tenv loop_var loop_var_ty loop_body in
   mk_typed_statement
     ~stmt:(ForEach (loop_var, te, ts))
-    ~return_type:(prevent_break_escape ts.smeta.return_type)
+    ~return_type:(compute_loop_statement_returntype ts.smeta.return_type)
     ~loc
 
 and check_loop_body cf tenv loop_var loop_var_ty loop_body =
@@ -1404,8 +1407,7 @@ and check_block loc cf tenv stmts =
   let return_type =
     checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
-    |> List.fold ~init:Incomplete ~f:try_compute_block_statement_returntype
-  in
+    |> List.fold ~init:Incomplete ~f:compute_block_statement_returntype in
   mk_typed_statement ~stmt:(Block checked_stmts) ~return_type ~loc
 
 and check_profile loc cf tenv name stmts =
@@ -1414,8 +1416,7 @@ and check_profile loc cf tenv name stmts =
   let return_type =
     checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
-    |> List.fold ~init:Incomplete ~f:try_compute_block_statement_returntype
-  in
+    |> List.fold ~init:Incomplete ~f:compute_block_statement_returntype in
   mk_typed_statement ~stmt:(Profile (name, checked_stmts)) ~return_type ~loc
 
 (* variable declarations *)
