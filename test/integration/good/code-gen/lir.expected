@@ -3284,12 +3284,14 @@
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 723)))
           (Return
-           ((MethodCall
-             (Parens
-              (StreamInsertion
-               (Constructor (Matrix Double -1 1 AoS) ((Literal 3)))
-               ((Literal 1) (Literal 2) (Literal 3))))
-             finished () ()))))
+           ((FunCall stan::math::promote_scalar
+             ((TypeLiteral local_scalar_t__))
+             ((MethodCall
+               (Parens
+                (StreamInsertion
+                 (Constructor (Matrix Double -1 1 AoS) ((Literal 3)))
+                 ((Literal 1) (Literal 2) (Literal 3))))
+               finished () ()))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
@@ -4724,11 +4726,14 @@
          ((Expression (Assign (Var current_statement__) (Literal 769)))
           (Return
            ((FunCall stan::math::to_matrix ()
-             ((InitializerExpr (StdVector (Matrix Double 1 -1 AoS))
+             ((InitializerExpr
+               (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
                ((MethodCall
                  (Parens
                   (StreamInsertion
-                   (Constructor (Matrix Double 1 -1 AoS) ((Literal 10)))
+                   (Constructor
+                    (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                    ((Literal 10)))
                    ((Literal 1) (Literal 2) (Literal 3) (Literal 4)
                     (Literal 5) (Literal 6) (Literal 7) (Literal 8)
                     (Literal 9) (Literal 10))))
@@ -4736,7 +4741,9 @@
                 (MethodCall
                  (Parens
                   (StreamInsertion
-                   (Constructor (Matrix Double 1 -1 AoS) ((Literal 10)))
+                   (Constructor
+                    (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                    ((Literal 10)))
                    ((Literal 1) (Literal 2) (Literal 3) (Literal 4)
                     (Literal 5) (Literal 6) (Literal 7) (Literal 8)
                     (Literal 9) (Literal 10))))
@@ -4744,7 +4751,9 @@
                 (MethodCall
                  (Parens
                   (StreamInsertion
-                   (Constructor (Matrix Double 1 -1 AoS) ((Literal 10)))
+                   (Constructor
+                    (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                    ((Literal 10)))
                    ((Literal 1) (Literal 2) (Literal 3) (Literal 4)
                     (Literal 5) (Literal 6) (Literal 7) (Literal 8)
                     (Literal 9) (Literal 10))))
@@ -4780,13 +4789,16 @@
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 771)))
           (Return
-           ((MethodCall
-             (Parens
-              (StreamInsertion
-               (Constructor (Matrix Double -1 1 AoS) ((Literal 10)))
-               ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
-                (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
-             finished () ()))))
+           ((FunCall stan::math::promote_scalar
+             ((TypeLiteral local_scalar_t__))
+             ((MethodCall
+               (Parens
+                (StreamInsertion
+                 (Constructor (Matrix Double -1 1 AoS) ((Literal 10)))
+                 ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
+                  (Literal 6) (Literal 7) (Literal 8) (Literal 9)
+                  (Literal 10))))
+               finished () ()))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()

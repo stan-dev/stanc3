@@ -59,12 +59,13 @@ let prepare_prog (mir : Program.Typed.t) :
   let map_rect_calls_list = List.sort ~compare (Queue.to_list map_rect_calls) in
   (mir, location_list, map_rect_calls_list)
 
-let gen_globals location_list =
+let gen_globals ?printed_filename location_list =
   let open Cpp in
   let location_list =
     " (found before start of program)"
     :: ( List.filter ~f:(fun x -> x <> Location_span.empty) location_list
-       |> List.map ~f:(fun x -> " (in " ^ Location_span.to_string x ^ ")") )
+       |> List.map ~f:(fun x ->
+              " (in " ^ Location_span.to_string ?printed_filename x ^ ")" ) )
     |> List.map ~f:Exprs.literal_string in
   let location_count = List.length location_list in
   let arr_type = Types.const_char_array location_count in

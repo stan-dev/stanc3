@@ -34,26 +34,40 @@ let attach_warnings x = (x, List.rev !warnings)
 let model_name = ref ""
 let check_that_all_functions_have_definition = ref true
 
+type function_indicator =
+  | NotInFunction
+  | NonReturning of unit Fun_kind.suffix
+  | Returning of unit Fun_kind.suffix * UnsizedType.t
+
 (* Record structure holding flags and other markers about context to be
    used for error reporting. *)
 type context_flags_record =
   { current_block: Env.originblock
   ; in_toplevel_decl: bool
-  ; in_fun_def: bool
-  ; in_returning_fun_def: bool
-  ; in_rng_fun_def: bool
-  ; in_lp_fun_def: bool
-  ; in_udf_dist_def: bool
+  ; containing_function: function_indicator
   ; loop_depth: int }
+
+let in_function cf = cf.containing_function <> NotInFunction
+
+let in_rng_function cf =
+  match cf.containing_function with
+  | NonReturning FnRng | Returning (FnRng, _) -> true
+  | _ -> false
+
+let in_lp_function cf =
+  match cf.containing_function with
+  | NonReturning FnTarget | Returning (FnTarget, _) -> true
+  | _ -> false
+
+let in_udf_distribution cf =
+  match cf.containing_function with
+  | NonReturning (FnLpdf ()) | Returning (FnLpdf (), _) -> true
+  | _ -> false
 
 let context block =
   { current_block= block
   ; in_toplevel_decl= false
-  ; in_fun_def= false
-  ; in_returning_fun_def= false
-  ; in_rng_fun_def= false
-  ; in_lp_fun_def= false
-  ; in_udf_dist_def= false
+  ; containing_function= NotInFunction
   ; loop_depth= 0 }
 
 let rec calculate_autodifftype cf origin ut =
@@ -150,16 +164,8 @@ let verify_name_fresh tenv id ~is_udf =
 let is_of_compatible_return_type rt1 srt2 =
   UnsizedType.(
     match (rt1, srt2) with
-    | Void, NoReturnType
-     |Void, Incomplete Void
-     |Void, Complete Void
-     |Void, AnyReturnType ->
-        true
-    | ReturnType UReal, Complete (ReturnType UInt) -> true
-    | ReturnType UComplex, Complete (ReturnType UReal) -> true
-    | ReturnType UComplex, Complete (ReturnType UInt) -> true
-    | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
-    | ReturnType _, AnyReturnType -> true
+    | Void, _ -> true
+    | ReturnType _, Complete -> true
     | _ -> false)
 
 (* -- Expressions ------------------------------------------------- *)
@@ -277,7 +283,7 @@ let check_id cf loc tenv id =
   | _ :: _
     when Utils.is_unnormalized_distribution id.name
          && not
-              ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
+              ( (in_udf_distribution cf || in_lp_function cf)
               || cf.current_block = Model ) ->
       Semantic_error.invalid_unnormalized_fn loc |> error
   | {kind= `Variable {origin; _}; type_} :: _ ->
@@ -439,7 +445,7 @@ let verify_fn_target_plus_equals cf loc id =
   if
     String.is_suffix id.name ~suffix:"_lp"
     && not
-         ( cf.in_lp_fun_def || cf.current_block = Model
+         ( in_lp_function cf || cf.current_block = Model
          || cf.current_block = TParam )
   then Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
@@ -451,7 +457,7 @@ let verify_fn_rng cf loc id =
     Semantic_error.invalid_decl_rng_fn loc |> error
   else if
     String.is_suffix id.name ~suffix:"_rng"
-    && ( (cf.in_fun_def && not cf.in_rng_fun_def)
+    && ( (in_function cf && not (in_rng_function cf))
        || cf.current_block = TParam || cf.current_block = Model )
   then Semantic_error.invalid_rng_fn loc |> error
 
@@ -461,7 +467,7 @@ let verify_fn_rng cf loc id =
 let verify_unnormalized cf loc id =
   if
     Utils.is_unnormalized_distribution id.name
-    && not ((cf.in_fun_def && cf.in_udf_dist_def) || cf.current_block = Model)
+    && not (in_udf_distribution cf || cf.current_block = Model)
   then Semantic_error.invalid_unnormalized_fn loc |> error
 
 let mk_fun_app ~is_cond_dist ~loc kind name args ~type_ : Ast.typed_expression =
@@ -818,7 +824,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       if
         not
-          ( cf.in_lp_fun_def || cf.current_block = Model
+          ( in_lp_function cf || cf.current_block = Model
           || cf.current_block = TParam )
       then
         Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
@@ -830,7 +836,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       if
         not
-          ( cf.in_lp_fun_def || cf.current_block = Model
+          ( in_lp_function cf || cf.current_block = Model
           || cf.current_block = TParam )
       then
         Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
@@ -913,7 +919,7 @@ let verify_nrfn_target loc cf id =
   if
     String.is_suffix id.name ~suffix:"_lp"
     && not
-         ( cf.in_lp_fun_def || cf.current_block = Model
+         ( in_lp_function cf || cf.current_block = Model
          || cf.current_block = TParam )
   then Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
@@ -938,7 +944,7 @@ let check_nrfn loc tenv id es =
                ( fnk (Fun_kind.suffix_from_name id.name)
                , id
                , Promotion.promote_list es promotions ) )
-          ~return_type:NoReturnType ~loc
+          ~return_type:Incomplete ~loc
     | UniqueMatch (ReturnType _, _, _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
@@ -1081,7 +1087,7 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   verify_assignment_read_only loc readonly assign_id ;
   verify_assignment_non_function loc rhs.emeta.type_ assign_id ;
   let rhs' = check_assignment_operator loc assign_op lhs rhs in
-  mk_typed_statement ~return_type:NoReturnType ~loc
+  mk_typed_statement ~return_type:Incomplete ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
 
 (* target plus-equals / increment log-prob *)
@@ -1091,20 +1097,20 @@ let verify_target_pe_expr_type loc e =
     Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
 
 let verify_target_pe_usage loc cf =
-  if cf.in_lp_fun_def || cf.current_block = Model then ()
+  if in_lp_function cf || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 let check_target_pe loc cf tenv e =
   let te = check_expression cf tenv e in
   verify_target_pe_usage loc cf ;
   verify_target_pe_expr_type loc te ;
-  mk_typed_statement ~stmt:(TargetPE te) ~return_type:NoReturnType ~loc
+  mk_typed_statement ~stmt:(TargetPE te) ~return_type:Incomplete ~loc
 
 let check_incr_logprob loc cf tenv e =
   let te = check_expression cf tenv e in
   verify_target_pe_usage loc cf ;
   verify_target_pe_expr_type loc te ;
-  mk_typed_statement ~stmt:(IncrementLogProb te) ~return_type:NoReturnType ~loc
+  mk_typed_statement ~stmt:(IncrementLogProb te) ~return_type:Incomplete ~loc
 
 (* tilde/sampling notation*)
 let verify_sampling_pdf_pmf id =
@@ -1124,7 +1130,7 @@ let verify_sampling_cdf_ccdf loc id =
 
 (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
 let verify_valid_sampling_pos loc cf =
-  if cf.in_lp_fun_def || cf.current_block = Model then ()
+  if in_lp_function cf || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 let check_sampling_distribution loc tenv id arguments =
@@ -1202,41 +1208,43 @@ let check_tilde loc cf tenv distribution truncation arg args =
   let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
   verify_sampling_cdf_defined loc tenv distribution ttrunc tes ;
   let stmt = Tilde {arg= te; distribution; args= tes; truncation= ttrunc} in
-  mk_typed_statement ~stmt ~loc ~return_type:NoReturnType
+  mk_typed_statement ~stmt ~loc ~return_type:Incomplete
 
 (* Break and continue only occur in loops. *)
 let check_break loc cf =
   if cf.loop_depth = 0 then Semantic_error.break_outside_loop loc |> error
-  else mk_typed_statement ~stmt:Break ~return_type:NoReturnType ~loc
+  else mk_typed_statement ~stmt:Break ~return_type:NonlocalControlFlow ~loc
 
 let check_continue loc cf =
   if cf.loop_depth = 0 then Semantic_error.continue_outside_loop loc |> error
-  else mk_typed_statement ~stmt:Continue ~return_type:NoReturnType ~loc
+  else mk_typed_statement ~stmt:Continue ~return_type:Incomplete ~loc
 
 let check_return loc cf tenv e =
-  let ensure_var (e : Ast.typed_expression) =
-    (* return position should always use local_scalar_t,
-       even if e.g. it is just a hard-coded array literal *)
-    let open Promotion in
-    let typ = e.emeta.type_ in
-    if UnsizedType.contains_tuple typ || UnsizedType.is_array typ then
-      promote e
-        (get_type_promotion_exn
-           (UnsizedType.fill_adtype_for_type UnsizedType.AutoDiffable typ, typ)
-           (e.emeta.ad_level, typ) )
-    else e in
-  if not cf.in_returning_fun_def then
-    Semantic_error.expression_return_outside_returning_fn loc |> error
-  else
-    let te = check_expression cf tenv e in
-    let promoted = ensure_var te in
-    mk_typed_statement ~stmt:(Return promoted)
-      ~return_type:(Complete (ReturnType te.emeta.type_)) ~loc
+  match cf.containing_function with
+  | NotInFunction | NonReturning _ ->
+      Semantic_error.expression_return_outside_returning_fn loc |> error
+  | Returning (_, expected) -> (
+      let te = check_expression cf tenv e in
+      let actual = te.emeta.type_ in
+      match SignatureMismatch.check_of_same_type_mod_conv expected actual with
+      | Ok _ ->
+          (* we ignore the promotion from SignatureMismatch so we can get one that _also_
+             ensures our returns use local_scalar_t *)
+          let promotions =
+            Promotion.get_type_promotion_exn
+              ( UnsizedType.fill_adtype_for_type UnsizedType.AutoDiffable
+                  expected
+              , expected )
+              (te.emeta.ad_level, actual) in
+          let promoted = Promotion.promote te promotions in
+          mk_typed_statement ~stmt:(Return promoted) ~return_type:Complete ~loc
+      | _ -> Semantic_error.invalid_return loc expected actual |> error )
 
 let check_returnvoid loc cf =
-  if (not cf.in_fun_def) || cf.in_returning_fun_def then
-    Semantic_error.void_outside_nonreturning_fn loc |> error
-  else mk_typed_statement ~stmt:ReturnVoid ~return_type:(Complete Void) ~loc
+  match cf.containing_function with
+  | NonReturning _ ->
+      mk_typed_statement ~stmt:ReturnVoid ~return_type:Complete ~loc
+  | _ -> Semantic_error.void_outside_nonreturning_fn loc |> error
 
 let check_printable cf tenv = function
   | PString s -> PString s
@@ -1250,14 +1258,13 @@ let check_printable cf tenv = function
 
 let check_print loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
-  mk_typed_statement ~stmt:(Print tps) ~return_type:NoReturnType ~loc
+  mk_typed_statement ~stmt:(Print tps) ~return_type:Incomplete ~loc
 
 let check_reject loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
-  mk_typed_statement ~stmt:(Reject tps) ~return_type:AnyReturnType ~loc
+  mk_typed_statement ~stmt:(Reject tps) ~return_type:Complete ~loc
 
-let check_skip loc =
-  mk_typed_statement ~stmt:Skip ~return_type:NoReturnType ~loc
+let check_skip loc = mk_typed_statement ~stmt:Skip ~return_type:Incomplete ~loc
 
 let rec stmt_is_escape {stmt; _} =
   match stmt with
@@ -1276,57 +1283,22 @@ and list_until_escape xs =
     | [] -> List.rev accu in
   aux [] xs
 
-let returntype_leastupperbound loc rt1 rt2 =
-  match (rt1, rt2) with
-  | UnsizedType.ReturnType UReal, UnsizedType.ReturnType UInt
-   |ReturnType UInt, ReturnType UReal ->
-      UnsizedType.ReturnType UReal
-  | _, _ when rt1 = rt2 -> rt2
-  | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> error
-
-let try_compute_block_statement_returntype loc srt1 srt2 =
+let compute_block_statement_returntype srt1 srt2 =
   match (srt1, srt2) with
-  | Complete rt1, Complete rt2 | Incomplete rt1, Complete rt2 ->
-      Complete (returntype_leastupperbound loc rt1 rt2)
-  | Incomplete rt1, Incomplete rt2 | Complete rt1, Incomplete rt2 ->
-      Incomplete (returntype_leastupperbound loc rt1 rt2)
-  | NoReturnType, NoReturnType -> NoReturnType
-  | AnyReturnType, Incomplete rt
-   |Complete rt, NoReturnType
-   |NoReturnType, Incomplete rt
-   |Incomplete rt, NoReturnType ->
-      Incomplete rt
-  | NoReturnType, Complete rt
-   |Complete rt, AnyReturnType
-   |Incomplete rt, AnyReturnType
-   |AnyReturnType, Complete rt ->
-      Complete rt
-  | AnyReturnType, NoReturnType
-   |NoReturnType, AnyReturnType
-   |AnyReturnType, AnyReturnType ->
-      AnyReturnType
+  | Complete, Complete | Incomplete, Complete -> Complete
+  | NonlocalControlFlow, _ | _, NonlocalControlFlow -> NonlocalControlFlow
+  | _ -> Incomplete
 
-let try_compute_ifthenelse_statement_returntype loc srt1 srt2 =
+let compute_ifthenelse_statement_returntype srt1 srt2 =
   match (srt1, srt2) with
-  | Complete rt1, Complete rt2 ->
-      returntype_leastupperbound loc rt1 rt2 |> Complete
-  | Incomplete rt1, Incomplete rt2
-   |Complete rt1, Incomplete rt2
-   |Incomplete rt1, Complete rt2 ->
-      returntype_leastupperbound loc rt1 rt2 |> Incomplete
-  | AnyReturnType, NoReturnType
-   |NoReturnType, AnyReturnType
-   |NoReturnType, NoReturnType ->
-      NoReturnType
-  | AnyReturnType, Incomplete rt
-   |Incomplete rt, AnyReturnType
-   |Complete rt, NoReturnType
-   |NoReturnType, Complete rt
-   |NoReturnType, Incomplete rt
-   |Incomplete rt, NoReturnType ->
-      Incomplete rt
-  | Complete rt, AnyReturnType | AnyReturnType, Complete rt -> Complete rt
-  | AnyReturnType, AnyReturnType -> AnyReturnType
+  | Complete, Complete -> Complete
+  | NonlocalControlFlow, _ | _, NonlocalControlFlow -> NonlocalControlFlow
+  | _ -> Incomplete
+
+(* when we exit a loop, the loop's entire return type is either complete or not *)
+let compute_loop_statement_returntype = function
+  | Complete -> Complete
+  | Incomplete | NonlocalControlFlow -> Incomplete
 
 (* statements which contain statements, and therefore need to be mutually recursive
    with check_statement
@@ -1345,19 +1317,30 @@ let rec check_if_then_else loc cf tenv pred_e s_true s_false_opt =
   let srt2 =
     ts_false_opt
     |> Option.map ~f:(fun s -> s.smeta.return_type)
-    |> Option.value ~default:NoReturnType in
-  let return_type = try_compute_ifthenelse_statement_returntype loc srt1 srt2 in
+    |> Option.value ~default:Incomplete in
+  let return_type = compute_ifthenelse_statement_returntype srt1 srt2 in
   mk_typed_statement ~stmt ~return_type ~loc
 
 and check_while loc cf tenv cond_e loop_body =
+  let hardcoded_true e =
+    (* heuristic for "will this loop forever" *)
+    match e.expr with
+    | Ast.IntNumeral s -> String.exists s ~f:(fun c -> c > '0' && c <= '9')
+    | _ -> false in
   let _, ts =
-    check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body
-  and te =
+    check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body in
+  let te =
     check_expression_of_int_or_real_type cf tenv cond_e
       "Condition in while-loop" in
-  mk_typed_statement
-    ~stmt:(While (te, ts))
-    ~return_type:ts.smeta.return_type ~loc
+  let return_type =
+    match ts.smeta.return_type with
+    | Complete -> Complete
+    | Incomplete when hardcoded_true te ->
+        (* if the only way out of the loop is a return or reject,
+            we can consider that like a return statement *)
+        Complete
+    | Incomplete | NonlocalControlFlow -> Incomplete in
+  mk_typed_statement ~stmt:(While (te, ts)) ~return_type ~loc
 
 and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
   let te1 =
@@ -1374,7 +1357,8 @@ and check_for loc cf tenv loop_var lower_bound_e upper_bound_e loop_body =
          ; lower_bound= te1
          ; upper_bound= te2
          ; loop_body= ts } )
-    ~return_type:ts.smeta.return_type ~loc
+    ~return_type:(compute_loop_statement_returntype ts.smeta.return_type)
+    ~loc
 
 and check_foreach_loop_identifier_type loc ty =
   match ty with
@@ -1390,7 +1374,8 @@ and check_foreach loc cf tenv loop_var foreach_e loop_body =
   let ts = check_loop_body cf tenv loop_var loop_var_ty loop_body in
   mk_typed_statement
     ~stmt:(ForEach (loop_var, te, ts))
-    ~return_type:ts.smeta.return_type ~loc
+    ~return_type:(compute_loop_statement_returntype ts.smeta.return_type)
+    ~loc
 
 and check_loop_body cf tenv loop_var loop_var_ty loop_body =
   verify_name_fresh tenv loop_var ~is_udf:false ;
@@ -1410,8 +1395,7 @@ and check_block loc cf tenv stmts =
   let return_type =
     checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
-    |> List.fold ~init:NoReturnType
-         ~f:(try_compute_block_statement_returntype loc) in
+    |> List.fold ~init:Incomplete ~f:compute_block_statement_returntype in
   mk_typed_statement ~stmt:(Block checked_stmts) ~return_type ~loc
 
 and check_profile loc cf tenv name stmts =
@@ -1420,8 +1404,7 @@ and check_profile loc cf tenv name stmts =
   let return_type =
     checked_stmts |> list_until_escape
     |> List.map ~f:(fun s -> s.smeta.return_type)
-    |> List.fold ~init:NoReturnType
-         ~f:(try_compute_block_statement_returntype loc) in
+    |> List.fold ~init:Incomplete ~f:compute_block_statement_returntype in
   mk_typed_statement ~stmt:(Profile (name, checked_stmts)) ~return_type ~loc
 
 (* variable declarations *)
@@ -1554,7 +1537,7 @@ and check_var_decl loc cf tenv sized_ty trans
       ; transformation= checked_trans
       ; variables= tvariables
       ; is_global } in
-  (tenv, mk_typed_statement ~stmt ~loc ~return_type:NoReturnType)
+  (tenv, mk_typed_statement ~stmt ~loc ~return_type:Incomplete)
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
@@ -1694,12 +1677,16 @@ and check_fundef loc cf tenv return_ty id args body =
       List.exists
         ~f:(fun suffix -> String.is_suffix name ~suffix)
         Utils.distribution_suffices in
+    let kind =
+      if is_udf_dist id.name then Fun_kind.FnLpdf ()
+      else if String.is_suffix id.name ~suffix:"_rng" then FnRng
+      else if String.is_suffix id.name ~suffix:"_lp" then FnTarget
+      else FnPlain in
     { cf with
-      in_fun_def= true
-    ; in_rng_fun_def= String.is_suffix id.name ~suffix:"_rng"
-    ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
-    ; in_udf_dist_def= is_udf_dist id.name
-    ; in_returning_fun_def= return_ty <> Void } in
+      containing_function=
+        UnsizedType.returntype_to_type_opt return_ty
+        |> Option.value_map ~default:(NonReturning kind) ~f:(fun r ->
+               Returning (kind, r) ) } in
   let _, checked_body = check_statement context tenv_body body in
   verify_fundef_return_tys loc return_ty checked_body ;
   let stmt =
@@ -1707,7 +1694,7 @@ and check_fundef loc cf tenv return_ty id args body =
       {returntype= return_ty; funname= id; arguments= args; body= checked_body}
   in
   (* NB: **not** tenv_body, so args don't leak out *)
-  (tenv, mk_typed_statement ~return_type:NoReturnType ~loc ~stmt)
+  (tenv, mk_typed_statement ~return_type:Incomplete ~loc ~stmt)
 
 and check_statement (cf : context_flags_record) (tenv : Env.t)
     (s : Ast.untyped_statement) : Env.t * typed_statement =

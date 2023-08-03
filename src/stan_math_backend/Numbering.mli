@@ -17,7 +17,7 @@ val prepare_prog :
   Program.Typed.t -> Program.Numbered.t * state_t * map_rect_registration_t
 
 val no_span_num : Stmt.Numbered.Meta.t
-val gen_globals : state_t -> Cpp.defn list
+val gen_globals : ?printed_filename:string -> state_t -> Cpp.defn list
 val assign_loc : Stmt.Numbered.Meta.t -> Cpp.stmt list
 
 val register_map_rect_functors :

@@ -150,8 +150,12 @@
         (Block
          (((pattern
             (Return
-             (((pattern (Lit Real 0.0))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             (((pattern
+                (Promotion
+                 ((pattern (Lit Real 0.0))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
@@ -162,8 +166,12 @@
         (Block
          (((pattern
             (Return
-             (((pattern (Lit Real 1.0))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             (((pattern
+                (Promotion
+                 ((pattern (Lit Real 1.0))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
@@ -174,8 +182,12 @@
         (Block
          (((pattern
             (Return
-             (((pattern (Lit Real 2.0))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             (((pattern
+                (Promotion
+                 ((pattern (Lit Real 2.0))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
@@ -186,8 +198,12 @@
         (Block
          (((pattern
             (Return
-             (((pattern (Lit Real 1.0))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             (((pattern
+                (Promotion
+                 ((pattern (Lit Real 1.0))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
@@ -198,8 +214,12 @@
         (Block
          (((pattern
             (Return
-             (((pattern (Lit Real 1.0))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             (((pattern
+                (Promotion
+                 ((pattern (Lit Real 1.0))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
@@ -210,8 +230,12 @@
         (Block
          (((pattern
             (Return
-             (((pattern (Lit Real 1.0))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+             (((pattern
+                (Promotion
+                 ((pattern (Lit Real 1.0))
+                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
@@ -1453,36 +1477,43 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Transpose__ FnPlain AoS)
-                 (((pattern
-                    (FunApp (CompilerInternal FnMakeRowVec)
-                     (((pattern
-                        (Promotion
-                         ((pattern (Lit Int 1))
+                (Promotion
+                 ((pattern
+                   (FunApp (StanLib Transpose__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (CompilerInternal FnMakeRowVec)
+                        (((pattern
+                           (Promotion
+                            ((pattern (Lit Int 1))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 2))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 2))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 3))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 3))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-                   (meta
-                    ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta
+                       ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
@@ -1969,255 +2000,438 @@
                     (FunApp (CompilerInternal FnMakeRowVec)
                      (((pattern
                         (Promotion
-                         ((pattern (Lit Int 1))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 1))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 2))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 2))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 3))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 3))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 4))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 4))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 5))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 5))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 6))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 6))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 7))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 7))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 8))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 8))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 9))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 9))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 10))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 10))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta
-                    ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
+                    ((type_ URowVector) (loc <opaque>)
+                     (adlevel AutoDiffable))))
                   ((pattern
                     (FunApp (CompilerInternal FnMakeRowVec)
                      (((pattern
                         (Promotion
-                         ((pattern (Lit Int 1))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 1))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 2))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 2))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 3))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 3))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 4))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 4))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 5))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 5))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 6))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 6))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 7))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 7))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 8))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 8))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 9))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 9))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 10))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 10))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta
-                    ((type_ URowVector) (loc <opaque>) (adlevel DataOnly))))
+                    ((type_ URowVector) (loc <opaque>)
+                     (adlevel AutoDiffable))))
                   ((pattern
                     (FunApp (CompilerInternal FnMakeRowVec)
                      (((pattern
                         (Promotion
-                         ((pattern (Lit Int 1))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 1))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 2))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 2))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 3))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 3))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 4))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 4))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 5))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 5))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 6))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 6))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 7))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 7))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 8))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 8))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 9))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 9))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern
                         (Promotion
-                         ((pattern (Lit Int 10))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 10))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         UReal AutoDiffable))
                        (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                    (meta
-                    ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                    ((type_ URowVector) (loc <opaque>)
+                     (adlevel AutoDiffable)))))))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
@@ -2229,92 +2443,106 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Transpose__ FnPlain AoS)
-                 (((pattern
-                    (FunApp (CompilerInternal FnMakeRowVec)
-                     (((pattern
-                        (Promotion
-                         ((pattern (Lit Int 1))
+                (Promotion
+                 ((pattern
+                   (FunApp (StanLib Transpose__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (CompilerInternal FnMakeRowVec)
+                        (((pattern
+                           (Promotion
+                            ((pattern (Lit Int 1))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 2))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 2))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 3))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 3))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 4))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 4))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 5))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 5))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 6))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 6))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 7))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 7))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 8))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 8))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 9))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 9))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern
-                        (Promotion
-                         ((pattern (Lit Int 10))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern
+                           (Promotion
+                            ((pattern (Lit Int 10))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            UReal DataOnly))
                           (meta
-                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         UReal DataOnly))
-                       (meta
-                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-                   (meta
-                    ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta
+                       ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+                 UReal AutoDiffable))
+               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))

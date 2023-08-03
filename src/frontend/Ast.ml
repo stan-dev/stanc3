@@ -176,18 +176,17 @@ type ('e, 's, 'l, 'f) statement =
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Statement return types which we will decorate statements with during type
-    checking: the purpose is to check that function bodies have the correct
-    return type in every possible execution branch.
-    NoReturnType corresponds to not having a return statement in it.
-    Incomplete rt corresponds to having some return statement(s) of type rt
-    in it, but not one in every branch
-    Complete rt corresponds to having a return statement of type rt in every branch
-    AnyReturnType corresponds to statements which have an error in every branch  *)
+    checking:
+    - [Complete] corresponds to statements that exit the function (return or error) in every branch
+    - [Incomplete] corresponds to statements which pass control flow to following statements in at least some branches
+    - [NonlocalControlFlow] is simila to [Incomplete] but specifically used when breaks are present in loops.
+      Normally, an infinite loop with [Incomplete] return type is fine (and considered [Complete]),
+      since it either returns or diverges. However, in the presence of break statements, control flow
+      may jump to the end of the loop. *)
 type statement_returntype =
-  | NoReturnType
-  | Incomplete of Middle.UnsizedType.returntype
-  | Complete of Middle.UnsizedType.returntype
-  | AnyReturnType
+  | Incomplete
+  | NonlocalControlFlow (* is any break present *)
+  | Complete
 [@@deriving sexp, hash, compare]
 
 type ('e, 'm, 'l, 'f) statement_with =

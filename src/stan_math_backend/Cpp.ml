@@ -491,7 +491,7 @@ module Printing = struct
     | Index (e1, e2) -> pf ppf "%a[%a]" pp_expr e1 pp_expr e2
     | Deref e -> pf ppf "*(%a)" pp_expr e
     | Assign (e1, e2) -> pf ppf "%a = %a" pp_expr e1 pp_expr e2
-    | PMinus e -> pf ppf "-%a" pp_expr e
+    | PMinus e -> pf ppf "-(%a)" pp_expr e
     | Increment e -> pf ppf "++%a" pp_expr e
     | BinOp (e1, op, e2) ->
         pf ppf "%a@ %a@ %a" pp_expr e1 pp_operator op pp_expr e2

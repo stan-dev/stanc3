@@ -726,7 +726,7 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
       std::vector<local_scalar_t__>(4, DUMMY_VAR__);
     current_statement__ = 31;
     stan::model::assign(dydt,
-      (((-stan::model::rvalue(theta, "theta", stan::model::index_uni(1)) *
+      (((-(stan::model::rvalue(theta, "theta", stan::model::index_uni(1))) *
       stan::model::rvalue(y, "y", stan::model::index_uni(4))) /
       (stan::model::rvalue(y, "y", stan::model::index_uni(4)) +
       stan::model::rvalue(theta, "theta", stan::model::index_uni(2)))) *
@@ -7685,7 +7685,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, (N - 1)));
       current_statement__ = 14;
-      stan::model::assign(phi, -stan::math::sum(phi_std_raw),
+      stan::model::assign(phi, -(stan::math::sum(phi_std_raw)),
         "assigning variable phi", stan::model::index_uni(N));
       current_statement__ = 15;
       stan::model::assign(phi,
@@ -7696,7 +7696,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         0);
       {
         current_statement__ = 28;
-        lp_accum__.add((-0.5 *
+        lp_accum__.add((-(0.5) *
           stan::math::dot_self(
             stan::math::subtract(
               stan::model::rvalue(phi, "phi", stan::model::index_multi(node1)),
@@ -7751,7 +7751,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, (N - 1)));
       current_statement__ = 14;
-      stan::model::assign(phi, -stan::math::sum(phi_std_raw),
+      stan::model::assign(phi, -(stan::math::sum(phi_std_raw)),
         "assigning variable phi", stan::model::index_uni(N));
       current_statement__ = 15;
       stan::model::assign(phi,
@@ -7762,7 +7762,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         0);
       {
         current_statement__ = 28;
-        lp_accum__.add((-0.5 *
+        lp_accum__.add((-(0.5) *
           stan::math::dot_self(
             stan::math::subtract(
               stan::model::rvalue(phi, "phi", stan::model::index_multi(node1)),
@@ -7836,7 +7836,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, (N - 1)));
       current_statement__ = 14;
-      stan::model::assign(phi, -stan::math::sum(phi_std_raw),
+      stan::model::assign(phi, -(stan::math::sum(phi_std_raw)),
         "assigning variable phi", stan::model::index_uni(N));
       current_statement__ = 15;
       stan::model::assign(phi,
@@ -15359,7 +15359,8 @@ foo(const int& N, const int& M, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
-    return stan::math::rep_matrix(1, N, M);
+    return stan::math::promote_scalar<local_scalar_t__>(
+             stan::math::rep_matrix(1, N, M));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -27580,12 +27581,12 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
         x = (x + (3 + i));
       }
       current_statement__ = 13;
-      for (int i = -10; i <= 10; ++i) {
+      for (int i = -(10); i <= 10; ++i) {
         current_statement__ = 11;
         x = (x + (4 + i));
       }
       current_statement__ = 16;
-      for (int i = -10; i <= 40; ++i) {
+      for (int i = -(10); i <= 40; ++i) {
         current_statement__ = 14;
         x = (x + (5 + i));
       }

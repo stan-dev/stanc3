@@ -724,8 +724,9 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
     current_statement__ = 4;
     x = stan::math::logit(r);
     current_statement__ = 5;
-    stan::model::assign(df_dx, ((stan::math::exp(-stan::math::square(x)) * 1)
-      / (r * (1 - r))), "assigning variable df_dx", stan::model::index_uni(1));
+    stan::model::assign(df_dx, ((stan::math::exp(-(stan::math::square(x))) *
+      1) / (r * (1 - r))), "assigning variable df_dx",
+      stan::model::index_uni(1));
     current_statement__ = 6;
     return df_dx;
   } catch (const std::exception& e) {
