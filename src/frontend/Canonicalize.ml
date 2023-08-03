@@ -123,6 +123,10 @@ let rec replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
     | _ -> true in
   let rec flatten_multi = function
     | LVariable id -> (LVariable id, None)
+    | LTuplePacking lvs ->
+        ( LTuplePacking
+            (List.map ~f:(replace_deprecated_lval deprecated_userdefined) lvs)
+        , None (* TUPLE UNPACK MAYBE *) )
     | LTupleProjection (lval, idx) ->
         ( LTupleProjection
             (replace_deprecated_lval deprecated_userdefined lval, idx)

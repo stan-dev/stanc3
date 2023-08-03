@@ -322,6 +322,27 @@ let rec id_of_lvalue {lval; _} =
   | LTupleProjection (l, _) -> id_of_lvalue l
   | LTuplePacking ls -> List.concat_map ~f:id_of_lvalue ls
 
+let rec extract_ids {expr; _} =
+  match expr with
+  | Variable id -> [id]
+  | Promotion (e, _, _)
+   |Indexed (e, _)
+   |Paren e
+   |TupleProjection (e, _)
+   |PrefixOp (_, e)
+   |PostfixOp (e, _) ->
+      extract_ids e
+  | TernaryIf (e1, e2, e3) ->
+      List.concat [extract_ids e1; extract_ids e2; extract_ids e3]
+  | BinOp (e1, _, e2) -> extract_ids e1 @ extract_ids e2
+  | ArrayExpr es
+   |RowVectorExpr es
+   |TupleExpr es
+   |CondDistApp (_, _, es)
+   |FunApp (_, _, es) ->
+      List.concat_map ~f:extract_ids es
+  | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP | GetTarget -> []
+
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list
     -> UnsizedType.argumentlist =
