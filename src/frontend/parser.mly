@@ -16,10 +16,19 @@ let build_id id loc =
   grammar_logger ("identifier " ^ id);
   {name=id; id_loc=location_span_of_positions loc}
 
-let reserved id loc =
+let reserved id =
   raise (Errors.SyntaxError (Errors.Parsing
-          ("Identifier '" ^ id ^ "' clashes with reserved keyword.\n",
-            location_span_of_positions loc)))
+          ("Expected a new identifier but found reserved keyword '" ^ id.name ^ "'.\n",
+            id.id_loc)))
+
+let reserved_decl (id, is_type) =
+  if is_type then
+    raise (Errors.SyntaxError (Errors.Parsing
+          ("Found a type ('"^id.name^
+            "') where an identifier was expected.\nAll variables declared in a comma-separated list must be of the same type.\n",
+            id.id_loc)))
+  else
+    reserved id
 
 let build_expr expr loc =
   {expr; emeta={loc=location_span_of_positions loc}}
@@ -198,47 +207,51 @@ future_keyword:
 
 decl_identifier:
   | id=identifier { id }
-  | id=reserved_word { id }
+  | id_flag=reserved_word { reserved (fst id_flag) }
+
+decl_identifier_after_comma:
+  | id=identifier { id }
+  | id_flag=reserved_word { reserved_decl id_flag }
 
 reserved_word:
   (* Keywords cannot be identifiers but it is nice to
     let them parse as such to provide a better error *)
-  | FUNCTIONBLOCK { reserved "functions" $loc }
-  | DATABLOCK { reserved "data" $loc }
-  | PARAMETERSBLOCK { reserved "parameters" $loc }
-  | MODELBLOCK { reserved "model" $loc }
-  | RETURN { reserved "return" $loc }
-  | IF { reserved "if" $loc }
-  | ELSE { reserved "else" $loc }
-  | WHILE { reserved "while" $loc }
-  | FOR { reserved "for" $loc }
-  | IN { reserved "in" $loc }
-  | BREAK { reserved "break" $loc }
-  | CONTINUE { reserved "continue" $loc }
-  | VOID { reserved "void" $loc }
-  | INT { reserved "int" $loc }
-  | REAL { reserved "real" $loc }
-  | COMPLEX { reserved "complex" $loc }
-  | VECTOR { reserved "vector" $loc }
-  | ROWVECTOR { reserved "row_vector" $loc }
-  | MATRIX { reserved "matrix" $loc }
-  | COMPLEXVECTOR { reserved "complex_vector" $loc }
-  | COMPLEXROWVECTOR { reserved "complex_row_vector" $loc }
-  | COMPLEXMATRIX { reserved "complex_matrix" $loc }
-  | ORDERED { reserved "ordered" $loc }
-  | POSITIVEORDERED { reserved "positive_ordered" $loc }
-  | SIMPLEX { reserved "simplex" $loc }
-  | UNITVECTOR { reserved "unit_vector" $loc }
-  | CHOLESKYFACTORCORR { reserved "cholesky_factor_corr" $loc }
-  | CHOLESKYFACTORCOV { reserved "cholesky_factor_cov" $loc }
-  | CORRMATRIX { reserved "corr_matrix" $loc }
-  | COVMATRIX { reserved "cov_matrix" $loc  }
-  | PRINT { reserved "print" $loc }
-  | REJECT { reserved "reject" $loc }
-  | TARGET { reserved "target" $loc }
-  | GETLP { reserved "get_lp" $loc }
-  | PROFILE { reserved "profile" $loc }
-  | TUPLE { reserved "tuple" $loc }
+  | FUNCTIONBLOCK { build_id "functions" $loc, false }
+  | DATABLOCK { build_id "data" $loc, false }
+  | PARAMETERSBLOCK { build_id "parameters" $loc, false }
+  | MODELBLOCK { build_id "model" $loc, false }
+  | RETURN { build_id "return" $loc, false }
+  | IF { build_id "if" $loc, false }
+  | ELSE { build_id "else" $loc, false }
+  | WHILE { build_id "while" $loc, false }
+  | FOR { build_id "for" $loc, false }
+  | IN { build_id "in" $loc, false }
+  | BREAK { build_id "break" $loc, false }
+  | CONTINUE { build_id "continue" $loc, false }
+  | VOID { build_id "void" $loc, false }
+  | INT { build_id "int" $loc, true }
+  | REAL { build_id "real" $loc, true }
+  | COMPLEX { build_id "complex" $loc, true }
+  | VECTOR { build_id "vector" $loc, true }
+  | ROWVECTOR { build_id "row_vector" $loc, true }
+  | MATRIX { build_id "matrix" $loc, true }
+  | COMPLEXVECTOR { build_id "complex_vector" $loc, true }
+  | COMPLEXROWVECTOR { build_id "complex_row_vector" $loc, true }
+  | COMPLEXMATRIX { build_id "complex_matrix" $loc, true }
+  | ORDERED { build_id "ordered" $loc, true }
+  | POSITIVEORDERED { build_id "positive_ordered" $loc, true }
+  | SIMPLEX { build_id "simplex" $loc, true }
+  | UNITVECTOR { build_id "unit_vector" $loc, true }
+  | CHOLESKYFACTORCORR { build_id "cholesky_factor_corr" $loc, true }
+  | CHOLESKYFACTORCOV { build_id "cholesky_factor_cov" $loc, true }
+  | CORRMATRIX { build_id "corr_matrix" $loc, true }
+  | COVMATRIX { build_id "cov_matrix" $loc, true  }
+  | PRINT { build_id "print" $loc, false }
+  | REJECT { build_id "reject" $loc, false }
+  | TARGET { build_id "target" $loc, false }
+  | GETLP { build_id "get_lp" $loc, false }
+  | PROFILE { build_id "profile" $loc, false }
+  | TUPLE { build_id "tuple" $loc, true }
 
 
 function_def:
@@ -319,9 +332,14 @@ optional_assignment(rhs):
   | rhs_opt=option(pair(ASSIGN, rhs))
     { Option.map ~f:snd rhs_opt }
 
-id_and_optional_assignment(rhs):
-  | identifier=decl_identifier initial_value=optional_assignment(rhs)
+id_and_optional_assignment(rhs, decl):
+  | identifier=decl initial_value=optional_assignment(rhs)
     { Ast.{identifier; initial_value} }
+
+remaining_declarations(rhs):
+  | COMMA decls=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs, decl_identifier_after_comma))
+    { decls }
+
 
 (*
  * All rules for declaration statements.
@@ -371,8 +389,11 @@ decl(type_rule, rhs):
   (* Note that the array dimensions option must be inlined with ioption, else
      it will conflict with first rule. *)
   | ty=higher_type(type_rule)
-    vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
+    (* additional indirection only for better error messaging *)
+    v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
     { (fun ~is_global ->
+      let vs = v :: Option.value vs ~default:[]
+      in
       { stmt=
           VarDecl {
               decl_type= fst ty

@@ -258,7 +258,7 @@ Syntax error in 'fundef-bad6.stan', line 1, column 37 to column 42, parsing erro
                                               ^
    -------------------------------------------------
 
-Identifier 'while' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'while'.
   $ ../../../../../install/default/bin/stanc fundef-bad7.stan
 Syntax error in 'fundef-bad7.stan', line 1, column 21 to column 26, parsing error:
    -------------------------------------------------
@@ -274,7 +274,7 @@ Syntax error in 'fundef-bad8.stan', line 1, column 17 to column 22, parsing erro
                           ^
    -------------------------------------------------
 
-Identifier 'while' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'while'.
   $ ../../../../../install/default/bin/stanc fundef-bad9.stan
 Syntax error in 'fundef-bad9.stan', line 1, column 23 to column 27, parsing error:
    -------------------------------------------------
@@ -3603,7 +3603,7 @@ Syntax error in 'variable-decl-bad3.stan', line 1, column 17 to column 22, parsi
                           ^
    -------------------------------------------------
 
-Expected ";".
+";" expected after variable declaration.
   $ ../../../../../install/default/bin/stanc variable-decl-bad4.stan
 Syntax error in 'variable-decl-bad4.stan', line 1, column 32 to column 37, parsing error:
    -------------------------------------------------

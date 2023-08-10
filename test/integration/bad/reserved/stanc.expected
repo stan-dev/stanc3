@@ -19,7 +19,7 @@ Syntax error in 'break.stan', line 2, column 7 to column 12, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'break' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'break'.
   $ ../../../../../install/default/bin/stanc cholesky_factor_corr.stan
 Syntax error in 'cholesky_factor_corr.stan', line 2, column 7 to column 27, parsing error:
    -------------------------------------------------
@@ -30,7 +30,7 @@ Syntax error in 'cholesky_factor_corr.stan', line 2, column 7 to column 27, pars
      4:  model {
    -------------------------------------------------
 
-Identifier 'cholesky_factor_corr' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'cholesky_factor_corr'.
   $ ../../../../../install/default/bin/stanc cholesky_factor_cov.stan
 Syntax error in 'cholesky_factor_cov.stan', line 2, column 7 to column 26, parsing error:
    -------------------------------------------------
@@ -41,7 +41,7 @@ Syntax error in 'cholesky_factor_cov.stan', line 2, column 7 to column 26, parsi
      4:  model {
    -------------------------------------------------
 
-Identifier 'cholesky_factor_cov' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'cholesky_factor_cov'.
   $ ../../../../../install/default/bin/stanc continue.stan
 Syntax error in 'continue.stan', line 2, column 7 to column 15, parsing error:
    -------------------------------------------------
@@ -52,7 +52,7 @@ Syntax error in 'continue.stan', line 2, column 7 to column 15, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'continue' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'continue'.
   $ ../../../../../install/default/bin/stanc corr_matrix.stan
 Syntax error in 'corr_matrix.stan', line 2, column 7 to column 18, parsing error:
    -------------------------------------------------
@@ -63,7 +63,7 @@ Syntax error in 'corr_matrix.stan', line 2, column 7 to column 18, parsing error
      4:  model {
    -------------------------------------------------
 
-Identifier 'corr_matrix' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'corr_matrix'.
   $ ../../../../../install/default/bin/stanc cov_matrix.stan
 Syntax error in 'cov_matrix.stan', line 2, column 7 to column 17, parsing error:
    -------------------------------------------------
@@ -74,7 +74,7 @@ Syntax error in 'cov_matrix.stan', line 2, column 7 to column 17, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'cov_matrix' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'cov_matrix'.
   $ ../../../../../install/default/bin/stanc data.stan
 Syntax error in 'data.stan', line 2, column 7 to column 11, parsing error:
    -------------------------------------------------
@@ -85,7 +85,7 @@ Syntax error in 'data.stan', line 2, column 7 to column 11, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'data' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'data'.
   $ ../../../../../install/default/bin/stanc else.stan
 Syntax error in 'else.stan', line 2, column 7 to column 11, parsing error:
    -------------------------------------------------
@@ -96,7 +96,7 @@ Syntax error in 'else.stan', line 2, column 7 to column 11, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'else' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'else'.
   $ ../../../../../install/default/bin/stanc export.stan
 Semantic error in 'export.stan', line 2, column 7 to column 13:
    -------------------------------------------------
@@ -140,7 +140,7 @@ Syntax error in 'for.stan', line 2, column 7 to column 10, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'for' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'for'.
   $ ../../../../../install/default/bin/stanc generated.stan
 Semantic error in 'generated.stan', line 2, column 7 to column 16:
    -------------------------------------------------
@@ -162,7 +162,7 @@ Syntax error in 'if.stan', line 2, column 7 to column 9, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'if' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'if'.
   $ ../../../../../install/default/bin/stanc in.stan
 Syntax error in 'in.stan', line 2, column 7 to column 9, parsing error:
    -------------------------------------------------
@@ -173,7 +173,7 @@ Syntax error in 'in.stan', line 2, column 7 to column 9, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'in' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'in'.
   $ ../../../../../install/default/bin/stanc int.stan
 Syntax error in 'int.stan', line 2, column 7 to column 10, parsing error:
    -------------------------------------------------
@@ -184,7 +184,7 @@ Syntax error in 'int.stan', line 2, column 7 to column 10, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'int' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'int'.
   $ ../../../../../install/default/bin/stanc matrix.stan
 Syntax error in 'matrix.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
@@ -195,7 +195,7 @@ Syntax error in 'matrix.stan', line 2, column 7 to column 13, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'matrix' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'matrix'.
   $ ../../../../../install/default/bin/stanc model.stan
 Syntax error in 'model.stan', line 2, column 7 to column 12, parsing error:
    -------------------------------------------------
@@ -206,7 +206,7 @@ Syntax error in 'model.stan', line 2, column 7 to column 12, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'model' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'model'.
   $ ../../../../../install/default/bin/stanc ordered.stan
 Syntax error in 'ordered.stan', line 2, column 7 to column 14, parsing error:
    -------------------------------------------------
@@ -217,7 +217,7 @@ Syntax error in 'ordered.stan', line 2, column 7 to column 14, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'ordered' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'ordered'.
   $ ../../../../../install/default/bin/stanc parameters.stan
 Syntax error in 'parameters.stan', line 2, column 7 to column 17, parsing error:
    -------------------------------------------------
@@ -228,7 +228,7 @@ Syntax error in 'parameters.stan', line 2, column 7 to column 17, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'parameters' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'parameters'.
   $ ../../../../../install/default/bin/stanc positive_ordered.stan
 Syntax error in 'positive_ordered.stan', line 2, column 7 to column 23, parsing error:
    -------------------------------------------------
@@ -239,7 +239,7 @@ Syntax error in 'positive_ordered.stan', line 2, column 7 to column 23, parsing 
      4:  model {
    -------------------------------------------------
 
-Identifier 'positive_ordered' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'positive_ordered'.
   $ ../../../../../install/default/bin/stanc quantities.stan
 Semantic error in 'quantities.stan', line 2, column 7 to column 17:
    -------------------------------------------------
@@ -261,7 +261,7 @@ Syntax error in 'real.stan', line 2, column 7 to column 11, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'real' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'real'.
   $ ../../../../../install/default/bin/stanc repeat.stan
 Semantic error in 'repeat.stan', line 2, column 7 to column 13:
    -------------------------------------------------
@@ -283,7 +283,7 @@ Syntax error in 'return.stan', line 2, column 7 to column 13, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'return' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'return'.
   $ ../../../../../install/default/bin/stanc row_vector.stan
 Syntax error in 'row_vector.stan', line 2, column 7 to column 17, parsing error:
    -------------------------------------------------
@@ -294,7 +294,7 @@ Syntax error in 'row_vector.stan', line 2, column 7 to column 17, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'row_vector' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'row_vector'.
   $ ../../../../../install/default/bin/stanc simplex.stan
 Syntax error in 'simplex.stan', line 2, column 7 to column 14, parsing error:
    -------------------------------------------------
@@ -305,7 +305,7 @@ Syntax error in 'simplex.stan', line 2, column 7 to column 14, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'simplex' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'simplex'.
   $ ../../../../../install/default/bin/stanc static.stan
 Semantic error in 'static.stan', line 2, column 7 to column 13:
    -------------------------------------------------
@@ -382,7 +382,7 @@ Syntax error in 'unit_vector.stan', line 2, column 7 to column 18, parsing error
      4:  model {
    -------------------------------------------------
 
-Identifier 'unit_vector' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'unit_vector'.
   $ ../../../../../install/default/bin/stanc until.stan
 Semantic error in 'until.stan', line 2, column 7 to column 12:
    -------------------------------------------------
@@ -415,7 +415,7 @@ Syntax error in 'vector.stan', line 2, column 7 to column 13, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'vector' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'vector'.
   $ ../../../../../install/default/bin/stanc void.stan
 Syntax error in 'void.stan', line 2, column 7 to column 11, parsing error:
    -------------------------------------------------
@@ -426,7 +426,7 @@ Syntax error in 'void.stan', line 2, column 7 to column 11, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'void' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'void'.
   $ ../../../../../install/default/bin/stanc while.stan
 Syntax error in 'while.stan', line 2, column 7 to column 12, parsing error:
    -------------------------------------------------
@@ -437,4 +437,4 @@ Syntax error in 'while.stan', line 2, column 7 to column 12, parsing error:
      4:  model {
    -------------------------------------------------
 
-Identifier 'while' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'while'.

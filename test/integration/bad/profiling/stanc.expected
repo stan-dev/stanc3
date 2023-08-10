@@ -51,7 +51,7 @@ Syntax error in 'profile-bad5.stan', line 2, column 9 to column 16, parsing erro
      3:  }
    -------------------------------------------------
 
-Identifier 'profile' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'profile'.
   $ ../../../../../install/default/bin/stanc profile-bad6.stan
 Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing error:
    -------------------------------------------------
@@ -62,4 +62,4 @@ Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing erro
      4:      }
    -------------------------------------------------
 
-Identifier 'profile' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'profile'.
