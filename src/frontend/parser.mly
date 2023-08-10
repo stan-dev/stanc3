@@ -16,6 +16,11 @@ let build_id id loc =
   grammar_logger ("identifier " ^ id);
   {name=id; id_loc=location_span_of_positions loc}
 
+let reserved id loc =
+  raise (Errors.SyntaxError (Errors.Parsing
+          ("Identifier '" ^ id ^ "' clashes with reserved keyword.\n",
+            location_span_of_positions loc)))
+
 let build_expr expr loc =
   {expr; emeta={loc=location_span_of_positions loc}}
 
@@ -196,44 +201,44 @@ decl_identifier:
   | id=reserved_word { id }
 
 reserved_word:
-  (* Keywords cannot be identifiers but
-     semantic check produces a better error message. *)
-  | FUNCTIONBLOCK { build_id "functions" $loc }
-  | DATABLOCK { build_id "data" $loc }
-  | PARAMETERSBLOCK { build_id "parameters" $loc }
-  | MODELBLOCK { build_id "model" $loc }
-  | RETURN { build_id "return" $loc }
-  | IF { build_id "if" $loc }
-  | ELSE { build_id "else" $loc }
-  | WHILE { build_id "while" $loc }
-  | FOR { build_id "for" $loc }
-  | IN { build_id "in" $loc }
-  | BREAK { build_id "break" $loc }
-  | CONTINUE { build_id "continue" $loc }
-  | VOID { build_id "void" $loc }
-  | INT { build_id "int" $loc }
-  | REAL { build_id "real" $loc }
-  | COMPLEX { build_id "complex" $loc }
-  | VECTOR { build_id "vector" $loc }
-  | ROWVECTOR { build_id "row_vector" $loc }
-  | MATRIX { build_id "matrix" $loc }
-  | COMPLEXVECTOR { build_id "complex_vector" $loc }
-  | COMPLEXROWVECTOR { build_id "complex_row_vector" $loc }
-  | COMPLEXMATRIX { build_id "complex_matrix" $loc }
-  | ORDERED { build_id "ordered" $loc }
-  | POSITIVEORDERED { build_id "positive_ordered" $loc }
-  | SIMPLEX { build_id "simplex" $loc }
-  | UNITVECTOR { build_id "unit_vector" $loc }
-  | CHOLESKYFACTORCORR { build_id "cholesky_factor_corr" $loc }
-  | CHOLESKYFACTORCOV { build_id "cholesky_factor_cov" $loc }
-  | CORRMATRIX { build_id "corr_matrix" $loc }
-  | COVMATRIX { build_id "cov_matrix" $loc }
-  | PRINT { build_id "print" $loc }
-  | REJECT { build_id "reject" $loc }
-  | TARGET { build_id "target" $loc }
-  | GETLP { build_id "get_lp" $loc }
-  | PROFILE { build_id "profile" $loc }
-  | TUPLE { build_id "tuple" $loc }
+  (* Keywords cannot be identifiers but it is nice to
+    let them parse as such to provide a better error *)
+  | FUNCTIONBLOCK { reserved "functions" $loc }
+  | DATABLOCK { reserved "data" $loc }
+  | PARAMETERSBLOCK { reserved "parameters" $loc }
+  | MODELBLOCK { reserved "model" $loc }
+  | RETURN { reserved "return" $loc }
+  | IF { reserved "if" $loc }
+  | ELSE { reserved "else" $loc }
+  | WHILE { reserved "while" $loc }
+  | FOR { reserved "for" $loc }
+  | IN { reserved "in" $loc }
+  | BREAK { reserved "break" $loc }
+  | CONTINUE { reserved "continue" $loc }
+  | VOID { reserved "void" $loc }
+  | INT { reserved "int" $loc }
+  | REAL { reserved "real" $loc }
+  | COMPLEX { reserved "complex" $loc }
+  | VECTOR { reserved "vector" $loc }
+  | ROWVECTOR { reserved "row_vector" $loc }
+  | MATRIX { reserved "matrix" $loc }
+  | COMPLEXVECTOR { reserved "complex_vector" $loc }
+  | COMPLEXROWVECTOR { reserved "complex_row_vector" $loc }
+  | COMPLEXMATRIX { reserved "complex_matrix" $loc }
+  | ORDERED { reserved "ordered" $loc }
+  | POSITIVEORDERED { reserved "positive_ordered" $loc }
+  | SIMPLEX { reserved "simplex" $loc }
+  | UNITVECTOR { reserved "unit_vector" $loc }
+  | CHOLESKYFACTORCORR { reserved "cholesky_factor_corr" $loc }
+  | CHOLESKYFACTORCOV { reserved "cholesky_factor_cov" $loc }
+  | CORRMATRIX { reserved "corr_matrix" $loc }
+  | COVMATRIX { reserved "cov_matrix" $loc  }
+  | PRINT { reserved "print" $loc }
+  | REJECT { reserved "reject" $loc }
+  | TARGET { reserved "target" $loc }
+  | GETLP { reserved "get_lp" $loc }
+  | PROFILE { reserved "profile" $loc }
+  | TUPLE { reserved "tuple" $loc }
 
 
 function_def:

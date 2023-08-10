@@ -2344,7 +2344,7 @@ Syntax error in 'string_literal_newline.stan', line 3, column 1, lexing error:
 
 Invalid character found.
   $ ../../../../install/default/bin/stanc target-reserved.stan
-Semantic error in 'target-reserved.stan', line 2, column 7 to column 13:
+Syntax error in 'target-reserved.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real target;

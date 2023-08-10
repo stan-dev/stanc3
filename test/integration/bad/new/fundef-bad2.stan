@@ -1,1 +1,1 @@
-functions { vector while }
+functions { vector foo }
