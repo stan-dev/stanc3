@@ -220,10 +220,10 @@ Syntax error in 'fundef-bad10.stan', line 2, column 12 to column 23, parsing err
 
 An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../../install/default/bin/stanc fundef-bad2.stan
-Syntax error in 'fundef-bad2.stan', line 1, column 25 to column 26, parsing error:
+Syntax error in 'fundef-bad2.stan', line 1, column 23 to column 24, parsing error:
    -------------------------------------------------
-     1:  functions { vector while }
-                                  ^
+     1:  functions { vector foo }
+                                ^
    -------------------------------------------------
 
 "(" expected after function name.
@@ -252,13 +252,13 @@ Syntax error in 'fundef-bad5.stan', line 1, column 22 to column 26, parsing erro
 
 Either "{" statement "}" is expected for a function definition or ";" for a function forward declaration.
   $ ../../../../../install/default/bin/stanc fundef-bad6.stan
-Semantic error in 'fundef-bad6.stan', line 1, column 37 to column 42:
+Syntax error in 'fundef-bad6.stan', line 1, column 37 to column 42, parsing error:
    -------------------------------------------------
      1:  functions { void T ( array [] vector while);}
                                               ^
    -------------------------------------------------
 
-Identifier 'while' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'while'.
   $ ../../../../../install/default/bin/stanc fundef-bad7.stan
 Syntax error in 'fundef-bad7.stan', line 1, column 21 to column 26, parsing error:
    -------------------------------------------------
@@ -268,13 +268,13 @@ Syntax error in 'fundef-bad7.stan', line 1, column 21 to column 26, parsing erro
 
 An argument declaration (unsized and unconstrained type followed by identifier) is expected.
   $ ../../../../../install/default/bin/stanc fundef-bad8.stan
-Semantic error in 'fundef-bad8.stan', line 1, column 17 to column 22:
+Syntax error in 'fundef-bad8.stan', line 1, column 17 to column 22, parsing error:
    -------------------------------------------------
      1:  functions { void while();}
                           ^
    -------------------------------------------------
 
-Identifier 'while' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'while'.
   $ ../../../../../install/default/bin/stanc fundef-bad9.stan
 Syntax error in 'fundef-bad9.stan', line 1, column 23 to column 27, parsing error:
    -------------------------------------------------
@@ -3603,7 +3603,7 @@ Syntax error in 'variable-decl-bad3.stan', line 1, column 17 to column 22, parsi
                           ^
    -------------------------------------------------
 
-Expected ";".
+";" expected after variable declaration.
   $ ../../../../../install/default/bin/stanc variable-decl-bad4.stan
 Syntax error in 'variable-decl-bad4.stan', line 1, column 32 to column 37, parsing error:
    -------------------------------------------------

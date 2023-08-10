@@ -13,18 +13,34 @@ let reducearray (sbt, l) =
   List.fold_right l ~f:(fun z y -> SizedType.SArray (y, z)) ~init:sbt
 
 let build_id id loc =
-  grammar_logger ("identifier " ^ id);
-  {name=id; id_loc=location_span_of_positions loc}
+  grammar_logger ("identifier " ^ id) ;
+  {name= id; id_loc= location_span_of_positions loc}
 
-let build_expr expr loc =
-  {expr; emeta={loc=location_span_of_positions loc}}
+let reserved (name, loc, _) =
+  raise
+    (Errors.SyntaxError
+       (Errors.Parsing
+          ( "Expected a new identifier but found reserved keyword '" ^ name
+            ^ "'.\n"
+          , location_span_of_positions loc ) ) )
 
-let rec iterate_n f x = function
-  | 0 -> x
-  | n -> iterate_n f (f x) (n - 1)
+let reserved_decl (name, loc, is_type) =
+  if is_type then
+    raise
+      (Errors.SyntaxError
+         (Errors.Parsing
+            ( "Found a type ('" ^ name
+              ^ "') where an identifier was expected.\n\
+                 All variables declared in a comma-separated list must be of \
+                 the same type.\n"
+            , location_span_of_positions loc ) ) )
+  else reserved (name, loc, is_type)
+
+let build_expr expr loc = {expr; emeta= {loc= location_span_of_positions loc}}
+let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
+
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
-
 %}
 
 (* Token definitions. The quoted strings are aliases, used in the examples generated in
@@ -86,7 +102,6 @@ let nest_unsized_array basic_type n =
 %left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE
-
 
 (* Top level rule *)
 %start <Ast.untyped_program> program functions_only
@@ -193,48 +208,51 @@ future_keyword:
 
 decl_identifier:
   | id=identifier { id }
-  | id=reserved_word { id }
+  | err=reserved_word { reserved err }
+
+decl_identifier_after_comma:
+  | id=identifier { id }
+  | err=reserved_word { reserved_decl err }
 
 reserved_word:
-  (* Keywords cannot be identifiers but
-     semantic check produces a better error message. *)
-  | FUNCTIONBLOCK { build_id "functions" $loc }
-  | DATABLOCK { build_id "data" $loc }
-  | PARAMETERSBLOCK { build_id "parameters" $loc }
-  | MODELBLOCK { build_id "model" $loc }
-  | RETURN { build_id "return" $loc }
-  | IF { build_id "if" $loc }
-  | ELSE { build_id "else" $loc }
-  | WHILE { build_id "while" $loc }
-  | FOR { build_id "for" $loc }
-  | IN { build_id "in" $loc }
-  | BREAK { build_id "break" $loc }
-  | CONTINUE { build_id "continue" $loc }
-  | VOID { build_id "void" $loc }
-  | INT { build_id "int" $loc }
-  | REAL { build_id "real" $loc }
-  | COMPLEX { build_id "complex" $loc }
-  | VECTOR { build_id "vector" $loc }
-  | ROWVECTOR { build_id "row_vector" $loc }
-  | MATRIX { build_id "matrix" $loc }
-  | COMPLEXVECTOR { build_id "complex_vector" $loc }
-  | COMPLEXROWVECTOR { build_id "complex_row_vector" $loc }
-  | COMPLEXMATRIX { build_id "complex_matrix" $loc }
-  | ORDERED { build_id "ordered" $loc }
-  | POSITIVEORDERED { build_id "positive_ordered" $loc }
-  | SIMPLEX { build_id "simplex" $loc }
-  | UNITVECTOR { build_id "unit_vector" $loc }
-  | CHOLESKYFACTORCORR { build_id "cholesky_factor_corr" $loc }
-  | CHOLESKYFACTORCOV { build_id "cholesky_factor_cov" $loc }
-  | CORRMATRIX { build_id "corr_matrix" $loc }
-  | COVMATRIX { build_id "cov_matrix" $loc }
-  | PRINT { build_id "print" $loc }
-  | REJECT { build_id "reject" $loc }
-  | TARGET { build_id "target" $loc }
-  | GETLP { build_id "get_lp" $loc }
-  | PROFILE { build_id "profile" $loc }
-  | TUPLE { build_id "tuple" $loc }
-
+  (* Keywords cannot be identifiers but it is nice to
+    let them parse as such to provide a better error *)
+  | FUNCTIONBLOCK { "functions", $loc, false }
+  | DATABLOCK { "data", $loc, false }
+  | PARAMETERSBLOCK { "parameters", $loc, false }
+  | MODELBLOCK { "model", $loc, false }
+  | RETURN { "return", $loc, false }
+  | IF { "if", $loc, false }
+  | ELSE { "else", $loc, false }
+  | WHILE { "while", $loc, false }
+  | FOR { "for", $loc, false }
+  | IN { "in", $loc, false }
+  | BREAK { "break", $loc, false }
+  | CONTINUE { "continue", $loc, false }
+  | VOID { "void", $loc, false }
+  | INT { "int", $loc, true }
+  | REAL { "real", $loc, true }
+  | COMPLEX { "complex", $loc, true }
+  | VECTOR { "vector", $loc, true }
+  | ROWVECTOR { "row_vector", $loc, true }
+  | MATRIX { "matrix", $loc, true }
+  | COMPLEXVECTOR { "complex_vector", $loc, true }
+  | COMPLEXROWVECTOR { "complex_row_vector", $loc, true }
+  | COMPLEXMATRIX { "complex_matrix", $loc, true }
+  | ORDERED { "ordered", $loc, true }
+  | POSITIVEORDERED { "positive_ordered", $loc, true }
+  | SIMPLEX { "simplex", $loc, true }
+  | UNITVECTOR { "unit_vector", $loc, true }
+  | CHOLESKYFACTORCORR { "cholesky_factor_corr", $loc, true }
+  | CHOLESKYFACTORCOV { "cholesky_factor_cov", $loc, true }
+  | CORRMATRIX { "corr_matrix", $loc, true }
+  | COVMATRIX { "cov_matrix", $loc, true  }
+  | PRINT { "print", $loc, false }
+  | REJECT { "reject", $loc, false }
+  | TARGET { "target", $loc, false }
+  | GETLP { "get_lp", $loc, false }
+  | PROFILE { "profile", $loc, false }
+  | TUPLE { "tuple", $loc, true }
 
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
@@ -314,9 +332,13 @@ optional_assignment(rhs):
   | rhs_opt=option(pair(ASSIGN, rhs))
     { Option.map ~f:snd rhs_opt }
 
-id_and_optional_assignment(rhs):
-  | identifier=decl_identifier initial_value=optional_assignment(rhs)
+id_and_optional_assignment(rhs, decl):
+  | identifier=decl initial_value=optional_assignment(rhs)
     { Ast.{identifier; initial_value} }
+
+remaining_declarations(rhs):
+  | COMMA decls=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs, decl_identifier_after_comma))
+    { decls }
 
 (*
  * All rules for declaration statements.
@@ -366,8 +388,11 @@ decl(type_rule, rhs):
   (* Note that the array dimensions option must be inlined with ioption, else
      it will conflict with first rule. *)
   | ty=higher_type(type_rule)
-    vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
+    (* additional indirection only for better error messaging *)
+    v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
     { (fun ~is_global ->
+      let vs = v :: Option.value vs ~default:[]
+      in
       { stmt=
           VarDecl {
               decl_type= fst ty
@@ -567,7 +592,6 @@ lhs:
          build_expr (TupleProjection (l, ix)) $loc
     }
 
-
 (* This is separated so that it can be reused, e.g. to match array[ixs] type syntax *)
 %inline indexed(expr_type):
   | l=expr_type LBRACK indices=indexes RBRACK
@@ -635,7 +659,6 @@ constr_expression:
       grammar_logger "constr_expression_identifier" ;
       build_expr (Variable id) $loc
     }
-
 
 common_expression:
   | i=INTNUMERAL

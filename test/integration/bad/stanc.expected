@@ -2344,7 +2344,7 @@ Syntax error in 'string_literal_newline.stan', line 3, column 1, lexing error:
 
 Invalid character found.
   $ ../../../../install/default/bin/stanc target-reserved.stan
-Semantic error in 'target-reserved.stan', line 2, column 7 to column 13:
+Syntax error in 'target-reserved.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real target;
@@ -2353,7 +2353,7 @@ Semantic error in 'target-reserved.stan', line 2, column 7 to column 13:
      4:  parameters {
    -------------------------------------------------
 
-Identifier 'target' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'target'.
   $ ../../../../install/default/bin/stanc target_pe_bad.stan
 Semantic error in 'target_pe_bad.stan', line 8, column 2 to column 16:
    -------------------------------------------------

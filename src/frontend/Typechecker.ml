@@ -91,14 +91,10 @@ let has_int_or_real_type ue =
 
 (* -- General checks ---------------------------------------------- *)
 let reserved_keywords =
-  [ "for"; "in"; "while"; "repeat"; "until"; "if"; "then"; "else"; "true"
-  ; "false"; "target"; "int"; "real"; "complex"; "void"; "vector"; "simplex"
-  ; "unit_vector"; "ordered"; "positive_ordered"; "row_vector"; "matrix"
-  ; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"; "cov_matrix"
-  ; "functions"; "model"; "data"; "parameters"; "quantities"; "transformed"
-  ; "generated"; "profile"; "return"; "break"; "continue"; "increment_log_prob"
-  ; "get_lp"; "print"; "reject"; "typedef"; "struct"; "var"; "export"; "extern"
-  ; "static"; "auto" ]
+  (* parser stops most keywords currently in use, but we still have some extra
+     reserved for the future *)
+  [ "generated"; "quantities"; "transformed"; "repeat"; "until"; "then"; "true"
+  ; "false"; "typedef"; "struct"; "var"; "export"; "extern"; "static"; "auto" ]
 
 let verify_identifier id : unit =
   if id.name = !model_name then

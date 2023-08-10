@@ -502,16 +502,16 @@ Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 17, column 0 to col
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
   $ ../../../../../install/default/bin/stanc bad_decl1.stan
-Syntax error in 'bad_decl1.stan', line 2, column 14 to column 15, parsing error:
+Syntax error in 'bad_decl1.stan', line 2, column 10 to column 13, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real x, int y;
-                       ^
+                   ^
      3:  }
    -------------------------------------------------
 
-Expected a new identifier after comma in declaration.
-All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
+Found a type ('int') where an identifier was expected.
+All variables declared in a comma-separated list must be of the same type.
   $ ../../../../../install/default/bin/stanc bad_decl2.stan
 Syntax error in 'bad_decl2.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
@@ -535,6 +535,16 @@ Syntax error in 'bad_decl3.stan', line 3, column 28 to column 29, parsing error:
 
 Expected a new identifier after comma in declaration.
 All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.
+  $ ../../../../../install/default/bin/stanc bad_decl4.stan
+Syntax error in 'bad_decl4.stan', line 2, column 10 to column 16, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    real x, reject;
+                   ^
+     3:  }
+   -------------------------------------------------
+
+Expected a new identifier but found reserved keyword 'reject'.
   $ ../../../../../install/default/bin/stanc bad_function.stan
 Semantic error in 'bad_function.stan', line 3, column 3 to column 7:
    -------------------------------------------------
