@@ -103,7 +103,6 @@ let nest_unsized_array basic_type n =
 %nonassoc below_ELSE
 %nonassoc ELSE
 
-
 (* Top level rule *)
 %start <Ast.untyped_program> program functions_only
 %%
@@ -214,7 +213,6 @@ decl_identifier:
 decl_identifier_after_comma:
   | id=identifier { id }
   | err=reserved_word { reserved_decl err }
-
 
 reserved_word:
   (* Keywords cannot be identifiers but it is nice to
@@ -594,7 +592,6 @@ lhs:
          build_expr (TupleProjection (l, ix)) $loc
     }
 
-
 (* This is separated so that it can be reused, e.g. to match array[ixs] type syntax *)
 %inline indexed(expr_type):
   | l=expr_type LBRACK indices=indexes RBRACK
@@ -662,7 +659,6 @@ constr_expression:
       grammar_logger "constr_expression_identifier" ;
       build_expr (Variable id) $loc
     }
-
 
 common_expression:
   | i=INTNUMERAL
