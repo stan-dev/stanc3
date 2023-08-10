@@ -13,32 +13,34 @@ let reducearray (sbt, l) =
   List.fold_right l ~f:(fun z y -> SizedType.SArray (y, z)) ~init:sbt
 
 let build_id id loc =
-  grammar_logger ("identifier " ^ id);
-  {name=id; id_loc=location_span_of_positions loc}
+  grammar_logger ("identifier " ^ id) ;
+  {name= id; id_loc= location_span_of_positions loc}
 
-let reserved id =
-  raise (Errors.SyntaxError (Errors.Parsing
-          ("Expected a new identifier but found reserved keyword '" ^ id.name ^ "'.\n",
-            id.id_loc)))
+let reserved (name, loc, _) =
+  raise
+    (Errors.SyntaxError
+       (Errors.Parsing
+          ( "Expected a new identifier but found reserved keyword '" ^ name
+            ^ "'.\n"
+          , location_span_of_positions loc ) ) )
 
-let reserved_decl (id, is_type) =
+let reserved_decl (name, loc, is_type) =
   if is_type then
-    raise (Errors.SyntaxError (Errors.Parsing
-          ("Found a type ('"^id.name^
-            "') where an identifier was expected.\nAll variables declared in a comma-separated list must be of the same type.\n",
-            id.id_loc)))
-  else
-    reserved id
+    raise
+      (Errors.SyntaxError
+         (Errors.Parsing
+            ( "Found a type ('" ^ name
+              ^ "') where an identifier was expected.\n\
+                 All variables declared in a comma-separated list must be of \
+                 the same type.\n"
+            , location_span_of_positions loc ) ) )
+  else reserved (name, loc, is_type)
 
-let build_expr expr loc =
-  {expr; emeta={loc=location_span_of_positions loc}}
+let build_expr expr loc = {expr; emeta= {loc= location_span_of_positions loc}}
+let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 
-let rec iterate_n f x = function
-  | 0 -> x
-  | n -> iterate_n f (f x) (n - 1)
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
-
 %}
 
 (* Token definitions. The quoted strings are aliases, used in the examples generated in
@@ -207,52 +209,52 @@ future_keyword:
 
 decl_identifier:
   | id=identifier { id }
-  | id_flag=reserved_word { reserved (fst id_flag) }
+  | err=reserved_word { reserved err }
 
 decl_identifier_after_comma:
   | id=identifier { id }
-  | id_flag=reserved_word { reserved_decl id_flag }
+  | err=reserved_word { reserved_decl err }
+
 
 reserved_word:
   (* Keywords cannot be identifiers but it is nice to
     let them parse as such to provide a better error *)
-  | FUNCTIONBLOCK { build_id "functions" $loc, false }
-  | DATABLOCK { build_id "data" $loc, false }
-  | PARAMETERSBLOCK { build_id "parameters" $loc, false }
-  | MODELBLOCK { build_id "model" $loc, false }
-  | RETURN { build_id "return" $loc, false }
-  | IF { build_id "if" $loc, false }
-  | ELSE { build_id "else" $loc, false }
-  | WHILE { build_id "while" $loc, false }
-  | FOR { build_id "for" $loc, false }
-  | IN { build_id "in" $loc, false }
-  | BREAK { build_id "break" $loc, false }
-  | CONTINUE { build_id "continue" $loc, false }
-  | VOID { build_id "void" $loc, false }
-  | INT { build_id "int" $loc, true }
-  | REAL { build_id "real" $loc, true }
-  | COMPLEX { build_id "complex" $loc, true }
-  | VECTOR { build_id "vector" $loc, true }
-  | ROWVECTOR { build_id "row_vector" $loc, true }
-  | MATRIX { build_id "matrix" $loc, true }
-  | COMPLEXVECTOR { build_id "complex_vector" $loc, true }
-  | COMPLEXROWVECTOR { build_id "complex_row_vector" $loc, true }
-  | COMPLEXMATRIX { build_id "complex_matrix" $loc, true }
-  | ORDERED { build_id "ordered" $loc, true }
-  | POSITIVEORDERED { build_id "positive_ordered" $loc, true }
-  | SIMPLEX { build_id "simplex" $loc, true }
-  | UNITVECTOR { build_id "unit_vector" $loc, true }
-  | CHOLESKYFACTORCORR { build_id "cholesky_factor_corr" $loc, true }
-  | CHOLESKYFACTORCOV { build_id "cholesky_factor_cov" $loc, true }
-  | CORRMATRIX { build_id "corr_matrix" $loc, true }
-  | COVMATRIX { build_id "cov_matrix" $loc, true  }
-  | PRINT { build_id "print" $loc, false }
-  | REJECT { build_id "reject" $loc, false }
-  | TARGET { build_id "target" $loc, false }
-  | GETLP { build_id "get_lp" $loc, false }
-  | PROFILE { build_id "profile" $loc, false }
-  | TUPLE { build_id "tuple" $loc, true }
-
+  | FUNCTIONBLOCK { "functions", $loc, false }
+  | DATABLOCK { "data", $loc, false }
+  | PARAMETERSBLOCK { "parameters", $loc, false }
+  | MODELBLOCK { "model", $loc, false }
+  | RETURN { "return", $loc, false }
+  | IF { "if", $loc, false }
+  | ELSE { "else", $loc, false }
+  | WHILE { "while", $loc, false }
+  | FOR { "for", $loc, false }
+  | IN { "in", $loc, false }
+  | BREAK { "break", $loc, false }
+  | CONTINUE { "continue", $loc, false }
+  | VOID { "void", $loc, false }
+  | INT { "int", $loc, true }
+  | REAL { "real", $loc, true }
+  | COMPLEX { "complex", $loc, true }
+  | VECTOR { "vector", $loc, true }
+  | ROWVECTOR { "row_vector", $loc, true }
+  | MATRIX { "matrix", $loc, true }
+  | COMPLEXVECTOR { "complex_vector", $loc, true }
+  | COMPLEXROWVECTOR { "complex_row_vector", $loc, true }
+  | COMPLEXMATRIX { "complex_matrix", $loc, true }
+  | ORDERED { "ordered", $loc, true }
+  | POSITIVEORDERED { "positive_ordered", $loc, true }
+  | SIMPLEX { "simplex", $loc, true }
+  | UNITVECTOR { "unit_vector", $loc, true }
+  | CHOLESKYFACTORCORR { "cholesky_factor_corr", $loc, true }
+  | CHOLESKYFACTORCOV { "cholesky_factor_cov", $loc, true }
+  | CORRMATRIX { "corr_matrix", $loc, true }
+  | COVMATRIX { "cov_matrix", $loc, true  }
+  | PRINT { "print", $loc, false }
+  | REJECT { "reject", $loc, false }
+  | TARGET { "target", $loc, false }
+  | GETLP { "get_lp", $loc, false }
+  | PROFILE { "profile", $loc, false }
+  | TUPLE { "tuple", $loc, true }
 
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
@@ -339,7 +341,6 @@ id_and_optional_assignment(rhs, decl):
 remaining_declarations(rhs):
   | COMMA decls=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs, decl_identifier_after_comma))
     { decls }
-
 
 (*
  * All rules for declaration statements.
