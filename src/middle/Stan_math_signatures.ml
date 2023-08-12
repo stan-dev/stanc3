@@ -1637,7 +1637,7 @@ let () =
   add_unqualified ("log_sum_exp", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [URowVector], SoA) ;
   add_unqualified ("log_sum_exp", ReturnType UReal, [UMatrix], SoA) ;
-  add_binary "log_sum_exp" SoA ;
+  add_binary_vec "log_sum_exp" AoS ;
   let logical_binops =
     [ "logical_or"; "logical_and"; "logical_eq"; "logical_neq"; "logical_lt"
     ; "logical_lte"; "logical_gt"; "logical_gte" ] in
