@@ -273,8 +273,8 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
         (*Right now we can't handle AD real and data matrix funcs
            that return a matrix :-/*)
         let is_args_autodiff_real_data_matrix =
-          (*If there are any autodiffable vars*)
           if
+            (* Check there are no Autodiffable matrices*)
             List.exists
               ~f:(fun (x, y) ->
                 match (x, UnsizedType.contains_eigen_type y) with
@@ -283,6 +283,7 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
               fun_args
           then false
           else
+            (*If there are any autodiffable vars*)
             List.exists
               ~f:(fun (x, y) ->
                 match (x, y) with
@@ -295,8 +296,7 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
                    match (x, UnsizedType.is_container y) with
                    | UnsizedType.DataOnly, true -> true
                    | _ -> false )
-                 fun_args
-          (*And there are no Autodiffable matrices*) in
+                 fun_args in
         match is_args_autodiff_real_data_matrix with
         | true -> true
         | false -> List.exists ~f:is_any_ad_real_data_matrix_expr exprs ) )
