@@ -268,38 +268,17 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
     | "check_matching_dims" -> false
-    | _ -> (
+    | _ ->
         let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
         (*Right now we can't handle AD real and data matrix funcs
            that return a matrix :-/*)
-        let is_args_autodiff_real_data_matrix =
-          if
-            (* Check there are no Autodiffable matrices*)
-            List.exists
-              ~f:(fun (x, y) ->
-                match (x, UnsizedType.contains_eigen_type y) with
-                | UnsizedType.AutoDiffable, true -> false
-                | _ -> true )
-              fun_args
-          then false
-          else
-            (*If there are any autodiffable vars*)
-            List.exists
-              ~f:(fun (x, y) ->
-                match (x, y) with
-                | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
-                | _ -> false )
-              fun_args
-            (*And there are any data matrices*)
-            && List.exists
-                 ~f:(fun (x, y) ->
-                   match (x, UnsizedType.is_container y) with
-                   | UnsizedType.DataOnly, true -> true
-                   | _ -> false )
-                 fun_args in
-        match is_args_autodiff_real_data_matrix with
-        | true -> true
-        | false -> List.exists ~f:is_any_ad_real_data_matrix_expr exprs ) )
+        List.for_all
+          ~f:(fun (x, y) ->
+            match (x, y) with
+            | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
+            | UnsizedType.DataOnly, x when UnsizedType.is_container x -> true
+            | _ -> false )
+          fun_args )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
   | CompilerInternal (_ : 'a Internal_fun.t) -> false
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false

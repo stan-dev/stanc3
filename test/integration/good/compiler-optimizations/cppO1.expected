@@ -1504,15 +1504,14 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_p;
+      Eigen::Matrix<local_scalar_t__,-1,-1> X_p;
       current_statement__ = 1;
-      X_p = in__.template read<
-              stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp1;
+      X_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
+      Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1;
       current_statement__ = 2;
       stan::model::assign(X_tp1, stan::math::exp(X_data),
         "assigning variable X_tp1");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp2;
+      Eigen::Matrix<local_scalar_t__,-1,-1> X_tp2;
       current_statement__ = 3;
       stan::model::assign(X_tp2, stan::math::exp(X_tp1),
         "assigning variable X_tp2");
