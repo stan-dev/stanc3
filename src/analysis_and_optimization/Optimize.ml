@@ -1231,6 +1231,7 @@ let optimize_soa (mir : Program.Typed.t) =
   (*
   let print_set s =
     Set.Poly.iter ~f:print_endline s in
+  let () = print_endline "Initial Variables" in
   let () = print_set initial_variables in
   *)
   let mod_exprs aos_exits mod_expr =

@@ -274,26 +274,29 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
            that return a matrix :-/*)
         let is_args_autodiff_real_data_matrix =
           (*If there are any autodiffable vars*)
-          List.exists
-            ~f:(fun (x, y) ->
-              match (x, y) with
-              | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
-              | _ -> false )
-            fun_args
-          (*And there are any data matrices*)
-          && List.exists
-               ~f:(fun (x, y) ->
-                 match (x, UnsizedType.is_container y) with
-                 | UnsizedType.DataOnly, true -> true
-                 | _ -> false )
-               fun_args
-          (*And there are no Autodiffable matrices*)
-          && List.exists
-               ~f:(fun (x, y) ->
-                 match (x, UnsizedType.contains_eigen_type y) with
-                 | UnsizedType.AutoDiffable, true -> false
-                 | _ -> true )
-               fun_args in
+          if
+            List.exists
+              ~f:(fun (x, y) ->
+                match (x, UnsizedType.contains_eigen_type y) with
+                | UnsizedType.AutoDiffable, true -> false
+                | _ -> true )
+              fun_args
+          then false
+          else
+            List.exists
+              ~f:(fun (x, y) ->
+                match (x, y) with
+                | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
+                | _ -> false )
+              fun_args
+            (*And there are any data matrices*)
+            && List.exists
+                 ~f:(fun (x, y) ->
+                   match (x, UnsizedType.is_container y) with
+                   | UnsizedType.DataOnly, true -> true
+                   | _ -> false )
+                 fun_args
+          (*And there are no Autodiffable matrices*) in
         match is_args_autodiff_real_data_matrix with
         | true -> true
         | false -> List.exists ~f:is_any_ad_real_data_matrix_expr exprs ) )
@@ -332,7 +335,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
     query_initial_demotable_expr in_loop ~acc:accum in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
-      ( lval
+      ( (lval : Expr.Typed.Meta.t Expr.Fixed.t Stmt.Fixed.Pattern.lvalue)
       , (ut : UnsizedType.t)
       , (Expr.Fixed.{meta= Expr.Typed.Meta.{type_; adlevel; _}; _} as rhs) ) ->
       let name = Stmt.Helpers.lhs_variable lval in
