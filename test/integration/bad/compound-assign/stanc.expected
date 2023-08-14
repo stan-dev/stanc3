@@ -34,7 +34,7 @@ Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, par
      4:  }
    -------------------------------------------------
 
-";" or plain assignment is expected after a top-level variable declaration.
+";" or plain assignment expected after variable declaration.
   $ ../../../../../install/default/bin/stanc plus_equals_bad_lhs_idxs.stan
 Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
    -------------------------------------------------

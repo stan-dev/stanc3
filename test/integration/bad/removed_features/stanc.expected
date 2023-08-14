@@ -236,7 +236,7 @@ Error in 'cov_exp_quad.stan', line 109, column 29: cov_exp_quad was removed
     in Stan 2.33. Use gp_exp_quad_cov instead. This can be automatically
     changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc decl.stan
-Semantic error in 'decl.stan', line 2, column 7 to column 12:
+Syntax error in 'decl.stan', line 2, column 7 to column 12, parsing error:
    -------------------------------------------------
      1:  data {
      2:     int array[5]; // this is terrible
@@ -245,7 +245,7 @@ Semantic error in 'decl.stan', line 2, column 7 to column 12:
      4:  }
    -------------------------------------------------
 
-Identifier 'array' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'array'.
   $ ../../../../../install/default/bin/stanc declarations.stan
 Error in 'declarations.stan', line 415, column 4: Declaration of arrays by
     placing brackets after a variable name was removed in Stan 2.33.0.
@@ -818,7 +818,7 @@ Error in 'get_lp_target.stan', line 10, column 21: The get_lp() function was
     removed in Stan 2.33.0. Use target() instead. This can be done
     automatically with the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc identifiers.stan
-Semantic error in 'identifiers.stan', line 2, column 6 to column 11:
+Syntax error in 'identifiers.stan', line 2, column 6 to column 11, parsing error:
    -------------------------------------------------
      1:  data {
      2:    int upper;
@@ -827,7 +827,7 @@ Semantic error in 'identifiers.stan', line 2, column 6 to column 11:
      4:    int multiplier;
    -------------------------------------------------
 
-Identifier 'upper' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'upper'.
   $ ../../../../../install/default/bin/stanc if_else.stan
 Error in 'if_else.stan', line 9, column 26: The if_else() function was
     removed in Stan 2.33.0. Use the conditional operator (x ? y : z) instead;
@@ -1141,13 +1141,13 @@ Error in 'removed_deprecated_syntax.stan', line 48, column 2: The arrow-style
     assignment operator '<-' was removed in Stan 2.33, use '=' instead. This
     can be done automatically with the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc unreserved-array-keyword.stan
-Syntax error in 'unreserved-array-keyword.stan', line 2, column 40 to column 45, parsing error:
+Syntax error in 'unreserved-array-keyword.stan', line 2, column 24 to column 29, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real f(array[,,] real array) { return array[1,2,3]; }
-                                                 ^
+                                 ^
      3:  }
      4:  
    -------------------------------------------------
 
-Ill-formed return statement. ";" or expression followed by ";" expected after "return".
+Expected a new identifier but found reserved keyword 'array'.

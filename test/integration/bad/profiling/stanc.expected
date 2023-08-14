@@ -43,7 +43,7 @@ Syntax error in 'profile-bad4.stan', line 2, column 13 to column 18, parsing err
 
 Expected profile name as string in parenthesis
   $ ../../../../../install/default/bin/stanc profile-bad5.stan
-Semantic error in 'profile-bad5.stan', line 2, column 9 to column 16:
+Syntax error in 'profile-bad5.stan', line 2, column 9 to column 16, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:      real profile;
@@ -51,9 +51,9 @@ Semantic error in 'profile-bad5.stan', line 2, column 9 to column 16:
      3:  }
    -------------------------------------------------
 
-Identifier 'profile' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'profile'.
   $ ../../../../../install/default/bin/stanc profile-bad6.stan
-Semantic error in 'profile-bad6.stan', line 2, column 9 to column 16:
+Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing error:
    -------------------------------------------------
      1:  functions {
      2:      real profile(int i) {
@@ -62,4 +62,4 @@ Semantic error in 'profile-bad6.stan', line 2, column 9 to column 16:
      4:      }
    -------------------------------------------------
 
-Identifier 'profile' clashes with reserved keyword.
+Expected a new identifier but found reserved keyword 'profile'.
