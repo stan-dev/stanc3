@@ -210,6 +210,12 @@ rule token = parse
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
                                 lexer_pos_logger (lexeme_start_p lexbuf);
                                 Parser.IDENTIFIER (lexeme lexbuf) }
+
+  (* TODO annotation add paren lexxing *)
+  | "@" (identifier as ann)        { lexer_logger ("annotation " ^ ann) ;
+                                lexer_pos_logger (lexeme_start_p lexbuf);
+                                Parser.ANNOTATION (lexeme lexbuf) }
+
 (* End of file *)
   | eof                       { lexer_logger "eof" ;
                                 if Preprocessor.size () = 1

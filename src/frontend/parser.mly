@@ -46,6 +46,8 @@ let note_deprecated_array ?(unsized = false) (pos1, pos2) =
   let loc_span = location_span_of_positions (pos1, pos2) in
   Deprecation_removals.old_array_usages :=
     (loc_span, unsized) :: !Deprecation_removals.old_array_usages
+
+let (!=) = Stdlib.( <> )
 %}
 
 (* Token definitions. The quoted strings are aliases, used in the examples generated in
@@ -72,6 +74,7 @@ let note_deprecated_array ?(unsized = false) (pos1, pos2) =
 %token <string> IMAGNUMERAL "1i"
 %token <string> STRINGLITERAL "\"hello world\""
 %token <string> IDENTIFIER "foo"
+%token <string> ANNOTATION "@baz"
 %token TARGET "target"
 %token QMARK "?" COLON ":" BANG "!" MINUS "-" PLUS "+" HAT "^" ELTPOW ".^" TRANSPOSE "'"
        TIMES "*" DIVIDE "/" MODULO "%" IDIVIDE "%/%" LDIVIDE "\\" ELTTIMES ".*"
@@ -196,7 +199,6 @@ identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
 
-
 decl_identifier:
   | id=identifier { id }
   | err=reserved_word { reserved err }
@@ -251,12 +253,12 @@ reserved_word:
   | ARRAY { "array", $loc, true }
 
 function_def:
-  | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
-    RPAREN b=statement
+  | annotation=option(ANNOTATION) rt=return_type name=decl_identifier
+    LPAREN arguments=separated_list(COMMA, arg_decl) RPAREN body=statement
     {
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
-                           arguments = args; body=b;};
+                    annotation; arguments; body};
        smeta={loc=location_span_of_positions $loc}
       }
     }
@@ -351,42 +353,11 @@ remaining_declarations(rhs):
  * identifier.
  *)
 decl(type_rule, rhs):
-  (* This rule matches the old array syntax, e.g:
-       int x[1,2] = ..;
-
-     We need to match it separately because we won't support multiple inline
-     declarations using this form.
-
-     This form is deprecated.
-   *)
-  | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
-      SEMICOLON
-    { note_deprecated_array $loc;
-      (fun ~is_global ->
-      { stmt=
-          VarDecl {
-              decl_type= (reducearray (fst ty, dims))
-            ; transformation= snd ty
-            ; variables= [ { identifier= id
-                           ; initial_value= rhs_opt
-                           } ]
-            ; is_global
-            }
-      ; smeta= {
-          loc= location_span_of_positions $loc
-        }
-    })
-    }
-
-  (* This rule matches non-array declarations and also the new array syntax, e.g:
-       array[1,2] int x = ..;
-   *)
-  (* Note that the array dimensions option must be inlined with ioption, else
-     it will conflict with first rule. *)
-  | ty=higher_type(type_rule)
+  | annotation=option(ANNOTATION) ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
-    { (fun ~is_global ->
+    {
+      (fun ~is_global ->
       let vs = v :: Option.value vs ~default:[]
       in
       { stmt=
@@ -395,6 +366,7 @@ decl(type_rule, rhs):
             ; transformation= snd ty
             ; variables=vs
             ; is_global
+            ; annotation
             }
       ; smeta= {
           loc= location_span_of_positions $sloc
@@ -553,9 +525,6 @@ offset_mult:
     | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
                  { grammar_logger "array dims" ; l  }
 
-dims:
-  | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
-    { grammar_logger "dims" ; l  }
 
 (* General expressions (that can't be used in constraints declarations) *)
 %inline expression:

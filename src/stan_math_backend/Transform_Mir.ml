@@ -320,6 +320,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
+              ; decl_annotation= None
               ; initialize= true }
             |> swrap )
           tuple_component_names tuple_types in
@@ -367,6 +368,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
+            ; decl_annotation= None
             ; initialize= true }
           |> swrap
         , Assignment (Stmt.Helpers.lvariable decl_id_flat, flat_type, origin)
@@ -471,6 +473,7 @@ let rec var_context_read
                 { decl_adtype= AutoDiffable
                 ; decl_id= variable_name
                 ; decl_type= Unsized array_type
+                ; decl_annotation= None
                 ; initialize= true }
               |> swrap_noloc
             ; Assignment
@@ -482,6 +485,7 @@ let rec var_context_read
                 { decl_adtype= DataOnly
                 ; decl_id= variable_name ^ "pos__"
                 ; decl_type= Unsized UInt
+                ; decl_annotation= None
                 ; initialize= true }
               |> swrap_noloc
             ; Stmt.Fixed.Pattern.Assignment
@@ -510,6 +514,7 @@ let rec var_context_read
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
+              ; decl_annotation= None
               ; initialize= true }
             |> swrap_noloc )
           tuple_component_names tuple_types in
@@ -557,6 +562,7 @@ let rec var_context_read
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
+            ; decl_annotation= None
             ; initialize= false }
           |> swrap
         , Assignment
@@ -821,42 +827,46 @@ let param_serializer_write ?(unconstrain = false)
   need to write them in "column major order"
  *)
 let param_unconstrained_serializer_write
-    (decl_id, smeta, Program.{out_constrained_st; _}) =
-  let rec write (var, st) =
-    match st with
-    | SizedType.STuple subtypes ->
-        let elements =
-          List.mapi
-            ~f:(fun iter x -> (Expr.Helpers.add_tuple_index var (iter + 1), x))
-            subtypes in
-        List.concat_map ~f:write elements
-    | _ when SizedType.is_recursive_container st ->
-        let nonarray_st, array_dims = SizedType.get_scalar_and_dims st in
-        [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
-            (fun loopvars ->
-              Stmt.Fixed.
-                { meta= Location_span.empty
-                ; pattern=
-                    SList
-                      (write
-                         ( List.fold ~f:Expr.Helpers.add_int_index ~init:var
-                             (List.map
-                                ~f:(fun e -> Index.Single e)
-                                (List.rev loopvars) )
-                         , nonarray_st ) ) } )
-            smeta ]
-    | _ ->
-        [ Stmt.Helpers.internal_nrfunapp
-            (FnWriteParam {unconstrain_opt= None; var})
-            [] Location_span.empty ] in
-  let var =
-    { Expr.Fixed.pattern= Var decl_id
-    ; meta=
-        Expr.Typed.Meta.
-          { loc= Location_span.empty
-          ; type_= SizedType.to_unsized out_constrained_st
-          ; adlevel= DataOnly } } in
-  write (var, out_constrained_st)
+    (decl_id, smeta, Program.{out_constrained_st; out_annotation; _}) =
+  match out_annotation with
+  | Some "@silent" -> [] (* TODO annotation: correct? *)
+  | _ ->
+      let rec write (var, st) =
+        match st with
+        | SizedType.STuple subtypes ->
+            let elements =
+              List.mapi
+                ~f:(fun iter x ->
+                  (Expr.Helpers.add_tuple_index var (iter + 1), x) )
+                subtypes in
+            List.concat_map ~f:write elements
+        | _ when SizedType.is_recursive_container st ->
+            let nonarray_st, array_dims = SizedType.get_scalar_and_dims st in
+            [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
+                (fun loopvars ->
+                  Stmt.Fixed.
+                    { meta= Location_span.empty
+                    ; pattern=
+                        SList
+                          (write
+                             ( List.fold ~f:Expr.Helpers.add_int_index ~init:var
+                                 (List.map
+                                    ~f:(fun e -> Index.Single e)
+                                    (List.rev loopvars) )
+                             , nonarray_st ) ) } )
+                smeta ]
+        | _ ->
+            [ Stmt.Helpers.internal_nrfunapp
+                (FnWriteParam {unconstrain_opt= None; var})
+                [] Location_span.empty ] in
+      let var =
+        { Expr.Fixed.pattern= Var decl_id
+        ; meta=
+            Expr.Typed.Meta.
+              { loc= Location_span.empty
+              ; type_= SizedType.to_unsized out_constrained_st
+              ; adlevel= DataOnly } } in
+      write (var, out_constrained_st)
 
 (** Reads in parameters from a var_context, the same way as is done in the constructor,
      and then writes out the unconstrained versions *)
@@ -870,6 +880,7 @@ let var_context_unconstrain_transform (decl_id, smeta, outvar) =
                 (SizedType.to_unsized st)
           ; decl_id
           ; decl_type= Type.Sized st
+          ; decl_annotation= outvar.out_annotation
           ; initialize= true }
     ; meta= smeta }
   :: var_context_read (Stmt.Helpers.lvariable decl_id, smeta, st)
@@ -886,6 +897,7 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
                   (SizedType.to_unsized outvar.Program.out_constrained_st)
             ; decl_id
             ; decl_type= Type.Sized outvar.Program.out_constrained_st
+            ; decl_annotation= outvar.out_annotation
             ; initialize= true }
       ; meta= smeta } in
   let rec read (lval, st) =
@@ -1027,6 +1039,7 @@ let trans_prog (p : Program.Typed.t) =
         { decl_adtype= DataOnly
         ; decl_id= pos
         ; decl_type= Sized SInt
+        ; decl_annotation= None
         ; initialize= true }
     ; Assignment (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
@@ -1144,6 +1157,8 @@ let trans_prog (p : Program.Typed.t) =
                   { decl_adtype= DataOnly
                   ; decl_id= vident
                   ; decl_type= Type.Unsized type_of_input_var
+                  ; decl_annotation=
+                      None (* TODO annotations: copy these over? *)
                   ; initialize= true }
             ; meta= Location_span.empty }
         ; { pattern=

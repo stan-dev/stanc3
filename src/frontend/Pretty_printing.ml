@@ -177,6 +177,11 @@ let pp_comments_spacing space_before f ppf loc =
 
 let comma_no_break = any ", "
 
+let pp_annotation =
+  let open Fmt in
+  let pp_ann ppf a = pf ppf "%a@ " string a in
+  option pp_ann
+
 let indented_box ?(offset = 0) pp_v ppf v =
   pf ppf "@[<h>  %a@]" (box ~indent:offset pp_v) v
 
@@ -446,16 +451,23 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       pf ppf "profile(%s) {@,%a@,}" name
         (indented_box pp_list_of_statements)
         (vdsl, loc)
-  | VarDecl {decl_type= pst; transformation= trans; variables; is_global= _} ->
+  | VarDecl
+      { decl_type= pst
+      ; transformation= trans
+      ; variables
+      ; is_global= _
+      ; annotation } ->
       let pp_var ppf {identifier; initial_value} =
         pf ppf "%a%a" pp_identifier identifier
           (option (fun ppf e -> pf ppf " = %a" pp_expression e))
           initial_value in
-      pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
-        (list ~sep:comma pp_var) variables
-  | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
+      pf ppf "@[<h>%a%a %a;@]" pp_annotation annotation pp_transformed_type
+        (pst, trans) (list ~sep:comma pp_var) variables
+  | FunDef {returntype= rt; funname= id; arguments= args; body= b; annotation}
+    -> (
       let loc_of (_, _, id) = id.id_loc in
-      pf ppf "%a %a(%a" pp_returntype rt pp_identifier id
+      pf ppf "%a%a %a(%a" pp_annotation annotation pp_returntype rt
+        pp_identifier id
         (box (pp_list_of pp_args loc_of))
         (args, {loc with end_loc= b.smeta.loc.begin_loc}) ;
       match b with

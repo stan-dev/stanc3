@@ -22,6 +22,7 @@ module Fixed : sig
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
           ; decl_type: 'a Type.t
+          ; decl_annotation: string option
           ; initialize: bool }
     [@@deriving sexp, hash, compare]
 

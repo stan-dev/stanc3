@@ -156,7 +156,8 @@ let rec replace_deprecated_stmt
           { assign_lhs= replace_deprecated_lval deprecated_userdefined l
           ; assign_op= Assign
           ; assign_rhs= (replace_deprecated_expr deprecated_userdefined) e }
-    | FunDef {returntype; funname= {name; id_loc}; arguments; body} ->
+    | FunDef {returntype; funname= {name; id_loc}; arguments; body; annotation}
+      ->
         let newname =
           match String.Map.find deprecated_userdefined name with
           | Some type_ -> update_suffix name type_
@@ -165,6 +166,7 @@ let rec replace_deprecated_stmt
           { returntype
           ; funname= {name= newname; id_loc}
           ; arguments
+          ; annotation
           ; body= replace_deprecated_stmt deprecated_userdefined body }
     | IfThenElse (({emeta= {type_= UReal; _}; _} as cond), ifb, elseb) ->
         IfThenElse
@@ -227,12 +229,14 @@ let parens_lval = map_lval_with no_parens ident
 let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
   let stmt =
     match stmt with
-    | VarDecl {decl_type= d; transformation= t; variables; is_global} ->
+    | VarDecl {decl_type= d; transformation= t; variables; is_global; annotation}
+      ->
         VarDecl
           { decl_type= Middle.SizedType.map no_parens d
           ; transformation= Middle.Transformation.map keep_parens t
           ; variables= List.map ~f:(map_variable no_parens) variables
-          ; is_global }
+          ; is_global
+          ; annotation }
     | For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For
           { loop_variable
