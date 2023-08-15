@@ -172,11 +172,22 @@ transformed data {
 }
 parameters {
   real p_real;
-  real y_p;
   array[d_int] real p_real_array;
+  array[d_int, 2] real p_real_array_2d;
+  array[d_int, 2, 3] real p_real_array_3d;
   matrix[d_int, d_int] p_matrix;
+  array[d_int] matrix[d_int, d_int] p_matrix_array;
+  array[d_int, 2] matrix[d_int, d_int] p_matrix_array_2d;
+  array[d_int, 2, 3] matrix[d_int, d_int] p_matrix_array_3d;
   vector[d_int] p_vector;
+  array[d_int] vector[d_int] p_vector_array;
+  array[d_int, 2] vector[d_int] p_vector_array_2d;
+  array[d_int, 2, 3] vector[d_int] p_vector_array_3d;
   row_vector[d_int] p_row_vector;
+  array[d_int] row_vector[d_int] p_row_vector_array;
+  array[d_int, 2] row_vector[d_int] p_row_vector_array_2d;
+  array[d_int, 2, 3] row_vector[d_int] p_row_vector_array_3d;
+  real y_p;
 }
 transformed parameters {
   real transformed_param_real;
