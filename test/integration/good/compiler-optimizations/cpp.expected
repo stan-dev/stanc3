@@ -778,44 +778,43 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
       Eigen::Matrix<double,-1,-1> lcm_sym14__;
       Eigen::Matrix<double,-1,-1> lcm_sym13__;
       Eigen::Matrix<double,-1,-1> lcm_sym12__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_p;
+      Eigen::Matrix<local_scalar_t__,-1,-1> X_p;
       current_statement__ = 1;
-      X_p = in__.template read<
-              stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp1;
+      X_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
+      Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1;
       current_statement__ = 2;
       stan::model::assign(X_tp1, X_d, "assigning variable X_tp1");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp2 =
+      Eigen::Matrix<double,-1,-1> X_tp2 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym12__, stan::math::exp(X_d),
         "assigning variable lcm_sym12__");
       stan::model::assign(X_tp2, lcm_sym12__, "assigning variable X_tp2");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp3 =
+      Eigen::Matrix<double,-1,-1> X_tp3 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym13__, stan::math::exp(lcm_sym12__),
         "assigning variable lcm_sym13__");
       stan::model::assign(X_tp3, lcm_sym13__, "assigning variable X_tp3");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp4 =
+      Eigen::Matrix<double,-1,-1> X_tp4 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym14__, stan::math::exp(lcm_sym13__),
         "assigning variable lcm_sym14__");
       stan::model::assign(X_tp4, lcm_sym14__, "assigning variable X_tp4");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp5 =
+      Eigen::Matrix<double,-1,-1> X_tp5 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym15__, stan::math::exp(lcm_sym14__),
         "assigning variable lcm_sym15__");
       stan::model::assign(X_tp5, lcm_sym15__, "assigning variable X_tp5");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp6 =
+      Eigen::Matrix<double,-1,-1> X_tp6 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
           std::numeric_limits<double>::quiet_NaN());
       stan::model::assign(lcm_sym16__, stan::math::exp(lcm_sym15__),
         "assigning variable lcm_sym16__");
       stan::model::assign(X_tp6, lcm_sym16__, "assigning variable X_tp6");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp7;
+      Eigen::Matrix<double,-1,-1> X_tp7;
       current_statement__ = 8;
       stan::model::assign(X_tp7, stan::math::exp(lcm_sym16__),
         "assigning variable X_tp7");
@@ -3444,19 +3443,15 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     try {
       Eigen::Matrix<double,-1,-1> lcm_sym9__;
       Eigen::Matrix<double,-1,-1> lcm_sym8__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_p;
+      Eigen::Matrix<local_scalar_t__,-1,-1> X_p;
       current_statement__ = 1;
-      X_p = in__.template read<
-              stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp1 =
-        stan::math::var_value<Eigen::Matrix<double,-1,-1>>(Eigen::Matrix<double,-1,-1>::Constant(10,
-                                                             10,
-                                                             std::numeric_limits<double>::quiet_NaN(
-                                                               )));
+      X_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
+      Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1 =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
       stan::model::assign(lcm_sym8__, stan::math::exp(X_data),
         "assigning variable lcm_sym8__");
       stan::model::assign(X_tp1, lcm_sym8__, "assigning variable X_tp1");
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp2;
+      Eigen::Matrix<double,-1,-1> X_tp2;
       current_statement__ = 3;
       stan::model::assign(X_tp2, stan::math::exp(lcm_sym8__),
         "assigning variable X_tp2");
@@ -11904,21 +11899,16 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 1;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__,
                   jacobian__>(0, lp__);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> phi_std_raw =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant((N
-                                                            - 1),
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
+      Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant((N - 1), DUMMY_VAR__);
       lcm_sym24__ = (N - 1);
       phi_std_raw = in__.template read<
-                      stan::math::var_value<Eigen::Matrix<double,-1,1>>>(lcm_sym24__);
+                      Eigen::Matrix<local_scalar_t__,-1,1>>(lcm_sym24__);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
       lcm_sym23__ = stan::math::inv_sqrt(tau_phi);
       sigma_phi = lcm_sym23__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> phi =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
+      Eigen::Matrix<local_scalar_t__,-1,1> phi =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 13;
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, lcm_sym24__));
@@ -19051,11 +19041,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       int lcm_sym33__;
       int lcm_sym32__;
       int lcm_sym31__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> pi;
+      Eigen::Matrix<local_scalar_t__,-1,1> pi;
       current_statement__ = 1;
       pi = in__.template read_constrain_simplex<
-             stan::math::var_value<Eigen::Matrix<double,-1,1>>,
-             jacobian__>(lp__, K);
+             Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, K);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>> theta =
         std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(J,
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(K,
@@ -19115,10 +19104,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         if (stan::math::logical_gte(I, 1)) {
           current_statement__ = 13;
           stan::math::validate_non_negative_index("log_q", "K", K);
-          stan::math::var_value<Eigen::Matrix<double,-1,1>> log_q =
-            stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(K,
-                                                                std::numeric_limits<double>::quiet_NaN(
-                                                                  )));
+          Eigen::Matrix<local_scalar_t__,-1,1> log_q =
+            Eigen::Matrix<local_scalar_t__,-1,1>::Constant(K, DUMMY_VAR__);
           stan::model::assign(lcm_sym43__, stan::math::log(pi),
             "assigning variable lcm_sym43__");
           stan::model::assign(log_q, lcm_sym43__, "assigning variable log_q");
@@ -19156,7 +19143,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           for (int i = 2; i <= I; ++i) {
             current_statement__ = 13;
             stan::math::validate_non_negative_index("log_q", "K", K);
-            stan::math::var_value<Eigen::Matrix<double,-1,1>> log_q;
+            Eigen::Matrix<local_scalar_t__,-1,1> log_q;
             current_statement__ = 14;
             stan::model::assign(log_q, lcm_sym43__,
               "assigning variable log_q");
@@ -20085,21 +20072,18 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 4;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__,
                   jacobian__>(0, lp__);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> theta_std;
+      Eigen::Matrix<local_scalar_t__,-1,1> theta_std;
       current_statement__ = 5;
-      theta_std = in__.template read<
-                    stan::math::var_value<Eigen::Matrix<double,-1,1>>>(N);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> phi_std_raw;
+      theta_std = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw;
       current_statement__ = 6;
       phi_std_raw = in__.template read<
-                      stan::math::var_value<Eigen::Matrix<double,-1,1>>>(N);
+                      Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
       lcm_sym13__ = stan::math::inv_sqrt(tau_phi);
       sigma_phi = lcm_sym13__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> phi =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
+      Eigen::Matrix<local_scalar_t__,-1,1> phi =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 9;
       stan::model::assign(phi, phi_std_raw, "assigning variable phi",
         stan::model::index_min_max(1, N));
@@ -23715,24 +23699,17 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
       double lcm_sym15__;
       double lcm_sym14__;
       double lcm_sym13__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> y;
+      Eigen::Matrix<local_scalar_t__,-1,1> y;
       current_statement__ = 1;
-      y = in__.template read<
-            stan::math::var_value<Eigen::Matrix<double,-1,1>>>(3);
-      std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>>
-        arr_vec =
-        std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>>(3,
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(4,
-                                                              std::numeric_limits<double>::quiet_NaN(
-                                                                ))));
+      y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+      std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> arr_vec =
+        std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(3,
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__));
       current_statement__ = 2;
       arr_vec = in__.template read<
-                  std::vector<
-                    stan::math::var_value<Eigen::Matrix<double,-1,1>>>>(3, 4);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> x =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(3,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
+                  std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(3, 4);
+      Eigen::Matrix<local_scalar_t__,-1,1> x =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(3, DUMMY_VAR__);
       stan::model::assign(lcm_sym16__,
         stan::model::rvalue(y, "y", stan::model::index_min_max(1, 3)),
         "assigning variable lcm_sym16__");
@@ -24453,28 +24430,23 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     (void) function__;
     try {
       int lcm_sym28__;
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> p_single_ret_vec;
+      Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec;
       current_statement__ = 1;
       p_single_ret_vec = in__.template read<
-                           stan::math::var_value<Eigen::Matrix<double,-1,1>>>(5);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> p_multi_ret_vec;
+                           Eigen::Matrix<local_scalar_t__,-1,1>>(5);
+      Eigen::Matrix<local_scalar_t__,-1,1> p_multi_ret_vec;
       current_statement__ = 2;
       p_multi_ret_vec = in__.template read<
-                          stan::math::var_value<Eigen::Matrix<double,-1,1>>>(5);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> tp_single_ret_vec =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(5,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
+                          Eigen::Matrix<local_scalar_t__,-1,1>>(5);
+      Eigen::Matrix<local_scalar_t__,-1,1> tp_single_ret_vec =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       stan::math::var_value<Eigen::Matrix<double,-1,1>>
         inline_single_ret_fun_return_sym7__;
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> tp_multi_ret_vec =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(5,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
-      stan::math::var_value<Eigen::Matrix<double,-1,1>>
-        inline_multi_ret_fun_return_sym9__;
+      Eigen::Matrix<local_scalar_t__,-1,1> tp_multi_ret_vec =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_return_sym9__;
       int inline_multi_ret_fun_early_ret_check_sym11__ =
         std::numeric_limits<int>::min();
       for (int inline_multi_ret_fun_iterator_sym12__ = 1; inline_multi_ret_fun_iterator_sym12__
@@ -25495,7 +25467,7 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       stan::math::var_value<Eigen::Matrix<double,-1,1>> R =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> out =
+      Eigen::Matrix<double,-1,1> out =
         Eigen::Matrix<double,-1,1>::Constant(N,
           std::numeric_limits<double>::quiet_NaN());
       stan::math::var_value<Eigen::Matrix<double,-1,1>>
@@ -33785,8 +33757,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       beta_p = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> logit_psi =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(R, DUMMY_VAR__);
-      Eigen::Matrix<local_scalar_t__,-1,-1> logit_p =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(R, T, DUMMY_VAR__);
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> logit_p =
+        stan::math::var_value<Eigen::Matrix<double,-1,-1>>(Eigen::Matrix<double,-1,-1>::Constant(R,
+                                                             T,
+                                                             std::numeric_limits<double>::quiet_NaN(
+                                                               )));
       stan::model::assign(lcm_sym25__,
         stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable lcm_sym25__");
@@ -36137,19 +36112,17 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       local_scalar_t__ phi;
       current_statement__ = 2;
       phi = in__.template read<local_scalar_t__>();
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> x_matrix;
+      Eigen::Matrix<local_scalar_t__,-1,-1> x_matrix;
       current_statement__ = 3;
-      x_matrix = in__.template read<
-                   stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(3, 2);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> x_vector;
+      x_matrix = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3,
+                   2);
+      Eigen::Matrix<local_scalar_t__,-1,1> x_vector;
       current_statement__ = 4;
-      x_vector = in__.template read<
-                   stan::math::var_value<Eigen::Matrix<double,-1,1>>>(2);
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> x_cov;
+      x_vector = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      Eigen::Matrix<local_scalar_t__,-1,-1> x_cov;
       current_statement__ = 5;
       x_cov = in__.template read_constrain_cov_matrix<
-                stan::math::var_value<Eigen::Matrix<double,-1,-1>>,
-                jacobian__>(lp__, 2);
+                Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 2);
       {
         double x = std::numeric_limits<double>::quiet_NaN();
         {
@@ -40425,14 +40398,12 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       Eigen::Matrix<local_scalar_t__,-1,-1> lcm_sym10__;
       Eigen::Matrix<local_scalar_t__,-1,-1> lcm_sym9__;
       double lcm_sym8__;
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> m2;
+      Eigen::Matrix<local_scalar_t__,-1,-1> m2;
       current_statement__ = 1;
-      m2 = in__.template read<
-             stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
-      stan::math::var_value<Eigen::Matrix<double,-1,-1>> m3;
+      m2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
+      Eigen::Matrix<local_scalar_t__,-1,-1> m3;
       current_statement__ = 2;
-      m3 = in__.template read<
-             stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
+      m3 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
         stan::math::var_value<Eigen::Matrix<double,-1,-1>> m5 =
           Eigen::Matrix<double,-1,-1>::Constant(10, 10,
@@ -42658,15 +42629,12 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 5;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>> b =
-        std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>>(I,
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(8,
-                                                              std::numeric_limits<double>::quiet_NaN(
-                                                                ))));
+      std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> b =
+        std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(I,
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(8, DUMMY_VAR__));
       current_statement__ = 6;
       b = in__.template read<
-            std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>>>(I,
-            8);
+            std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(I, 8);
       local_scalar_t__ sigma = DUMMY_VAR__;
       lcm_sym13__ = (1 / stan::math::sqrt(tau));
       sigma = lcm_sym13__;
@@ -43542,7 +43510,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
       local_scalar_t__ param;
       current_statement__ = 1;
       param = in__.template read<local_scalar_t__>();
-      std::vector<stan::math::var_value<Eigen::Matrix<double,-1,1>>> local =
+      std::vector<Eigen::Matrix<double,-1,1>> local =
         std::vector<Eigen::Matrix<double,-1,1>>(2,
           Eigen::Matrix<double,-1,1>::Constant(5,
             std::numeric_limits<double>::quiet_NaN()));

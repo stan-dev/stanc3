@@ -8237,8 +8237,12 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
       stan::model::assign(user_func_aos,
         mat_ret_user_func(udf_input_aos, pstream__),
         "assigning variable user_func_aos");
-      Eigen::Matrix<local_scalar_t__,-1,-1> empty_user_func_aos =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>>
+        empty_user_func_aos =
+        stan::math::var_value<Eigen::Matrix<double,-1,-1>>(Eigen::Matrix<double,-1,-1>::Constant(10,
+                                                             10,
+                                                             std::numeric_limits<double>::quiet_NaN(
+                                                               )));
       current_statement__ = 4;
       stan::model::assign(empty_user_func_aos, empty_user_func(pstream__),
         "assigning variable empty_user_func_aos");
@@ -8248,14 +8252,20 @@ class return_types_and_udfs_demotes_model final : public model_base_crtp<return_
       stan::model::assign(inner_empty_user_func_aos,
         stan::math::multiply(udf_input_aos, empty_user_func(pstream__)),
         "assigning variable inner_empty_user_func_aos");
-      Eigen::Matrix<local_scalar_t__,-1,-1> int_aos_mul_aos =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> int_aos_mul_aos =
+        stan::math::var_value<Eigen::Matrix<double,-1,-1>>(Eigen::Matrix<double,-1,-1>::Constant(10,
+                                                             10,
+                                                             std::numeric_limits<double>::quiet_NaN(
+                                                               )));
       current_statement__ = 6;
       stan::model::assign(int_aos_mul_aos,
         stan::math::multiply(stan::math::rows(row_soa), empty_user_func_aos),
         "assigning variable int_aos_mul_aos");
-      Eigen::Matrix<local_scalar_t__,-1,-1> mul_two_aos =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> mul_two_aos =
+        stan::math::var_value<Eigen::Matrix<double,-1,-1>>(Eigen::Matrix<double,-1,-1>::Constant(10,
+                                                             10,
+                                                             std::numeric_limits<double>::quiet_NaN(
+                                                               )));
       current_statement__ = 7;
       stan::model::assign(mul_two_aos,
         stan::math::multiply(

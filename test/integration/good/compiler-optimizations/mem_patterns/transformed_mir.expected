@@ -20762,10 +20762,10 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
 matrix[10, 10] row_soa: SoA
 matrix[10, 10] udf_input_aos: AoS
 matrix[10, 10] user_func_aos: AoS
-matrix[10, 10] empty_user_func_aos: AoS
+matrix[10, 10] empty_user_func_aos: SoA
 matrix[10, 10] inner_empty_user_func_aos: AoS
-matrix[10, 10] int_aos_mul_aos: AoS
-matrix[10, 10] mul_two_aos: AoS
+matrix[10, 10] int_aos_mul_aos: SoA
+matrix[10, 10] mul_two_aos: SoA
 ((functions_block
   (((fdrt (ReturnType UMatrix)) (fdname empty_user_func) (fdsuffix FnPlain)
     (fdargs ())
@@ -21056,7 +21056,7 @@ matrix[10, 10] mul_two_aos: AoS
      (Decl (decl_adtype AutoDiffable) (decl_id empty_user_func_aos)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -21093,7 +21093,7 @@ matrix[10, 10] mul_two_aos: AoS
      (Decl (decl_adtype AutoDiffable) (decl_id int_aos_mul_aos)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -21103,7 +21103,7 @@ matrix[10, 10] mul_two_aos: AoS
    ((pattern
      (Assignment ((LVariable int_aos_mul_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
+        (FunApp (StanLib Times__ FnPlain SoA)
          (((pattern
             (Promotion
              ((pattern
@@ -21122,7 +21122,7 @@ matrix[10, 10] mul_two_aos: AoS
      (Decl (decl_adtype AutoDiffable) (decl_id mul_two_aos)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 10))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -21132,9 +21132,9 @@ matrix[10, 10] mul_two_aos: AoS
    ((pattern
      (Assignment ((LVariable mul_two_aos) ()) UMatrix
       ((pattern
-        (FunApp (StanLib Times__ FnPlain AoS)
+        (FunApp (StanLib Times__ FnPlain SoA)
          (((pattern
-            (FunApp (StanLib Times__ FnPlain AoS)
+            (FunApp (StanLib Times__ FnPlain SoA)
              (((pattern
                 (Promotion
                  ((pattern
@@ -21147,7 +21147,7 @@ matrix[10, 10] mul_two_aos: AoS
                  UReal DataOnly))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib transpose FnPlain AoS)
+                (FunApp (StanLib transpose FnPlain SoA)
                  (((pattern (Var int_aos_mul_aos))
                    (meta
                     ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))

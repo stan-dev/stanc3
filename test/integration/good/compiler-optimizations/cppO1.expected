@@ -1504,14 +1504,15 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_p;
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_p;
       current_statement__ = 1;
-      X_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1;
+      X_p = in__.template read<
+              stan::math::var_value<Eigen::Matrix<double,-1,-1>>>(10, 10);
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp1;
       current_statement__ = 2;
       stan::model::assign(X_tp1, stan::math::exp(X_data),
         "assigning variable X_tp1");
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_tp2;
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> X_tp2;
       current_statement__ = 3;
       stan::model::assign(X_tp2, stan::math::exp(X_tp1),
         "assigning variable X_tp2");
@@ -22755,8 +22756,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       beta_p = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> logit_psi =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(R, DUMMY_VAR__);
-      Eigen::Matrix<local_scalar_t__,-1,-1> logit_p =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(R, T, DUMMY_VAR__);
+      stan::math::var_value<Eigen::Matrix<double,-1,-1>> logit_p =
+        stan::math::var_value<Eigen::Matrix<double,-1,-1>>(Eigen::Matrix<double,-1,-1>::Constant(R,
+                                                             T,
+                                                             std::numeric_limits<double>::quiet_NaN(
+                                                               )));
       current_statement__ = 10;
       stan::model::assign(logit_psi, stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable logit_psi");

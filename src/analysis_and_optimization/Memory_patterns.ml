@@ -240,35 +240,37 @@ and is_any_soa_supported_fun_expr (kind : 'a Fun_kind.t)
   Return true if the rhs expression of an assignment contains only
    combinations of AutoDiffable Reals and Data Matrices
  *)
-let rec is_any_ad_real_data_matrix_expr
-    Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{adlevel; _}} : bool =
-  if UnsizedType.is_dataonlytype adlevel then false
+let rec contains_eigen_expr
+    Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{adlevel; type_; _}} : bool =
+  (*If only data then we can promote data to var<mat>*)
+  if UnsizedType.is_dataonlytype adlevel then true
   else
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.t list)) ->
         (*let () = print_endline "1" in*)
-        is_any_ad_real_data_matrix_expr_fun kind exprs
+        contains_eigen_expr_fun kind exprs
     | Indexed (expr, _) | Promotion (expr, _, _) | TupleProjection (expr, _) ->
         (*let () = print_endline "2" in*)
-        is_any_ad_real_data_matrix_expr expr
+        contains_eigen_expr expr
+    | Var (_ : string) when UnsizedType.is_eigen_type type_ ->
+        (*let () = print_endline "3" in*)
+        true
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
         (*let () = print_endline "3" in*)
         false
     | TernaryIf (_, texpr, fexpr) ->
         (*let () = print_endline "4" in*)
-        is_any_ad_real_data_matrix_expr texpr
-        || is_any_ad_real_data_matrix_expr fexpr
+        contains_eigen_expr texpr || contains_eigen_expr fexpr
     | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
         (*let () = print_endline "5" in*)
-        is_any_ad_real_data_matrix_expr lhs
-        && is_any_ad_real_data_matrix_expr rhs
+        contains_eigen_expr lhs && contains_eigen_expr rhs
 
 (**
   Return true if the expressions in a function call are all
    combinations of AutoDiffable Reals and Data Matrices
  *)
-and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
-    (exprs : Expr.Typed.t list) : bool =
+and contains_eigen_expr_fun (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) :
+    bool =
   (*let are_all_exprs_variables =
     List.for_all
       ~f:(fun x ->
@@ -278,8 +280,8 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
-    | "check_matching_dims" -> false
-    | "rep_vector" | "rep_row_vector" | "rep_matrix" -> false
+    | "check_matching_dims" -> true
+    | "rep_vector" | "rep_row_vector" | "rep_matrix" -> true
     | _ ->
         let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
         (*let () = print_endline name in*)
@@ -320,20 +322,37 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
             fun_args in
         (*let () = print_endline "is_any_ad_matrix" in*)
         (*let () = print_endline (string_of_bool is_any_ad_matrix) in*)
-        (is_any_data_container && is_any_var && not is_any_ad_matrix)
-        || List.for_all
-             ~f:(fun expr ->
-               let x, y = Expr.Typed.fun_arg expr in
-               match (x, y) with
-               | UnsizedType.AutoDiffable, x
-                 when UnsizedType.contains_eigen_type x ->
-                   (*let () = print_endline "found ad eigen" in*)
-                   is_any_ad_real_data_matrix_expr expr
-               | _ -> true )
-             exprs )
-  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
-  | CompilerInternal (_ : 'a Internal_fun.t) -> false
-  | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
+        let is_all_data =
+          List.for_all ~f:(fun (x, _) -> x = UnsizedType.DataOnly) fun_args
+        in
+        if is_any_data_container && is_any_var && not is_any_ad_matrix then
+          (*let () = print_endline "returning false" in*)
+          false
+        else if is_all_data then true
+        else
+          (*let () = print_endline "deeper" in*)
+          let expr_ad_matrix =
+            List.filter
+              ~f:(fun expr ->
+                let x, y = Expr.Typed.fun_arg expr in
+                match (x, y) with
+                | UnsizedType.AutoDiffable, x
+                  when UnsizedType.contains_eigen_type x ->
+                    true
+                | _ -> false )
+              exprs in
+          let xx = List.map ~f:contains_eigen_expr expr_ad_matrix in
+          (*let () = print_endline "xx vals" in*)
+          (*let () = List.iter2_exn ~f:(fun x y ->
+             let ad, tt = Expr.Typed.fun_arg y in
+             Printf.printf "(%s, %s, %s)\n" (UnsizedType.string_of_autodifftype ad) (UnsizedType.string_of_t tt) (string_of_bool x)) xx expr_ad_matrix in*)
+          let ret = List.exists ~f:(fun x -> x) xx in
+          (*let () = print_endline "returning" in*)
+          (*let () = print_endline (string_of_bool ret) in*)
+          ret )
+  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> false
+  | CompilerInternal (_ : 'a Internal_fun.t) -> true
+  | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> true
 
 (**
   Query to find the initial set of objects in statements that cannot be SoA.
@@ -362,10 +381,15 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
  *)
 let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
     (Stmt.Fixed.{pattern; _} : Stmt.Located.t) : string Set.Poly.t =
+  (*let () = print_endline "------" in*)
+  (*let () = print_endline "NEXT" in*)
+  (*let () = print_endline "----" in*)
   (*let print_string s = print_endline s in
     let print_set s = Set.Poly.iter ~f:print_string s in
     let print_bool bb =
       if bb then print_endline "true" else print_endline "false" in*)
+  (*let () = print_endline "acc" in*)
+  (*let () = print_set acc in*)
   let query_expr (accum : string Set.Poly.t) =
     query_initial_demotable_expr in_loop ~acc:accum in
   match pattern with
@@ -391,15 +415,16 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
         | false -> idx_list in
       let rhs_demotable_names = query_expr acc rhs in
       (* RHS (3)*)
-      let check_if_rhs_ad_real_data_matrix_expr =
+      let check_contains_eigen_matrix =
         match (UnsizedType.contains_eigen_type type_, adlevel) with
         | true, UnsizedType.AutoDiffable ->
-            let blah = is_any_ad_real_data_matrix_expr rhs in
+            let blah = contains_eigen_expr rhs in
+            let is_soav = not (is_any_soa_supported_expr rhs) in
             (*let () = print_endline "is_any_data1: " in*)
             (*let () = print_bool blah in*)
             (*let () = print_endline "is_any_soa1: " in*)
-            (*let () = print_bool (not (is_any_soa_supported_expr rhs)) in*)
-            blah || not (is_any_soa_supported_expr rhs)
+            (*let () = print_bool is_soav in*)
+            blah || is_soav
         | _ -> false in
       (* RHS (1)*)
       let is_all_rhs_aos =
@@ -416,8 +441,8 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       (*let () = print_bool is_eigen_stmt in*)
       (*let () = print_endline "is_all_rhs_aos: " in*)
       (*let () = print_bool is_all_rhs_aos in*)
-      (*let () = print_endline "check_if_rhs_ad_real_data_matrix_expr: " in*)
-      (*let () = print_bool check_if_rhs_ad_real_data_matrix_expr in*)
+      (*let () = print_endline "check_contains_eigen_matrix: " in*)
+      (*let () = print_bool check_contains_eigen_matrix in*)
       (*let () = print_endline "is_not_supported_func: " in*)
       (*let () = print_bool is_not_supported_func in*)
       (*let () = print_endline "Assign idx: " in*)
@@ -428,7 +453,9 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       (*let () = print_string name in*)
       let base_set = Set.Poly.union idx_demotable rhs_demotable_names in
       let base_set_plus_lhs =
-        if check_if_rhs_ad_real_data_matrix_expr then Set.Poly.add base_set name
+        if is_eigen_stmt && not check_contains_eigen_matrix then
+          (*let () = print_endline "name added" in*)
+          Set.Poly.add base_set name
         else base_set in
       let assign_demotes =
         if is_eigen_stmt && (is_all_rhs_aos || is_not_supported_func) then

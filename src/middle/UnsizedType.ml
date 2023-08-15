@@ -125,12 +125,11 @@ let rec string_of_t t =
     )
   | _ -> "unknown"
 
+let print_type (adiff, t) =
+  Printf.printf "(%s, %s)\n" (string_of_autodifftype adiff) (string_of_t t)
+
 let print_type_list lst =
-  List.iter
-    ~f:(fun (adiff, t) ->
-      Printf.printf "(%s, %s)\n" (string_of_autodifftype adiff) (string_of_t t)
-      )
-    lst
+  List.iter ~f:(fun (adiff, t) -> print_type (adiff, t)) lst
 
 (* -- Type conversion -- *)
 let rec autodifftype_can_convert at1 at2 =
