@@ -100,6 +100,38 @@ and pp_returntype ppf = function
   | Void -> Fmt.string ppf "void"
   | ReturnType ut -> pp ppf ut
 
+let string_of_autodifftype ad =
+  match ad with DataOnly -> "data" | AutoDiffable | TupleAD _ -> "var"
+
+let rec string_of_t t =
+  match t with
+  | UInt -> "int"
+  | UReal -> "real"
+  | UComplex -> "complex"
+  | UVector -> "vector"
+  | URowVector -> "row_vector"
+  | UMatrix -> "matrix"
+  | UComplexVector -> "complex_vector"
+  | UComplexRowVector -> "complex_row_vector"
+  | UComplexMatrix -> "complex_matrix"
+  | UArray ut ->
+      let ut2, d = unwind_array_type ut in
+      let array_str = "[" ^ String.make d ',' ^ "]" in
+      "array" ^ array_str ^ " " ^ string_of_t ut2
+  | UTuple ts -> (
+    match ts with
+    | [t] -> "tuple(" ^ string_of_t t ^ ")"
+    | _ -> "tuple(" ^ String.concat ~sep:"," (List.map ts ~f:string_of_t) ^ ")"
+    )
+  | _ -> "unknown"
+
+let print_type_list lst =
+  List.iter
+    ~f:(fun (adiff, t) ->
+      Printf.printf "(%s, %s)\n" (string_of_autodifftype adiff) (string_of_t t)
+      )
+    lst
+
 (* -- Type conversion -- *)
 let rec autodifftype_can_convert at1 at2 =
   match (at1, at2) with

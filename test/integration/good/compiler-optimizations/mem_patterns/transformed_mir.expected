@@ -10059,7 +10059,7 @@ matrix[10, 10] X_tp7: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name deep_dependence_model) (prog_path deep_dependence.stan))
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns golf_angle.stan
-vector[J] p: SoA
+vector[J] p: AoS
 ((functions_block ())
  (input_vars
   ((J
@@ -10476,7 +10476,7 @@ vector[J] p: SoA
          (Decl (decl_adtype AutoDiffable) (decl_id p)
           (decl_type
            (Sized
-            (SVector SoA
+            (SVector AoS
              ((pattern (Var J))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize true)))
@@ -10484,9 +10484,9 @@ vector[J] p: SoA
        ((pattern
          (Assignment ((LVariable p) ()) UVector
           ((pattern
-            (FunApp (StanLib Minus__ FnPlain SoA)
+            (FunApp (StanLib Minus__ FnPlain AoS)
              (((pattern
-                (FunApp (StanLib Times__ FnPlain SoA)
+                (FunApp (StanLib Times__ FnPlain AoS)
                  (((pattern
                     (Promotion
                      ((pattern (Lit Int 2))
@@ -10494,9 +10494,9 @@ vector[J] p: SoA
                      UReal DataOnly))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
-                    (FunApp (StanLib Phi FnPlain SoA)
+                    (FunApp (StanLib Phi FnPlain AoS)
                      (((pattern
-                        (FunApp (StanLib Divide__ FnPlain SoA)
+                        (FunApp (StanLib Divide__ FnPlain AoS)
                          (((pattern (Var threshold_angle))
                            (meta
                             ((type_ UVector) (loc <opaque>)
@@ -10522,7 +10522,7 @@ vector[J] p: SoA
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib binomial_lpmf (FnLpdf true) SoA)
+            (FunApp (StanLib binomial_lpmf (FnLpdf true) AoS)
              (((pattern (Var y))
                (meta
                 ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))

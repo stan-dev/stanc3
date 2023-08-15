@@ -4016,10 +4016,8 @@ class golf_angle_model final : public model_base_crtp<golf_angle_model> {
       {
         current_statement__ = 3;
         stan::math::validate_non_negative_index("p", "J", J);
-        stan::math::var_value<Eigen::Matrix<double,-1,1>> p =
-          stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(J,
-                                                              std::numeric_limits<double>::quiet_NaN(
-                                                                )));
+        Eigen::Matrix<local_scalar_t__,-1,1> p =
+          Eigen::Matrix<local_scalar_t__,-1,1>::Constant(J, DUMMY_VAR__);
         current_statement__ = 4;
         stan::model::assign(p,
           stan::math::subtract(

@@ -246,15 +246,20 @@ let rec is_any_ad_real_data_matrix_expr
   else
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.t list)) ->
+        (* let print_endline "1" = $2 in *)
         is_any_ad_real_data_matrix_expr_fun kind exprs
     | Indexed (expr, _) | Promotion (expr, _, _) | TupleProjection (expr, _) ->
+        (* let print_endline "2" = $2 in *)
         is_any_ad_real_data_matrix_expr expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
+        (* let print_endline "3" = $2 in *)
         false
     | TernaryIf (_, texpr, fexpr) ->
+        (* let print_endline "4" = $2 in *)
         is_any_ad_real_data_matrix_expr texpr
         || is_any_ad_real_data_matrix_expr fexpr
     | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
+        (* let print_endline "5" = $2 in *)
         is_any_ad_real_data_matrix_expr lhs
         && is_any_ad_real_data_matrix_expr rhs
 
@@ -264,24 +269,54 @@ let rec is_any_ad_real_data_matrix_expr
  *)
 and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) : bool =
+  let are_all_exprs_variables =
+    List.for_all
+      ~f:(fun x ->
+        match x with {Expr.Fixed.pattern= Var _; _} -> true | _ -> false )
+      exprs in
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
     | "check_matching_dims" -> false
+    | "rep_vector" | "rep_row_vector" | "rep_matrix" -> false
     | _ ->
-        let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
-        (*Right now we can't handle AD real and data matrix funcs
-           that return a matrix :-/*)
-        List.for_all
-          ~f:(fun (x, y) ->
-            match (x, y) with
-            | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
-            | UnsizedType.DataOnly, x when UnsizedType.is_container x -> true
-            | _ -> false )
-          fun_args )
+        if are_all_exprs_variables then
+          (* let print_endline "6" = $2 in *)
+          let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
+          (* let UnsizedType.print_type_list fun_args = $2 in *)
+          (*Right now we can't handle AD real and data matrix funcs
+             that return a matrix :-/*)
+          List.for_all
+            ~f:(fun (x, y) ->
+              match (x, y) with
+              | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
+              | UnsizedType.DataOnly, x when UnsizedType.is_container x -> true
+              | _, UInt -> true
+              | _ -> false )
+            fun_args
+          || List.exists ~f:is_any_ad_real_data_matrix_expr exprs
+        else List.exists ~f:is_any_ad_real_data_matrix_expr exprs )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
   | CompilerInternal (_ : 'a Internal_fun.t) -> false
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
+
+(*
+            (* let print_endline "7" = $2 in *)
+        let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
+        (* let UnsizedType.print_type_list fun_args = $2 in *)
+        (*Right now we can't handle AD real and data matrix funcs
+           that return a matrix :-/*)
+        let is_args_autodiff_real_data_matrix =
+          List.for_all
+            ~f:(fun (x, y) ->
+              match (x, y) with
+              | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
+              | UnsizedType.DataOnly, x when UnsizedType.is_container x -> true
+              | _, UInt -> true
+              | _ -> false )
+            fun_args in
+        is_args_autodiff_real_data_matrix || List.exists ~f:is_any_ad_real_data_matrix_expr exprs   
+  *)
 
 (**
   Query to find the initial set of objects in statements that cannot be SoA.
@@ -310,6 +345,10 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
  *)
 let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
     (Stmt.Fixed.{pattern; _} : Stmt.Located.t) : string Set.Poly.t =
+  (* let print_string s = print_endline s in
+     let print_set s = Set.Poly.iter ~f:print_string s in
+     let print_bool bb =
+       if bb then print_endline "true" else print_endline "false" in *)
   let query_expr (accum : string Set.Poly.t) =
     query_initial_demotable_expr in_loop ~acc:accum in
   match pattern with
@@ -317,6 +356,8 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       ( (lval : Expr.Typed.Meta.t Expr.Fixed.t Stmt.Fixed.Pattern.lvalue)
       , (ut : UnsizedType.t)
       , (Expr.Fixed.{meta= Expr.Typed.Meta.{type_; adlevel; _}; _} as rhs) ) ->
+      (* let print_endline "Assign: " = $2 in *)
+      (* let print_string (Stmt.Helpers.get_lhs_name lval) = $2 in *)
       let name = Stmt.Helpers.lhs_variable lval in
       let idx = Stmt.Helpers.lhs_indices lval in
       let idx_list =
@@ -336,8 +377,12 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       let check_if_rhs_ad_real_data_matrix_expr =
         match (UnsizedType.contains_eigen_type type_, adlevel) with
         | true, UnsizedType.AutoDiffable ->
-            is_any_ad_real_data_matrix_expr rhs
-            || not (is_any_soa_supported_expr rhs)
+            let blah = is_any_ad_real_data_matrix_expr rhs in
+            (* let print_endline "is_any_data1: " = $2 in *)
+            (* let print_bool blah = $2 in *)
+            (* let print_endline "is_any_soa1: " = $2 in *)
+            (* let print_bool (not (is_any_soa_supported_expr rhs)) = $2 in *)
+            blah || not (is_any_soa_supported_expr rhs)
         | _ -> false in
       (* RHS (1)*)
       let is_all_rhs_aos =
@@ -350,17 +395,28 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
         | FunApp (UserDefined _, _) -> true
         | _ -> false in
       let is_eigen_stmt = UnsizedType.contains_eigen_type rhs.meta.type_ in
+      (* let print_endline "is_eigen_stmt: " = $2 in *)
+      (* let print_bool is_eigen_stmt = $2 in *)
+      (* let print_endline "is_all_rhs_aos: " = $2 in *)
+      (* let print_bool is_all_rhs_aos = $2 in *)
+      (* let print_endline "check_if_rhs_ad_real_data_matrix_expr: " = $2 in *)
+      (* let print_bool check_if_rhs_ad_real_data_matrix_expr = $2 in *)
+      (* let print_endline "is_not_supported_func: " = $2 in *)
+      (* let print_bool is_not_supported_func = $2 in *)
+      (* let print_endline "Assign idx: " = $2 in *)
+      (* let print_set idx_demotable = $2 in *)
+      (* let print_endline "Assign rhs: " = $2 in *)
+      (* let print_set rhs_demotable_names = $2 in *)
+      (* let print_endline "Assign name: " = $2 in *)
+      (* let print_string name = $2 in *)
+      let base_set = Set.Poly.union idx_demotable rhs_demotable_names in
+      let base_set_plus_lhs =
+        if check_if_rhs_ad_real_data_matrix_expr then Set.Poly.add base_set name
+        else base_set in
       let assign_demotes =
-        if
-          is_eigen_stmt
-          && ( is_all_rhs_aos || check_if_rhs_ad_real_data_matrix_expr
-             || is_not_supported_func )
-        then
-          let base_set = Set.Poly.union idx_demotable rhs_demotable_names in
-          Set.Poly.add
-            (Set.Poly.union base_set (query_var_eigen_names rhs))
-            name
-        else Set.Poly.union idx_demotable rhs_demotable_names in
+        if is_eigen_stmt && (is_all_rhs_aos || is_not_supported_func) then
+          Set.Poly.union base_set_plus_lhs (query_var_eigen_names rhs)
+        else base_set_plus_lhs in
       let tuple_demotes =
         match lval with
         | LTupleProjection _, _ ->
@@ -368,7 +424,14 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
               (Set.Poly.union assign_demotes (query_var_eigen_names rhs))
               name
         | _ -> assign_demotes in
-      Set.Poly.union acc tuple_demotes
+      let xx = Set.Poly.union acc tuple_demotes in
+      (* let print_endline "Assign acc: " = $2 in *)
+      (* let print_set acc = $2 in *)
+      (* let print_endline "Assign tups: " = $2 in *)
+      (* let print_set tuple_demotes = $2 in *)
+      (* let print_endline "Assign xx: " = $2 in *)
+      (* let print_set xx = $2 in *)
+      xx
   | NRFunApp (kind, exprs) ->
       query_initial_demotable_funs in_loop acc kind exprs
   | IfElse (predicate, true_stmt, op_false_stmt) ->
