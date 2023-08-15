@@ -19,5 +19,6 @@ model {
   for (i in 1:5) {
   tp_soa_single_idx_in_upfrom_idx = tp_soa_multi_idx_assign_in_loop[Idx[i]:];
   }
+  target += std_normal_lpdf(tp_soa_single_idx_in_upfrom_idx);
 
 }

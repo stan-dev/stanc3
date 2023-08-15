@@ -6845,7 +6845,7 @@ namespace indexing2_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 17> locations_array__ =
+static constexpr std::array<const char*, 18> locations_array__ =
   {" (found before start of program)",
   " (in 'indexing2.stan', line 8, column 2 to column 13)",
   " (in 'indexing2.stan', line 9, column 2 to column 35)",
@@ -6859,6 +6859,7 @@ static constexpr std::array<const char*, 17> locations_array__ =
   " (in 'indexing2.stan', line 20, column 2 to column 77)",
   " (in 'indexing2.stan', line 19, column 17 to line 21, column 3)",
   " (in 'indexing2.stan', line 19, column 2 to line 21, column 3)",
+  " (in 'indexing2.stan', line 22, column 2 to column 61)",
   " (in 'indexing2.stan', line 2, column 1 to column 7)",
   " (in 'indexing2.stan', line 3, column 1 to column 7)",
   " (in 'indexing2.stan', line 4, column 7 to column 8)",
@@ -6887,25 +6888,25 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 13;
+      current_statement__ = 14;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 13;
-      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 14;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 15;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
-      current_statement__ = 14;
-      M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 15;
-      stan::math::validate_non_negative_index("Idx", "N", N);
+      M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 16;
+      stan::math::validate_non_negative_index("Idx", "N", N);
+      current_statement__ = 17;
       context__.validate_dims("data initialization", "Idx", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       Idx = std::vector<int>(N, std::numeric_limits<int>::min());
-      current_statement__ = 16;
+      current_statement__ = 17;
       Idx = context__.vals_i("Idx");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6986,6 +6987,9 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
                 stan::model::rvalue(Idx, "Idx", stan::model::index_uni(i)))),
             "assigning variable tp_soa_single_idx_in_upfrom_idx");
         }
+        current_statement__ = 13;
+        lp_accum__.add(stan::math::std_normal_lpdf<false>(
+                         tp_soa_single_idx_in_upfrom_idx));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7065,6 +7069,9 @@ class indexing2_model final : public model_base_crtp<indexing2_model> {
                 stan::model::rvalue(Idx, "Idx", stan::model::index_uni(i)))),
             "assigning variable tp_soa_single_idx_in_upfrom_idx");
         }
+        current_statement__ = 13;
+        lp_accum__.add(stan::math::std_normal_lpdf<false>(
+                         tp_soa_single_idx_in_upfrom_idx));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

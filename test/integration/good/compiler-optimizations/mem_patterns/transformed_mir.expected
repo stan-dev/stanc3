@@ -19089,6 +19089,14 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
                     ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
+        (meta <opaque>))
+       ((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (StanLib std_normal_lpdf (FnLpdf false) AoS)
+             (((pattern (Var tp_soa_single_idx_in_upfrom_idx))
+               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>)))))
     (meta <opaque>))))
  (reverse_mode_log_prob
@@ -19252,6 +19260,14 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
                     ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
+        (meta <opaque>))
+       ((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (StanLib std_normal_lpdf (FnLpdf false) SoA)
+             (((pattern (Var tp_soa_single_idx_in_upfrom_idx))
+               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>)))))
     (meta <opaque>))))
  (generate_quantities
