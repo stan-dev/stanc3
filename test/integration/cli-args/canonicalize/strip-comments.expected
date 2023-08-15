@@ -189,8 +189,6 @@ model {
   c ~ poisson_log(3.0);
   if (b != 0.0) {
     x ~ normal(0, 1);
-    x ~ normal_log(0, 1);
-    x ~ normal_log(0, 1);
     target += normal_log_lpdf(x | 1, 2);
     target += std_normal_lpdf(x);
   } else {
@@ -229,11 +227,6 @@ generated quantities {
                                                      x_r, x_i);
 }
 
-Warning in 'deprecated.stan', line 37, column 2: Nested multi-indexing on the
-    left hand side of assignment does not behave the same as nested indexing
-    in expressions. This is considered a bug and will be disallowed in Stan
-    2.33.0. The indexing can be automatically fixed using the canonicalize
-    flag for stanc.
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize strip-comments,braces,parentheses,deprecations deprecated_tilde.stan
 functions {
   real test_log_lpmf(int bar, real foo) {

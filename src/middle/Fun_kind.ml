@@ -3,7 +3,6 @@
 *)
 
 open Core_kernel
-open Core_kernel.Poly
 
 type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
 [@@deriving compare, hash, fold, map, sexp, equal]
@@ -22,13 +21,6 @@ let suffix_from_name fname =
   else if is_suffix "_lp" then FnTarget
   else if is_suffix "_lupdf" || is_suffix "_lupmf" then FnLpdf true
   else if is_suffix "_lpdf" || is_suffix "_lpmf" then FnLpdf false
-  else if
-    is_suffix "_log"
-    && not
-         ( is_suffix "_cdf_log" || is_suffix "_ccdf_log"
-         || fname = "multiply_log"
-         || fname = "binomial_coefficient_log" )
-  then FnLpdf false
   else FnPlain
 
 let with_unnormalized_suffix (name : string) =

@@ -35461,7 +35461,7 @@ namespace shadowing_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 52> locations_array__ =
+static constexpr std::array<const char*, 53> locations_array__ =
   {" (found before start of program)",
   " (in 'shadowing.stan', line 14, column 2 to column 9)",
   " (in 'shadowing.stan', line 15, column 2 to column 10)",
@@ -35479,38 +35479,39 @@ static constexpr std::array<const char*, 52> locations_array__ =
   " (in 'shadowing.stan', line 30, column 2 to column 11)",
   " (in 'shadowing.stan', line 31, column 2 to column 11)",
   " (in 'shadowing.stan', line 32, column 2 to column 16)",
-  " (in 'shadowing.stan', line 33, column 2 to column 32)",
-  " (in 'shadowing.stan', line 36, column 2 to column 34)",
-  " (in 'shadowing.stan', line 37, column 2 to column 12)",
-  " (in 'shadowing.stan', line 38, column 2 to column 35)",
-  " (in 'shadowing.stan', line 39, column 2 to column 14)",
-  " (in 'shadowing.stan', line 40, column 2 to column 37)",
-  " (in 'shadowing.stan', line 41, column 2 to column 19)",
-  " (in 'shadowing.stan', line 42, column 2 to column 14)",
+  " (in 'shadowing.stan', line 33, column 2 to column 15)",
+  " (in 'shadowing.stan', line 34, column 2 to column 32)",
+  " (in 'shadowing.stan', line 37, column 2 to column 34)",
+  " (in 'shadowing.stan', line 38, column 2 to column 12)",
+  " (in 'shadowing.stan', line 39, column 2 to column 35)",
+  " (in 'shadowing.stan', line 40, column 2 to column 14)",
+  " (in 'shadowing.stan', line 41, column 2 to column 37)",
+  " (in 'shadowing.stan', line 42, column 2 to column 19)",
   " (in 'shadowing.stan', line 43, column 2 to column 14)",
-  " (in 'shadowing.stan', line 44, column 2 to column 18)",
-  " (in 'shadowing.stan', line 45, column 2 to column 23)",
-  " (in 'shadowing.stan', line 46, column 2 to column 17)",
-  " (in 'shadowing.stan', line 49, column 2 to column 32)",
-  " (in 'shadowing.stan', line 50, column 2 to column 18)",
-  " (in 'shadowing.stan', line 51, column 2 to column 20)",
-  " (in 'shadowing.stan', line 52, column 2 to column 15)",
-  " (in 'shadowing.stan', line 53, column 2 to column 19)",
-  " (in 'shadowing.stan', line 56, column 2 to column 10)",
-  " (in 'shadowing.stan', line 69, column 2 to column 69)",
-  " (in 'shadowing.stan', line 72, column 2 to column 43)",
-  " (in 'shadowing.stan', line 57, column 2 to line 58, column 70)",
-  " (in 'shadowing.stan', line 59, column 2 to column 54)",
-  " (in 'shadowing.stan', line 61, column 2 to column 55)",
-  " (in 'shadowing.stan', line 63, column 2 to column 23)",
-  " (in 'shadowing.stan', line 65, column 2 to column 23)",
-  " (in 'shadowing.stan', line 67, column 2 to column 80)",
-  " (in 'shadowing.stan', line 75, column 4 to column 22)",
-  " (in 'shadowing.stan', line 74, column 2 to line 76, column 3)",
-  " (in 'shadowing.stan', line 79, column 2 to column 23)",
+  " (in 'shadowing.stan', line 44, column 2 to column 14)",
+  " (in 'shadowing.stan', line 45, column 2 to column 18)",
+  " (in 'shadowing.stan', line 46, column 2 to column 23)",
+  " (in 'shadowing.stan', line 47, column 2 to column 17)",
+  " (in 'shadowing.stan', line 50, column 2 to column 32)",
+  " (in 'shadowing.stan', line 51, column 2 to column 18)",
+  " (in 'shadowing.stan', line 52, column 2 to column 20)",
+  " (in 'shadowing.stan', line 53, column 2 to column 15)",
+  " (in 'shadowing.stan', line 54, column 2 to column 19)",
+  " (in 'shadowing.stan', line 57, column 2 to column 10)",
+  " (in 'shadowing.stan', line 70, column 2 to column 69)",
+  " (in 'shadowing.stan', line 73, column 2 to column 43)",
+  " (in 'shadowing.stan', line 58, column 2 to line 59, column 70)",
+  " (in 'shadowing.stan', line 60, column 2 to column 54)",
+  " (in 'shadowing.stan', line 62, column 2 to column 55)",
+  " (in 'shadowing.stan', line 64, column 2 to column 23)",
+  " (in 'shadowing.stan', line 66, column 2 to column 23)",
+  " (in 'shadowing.stan', line 68, column 2 to column 58)",
+  " (in 'shadowing.stan', line 76, column 4 to column 22)",
+  " (in 'shadowing.stan', line 75, column 2 to line 77, column 3)",
+  " (in 'shadowing.stan', line 80, column 2 to column 23)",
   " (in 'shadowing.stan', line 10, column 3 to column 15)",
-  " (in 'shadowing.stan', line 69, column 8 to column 9)",
-  " (in 'shadowing.stan', line 72, column 9 to column 24)",
+  " (in 'shadowing.stan', line 70, column 8 to column 9)",
+  " (in 'shadowing.stan', line 73, column 9 to column 24)",
   " (in 'shadowing.stan', line 3, column 4 to column 30)",
   " (in 'shadowing.stan', line 5, column 4 to column 14)",
   " (in 'shadowing.stan', line 2, column 43 to line 6, column 3)"};
@@ -35555,10 +35556,10 @@ rhs(const T0__& t, const T1__& y_arg__, const T2__& alpha, std::ostream*
   try {
     Eigen::Matrix<local_scalar_t__,-1,1> yp =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(1, DUMMY_VAR__);
-    current_statement__ = 49;
+    current_statement__ = 50;
     stan::model::assign(yp, stan::math::multiply(-(alpha), y),
       "assigning variable yp");
-    current_statement__ = 50;
+    current_statement__ = 51;
     return yp;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -35590,7 +35591,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 46;
+      current_statement__ = 47;
       context__.validate_dims("data initialization", "x", "double",
         std::vector<size_t>{static_cast<size_t>(4)});
       x_data__ = Eigen::Matrix<double,-1,1>::Constant(4,
@@ -35598,7 +35599,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       new (&x) Eigen::Map<Eigen::Matrix<double,-1,1>>(x_data__.data(), 4);
       {
         std::vector<local_scalar_t__> x_flat__;
-        current_statement__ = 46;
+        current_statement__ = 47;
         x_flat__ = context__.vals_r("x");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
@@ -35607,21 +35608,21 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 47;
+      current_statement__ = 48;
       stan::math::validate_non_negative_index("called", "1", 1);
-      current_statement__ = 48;
+      current_statement__ = 49;
       result_1dim__ = std::numeric_limits<int>::min();
-      current_statement__ = 48;
+      current_statement__ = 49;
       result_1dim__ = stan::math::num_elements(x);
-      current_statement__ = 48;
+      current_statement__ = 49;
       stan::math::validate_non_negative_index("result", "num_elements(x)",
         result_1dim__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
     num_params_r__ = 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 +
-      1 + 1 + 1 + 1 + 1 + 1 + 1 + (5 - 1) + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 4
-      + 1 + 1;
+      1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + (5 - 1) + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1
+      + 4 + 1 + 1;
   }
   inline std::string model_name() const final {
     return "shadowing_model";
@@ -35700,85 +35701,87 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       local_scalar_t__ multiply = DUMMY_VAR__;
       current_statement__ = 16;
       multiply = in__.template read<local_scalar_t__>();
-      local_scalar_t__ binomial_coefficient_log = DUMMY_VAR__;
+      local_scalar_t__ lchoose = DUMMY_VAR__;
       current_statement__ = 17;
+      lchoose = in__.template read<local_scalar_t__>();
+      local_scalar_t__ binomial_coefficient_log = DUMMY_VAR__;
+      current_statement__ = 18;
       binomial_coefficient_log = in__.template read<local_scalar_t__>();
       local_scalar_t__ read_constrain_lb = DUMMY_VAR__;
-      current_statement__ = 18;
+      current_statement__ = 19;
       read_constrain_lb = in__.template read_constrain_lb<local_scalar_t__,
                             jacobian__>(0, lp__);
       local_scalar_t__ read = DUMMY_VAR__;
-      current_statement__ = 19;
+      current_statement__ = 20;
       read = in__.template read<local_scalar_t__>();
       local_scalar_t__ validate_non_negative_index = DUMMY_VAR__;
-      current_statement__ = 20;
+      current_statement__ = 21;
       validate_non_negative_index = in__.template read<local_scalar_t__>();
       local_scalar_t__ length = DUMMY_VAR__;
-      current_statement__ = 21;
+      current_statement__ = 22;
       length = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> validate_positive_index =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      current_statement__ = 22;
+      current_statement__ = 23;
       validate_positive_index = in__.template read_constrain_simplex<
                                   Eigen::Matrix<local_scalar_t__,-1,1>,
                                   jacobian__>(lp__, 5);
       local_scalar_t__ profile_map = DUMMY_VAR__;
-      current_statement__ = 23;
+      current_statement__ = 24;
       profile_map = in__.template read<local_scalar_t__>();
       local_scalar_t__ assign = DUMMY_VAR__;
-      current_statement__ = 24;
+      current_statement__ = 25;
       assign = in__.template read<local_scalar_t__>();
       local_scalar_t__ rvalue = DUMMY_VAR__;
-      current_statement__ = 25;
+      current_statement__ = 26;
       rvalue = in__.template read<local_scalar_t__>();
       local_scalar_t__ stan_print = DUMMY_VAR__;
-      current_statement__ = 26;
+      current_statement__ = 27;
       stan_print = in__.template read<local_scalar_t__>();
       local_scalar_t__ model_base_crtp = DUMMY_VAR__;
-      current_statement__ = 27;
+      current_statement__ = 28;
       model_base_crtp = in__.template read<local_scalar_t__>();
       local_scalar_t__ index_uni = DUMMY_VAR__;
-      current_statement__ = 28;
+      current_statement__ = 29;
       index_uni = in__.template read<local_scalar_t__>();
       local_scalar_t__ bernoulli_logit_glm_lpmf = DUMMY_VAR__;
-      current_statement__ = 29;
+      current_statement__ = 30;
       bernoulli_logit_glm_lpmf = in__.template read<local_scalar_t__>();
       local_scalar_t__ reduce_sum = DUMMY_VAR__;
-      current_statement__ = 30;
+      current_statement__ = 31;
       reduce_sum = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> segment =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__);
-      current_statement__ = 31;
+      current_statement__ = 32;
       segment = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(4);
       local_scalar_t__ ode_bdf = DUMMY_VAR__;
-      current_statement__ = 32;
+      current_statement__ = 33;
       ode_bdf = in__.template read<local_scalar_t__>();
       local_scalar_t__ ode_bdf_tol = DUMMY_VAR__;
-      current_statement__ = 33;
+      current_statement__ = 34;
       ode_bdf_tol = in__.template read<local_scalar_t__>();
       local_scalar_t__ mu = DUMMY_VAR__;
-      current_statement__ = 37;
+      current_statement__ = 38;
       mu = ((((((((stan::math::e() + stan::math::pi()) + stan::math::log2())
         + stan::math::log10()) + stan::math::sqrt2()) +
         stan::math::not_a_number()) + stan::math::positive_infinity()) +
         stan::math::negative_infinity()) + stan::math::machine_precision());
-      current_statement__ = 38;
-      mu = (mu + ((logit + bernoulli_logit_glm_lpmf) + reduce_sum));
       current_statement__ = 39;
+      mu = (mu + ((logit + bernoulli_logit_glm_lpmf) + reduce_sum));
+      current_statement__ = 40;
       mu = (mu + ((inv_logit * stan::math::inv_logit(0.5)) + (logit *
         stan::math::logit(10))));
-      current_statement__ = 40;
-      mu = (mu + (pow * stan::math::pow(3, 2)));
       current_statement__ = 41;
-      mu = ((add + add) - sub);
+      mu = (mu + (pow * stan::math::pow(3, 2)));
       current_statement__ = 42;
-      mu = (mu + ((binomial_coefficient_log *
-        stan::math::binomial_coefficient_log(3, 4)) *
-        stan::math::binomial_coefficient_log(3, 4)));
+      mu = ((add + add) - sub);
+      current_statement__ = 43;
+      mu = (mu + ((lchoose * stan::math::binomial_coefficient_log(3, 4)) *
+        binomial_coefficient_log));
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> called =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(1,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__));
-      current_statement__ = 35;
+      current_statement__ = 36;
       stan::model::assign(called,
         stan::math::ode_bdf(rhs_variadic2_functor__(), segment, 1.0,
           std::vector<double>{3.0}, pstream__, 3.5),
@@ -35786,18 +35789,18 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       Eigen::Matrix<local_scalar_t__,-1,1> result =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(result_1dim__,
           DUMMY_VAR__);
-      current_statement__ = 36;
+      current_statement__ = 37;
       stan::model::assign(result, stan::math::multiply(x, 5.0),
         "assigning variable result");
-      current_statement__ = 44;
+      current_statement__ = 45;
       {
         stan::math::profile<local_scalar_t__> profile__("shadow-1",
           const_cast<stan::math::profile_map&>(profiles__));
-        current_statement__ = 43;
+        current_statement__ = 44;
         mu = (mu + profile_map);
       }
       {
-        current_statement__ = 45;
+        current_statement__ = 46;
         if (pstream__) {
           stan::math::stan_print(pstream__, "hello world");
           *(pstream__) << std::endl;
@@ -35879,85 +35882,87 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       local_scalar_t__ multiply = DUMMY_VAR__;
       current_statement__ = 16;
       multiply = in__.template read<local_scalar_t__>();
-      local_scalar_t__ binomial_coefficient_log = DUMMY_VAR__;
+      local_scalar_t__ lchoose = DUMMY_VAR__;
       current_statement__ = 17;
+      lchoose = in__.template read<local_scalar_t__>();
+      local_scalar_t__ binomial_coefficient_log = DUMMY_VAR__;
+      current_statement__ = 18;
       binomial_coefficient_log = in__.template read<local_scalar_t__>();
       local_scalar_t__ read_constrain_lb = DUMMY_VAR__;
-      current_statement__ = 18;
+      current_statement__ = 19;
       read_constrain_lb = in__.template read_constrain_lb<local_scalar_t__,
                             jacobian__>(0, lp__);
       local_scalar_t__ read = DUMMY_VAR__;
-      current_statement__ = 19;
+      current_statement__ = 20;
       read = in__.template read<local_scalar_t__>();
       local_scalar_t__ validate_non_negative_index = DUMMY_VAR__;
-      current_statement__ = 20;
+      current_statement__ = 21;
       validate_non_negative_index = in__.template read<local_scalar_t__>();
       local_scalar_t__ length = DUMMY_VAR__;
-      current_statement__ = 21;
+      current_statement__ = 22;
       length = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> validate_positive_index =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      current_statement__ = 22;
+      current_statement__ = 23;
       validate_positive_index = in__.template read_constrain_simplex<
                                   Eigen::Matrix<local_scalar_t__,-1,1>,
                                   jacobian__>(lp__, 5);
       local_scalar_t__ profile_map = DUMMY_VAR__;
-      current_statement__ = 23;
+      current_statement__ = 24;
       profile_map = in__.template read<local_scalar_t__>();
       local_scalar_t__ assign = DUMMY_VAR__;
-      current_statement__ = 24;
+      current_statement__ = 25;
       assign = in__.template read<local_scalar_t__>();
       local_scalar_t__ rvalue = DUMMY_VAR__;
-      current_statement__ = 25;
+      current_statement__ = 26;
       rvalue = in__.template read<local_scalar_t__>();
       local_scalar_t__ stan_print = DUMMY_VAR__;
-      current_statement__ = 26;
+      current_statement__ = 27;
       stan_print = in__.template read<local_scalar_t__>();
       local_scalar_t__ model_base_crtp = DUMMY_VAR__;
-      current_statement__ = 27;
+      current_statement__ = 28;
       model_base_crtp = in__.template read<local_scalar_t__>();
       local_scalar_t__ index_uni = DUMMY_VAR__;
-      current_statement__ = 28;
+      current_statement__ = 29;
       index_uni = in__.template read<local_scalar_t__>();
       local_scalar_t__ bernoulli_logit_glm_lpmf = DUMMY_VAR__;
-      current_statement__ = 29;
+      current_statement__ = 30;
       bernoulli_logit_glm_lpmf = in__.template read<local_scalar_t__>();
       local_scalar_t__ reduce_sum = DUMMY_VAR__;
-      current_statement__ = 30;
+      current_statement__ = 31;
       reduce_sum = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> segment =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__);
-      current_statement__ = 31;
+      current_statement__ = 32;
       segment = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(4);
       local_scalar_t__ ode_bdf = DUMMY_VAR__;
-      current_statement__ = 32;
+      current_statement__ = 33;
       ode_bdf = in__.template read<local_scalar_t__>();
       local_scalar_t__ ode_bdf_tol = DUMMY_VAR__;
-      current_statement__ = 33;
+      current_statement__ = 34;
       ode_bdf_tol = in__.template read<local_scalar_t__>();
       local_scalar_t__ mu = DUMMY_VAR__;
-      current_statement__ = 37;
+      current_statement__ = 38;
       mu = ((((((((stan::math::e() + stan::math::pi()) + stan::math::log2())
         + stan::math::log10()) + stan::math::sqrt2()) +
         stan::math::not_a_number()) + stan::math::positive_infinity()) +
         stan::math::negative_infinity()) + stan::math::machine_precision());
-      current_statement__ = 38;
-      mu = (mu + ((logit + bernoulli_logit_glm_lpmf) + reduce_sum));
       current_statement__ = 39;
+      mu = (mu + ((logit + bernoulli_logit_glm_lpmf) + reduce_sum));
+      current_statement__ = 40;
       mu = (mu + ((inv_logit * stan::math::inv_logit(0.5)) + (logit *
         stan::math::logit(10))));
-      current_statement__ = 40;
-      mu = (mu + (pow * stan::math::pow(3, 2)));
       current_statement__ = 41;
-      mu = ((add + add) - sub);
+      mu = (mu + (pow * stan::math::pow(3, 2)));
       current_statement__ = 42;
-      mu = (mu + ((binomial_coefficient_log *
-        stan::math::binomial_coefficient_log(3, 4)) *
-        stan::math::binomial_coefficient_log(3, 4)));
+      mu = ((add + add) - sub);
+      current_statement__ = 43;
+      mu = (mu + ((lchoose * stan::math::binomial_coefficient_log(3, 4)) *
+        binomial_coefficient_log));
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> called =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(1,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__));
-      current_statement__ = 35;
+      current_statement__ = 36;
       stan::model::assign(called,
         stan::math::ode_bdf(rhs_variadic2_functor__(), segment, 1.0,
           std::vector<double>{3.0}, pstream__, 3.5),
@@ -35965,18 +35970,18 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       Eigen::Matrix<local_scalar_t__,-1,1> result =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(result_1dim__,
           DUMMY_VAR__);
-      current_statement__ = 36;
+      current_statement__ = 37;
       stan::model::assign(result, stan::math::multiply(x, 5.0),
         "assigning variable result");
-      current_statement__ = 44;
+      current_statement__ = 45;
       {
         stan::math::profile<local_scalar_t__> profile__("shadow-1",
           const_cast<stan::math::profile_map&>(profiles__));
-        current_statement__ = 43;
+        current_statement__ = 44;
         mu = (mu + profile_map);
       }
       {
-        current_statement__ = 45;
+        current_statement__ = 46;
         if (pstream__) {
           stan::math::stan_print(pstream__, "hello world");
           *(pstream__) << std::endl;
@@ -36069,66 +36074,69 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       double multiply = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 16;
       multiply = in__.template read<local_scalar_t__>();
+      double lchoose = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 17;
+      lchoose = in__.template read<local_scalar_t__>();
       double binomial_coefficient_log =
         std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 17;
+      current_statement__ = 18;
       binomial_coefficient_log = in__.template read<local_scalar_t__>();
       double read_constrain_lb = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 18;
+      current_statement__ = 19;
       read_constrain_lb = in__.template read_constrain_lb<local_scalar_t__,
                             jacobian__>(0, lp__);
       double read = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 19;
+      current_statement__ = 20;
       read = in__.template read<local_scalar_t__>();
       double validate_non_negative_index =
         std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 20;
+      current_statement__ = 21;
       validate_non_negative_index = in__.template read<local_scalar_t__>();
       double length = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 21;
+      current_statement__ = 22;
       length = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double,-1,1> validate_positive_index =
         Eigen::Matrix<double,-1,1>::Constant(5,
           std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 22;
+      current_statement__ = 23;
       validate_positive_index = in__.template read_constrain_simplex<
                                   Eigen::Matrix<local_scalar_t__,-1,1>,
                                   jacobian__>(lp__, 5);
       double profile_map = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 23;
+      current_statement__ = 24;
       profile_map = in__.template read<local_scalar_t__>();
       double assign = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 24;
+      current_statement__ = 25;
       assign = in__.template read<local_scalar_t__>();
       double rvalue = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 25;
+      current_statement__ = 26;
       rvalue = in__.template read<local_scalar_t__>();
       double stan_print = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 26;
+      current_statement__ = 27;
       stan_print = in__.template read<local_scalar_t__>();
       double model_base_crtp = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 27;
+      current_statement__ = 28;
       model_base_crtp = in__.template read<local_scalar_t__>();
       double index_uni = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 28;
+      current_statement__ = 29;
       index_uni = in__.template read<local_scalar_t__>();
       double bernoulli_logit_glm_lpmf =
         std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 29;
+      current_statement__ = 30;
       bernoulli_logit_glm_lpmf = in__.template read<local_scalar_t__>();
       double reduce_sum = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 30;
+      current_statement__ = 31;
       reduce_sum = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double,-1,1> segment =
         Eigen::Matrix<double,-1,1>::Constant(4,
           std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 31;
+      current_statement__ = 32;
       segment = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(4);
       double ode_bdf = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 32;
+      current_statement__ = 33;
       ode_bdf = in__.template read<local_scalar_t__>();
       double ode_bdf_tol = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 33;
+      current_statement__ = 34;
       ode_bdf_tol = in__.template read<local_scalar_t__>();
       double mu = std::numeric_limits<double>::quiet_NaN();
       std::vector<Eigen::Matrix<double,-1,1>> called =
@@ -36154,6 +36162,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       out__.write(add);
       out__.write(sub);
       out__.write(multiply);
+      out__.write(lchoose);
       out__.write(binomial_coefficient_log);
       out__.write(read_constrain_lb);
       out__.write(read);
@@ -36176,42 +36185,41 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 37;
+      current_statement__ = 38;
       mu = ((((((((stan::math::e() + stan::math::pi()) + stan::math::log2())
         + stan::math::log10()) + stan::math::sqrt2()) +
         stan::math::not_a_number()) + stan::math::positive_infinity()) +
         stan::math::negative_infinity()) + stan::math::machine_precision());
-      current_statement__ = 38;
-      mu = (mu + ((logit + bernoulli_logit_glm_lpmf) + reduce_sum));
       current_statement__ = 39;
+      mu = (mu + ((logit + bernoulli_logit_glm_lpmf) + reduce_sum));
+      current_statement__ = 40;
       mu = (mu + ((inv_logit * stan::math::inv_logit(0.5)) + (logit *
         stan::math::logit(10))));
-      current_statement__ = 40;
-      mu = (mu + (pow * stan::math::pow(3, 2)));
       current_statement__ = 41;
-      mu = ((add + add) - sub);
+      mu = (mu + (pow * stan::math::pow(3, 2)));
       current_statement__ = 42;
-      mu = (mu + ((binomial_coefficient_log *
-        stan::math::binomial_coefficient_log(3, 4)) *
-        stan::math::binomial_coefficient_log(3, 4)));
-      current_statement__ = 35;
+      mu = ((add + add) - sub);
+      current_statement__ = 43;
+      mu = (mu + ((lchoose * stan::math::binomial_coefficient_log(3, 4)) *
+        binomial_coefficient_log));
+      current_statement__ = 36;
       stan::model::assign(called,
         stan::math::ode_bdf(rhs_variadic2_functor__(), segment, 1.0,
           std::vector<double>{3.0}, pstream__, 3.5),
         "assigning variable called");
-      current_statement__ = 36;
+      current_statement__ = 37;
       stan::model::assign(result, stan::math::multiply(x, 5.0),
         "assigning variable result");
-      current_statement__ = 44;
+      current_statement__ = 45;
       {
         stan::math::profile<local_scalar_t__> profile__("shadow-1",
           const_cast<stan::math::profile_map&>(profiles__));
-        current_statement__ = 43;
+        current_statement__ = 44;
         mu = (mu + profile_map);
       }
       if (emit_transformed_parameters__) {
         out__.write(mu);
-        current_statement__ = 35;
+        current_statement__ = 36;
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
             out__.write(called[(sym2__ - 1)][(sym1__ - 1)]);
@@ -36304,78 +36312,82 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       current_statement__ = 16;
       multiply = in__.read<local_scalar_t__>();
       out__.write(multiply);
-      local_scalar_t__ binomial_coefficient_log = DUMMY_VAR__;
+      local_scalar_t__ lchoose = DUMMY_VAR__;
       current_statement__ = 17;
+      lchoose = in__.read<local_scalar_t__>();
+      out__.write(lchoose);
+      local_scalar_t__ binomial_coefficient_log = DUMMY_VAR__;
+      current_statement__ = 18;
       binomial_coefficient_log = in__.read<local_scalar_t__>();
       out__.write(binomial_coefficient_log);
       local_scalar_t__ read_constrain_lb = DUMMY_VAR__;
-      current_statement__ = 18;
+      current_statement__ = 19;
       read_constrain_lb = in__.read<local_scalar_t__>();
       out__.write_free_lb(0, read_constrain_lb);
       local_scalar_t__ read = DUMMY_VAR__;
-      current_statement__ = 19;
+      current_statement__ = 20;
       read = in__.read<local_scalar_t__>();
       out__.write(read);
       local_scalar_t__ validate_non_negative_index = DUMMY_VAR__;
-      current_statement__ = 20;
+      current_statement__ = 21;
       validate_non_negative_index = in__.read<local_scalar_t__>();
       out__.write(validate_non_negative_index);
       local_scalar_t__ length = DUMMY_VAR__;
-      current_statement__ = 21;
+      current_statement__ = 22;
       length = in__.read<local_scalar_t__>();
       out__.write(length);
       Eigen::Matrix<local_scalar_t__,-1,1> validate_positive_index =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
-      current_statement__ = 22;
+      current_statement__ = 23;
       stan::model::assign(validate_positive_index,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(5),
         "assigning variable validate_positive_index");
       out__.write_free_simplex(validate_positive_index);
       local_scalar_t__ profile_map = DUMMY_VAR__;
-      current_statement__ = 23;
+      current_statement__ = 24;
       profile_map = in__.read<local_scalar_t__>();
       out__.write(profile_map);
       local_scalar_t__ assign = DUMMY_VAR__;
-      current_statement__ = 24;
+      current_statement__ = 25;
       assign = in__.read<local_scalar_t__>();
       out__.write(assign);
       local_scalar_t__ rvalue = DUMMY_VAR__;
-      current_statement__ = 25;
+      current_statement__ = 26;
       rvalue = in__.read<local_scalar_t__>();
       out__.write(rvalue);
       local_scalar_t__ stan_print = DUMMY_VAR__;
-      current_statement__ = 26;
+      current_statement__ = 27;
       stan_print = in__.read<local_scalar_t__>();
       out__.write(stan_print);
       local_scalar_t__ model_base_crtp = DUMMY_VAR__;
-      current_statement__ = 27;
+      current_statement__ = 28;
       model_base_crtp = in__.read<local_scalar_t__>();
       out__.write(model_base_crtp);
       local_scalar_t__ index_uni = DUMMY_VAR__;
-      current_statement__ = 28;
+      current_statement__ = 29;
       index_uni = in__.read<local_scalar_t__>();
       out__.write(index_uni);
       local_scalar_t__ bernoulli_logit_glm_lpmf = DUMMY_VAR__;
-      current_statement__ = 29;
+      current_statement__ = 30;
       bernoulli_logit_glm_lpmf = in__.read<local_scalar_t__>();
       out__.write(bernoulli_logit_glm_lpmf);
       local_scalar_t__ reduce_sum = DUMMY_VAR__;
-      current_statement__ = 30;
+      current_statement__ = 31;
       reduce_sum = in__.read<local_scalar_t__>();
       out__.write(reduce_sum);
       Eigen::Matrix<local_scalar_t__,-1,1> segment =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__);
-      current_statement__ = 31;
+      current_statement__ = 32;
       stan::model::assign(segment,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(4),
         "assigning variable segment");
       out__.write(segment);
       local_scalar_t__ ode_bdf = DUMMY_VAR__;
-      current_statement__ = 32;
+      current_statement__ = 33;
       ode_bdf = in__.read<local_scalar_t__>();
       out__.write(ode_bdf);
       local_scalar_t__ ode_bdf_tol = DUMMY_VAR__;
-      current_statement__ = 33;
+      current_statement__ = 34;
       ode_bdf_tol = in__.read<local_scalar_t__>();
       out__.write(ode_bdf_tol);
     } catch (const std::exception& e) {
@@ -36442,55 +36454,58 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       context__.validate_dims("parameter initialization", "multiply",
         "double", std::vector<size_t>{});
       current_statement__ = 17;
-      context__.validate_dims("parameter initialization",
-        "binomial_coefficient_log", "double", std::vector<size_t>{});
+      context__.validate_dims("parameter initialization", "lchoose",
+        "double", std::vector<size_t>{});
       current_statement__ = 18;
       context__.validate_dims("parameter initialization",
-        "read_constrain_lb", "double", std::vector<size_t>{});
+        "binomial_coefficient_log", "double", std::vector<size_t>{});
       current_statement__ = 19;
+      context__.validate_dims("parameter initialization",
+        "read_constrain_lb", "double", std::vector<size_t>{});
+      current_statement__ = 20;
       context__.validate_dims("parameter initialization", "read", "double",
         std::vector<size_t>{});
-      current_statement__ = 20;
+      current_statement__ = 21;
       context__.validate_dims("parameter initialization",
         "validate_non_negative_index", "double", std::vector<size_t>{});
-      current_statement__ = 21;
+      current_statement__ = 22;
       context__.validate_dims("parameter initialization", "length", "double",
         std::vector<size_t>{});
-      current_statement__ = 22;
+      current_statement__ = 23;
       context__.validate_dims("parameter initialization",
         "validate_positive_index", "double",
         std::vector<size_t>{static_cast<size_t>(5)});
-      current_statement__ = 23;
+      current_statement__ = 24;
       context__.validate_dims("parameter initialization", "profile_map",
         "double", std::vector<size_t>{});
-      current_statement__ = 24;
+      current_statement__ = 25;
       context__.validate_dims("parameter initialization", "assign", "double",
         std::vector<size_t>{});
-      current_statement__ = 25;
+      current_statement__ = 26;
       context__.validate_dims("parameter initialization", "rvalue", "double",
         std::vector<size_t>{});
-      current_statement__ = 26;
+      current_statement__ = 27;
       context__.validate_dims("parameter initialization", "stan_print",
         "double", std::vector<size_t>{});
-      current_statement__ = 27;
+      current_statement__ = 28;
       context__.validate_dims("parameter initialization", "model_base_crtp",
         "double", std::vector<size_t>{});
-      current_statement__ = 28;
+      current_statement__ = 29;
       context__.validate_dims("parameter initialization", "index_uni",
         "double", std::vector<size_t>{});
-      current_statement__ = 29;
+      current_statement__ = 30;
       context__.validate_dims("parameter initialization",
         "bernoulli_logit_glm_lpmf", "double", std::vector<size_t>{});
-      current_statement__ = 30;
+      current_statement__ = 31;
       context__.validate_dims("parameter initialization", "reduce_sum",
         "double", std::vector<size_t>{});
-      current_statement__ = 31;
+      current_statement__ = 32;
       context__.validate_dims("parameter initialization", "segment",
         "double", std::vector<size_t>{static_cast<size_t>(4)});
-      current_statement__ = 32;
+      current_statement__ = 33;
       context__.validate_dims("parameter initialization", "ode_bdf",
         "double", std::vector<size_t>{});
-      current_statement__ = 33;
+      current_statement__ = 34;
       context__.validate_dims("parameter initialization", "ode_bdf_tol",
         "double", std::vector<size_t>{});
       int pos__ = std::numeric_limits<int>::min();
@@ -36559,33 +36574,37 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       current_statement__ = 16;
       multiply = context__.vals_r("multiply")[(1 - 1)];
       out__.write(multiply);
-      local_scalar_t__ binomial_coefficient_log = DUMMY_VAR__;
+      local_scalar_t__ lchoose = DUMMY_VAR__;
       current_statement__ = 17;
+      lchoose = context__.vals_r("lchoose")[(1 - 1)];
+      out__.write(lchoose);
+      local_scalar_t__ binomial_coefficient_log = DUMMY_VAR__;
+      current_statement__ = 18;
       binomial_coefficient_log = context__.vals_r("binomial_coefficient_log")[(1
         - 1)];
       out__.write(binomial_coefficient_log);
       local_scalar_t__ read_constrain_lb = DUMMY_VAR__;
-      current_statement__ = 18;
+      current_statement__ = 19;
       read_constrain_lb = context__.vals_r("read_constrain_lb")[(1 - 1)];
       out__.write_free_lb(0, read_constrain_lb);
       local_scalar_t__ read = DUMMY_VAR__;
-      current_statement__ = 19;
+      current_statement__ = 20;
       read = context__.vals_r("read")[(1 - 1)];
       out__.write(read);
       local_scalar_t__ validate_non_negative_index = DUMMY_VAR__;
-      current_statement__ = 20;
+      current_statement__ = 21;
       validate_non_negative_index = context__.vals_r("validate_non_negative_index")[(1
         - 1)];
       out__.write(validate_non_negative_index);
       local_scalar_t__ length = DUMMY_VAR__;
-      current_statement__ = 21;
+      current_statement__ = 22;
       length = context__.vals_r("length")[(1 - 1)];
       out__.write(length);
       Eigen::Matrix<local_scalar_t__,-1,1> validate_positive_index =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> validate_positive_index_flat__;
-        current_statement__ = 22;
+        current_statement__ = 23;
         validate_positive_index_flat__ = context__.vals_r("validate_positive_index");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
@@ -36598,43 +36617,43 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       }
       out__.write_free_simplex(validate_positive_index);
       local_scalar_t__ profile_map = DUMMY_VAR__;
-      current_statement__ = 23;
+      current_statement__ = 24;
       profile_map = context__.vals_r("profile_map")[(1 - 1)];
       out__.write(profile_map);
       local_scalar_t__ assign = DUMMY_VAR__;
-      current_statement__ = 24;
+      current_statement__ = 25;
       assign = context__.vals_r("assign")[(1 - 1)];
       out__.write(assign);
       local_scalar_t__ rvalue = DUMMY_VAR__;
-      current_statement__ = 25;
+      current_statement__ = 26;
       rvalue = context__.vals_r("rvalue")[(1 - 1)];
       out__.write(rvalue);
       local_scalar_t__ stan_print = DUMMY_VAR__;
-      current_statement__ = 26;
+      current_statement__ = 27;
       stan_print = context__.vals_r("stan_print")[(1 - 1)];
       out__.write(stan_print);
       local_scalar_t__ model_base_crtp = DUMMY_VAR__;
-      current_statement__ = 27;
+      current_statement__ = 28;
       model_base_crtp = context__.vals_r("model_base_crtp")[(1 - 1)];
       out__.write(model_base_crtp);
       local_scalar_t__ index_uni = DUMMY_VAR__;
-      current_statement__ = 28;
+      current_statement__ = 29;
       index_uni = context__.vals_r("index_uni")[(1 - 1)];
       out__.write(index_uni);
       local_scalar_t__ bernoulli_logit_glm_lpmf = DUMMY_VAR__;
-      current_statement__ = 29;
+      current_statement__ = 30;
       bernoulli_logit_glm_lpmf = context__.vals_r("bernoulli_logit_glm_lpmf")[(1
         - 1)];
       out__.write(bernoulli_logit_glm_lpmf);
       local_scalar_t__ reduce_sum = DUMMY_VAR__;
-      current_statement__ = 30;
+      current_statement__ = 31;
       reduce_sum = context__.vals_r("reduce_sum")[(1 - 1)];
       out__.write(reduce_sum);
       Eigen::Matrix<local_scalar_t__,-1,1> segment =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(4, DUMMY_VAR__);
       {
         std::vector<local_scalar_t__> segment_flat__;
-        current_statement__ = 31;
+        current_statement__ = 32;
         segment_flat__ = context__.vals_r("segment");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
@@ -36645,11 +36664,11 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
       }
       out__.write(segment);
       local_scalar_t__ ode_bdf = DUMMY_VAR__;
-      current_statement__ = 32;
+      current_statement__ = 33;
       ode_bdf = context__.vals_r("ode_bdf")[(1 - 1)];
       out__.write(ode_bdf);
       local_scalar_t__ ode_bdf_tol = DUMMY_VAR__;
-      current_statement__ = 33;
+      current_statement__ = 34;
       ode_bdf_tol = context__.vals_r("ode_bdf_tol")[(1 - 1)];
       out__.write(ode_bdf_tol);
     } catch (const std::exception& e) {
@@ -36663,10 +36682,11 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     names__ = std::vector<std::string>{"e", "pi", "log2", "log10", "sqrt2",
                 "not_a_number", "positive_infinity", "negative_infinity",
                 "machine_precision", "inv_logit", "logit", "num_elements",
-                "pow", "add", "sub", "multiply", "binomial_coefficient_log",
-                "read_constrain_lb", "read", "validate_non_negative_index",
-                "length", "validate_positive_index", "profile_map", "assign",
-                "rvalue", "stan_print", "model_base_crtp", "index_uni",
+                "pow", "add", "sub", "multiply", "lchoose",
+                "binomial_coefficient_log", "read_constrain_lb", "read",
+                "validate_non_negative_index", "length",
+                "validate_positive_index", "profile_map", "assign", "rvalue",
+                "stan_print", "model_base_crtp", "index_uni",
                 "bernoulli_logit_glm_lpmf", "reduce_sum", "segment",
                 "ode_bdf", "ode_bdf_tol"};
     if (emit_transformed_parameters__) {
@@ -36691,6 +36711,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
                 std::vector<size_t>{}, std::vector<size_t>{},
                 std::vector<size_t>{}, std::vector<size_t>{},
                 std::vector<size_t>{}, std::vector<size_t>{},
+                std::vector<size_t>{},
                 std::vector<size_t>{static_cast<size_t>(5)},
                 std::vector<size_t>{}, std::vector<size_t>{},
                 std::vector<size_t>{}, std::vector<size_t>{},
@@ -36729,6 +36750,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     param_names__.emplace_back(std::string() + "add");
     param_names__.emplace_back(std::string() + "sub");
     param_names__.emplace_back(std::string() + "multiply");
+    param_names__.emplace_back(std::string() + "lchoose");
     param_names__.emplace_back(std::string() + "binomial_coefficient_log");
     param_names__.emplace_back(std::string() + "read_constrain_lb");
     param_names__.emplace_back(std::string() + "read");
@@ -36787,6 +36809,7 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     param_names__.emplace_back(std::string() + "add");
     param_names__.emplace_back(std::string() + "sub");
     param_names__.emplace_back(std::string() + "multiply");
+    param_names__.emplace_back(std::string() + "lchoose");
     param_names__.emplace_back(std::string() + "binomial_coefficient_log");
     param_names__.emplace_back(std::string() + "read_constrain_lb");
     param_names__.emplace_back(std::string() + "read");
@@ -36826,10 +36849,10 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log10\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sqrt2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_a_number\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"positive_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"negative_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"machine_precision\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inv_logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"num_elements\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pow\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"add\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sub\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"multiply\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"binomial_coefficient_log\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read_constrain_lb\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_non_negative_index\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"length\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_positive_index\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "},\"block\":\"parameters\"},{\"name\":\"profile_map\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"assign\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rvalue\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"stan_print\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"model_base_crtp\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"index_uni\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"bernoulli_logit_glm_lpmf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"reduce_sum\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"segment\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "},\"block\":\"parameters\"},{\"name\":\"ode_bdf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"ode_bdf_tol\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"called\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"result\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(result_1dim__) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log10\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sqrt2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_a_number\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"positive_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"negative_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"machine_precision\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inv_logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"num_elements\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pow\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"add\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sub\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"multiply\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"lchoose\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"binomial_coefficient_log\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read_constrain_lb\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_non_negative_index\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"length\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_positive_index\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(5) + "},\"block\":\"parameters\"},{\"name\":\"profile_map\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"assign\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rvalue\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"stan_print\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"model_base_crtp\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"index_uni\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"bernoulli_logit_glm_lpmf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"reduce_sum\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"segment\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "},\"block\":\"parameters\"},{\"name\":\"ode_bdf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"ode_bdf_tol\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"called\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"result\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(result_1dim__) + "},\"block\":\"transformed_parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log10\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sqrt2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_a_number\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"positive_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"negative_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"machine_precision\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inv_logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"num_elements\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pow\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"add\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sub\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"multiply\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"binomial_coefficient_log\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read_constrain_lb\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_non_negative_index\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"length\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_positive_index\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((5 -1)) + "},\"block\":\"parameters\"},{\"name\":\"profile_map\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"assign\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rvalue\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"stan_print\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"model_base_crtp\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"index_uni\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"bernoulli_logit_glm_lpmf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"reduce_sum\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"segment\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "},\"block\":\"parameters\"},{\"name\":\"ode_bdf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"ode_bdf_tol\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"called\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"result\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(result_1dim__) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"log10\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sqrt2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_a_number\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"positive_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"negative_infinity\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"machine_precision\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inv_logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"num_elements\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"pow\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"add\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sub\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"multiply\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"lchoose\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"binomial_coefficient_log\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read_constrain_lb\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"read\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_non_negative_index\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"length\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"validate_positive_index\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((5 -1)) + "},\"block\":\"parameters\"},{\"name\":\"profile_map\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"assign\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rvalue\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"stan_print\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"model_base_crtp\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"index_uni\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"bernoulli_logit_glm_lpmf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"reduce_sum\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"segment\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "},\"block\":\"parameters\"},{\"name\":\"ode_bdf\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"ode_bdf_tol\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"called\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(4) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"result\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(result_1dim__) + "},\"block\":\"transformed_parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -36838,10 +36861,10 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((((((((((((((((((((((((((((((1 + 1) + 1) +
-      1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
-      1) + 1) + 1) + 1) + 5) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 4) +
-      1) + 1);
+    const size_t num_params__ = (((((((((((((((((((((((((((((((((1 + 1) + 1)
+      + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+      1) + 1) + 1) + 1) + 1) + 5) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+      4) + 1) + 1);
     const size_t num_transformed = emit_transformed_parameters * (((1 + (1 *
       4)) + result_1dim__));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
@@ -36859,10 +36882,10 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = ((((((((((((((((((((((((((((((((1 + 1) + 1) +
-      1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
-      1) + 1) + 1) + 1) + 5) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 4) +
-      1) + 1);
+    const size_t num_params__ = (((((((((((((((((((((((((((((((((1 + 1) + 1)
+      + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+      1) + 1) + 1) + 1) + 1) + 5) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+      4) + 1) + 1);
     const size_t num_transformed = emit_transformed_parameters * (((1 + (1 *
       4)) + result_1dim__));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
@@ -36935,9 +36958,6 @@ stan::math::profile_map& get_stan_profile_data() {
   return shadowing_model_namespace::profiles__;
 }
 #endif
-Warning in 'shadowing.stan', line 67, column 50: binomial_coefficient_log is
-    deprecated and will be removed in Stan 2.33.0. Use lchoose instead. This
-    can be automatically changed using the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --print-cpp single-argument-lpmf.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>

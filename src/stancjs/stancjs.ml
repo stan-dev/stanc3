@@ -7,7 +7,14 @@ open Js_of_ocaml
 
 let version = "%%NAME%% %%VERSION%%"
 
-let stan2cpp model_name model_string is_flag_set flag_val =
+type stanc_error =
+  | RemovedDeprecations of (Location_span.t * string) list
+  | ProgramError of Errors.t
+
+let stan2cpp model_name model_string is_flag_set flag_val :
+    (string, stanc_error) result
+    * Warnings.t list
+    * Pedantic_analysis.warning_span list =
   Common.Gensym.reset_danger_use_cautiously () ;
   Typechecker.model_name := model_name ;
   Typechecker.check_that_all_functions_have_definition :=
@@ -56,12 +63,15 @@ let stan2cpp model_name model_string is_flag_set flag_val =
           flag_val "max-line-length"
           |> Option.map ~f:int_of_string
           |> Option.value ~default:78 in
-        let deprecation_warnings =
-          if canonicalizer_settings.deprecations then []
-          else Deprecation_analysis.collect_warnings typed_ast in
+        let deprecation_warnings, deprecation_errors =
+          if canonicalizer_settings.deprecations then ([], [])
+          else
+            ( Deprecation_analysis.collect_warnings typed_ast
+            , Deprecation_removals.collect_removals typed_ast ) in
         let warnings = warnings @ deprecation_warnings in
-        let mir = Ast_to_Mir.trans_prog model_name typed_ast in
-        let tx_mir = Transform_Mir.trans_prog mir in
+        if not (List.is_empty deprecation_errors) then
+          r.return
+            (Result.Error (RemovedDeprecations deprecation_errors), warnings, []) ;
         if is_flag_set "auto-format" || is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
@@ -74,6 +84,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
                       canonicalizer_settings ) )
             , warnings
             , [] ) ;
+        let mir = Ast_to_Mir.trans_prog model_name typed_ast in
         if is_flag_set "debug-mir" then
           r.return
             ( Result.Ok
@@ -85,7 +96,7 @@ let stan2cpp model_name model_string is_flag_set flag_val =
         if is_flag_set "debug-generate-data" then
           r.return
             ( Result.map_error
-                ~f:(fun e -> Errors.DebugDataError e)
+                ~f:(fun e -> ProgramError (Errors.DebugDataError e))
                 (Debug_data_generation.gen_values_json
                    (Ast_to_Mir.gather_declarations typed_ast.datablock) )
             , warnings
@@ -93,11 +104,21 @@ let stan2cpp model_name model_string is_flag_set flag_val =
         if is_flag_set "debug-generate-inits" then
           r.return
             ( Result.map_error
-                ~f:(fun e -> Errors.DebugDataError e)
+                ~f:(fun e -> ProgramError (Errors.DebugDataError e))
                 (Debug_data_generation.gen_values_json
                    (Ast_to_Mir.gather_declarations typed_ast.parametersblock) )
             , warnings
             , [] ) ;
+        let tx_mir = Transform_Mir.trans_prog mir in
+        if is_flag_set "debug-transformed-mir" then
+          r.return
+            ( Result.Ok
+                (Sexp.to_string_hum [%sexp (tx_mir : Middle.Program.Typed.t)])
+            , warnings
+            , [] ) ;
+        if is_flag_set "debug-transformed-mir-pretty" then
+          r.return
+            (Result.Ok (Fmt.str "%a" Program.Typed.pp tx_mir), warnings, []) ;
         let opt_mir =
           let opt_lvl =
             if is_flag_set "O0" then Optimize.O0
@@ -153,24 +174,31 @@ let stan2cpp model_name model_string is_flag_set flag_val =
       match result with
       | Result.Ok (cpp, warnings, pedantic_mode_warnings) ->
           (Result.Ok cpp, warnings, pedantic_mode_warnings)
-      | Result.Error _ as e -> (e, parser_warnings, []) )
+      | Result.Error e -> (Result.Error (ProgramError e), parser_warnings, []) )
 
-let wrap_result ?printed_filename ~code ~warnings = function
+let wrap_result ?printed_filename ~code ~warnings res =
+  let js_warnings =
+    ( "warnings"
+    , Js.Unsafe.inject
+        (Js.array (List.to_array (List.map ~f:Js.string warnings))) ) in
+  match res with
   | Result.Ok s ->
-      Js.Unsafe.obj
-        [| ("result", Js.Unsafe.inject (Js.string s))
-         ; ( "warnings"
-           , Js.Unsafe.inject
-               (Js.array (List.to_array (List.map ~f:Js.string warnings))) )
-        |]
-  | Error e ->
+      Js.Unsafe.obj [|("result", Js.Unsafe.inject (Js.string s)); js_warnings|]
+  | Error (ProgramError e) ->
       let e =
         Fmt.str "%a"
           (Errors.pp ?printed_filename ?code:(Some (Js.to_string code)))
           e in
       Js.Unsafe.obj
         [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [|e|]))
-         ; ("warnings", Js.Unsafe.inject Js.array_empty) |]
+         ; js_warnings |]
+  | Error (RemovedDeprecations ls) ->
+      let errors =
+        Fmt.str "%a" (Deprecation_removals.pp_removals ?printed_filename) ls
+      in
+      Js.Unsafe.obj
+        [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [|errors|]))
+         ; js_warnings |]
 
 let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
   let flags =

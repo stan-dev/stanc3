@@ -6,12 +6,12 @@ real my_log1p_exp(real x) {
     return log1p_exp(x);
 }
 
-real array_fun(real[] a)
+real array_fun(array[] real a)
 {
     return sum(a);
 }
 
-real int_array_fun(int[] a)
+real int_array_fun(array[] int a)
 {
     return sum(a);
 }

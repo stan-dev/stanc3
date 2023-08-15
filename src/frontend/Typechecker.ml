@@ -1047,13 +1047,8 @@ let rec check_lvalue cf tenv = function
       let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
       let ad_level =
         inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
-      if List.exists ~f:is_multiindex flat then (
-        add_warning loc
-          "Nested multi-indexing on the left hand side of assignment does not \
-           behave the same as nested indexing in expressions. This is \
-           considered a bug and will be disallowed in Stan 2.33.0. The \
-           indexing can be automatically fixed using the canonicalize flag for \
-           stanc." ;
+      ( if List.exists ~f:is_multiindex flat then
+        (* TODO: prevent in 2.34 *)
         let lvalue_rvalue_types_differ =
           try
             let flat_type =
@@ -1141,34 +1136,27 @@ let check_sampling_distribution loc tenv id arguments =
     SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
   let sampling_dists =
     List.map ~f:name_w_suffix_sampling_dist Utils.distribution_suffices in
-  let sampling_dist_match =
-    if name = "binomial_coefficient" || name = "multiply" then None
-    else
-      List.find_map
-        ~f:(function
-          | UniqueMatch (ReturnType UReal, _, p) -> Some p | _ -> None )
-        sampling_dists in
-  match sampling_dist_match with
-  | Some p -> Promotion.promote_list arguments p
-  | None -> (
-    match
-      List.max_elt sampling_dists
-        ~compare:SignatureMismatch.compare_match_results
-    with
-    | None | Some (UniqueMatch _) | Some (SignatureErrors ([], _)) ->
-        (* Either non-existant or a very odd case,
-           output the old non-informative error *)
-        Semantic_error.invalid_sampling_no_such_dist loc name |> error
-    | Some (AmbiguousMatch sigs) ->
-        Semantic_error.ambiguous_function_promotion loc id.name
-          (Some (List.map ~f:type_of_expr_typed arguments))
-          sigs
-        |> error
-    | Some (SignatureErrors (l, b)) ->
-        arguments
-        |> List.map ~f:(fun e -> e.emeta.type_)
-        |> Semantic_error.illtyped_fn_app loc id.name (l, b)
-        |> error )
+  match
+    List.min_elt sampling_dists ~compare:SignatureMismatch.compare_match_results
+  with
+  | Some (UniqueMatch (_, _, p)) ->
+      Promotion.promote_list arguments p
+      (* real return type is enforced by [verify_fundef_dist_rt] *)
+  | None | Some (SignatureErrors ([], _)) ->
+      (* Function is non existent *)
+      Semantic_error.invalid_sampling_no_such_dist loc name
+        (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
+      |> error
+  | Some (AmbiguousMatch sigs) ->
+      Semantic_error.ambiguous_function_promotion loc id.name
+        (Some (List.map ~f:type_of_expr_typed arguments))
+        sigs
+      |> error
+  | Some (SignatureErrors (l, b)) ->
+      arguments
+      |> List.map ~f:(fun e -> e.emeta.type_)
+      |> Semantic_error.illtyped_fn_app loc id.name (l, b)
+      |> error
 
 let is_cumulative_density_defined tenv id arguments =
   let name = id.name in
@@ -1599,7 +1587,7 @@ and verify_fundef_dist_rt loc id return_ty =
   let is_dist =
     List.exists
       ~f:(fun x -> String.is_suffix id.name ~suffix:x)
-      Utils.conditioning_suffices_w_log in
+      Utils.conditioning_suffices in
   if is_dist then
     match return_ty with
     | UnsizedType.ReturnType UReal -> ()

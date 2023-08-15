@@ -7,13 +7,10 @@ let option_or_else ~if_none x = Option.first_some x if_none
 (** Name mangling helper functions for distributions *)
 let unnormalized_suffices = ["_lupdf"; "_lupmf"]
 
-(** _log is listed last so that it only gets picked up if no other implementation exists *)
-let distribution_suffices = ["_lpmf"; "_lpdf"; "_log"]
+let distribution_suffices = ["_lpmf"; "_lpdf"]
 
 let conditioning_suffices =
   ["_lpdf"; "_lupdf"; "_lupmf"; "_lpmf"; "_cdf"; "_lcdf"; "_lccdf"]
-
-let conditioning_suffices_w_log = conditioning_suffices @ ["_log"]
 
 let cumulative_distribution_suffices =
   ["cdf"; "lcdf"; "lccdf"; "cdf_log"; "ccdf_log"]

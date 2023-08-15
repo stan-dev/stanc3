@@ -30,15 +30,6 @@ Syntax error in '../included/badrecurse2.stan', line 1, column 0, included from
    -------------------------------------------------
 
 File badrecurse3.stan recursively included itself.
-  $ ../../../../install/default/bin/stanc --include-paths="../included"  dep-warning.stan
-Syntax error in 'dep-warning.stan', line 1, column 2 to column 6, parsing error:
-   -------------------------------------------------
-     1:    real z;
-           ^
-     2:    # I am a deprecated comment.
-   -------------------------------------------------
-
-Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
   $ ../../../../install/default/bin/stanc --include-paths="../included"  error_spread_over_files.stan
 Syntax error in 'error_spread_over_files.stan', line 1, column 2 to column 3, parsing error:
    -------------------------------------------------
@@ -71,15 +62,6 @@ Syntax error in 'incl_stanc_helper2.stan', line 1, column 2 to column 6, parsing
      1:    real w;
            ^
      2:    real x;
-   -------------------------------------------------
-
-Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-  $ ../../../../install/default/bin/stanc --include-paths="../included"  incl_stanc_helper_deprecated_warning.stan
-Syntax error in 'incl_stanc_helper_deprecated_warning.stan', line 1, column 2 to column 6, parsing error:
-   -------------------------------------------------
-     1:    real y;
-           ^
-     2:    #include dep-warning.stan
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
@@ -159,13 +141,6 @@ Syntax error in 'sem-err.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-  $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_deprecated_warning.stan
-Warning in '../included/dep-warning.stan', line 2, column 2, included from
-'../included/incl_stanc_helper_deprecated_warning.stan', line 2, column 2, included from
-'stanc_helper_with_bad_include_deprecated_warning.stan', line 2, column 0: Comments
-    beginning with # are deprecated and this syntax will be removed in Stan
-    2.33.0. Use // to begin line comments; this can be done automatically
-    using the auto-format flag to stanc
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_error_spread_over_files.stan
 Semantic error in '../included/incl_stanc_helper_error_spread_over_files.stan', line 2, column 2, included from
 'stanc_helper_with_bad_include_error_spread_over_files.stan', line 2, column 0:

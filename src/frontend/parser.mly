@@ -41,6 +41,11 @@ let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
+
+let note_deprecated_array ?(unsized = false) (pos1, pos2) =
+  let loc_span = location_span_of_positions (pos1, pos2) in
+  Deprecation_removals.old_array_usages :=
+    (loc_span, unsized) :: !Deprecation_removals.old_array_usages
 %}
 
 (* Token definitions. The quoted strings are aliases, used in the examples generated in
@@ -98,7 +103,6 @@ let nest_unsized_array basic_type n =
 %nonassoc unary_over_binary
 %right HAT ELTPOW
 %left TRANSPOSE
-%nonassoc ARRAY (* resolves shift-reduce with array keyword in declarations *)
 %left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE
@@ -191,20 +195,7 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
-  | id_and_v = future_keyword
-    {
-      let id, v = id_and_v in
-      Input_warnings.future_keyword id.name v $loc;
-      id
-    }
 
-future_keyword:
-  | OFFSET { build_id "offset" $loc, "2.33.0" }
-  | MULTIPLIER { build_id "multiplier" $loc, "2.33.0" }
-  | LOWER { build_id "lower" $loc, "2.33.0" }
-  | UPPER { build_id "upper" $loc, "2.33.0" }
-  | ARRAY
-    { build_id "array" $loc, "2.33.0" }
 
 decl_identifier:
   | id=identifier { id }
@@ -253,6 +244,11 @@ reserved_word:
   | GETLP { "get_lp", $loc, false }
   | PROFILE { "profile", $loc, false }
   | TUPLE { "tuple", $loc, true }
+  | OFFSET { "offset", $loc, false }
+  | MULTIPLIER { "multiplier", $loc, false }
+  | LOWER { "lower", $loc, false }
+  | UPPER { "upper", $loc, false }
+  | ARRAY { "array", $loc, true }
 
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
@@ -285,7 +281,7 @@ unsized_type:
   | bt=basic_type n_opt=option(unsized_dims)
     {  grammar_logger "unsized_type";
        if Option.is_some n_opt then
-        Input_warnings.array_syntax ~unsized:true $loc;
+         note_deprecated_array ~unsized:true $loc;
        nest_unsized_array bt (Option.value n_opt ~default:0)
     }
   | t=unsized_tuple_type
@@ -365,7 +361,7 @@ decl(type_rule, rhs):
    *)
   | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
       SEMICOLON
-    { Input_warnings.array_syntax $loc;
+    { note_deprecated_array $loc;
       (fun ~is_global ->
       { stmt=
           VarDecl {
