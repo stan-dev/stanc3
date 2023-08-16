@@ -3740,6 +3740,8 @@ Display all Stan math signatures exposed in the language
   columns_dot_self(complex_vector) => complex_row_vector
   columns_dot_self(complex_row_vector) => complex_row_vector
   columns_dot_self(complex_matrix) => complex_row_vector
+  complex_schur_decompose(matrix) => tuple(complex_matrix, complex_matrix)
+  complex_schur_decompose(complex_matrix) => tuple(complex_matrix, complex_matrix)
   complex_schur_decompose_t(matrix) => complex_matrix
   complex_schur_decompose_t(complex_matrix) => complex_matrix
   complex_schur_decompose_u(matrix) => complex_matrix
@@ -3865,6 +3867,7 @@ Display all Stan math signatures exposed in the language
   cov_exp_quad(array[] row_vector, real, real) => matrix
   cov_exp_quad(array[] row_vector, array[] row_vector, real, real) => matrix
   crossprod(matrix) => matrix
+  csr_extract(matrix) => tuple(vector, array[] int, array[] int)
   csr_extract_u(matrix) => array[] int
   csr_extract_v(matrix) => array[] int
   csr_extract_w(matrix) => vector
@@ -4619,6 +4622,10 @@ Display all Stan math signatures exposed in the language
   double_exponential_rng(array[] real, array[] int) => array[] real
   double_exponential_rng(array[] real, array[] real) => array[] real
   e() => real
+  eigendecompose(matrix) => tuple(complex_matrix, complex_vector)
+  eigendecompose(complex_matrix) => tuple(complex_matrix, complex_vector)
+  eigendecompose_sym(matrix) => tuple(matrix, vector)
+  eigendecompose_sym(complex_matrix) => tuple(complex_matrix, complex_vector)
   eigenvalues(matrix) => complex_vector
   eigenvalues(complex_matrix) => complex_vector
   eigenvalues_sym(matrix) => vector
@@ -19580,6 +19587,7 @@ Display all Stan math signatures exposed in the language
   qr(matrix) => tuple(matrix, matrix)
   qr_Q(matrix) => matrix
   qr_R(matrix) => matrix
+  qr_thin(matrix) => tuple(matrix, matrix)
   qr_thin_Q(matrix) => matrix
   qr_thin_R(matrix) => matrix
   quad_form(matrix, vector) => real
@@ -26976,6 +26984,8 @@ Display all Stan math signatures exposed in the language
   sum(complex_row_vector) => complex
   sum(complex_matrix) => complex
   sum(array[] complex) => complex
+  svd(matrix) => tuple(matrix, vector, matrix)
+  svd(complex_matrix) => tuple(complex_matrix, vector, complex_matrix)
   svd_U(matrix) => matrix
   svd_U(complex_matrix) => complex_matrix
   svd_V(matrix) => matrix
