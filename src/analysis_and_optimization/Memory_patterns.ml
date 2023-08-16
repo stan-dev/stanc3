@@ -195,6 +195,12 @@ and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) ->
       Set.Poly.union acc demoted_and_top_level_names
 
+let print_string s = print_endline s
+let print_set s = Set.Poly.iter ~f:print_string s
+
+let print_bool nn bb =
+  Printf.printf "%s: %s \n" nn (if bb then "true" else "false")
+
 (**
   Return true if the rhs expression of an assignment contains only
    combinations of AutoDiffable Reals and Data Matrices
@@ -266,9 +272,7 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
                   List.filter
                     ~f:(fun x -> UnsizedType.contains_eigen_type x.meta.type_)
                     exprs in
-                not
-                  (List.exists ~f:is_any_ad_real_data_matrix_expr
-                     ad_matrix_exprs )
+                List.exists ~f:is_any_ad_real_data_matrix_expr ad_matrix_exprs
             | false -> true )
         | false ->
             let ad_matrix_exprs =
@@ -280,10 +284,6 @@ and is_any_ad_real_data_matrix_expr_fun (kind : 'a Fun_kind.t)
   | CompilerInternal (_ : 'a Internal_fun.t) -> false
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> true
 
-(**
-  Return true if the rhs expression of an assignment contains any ad matrix 
-    that is not derived from ad scalars and data matrices.
-    *)
 let rec is_any_derived_from_ad_matrix
     Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{adlevel; type_; _}} : bool =
   if UnsizedType.is_dataonlytype adlevel then false
@@ -303,8 +303,8 @@ let rec is_any_derived_from_ad_matrix
         is_any_derived_from_ad_matrix lhs && is_any_derived_from_ad_matrix rhs
 
 (**
-  Return true if any of the expressions in a function call are derived from 
-    an AD matrix that is created outside of this expression.
+  Return true if the expressions in a function call are all
+   combinations of AutoDiffable Reals and Data Matrices
  *)
 and is_any_derived_from_ad_matrix_fun (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) : bool =
