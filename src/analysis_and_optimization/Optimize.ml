@@ -1228,11 +1228,6 @@ let optimize_soa (mir : Program.Typed.t) =
     List.fold ~init:Set.Poly.empty
       ~f:(Memory_patterns.query_initial_demotable_stmt false)
       mir.reverse_mode_log_prob in
-  (*
-  let print_set s =
-    Set.Poly.iter ~f:print_endline s in
-  let () = print_set initial_variables in
-  *)
   let mod_exprs aos_exits mod_expr =
     Mir_utils.map_rec_expr
       (Memory_patterns.modify_expr_pattern aos_exits)
