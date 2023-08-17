@@ -399,6 +399,10 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
             match rhs.pattern with
             | FunApp (UserDefined _, _) -> true
             | FunApp (CompilerInternal _, _) -> false
+            | FunApp (StanLib (name, _, _), exprs) ->
+                not
+                  (query_stan_math_mem_pattern_support name
+                     (List.map ~f:Expr.Typed.fun_arg exprs) )
             | _ -> false in
           (* LHS (3) all rhs aos*)
           let is_all_rhs_aos =
