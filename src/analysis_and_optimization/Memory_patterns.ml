@@ -312,7 +312,7 @@ and is_any_derived_from_ad_matrix_fun (kind : 'a Fun_kind.t)
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
     | "check_matching_dims" -> true
-    | "rep_vector" | "rep_matrix" | "rep_row_vector" -> true
+    | "rep_vector" | "rep_row_vector" -> true
     | _ ->
         let ad_matrix_exprs =
           List.filter
