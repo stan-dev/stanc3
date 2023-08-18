@@ -313,6 +313,11 @@ and is_any_derived_from_ad_matrix_fun (kind : 'a Fun_kind.t)
     match name with
     | "check_matching_dims" -> true
     | "rep_vector" | "rep_row_vector" -> true
+    | "rep_matrix"
+      when List.for_all
+             ~f:(fun (x, _) -> UnsizedType.is_dataonlytype x)
+             (List.map ~f:Expr.Typed.fun_arg exprs) ->
+        true
     | _ ->
         let ad_matrix_exprs =
           List.filter
