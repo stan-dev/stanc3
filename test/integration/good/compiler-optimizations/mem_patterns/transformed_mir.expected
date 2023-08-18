@@ -9,6 +9,7 @@ vector[N] aos_from_data: AoS
 matrix[N, N] soa_mat_rep: SoA
 matrix[N, N] soa_mat_rep_vec: SoA
 matrix[N, N] aos_mat_rep: AoS
+matrix[2, 2] aos_mat_from_vecs: AoS
 ((functions_block ())
  (input_vars
   ((N
@@ -815,6 +816,57 @@ matrix[N, N] aos_mat_rep: AoS
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
        ((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id aos_mat_from_vecs)
+          (decl_type
+           (Sized
+            (SMatrix AoS
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (initialize true)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable aos_mat_from_vecs) ()) UMatrix
+          ((pattern
+            (FunApp (CompilerInternal FnMakeRowVec)
+             (((pattern
+                (FunApp (CompilerInternal FnMakeRowVec)
+                 (((pattern
+                    (FunApp (StanLib Pow__ FnPlain AoS)
+                     (((pattern (Var alpha))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Lit Int 2))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern (Var sigma))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
+              ((pattern
+                (FunApp (CompilerInternal FnMakeRowVec)
+                 (((pattern (Var alpha))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (FunApp (StanLib Pow__ FnPlain AoS)
+                     (((pattern (Var sigma))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Lit Int 2))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>))
+       ((pattern
          (TargetPE
           ((pattern
             (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
@@ -879,6 +931,14 @@ matrix[N, N] aos_mat_rep: AoS
           ((pattern
             (FunApp (StanLib sum FnPlain AoS)
              (((pattern (Var aos_mat_rep))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>))
+       ((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (StanLib sum FnPlain AoS)
+             (((pattern (Var aos_mat_from_vecs))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>)))))
@@ -1420,6 +1480,57 @@ matrix[N, N] aos_mat_rep: AoS
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
        ((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id aos_mat_from_vecs)
+          (decl_type
+           (Sized
+            (SMatrix AoS
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (initialize true)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable aos_mat_from_vecs) ()) UMatrix
+          ((pattern
+            (FunApp (CompilerInternal FnMakeRowVec)
+             (((pattern
+                (FunApp (CompilerInternal FnMakeRowVec)
+                 (((pattern
+                    (FunApp (StanLib Pow__ FnPlain AoS)
+                     (((pattern (Var alpha))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Lit Int 2))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern (Var sigma))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
+              ((pattern
+                (FunApp (CompilerInternal FnMakeRowVec)
+                 (((pattern (Var alpha))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (FunApp (StanLib Pow__ FnPlain AoS)
+                     (((pattern (Var sigma))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Lit Int 2))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>))
+       ((pattern
          (TargetPE
           ((pattern
             (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
@@ -1484,6 +1595,14 @@ matrix[N, N] aos_mat_rep: AoS
           ((pattern
             (FunApp (StanLib sum FnPlain AoS)
              (((pattern (Var aos_mat_rep))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>))
+       ((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (StanLib sum FnPlain AoS)
+             (((pattern (Var aos_mat_from_vecs))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>)))))

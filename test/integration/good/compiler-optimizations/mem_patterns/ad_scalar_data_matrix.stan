@@ -18,6 +18,7 @@ model{
   matrix[N, N] soa_mat_rep = transpose(rep_matrix(2.0, N, N)) + rep_matrix(sum(rep_vector(sigma, N)), N, N); 
   matrix[N, N] soa_mat_rep_vec = transpose(rep_matrix(2.0, N, N)) + rep_matrix(rep_vector(sigma, N), N); 
   matrix[N, N] aos_mat_rep = transpose(rep_matrix(aos_deep, N)) + rep_matrix(aos_deep, N);
+  matrix[2, 2] aos_mat_from_vecs = [[alpha ^ 2, sigma], [alpha, sigma ^ 2]];
   y_data ~ normal(soa_simple, aos_deep);
   target += sum(soa_dual_rep);
   target += sum(aos_from_data);
@@ -26,4 +27,5 @@ model{
   target += sum(soa_mat_rep);
   target += sum(soa_mat_rep_vec);
   target += sum(aos_mat_rep);
+  target += sum(aos_mat_from_vecs);
 }

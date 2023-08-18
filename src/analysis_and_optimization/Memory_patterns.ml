@@ -232,7 +232,11 @@ and get_lowest_level_fun (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) =
            | _ -> false ->
         [(UnsizedType.AutoDiffable, UnsizedType.UMatrix)]
     | _ -> List.concat_map ~f:get_lowest_level exprs )
-  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> []
+  (*While not "true", we need to tell the optimizer these are danger functions*)
+  | CompilerInternal Internal_fun.FnMakeArray ->
+      [(AutoDiffable, UReal); (DataOnly, UArray UReal)]
+  | CompilerInternal Internal_fun.FnMakeRowVec ->
+      [(AutoDiffable, UReal); (DataOnly, URowVector)]
   | CompilerInternal (_ : 'a Internal_fun.t) -> []
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> []
 
@@ -242,7 +246,7 @@ let contains_at_least_one_ad_matrix_or_all_data
   || List.exists
        ~f:(fun x ->
          UnsizedType.is_autodifftype (fst x)
-         && UnsizedType.contains_eigen_type (snd x) )
+         && UnsizedType.is_eigen_type (snd x) )
        fun_args
   || List.for_all ~f:(fun x -> UnsizedType.is_dataonlytype (fst x)) fun_args
 
