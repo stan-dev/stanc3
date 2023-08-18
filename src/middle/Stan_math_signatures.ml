@@ -479,6 +479,7 @@ let string_operator_to_stan_math_fns str =
 
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
+  Format.pp_set_margin ppf 180 ;
   let pp_sig ppf (name, (rt, args, _)) =
     pf ppf "%s(@[<h>%a@]) => %a" name
       (list ~sep:comma UnsizedType.pp)
@@ -1007,6 +1008,16 @@ let () =
   add_unqualified
     ("columns_dot_self", ReturnType UComplexRowVector, [UComplexMatrix], AoS) ;
   add_unqualified
+    ( "complex_schur_decompose"
+    , ReturnType (UTuple [UComplexMatrix; UComplexMatrix])
+    , [UComplexMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "complex_schur_decompose"
+    , ReturnType (UTuple [UComplexMatrix; UComplexMatrix])
+    , [UMatrix]
+    , AoS ) ;
+  add_unqualified
     ( "complex_schur_decompose_t"
     , ReturnType UComplexMatrix
     , [UComplexMatrix]
@@ -1053,6 +1064,11 @@ let () =
     ( "csr_to_dense_matrix"
     , ReturnType UMatrix
     , [UInt; UInt; UVector; UArray UInt; UArray UInt]
+    , AoS ) ;
+  add_unqualified
+    ( "csr_extract"
+    , ReturnType (UTuple [UVector; UArray UInt; UArray UInt])
+    , [UMatrix]
     , AoS ) ;
   add_unqualified ("csr_extract_w", ReturnType UVector, [UMatrix], AoS) ;
   add_unqualified ("csr_extract_v", ReturnType (UArray UInt), [UMatrix], AoS) ;
@@ -1175,12 +1191,32 @@ let () =
   add_unqualified ("dot_self", ReturnType UComplex, [UComplexVector], AoS) ;
   add_unqualified ("dot_self", ReturnType UComplex, [UComplexRowVector], AoS) ;
   add_nullary "e" ;
+  add_unqualified
+    ( "eigendecompose"
+    , ReturnType (UTuple [UComplexMatrix; UComplexVector])
+    , [UMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "eigendecompose"
+    , ReturnType (UTuple [UComplexMatrix; UComplexVector])
+    , [UComplexMatrix]
+    , AoS ) ;
   add_unqualified ("eigenvalues", ReturnType UComplexVector, [UMatrix], AoS) ;
   add_unqualified ("eigenvectors", ReturnType UComplexMatrix, [UMatrix], AoS) ;
   add_unqualified
     ("eigenvalues", ReturnType UComplexVector, [UComplexMatrix], AoS) ;
   add_unqualified
     ("eigenvectors", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
+  add_unqualified
+    ( "eigendecompose_sym"
+    , ReturnType (UTuple [UMatrix; UVector])
+    , [UMatrix]
+    , AoS ) ;
+  add_unqualified
+    ( "eigendecompose_sym"
+    , ReturnType (UTuple [UComplexMatrix; UComplexVector])
+    , [UComplexMatrix]
+    , AoS ) ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
   add_unqualified
     ("eigenvalues_sym", ReturnType UComplexVector, [UComplexMatrix], AoS) ;
@@ -1191,6 +1227,8 @@ let () =
   add_unqualified ("qr", ReturnType (UTuple [UMatrix; UMatrix]), [UMatrix], AoS) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix], AoS) ;
+  add_unqualified
+    ("qr_thin", ReturnType (UTuple [UMatrix; UMatrix]), [UMatrix], AoS) ;
   add_unqualified ("qr_thin_Q", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_thin_R", ReturnType UMatrix, [UMatrix], AoS) ;
   List.iter
@@ -2365,6 +2403,14 @@ let () =
   add_unqualified ("sum", ReturnType UComplex, [UComplexVector], SoA) ;
   add_unqualified ("sum", ReturnType UComplex, [UComplexRowVector], SoA) ;
   add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA) ;
+  (* TODO (future): SoA inside of tuples, update following signatures *)
+  add_unqualified
+    ("svd", ReturnType (UTuple [UMatrix; UVector; UMatrix]), [UMatrix], AoS) ;
+  add_unqualified
+    ( "svd"
+    , ReturnType (UTuple [UComplexMatrix; UVector; UComplexMatrix])
+    , [UComplexMatrix]
+    , AoS ) ;
   add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("svd_U", ReturnType UComplexMatrix, [UComplexMatrix], SoA) ;
   add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix], SoA) ;
