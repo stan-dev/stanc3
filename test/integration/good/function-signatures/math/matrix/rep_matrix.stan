@@ -42,13 +42,22 @@ transformed parameters {
   transformed_param_matrix = rep_matrix(p_row_vector, d_int);
 
   complex_matrix[d_int,d_int] transformed_param_cmatrix;
-
+  
   transformed_param_cmatrix = rep_matrix(d_complex, d_int, d_int);
   transformed_param_cmatrix = rep_matrix(d_cvector, d_int);
   transformed_param_cmatrix = rep_matrix(d_crow_vector, d_int);
   transformed_param_cmatrix = rep_matrix(p_complex, d_int, d_int);
   transformed_param_cmatrix = rep_matrix(p_cvector, d_int);
   transformed_param_cmatrix = rep_matrix(p_crow_vector, d_int);
+
+  matrix[d_int, d_int] soa_matrix;
+  soa_matrix = rep_matrix(d_real, d_int, d_int);
+  soa_matrix = rep_matrix(p_real, d_int, d_int);
+
+  matrix[d_int, d_int] aos_matrix_d_vector = rep_matrix(d_vector, d_int);
+  matrix[d_int, d_int] aos_matrix_p_vector = rep_matrix(p_vector, d_int);
+  matrix[d_int, d_int] aos_matrix_drow_vector = rep_matrix(d_row_vector, d_int);
+  matrix[d_int, d_int] aos_matrix_prow_vector = rep_matrix(p_row_vector, d_int);
 
 }
 model {

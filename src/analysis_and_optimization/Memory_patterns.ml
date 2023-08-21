@@ -195,31 +195,44 @@ and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) ->
       Set.Poly.union acc demoted_and_top_level_names
 
-let print_string s = print_endline s
-let print_set s = Set.Poly.iter ~f:print_string s
-
-let print_bool nn bb =
-  Printf.printf "%s: %s \n" nn (if bb then "true" else "false")
-
-let rec get_lowest_level
+(** 
+  * Recurse through subexpressions and return a list of Unsized types. 
+  * Recursion continues until 
+  * 1. A non-autodiffable type is found  
+  * 2. An autodiffable scalar is found 
+  * 3. A `Var` type is found that is an autodiffable matrix
+  *)
+let rec extract_nonderived_admatrix_types
     Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{adlevel; type_; _}} =
   if
     UnsizedType.is_autodifftype adlevel && UnsizedType.contains_eigen_type type_
   then
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.t list)) ->
-        get_lowest_level_fun kind exprs
+        extract_nonderived_admatrix_types_fun kind exprs
     | Indexed (expr, _) | Promotion (expr, _, _) | TupleProjection (expr, _) ->
-        get_lowest_level expr
+        extract_nonderived_admatrix_types expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
         [(adlevel, type_)]
     | TernaryIf (_, texpr, fexpr) ->
-        List.concat [get_lowest_level texpr; get_lowest_level fexpr]
+        List.concat
+          [ extract_nonderived_admatrix_types texpr
+          ; extract_nonderived_admatrix_types fexpr ]
     | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
-        List.concat [get_lowest_level lhs; get_lowest_level rhs]
+        List.concat
+          [ extract_nonderived_admatrix_types lhs
+          ; extract_nonderived_admatrix_types rhs ]
   else [(adlevel, type_)]
 
-and get_lowest_level_fun (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) =
+(**
+ * Recurse through functions to find nonderived ad matrix types. 
+ * Special cases for StanLib functions are for 
+ * - `check_matching_dims`: compiler function that has no effect on optimization
+ * - `rep_*vector` These are templated in the C++ to cast up to `Var<Matrix>` types 
+ * - `rep_matrix`. When it's only a scalar being propogated an math library overload can upcast to `Var<Matrix>` 
+ *)
+and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
+    (exprs : Expr.Typed.t list) =
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
@@ -231,7 +244,7 @@ and get_lowest_level_fun (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) =
            | [(_, UnsizedType.UReal); _; _] -> true
            | _ -> false ->
         [(UnsizedType.AutoDiffable, UnsizedType.UMatrix)]
-    | _ -> List.concat_map ~f:get_lowest_level exprs )
+    | _ -> List.concat_map ~f:extract_nonderived_admatrix_types exprs )
   (*While not "true", we need to tell the optimizer these are danger functions*)
   | CompilerInternal Internal_fun.FnMakeArray ->
       [(AutoDiffable, UReal); (DataOnly, UArray UReal)]
@@ -240,6 +253,7 @@ and get_lowest_level_fun (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) =
   | CompilerInternal (_ : 'a Internal_fun.t) -> []
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> []
 
+(**Checks if a list of types contains at least on ad matrix or if everything is derived from data*)
 let contains_at_least_one_ad_matrix_or_all_data
     (fun_args : (UnsizedType.autodifftype * UnsizedType.t) list) =
   List.is_empty fun_args
@@ -314,10 +328,11 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
         if is_eigen_stmt then
           (* LHS (2)*)
           let is_rhs_not_promoteable_to_soa =
-            let blah = get_lowest_level rhs in
             match (UnsizedType.contains_eigen_type type_, adlevel) with
             | true, UnsizedType.AutoDiffable ->
-                not (contains_at_least_one_ad_matrix_or_all_data blah)
+                not
+                  (contains_at_least_one_ad_matrix_or_all_data
+                     (extract_nonderived_admatrix_types rhs) )
             | _ -> false in
           (* LHS (3) rhs unsupported function*)
           let is_not_supported_func =
