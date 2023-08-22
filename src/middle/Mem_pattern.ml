@@ -1,5 +1,4 @@
 open Core_kernel
-open Core_kernel.Poly
 
 (**
   * This type represents whether or not an autodiff type can be represented
@@ -11,13 +10,14 @@ open Core_kernel.Poly
   * (fyi a var in the C++ code is an alias for var_value<double>)
   *
  **)
-type t = AoS | SoA [@@deriving sexp, compare, map, hash, fold, equal]
+type t = AoS | SoA | OpenCL [@@deriving sexp, compare, map, hash, fold, equal]
 
 let pp ppf = function
   | AoS -> Fmt.string ppf "AoS"
   | SoA -> Fmt.string ppf "SoA"
+  | OpenCL -> Fmt.string ppf "OpenCL"
 
 let lub_mem_pat lst =
-  let find_soa mem_pat = mem_pat = SoA in
+  let find_soa mem_pat = match mem_pat with SoA -> true | _ -> false in
   let any_soa = List.exists ~f:find_soa lst in
   match any_soa with true -> SoA | false -> AoS

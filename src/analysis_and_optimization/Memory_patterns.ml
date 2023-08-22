@@ -84,8 +84,8 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
         | None -> false )
       | _ -> false )
 
-let query_stan_math_mem_pattern_support (name : string)
-    (args : (UnsizedType.autodifftype * UnsizedType.t) list) =
+let query_stan_math_mem_pattern_support (requested_mem : Mem_pattern.t)
+    (name : string) (args : (UnsizedType.autodifftype * UnsizedType.t) list) =
   let open Stan_math_signatures in
   match name with
   | x when is_stan_math_variadic_function_name x -> false
@@ -103,13 +103,16 @@ let query_stan_math_mem_pattern_support (name : string)
             |> Result.is_ok )
           namematches in
       let is_soa ((_ : UnsizedType.returntype), _, mem) =
-        mem = Mem_pattern.SoA in
+        match requested_mem with
+        | Mem_pattern.SoA -> mem = Mem_pattern.SoA || mem = OpenCL
+        | OpenCL -> mem = OpenCL
+        | AoS -> mem = AoS in
       List.exists ~f:is_soa filteredmatches
 
 (*Validate whether a function can support SoA matrices*)
-let is_fun_soa_supported name exprs =
+let is_fun_soa_supported (requested_mem : Mem_pattern.t) name exprs =
   let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
-  query_stan_math_mem_pattern_support name fun_args
+  query_stan_math_mem_pattern_support requested_mem name fun_args
 
 (**
   Query to find the initial set of objects that cannot be SoA.
@@ -121,13 +124,14 @@ let is_fun_soa_supported name exprs =
     will be returned if the matrix or vector is accessed by single
      cell indexing.
  *)
-let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
-    Expr.Fixed.{pattern; _} : string Set.Poly.t =
+let rec query_initial_demotable_expr (requested_mem : Mem_pattern.t)
+    (in_loop : bool) ~(acc : string Set.Poly.t) Expr.Fixed.{pattern; _} :
+    string Set.Poly.t =
   let query_expr (accum : string Set.Poly.t) =
-    query_initial_demotable_expr in_loop ~acc:accum in
+    query_initial_demotable_expr requested_mem in_loop ~acc:accum in
   match pattern with
   | FunApp (kind, (exprs : Expr.Typed.t list)) ->
-      query_initial_demotable_funs in_loop acc kind exprs
+      query_initial_demotable_funs requested_mem in_loop acc kind exprs
   | Indexed ((Expr.Fixed.{meta= {type_; _}; _} as expr), indexed) ->
       let index_set =
         Set.Poly.union_list
@@ -173,9 +177,11 @@ let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
    to the UDF.
   exprs The expression list passed to the functions.
  *)
-and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
-    (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) : string Set.Poly.t =
-  let query_expr accum = query_initial_demotable_expr in_loop ~acc:accum in
+and query_initial_demotable_funs (requested_mem : Mem_pattern.t)
+    (in_loop : bool) (acc : string Set.Poly.t) (kind : 'a Fun_kind.t)
+    (exprs : Expr.Typed.t list) : string Set.Poly.t =
+  let query_expr accum =
+    query_initial_demotable_expr requested_mem in_loop ~acc:accum in
   let top_level_eigen_names =
     Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
   let demoted_eigen_names = List.fold ~init:acc ~f:query_expr exprs in
@@ -186,7 +192,7 @@ and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
     match name with
     | "check_matching_dims" -> acc
     | name -> (
-      match is_fun_soa_supported name exprs with
+      match is_fun_soa_supported requested_mem name exprs with
       | true -> Set.Poly.union acc demoted_eigen_names
       | false -> Set.Poly.union acc demoted_and_top_level_names ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) ->
@@ -289,10 +295,11 @@ let contains_at_least_one_ad_matrix_or_all_data
   @param in_loop A boolean to specify the logic of indexing expressions. See
    [query_initial_demotable_expr] for an explanation of the logic.
  *)
-let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
+let rec query_initial_demotable_stmt (requested_mem : Mem_pattern.t)
+    (in_loop : bool) (acc : string Set.Poly.t)
     (Stmt.Fixed.{pattern; _} : Stmt.Located.t) : string Set.Poly.t =
   let query_expr (accum : string Set.Poly.t) =
-    query_initial_demotable_expr in_loop ~acc:accum in
+    query_initial_demotable_expr requested_mem in_loop ~acc:accum in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       ( lval
@@ -306,7 +313,8 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
           List.fold ~init:acc
             ~f:(fun accum x ->
               Index.folder accum
-                (fun acc -> query_initial_demotable_expr in_loop ~acc)
+                (fun acc ->
+                  query_initial_demotable_expr requested_mem in_loop ~acc )
                 x )
             idx in
         match is_uni_eigen_loop_indexing in_loop ut idx with
@@ -341,7 +349,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
             | FunApp (CompilerInternal _, _) -> false
             | FunApp (StanLib (name, _, _), exprs) ->
                 not
-                  (query_stan_math_mem_pattern_support name
+                  (query_stan_math_mem_pattern_support requested_mem name
                      (List.map ~f:Expr.Typed.fun_arg exprs) )
             | _ -> false in
           (* LHS (3) all rhs aos*)
@@ -360,21 +368,26 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
         else tuple_demotions in
       Set.Poly.union acc assign_demotions
   | NRFunApp (kind, exprs) ->
-      query_initial_demotable_funs in_loop acc kind exprs
+      query_initial_demotable_funs requested_mem in_loop acc kind exprs
   | IfElse (predicate, true_stmt, op_false_stmt) ->
       let predicate_acc = query_expr acc predicate in
       Set.Poly.union acc
         (Set.Poly.union_list
            [ predicate_acc
-           ; query_initial_demotable_stmt in_loop predicate_acc true_stmt
+           ; query_initial_demotable_stmt requested_mem in_loop predicate_acc
+               true_stmt
            ; Option.value_map
-               ~f:(query_initial_demotable_stmt in_loop predicate_acc)
+               ~f:
+                 (query_initial_demotable_stmt requested_mem in_loop
+                    predicate_acc )
                ~default:Set.Poly.empty op_false_stmt ] )
   | Return optional_expr ->
       Option.value_map ~f:(query_expr acc) ~default:Set.Poly.empty optional_expr
   | SList lst | Profile (_, lst) | Block lst ->
       Set.Poly.union_list
-        (List.map ~f:(query_initial_demotable_stmt in_loop acc) lst)
+        (List.map
+           ~f:(query_initial_demotable_stmt requested_mem in_loop acc)
+           lst )
   | TargetPE expr -> query_expr acc expr
   (* NOTE: loops generated by inlining are not actually loops;
      we do not unconditionally set "in_loop" *)
@@ -384,15 +397,15 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       ; body
       ; _ }
     when lb = "1" && ub = "1" ->
-      query_initial_demotable_stmt in_loop acc body
+      query_initial_demotable_stmt requested_mem in_loop acc body
   | For {lower; upper; body; _} ->
       Set.Poly.union
         (Set.Poly.union (query_expr acc lower) (query_expr acc upper))
-        (query_initial_demotable_stmt true acc body)
+        (query_initial_demotable_stmt requested_mem true acc body)
   | While (predicate, body) ->
       Set.Poly.union_list
         [ acc; query_expr acc predicate
-        ; query_initial_demotable_stmt true acc body ]
+        ; query_initial_demotable_stmt requested_mem true acc body ]
   | Decl {decl_type= Type.Sized st; decl_id; _}
     when SizedType.is_complex_type st ->
       Set.Poly.add acc decl_id
@@ -441,29 +454,41 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
   @param kind A [Fun_kind.t]
   @param exprs A list of expressions going into the function.
  **)
-let rec modify_kind ?force_demotion:(force = false)
-    (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
-    (exprs : Expr.Typed.t list) =
+let rec modify_kind (requested_mem : Mem_pattern.t)
+    ?force_demotion:(force = false) (modifiable_set : string Set.Poly.t)
+    (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) =
   let expr_names =
     Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
   let is_all_in_list =
     is_nonzero_subset ~set:modifiable_set ~subset:expr_names in
   match kind with
   | Fun_kind.StanLib (name, sfx, (_ : Mem_pattern.t)) ->
-      if is_all_in_list || (not (is_fun_soa_supported name exprs)) || force then
+      if
+        is_all_in_list
+        || (not (is_fun_soa_supported requested_mem name exprs))
+        || force
+      then
         (*Force demotion of all subexprs*)
         let exprs' =
-          List.map ~f:(modify_expr ~force_demotion:true expr_names) exprs in
+          List.map
+            ~f:(modify_expr requested_mem ~force_demotion:true expr_names)
+            exprs in
         (Fun_kind.StanLib (name, sfx, Mem_pattern.AoS), exprs')
       else
-        ( Fun_kind.StanLib (name, sfx, SoA)
-        , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs
-        )
+        ( Fun_kind.StanLib (name, sfx, requested_mem)
+        , List.map
+            ~f:(modify_expr requested_mem ~force_demotion:force modifiable_set)
+            exprs )
   | UserDefined _ as udf ->
-      (udf, List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs)
+      ( udf
+      , List.map
+          ~f:(modify_expr requested_mem ~force_demotion:force modifiable_set)
+          exprs )
   | (_ : 'a Fun_kind.t) ->
       ( kind
-      , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs )
+      , List.map
+          ~f:(modify_expr requested_mem ~force_demotion:force modifiable_set)
+          exprs )
 
 (**
   Modify an expression and it's subexpressions from SoA <-> AoS
@@ -479,15 +504,16 @@ let rec modify_kind ?force_demotion:(force = false)
    associated expressions we want to modify.
   @param pattern The expression to modify.
  *)
-and modify_expr_pattern ?force_demotion:(force = false)
-    (modifiable_set : string Set.Poly.t)
+and modify_expr_pattern (requested_mem : Mem_pattern.t)
+    ?force_demotion:(force = false) (modifiable_set : string Set.Poly.t)
     (pattern : Expr.Typed.t Expr.Fixed.Pattern.t) =
   let mod_expr ?force_demotion:(forced = false) =
-    modify_expr ~force_demotion:forced modifiable_set in
+    modify_expr requested_mem ~force_demotion:forced modifiable_set in
   match pattern with
   | Expr.Fixed.Pattern.FunApp (kind, (exprs : Expr.Typed.t list)) ->
       let kind', expr' =
-        modify_kind ~force_demotion:force modifiable_set kind exprs in
+        modify_kind requested_mem ~force_demotion:force modifiable_set kind
+          exprs in
       Expr.Fixed.Pattern.FunApp (kind', expr')
   | TernaryIf (predicate, texpr, fexpr) ->
       let is_eigen_return =
@@ -523,10 +549,12 @@ and modify_expr_pattern ?force_demotion:(force = false)
    associated expressions we want to modify.
   @param expr the expression to modify.
 *)
-and modify_expr ?force_demotion:(force = false)
+and modify_expr (requested_mem : Mem_pattern.t) ?force_demotion:(force = false)
     (modifiable_set : string Set.Poly.t) (Expr.Fixed.{pattern; _} as expr) =
   { expr with
-    pattern= modify_expr_pattern ~force_demotion:force modifiable_set pattern }
+    pattern=
+      modify_expr_pattern requested_mem ~force_demotion:force modifiable_set
+        pattern }
 
 (**
   Modify statement patterns in the MIR from AoS <-> SoA and vice versa
@@ -540,11 +568,12 @@ and modify_expr ?force_demotion:(force = false)
   @param pattern The statement pattern to modify
   @param modifiable_set The name of the variable we are searching for.
 *)
-let rec modify_stmt_pattern
+let rec modify_stmt_pattern (requested_mem : Mem_pattern.t)
     (pattern : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
     (modifiable_set : string Core_kernel.Set.Poly.t) =
-  let mod_expr force = modify_expr ~force_demotion:force modifiable_set in
-  let mod_stmt stmt = modify_stmt stmt modifiable_set in
+  let mod_expr force =
+    modify_expr requested_mem ~force_demotion:force modifiable_set in
+  let mod_stmt stmt = modify_stmt requested_mem stmt modifiable_set in
   match pattern with
   | Stmt.Fixed.Pattern.Decl
       ({decl_id; decl_type= Type.Sized sized_type; _} as decl) ->
@@ -557,9 +586,10 @@ let rec modify_stmt_pattern
         Decl
           { decl with
             decl_type=
-              Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type) }
+              Type.Sized
+                (SizedType.modify_sizedtype_mem requested_mem sized_type) }
   | NRFunApp (kind, (exprs : Expr.Typed.t list)) ->
-      let kind', exprs' = modify_kind modifiable_set kind exprs in
+      let kind', exprs' = modify_kind requested_mem modifiable_set kind exprs in
       NRFunApp (kind', exprs')
   | Assignment
       ( lval
@@ -585,7 +615,7 @@ let rec modify_stmt_pattern
               pattern=
                 FunApp
                   ( CompilerInternal
-                      (FnReadParam {read_param with mem_pattern= SoA})
+                      (FnReadParam {read_param with mem_pattern= requested_mem})
                   , List.map ~f:(mod_expr false) args ) } )
   | Assignment (lval, (ut : UnsizedType.t), rhs) ->
       let name = Stmt.Helpers.lhs_variable lval in
@@ -622,9 +652,9 @@ let rec modify_stmt_pattern
   @param stmt The statement to modify.
   @param modifiable_set The name of the variable we are searching for.
 *)
-and modify_stmt (Stmt.Fixed.{pattern; _} as stmt)
-    (modifiable_set : string Set.Poly.t) =
-  {stmt with pattern= modify_stmt_pattern pattern modifiable_set}
+and modify_stmt (requested_mem : Mem_pattern.t)
+    (Stmt.Fixed.{pattern; _} as stmt) (modifiable_set : string Set.Poly.t) =
+  {stmt with pattern= modify_stmt_pattern requested_mem pattern modifiable_set}
 
 let collect_mem_pattern_variables stmts =
   let take_stmt acc = function

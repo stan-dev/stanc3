@@ -72,6 +72,18 @@ let rec initialize_value st adtype =
   | AutoDiffable, SMatrix (SoA, d1, d2) ->
       let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
       Constructor (typ, [initialize_value (SMatrix (AoS, d1, d2)) DataOnly])
+  | AutoDiffable, SVector (OpenCL, size) ->
+      let typ =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st) OpenCL in
+      Constructor (typ, [initialize_value (SVector (AoS, size)) DataOnly])
+  | AutoDiffable, SRowVector (OpenCL, size) ->
+      let typ =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st) OpenCL in
+      Constructor (typ, [initialize_value (SRowVector (AoS, size)) DataOnly])
+  | AutoDiffable, SMatrix (OpenCL, d1, d2) ->
+      let typ =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st) OpenCL in
+      Constructor (typ, [initialize_value (SMatrix (AoS, d1, d2)) DataOnly])
   | DataOnly, SArray (t, d) ->
       let typ = lower_st st adtype in
       Constructor (typ, [lower_expr d; initialize_value t adtype])

@@ -190,7 +190,7 @@ let rec get_mem_pattern st =
   | SVector (mem, _) | SRowVector (mem, _) | SMatrix (mem, _, _) -> mem
   | SArray (t, _) -> get_mem_pattern t
 
-(*Given a sizedtype, demote it's mem pattern from SoA to AoS*)
+(*Given a sizedtype, demote it's mem pattern from SoA or OpenCL to AoS*)
 let rec demote_sizedtype_mem st =
   match st with
   | ( SInt | SReal | SComplex
@@ -201,12 +201,12 @@ let rec demote_sizedtype_mem st =
     | SComplexMatrix (_, _) ) as ret ->
       ret
   | SArray (inner_type, dim) -> SArray (demote_sizedtype_mem inner_type, dim)
-  | SVector (SoA, dim) -> SVector (AoS, dim)
-  | SRowVector (SoA, dim) -> SRowVector (AoS, dim)
-  | SMatrix (SoA, dim1, dim2) -> SMatrix (AoS, dim1, dim2)
+  | SVector ((SoA | OpenCL), dim) -> SVector (AoS, dim)
+  | SRowVector ((SoA | OpenCL), dim) -> SRowVector (AoS, dim)
+  | SMatrix ((SoA | OpenCL), dim1, dim2) -> SMatrix (AoS, dim1, dim2)
   | STuple subtypes -> STuple (List.map ~f:demote_sizedtype_mem subtypes)
 
-(*Given a sizedtype, promote it's mem pattern from AoS to SoA*)
+(*Given a sizedtype, promote it's mem pattern from AoS to SoA *)
 let rec promote_sizedtype_mem st =
   match st with
   | SVector (AoS, dim) -> SVector (SoA, dim)
@@ -220,6 +220,7 @@ let modify_sizedtype_mem (mem_pattern : Mem_pattern.t) st =
   match mem_pattern with
   | AoS -> demote_sizedtype_mem st
   | SoA -> promote_sizedtype_mem st
+  | OpenCL -> demote_sizedtype_mem st
 
 let rec has_mem_pattern = function
   | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _

@@ -35,6 +35,7 @@ let dump_stan_math_distributions = ref false
 let opt_lvl = ref Optimize.O0
 let no_soa_opt = ref false
 let soa_opt = ref false
+let opencl_opt = ref false
 let output_file = ref ""
 let generate_data = ref false
 let generate_inits = ref false
@@ -190,6 +191,9 @@ let options =
     ; ( "-fsoa"
       , Arg.Unit (fun () -> soa_opt := true)
       , "\tTurn on the Struct of Arrays optimization" )
+    ; ( "-fopencl"
+      , Arg.Unit (fun () -> opencl_opt := true)
+      , "\tTurn on OpenCL optimization" )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
@@ -356,7 +360,11 @@ let use_file filename =
         if !no_soa_opt then {base_optims with optimize_soa= false}
         else if !soa_opt then {base_optims with optimize_soa= true}
         else base_optims in
-      Optimize.optimization_suite ~settings:set_optims tx_mir in
+      let set_optims_opencl =
+        if !opencl_opt then
+          {set_optims with optimize_opencl= true; optimize_soa= false}
+        else set_optims in
+      Optimize.optimization_suite ~settings:set_optims_opencl tx_mir in
     if !dump_mem_pattern then
       Memory_patterns.pp_mem_patterns Format.std_formatter opt_mir ;
     if !dump_opt_mir then

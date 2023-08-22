@@ -403,7 +403,9 @@ module Printing = struct
       | Middle.Mem_pattern.AoS ->
           pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
       | Middle.Mem_pattern.SoA ->
-          pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j )
+          pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j
+      | OpenCL -> pf ppf "stan::math::var_value<stan::math::matrix_cl<double>>"
+      )
     | Const t -> pf ppf "const %a" pp_type_ t
     | Ref t -> pf ppf "%a&" pp_type_ t
     | Pointer t -> pf ppf "%a*" pp_type_ t

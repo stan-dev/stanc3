@@ -828,7 +828,10 @@ and unenforce_initialize (lst : Stmt.Located.t list) =
     | Stmt.Fixed.Pattern.Decl ({decl_id; decl_type; _} as decl_pat) -> (
         let is_soa =
           match decl_type with
-          | Type.Sized s -> SizedType.get_mem_pattern s = Mem_pattern.SoA
+          | Type.Sized s -> (
+            match SizedType.get_mem_pattern s with
+            | Mem_pattern.SoA | Mem_pattern.OpenCL -> true
+            | _ -> false )
           | _ -> false in
         match List.hd sub_lst with
         | Some next_stmt -> (
@@ -1226,14 +1229,46 @@ let optimize_soa (mir : Program.Typed.t) =
     | stmt -> Memory_patterns.query_demotable_stmt aos_variables stmt in
   let initial_variables =
     List.fold ~init:Set.Poly.empty
-      ~f:(Memory_patterns.query_initial_demotable_stmt false)
+      ~f:(Memory_patterns.query_initial_demotable_stmt Mem_pattern.SoA false)
       mir.reverse_mode_log_prob in
   let mod_exprs aos_exits mod_expr =
     Mir_utils.map_rec_expr
-      (Memory_patterns.modify_expr_pattern aos_exits)
+      (Memory_patterns.modify_expr_pattern Mem_pattern.SoA aos_exits)
       mod_expr in
   let modify_stmt_patt stmt_pattern variable_set =
-    Memory_patterns.modify_stmt_pattern stmt_pattern variable_set in
+    Memory_patterns.modify_stmt_pattern Mem_pattern.SoA stmt_pattern
+      variable_set in
+  let transform stmt =
+    optimize_minimal_variables ~gen_variables:gen_aos_variables
+      ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
+      stmt ~extra_variables:(fun _ -> initial_variables) in
+  let transform' s =
+    match transform {pattern= SList s; meta= Location_span.empty} with
+    | {pattern= SList (l : Stmt.Located.t list); _} -> l
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message "Something went wrong with program transformation packing!"]
+  in
+  {mir with reverse_mode_log_prob= transform' mir.reverse_mode_log_prob}
+
+let optimize_opencl (mir : Program.Typed.t) =
+  let gen_aos_variables
+      (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
+      (l : int) (aos_variables : string Set.Poly.t) =
+    let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
+    match (mir_node l).pattern with
+    | stmt -> Memory_patterns.query_demotable_stmt aos_variables stmt in
+  let initial_variables =
+    List.fold ~init:Set.Poly.empty
+      ~f:(Memory_patterns.query_initial_demotable_stmt Mem_pattern.OpenCL false)
+      mir.reverse_mode_log_prob in
+  let mod_exprs aos_exits mod_expr =
+    Mir_utils.map_rec_expr
+      (Memory_patterns.modify_expr_pattern Mem_pattern.OpenCL aos_exits)
+      mod_expr in
+  let modify_stmt_patt stmt_pattern variable_set =
+    Memory_patterns.modify_stmt_pattern Mem_pattern.OpenCL stmt_pattern
+      variable_set in
   let transform stmt =
     optimize_minimal_variables ~gen_variables:gen_aos_variables
       ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
@@ -1264,7 +1299,8 @@ type optimization_settings =
   ; lazy_code_motion: bool
   ; optimize_ad_levels: bool
   ; preserve_stability: bool
-  ; optimize_soa: bool }
+  ; optimize_soa: bool
+  ; optimize_opencl: bool }
 
 let settings_const b =
   { function_inlining= b
@@ -1281,7 +1317,8 @@ let settings_const b =
   ; lazy_code_motion= b
   ; optimize_ad_levels= b
   ; preserve_stability= not b
-  ; optimize_soa= b }
+  ; optimize_soa= b
+  ; optimize_opencl= false }
 
 let all_optimizations : optimization_settings = settings_const true
 let no_optimizations : optimization_settings = settings_const false
@@ -1306,7 +1343,8 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       ; allow_uninitialized_decls= true
       ; optimize_ad_levels= false
       ; preserve_stability= false
-      ; optimize_soa= true }
+      ; optimize_soa= true
+      ; optimize_opencl= false }
   | Oexperimental -> all_optimizations
 
 let optimization_suite ?(settings = all_optimizations) mir =
@@ -1349,6 +1387,7 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Machine idioms and instruction combining *)
     ; (optimize_ad_levels, settings.optimize_ad_levels)
     ; (optimize_soa, settings.optimize_soa)
+    ; (optimize_opencl, settings.optimize_opencl)
       (*Remove decls immediately assigned to*)
     ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Machine idioms and instruction combining *)

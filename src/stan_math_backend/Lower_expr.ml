@@ -276,7 +276,7 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
         (fun _ ->
           Exprs.fun_call "stan::math::get_lp" [Var "lp__"; Var "lp_accum__"] )
   | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row" | "append_col"
-    when mem_pattern = Mem_pattern.SoA -> (
+    when mem_pattern = Mem_pattern.SoA || mem_pattern = OpenCL -> (
       let is_autodiffable Expr.Fixed.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
         adlevel = UnsizedType.AutoDiffable in
       match ret_type with
