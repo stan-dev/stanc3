@@ -17,6 +17,10 @@ let pp ppf = function
   | SoA -> Fmt.string ppf "SoA"
   | OpenCL -> Fmt.string ppf "OpenCL"
 
+let is_soa mem = match mem with SoA -> true | _ -> false
+let is_aos mem = match mem with AoS -> true | _ -> false
+let is_opencl mem = match mem with OpenCL -> true | _ -> false
+
 let lub_mem_pat lst =
   let find_soa mem_pat = match mem_pat with SoA -> true | _ -> false in
   let any_soa = List.exists ~f:find_soa lst in

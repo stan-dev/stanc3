@@ -107,25 +107,15 @@ let lower_assign_sized st adtype initialize =
   if initialize then Some (initialize_value st adtype) else None
 
 let lower_unsized_decl name ut adtype =
-  let type_ =
-    match (Transform_Mir.is_opencl_var name, ut) with
-    | _, UnsizedType.(UInt | UReal) | false, _ ->
-        lower_unsizedtype_local adtype ut
-    | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
-    | true, _ -> TypeLiteral "matrix_cl<double>" in
-  make_variable_defn ~type_ ~name ()
+  make_variable_defn ~type_:(lower_unsizedtype_local adtype ut) ~name ()
 
-let lower_possibly_opencl_decl name st adtype =
+let lower_possibly_st_decl _ st adtype =
   let ut = SizedType.to_unsized st in
   let mem_pattern = SizedType.get_mem_pattern st in
-  match (Transform_Mir.is_opencl_var name, ut) with
-  | _, UnsizedType.(UInt | UReal) | false, _ ->
-      lower_possibly_var_decl adtype ut mem_pattern
-  | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
-  | true, _ -> TypeLiteral "matrix_cl<double>"
+  lower_possibly_var_decl adtype ut mem_pattern
 
 let lower_sized_decl name st adtype initialize =
-  let type_ = lower_possibly_opencl_decl name st adtype in
+  let type_ = lower_possibly_st_decl name st adtype in
   let init =
     lower_assign_sized st adtype initialize
     |> Option.value_map ~default:Uninitialized ~f:(fun i -> Assignment i) in

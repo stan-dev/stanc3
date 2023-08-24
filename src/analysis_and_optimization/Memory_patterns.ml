@@ -586,8 +586,7 @@ let rec modify_stmt_pattern (requested_mem : Mem_pattern.t)
         Decl
           { decl with
             decl_type=
-              Type.Sized
-                (SizedType.modify_sizedtype_mem requested_mem sized_type) }
+              Type.Sized (SizedType.promote_mem requested_mem sized_type) }
   | NRFunApp (kind, (exprs : Expr.Typed.t list)) ->
       let kind', exprs' = modify_kind requested_mem modifiable_set kind exprs in
       NRFunApp (kind', exprs')
@@ -675,3 +674,86 @@ let pp_mem_patterns ppf (Program.{reverse_mode_log_prob; _} : Program.Typed.t) =
     (* Collect all the sizedtypes which have a mem pattern *)
     collect_mem_pattern_variables reverse_mode_log_prob in
   Fmt.(pf ppf "@[<v>%a@.@]" (list pp_var)) mem_vars
+
+let rec extract_opencl_data_expr acc
+    Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{adlevel; _}} =
+  match pattern with
+  | Expr.Fixed.Pattern.FunApp (_, (exprs : Expr.Typed.t list)) ->
+      List.fold_left ~f:extract_opencl_data_expr ~init:acc exprs
+  | TernaryIf (predicate, texpr, fexpr) ->
+      extract_opencl_data_expr
+        (extract_opencl_data_expr (extract_opencl_data_expr acc texpr) fexpr)
+        predicate
+  | Indexed (idx_expr, indexed) ->
+      List.fold_left
+        ~f:(fun acc idx ->
+          Index.apply ~default:acc ~merge:Set.Poly.union
+            (extract_opencl_data_expr acc)
+            idx )
+        ~init:(extract_opencl_data_expr acc idx_expr)
+        indexed
+  | TupleProjection (idx_expr, _) -> extract_opencl_data_expr acc idx_expr
+  | EAnd (lhs, rhs) ->
+      extract_opencl_data_expr (extract_opencl_data_expr acc lhs) rhs
+  | EOr (lhs, rhs) ->
+      extract_opencl_data_expr (extract_opencl_data_expr acc lhs) rhs
+  | Promotion (expr, _, _) -> extract_opencl_data_expr acc expr
+  | Var (name : string) when UnsizedType.is_dataonlytype adlevel ->
+      Set.Poly.add acc name
+  | Var _ | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> acc
+
+let rec extract_opencl_data_stmt (acc : string Set.Poly.t)
+    Stmt.Fixed.{pattern; _} =
+  match pattern with
+  | Stmt.Fixed.Pattern.Decl _ -> acc
+  | NRFunApp (_, (exprs : Expr.Typed.t list)) ->
+      List.fold_left ~f:extract_opencl_data_expr ~init:acc exprs
+  | Assignment (_, (_ : UnsizedType.t), rhs) -> extract_opencl_data_expr acc rhs
+  | IfElse (predicate, true_stmt, op_false_stmt) -> (
+      let acc_pred_true =
+        extract_opencl_data_expr
+          (extract_opencl_data_stmt acc true_stmt)
+          predicate in
+      match op_false_stmt with
+      | None -> acc_pred_true
+      | Some false_stmt -> extract_opencl_data_stmt acc_pred_true false_stmt )
+  | Block stmts | SList stmts ->
+      List.fold_left ~f:extract_opencl_data_stmt ~init:acc stmts
+  | For {lower; upper; body; _} ->
+      extract_opencl_data_expr
+        (extract_opencl_data_expr (extract_opencl_data_stmt acc body) upper)
+        lower
+  | TargetPE expr -> extract_opencl_data_expr acc expr
+  | Return optional_expr -> (
+    match optional_expr with
+    | None -> acc
+    | Some expr -> extract_opencl_data_expr acc expr )
+  | Profile ((_ : string), stmts) ->
+      List.fold_left ~f:extract_opencl_data_stmt ~init:acc stmts
+  | While (predicate, body) ->
+      extract_opencl_data_expr (extract_opencl_data_stmt acc body) predicate
+  | Skip | Break | Continue -> acc
+
+let extract_opencl_data (log_prob : Stmt.Located.t list) =
+  List.fold_left ~f:extract_opencl_data_stmt ~init:Set.Poly.empty log_prob
+
+let add_opencl_data names prep_data =
+  let decls =
+    List.filter
+      ~f:(fun Stmt.Fixed.{pattern; _} ->
+        match pattern with Stmt.Fixed.Pattern.Decl _ -> true | _ -> false )
+      prep_data in
+  let make_opencl_decl (Stmt.Fixed.{pattern; _} as stmt) =
+    let new_decl =
+      match pattern with
+      | Decl ({decl_type= Type.Sized st; decl_id; _} as decl)
+        when Set.Poly.exists ~f:(fun x -> x = decl_id) names ->
+          Stmt.Fixed.Pattern.Decl
+            { decl with
+              decl_type=
+                Type.Sized (Middle.SizedType.promote_mem Mem_pattern.OpenCL st)
+            ; decl_id= decl_id ^ "_opencl" }
+      | _ -> pattern in
+    {stmt with pattern= new_decl} in
+  let new_decls = List.map ~f:make_opencl_decl decls in
+  List.join [prep_data; new_decls]

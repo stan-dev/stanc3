@@ -211,9 +211,6 @@ let options =
             Preprocessor.include_paths := String.split_on_chars ~on:[','] str )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
-    ; ( "--use-opencl"
-      , Arg.Set Transform_Mir.use_opencl
-      , " If set, try to use matrix_cl signatures." )
     ; ( "--standalone-functions"
       , Arg.Set Lower_program.standalone_functions
       , " If set, the generated C++ will be the standalone functions C++ code."

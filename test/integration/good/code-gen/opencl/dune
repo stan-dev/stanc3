@@ -9,7 +9,7 @@
    %{targets}
    (run
     %{bin:run_bin_on_args}
-    "%{bin:stanc} --print-cpp --use-opencl"
+    "%{bin:stanc} --print-cpp -fopencl"
     %{stanfiles}))))
 
 (rule

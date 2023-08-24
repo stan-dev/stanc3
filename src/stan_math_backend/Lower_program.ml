@@ -38,17 +38,15 @@ let includes = Preprocessor (Include "stan/model/model_header.hpp")
   @param vident name of the private member.
   @param ut The unsized type to print.
  *)
-let lower_data_decl (vident, ut) : defn =
+let lower_data_decl (vident, (st : 'a SizedType.t)) : defn =
   let data_vident =
-    if UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var vident)
-    then vident ^ "_data__"
-    else vident in
+    if SizedType.is_eigen_type st then vident ^ "_data__" else vident in
   GlobalVariableDefn
-    (lower_unsized_decl data_vident ut
-       (UnsizedType.fill_adtype_for_type DataOnly ut) )
+    (lower_unsized_decl data_vident (SizedType.to_unsized st)
+       (UnsizedType.fill_adtype_for_type DataOnly (SizedType.to_unsized st)) )
 
 (** Create maps of Eigen types*)
-let lower_map_decl (vident, ut) : defn =
+let lower_map_decl (vident, (st : 'a SizedType.t)) : defn =
   let eigen_map t ndims =
     GlobalVariableDefn
       (make_variable_defn
@@ -59,6 +57,7 @@ let lower_map_decl (vident, ut) : defn =
               (Literal "nullptr" :: List.init ndims ~f:(fun _ -> Literal "0"))
            )
          () ) in
+  let ut = SizedType.to_unsized st in
   let scalar = local_scalar ut DataOnly in
   let open Types in
   match ut with
@@ -76,8 +75,9 @@ let lower_map_decl (vident, ut) : defn =
 
 let rec top_level_decls Stmt.Fixed.{pattern; _} =
   match pattern with
-  | Decl d when d.decl_id <> "pos__" ->
-      [(d.decl_id, Type.to_unsized d.decl_type)]
+  | Decl {decl_id; decl_type= Type.Sized decl_type_st; _}
+    when decl_id <> "pos__" ->
+      [(decl_id, decl_type_st)]
   | SList stmts -> List.concat_map ~f:top_level_decls stmts
   | _ -> []
 
@@ -85,8 +85,7 @@ let rec top_level_decls Stmt.Fixed.{pattern; _} =
 let lower_model_private {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
   (*Filter out Any data that is not an Eigen matrix*)
-  let get_eigen_map (name, ut) =
-    UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var name) in
+  let get_eigen_map (_, (st : 'a SizedType.t)) = SizedType.is_eigen_type st in
   let eigen_map_decls = (List.filter ~f:get_eigen_map) data_decls in
   List.map ~f:lower_data_decl data_decls
   @ List.map ~f:lower_map_decl eigen_map_decls
@@ -120,7 +119,11 @@ let gen_assign_data decl_id st =
   let lower_placement_new decl_id st =
     let open Expression_syntax in
     match st with
-    | SizedType.SVector (_, d)
+    | SizedType.SVector (Mem_pattern.OpenCL, _)
+     |SRowVector (OpenCL, _)
+     |SMatrix (OpenCL, _, _) ->
+        []
+    | SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d
      |SComplexRowVector d ->
@@ -140,10 +143,15 @@ let gen_assign_data decl_id st =
     | _ -> [] in
   let underlying_var decl_id st =
     match st with
+    | SizedType.SVector (Mem_pattern.OpenCL, _)
+     |SRowVector (OpenCL, _)
+     |SMatrix (OpenCL, _, _) ->
+        Var decl_id
     | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
      |SComplexRowVector _ | SComplexMatrix _ ->
         Var (decl_id ^ "_data__")
     | SInt | SReal | SComplex | SArray _ | STuple _ -> Var decl_id in
+  (* I think we don't want to initialize to NA for OpenCL types?*)
   Expression
     (Assign
        ( underlying_var decl_id st

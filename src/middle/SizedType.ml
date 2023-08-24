@@ -220,7 +220,15 @@ let modify_sizedtype_mem (mem_pattern : Mem_pattern.t) st =
   match mem_pattern with
   | AoS -> demote_sizedtype_mem st
   | SoA -> promote_sizedtype_mem st
-  | OpenCL -> demote_sizedtype_mem st
+  | OpenCL -> promote_sizedtype_mem st
+
+let rec promote_mem (mem_pattern : Mem_pattern.t) st =
+  match st with
+  | SVector (_, dim) -> SVector (mem_pattern, dim)
+  | SRowVector (_, dim) -> SRowVector (mem_pattern, dim)
+  | SMatrix (_, dim1, dim2) -> SMatrix (mem_pattern, dim1, dim2)
+  | SArray (inner_type, dim) -> SArray (promote_mem mem_pattern inner_type, dim)
+  | _ -> st
 
 let rec has_mem_pattern = function
   | SInt | SReal | SComplex | SComplexVector _ | SComplexRowVector _
@@ -229,6 +237,16 @@ let rec has_mem_pattern = function
   | SVector _ | SRowVector _ | SMatrix _ -> true
   | SArray (t, _) -> has_mem_pattern t
   | STuple subtypes -> List.exists ~f:has_mem_pattern subtypes
+
+let is_eigen_type st =
+  match st with
+  | (SVector (mem, _) | SRowVector (mem, _) | SMatrix (mem, _, _))
+    when not (Mem_pattern.is_opencl mem) ->
+      false
+  | SVector _ | SRowVector _ | SMatrix _ | SComplexRowVector _
+   |SComplexVector _ | SComplexMatrix _ ->
+      true
+  | _ -> false
 
 (** The inverse of [get_array_dims]
 *)

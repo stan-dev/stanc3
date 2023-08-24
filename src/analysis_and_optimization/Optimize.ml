@@ -1280,7 +1280,13 @@ let optimize_opencl (mir : Program.Typed.t) =
         Common.FatalError.fatal_error_msg
           [%message "Something went wrong with program transformation packing!"]
   in
-  {mir with reverse_mode_log_prob= transform' mir.reverse_mode_log_prob}
+  let reverse_log_prob = transform' mir.reverse_mode_log_prob in
+  let opencl_data = Memory_patterns.extract_opencl_data reverse_log_prob in
+  let opencl_data_gen =
+    Memory_patterns.add_opencl_data opencl_data mir.prepare_data in
+  { mir with
+    reverse_mode_log_prob= reverse_log_prob
+  ; prepare_data= opencl_data_gen }
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)
