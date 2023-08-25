@@ -385,7 +385,7 @@ module Printing = struct
   let trailing_space (t : 'a Fmt.t) : 'a Fmt.t = fun ppf -> pf ppf "%a@ " t
   let pp_identifier ppf = string ppf
 
-  let rec pp_type_ ppf t =
+  let rec pp_type_ ppf (t : type_) =
     match t with
     | Auto -> string ppf "auto"
     | Void -> string ppf "void"
@@ -393,22 +393,25 @@ module Printing = struct
     | Double -> string ppf "double"
     | Complex t -> pf ppf "std::complex<%a>" pp_type_ t
     | TemplateType id -> pp_identifier ppf id
-    | StdVector t -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ t
-    | Array (t, i) -> pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ t i
+    | StdVector inner_t -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ inner_t
+    | Array (inner_t, i) ->
+        pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ inner_t i
     | Tuple subtypes ->
         pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) subtypes
     | TypeLiteral id -> pp_identifier ppf id
-    | Matrix (t, i, j, mem_pattern) -> (
+    | Matrix (inner_t, i, j, mem_pattern) -> (
       match mem_pattern with
       | Middle.Mem_pattern.AoS ->
-          pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
-      | Middle.Mem_pattern.SoA ->
-          pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j
-      | OpenCL -> pf ppf "stan::math::var_value<stan::math::matrix_cl<double>>"
-      )
-    | Const t -> pf ppf "const %a" pp_type_ t
-    | Ref t -> pf ppf "%a&" pp_type_ t
-    | Pointer t -> pf ppf "%a*" pp_type_ t
+          pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ inner_t i j
+      | SoA -> pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j
+      | OpenCL -> (
+        match inner_t with
+        | Double -> pf ppf "stan::math::matrix_cl<double>"
+        | Int -> pf ppf "stan::math::matrix_cl<int>"
+        | _ -> pf ppf "stan::math::var_value<stan::math::matrix_cl<double>>" ) )
+    | Const inner_t -> pf ppf "const %a" pp_type_ inner_t
+    | Ref inner_t -> pf ppf "%a&" pp_type_ inner_t
+    | Pointer inner_t -> pf ppf "%a*" pp_type_ inner_t
     | TypeTrait (s, types) ->
         pf ppf "@[<2>%s<%a>@]" s (list ~sep:comma pp_type_) types
 

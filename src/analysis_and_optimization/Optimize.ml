@@ -1283,9 +1283,11 @@ let optimize_opencl (mir : Program.Typed.t) =
   let reverse_log_prob = transform' mir.reverse_mode_log_prob in
   let opencl_data = Memory_patterns.extract_opencl_data reverse_log_prob in
   let opencl_data_gen =
-    Memory_patterns.add_opencl_data opencl_data mir.prepare_data in
+    Memory_patterns.create_opencl_data opencl_data mir.prepare_data in
+  let reverse_log_prob' =
+    Memory_patterns.add_opencl_data opencl_data reverse_log_prob in
   { mir with
-    reverse_mode_log_prob= reverse_log_prob
+    reverse_mode_log_prob= reverse_log_prob'
   ; prepare_data= opencl_data_gen }
 
 (* Apparently you need to completely copy/paste type definitions between

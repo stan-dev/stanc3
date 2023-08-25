@@ -106,8 +106,10 @@ let rec initialize_value st adtype =
 let lower_assign_sized st adtype initialize =
   if initialize then Some (initialize_value st adtype) else None
 
-let lower_unsized_decl name ut adtype =
-  make_variable_defn ~type_:(lower_unsizedtype_local adtype ut) ~name ()
+let lower_unsized_decl name st adtype mem_pattern =
+  make_variable_defn
+    ~type_:(lower_unsizedtype_local ~mem_pattern adtype st)
+    ~name ()
 
 let lower_possibly_st_decl _ st adtype =
   let ut = SizedType.to_unsized st in
@@ -124,7 +126,8 @@ let lower_sized_decl name st adtype initialize =
 let lower_decl vident pst adtype initialize =
   match pst with
   | Type.Sized st -> VariableDefn (lower_sized_decl vident st adtype initialize)
-  | Unsized ut -> VariableDefn (lower_unsized_decl vident ut adtype)
+  | Unsized ut ->
+      VariableDefn (lower_unsized_decl vident ut adtype Mem_pattern.AoS)
 
 let lower_profile name body =
   let profile =

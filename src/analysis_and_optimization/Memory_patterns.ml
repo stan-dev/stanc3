@@ -737,7 +737,7 @@ let rec extract_opencl_data_stmt (acc : string Set.Poly.t)
 let extract_opencl_data (log_prob : Stmt.Located.t list) =
   List.fold_left ~f:extract_opencl_data_stmt ~init:Set.Poly.empty log_prob
 
-let add_opencl_data names prep_data =
+let create_opencl_data names prep_data =
   let decls =
     List.filter
       ~f:(fun Stmt.Fixed.{pattern; _} ->
@@ -752,8 +752,73 @@ let add_opencl_data names prep_data =
             { decl with
               decl_type=
                 Type.Sized (Middle.SizedType.promote_mem Mem_pattern.OpenCL st)
-            ; decl_id= decl_id ^ "_opencl" }
+            ; decl_id= decl_id ^ "_opencl__" }
       | _ -> pattern in
     {stmt with pattern= new_decl} in
   let new_decls = List.map ~f:make_opencl_decl decls in
   List.join [prep_data; new_decls]
+
+let rec add_opencl_data_expr names (Expr.Fixed.{pattern; _} as expr) =
+  let f = add_opencl_data_expr names in
+  match pattern with
+  | Expr.Fixed.Pattern.FunApp (fun_kind, (exprs : Expr.Typed.t list)) ->
+      { expr with
+        pattern= Expr.Fixed.Pattern.FunApp (fun_kind, List.map ~f exprs) }
+  | TernaryIf (predicate, texpr, fexpr) ->
+      {expr with pattern= TernaryIf (f predicate, f texpr, f fexpr)}
+  | Indexed (idx_expr, indexed) ->
+      { expr with
+        pattern=
+          Indexed
+            (f idx_expr, List.map ~f:(fun x -> Index.map_expr ~f x) indexed) }
+  | TupleProjection (idx_expr, idx) ->
+      {expr with pattern= TupleProjection (f idx_expr, idx)}
+  | EAnd (lhs, rhs) -> {expr with pattern= EAnd (f lhs, f rhs)}
+  | EOr (lhs, rhs) -> {expr with pattern= EOr (f lhs, f rhs)}
+  | Promotion (expr, ut, ad) -> {expr with pattern= Promotion (f expr, ut, ad)}
+  | Var (name : string) when Set.Poly.mem names name ->
+      {expr with pattern= Var (name ^ "_opencl__")}
+  | Var _ | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> expr
+
+let rec add_opencl_data_stmt names (Stmt.Fixed.{pattern; _} as stmt) =
+  let f_stmt = add_opencl_data_stmt names in
+  let f_expr = add_opencl_data_expr names in
+  match pattern with
+  | Stmt.Fixed.Pattern.Decl _ -> stmt
+  | NRFunApp (fun_kind, (exprs : Expr.Typed.t list)) ->
+      {stmt with pattern= NRFunApp (fun_kind, List.map ~f:f_expr exprs)}
+  | Assignment (lhs, (ut : UnsizedType.t), rhs) ->
+      {stmt with pattern= Assignment (lhs, ut, f_expr rhs)}
+  | IfElse (predicate, true_stmt, op_false_stmt) -> (
+      let predicate_mod = f_expr predicate in
+      let true_stmt_mod = f_stmt true_stmt in
+      let fin_stmt op_false =
+        {stmt with pattern= IfElse (predicate_mod, true_stmt_mod, op_false)}
+      in
+      match op_false_stmt with
+      | None -> fin_stmt None
+      | Some stmt_some -> fin_stmt (Some (f_stmt stmt_some)) )
+  | Block stmts | SList stmts ->
+      {stmt with pattern= Block (List.map ~f:f_stmt stmts)}
+  | For {loopvar; lower; upper; body} ->
+      { stmt with
+        pattern=
+          For
+            { loopvar
+            ; lower= f_expr lower
+            ; upper= f_expr upper
+            ; body= f_stmt body } }
+  | TargetPE expr -> {stmt with pattern= TargetPE (f_expr expr)}
+  | Return optional_expr -> (
+      let fin_stmt opt = {stmt with pattern= Return opt} in
+      match optional_expr with
+      | None -> fin_stmt None
+      | Some expr -> fin_stmt (Some (f_expr expr)) )
+  | Profile ((name : string), stmts) ->
+      {stmt with pattern= Profile (name, List.map ~f:f_stmt stmts)}
+  | While (predicate, body) ->
+      {stmt with pattern= While (f_expr predicate, f_stmt body)}
+  | Skip | Break | Continue -> stmt
+
+let add_opencl_data names log_prob =
+  List.map ~f:(add_opencl_data_stmt names) log_prob

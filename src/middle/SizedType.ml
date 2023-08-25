@@ -241,7 +241,7 @@ let rec has_mem_pattern = function
 let is_eigen_type st =
   match st with
   | (SVector (mem, _) | SRowVector (mem, _) | SMatrix (mem, _, _))
-    when not (Mem_pattern.is_opencl mem) ->
+    when Mem_pattern.is_opencl mem ->
       false
   | SVector _ | SRowVector _ | SMatrix _ | SComplexRowVector _
    |SComplexVector _ | SComplexMatrix _ ->

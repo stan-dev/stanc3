@@ -43,7 +43,8 @@ let lower_data_decl (vident, (st : 'a SizedType.t)) : defn =
     if SizedType.is_eigen_type st then vident ^ "_data__" else vident in
   GlobalVariableDefn
     (lower_unsized_decl data_vident (SizedType.to_unsized st)
-       (UnsizedType.fill_adtype_for_type DataOnly (SizedType.to_unsized st)) )
+       (UnsizedType.fill_adtype_for_type DataOnly (SizedType.to_unsized st))
+       (SizedType.get_mem_pattern st) )
 
 (** Create maps of Eigen types*)
 let lower_map_decl (vident, (st : 'a SizedType.t)) : defn =
@@ -86,7 +87,7 @@ let lower_model_private {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
   (*Filter out Any data that is not an Eigen matrix*)
   let get_eigen_map (_, (st : 'a SizedType.t)) = SizedType.is_eigen_type st in
-  let eigen_map_decls = (List.filter ~f:get_eigen_map) data_decls in
+  let eigen_map_decls = List.filter ~f:get_eigen_map data_decls in
   List.map ~f:lower_data_decl data_decls
   @ List.map ~f:lower_map_decl eigen_map_decls
 
@@ -151,14 +152,27 @@ let gen_assign_data decl_id st =
      |SComplexRowVector _ | SComplexMatrix _ ->
         Var (decl_id ^ "_data__")
     | SInt | SReal | SComplex | SArray _ | STuple _ -> Var decl_id in
-  (* I think we don't want to initialize to NA for OpenCL types?*)
-  Expression
-    (Assign
-       ( underlying_var decl_id st
-       , initialize_value st
-           (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
-              (SizedType.to_unsized st) ) ) )
-  :: lower_placement_new decl_id st
+  match st with
+  | (SizedType.SVector (mem, _) | SRowVector (mem, _) | SMatrix (mem, _, _))
+    when Mem_pattern.is_opencl mem ->
+      [ Expression
+          (Assign
+             ( underlying_var decl_id st (*9 here for _opencl__*)
+             , FunCall
+                 ( "stan::math::to_matrix_cl"
+                 , []
+                 , [ Var
+                       (String.sub decl_id ~pos:0
+                          ~len:(String.length decl_id - 9) ) ] ) ) ) ]
+  | _ ->
+      (* I think we don't want to initialize to NA for OpenCL types?*)
+      Expression
+        (Assign
+           ( underlying_var decl_id st
+           , initialize_value st
+               (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
+                  (SizedType.to_unsized st) ) ) )
+      :: lower_placement_new decl_id st
 
 let lower_constructor
     {Program.prog_name; input_vars; prepare_data; output_vars; _} =
