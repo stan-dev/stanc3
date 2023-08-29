@@ -249,6 +249,11 @@ let get_ast_or_exit ?printed_filename ?(print_warnings = true)
       Errors.pp ?printed_filename Fmt.stderr err ;
       exit 1
 
+let print_sexp sexp =
+  let ppf = Format.std_formatter in
+  Format.pp_set_margin ppf 90 ;
+  Sexp.pp_hum ppf sexp
+
 let type_ast_or_exit ?printed_filename ast =
   match Typechecker.check_program ast with
   | Result.Ok (p, warns) ->
@@ -338,8 +343,7 @@ let use_file filename =
   Debugging.typed_ast_logger typed_ast ;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
-    if !dump_mir then
-      Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
+    if !dump_mir then print_sexp [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
     if !warn_pedantic then
       Pedantic_analysis.warn_pedantic mir
@@ -348,8 +352,7 @@ let use_file filename =
       Pedantic_analysis.warn_uninitialized mir
       |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
     let tx_mir = Transform_Mir.trans_prog mir in
-    if !dump_tx_mir then
-      Sexp.pp_hum Format.std_formatter [%sexp (tx_mir : Middle.Program.Typed.t)] ;
+    if !dump_tx_mir then print_sexp [%sexp (tx_mir : Middle.Program.Typed.t)] ;
     if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
     let opt_mir =
       let set_optims =
@@ -364,14 +367,11 @@ let use_file filename =
       Optimize.optimization_suite ~settings:set_optims_opencl tx_mir in
     if !dump_mem_pattern then
       Memory_patterns.pp_mem_patterns Format.std_formatter opt_mir ;
-    if !dump_opt_mir then
-      Sexp.pp_hum Format.std_formatter
-        [%sexp (opt_mir : Middle.Program.Typed.t)] ;
+    if !dump_opt_mir then print_sexp [%sexp (opt_mir : Middle.Program.Typed.t)] ;
     if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt_mir ;
     if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
     let cpp = Lower_program.lower_program ?printed_filename opt_mir in
-    if !dump_lir then
-      Sexp.pp_hum Format.std_formatter [%sexp (cpp : Cpp.program)] ;
+    if !dump_lir then print_sexp [%sexp (cpp : Cpp.program)] ;
     let cpp_str = Fmt.(to_to_string Cpp.Printing.pp_program) cpp in
     Out_channel.write_all !output_file ~data:cpp_str ;
     if !print_model_cpp then print_endline cpp_str )

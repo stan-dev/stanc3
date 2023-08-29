@@ -988,7 +988,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                   | "PPlus__" | "PMinus__" ->
                       apply_prefix_operator_real op (Float.of_string r)
                   | _ -> FunApp (kind, l) )
-                | ( ("Divide__" | "IntDivide__")
+                | ( ("Divide__" | "IntDivide__" | "Modulo__")
                   , [{meta= {type_= UInt; _}; _}; {pattern= Lit (Int, i2); _}] )
                   when Int.of_string i2 = 0 ->
                     raise (Rejected (e.meta.loc, "Integer division by zero"))
