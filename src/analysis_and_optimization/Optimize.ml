@@ -84,13 +84,14 @@ let gen_inline_var (name : string) (id_var : string) =
 
 let replace_fresh_local_vars (fname : string) stmt =
   let f (m : (string, string) Core_kernel.Map.Poly.t) = function
-    | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
+    | Stmt.Fixed.Pattern.Decl
+        {decl_adtype; decl_type; decl_id; initialize; mem_pattern} ->
         let new_name =
           match Map.Poly.find m decl_id with
           | Some existing -> existing
           | None -> gen_inline_var fname decl_id in
         ( Stmt.Fixed.Pattern.Decl
-            {decl_adtype; decl_id= new_name; decl_type; initialize}
+            {decl_adtype; decl_id= new_name; decl_type; initialize; mem_pattern}
         , Map.Poly.set m ~key:decl_id ~data:new_name )
     | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} ->
         let new_name =
@@ -201,7 +202,8 @@ let handle_early_returns (fname : string) opt_var stmt =
                 { decl_adtype= DataOnly
                 ; decl_id= returned
                 ; decl_type= Sized SInt
-                ; initialize= true }
+                ; initialize= true
+                ; mem_pattern= Mem_pattern.AoS }
           ; meta= Location_span.empty }
       ; Stmt.Fixed.
           { pattern=
@@ -294,7 +296,8 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                             (Type.to_unsized decl_type)
                       ; decl_id= inline_return_name
                       ; decl_type
-                      ; initialize= false } ]
+                      ; initialize= false
+                      ; mem_pattern= Mem_pattern.AoS } ]
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
@@ -978,7 +981,8 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
                   { decl_adtype= Expr.Typed.adlevel_of key
                   ; decl_id= data
                   ; decl_type= Type.Unsized (Expr.Typed.type_of key)
-                  ; initialize= true }
+                  ; initialize= true
+                  ; mem_pattern= AoS }
             ; meta= Location_span.empty }
           :: accum ) in
     let lazy_code_motion_base i stmt =
@@ -1226,7 +1230,9 @@ let optimize_soa (mir : Program.Typed.t) =
       (l : int) (aos_variables : string Set.Poly.t) =
     let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
     match (mir_node l).pattern with
-    | stmt -> Memory_patterns.query_demotable_stmt aos_variables stmt in
+    | stmt ->
+        Memory_patterns.query_demotable_stmt Mem_pattern.SoA aos_variables stmt
+  in
   let initial_variables =
     List.fold ~init:Set.Poly.empty
       ~f:(Memory_patterns.query_initial_demotable_stmt Mem_pattern.SoA false)
@@ -1257,7 +1263,9 @@ let optimize_opencl (mir : Program.Typed.t) =
       (l : int) (aos_variables : string Set.Poly.t) =
     let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
     match (mir_node l).pattern with
-    | stmt -> Memory_patterns.query_demotable_stmt aos_variables stmt in
+    | stmt ->
+        Memory_patterns.query_demotable_stmt Mem_pattern.OpenCL aos_variables
+          stmt in
   let initial_variables =
     List.fold ~init:Set.Poly.empty
       ~f:(Memory_patterns.query_initial_demotable_stmt Mem_pattern.OpenCL false)

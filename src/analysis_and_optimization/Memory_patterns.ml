@@ -2,6 +2,29 @@ open Core_kernel
 open Core_kernel.Poly
 open Middle
 
+let user_warning (mem_pattern : Mem_pattern.t) (linenum : int) (msg : string) =
+  let mem_name =
+    match mem_pattern with
+    | Mem_pattern.SoA -> "SoA"
+    | OpenCL -> "OpenCL"
+    | AoS -> "AoS" in
+  Printf.eprintf "%s (Line: %i) warning: %s\n" mem_name linenum msg
+
+let user_warning_op (mem_pattern : Mem_pattern.t) (linenum : int) (msg : string)
+    (names : string) =
+  let mem_name =
+    match mem_pattern with
+    | Mem_pattern.SoA -> "SoA"
+    | OpenCL -> "OpenCL"
+    | AoS -> "AoS" in
+  if String.is_empty names || String.is_empty msg then Printf.eprintf ""
+  else Printf.eprintf "%s (Line %i) warning: %s\n" mem_name linenum (msg ^ names)
+
+let concat_set_str (set : string Set.Poly.t) =
+  Set.Poly.fold
+    ~f:(fun acc elem -> if acc = "" then acc ^ elem else acc ^ ", " ^ elem)
+    ~init:"" set
+
 (**
   Return a Var expression of the name for each type
    containing an eigen matrix
@@ -125,13 +148,15 @@ let is_fun_soa_supported (requested_mem : Mem_pattern.t) name exprs =
      cell indexing.
  *)
 let rec query_initial_demotable_expr (requested_mem : Mem_pattern.t)
-    (in_loop : bool) ~(acc : string Set.Poly.t) Expr.Fixed.{pattern; _} :
-    string Set.Poly.t =
+    (in_loop : bool) (stmt_linenum : int) ~(acc : string Set.Poly.t)
+    Expr.Fixed.{pattern; _} : string Set.Poly.t =
   let query_expr (accum : string Set.Poly.t) =
-    query_initial_demotable_expr requested_mem in_loop ~acc:accum in
+    query_initial_demotable_expr requested_mem in_loop stmt_linenum ~acc:accum
+  in
   match pattern with
   | FunApp (kind, (exprs : Expr.Typed.t list)) ->
-      query_initial_demotable_funs requested_mem in_loop acc kind exprs
+      query_initial_demotable_funs requested_mem in_loop stmt_linenum acc kind
+        exprs
   | Indexed ((Expr.Fixed.{meta= {type_; _}; _} as expr), indexed) ->
       let index_set =
         Set.Poly.union_list
@@ -142,7 +167,12 @@ let rec query_initial_demotable_expr (requested_mem : Mem_pattern.t)
              indexed ) in
       let index_demotes =
         if is_uni_eigen_loop_indexing in_loop type_ indexed then
-          Set.Poly.union (query_var_eigen_names expr) index_set
+          let single_index_set = query_var_eigen_names expr in
+          let failure_str =
+            concat_set_str (Set.Poly.inter acc single_index_set) in
+          let msg = "Accessed by element in a for loop: " in
+          let () = user_warning_op requested_mem stmt_linenum msg failure_str in
+          Set.Poly.union single_index_set index_set
         else Set.Poly.union (query_expr acc expr) index_set in
       Set.Poly.union acc index_demotes
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
@@ -151,9 +181,16 @@ let rec query_initial_demotable_expr (requested_mem : Mem_pattern.t)
   | TupleProjection (expr, _) -> query_expr acc expr
   | TernaryIf (predicate, texpr, fexpr) ->
       let predicate_demotes = query_expr acc predicate in
-      Set.Poly.union
-        (Set.Poly.union predicate_demotes (query_var_eigen_names texpr))
-        (query_var_eigen_names fexpr)
+      let full_set =
+        Set.Poly.union
+          (Set.Poly.union predicate_demotes (query_var_eigen_names texpr))
+          (query_var_eigen_names fexpr) in
+      if Set.Poly.is_empty full_set then full_set
+      else
+        let failure_str = concat_set_str (Set.Poly.inter acc full_set) in
+        let msg = "Used in a ternary operator which is not allowed: " in
+        let () = user_warning_op requested_mem stmt_linenum msg failure_str in
+        full_set
   | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
       (*We need to get the demotes from both sides*)
       let full_lhs_rhs =
@@ -178,10 +215,11 @@ let rec query_initial_demotable_expr (requested_mem : Mem_pattern.t)
   exprs The expression list passed to the functions.
  *)
 and query_initial_demotable_funs (requested_mem : Mem_pattern.t)
-    (in_loop : bool) (acc : string Set.Poly.t) (kind : 'a Fun_kind.t)
-    (exprs : Expr.Typed.t list) : string Set.Poly.t =
+    (in_loop : bool) (stmt_linenum : int) (acc : string Set.Poly.t)
+    (kind : 'a Fun_kind.t) (exprs : Expr.Typed.t list) : string Set.Poly.t =
   let query_expr accum =
-    query_initial_demotable_expr requested_mem in_loop ~acc:accum in
+    query_initial_demotable_expr requested_mem in_loop stmt_linenum ~acc:accum
+  in
   let top_level_eigen_names =
     Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
   let demoted_eigen_names = List.fold ~init:acc ~f:query_expr exprs in
@@ -194,11 +232,29 @@ and query_initial_demotable_funs (requested_mem : Mem_pattern.t)
     | name -> (
       match is_fun_soa_supported requested_mem name exprs with
       | true -> Set.Poly.union acc demoted_eigen_names
-      | false -> Set.Poly.union acc demoted_and_top_level_names ) )
+      | false ->
+          let fail_names =
+            concat_set_str (Set.Poly.inter acc top_level_eigen_names) in
+          let () =
+            user_warning_op requested_mem stmt_linenum
+              ("Function " ^ name ^ " is not supported: ")
+              fail_names in
+          Set.Poly.union acc demoted_and_top_level_names ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) ->
+      let fail_names =
+        concat_set_str (Set.Poly.inter acc demoted_and_top_level_names) in
+      let () =
+        user_warning_op requested_mem stmt_linenum
+          "Used in {} make array or make row vector compiler functions: "
+          fail_names in
       Set.Poly.union acc demoted_and_top_level_names
   | CompilerInternal (_ : 'a Internal_fun.t) -> acc
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) ->
+      let fail_names =
+        concat_set_str (Set.Poly.inter acc demoted_and_top_level_names) in
+      let () =
+        user_warning_op requested_mem stmt_linenum
+          "Used in user defined function:" fail_names in
       Set.Poly.union acc demoted_and_top_level_names
 
 (** 
@@ -297,9 +353,10 @@ let contains_at_least_one_ad_matrix_or_all_data
  *)
 let rec query_initial_demotable_stmt (requested_mem : Mem_pattern.t)
     (in_loop : bool) (acc : string Set.Poly.t)
-    (Stmt.Fixed.{pattern; _} : Stmt.Located.t) : string Set.Poly.t =
+    (Stmt.Fixed.{pattern; meta} : Stmt.Located.t) : string Set.Poly.t =
+  let linenum = meta.end_loc.line_num in
   let query_expr (accum : string Set.Poly.t) =
-    query_initial_demotable_expr requested_mem in_loop ~acc:accum in
+    query_initial_demotable_expr requested_mem in_loop linenum ~acc:accum in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       ( lval
@@ -314,11 +371,17 @@ let rec query_initial_demotable_stmt (requested_mem : Mem_pattern.t)
             ~f:(fun accum x ->
               Index.folder accum
                 (fun acc ->
-                  query_initial_demotable_expr requested_mem in_loop ~acc )
+                  query_initial_demotable_expr requested_mem in_loop linenum
+                    ~acc )
                 x )
             idx in
         match is_uni_eigen_loop_indexing in_loop ut idx with
-        | true -> Set.Poly.add idx_list name
+        | true ->
+            let () =
+              user_warning_op requested_mem linenum
+                "Accessed by element in a for loop: "
+                (if Set.Poly.mem acc name then "" else name) in
+            Set.Poly.add idx_list name
         | false -> idx_list in
       let rhs_demotable_names = query_expr acc rhs in
       let rhs_and_idx_demotions =
@@ -327,9 +390,12 @@ let rec query_initial_demotable_stmt (requested_mem : Mem_pattern.t)
       let tuple_demotions =
         match lval with
         | LTupleProjection _, _ ->
-            Set.Poly.add
-              (Set.Poly.union rhs_and_idx_demotions (query_var_eigen_names rhs))
-              name
+            let tuple_set = query_var_eigen_names rhs in
+            let fail_set = concat_set_str tuple_set in
+            let () =
+              user_warning_op requested_mem linenum "Used in tuple: " fail_set
+            in
+            Set.Poly.add (Set.Poly.union rhs_and_idx_demotions tuple_set) name
         | _ -> rhs_and_idx_demotions in
       let assign_demotions =
         let is_eigen_stmt = UnsizedType.contains_eigen_type rhs.meta.type_ in
@@ -361,14 +427,38 @@ let rec query_initial_demotable_stmt (requested_mem : Mem_pattern.t)
             is_all_rhs_aos || is_rhs_not_promoteable_to_soa
             || is_not_supported_func
           then
-            Set.Poly.add
-              (Set.Poly.union tuple_demotions (query_var_eigen_names rhs))
-              name
+            let rhs_set = query_var_eigen_names rhs in
+            let all_rhs_warn =
+              if is_all_rhs_aos then
+                "Right hand side of assignment is all AoS: "
+              else "" in
+            let rhs_not_promotable_to_soa_warn =
+              if is_rhs_not_promoteable_to_soa then
+                "The right hand side of the assignment only contains data and \
+                 scalar operations that are not promotable to SoA: "
+              else "" in
+            let not_supported_func_warn =
+              if is_not_supported_func then
+                "Function on right hand side of assignment is not supported by \
+                 SoA: "
+              else "" in
+            let rhs_name_set = Set.Poly.add rhs_set name in
+            let rhs_name_set_str = concat_set_str rhs_name_set in
+            let () =
+              user_warning_op requested_mem linenum all_rhs_warn
+                rhs_name_set_str in
+            let () =
+              user_warning_op requested_mem linenum
+                rhs_not_promotable_to_soa_warn rhs_name_set_str in
+            let () =
+              user_warning_op requested_mem linenum not_supported_func_warn
+                rhs_name_set_str in
+            Set.Poly.add (Set.Poly.union tuple_demotions rhs_set) name
           else tuple_demotions
         else tuple_demotions in
       Set.Poly.union acc assign_demotions
   | NRFunApp (kind, exprs) ->
-      query_initial_demotable_funs requested_mem in_loop acc kind exprs
+      query_initial_demotable_funs requested_mem in_loop linenum acc kind exprs
   | IfElse (predicate, true_stmt, op_false_stmt) ->
       let predicate_acc = query_expr acc predicate in
       Set.Poly.union acc
@@ -423,7 +513,8 @@ let rec query_initial_demotable_stmt (requested_mem : Mem_pattern.t)
   @param aos_exits A set of variables that can be demoted.
   @param pattern The Stmt pattern to query.
  *)
-let query_demotable_stmt (aos_exits : string Set.Poly.t)
+let query_demotable_stmt (mem_pattern : Mem_pattern.t)
+    (aos_exits : string Set.Poly.t)
     (pattern : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
@@ -431,7 +522,14 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
       let assign_name = Stmt.Helpers.lhs_variable lval in
       let all_rhs_eigen_names = query_var_eigen_names rhs in
       if Set.Poly.mem aos_exits assign_name then
-        Set.Poly.add all_rhs_eigen_names assign_name
+        (*idk how to get the line number here :/ *)
+        if not (Set.Poly.mem aos_exits assign_name) then
+          let () =
+            user_warning_op mem_pattern 1
+              "Right hand side contains only AoS expressions: " assign_name
+          in
+          Set.Poly.add all_rhs_eigen_names assign_name
+        else Set.Poly.add all_rhs_eigen_names assign_name
       else
         match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
         | true -> Set.Poly.add all_rhs_eigen_names assign_name

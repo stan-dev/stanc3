@@ -32,7 +32,7 @@
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -41,7 +41,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable N) ()) UInt
@@ -88,7 +88,7 @@
         (SArray SReal
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) (UArray UReal)
@@ -114,13 +114,14 @@
         (SVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id y_flat__)
-          (decl_type (Unsized (UArray UReal))) (initialize false)))
+          (decl_type (Unsized (UArray UReal))) (initialize false)
+          (mem_pattern AoS)))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable y_flat__) ()) (UArray UReal)
@@ -182,7 +183,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sum_y) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Profile "\"sum\""
@@ -198,7 +199,7 @@
  (log_prob
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable rho) ()) UReal
@@ -216,7 +217,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) UReal
@@ -234,7 +235,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -279,7 +280,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize true)))
+          (initialize true) (mem_pattern AoS)))
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
@@ -308,7 +309,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize true)))
+          (initialize true) (mem_pattern AoS)))
         (meta <opaque>))
        ((pattern
          (Profile "\"cov_exp_quad\""
@@ -483,7 +484,7 @@
  (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable rho) ()) UReal
@@ -501,7 +502,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) UReal
@@ -519,7 +520,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -564,7 +565,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize true)))
+          (initialize true) (mem_pattern AoS)))
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
@@ -593,7 +594,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize true)))
+          (initialize true) (mem_pattern AoS)))
         (meta <opaque>))
        ((pattern
          (Profile "\"cov_exp_quad\""
@@ -768,7 +769,7 @@
  (generate_quantities
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id rho) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable rho) ()) UReal
@@ -786,7 +787,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) UReal
@@ -804,7 +805,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -877,7 +878,7 @@
  (transform_inits
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable rho) ()) UReal
@@ -908,7 +909,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) UReal
@@ -939,7 +940,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -971,7 +972,7 @@
  (unconstrain_array
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
-      (initialize true)))
+      (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable rho) ()) UReal
@@ -993,7 +994,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) UReal
@@ -1015,7 +1016,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized SReal)) (initialize true) (mem_pattern AoS)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal

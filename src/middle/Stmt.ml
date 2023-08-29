@@ -24,7 +24,8 @@ module Fixed = struct
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
           ; decl_type: 'a Type.t
-          ; initialize: bool }
+          ; initialize: bool
+          ; mem_pattern: Mem_pattern.t }
     [@@deriving sexp, hash, map, fold, compare]
 
     and 'e lvalue = 'e lbase * 'e Index.t list
@@ -141,7 +142,8 @@ module Helpers = struct
                   { decl_adtype= Expr.Typed.adlevel_of e
                   ; decl_id= sym
                   ; decl_type= Unsized (Expr.Typed.type_of e)
-                  ; initialize= true }
+                  ; initialize= true
+                  ; mem_pattern= Mem_pattern.AoS }
             ; meta= e.meta.loc } in
           let assign =
             { decl with
