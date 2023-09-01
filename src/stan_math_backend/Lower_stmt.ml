@@ -40,8 +40,8 @@ let rec initialize_value st adtype =
     if adtype = UnsizedType.DataOnly then Exprs.quiet_NaN else Var "DUMMY_VAR__"
   in
   match (adtype, st) with
-  | UnsizedType.(DataOnly | AutoDiffable), SizedType.SInt -> Exprs.int_min
-  | (DataOnly | AutoDiffable), SReal -> init_nan
+  | UnsizedType.(DataOnly | AutoDiffable), SizedType.SInt _ -> Exprs.int_min
+  | (DataOnly | AutoDiffable), SReal _ -> init_nan
   | (DataOnly | AutoDiffable), SComplex ->
       let scalar = local_scalar (SizedType.to_unsized st) adtype in
       Constructor (Types.complex scalar, [init_nan; init_nan])
@@ -84,10 +84,10 @@ let rec initialize_value st adtype =
       let typ =
         lower_possibly_var_decl adtype (SizedType.to_unsized st) OpenCL in
       Constructor (typ, [initialize_value (SMatrix (AoS, d1, d2)) DataOnly])
-  | DataOnly, SArray (t, d) ->
+  | DataOnly, SArray (_, t, d) ->
       let typ = lower_st st adtype in
       Constructor (typ, [lower_expr d; initialize_value t adtype])
-  | (AutoDiffable | TupleAD _), SArray (t, d) ->
+  | (AutoDiffable | TupleAD _), SArray (_, t, d) ->
       let typ =
         lower_possibly_var_decl adtype (SizedType.to_unsized st)
           (SizedType.get_mem_pattern t) in
@@ -133,13 +133,13 @@ let lower_profile name body =
   let profile =
     VariableDefn
       (make_variable_defn
-         ~type_:(TypeLiteral "stan::math::profile<local_scalar_t__>")
+         ~type_:(TypeLiteral ("stan::math::profile<local_scalar_t__>", AoS))
          ~name:"profile__"
          ~init:
            (Construction
               [ Var name
               ; Exprs.templated_fun_call "const_cast"
-                  [Ref (TypeLiteral "stan::math::profile_map")]
+                  [Ref (TypeLiteral ("stan::math::profile_map", AoS))]
                   [Var "profiles__"] ] )
          () ) in
   Stmts.block (profile :: body)
@@ -162,7 +162,7 @@ and lower_nonrange_lbase = function
   | Stmt.Fixed.Pattern.LVariable v -> Var v
   | LTupleProjection (lv, ix) ->
       Exprs.templated_fun_call "std::get"
-        [TypeLiteral (string_of_int (ix - 1))]
+        [TypeLiteral (string_of_int (ix - 1), AoS)]
         [lower_nonrange_lvalue lv]
 
 (* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
@@ -256,7 +256,8 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       let err_strm_name = "errmsg_stream__" in
       let stream_decl =
         VariableDefn
-          (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
+          (make_variable_defn
+             ~type_:(TypeLiteral ("std::stringstream", AoS))
              ~name:err_strm_name () ) in
       let throw =
         Throw
@@ -325,7 +326,7 @@ module Testing = struct
     Fmt.str "@[<v>%a@]"
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
-         (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
+         (SArray (AoS, SArray (AoS, SMatrix (AoS, int 2, int 3), int 4), int 5))
          DataOnly false )
     |> print_endline ;
     [%expect {| |}]
@@ -335,7 +336,7 @@ module Testing = struct
     Fmt.str "@[<v>%a@]"
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
-         (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
+         (SArray (AoS, SArray (AoS, SMatrix (AoS, int 2, int 3), int 4), int 5))
          DataOnly true )
     |> print_endline ;
     [%expect

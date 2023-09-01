@@ -329,14 +329,14 @@ let type_of_arguments :
 
 let get_loc_dt (t : untyped_expression SizedType.t) =
   match t with
-  | SInt | SReal | SComplex | STuple _ -> None
+  | SInt _ | SReal _ | SComplex | STuple _ -> None
   | SVector (_, e)
    |SRowVector (_, e)
    |SMatrix (_, e, _)
    |SComplexVector e
    |SComplexRowVector e
    |SComplexMatrix (e, _)
-   |SArray (_, e) ->
+   |SArray (_, _, e) ->
       Some e.emeta.loc.begin_loc
 
 let get_loc_tf (t : untyped_expression Transformation.t) =

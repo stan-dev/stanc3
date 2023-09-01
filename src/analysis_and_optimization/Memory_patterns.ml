@@ -532,7 +532,12 @@ let query_demotable_stmt (mem_pattern : Mem_pattern.t)
         else Set.Poly.add all_rhs_eigen_names assign_name
       else
         match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
-        | true -> Set.Poly.add all_rhs_eigen_names assign_name
+        | true ->
+            let () =
+              user_warning_op mem_pattern 1
+                "Right hand side contains only AoS expressions: " assign_name
+            in
+            Set.Poly.add all_rhs_eigen_names assign_name
         | false -> Set.Poly.empty )
   (* All other statements do not need logic here*)
   | _ -> Set.Poly.empty
@@ -846,15 +851,29 @@ let create_opencl_data names prep_data =
       match pattern with
       | Decl ({decl_type= Type.Sized st; decl_id; _} as decl)
         when Set.Poly.exists ~f:(fun x -> x = decl_id) names ->
-          Stmt.Fixed.Pattern.Decl
-            { decl with
-              decl_type=
-                Type.Sized (Middle.SizedType.promote_mem Mem_pattern.OpenCL st)
-            ; decl_id= decl_id ^ "_opencl__" }
-      | _ -> pattern in
-    {stmt with pattern= new_decl} in
+          let new_decl1 =
+            Stmt.Fixed.Pattern.Decl
+              { decl with
+                decl_type=
+                  Type.Sized
+                    (Middle.SizedType.promote_mem Mem_pattern.OpenCL st)
+              ; decl_id= decl_id ^ "_opencl__" } in
+          let lval_assign = Stmt.Helpers.lvariable (decl_id ^ "_opencl__") in
+          let assign_expr =
+            { Expr.Fixed.meta= Expr.Typed.Meta.empty
+            ; pattern=
+                FunApp
+                  ( StanLib ("to_matrix_cl", FnPlain, OpenCL)
+                  , [Expr.Helpers.variable decl_id] ) } in
+          let new_assign =
+            Stmt.Fixed.Pattern.Assignment
+              (lval_assign, SizedType.to_unsized st, assign_expr) in
+          [new_decl1; new_assign]
+      | _ -> [pattern] in
+    let new_stmts = List.map ~f:(fun x -> {stmt with pattern= x}) new_decl in
+    new_stmts in
   let new_decls = List.map ~f:make_opencl_decl decls in
-  List.join [prep_data; new_decls]
+  List.concat [prep_data; List.concat new_decls]
 
 let rec add_opencl_data_expr names (Expr.Fixed.{pattern; _} as expr) =
   let f = add_opencl_data_expr names in

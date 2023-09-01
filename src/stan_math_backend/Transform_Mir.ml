@@ -128,7 +128,7 @@ let break_eigen_cycles functions_block =
 *)
 
 let rec base_type = function
-  | SizedType.SArray (t, _) -> base_type t
+  | SizedType.SArray (_, t, _) -> base_type t
   | SVector _ | SRowVector _ | SMatrix _ -> UnsizedType.UReal
   | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ -> UComplex
   | x -> SizedType.to_unsized x
@@ -203,9 +203,9 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
       (Stmt.Helpers.lvariable enclosing_tuple_pos, UInt, type_size)
     |> swrap in
   match st with
-  | SInt | SReal | SComplex ->
+  | SInt _ | SReal _ | SComplex ->
       [Assignment (decl_id_lval, unsized, origin) |> swrap; incr_tuple_pos]
-  | SArray ((SInt | SReal), _) ->
+  | SArray (_, (SInt _ | SReal _), _) ->
       [Assignment (decl_id_lval, flat_type, origin) |> swrap; incr_tuple_pos]
   | STuple subtypes ->
       let elements =
@@ -244,8 +244,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= true
-              ; mem_pattern= Mem_pattern.AoS }
+              ; initialize= true }
             |> swrap )
           tuple_component_names tuple_types in
       let loop =
@@ -292,8 +291,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
-            ; initialize= true
-            ; mem_pattern= AoS }
+            ; initialize= true }
           |> swrap
         , Assignment (Stmt.Helpers.lvariable decl_id_flat, flat_type, origin)
           |> swrap
@@ -348,14 +346,14 @@ let rec var_context_read
       [{decl_var with pattern= Lit (Str, remove_prefix decl_id)}]
       Expr.Typed.Meta.{decl_var.meta with type_= flat_type} in
   match st with
-  | SInt | SReal | SComplex ->
+  | SInt _ | SReal _ | SComplex ->
       let e =
         { Expr.Fixed.pattern=
             Indexed
               (readfnapp decl_id flat_type, [Single Expr.Helpers.loop_bottom])
         ; meta= {decl_var.meta with type_= unsized} } in
       [Assignment (decl_id_lval, unsized, e) |> swrap]
-  | SArray ((SInt | SReal), _) ->
+  | SArray (_, (SInt _ | SReal _), _) ->
       [ Assignment (decl_id_lval, flat_type, readfnapp decl_id flat_type)
         |> swrap ]
   | STuple subtypes ->
@@ -397,8 +395,7 @@ let rec var_context_read
                 { decl_adtype= AutoDiffable
                 ; decl_id= variable_name
                 ; decl_type= Unsized array_type
-                ; initialize= true
-                ; mem_pattern= AoS }
+                ; initialize= true }
               |> swrap_noloc
             ; Assignment
                 ( Stmt.Helpers.lvariable variable_name
@@ -409,8 +406,7 @@ let rec var_context_read
                 { decl_adtype= DataOnly
                 ; decl_id= variable_name ^ "pos__"
                 ; decl_type= Unsized UInt
-                ; initialize= true
-                ; mem_pattern= AoS }
+                ; initialize= true }
               |> swrap_noloc
             ; Stmt.Fixed.Pattern.Assignment
                 ( Stmt.Helpers.lvariable (variable_name ^ "pos__")
@@ -438,8 +434,7 @@ let rec var_context_read
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= true
-              ; mem_pattern= AoS }
+              ; initialize= true }
             |> swrap_noloc )
           tuple_component_names tuple_types in
       let loop =
@@ -486,8 +481,7 @@ let rec var_context_read
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
-            ; initialize= false
-            ; mem_pattern= AoS }
+            ; initialize= false }
           |> swrap
         , Assignment
             ( Stmt.Helpers.lvariable decl_id_flat
@@ -533,8 +527,8 @@ let rec var_context_read
 let read_constrain_dims constrain_transform st =
   let rec constrain_get_dims st =
     match st with
-    | SizedType.SInt | SReal | SComplex | STuple _ -> []
-    | SArray (t, dim) -> dim :: constrain_get_dims t
+    | SizedType.SInt _ | SReal _ | SComplex | STuple _ -> []
+    | SArray (_, t, dim) -> dim :: constrain_get_dims t
     | SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d
@@ -800,8 +794,7 @@ let var_context_unconstrain_transform (decl_id, smeta, outvar) =
                 (SizedType.to_unsized st)
           ; decl_id
           ; decl_type= Type.Sized st
-          ; initialize= true
-          ; mem_pattern= AoS }
+          ; initialize= true }
     ; meta= smeta }
   :: var_context_read (Stmt.Helpers.lvariable decl_id, smeta, st)
   @ param_serializer_write ~unconstrain:true (decl_id, outvar)
@@ -817,8 +810,7 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
                   (SizedType.to_unsized outvar.Program.out_constrained_st)
             ; decl_id
             ; decl_type= Type.Sized outvar.Program.out_constrained_st
-            ; initialize= true
-            ; mem_pattern= AoS }
+            ; initialize= true }
       ; meta= smeta } in
   let rec read (lval, st) =
     match st with
@@ -931,9 +923,8 @@ let trans_prog (p : Program.Typed.t) =
     [ Stmt.Fixed.Pattern.Decl
         { decl_adtype= DataOnly
         ; decl_id= pos
-        ; decl_type= Sized SInt
-        ; initialize= true
-        ; mem_pattern= AoS }
+        ; decl_type= Sized (SInt AoS)
+        ; initialize= true }
     ; Assignment (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} ) in

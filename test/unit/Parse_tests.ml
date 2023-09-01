@@ -82,7 +82,7 @@ let%expect_test "parse minus unary" =
        (modelblock
         (((stmts
            (((stmt
-              (VarDecl (decl_type SReal) (transformation Identity)
+              (VarDecl (decl_type (SReal AoS)) (transformation Identity)
                (is_global false)
                (variables
                 (((identifier ((name x) (id_loc <opaque>))) (initial_value ()))))))
@@ -116,7 +116,7 @@ let%expect_test "parse unary over binary" =
      (modelblock
       (((stmts
          (((stmt
-            (VarDecl (decl_type SReal) (transformation Identity)
+            (VarDecl (decl_type (SReal AoS)) (transformation Identity)
              (is_global false)
              (variables
               (((identifier ((name x) (id_loc <opaque>)))
@@ -388,8 +388,9 @@ let%expect_test "parse crazy truncation example" =
            (((stmt
               (VarDecl
                (decl_type
-                (SArray
-                 (SArray SReal ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
+                (SArray AoS
+                 (SArray AoS (SReal AoS)
+                  ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
                  ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
                (transformation Identity) (is_global false)
                (variables

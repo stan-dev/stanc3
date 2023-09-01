@@ -24,8 +24,7 @@ module Fixed = struct
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
           ; decl_type: 'a Type.t
-          ; initialize: bool
-          ; mem_pattern: Mem_pattern.t }
+          ; initialize: bool }
     [@@deriving sexp, hash, map, fold, compare]
 
     and 'e lvalue = 'e lbase * 'e Index.t list
@@ -142,8 +141,7 @@ module Helpers = struct
                   { decl_adtype= Expr.Typed.adlevel_of e
                   ; decl_id= sym
                   ; decl_type= Unsized (Expr.Typed.type_of e)
-                  ; initialize= true
-                  ; mem_pattern= Mem_pattern.AoS }
+                  ; initialize= true }
             ; meta= e.meta.loc } in
           let assign =
             { decl with
@@ -247,7 +245,7 @@ module Helpers = struct
 *)
   let rec for_scalar st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal | SComplex -> bodyfn st var
+    | SizedType.SInt _ | SReal _ | SComplex -> bodyfn st var
     | SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d
@@ -261,7 +259,7 @@ module Helpers = struct
         mk_for_iteratee d1
           (fun e -> for_scalar (SComplexRowVector d2) bodyfn e smeta)
           var smeta
-    | SArray (t, d) ->
+    | SArray (_, t, d) ->
         mk_for_iteratee d (fun e -> for_scalar t bodyfn e smeta) var smeta
     | STuple _ -> bodyfn st var
 
@@ -276,7 +274,7 @@ module Helpers = struct
       | _ -> e in
     let rec go st bodyfn var smeta =
       match st with
-      | SizedType.SArray (t, d) ->
+      | SizedType.SArray (_, t, d) ->
           let bodyfn' _ var = mk_for_iteratee d (bodyfn st) var smeta in
           go t bodyfn' var smeta
       | SMatrix (mem_pattern, d1, d2) ->

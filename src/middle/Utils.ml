@@ -90,7 +90,7 @@ let zip_stuple_trans_exn pst tms =
   let rec tuple_subtypes pst =
     match pst with
     | SizedType.STuple subtypes -> subtypes
-    | SArray (st, _) -> tuple_subtypes st
+    | SArray (_, st, _) -> tuple_subtypes st
     | _ ->
         Common.FatalError.fatal_error_msg
           [%message "Internal error: expected Tuple with TupleTransformation"]

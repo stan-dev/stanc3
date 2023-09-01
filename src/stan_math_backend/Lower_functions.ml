@@ -6,16 +6,16 @@ open Cpp
 
 let rec lower_type_eigen_expr (t : UnsizedType.t) (inner_type : type_) : type_ =
   match t with
-  | UInt -> Int
+  | UInt -> Int AoS
   | UReal | UMatrix | URowVector | UVector | UComplexVector | UComplexMatrix
    |UComplexRowVector | UTuple _ ->
       inner_type
   | UComplex -> Types.complex inner_type
   | UArray t when UnsizedType.contains_tuple t ->
-      StdVector (lower_type_eigen_expr t inner_type)
+      StdVector (lower_type_eigen_expr t inner_type, AoS)
   | UArray t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
-      StdVector (lower_type t inner_type)
+      StdVector (lower_type t inner_type, AoS)
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
@@ -151,14 +151,14 @@ let%expect_test "arg types tuple template" =
 
 let lower_promoted_scalar args =
   match args with
-  | [] -> Double
+  | [] -> Double AoS
   | _ ->
       let rec promote_args_chunked args =
         let chunk_till_empty list_tail =
           match list_tail with [] -> [] | _ -> [promote_args_chunked list_tail]
         in
         match args with
-        | [] -> Double
+        | [] -> Double AoS
         | hd :: list_tail ->
             TypeTrait ("stan::promote_args_t", hd @ chunk_till_empty list_tail)
       in
@@ -239,7 +239,7 @@ let lower_args extra_templates extra args variadic =
   let arg_strs =
     args
     @ mk_extra_args extra_templates extra
-    @ [(Pointer (TypeLiteral "std::ostream"), "pstream__")]
+    @ [(Pointer (TypeLiteral ("std::ostream", AoS)), "pstream__")]
     @ variadic_args in
   arg_strs
 
@@ -382,17 +382,19 @@ let lower_standalone_fun_def namespace_fun
   let all_args =
     args
     @ mk_extra_args extra_templates extra
-    @ [(Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr")] in
+    @ [(Pointer (TypeLiteral ("std::ostream", AoS)), "pstream__ = nullptr")]
+  in
   let mark_function_comment = GlobalComment "[[stan::function]]" in
   let return_type, return_stmt =
     match fdrt with
     | Void -> (Void, fun e -> Expression e)
-    | ReturnType ut -> (lower_type ut Double, fun e -> Return (Some e)) in
+    | ReturnType ut -> (lower_type ut (Double AoS), fun e -> Return (Some e))
+  in
   let fn_sig = make_fun_defn ~name:fdname ~return_type ~args:all_args in
   let internal_fname = namespace_fun ^ "::" ^ fdname in
   let template =
     match fdsuffix with
-    | FnLpdf _ | FnTarget -> [TypeLiteral "false"]
+    | FnLpdf _ | FnTarget -> [TypeLiteral ("false", AoS)]
     | FnRng | FnPlain -> [] in
   let call_args =
     List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]

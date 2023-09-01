@@ -335,7 +335,7 @@ let rec pp_transformed_type ppf (st, trans) =
           const (fun ppf -> pf ppf "[%a]" pp_expression) e
       | SMatrix (_, e1, e2) | SComplexMatrix (e1, e2) ->
           const (fun ppf -> pf ppf "[%a, %a]" pp_expression e1 pp_expression) e2
-      | SArray _ | SInt | SReal | SComplex | STuple _ -> nop in
+      | SArray _ | SInt _ | SReal _ | SComplex | STuple _ -> nop in
     let cov_sizes_fmt =
       match st with
       | SMatrix (_, e1, e2) ->

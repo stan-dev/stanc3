@@ -22,8 +22,7 @@ module Fixed : sig
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
           ; decl_type: 'a Type.t
-          ; initialize: bool
-          ; mem_pattern: Mem_pattern.t }
+          ; initialize: bool }
     [@@deriving sexp, hash, compare]
 
     and 'e lvalue = 'e lbase * 'e Index.t list
