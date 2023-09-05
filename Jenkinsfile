@@ -82,6 +82,11 @@ pipeline {
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
         GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
+        OPENCL_DEVICE_ID_CPU = 0
+        OPENCL_DEVICE_ID_GPU = 0
+        OPENCL_PLATFORM_ID = 1
+        OPENCL_PLATFORM_ID_CPU = 0
+        OPENCL_PLATFORM_ID_GPU = 0
     }
     stages {
         stage('Kill previous builds') {
@@ -401,7 +406,79 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-example-O1/*") }}
                 }
+                stage("Compile tests - good with opencl and O=1") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                          expression {
+                            !skipCompileTestsAtO1
+                          }
+                          expression {
+                            !params.skip_compile_O1
+                          }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/compile-good-O1cl"){
+                            unstash "Stanc3Setup"
+                            script {
+                                runPerformanceTests("../test/integration/good", "--O1 --use-opencl")
+                            }
 
+                            xunit([GoogleTest(
+                                deleteOutputFiles: false,
+                                failIfNotNew: true,
+                                pattern: 'performance-tests-cmdstan/performance.xml',
+                                skipNoTestFiles: false,
+                                stopProcessingIfError: false)
+                            ])
+                        }
+                    }
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-good-O1cl/*") }}
+                }
+
+                stage("Compile tests - example-models with opencl and O=1") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                          expression {
+                            !skipCompileTestsAtO1
+                          }
+                          expression {
+                            !params.skip_compile_O1
+                          }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/ci:gpu'
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/compile-example-O1cl"){
+                            script {
+                                unstash "Stanc3Setup"
+                                runPerformanceTests("example-models", "--O1 --use-opencl")
+                            }
+
+                            xunit([GoogleTest(
+                                deleteOutputFiles: false,
+                                failIfNotNew: true,
+                                pattern: 'performance-tests-cmdstan/performance.xml',
+                                skipNoTestFiles: false,
+                                stopProcessingIfError: false)
+                            ])
+                        }
+                    }
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-example-O1cl/*") }}
+                }
                 stage("Model end-to-end tests") {
                     when {
                         beforeAgent true
