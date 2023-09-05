@@ -128,7 +128,7 @@ let stan2cpp model_name model_string is_flag_set flag_val :
           let opt_flags = Optimize.level_optimizations opt_lvl in
           let opencl_optims =
             if is_flag_set "use-opencl" then
-              {opt_flags with optimize_opencl= (true, optimize_soa = false)}
+              {opt_flags with optimize_opencl= true; optimize_soa= false}
             else opt_flags in
           Optimize.optimization_suite ~settings:opencl_optims tx_mir in
         if is_flag_set "debug-optimized-mir" then
