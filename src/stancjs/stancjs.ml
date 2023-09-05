@@ -19,7 +19,6 @@ let stan2cpp model_name model_string is_flag_set flag_val :
   Typechecker.model_name := model_name ;
   Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
-  Transform_Mir.opencl_opt := is_flag_set "use-opencl" ;
   Lower_program.standalone_functions :=
     is_flag_set "standalone-functions" || is_flag_set "functions-only" ;
   With_return.with_return (fun r ->
