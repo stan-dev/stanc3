@@ -191,7 +191,7 @@ let options =
     ; ( "-fsoa"
       , Arg.Unit (fun () -> soa_opt := true)
       , "\tTurn on the Struct of Arrays optimization" )
-    ; ( "-fopencl"
+    ; ( "--use-opencl"
       , Arg.Unit (fun () -> opencl_opt := true)
       , "\tTurn on OpenCL optimization" )
     ; ( "--o"
