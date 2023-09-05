@@ -247,7 +247,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   int k;
   int n;
   stan::math::matrix_cl<double> X_d_opencl__;
-  matrix_cl<Eigen::Matrix<matrix_cl<double>,-1,-1>> X_d_a_opencl__;
+  std::vector<Eigen::Matrix<matrix_cl<double>,-1,-1>> X_d_a_opencl__;
   stan::math::matrix_cl<double> y_v_d_opencl__;
   stan::math::matrix_cl<double> X_rv_d_opencl__;
   matrix_cl<int> y_vi_d_opencl__;

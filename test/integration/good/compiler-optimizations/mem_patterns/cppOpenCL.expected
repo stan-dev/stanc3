@@ -5125,15 +5125,15 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       p_soa_mat = in__.template read<
                     stan::math::var_value<stan::math::matrix_cl<double>>>(N,
                     M);
-      matrix_cl<stan::math::var_value<stan::math::matrix_cl<double>>>
+      std::vector<stan::math::var_value<stan::math::matrix_cl<double>>>
         p_soa_arr_vec_v =
-        matrix_cl<stan::math::var_value<stan::math::matrix_cl<double>>>(10,
+        std::vector<stan::math::var_value<stan::math::matrix_cl<double>>>(10,
           stan::math::var_value<stan::math::matrix_cl<double>>(Eigen::Matrix<double,-1,1>::Constant(N,
                                                                  std::numeric_limits<double>::quiet_NaN(
                                                                    ))));
       current_statement__ = 4;
       p_soa_arr_vec_v = in__.template read<
-                          matrix_cl<
+                          std::vector<
                             stan::math::var_value<stan::math::matrix_cl<double>>>>(10,
                           N);
       stan::math::var_value<stan::math::matrix_cl<double>>

@@ -391,6 +391,9 @@ module Printing = struct
   let pp_identifier ppf = string ppf
 
   let rec pp_type_ ppf (t : type_) =
+    let is_base_scalar_type = function
+      | Auto | Int _ | Double _ -> true
+      | _ -> false in
     match t with
     | Auto -> string ppf "auto"
     | Void -> string ppf "void"
@@ -401,8 +404,12 @@ module Printing = struct
     | Double _ -> string ppf "double"
     | Complex t -> pf ppf "std::complex<%a>" pp_type_ t
     | TemplateType id -> pp_identifier ppf id
-    | StdVector (inner_t, mem) when Mem_pattern.is_opencl mem ->
-        pf ppf "@[<2>matrix_cl<@,%a>@]" pp_type_ inner_t
+    | StdVector (inner_t, mem)
+      when Mem_pattern.is_opencl mem && is_base_scalar_type inner_t -> (
+      match inner_t with
+      | Double _ -> pf ppf "@[<2>matrix_cl<@,%a>@]" pp_type_ inner_t
+      | Int _ -> pf ppf "@[<2>matrix_cl<@,%a>@]" pp_type_ inner_t
+      | _ -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ inner_t )
     | StdVector (inner_t, _) ->
         pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ inner_t
     | Array (inner_t, _, mem) when Mem_pattern.is_opencl mem ->
