@@ -1,6 +1,40 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.33.0 (5 September 2023)
+======================================================================
+
+- Added tuple types to the language (#1100)
+- The following deprecations have been turned into errors this version:
+    - The old array syntax, e.g. `int arr[5];`. Use `array[5] int arr;` instead.
+    - Distribution functions ending in `_log`. Use either `_lpdf` or `_lpmf`.
+    - The functions `binomial_coefficient_log`, `multiply_log`, and `cov_exp_quad`. Use `lchoose`, `lmultiply`, and `gp_exp_quad_cov` respectively.
+    - The `if_else` function. Use the ternary operator  `cond ? true_value : false_value`
+    - Use of CDFs with a `,` between the first and second argument. Use a `|`.
+    - Comments beginning with `#`. Use `//`.
+    - Use of `<-` for assignment. Use `=`.
+    - The `increment_log_prob` function. Use the `target +=` statement.
+    - The `get_lp()` function. Use `target()`.
+    - The use of nested multi-indices on the left hand side of an assignment statement.
+    For this version, these can all be automatically updated with the `--canonicalize=deprecations` argument to the autoformatter. This is not guaranteed to work for versions _following_ this one.
+    Additionally, the following identifiers are now reserved words: `array`, `offset`, `multiplier`, `lower`, and `upper`.
+    (#1287)
+- Exposed vectorized signatures for `log_sum_exp` (#1344)
+- Exposed new functions `qr`, `qr_thin`,  `eigendecompose_sym`, `eigendecompose`, `complex_schur_decompose`, `svd`, and `csr_extract`. (#1346)
+- Added a `log_prob_impl` specialization specifically for reverse mode to improve code generation (#1327)
+- Fixed an issue where returning array literals could produce the wrong types in C++. (#1335)
+- Fixed an issue with leading zeroes in real literals like `0E0` (#1336)
+- Fixed a bug with type promotion in the arguments to user-defined distributions generating bad C++. (#1338)
+- Fixed optimization logic for deducing whether mixes of scalars, data matrices, and autodiff matrices can be promoted to SoA (#1347)
+- Fixed an issue with the partial evaluator crashing on statements containing a mod-by-zero. (#1351)
+- `--filename-in-msg` now also affects the name of the file shown in runtime exceptions. Useful for interfaces which use mangled or temporary names during compilation. (#1339)
+- Improved error message provided when the wrong return type is returned from a function.
+    Return statements now follow the same type promotion rules as assignment and function argument passing.
+    The typechecker now allows infinite loops (`while (1)` without an internal `break`) to be the end of a returning function. Previously, an (unreachable) return statement was needed following the loop.
+    (#1341)
+- Improved error messages for unsupported type in reduce_sum (#1332)
+- Improved error messages when using a reserved word as a variable name. (#1343)
+
 v2.32.1 (2 May 2023)
 ======================================================================
 
