@@ -436,7 +436,7 @@ pipeline {
                         dir("${env.WORKSPACE}/compile-good-O1cl"){
                             unstash "Stanc3Setup"
                             script {
-                                runPerformanceTests("../test/integration/good", "--O1 --use-opencl")
+                                runPerformanceTests("../test/integration/good", "--O1 --use-opencl", true)
                             }
 
                             xunit([GoogleTest(
@@ -473,7 +473,7 @@ pipeline {
                         dir("${env.WORKSPACE}/compile-example-O1cl"){   
                             script {
                                 unstash "Stanc3Setup"
-                                runPerformanceTests("example-models", "--O1 --use-opencl")
+                                runPerformanceTests("example-models", "--O1 --use-opencl", true)
                             }
 
                             xunit([GoogleTest(
