@@ -25,7 +25,7 @@ def tagName() {
     }
 }
 
-def runPerformanceTests(String testsPath, String stancFlags = "", Bool opencl = false){
+def runPerformanceTests(String testsPath, String stancFlags = "", Boolean opencl = false){
     unstash 'ubuntu-exe'
 
     sh """
