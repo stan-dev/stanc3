@@ -781,8 +781,12 @@ let pp_mem_patterns ppf (Program.{reverse_mode_log_prob; _} : Program.Typed.t) =
 let rec extract_opencl_data_expr acc
     Expr.Fixed.{pattern; meta= Expr.Typed.Meta.{adlevel; _}} =
   match pattern with
-  | Expr.Fixed.Pattern.FunApp (_, (exprs : Expr.Typed.t list)) ->
-      List.fold_left ~f:extract_opencl_data_expr ~init:acc exprs
+  | Expr.Fixed.Pattern.FunApp (fun_kind, (exprs : Expr.Typed.t list)) -> (
+    match fun_kind with
+    | Fun_kind.CompilerInternal (Internal_fun.FnReadParam _ : 'a Internal_fun.t)
+      ->
+        acc
+    | _ -> List.fold_left ~f:extract_opencl_data_expr ~init:acc exprs )
   | TernaryIf (predicate, texpr, fexpr) ->
       extract_opencl_data_expr
         (extract_opencl_data_expr (extract_opencl_data_expr acc texpr) fexpr)
@@ -850,7 +854,7 @@ let create_opencl_data names prep_data =
     let new_decl =
       match pattern with
       | Decl ({decl_type= Type.Sized st; decl_id; _} as decl)
-        when Set.Poly.exists ~f:(fun x -> x = decl_id) names ->
+        when Set.Poly.mem names decl_id ->
           let new_decl1 =
             Stmt.Fixed.Pattern.Decl
               { decl with
@@ -869,7 +873,7 @@ let create_opencl_data names prep_data =
             Stmt.Fixed.Pattern.Assignment
               (lval_assign, SizedType.to_unsized st, assign_expr) in
           [new_decl1; new_assign]
-      | _ -> [pattern] in
+      | _ -> [] in
     let new_stmts = List.map ~f:(fun x -> {stmt with pattern= x}) new_decl in
     new_stmts in
   let new_decls = List.map ~f:make_opencl_decl decls in

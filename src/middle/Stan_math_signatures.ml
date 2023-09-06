@@ -212,50 +212,57 @@ let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
+let less_lpf = [Rng; Ccdf; Cdf]
+let less_lpf_depr = less_lpf @ [Log]
 let full_lpdf_depr = full_lpdf @ [Log]
 let full_lpmf_depr = full_lpmf @ [Log]
 
 let distributions =
-  [ ( full_lpmf_depr
-    , "beta_binomial"
-    , [DVInt; DVInt; DVReal; DVReal]
-    , Mem_pattern.OpenCL )
-  ; (full_lpdf_depr, "beta", [DVReal; DVReal; DVReal], OpenCL)
-  ; ( [Lpdf; Ccdf; Cdf; Log]
-    , "beta_proportion"
-    , [DVReal; DVReal; DIntAndReals]
-    , OpenCL ); (full_lpmf_depr, "bernoulli", [DVInt; DVReal], OpenCL)
-  ; ([Lpmf; Rng; Log], "bernoulli_logit", [DVInt; DVReal], OpenCL)
+  [ (full_lpmf_depr, "bernoulli", [DVInt; DVReal], Mem_pattern.SoA)
   ; ([Lpmf], "bernoulli_logit_glm", [DVInt; DMatrix; DReal; DVector], OpenCL)
-  ; (full_lpmf_depr, "binomial", [DVInt; DVInt; DVReal], OpenCL)
-  ; ([Lpmf; Log], "binomial_logit", [DVInt; DVInt; DVReal], OpenCL)
+  ; ([Lpmf], "bernoulli_logit", [DVInt; DVReal], OpenCL)
+  ; ([Rng; Log], "bernoulli_logit", [DVInt; DVReal], SoA)
+  ; (less_lpf_depr, "beta_binomial", [DVInt; DVInt; DVReal; DVReal], SoA)
+  ; ([Lpmf], "beta_binomial", [DVInt; DVInt; DVReal; DVReal], OpenCL)
+  ; (less_lpf_depr, "beta", [DVReal; DVReal; DVReal], OpenCL)
+  ; ([Lpdf], "beta", [DVReal; DVReal; DVReal], SoA)
+  ; (less_lpf_depr, "beta_proportion", [DVReal; DVReal; DIntAndReals], SoA)
+  ; ([Lpdf], "beta_proportion", [DVReal; DVReal; DIntAndReals], OpenCL)
+  ; ([Log], "binomial_logit", [DVInt; DVInt; DVReal], SoA)
+  ; ([Lpmf], "binomial_logit", [DVInt; DVInt; DVReal], OpenCL)
+  ; (less_lpf_depr, "binomial", [DVInt; DVInt; DVReal], SoA)
+  ; ([Lpmf], "binomial", [DVInt; DVInt; DVReal], OpenCL)
   ; ([Lpmf; Log], "categorical", [DVInt; DVector], AoS)
   ; ([Lpmf; Log], "categorical_logit", [DVInt; DVector], AoS)
   ; ([Lpmf], "categorical_logit_glm", [DVInt; DMatrix; DVector; DMatrix], OpenCL)
   ; (full_lpdf_depr, "cauchy", [DVReal; DVReal; DVReal], OpenCL)
-  ; (full_lpdf_depr, "chi_square", [DVReal; DVReal], OpenCL)
+  ; (less_lpf_depr, "chi_square", [DVReal; DVReal], SoA)
+  ; ([Lpdf], "chi_square", [DVReal; DVReal], OpenCL)
   ; ([Lpdf; Log], "dirichlet", [DVectors; DVectors], OpenCL)
-  ; (full_lpmf_depr, "discrete_range", [DVInt; DVInt; DVInt], OpenCL)
+  ; (full_lpmf_depr, "discrete_range", [DVInt; DVInt; DVInt], SoA)
   ; (full_lpdf_depr, "double_exponential", [DVReal; DVReal; DVReal], OpenCL)
   ; (full_lpdf_depr, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal], OpenCL)
   ; (full_lpdf_depr, "exponential", [DVReal; DVReal], OpenCL)
   ; (full_lpdf_depr, "frechet", [DVReal; DVReal; DVReal], OpenCL)
-  ; (full_lpdf_depr, "gamma", [DVReal; DVReal; DVReal], OpenCL)
+  ; (less_lpf_depr, "gamma", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "gamma", [DVReal; DVReal; DVReal], OpenCL)
   ; ( [Lpdf; Log]
     , "gaussian_dlm_obs"
     , [DMatrix; DMatrix; DMatrix; DMatrix; DMatrix; DVector; DMatrix]
     , AoS ); (full_lpdf_depr, "gumbel", [DVReal; DVReal; DVReal], OpenCL)
   ; ([Rng], "hmm_latent", [DIntArray; DMatrix; DMatrix; DVector], AoS)
   ; ([Lpmf; Rng; Log], "hypergeometric", [DInt; DInt; DInt; DInt], OpenCL)
-  ; (full_lpdf_depr, "inv_chi_square", [DVReal; DVReal], OpenCL)
-  ; (full_lpdf_depr, "inv_gamma", [DVReal; DVReal; DVReal], OpenCL)
-  ; ([Lpdf], "inv_wishart_cholesky", [DMatrix; DReal; DMatrix], OpenCL)
-  ; ([Lpdf; Log], "inv_wishart", [DMatrix; DReal; DMatrix], OpenCL)
+  ; (less_lpf_depr, "inv_chi_square", [DVReal; DVReal], SoA)
+  ; ([Lpdf], "inv_chi_square", [DVReal; DVReal], OpenCL)
+  ; (less_lpf_depr, "inv_gamma", [DVReal; DVReal; DVReal], OpenCL)
+  ; ([Lpdf], "inv_gamma", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "inv_wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
+  ; ([Lpdf; Log], "inv_wishart", [DMatrix; DReal; DMatrix], SoA)
   ; ([Lpdf; Log], "lkj_corr", [DMatrix; DReal], AoS)
   ; ([Lpdf; Log], "lkj_corr_cholesky", [DMatrix; DReal], AoS)
   ; ([Lpdf; Log], "lkj_cov", [DMatrix; DVector; DVector; DReal], AoS)
   ; (full_lpdf_depr, "logistic", [DVReal; DVReal; DVReal], OpenCL)
-  ; ([Lpdf; Rng; Cdf; Log], "loglogistic", [DVReal; DVReal; DVReal], OpenCL)
+  ; ([Lpdf; Rng; Cdf; Log], "loglogistic", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf_depr, "lognormal", [DVReal; DVReal; DVReal], OpenCL)
   ; ([Lpdf; Log], "multi_gp", [DMatrix; DMatrix; DVector], AoS)
   ; ([Lpdf; Log], "multi_gp_cholesky", [DMatrix; DMatrix; DVector], AoS)
@@ -268,8 +275,10 @@ let distributions =
   ; ( [Lpdf]
     , "multi_student_t_cholesky"
     , [DVectors; DReal; DVectors; DMatrix]
-    , OpenCL ); (full_lpmf_depr, "neg_binomial", [DVInt; DVReal; DVReal], OpenCL)
-  ; (full_lpmf_depr, "neg_binomial_2", [DVInt; DVReal; DVReal], OpenCL)
+    , OpenCL ); (less_lpf_depr, "neg_binomial", [DVInt; DVReal; DVReal], SoA)
+  ; ([Lpmf], "neg_binomial", [DVInt; DVReal; DVReal], OpenCL)
+  ; (less_lpf_depr, "neg_binomial_2", [DVInt; DVReal; DVReal], SoA)
+  ; ([Lpmf], "neg_binomial_2", [DVInt; DVReal; DVReal], OpenCL)
   ; ([Lpmf; Rng; Log], "neg_binomial_2_log", [DVInt; DVReal; DVReal], OpenCL)
   ; ( [Lpmf]
     , "neg_binomial_2_log_glm"
@@ -281,29 +290,33 @@ let distributions =
   ; ([Lpmf; Log], "ordered_probit", [DInt; DReal; DVector], OpenCL)
   ; (full_lpdf_depr, "pareto", [DVReal; DVReal; DVReal], OpenCL)
   ; (full_lpdf_depr, "pareto_type_2", [DVReal; DVReal; DVReal; DVReal], OpenCL)
-  ; (full_lpmf_depr, "poisson", [DVInt; DVReal], OpenCL)
-  ; ([Lpmf; Rng; Log], "poisson_log", [DVInt; DVReal], OpenCL)
   ; ([Lpmf], "poisson_log_glm", [DVInt; DMatrix; DReal; DVector], OpenCL)
+  ; ([Lpmf; Rng; Log], "poisson_log", [DVInt; DVReal], OpenCL)
+  ; (less_lpf_depr, "poisson", [DVInt; DVReal], SoA)
+  ; ([Lpmf], "poisson", [DVInt; DVReal], OpenCL)
   ; (full_lpdf_depr, "rayleigh", [DVReal; DVReal], OpenCL)
-  ; (full_lpdf_depr, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], OpenCL)
-  ; (full_lpdf_depr, "skew_normal", [DVReal; DVReal; DVReal; DVReal], OpenCL)
+  ; (less_lpf_depr, "scaled_inv_chi_square", [DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "scaled_inv_chi_square", [DVReal; DVReal; DVReal], OpenCL)
   ; ( full_lpdf_depr
     , "skew_double_exponential"
     , [DVReal; DVReal; DVReal; DVReal]
     , OpenCL )
-  ; (full_lpdf_depr, "student_t", [DVReal; DVReal; DVReal; DVReal], OpenCL)
+  ; (less_lpf_depr, "skew_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "skew_normal", [DVReal; DVReal; DVReal; DVReal], OpenCL)
   ; (full_lpdf_depr, "std_normal", [DVReal], OpenCL)
+  ; (less_lpf_depr, "student_t", [DVReal; DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "student_t", [DVReal; DVReal; DVReal; DVReal], OpenCL)
   ; (full_lpdf_depr, "uniform", [DVReal; DVReal; DVReal], OpenCL)
-  ; (full_lpdf_depr, "von_mises", [DVReal; DVReal; DVReal], OpenCL)
+  ; (full_lpdf_depr, "von_mises", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf_depr, "weibull", [DVReal; DVReal; DVReal], OpenCL)
-  ; ([Lpdf; Log], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], OpenCL)
-  ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], OpenCL)
-  ; ([Lpdf; Log], "wishart", [DMatrix; DReal; DMatrix], OpenCL) ]
+  ; ([Lpdf; Log], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
+  ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
+  ; ([Lpdf; Log], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
 
 let basic_vectorized = UnaryVectorized IntsToReals
 
 let math_sigs =
-  [ ([UnaryVectorized SameAsArg], "abs", [DDeepVectorized], Mem_pattern.OpenCL)
+  [ ([UnaryVectorized SameAsArg], "abs", [DDeepVectorized], Mem_pattern.SoA)
   ; ([basic_vectorized], "acos", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "acosh", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "asin", [DDeepVectorized], OpenCL)
@@ -328,13 +341,13 @@ let math_sigs =
   ; ([basic_vectorized], "floor", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "inv", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "inv_cloglog", [DDeepVectorized], OpenCL)
-  ; ([basic_vectorized], "inv_erfc", [DDeepVectorized], OpenCL)
+  ; ([basic_vectorized], "inv_erfc", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "inv_logit", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "inv_Phi", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "inv_sqrt", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "inv_square", [DDeepVectorized], OpenCL)
-  ; ([basic_vectorized], "lambert_w0", [DDeepVectorized], OpenCL)
-  ; ([basic_vectorized], "lambert_wm1", [DDeepVectorized], OpenCL)
+  ; ([basic_vectorized], "lambert_w0", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "lambert_wm1", [DDeepVectorized], SoA)
   ; ([basic_vectorized], "lgamma", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "log", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "log10", [DDeepVectorized], OpenCL)
@@ -356,10 +369,10 @@ let math_sigs =
   ; ([basic_vectorized], "sqrt", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "square", [DDeepVectorized], OpenCL)
     (* TODO: Eventually will want to move _qf to be part of the distribution list above *)
-  ; ([basic_vectorized], "std_normal_qf", [DDeepVectorized], OpenCL)
+  ; ([basic_vectorized], "std_normal_qf", [DDeepVectorized], SoA)
     (* std_normal_qf is an alias for inv_Phi *)
-  ; ([basic_vectorized], "std_normal_log_qf", [DDeepVectorized], OpenCL)
-  ; ([basic_vectorized], "step", [DReal], OpenCL)
+  ; ([basic_vectorized], "std_normal_log_qf", [DDeepVectorized], SoA)
+  ; ([basic_vectorized], "step", [DReal], SoA)
   ; ([basic_vectorized], "tan", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "tanh", [DDeepVectorized], OpenCL)
   ; ([basic_vectorized], "tgamma", [DDeepVectorized], OpenCL)
@@ -893,8 +906,8 @@ let () =
     , ReturnType (UArray UInt)
     , [URowVector; UVector; UVector]
     , AoS ) ;
-  add_binary_vec_int_real "bessel_first_kind" OpenCL ;
-  add_binary_vec_int_real "bessel_second_kind" OpenCL ;
+  add_binary_vec_int_real "bessel_first_kind" SoA ;
+  add_binary_vec_int_real "bessel_second_kind" SoA ;
   add_binary_vec "beta" OpenCL ;
   (* XXX For some reason beta_proportion_rng doesn't take ints as first arg *)
   for_vector_types (fun t ->
@@ -972,14 +985,13 @@ let () =
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix], OpenCL) ;
   add_binary_vec_int_int "choose" AoS ;
   add_unqualified ("col", ReturnType UVector, [UMatrix; UInt], AoS) ;
-  add_unqualified
-    ("col", ReturnType UComplexVector, [UComplexMatrix; UInt], OpenCL) ;
-  add_unqualified ("cols", ReturnType UInt, [UVector], OpenCL) ;
-  add_unqualified ("cols", ReturnType UInt, [URowVector], OpenCL) ;
-  add_unqualified ("cols", ReturnType UInt, [UMatrix], OpenCL) ;
-  add_unqualified ("cols", ReturnType UInt, [UComplexVector], OpenCL) ;
-  add_unqualified ("cols", ReturnType UInt, [UComplexRowVector], OpenCL) ;
-  add_unqualified ("cols", ReturnType UInt, [UComplexMatrix], OpenCL) ;
+  add_unqualified ("col", ReturnType UComplexVector, [UComplexMatrix; UInt], SoA) ;
+  add_unqualified ("cols", ReturnType UInt, [UVector], SoA) ;
+  add_unqualified ("cols", ReturnType UInt, [URowVector], SoA) ;
+  add_unqualified ("cols", ReturnType UInt, [UMatrix], SoA) ;
+  add_unqualified ("cols", ReturnType UInt, [UComplexVector], SoA) ;
+  add_unqualified ("cols", ReturnType UInt, [UComplexRowVector], SoA) ;
+  add_unqualified ("cols", ReturnType UInt, [UComplexMatrix], SoA) ;
   add_unqualified
     ("columns_dot_product", ReturnType URowVector, [UVector; UVector], AoS) ;
   add_unqualified
@@ -1062,7 +1074,7 @@ let () =
     ( "csr_matrix_times_vector"
     , ReturnType UVector
     , [UInt; UInt; UVector; UArray UInt; UArray UInt; UVector]
-    , OpenCL ) ;
+    , SoA ) ;
   add_unqualified
     ( "csr_to_dense_matrix"
     , ReturnType UMatrix
@@ -1088,7 +1100,7 @@ let () =
     ("cumulative_sum", ReturnType UComplexVector, [UComplexVector], AoS) ;
   add_unqualified
     ("cumulative_sum", ReturnType UComplexRowVector, [UComplexRowVector], AoS) ;
-  add_unqualified ("determinant", ReturnType UReal, [UMatrix], OpenCL) ;
+  add_unqualified ("determinant", ReturnType UReal, [UMatrix], SoA) ;
   add_unqualified ("diag_matrix", ReturnType UMatrix, [UVector], AoS) ;
   add_unqualified
     ("diag_matrix", ReturnType UComplexMatrix, [UComplexVector], AoS) ;
@@ -1124,28 +1136,25 @@ let () =
   add_unqualified
     ("diagonal", ReturnType UComplexVector, [UComplexMatrix], OpenCL) ;
   add_unqualified ("dims", ReturnType (UArray UInt), [UComplex], AoS) ;
-  add_unqualified ("dims", ReturnType (UArray UInt), [UInt], OpenCL) ;
-  add_unqualified ("dims", ReturnType (UArray UInt), [UReal], OpenCL) ;
-  add_unqualified ("dims", ReturnType (UArray UInt), [UVector], OpenCL) ;
-  add_unqualified ("dims", ReturnType (UArray UInt), [URowVector], OpenCL) ;
-  add_unqualified ("dims", ReturnType (UArray UInt), [UMatrix], OpenCL) ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [UInt], SoA) ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [UReal], SoA) ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [UVector], SoA) ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [URowVector], SoA) ;
+  add_unqualified ("dims", ReturnType (UArray UInt), [UMatrix], SoA) ;
   List.iter
     ~f:(fun i ->
       List.iter
         ~f:(fun t ->
           add_unqualified
-            ( "dims"
-            , ReturnType (UArray UInt)
-            , [bare_array_type (t, i + 1)]
-            , OpenCL ) )
+            ("dims", ReturnType (UArray UInt), [bare_array_type (t, i + 1)], SoA)
+          )
         bare_types )
     (List.range 0 8) ;
   add_unqualified ("dirichlet_rng", ReturnType UVector, [UVector], AoS) ;
-  add_unqualified ("distance", ReturnType UReal, [UVector; UVector], OpenCL) ;
-  add_unqualified
-    ("distance", ReturnType UReal, [URowVector; URowVector], OpenCL) ;
-  add_unqualified ("distance", ReturnType UReal, [UVector; URowVector], OpenCL) ;
-  add_unqualified ("distance", ReturnType UReal, [URowVector; UVector], OpenCL) ;
+  add_unqualified ("distance", ReturnType UReal, [UVector; UVector], SoA) ;
+  add_unqualified ("distance", ReturnType UReal, [URowVector; URowVector], SoA) ;
+  add_unqualified ("distance", ReturnType UReal, [UVector; URowVector], SoA) ;
+  add_unqualified ("distance", ReturnType UReal, [URowVector; UVector], SoA) ;
   add_unqualified ("divide", ReturnType UInt, [UInt; UInt], OpenCL) ;
   add_unqualified ("divide", ReturnType UReal, [UReal; UReal], OpenCL) ;
   add_unqualified ("divide", ReturnType UVector, [UVector; UReal], OpenCL) ;
@@ -1232,7 +1241,7 @@ let () =
   add_unqualified
     ("eigenvectors_sym", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
-  add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], OpenCL) ;
+  add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("qr", ReturnType (UTuple [UMatrix; UMatrix]), [UMatrix], AoS) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix], AoS) ;
@@ -1311,12 +1320,12 @@ let () =
     , [UComplex; UComplexMatrix]
     , OpenCL ) ;
   add_unqualified ("exp", ReturnType UComplex, [UComplex], AoS) ;
-  add_binary_vec_int_int "falling_factorial" OpenCL ;
-  add_binary_vec_real_int "falling_factorial" OpenCL ;
+  add_binary_vec_int_int "falling_factorial" SoA ;
+  add_binary_vec_real_int "falling_factorial" SoA ;
   add_binary_vec "fdim" AoS ;
   add_unqualified ("fft", ReturnType UComplexVector, [UComplexVector], AoS) ;
   add_unqualified ("fft2", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
-  add_ternary_vec "fma" OpenCL ;
+  add_ternary_vec "fma" SoA ;
   add_binary_vec "fmax" AoS ;
   add_binary_vec "fmin" AoS ;
   add_binary_vec "fmod" AoS ;
@@ -1466,8 +1475,8 @@ let () =
     , [UArray UVector; UArray UVector; UReal; UReal; UReal]
     , AoS ) ;
   (* ; add_nullary ("get_lp")   *)
-  add_unqualified ("head", ReturnType URowVector, [URowVector; UInt], OpenCL) ;
-  add_unqualified ("head", ReturnType UVector, [UVector; UInt], OpenCL) ;
+  add_unqualified ("head", ReturnType URowVector, [URowVector; UInt], SoA) ;
+  add_unqualified ("head", ReturnType UVector, [UVector; UInt], SoA) ;
   add_unqualified
     ("head", ReturnType UComplexRowVector, [UComplexRowVector; UInt], AoS) ;
   add_unqualified
@@ -1480,7 +1489,7 @@ let () =
             ( "head"
             , ReturnType (bare_array_type (t, j))
             , [bare_array_type (t, j); UInt]
-            , OpenCL ) )
+            , SoA ) )
         (List.range 1 4) )
     bare_types ;
   add_unqualified
@@ -1491,12 +1500,12 @@ let () =
     , [(DataOnly, UMatrix); (DataOnly, UMatrix); (DataOnly, UVector)]
     , AoS ) ;
   add_binary_vec "hypot" AoS ;
-  add_unqualified ("identity_matrix", ReturnType UMatrix, [UInt], OpenCL) ;
-  add_unqualified ("if_else", ReturnType UInt, [UInt; UInt; UInt], OpenCL) ;
-  add_unqualified ("if_else", ReturnType UReal, [UInt; UReal; UReal], OpenCL) ;
-  add_unqualified ("inc_beta", ReturnType UReal, [UReal; UReal; UReal], OpenCL) ;
-  add_unqualified ("int_step", ReturnType UInt, [UReal], OpenCL) ;
-  add_unqualified ("int_step", ReturnType UInt, [UInt], OpenCL) ;
+  add_unqualified ("identity_matrix", ReturnType UMatrix, [UInt], SoA) ;
+  add_unqualified ("if_else", ReturnType UInt, [UInt; UInt; UInt], SoA) ;
+  add_unqualified ("if_else", ReturnType UReal, [UInt; UReal; UReal], SoA) ;
+  add_unqualified ("inc_beta", ReturnType UReal, [UReal; UReal; UReal], SoA) ;
+  add_unqualified ("int_step", ReturnType UInt, [UReal], SoA) ;
+  add_unqualified ("int_step", ReturnType UInt, [UInt], SoA) ;
   add_qualified
     ( "integrate_1d"
     , ReturnType UReal
@@ -1635,15 +1644,14 @@ let () =
     , AoS ) ;
   add_unqualified ("inv_fft", ReturnType UComplexVector, [UComplexVector], AoS) ;
   add_unqualified ("inv_fft2", ReturnType UComplexMatrix, [UComplexMatrix], AoS) ;
-  add_unqualified
-    ("inv_inc_beta", ReturnType UReal, [UReal; UReal; UReal], OpenCL) ;
+  add_unqualified ("inv_inc_beta", ReturnType UReal, [UReal; UReal; UReal], SoA) ;
   add_unqualified
     ("inv_wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("inv_wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
-  add_unqualified ("inverse", ReturnType UMatrix, [UMatrix], OpenCL) ;
+  add_unqualified ("inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("inverse_spd", ReturnType UMatrix, [UMatrix], AoS) ;
-  add_unqualified ("is_inf", ReturnType UInt, [UReal], OpenCL) ;
-  add_unqualified ("is_nan", ReturnType UInt, [UReal], OpenCL) ;
+  add_unqualified ("is_inf", ReturnType UInt, [UReal], SoA) ;
+  add_unqualified ("is_nan", ReturnType UInt, [UReal], SoA) ;
   add_binary_vec "lbeta" AoS ;
   add_binary_vec "lchoose" AoS ;
   add_binary_vec_real_int "ldexp" AoS ;
@@ -1651,22 +1659,22 @@ let () =
     ( "linspaced_int_array"
     , ReturnType (UArray UInt)
     , [(DataOnly, UInt); (DataOnly, UInt); (DataOnly, UInt)]
-    , OpenCL ) ;
+    , SoA ) ;
   add_qualified
     ( "linspaced_array"
     , ReturnType (UArray UReal)
     , [(DataOnly, UInt); (DataOnly, UReal); (DataOnly, UReal)]
-    , OpenCL ) ;
+    , SoA ) ;
   add_qualified
     ( "linspaced_row_vector"
     , ReturnType URowVector
     , [(DataOnly, UInt); (DataOnly, UReal); (DataOnly, UReal)]
-    , OpenCL ) ;
+    , SoA ) ;
   add_qualified
     ( "linspaced_vector"
     , ReturnType UVector
     , [(DataOnly, UInt); (DataOnly, UReal); (DataOnly, UReal)]
-    , OpenCL ) ;
+    , SoA ) ;
   add_unqualified
     ("lkj_corr_cholesky_rng", ReturnType UMatrix, [UInt; UReal], AoS) ;
   add_unqualified ("lkj_corr_rng", ReturnType UMatrix, [UInt; UReal], AoS) ;
@@ -1676,8 +1684,8 @@ let () =
   add_nullary "log10" ;
   add_unqualified ("log10", ReturnType UComplex, [UComplex], AoS) ;
   add_nullary "log2" ;
-  add_unqualified ("log_determinant", ReturnType UReal, [UMatrix], OpenCL) ;
-  add_unqualified ("log_determinant_spd", ReturnType UReal, [UMatrix], OpenCL) ;
+  add_unqualified ("log_determinant", ReturnType UReal, [UMatrix], SoA) ;
+  add_unqualified ("log_determinant_spd", ReturnType UReal, [UMatrix], SoA) ;
   add_binary_vec "log_diff_exp" AoS ;
   add_binary_vec "log_falling_factorial" AoS ;
   add_binary_vec "log_inv_logit_diff" AoS ;
@@ -1741,14 +1749,12 @@ let () =
   add_unqualified ("max", ReturnType UReal, [URowVector], AoS) ;
   add_unqualified ("max", ReturnType UReal, [UMatrix], AoS) ;
   add_unqualified ("max", ReturnType UInt, [UInt; UInt], AoS) ;
+  add_unqualified ("mdivide_left", ReturnType UVector, [UMatrix; UVector], SoA) ;
+  add_unqualified ("mdivide_left", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
   add_unqualified
-    ("mdivide_left", ReturnType UVector, [UMatrix; UVector], OpenCL) ;
+    ("mdivide_left_spd", ReturnType UVector, [UMatrix; UVector], SoA) ;
   add_unqualified
-    ("mdivide_left", ReturnType UMatrix, [UMatrix; UMatrix], OpenCL) ;
-  add_unqualified
-    ("mdivide_left_spd", ReturnType UVector, [UMatrix; UVector], OpenCL) ;
-  add_unqualified
-    ("mdivide_left_spd", ReturnType UMatrix, [UMatrix; UMatrix], OpenCL) ;
+    ("mdivide_left_spd", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
   add_unqualified
     ("mdivide_left_tri_low", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
   add_unqualified
@@ -1774,7 +1780,7 @@ let () =
     ("mdivide_right_tri_low", ReturnType URowVector, [URowVector; UMatrix], AoS) ;
   add_unqualified
     ("mdivide_right_tri_low", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
-  add_unqualified ("mean", ReturnType UReal, [UArray UReal], OpenCL) ;
+  add_unqualified ("mean", ReturnType UReal, [UArray UReal], AoS) ;
   add_unqualified ("mean", ReturnType UReal, [UVector], AoS) ;
   add_unqualified ("mean", ReturnType UReal, [URowVector], AoS) ;
   add_unqualified ("mean", ReturnType UReal, [UMatrix], AoS) ;
@@ -1942,12 +1948,12 @@ let () =
     , OpenCL ) ;
   add_nullary "negative_infinity" ;
   add_unqualified ("norm", ReturnType UReal, [UComplex], AoS) ;
-  add_unqualified ("norm1", ReturnType UReal, [UArray UReal], OpenCL) ;
-  add_unqualified ("norm1", ReturnType UReal, [UVector], OpenCL) ;
-  add_unqualified ("norm1", ReturnType UReal, [URowVector], OpenCL) ;
-  add_unqualified ("norm2", ReturnType UReal, [UArray UReal], OpenCL) ;
-  add_unqualified ("norm2", ReturnType UReal, [UVector], OpenCL) ;
-  add_unqualified ("norm2", ReturnType UReal, [URowVector], OpenCL) ;
+  add_unqualified ("norm1", ReturnType UReal, [UArray UReal], SoA) ;
+  add_unqualified ("norm1", ReturnType UReal, [UVector], SoA) ;
+  add_unqualified ("norm1", ReturnType UReal, [URowVector], SoA) ;
+  add_unqualified ("norm2", ReturnType UReal, [UArray UReal], SoA) ;
+  add_unqualified ("norm2", ReturnType UReal, [UVector], SoA) ;
+  add_unqualified ("norm2", ReturnType UReal, [URowVector], SoA) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
@@ -2004,32 +2010,30 @@ let () =
     , [UVector; UMatrix; UVector; UVector; UVector]
     , OpenCL ) ;
   add_nullary "not_a_number" ;
-  add_unqualified ("num_elements", ReturnType UInt, [UMatrix], OpenCL) ;
-  add_unqualified ("num_elements", ReturnType UInt, [UVector], OpenCL) ;
-  add_unqualified ("num_elements", ReturnType UInt, [URowVector], OpenCL) ;
-  add_unqualified ("num_elements", ReturnType UInt, [UComplexMatrix], OpenCL) ;
-  add_unqualified ("num_elements", ReturnType UInt, [UComplexVector], OpenCL) ;
-  add_unqualified ("num_elements", ReturnType UInt, [UComplexRowVector], OpenCL) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UMatrix], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UVector], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [URowVector], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UComplexMatrix], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UComplexVector], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UComplexRowVector], SoA) ;
   List.iter
     ~f:(fun i ->
       List.iter
         ~f:(fun t ->
           add_unqualified
-            ("num_elements", ReturnType UInt, [bare_array_type (t, i)], OpenCL)
-          )
+            ("num_elements", ReturnType UInt, [bare_array_type (t, i)], SoA) )
         bare_types )
     (List.range 1 10) ;
   add_unqualified
-    ("one_hot_int_array", ReturnType (UArray UInt), [UInt; UInt], OpenCL) ;
+    ("one_hot_int_array", ReturnType (UArray UInt), [UInt; UInt], SoA) ;
+  add_unqualified ("one_hot_array", ReturnType (UArray UReal), [UInt; UInt], SoA) ;
   add_unqualified
-    ("one_hot_array", ReturnType (UArray UReal), [UInt; UInt], OpenCL) ;
-  add_unqualified
-    ("one_hot_row_vector", ReturnType URowVector, [UInt; UInt], OpenCL) ;
-  add_unqualified ("one_hot_vector", ReturnType UVector, [UInt; UInt], OpenCL) ;
-  add_unqualified ("ones_int_array", ReturnType (UArray UInt), [UInt], OpenCL) ;
-  add_unqualified ("ones_array", ReturnType (UArray UReal), [UInt], OpenCL) ;
-  add_unqualified ("ones_row_vector", ReturnType URowVector, [UInt], OpenCL) ;
-  add_unqualified ("ones_vector", ReturnType UVector, [UInt], OpenCL) ;
+    ("one_hot_row_vector", ReturnType URowVector, [UInt; UInt], SoA) ;
+  add_unqualified ("one_hot_vector", ReturnType UVector, [UInt; UInt], SoA) ;
+  add_unqualified ("ones_int_array", ReturnType (UArray UInt), [UInt], SoA) ;
+  add_unqualified ("ones_array", ReturnType (UArray UReal), [UInt], SoA) ;
+  add_unqualified ("ones_row_vector", ReturnType URowVector, [UInt], SoA) ;
+  add_unqualified ("ones_vector", ReturnType UVector, [UInt], SoA) ;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
@@ -2132,8 +2136,8 @@ let () =
   add_unqualified ("prod", ReturnType UComplex, [UComplexRowVector], AoS) ;
   add_unqualified ("prod", ReturnType UComplex, [UComplexMatrix], AoS) ;
   add_unqualified ("proj", ReturnType UComplex, [UComplex], AoS) ;
-  add_unqualified ("quad_form", ReturnType UReal, [UMatrix; UVector], OpenCL) ;
-  add_unqualified ("quad_form", ReturnType UMatrix, [UMatrix; UMatrix], OpenCL) ;
+  add_unqualified ("quad_form", ReturnType UReal, [UMatrix; UVector], SoA) ;
+  add_unqualified ("quad_form", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
   add_unqualified ("quad_form_sym", ReturnType UReal, [UMatrix; UVector], AoS) ;
   add_unqualified ("quad_form_sym", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
   add_unqualified ("quad_form_diag", ReturnType UMatrix, [UMatrix; UVector], AoS) ;
@@ -2143,32 +2147,29 @@ let () =
     ( "quantile"
     , ReturnType UReal
     , [(DataOnly, UArray UReal); (DataOnly, UReal)]
-    , OpenCL ) ;
+    , SoA ) ;
   add_qualified
     ( "quantile"
     , ReturnType (UArray UReal)
     , [(DataOnly, UArray UReal); (DataOnly, UArray UReal)]
-    , OpenCL ) ;
+    , SoA ) ;
   add_qualified
-    ( "quantile"
-    , ReturnType UReal
-    , [(DataOnly, UVector); (DataOnly, UReal)]
-    , OpenCL ) ;
+    ("quantile", ReturnType UReal, [(DataOnly, UVector); (DataOnly, UReal)], SoA) ;
   add_qualified
     ( "quantile"
     , ReturnType (UArray UReal)
     , [(DataOnly, UVector); (DataOnly, UArray UReal)]
-    , OpenCL ) ;
+    , SoA ) ;
   add_qualified
     ( "quantile"
     , ReturnType UReal
     , [(DataOnly, URowVector); (DataOnly, UReal)]
-    , OpenCL ) ;
+    , SoA ) ;
   add_qualified
     ( "quantile"
     , ReturnType (UArray UReal)
     , [(DataOnly, URowVector); (DataOnly, UArray UReal)]
-    , OpenCL ) ;
+    , SoA ) ;
   add_unqualified ("rank", ReturnType UInt, [UArray UInt; UInt], AoS) ;
   add_unqualified ("rank", ReturnType UInt, [UArray UReal; UInt], AoS) ;
   add_unqualified ("rank", ReturnType UInt, [UVector; UInt], AoS) ;
@@ -2213,34 +2214,31 @@ let () =
   List.iter
     ~f:(fun t ->
       add_unqualified
-        ("rep_array", ReturnType (bare_array_type (t, 1)), [t; UInt], OpenCL) ;
+        ("rep_array", ReturnType (bare_array_type (t, 1)), [t; UInt], SoA) ;
       add_unqualified
-        ( "rep_array"
-        , ReturnType (bare_array_type (t, 2))
-        , [t; UInt; UInt]
-        , OpenCL ) ;
+        ("rep_array", ReturnType (bare_array_type (t, 2)), [t; UInt; UInt], SoA) ;
       add_unqualified
         ( "rep_array"
         , ReturnType (bare_array_type (t, 3))
         , [t; UInt; UInt; UInt]
-        , OpenCL ) ;
+        , SoA ) ;
       List.iter
         ~f:(fun j ->
           add_unqualified
             ( "rep_array"
             , ReturnType (bare_array_type (t, j + 1))
             , [bare_array_type (t, j); UInt]
-            , OpenCL ) ;
+            , SoA ) ;
           add_unqualified
             ( "rep_array"
             , ReturnType (bare_array_type (t, j + 2))
             , [bare_array_type (t, j); UInt; UInt]
-            , OpenCL ) ;
+            , SoA ) ;
           add_unqualified
             ( "rep_array"
             , ReturnType (bare_array_type (t, j + 3))
             , [bare_array_type (t, j); UInt; UInt; UInt]
-            , OpenCL ) )
+            , SoA ) )
         (List.range 1 3) )
     bare_types ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [UReal; UInt; UInt], OpenCL) ;
@@ -2252,11 +2250,10 @@ let () =
     ("rep_matrix", ReturnType UComplexMatrix, [UComplexVector; UInt], AoS) ;
   add_unqualified
     ("rep_matrix", ReturnType UComplexMatrix, [UComplexRowVector; UInt], AoS) ;
-  add_unqualified
-    ("rep_row_vector", ReturnType URowVector, [UReal; UInt], OpenCL) ;
+  add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt], SoA) ;
   add_unqualified
     ("rep_row_vector", ReturnType UComplexRowVector, [UComplex; UInt], AoS) ;
-  add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt], OpenCL) ;
+  add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt], SoA) ;
   add_unqualified
     ("rep_vector", ReturnType UComplexVector, [UComplex; UInt], AoS) ;
   add_unqualified ("reverse", ReturnType UVector, [UVector], OpenCL) ;
@@ -2278,15 +2275,15 @@ let () =
     ("reverse", ReturnType UComplexRowVector, [UComplexRowVector], OpenCL) ;
   add_binary_vec_int_int "rising_factorial" AoS ;
   add_binary_vec_real_int "rising_factorial" AoS ;
-  add_unqualified ("row", ReturnType URowVector, [UMatrix; UInt], OpenCL) ;
+  add_unqualified ("row", ReturnType URowVector, [UMatrix; UInt], SoA) ;
   add_unqualified
     ("row", ReturnType UComplexRowVector, [UComplexMatrix; UInt], AoS) ;
-  add_unqualified ("rows", ReturnType UInt, [UVector], OpenCL) ;
-  add_unqualified ("rows", ReturnType UInt, [URowVector], OpenCL) ;
-  add_unqualified ("rows", ReturnType UInt, [UMatrix], OpenCL) ;
-  add_unqualified ("rows", ReturnType UInt, [UComplexVector], OpenCL) ;
-  add_unqualified ("rows", ReturnType UInt, [UComplexRowVector], OpenCL) ;
-  add_unqualified ("rows", ReturnType UInt, [UComplexMatrix], OpenCL) ;
+  add_unqualified ("rows", ReturnType UInt, [UVector], SoA) ;
+  add_unqualified ("rows", ReturnType UInt, [URowVector], SoA) ;
+  add_unqualified ("rows", ReturnType UInt, [UMatrix], SoA) ;
+  add_unqualified ("rows", ReturnType UInt, [UComplexVector], SoA) ;
+  add_unqualified ("rows", ReturnType UInt, [UComplexRowVector], SoA) ;
+  add_unqualified ("rows", ReturnType UInt, [UComplexMatrix], SoA) ;
   add_unqualified
     ("rows_dot_product", ReturnType UVector, [UVector; UVector], AoS) ;
   add_unqualified
@@ -2327,8 +2324,8 @@ let () =
   add_unqualified ("sd", ReturnType UReal, [URowVector], OpenCL) ;
   add_unqualified ("sd", ReturnType UReal, [UMatrix], OpenCL) ;
   add_unqualified
-    ("segment", ReturnType URowVector, [URowVector; UInt; UInt], OpenCL) ;
-  add_unqualified ("segment", ReturnType UVector, [UVector; UInt; UInt], OpenCL) ;
+    ("segment", ReturnType URowVector, [URowVector; UInt; UInt], SoA) ;
+  add_unqualified ("segment", ReturnType UVector, [UVector; UInt; UInt], SoA) ;
   add_unqualified
     ( "segment"
     , ReturnType UComplexRowVector
@@ -2344,23 +2341,23 @@ let () =
             ( "segment"
             , ReturnType (bare_array_type (t, j))
             , [bare_array_type (t, j); UInt; UInt]
-            , OpenCL ) )
+            , SoA ) )
         (List.range 1 4) )
     bare_types ;
   add_unqualified ("sin", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("sinh", ReturnType UComplex, [UComplex], AoS) ;
-  add_unqualified ("singular_values", ReturnType UVector, [UMatrix], OpenCL) ;
+  add_unqualified ("singular_values", ReturnType UVector, [UMatrix], SoA) ;
   add_unqualified ("singular_values", ReturnType UVector, [UComplexMatrix], AoS) ;
   List.iter
     ~f:(fun i ->
       List.iter
         ~f:(fun t ->
           add_unqualified
-            ("size", ReturnType UInt, [bare_array_type (t, i)], OpenCL) )
+            ("size", ReturnType UInt, [bare_array_type (t, i)], SoA) )
         bare_types )
     (List.range 1 8) ;
   List.iter
-    ~f:(fun t -> add_unqualified ("size", ReturnType UInt, [t], OpenCL))
+    ~f:(fun t -> add_unqualified ("size", ReturnType UInt, [t], SoA))
     bare_types ;
   add_unqualified ("softmax", ReturnType UVector, [UVector], OpenCL) ;
   add_unqualified ("sort_asc", ReturnType (UArray UInt), [UArray UInt], AoS) ;
@@ -2397,14 +2394,14 @@ let () =
   add_unqualified ("sqrt", ReturnType UComplex, [UComplex], AoS) ;
   add_nullary "sqrt2" ;
   add_unqualified
-    ("sub_col", ReturnType UVector, [UMatrix; UInt; UInt; UInt], OpenCL) ;
+    ("sub_col", ReturnType UVector, [UMatrix; UInt; UInt; UInt], SoA) ;
   add_unqualified
     ( "sub_col"
     , ReturnType UComplexVector
     , [UComplexMatrix; UInt; UInt; UInt]
     , AoS ) ;
   add_unqualified
-    ("sub_row", ReturnType URowVector, [UMatrix; UInt; UInt; UInt], OpenCL) ;
+    ("sub_row", ReturnType URowVector, [UMatrix; UInt; UInt; UInt], SoA) ;
   add_unqualified
     ( "sub_row"
     , ReturnType UComplexRowVector
@@ -2456,10 +2453,10 @@ let () =
     , ReturnType (UTuple [UComplexMatrix; UVector; UComplexMatrix])
     , [UComplexMatrix]
     , AoS ) ;
-  add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix], OpenCL) ;
-  add_unqualified ("svd_U", ReturnType UComplexMatrix, [UComplexMatrix], OpenCL) ;
-  add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix], OpenCL) ;
-  add_unqualified ("svd_V", ReturnType UComplexMatrix, [UComplexMatrix], OpenCL) ;
+  add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("svd_U", ReturnType UComplexMatrix, [UComplexMatrix], SoA) ;
+  add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("svd_V", ReturnType UComplexMatrix, [UComplexMatrix], SoA) ;
   add_unqualified
     ("symmetrize_from_lower_tri", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified
@@ -2467,8 +2464,8 @@ let () =
     , ReturnType UComplexMatrix
     , [UComplexMatrix]
     , AoS ) ;
-  add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt], OpenCL) ;
-  add_unqualified ("tail", ReturnType UVector, [UVector; UInt], OpenCL) ;
+  add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt], SoA) ;
+  add_unqualified ("tail", ReturnType UVector, [UVector; UInt], SoA) ;
   add_unqualified
     ("tail", ReturnType UComplexRowVector, [UComplexRowVector; UInt], AoS) ;
   add_unqualified
@@ -2481,7 +2478,7 @@ let () =
             ( "tail"
             , ReturnType (bare_array_type (t, j))
             , [bare_array_type (t, j); UInt]
-            , OpenCL ) )
+            , SoA ) )
         (List.range 1 4) )
     bare_types ;
   add_unqualified ("tan", ReturnType UComplex, [UComplex], AoS) ;
@@ -2611,9 +2608,9 @@ let () =
     ("to_row_vector", ReturnType UComplexRowVector, [UComplexRowVector], AoS) ;
   add_unqualified
     ("to_row_vector", ReturnType UComplexRowVector, [UArray UComplex], AoS) ;
-  add_unqualified ("to_vector", ReturnType UVector, [UMatrix], OpenCL) ;
-  add_unqualified ("to_vector", ReturnType UVector, [UVector], OpenCL) ;
-  add_unqualified ("to_vector", ReturnType UVector, [URowVector], OpenCL) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UMatrix], SoA) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UVector], SoA) ;
+  add_unqualified ("to_vector", ReturnType UVector, [URowVector], SoA) ;
   add_unqualified ("to_vector", ReturnType UVector, [UArray UReal], AoS) ;
   add_unqualified ("to_vector", ReturnType UVector, [UArray UInt], AoS) ;
   add_unqualified ("to_vector", ReturnType UComplexVector, [UComplexMatrix], AoS) ;
@@ -2625,14 +2622,9 @@ let () =
   add_unqualified ("trace", ReturnType UReal, [UMatrix], OpenCL) ;
   add_unqualified ("trace", ReturnType UComplex, [UComplexMatrix], AoS) ;
   add_unqualified
-    ( "trace_gen_quad_form"
-    , ReturnType UReal
-    , [UMatrix; UMatrix; UMatrix]
-    , OpenCL ) ;
-  add_unqualified
-    ("trace_quad_form", ReturnType UReal, [UMatrix; UVector], OpenCL) ;
-  add_unqualified
-    ("trace_quad_form", ReturnType UReal, [UMatrix; UMatrix], OpenCL) ;
+    ("trace_gen_quad_form", ReturnType UReal, [UMatrix; UMatrix; UMatrix], SoA) ;
+  add_unqualified ("trace_quad_form", ReturnType UReal, [UMatrix; UVector], SoA) ;
+  add_unqualified ("trace_quad_form", ReturnType UReal, [UMatrix; UMatrix], SoA) ;
   add_unqualified ("transpose", ReturnType URowVector, [UVector], OpenCL) ;
   add_unqualified ("transpose", ReturnType UVector, [URowVector], OpenCL) ;
   add_unqualified ("transpose", ReturnType UMatrix, [UMatrix], OpenCL) ;
@@ -2642,7 +2634,7 @@ let () =
     ("transpose", ReturnType UComplexVector, [UComplexRowVector], OpenCL) ;
   add_unqualified
     ("transpose", ReturnType UComplexMatrix, [UComplexMatrix], OpenCL) ;
-  add_unqualified ("uniform_simplex", ReturnType UVector, [UInt], OpenCL) ;
+  add_unqualified ("uniform_simplex", ReturnType UVector, [UInt], SoA) ;
   add_unqualified ("variance", ReturnType UReal, [UArray UReal], OpenCL) ;
   add_unqualified ("variance", ReturnType UReal, [UVector], OpenCL) ;
   add_unqualified ("variance", ReturnType UReal, [URowVector], OpenCL) ;
@@ -2650,10 +2642,10 @@ let () =
   add_unqualified
     ("wishart_cholesky_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
   add_unqualified ("wishart_rng", ReturnType UMatrix, [UReal; UMatrix], AoS) ;
-  add_unqualified ("zeros_int_array", ReturnType (UArray UInt), [UInt], OpenCL) ;
-  add_unqualified ("zeros_array", ReturnType (UArray UReal), [UInt], OpenCL) ;
-  add_unqualified ("zeros_row_vector", ReturnType URowVector, [UInt], OpenCL) ;
-  add_unqualified ("zeros_vector", ReturnType UVector, [UInt], OpenCL) ;
+  add_unqualified ("zeros_int_array", ReturnType (UArray UInt), [UInt], SoA) ;
+  add_unqualified ("zeros_array", ReturnType (UArray UReal), [UInt], SoA) ;
+  add_unqualified ("zeros_row_vector", ReturnType URowVector, [UInt], SoA) ;
+  add_unqualified ("zeros_vector", ReturnType UVector, [UInt], SoA) ;
   (* Now add all the manually added stuff to the main hashtable used
      for type-checking *)
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->

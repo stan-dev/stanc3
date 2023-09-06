@@ -397,29 +397,30 @@ module Printing = struct
     match t with
     | Auto -> string ppf "auto"
     | Void -> string ppf "void"
-    | Int mem when Mem_pattern.is_opencl mem -> string ppf "matrix_cl<int>"
+    | Int mem when Mem_pattern.is_opencl mem ->
+        string ppf "stan::math::matrix_cl<int>"
     | Int _ -> string ppf "int"
     | Double mem when Mem_pattern.is_opencl mem ->
-        string ppf "matrix_cl<double>"
+        string ppf "stan::math::matrix_cl<double>"
     | Double _ -> string ppf "double"
     | Complex t -> pf ppf "std::complex<%a>" pp_type_ t
     | TemplateType id -> pp_identifier ppf id
     | StdVector (inner_t, mem)
       when Mem_pattern.is_opencl mem && is_base_scalar_type inner_t -> (
       match inner_t with
-      | Double _ -> pf ppf "@[<2>matrix_cl<@,%a>@]" pp_type_ inner_t
-      | Int _ -> pf ppf "@[<2>matrix_cl<@,%a>@]" pp_type_ inner_t
+      | Double _ -> pf ppf "@[<2>stan::math::matrix_cl<@,%a>@]" pp_type_ inner_t
+      | Int _ -> pf ppf "@[<2>stan::math::matrix_cl<@,%a>@]" pp_type_ inner_t
       | _ -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ inner_t )
     | StdVector (inner_t, _) ->
         pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ inner_t
     | Array (inner_t, _, mem) when Mem_pattern.is_opencl mem ->
-        pf ppf "@[<2>matrix_cl<@,%a>@]" pp_type_ inner_t
+        pf ppf "@[<2>stan::math::matrix_cl<@,%a>@]" pp_type_ inner_t
     | Array (inner_t, i, _) ->
         pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ inner_t i
     | Tuple subtypes ->
         pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) subtypes
     | TypeLiteral (id, mem) when Mem_pattern.is_opencl mem ->
-        pf ppf "@[<2>matrix_cl<@,%a>@]" pp_identifier id
+        pf ppf "@[<2>stan::math::matrix_cl<@,%a>@]" pp_identifier id
     | TypeLiteral (id, _) -> pp_identifier ppf id
     | Matrix (inner_t, i, j, mem_pattern) -> (
       match mem_pattern with

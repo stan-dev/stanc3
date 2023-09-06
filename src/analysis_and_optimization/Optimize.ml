@@ -1289,9 +1289,20 @@ let optimize_opencl (mir : Program.Typed.t) =
     Memory_patterns.create_opencl_data opencl_data mir.prepare_data in
   let reverse_log_prob' =
     Memory_patterns.add_opencl_data opencl_data reverse_log_prob in
-  { mir with
-    reverse_mode_log_prob= reverse_log_prob'
-  ; prepare_data= opencl_data_gen }
+  let check_if_all_opencl =
+    List.for_all
+      ~f:(fun stmt ->
+        match stmt.pattern with
+        | Stmt.Fixed.Pattern.Decl {decl_type= Type.Sized st; _}
+          when not (Mem_pattern.is_opencl (SizedType.get_mem_pattern st)) ->
+            false
+        | _ -> true )
+      reverse_log_prob' in
+  if check_if_all_opencl then
+    { mir with
+      reverse_mode_log_prob= reverse_log_prob'
+    ; prepare_data= opencl_data_gen }
+  else mir
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)

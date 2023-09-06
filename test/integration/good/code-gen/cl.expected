@@ -244,25 +244,22 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   std::vector<int> y2_vi_d_td;
   int y_s_d_td;
   double y_r_d_td;
-  int k;
-  int n;
   stan::math::matrix_cl<double> X_d_opencl__;
-  std::vector<Eigen::Matrix<matrix_cl<double>,-1,-1>> X_d_a_opencl__;
+  std::vector<Eigen::Matrix<stan::math::matrix_cl<double>,-1,-1>>
+    X_d_a_opencl__;
   stan::math::matrix_cl<double> y_v_d_opencl__;
   stan::math::matrix_cl<double> X_rv_d_opencl__;
-  matrix_cl<int> y_vi_d_opencl__;
-  matrix_cl<int> y2_vi_d_opencl__;
-  matrix_cl<int> y_s_d_opencl__;
-  matrix_cl<double> y_r_d_opencl__;
-  int k_td;
-  int n_td;
+  stan::math::matrix_cl<int> y_vi_d_opencl__;
+  stan::math::matrix_cl<int> y2_vi_d_opencl__;
+  stan::math::matrix_cl<int> y_s_d_opencl__;
+  stan::math::matrix_cl<double> y_r_d_opencl__;
   stan::math::matrix_cl<double> X_d_td_opencl__;
   stan::math::matrix_cl<double> y_v_d_td_opencl__;
   stan::math::matrix_cl<double> X_rv_d_td_opencl__;
-  matrix_cl<int> y_vi_d_td_opencl__;
-  matrix_cl<int> y2_vi_d_td_opencl__;
-  matrix_cl<int> y_s_d_td_opencl__;
-  matrix_cl<double> y_r_d_td_opencl__;
+  stan::math::matrix_cl<int> y_vi_d_td_opencl__;
+  stan::math::matrix_cl<int> y2_vi_d_td_opencl__;
+  stan::math::matrix_cl<int> y_s_d_td_opencl__;
+  stan::math::matrix_cl<double> y_r_d_td_opencl__;
   Eigen::Map<Eigen::Matrix<double,-1,-1>> X_d{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> y_v_d{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,1,-1>> X_rv_d{nullptr, 0};
@@ -486,15 +483,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::validate_non_negative_index("beta_m", "k", k);
       current_statement__ = 216;
       stan::math::validate_non_negative_index("X_rv_p", "n", n);
-      int pos__ = std::numeric_limits<int>::min();
-      current_statement__ = 176;
-      context__.validate_dims("data initialization", "k", "int",
-        std::vector<size_t>{});
-      k = std::numeric_limits<int>::min();
-      current_statement__ = 177;
-      context__.validate_dims("data initialization", "n", "int",
-        std::vector<size_t>{});
-      n = std::numeric_limits<int>::min();
       current_statement__ = 180;
       X_d_opencl__ = stan::math::to_matrix_cl(X_d);
       current_statement__ = 180;
@@ -529,10 +517,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       y_r_d_opencl__ = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 193;
       y_r_d_opencl__ = stan::math::to_matrix_cl(y_r_d);
-      current_statement__ = 194;
-      k_td = std::numeric_limits<int>::min();
-      current_statement__ = 195;
-      n_td = std::numeric_limits<int>::min();
       current_statement__ = 198;
       X_d_td_opencl__ = stan::math::to_matrix_cl(X_d_td);
       current_statement__ = 198;
@@ -1183,16 +1167,16 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 3;
       cuts = in__.template read<
                stan::math::var_value<stan::math::matrix_cl<double>>>(k);
-      matrix_cl<local_scalar_t__> sigma = DUMMY_VAR__;
+      stan::math::matrix_cl<local_scalar_t__> sigma = DUMMY_VAR__;
       current_statement__ = 4;
-      sigma = in__.template read_constrain_lb<matrix_cl<local_scalar_t__>,
-                jacobian__>(0, lp__);
-      matrix_cl<local_scalar_t__> alpha = DUMMY_VAR__;
+      sigma = in__.template read_constrain_lb<
+                stan::math::matrix_cl<local_scalar_t__>, jacobian__>(0, lp__);
+      stan::math::matrix_cl<local_scalar_t__> alpha = DUMMY_VAR__;
       current_statement__ = 5;
-      alpha = in__.template read<matrix_cl<local_scalar_t__>>();
-      matrix_cl<local_scalar_t__> phi = DUMMY_VAR__;
+      alpha = in__.template read<stan::math::matrix_cl<local_scalar_t__>>();
+      stan::math::matrix_cl<local_scalar_t__> phi = DUMMY_VAR__;
       current_statement__ = 6;
-      phi = in__.template read<matrix_cl<local_scalar_t__>>();
+      phi = in__.template read<stan::math::matrix_cl<local_scalar_t__>>();
       stan::math::var_value<stan::math::matrix_cl<double>> X_p =
         stan::math::var_value<stan::math::matrix_cl<double>>(Eigen::Matrix<double,-1,-1>::Constant(n,
                                                                k,
