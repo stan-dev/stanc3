@@ -31,8 +31,8 @@ def runPerformanceTests(String testsPath, String stancFlags = "", Boolean opencl
     sh """
         git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
     """
-    def make_local = opencl ? "CXX=${CXX}\nSTAN_OPENCL=true\nOPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU}\nOPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU}" : "CXX=${CXX}"
-    writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:make_local)
+
+    writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}")
 
     utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
     utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
@@ -47,7 +47,14 @@ def runPerformanceTests(String testsPath, String stancFlags = "", Boolean opencl
     if (stancFlags?.trim()) {
         sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= $stancFlags' >> make/local"
     }
-
+    if (opencl) {
+        sh """
+            cd performance-tests-cmdstan/cmdstan
+            echo STAN_OPENCL=true >> make/local
+            echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
+            echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
+        """
+    }
     sh """
         cd performance-tests-cmdstan/cmdstan
         echo 'O=0' >> make/local
