@@ -296,20 +296,21 @@ let extract_transform_args var = function
 let rec param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with
-    | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
+    | SizedType.SArray (mem, t, d) -> SizedType.SArray (mem, shrink_eigen f t, d)
     | SVector (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
         SVector (mem_pattern, f d)
-    | SInt | SReal | SComplex | SRowVector _ | STuple _ | SComplexRowVector _
-     |SComplexVector _ | SComplexMatrix _ ->
+    | SInt _ | SReal _ | SComplex | SRowVector _ | STuple _
+     |SComplexRowVector _ | SComplexVector _ | SComplexMatrix _ ->
         Common.FatalError.fatal_error_msg
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
   let rec shrink_eigen_mat f st =
     match st with
-    | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
+    | SizedType.SArray (mem, t, d) ->
+        SizedType.SArray (mem, shrink_eigen_mat f t, d)
     | SMatrix (mem_pattern, d1, d2) -> SVector (mem_pattern, f d1 d2)
-    | SInt | SReal | SComplex | SRowVector _ | SVector _ | STuple _
+    | SInt _ | SReal _ | SComplex | SRowVector _ | SVector _ | STuple _
      |SComplexRowVector _ | SComplexVector _ | SComplexMatrix _ ->
         Common.FatalError.fatal_error_msg
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -397,7 +398,7 @@ let check_sizedtype name st =
               ; str (Fmt.str "%a" Pretty_printing.pp_typed_expression x); n ]
             n.meta.loc ] in
   let rec sizedtype = function
-    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
+    | SizedType.(SInt _ | SReal _ | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
         let e = trans_expr s in
         (check s e, SizedType.SVector (mem_pattern, e))
@@ -418,10 +419,10 @@ let check_sizedtype name st =
         let er = trans_expr r in
         let ec = trans_expr c in
         (check r er @ check c ec, SizedType.SComplexMatrix (er, ec))
-    | SArray (t, s) ->
+    | SArray (mem, t, s) ->
         let e = trans_expr s in
         let ll, t = sizedtype t in
-        (check s e @ ll, SizedType.SArray (t, e))
+        (check s e @ ll, SizedType.SArray (mem, t, e))
     | STuple subtypes ->
         let checks, subtypes = List.unzip (List.map ~f:sizedtype subtypes) in
         (List.concat checks, STuple subtypes) in
@@ -680,7 +681,7 @@ let rec trans_sizedtype_decl declc tr name st =
         let decl =
           { Stmt.Fixed.pattern=
               Decl
-                { decl_type= Sized SInt
+                { decl_type= Sized (SInt AoS)
                 ; decl_id
                 ; decl_adtype= DataOnly
                 ; initialize= true }
@@ -699,7 +700,7 @@ let rec trans_sizedtype_decl declc tr name st =
                   ; loc= s.emeta.loc } } in
         ([decl; assign; check fn s var], var) in
   let rec go n = function
-    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
+    | SizedType.(SInt _ | SReal _ | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
         let fn =
           match (declc.transform_action, tr) with
@@ -739,10 +740,10 @@ let rec trans_sizedtype_decl declc tr name st =
         let l1, r = grab_size FnValidateSize n r in
         let l2, c = grab_size FnValidateSize (n + 1) c in
         (l1 @ l2, SizedType.SComplexMatrix (r, c))
-    | SArray (t, s) ->
+    | SArray (mem, t, s) ->
         let l, s = grab_size FnValidateSize n s in
         let ll, t = go (n + 1) t in
-        (l @ ll, SizedType.SArray (t, s))
+        (l @ ll, SizedType.SArray (mem, t, s))
     | STuple subtypes ->
         let former_array_indices =
           String.concat (List.init (n - 1) ~f:(fun _ -> "[]")) in

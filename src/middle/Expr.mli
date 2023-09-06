@@ -52,7 +52,7 @@ module Helpers : sig
   val variable : string -> Typed.t
   val zero : Typed.t
   val one : Typed.t
-  val unary_op : Operator.t -> Typed.t -> Typed.t
+  val unary_op : ?mem_pattern:Mem_pattern.t -> Operator.t -> Typed.t -> Typed.t
   val binop : Typed.t -> Operator.t -> Typed.t -> Typed.t
   val binop_list : Typed.t list -> Operator.t -> default:Typed.t -> Typed.t
   val row_vector : float list -> Typed.t

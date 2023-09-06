@@ -3,8 +3,6 @@ open Core_kernel.Poly
 open Middle
 open Mangle
 
-let use_opencl = ref false
-
 let translate_funapps_and_kwrds e =
   let open Expr.Fixed in
   let f ({pattern; _} as expr) =
@@ -124,87 +122,13 @@ let break_eigen_cycles functions_block =
       fndef in
   List.map ~f:break_cycles functions_block
 
-let opencl_trigger_restrictions =
-  String.Map.of_alist_exn
-    [ ( "bernoulli_lpmf"
-      , [ [ (0, UnsizedType.DataOnly, UnsizedType.UArray UnsizedType.UInt)
-          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
-    ; ( "bernoulli_logit_glm_lpmf"
-      , [ (* Array of conditions under which we do not want to move to OpenCL *)
-          [(1, UnsizedType.DataOnly, UnsizedType.URowVector)]
-          (* Argument 1 (0-based indexing) is a row vector *) ] )
-    ; ( "categorical_logit_glm_lpmf"
-      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
-    ; ( "exponential_lpdf"
-      , [ [ (0, UnsizedType.AutoDiffable, UnsizedType.UVector)
-          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
-    ; ( "neg_binomial_2_log_glm_lpmf"
-      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
-    ; ( "normal_id_glm_lpdf"
-      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
-    ; ( "ordered_logistic_glm_lpmf"
-      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
-    ; ( "poisson_log_glm_lpmf"
-      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
-    ; ("std_normal_lpdf", [[(0, UnsizedType.AutoDiffable, UnsizedType.UVector)]])
-    ; ( "uniform_lpdf"
-      , [ [ (0, UnsizedType.AutoDiffable, UnsizedType.UVector)
-          ; (1, UnsizedType.DataOnly, UnsizedType.UReal)
-          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] ) ]
-
-let opencl_supported_functions =
-  [ "bernoulli_lpmf"; "bernoulli_logit_lpmf"; "bernoulli_logit_glm_lpmf"
-  ; "beta_lpdf"; "beta_proportion_lpdf"; "binomial_lpmf"
-  ; "categorical_logit_glm_lpmf"; "cauchy_lpdf"; "chi_square_lpdf"
-  ; "double_exponential_lpdf"; "exp_mod_normal_lpdf"; "exponential_lpdf"
-  ; "frechet_lpdf"; "gamma_lpdf"; "gumbel_lpdf"; "inv_chi_square_lpdf"
-  ; "inv_gamma_lpdf"; "logistic_lpdf"; "lognormal_lpdf"; "neg_binomial_lpmf"
-  ; "neg_binomial_2_lpmf"; "neg_binomial_2_log_lpmf"
-  ; "neg_binomial_2_log_glm_lpmf"; "normal_lpdf"; "normal_id_glm_lpdf"
-  ; "ordered_logistic_glm_lpmf"; "pareto_lpdf"; "pareto_type_2_lpdf"
-  ; "poisson_lpmf"; "poisson_log_lpmf"; "poisson_log_glm_lpmf"; "rayleigh_lpdf"
-  ; "scaled_inv_chi_square_lpdf"; "skew_normal_lpdf"; "std_normal_lpdf"
-  ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf" ]
-  |> String.Set.of_list
-
-let opencl_suffix = "_opencl__"
-
-let to_matrix_cl e =
+(*let to_matrix_cl e =
   Expr.Fixed.
     {e with pattern= FunApp (StanLib ("to_matrix_cl", FnPlain, AoS), [e])}
-
-let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.{pattern; _} as e) =
-  let is_avail = List.mem available_cl_vars ~equal:( = ) in
-  let to_cl (Expr.Fixed.{pattern; meta= {Expr.Typed.Meta.type_; _}} as e) =
-    match (pattern, type_) with
-    | Var s, _ when is_avail s ->
-        Expr.Fixed.{e with pattern= Var (s ^ opencl_suffix)}
-    | _, UnsizedType.(UInt | UReal) -> e
-    | _, _ -> to_matrix_cl e in
-  let check_type args (i, ad, t) =
-    let arg = List.nth_exn args i in
-    Expr.Typed.type_of arg = t
-    && UnsizedType.autodifftype_can_convert (Expr.Typed.adlevel_of arg) ad in
-  let is_restricted args = List.exists ~f:(List.for_all ~f:(check_type args)) in
-  let maybe_map_args args req_args =
-    match req_args with
-    | Some x when is_restricted args x -> args
-    | None | Some _ -> List.map args ~f:to_cl in
-  let is_fn_opencl_supported f = Set.mem opencl_supported_functions f in
-  match pattern with
-  | FunApp (StanLib (f, sfx, mem_pattern), args) when is_fn_opencl_supported f
-    ->
-      let trigger = Map.find opencl_trigger_restrictions f in
-      { e with
-        pattern=
-          FunApp (StanLib (f, sfx, mem_pattern), maybe_map_args args trigger) }
-  | x ->
-      { e with
-        pattern=
-          Expr.Fixed.Pattern.map (switch_expr_to_opencl available_cl_vars) x }
+*)
 
 let rec base_type = function
-  | SizedType.SArray (t, _) -> base_type t
+  | SizedType.SArray (_, t, _) -> base_type t
   | SVector _ | SRowVector _ | SMatrix _ -> UnsizedType.UReal
   | SComplexVector _ | SComplexRowVector _ | SComplexMatrix _ -> UComplex
   | x -> SizedType.to_unsized x
@@ -279,9 +203,9 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
       (Stmt.Helpers.lvariable enclosing_tuple_pos, UInt, type_size)
     |> swrap in
   match st with
-  | SInt | SReal | SComplex ->
+  | SInt _ | SReal _ | SComplex ->
       [Assignment (decl_id_lval, unsized, origin) |> swrap; incr_tuple_pos]
-  | SArray ((SInt | SReal), _) ->
+  | SArray (_, (SInt _ | SReal _), _) ->
       [Assignment (decl_id_lval, flat_type, origin) |> swrap; incr_tuple_pos]
   | STuple subtypes ->
       let elements =
@@ -422,14 +346,14 @@ let rec var_context_read
       [{decl_var with pattern= Lit (Str, remove_prefix decl_id)}]
       Expr.Typed.Meta.{decl_var.meta with type_= flat_type} in
   match st with
-  | SInt | SReal | SComplex ->
+  | SInt _ | SReal _ | SComplex ->
       let e =
         { Expr.Fixed.pattern=
             Indexed
               (readfnapp decl_id flat_type, [Single Expr.Helpers.loop_bottom])
         ; meta= {decl_var.meta with type_= unsized} } in
       [Assignment (decl_id_lval, unsized, e) |> swrap]
-  | SArray ((SInt | SReal), _) ->
+  | SArray (_, (SInt _ | SReal _), _) ->
       [ Assignment (decl_id_lval, flat_type, readfnapp decl_id flat_type)
         |> swrap ]
   | STuple subtypes ->
@@ -603,8 +527,8 @@ let rec var_context_read
 let read_constrain_dims constrain_transform st =
   let rec constrain_get_dims st =
     match st with
-    | SizedType.SInt | SReal | SComplex | STuple _ -> []
-    | SArray (t, dim) -> dim :: constrain_get_dims t
+    | SizedType.SInt _ | SReal _ | SComplex | STuple _ -> []
+    | SArray (_, t, dim) -> dim :: constrain_get_dims t
     | SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d
@@ -960,33 +884,6 @@ let rec insert_before f to_insert = function
       if f hd then to_insert @ (hd :: tl)
       else hd :: insert_before f to_insert tl
 
-let is_opencl_var = String.is_suffix ~suffix:opencl_suffix
-
-let rec collect_vars_expr is_target accum Expr.Fixed.{pattern; _} =
-  Set.union accum
-    ( match pattern with
-    | Var s when is_target s -> String.Set.of_list [s]
-    | x ->
-        Expr.Fixed.Pattern.fold (collect_vars_expr is_target) String.Set.empty x
-    )
-
-let collect_opencl_vars s =
-  let rec go accum s =
-    Stmt.Fixed.(
-      Pattern.fold (collect_vars_expr is_opencl_var) go accum s.pattern) in
-  go String.Set.empty s
-
-let%expect_test "collect vars expr" =
-  let mkvar s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
-  let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
-  let fnapp =
-    Expr.
-      { Fixed.pattern= FunApp (StanLib ("print", FnPlain, AoS), args)
-      ; meta= Typed.Meta.empty } in
-  Stmt.Fixed.{pattern= TargetPE fnapp; meta= Location_span.empty}
-  |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
-  [%expect {| (w_opencl__ x_opencl__) |}]
-
 let%expect_test "insert before" =
   let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
   [%sexp (l : int list)] |> print_s ;
@@ -1026,7 +923,7 @@ let trans_prog (p : Program.Typed.t) =
     [ Stmt.Fixed.Pattern.Decl
         { decl_adtype= DataOnly
         ; decl_id= pos
-        ; decl_type= Sized SInt
+        ; decl_type= Sized (SInt AoS)
         ; initialize= true }
     ; Assignment (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
@@ -1074,22 +971,6 @@ let trans_prog (p : Program.Typed.t) =
         , _ ) ->
         true
     | _ -> false in
-  let translate_to_open_cl stmts =
-    if !use_opencl then
-      let decl Stmt.Fixed.{pattern; _} =
-        match pattern with
-        | Decl {decl_type= Sized (SInt | SReal); _} -> None
-        | Decl {decl_id; _} -> Some decl_id
-        | _ -> None in
-      let data_var_idents = List.filter_map ~f:decl p.prepare_data in
-      let switch_expr = switch_expr_to_opencl data_var_idents in
-      let rec trans_stmt_to_opencl s =
-        Stmt.Fixed.
-          { s with
-            pattern= Pattern.map switch_expr trans_stmt_to_opencl s.pattern }
-      in
-      List.map stmts ~f:trans_stmt_to_opencl
-    else stmts in
   let tparam_writes_cond =
     match tparam_writes with
     | [] -> []
@@ -1106,68 +987,22 @@ let trans_prog (p : Program.Typed.t) =
   let generate_quantities =
     ( p.generate_quantities
     |> add_reads p.output_vars param_deserializer_read
-    |> translate_to_open_cl
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes_cond )
     @ gq_writes in
-  let log_prob =
-    p.log_prob
-    |> add_reads p.output_vars param_deserializer_read
-    |> translate_to_open_cl in
-  let opencl_vars =
-    String.Set.union_list
-      (List.concat_map
-         ~f:(List.map ~f:collect_opencl_vars)
-         [log_prob; generate_quantities] )
-    |> String.Set.to_list in
-  let maybe_add_opencl_events_clear =
-    let event_clear_stmt x =
-      Stmt.Fixed.
-        { pattern= NRFunApp (CompilerInternal (FnReadWriteEventsOpenCL x), [])
-        ; meta= Location_span.empty } in
-    List.map ~f:event_clear_stmt opencl_vars in
-  let to_matrix_cl_stmts =
-    List.concat_map opencl_vars ~f:(fun vident ->
-        let vident_sans_opencl =
-          String.chop_suffix_exn ~suffix:opencl_suffix vident in
-        let type_of_input_var =
-          match
-            List.find
-              ~f:(fun (s, _, _) -> String.equal s vident_sans_opencl)
-              p.input_vars
-          with
-          | Some (_, _, st) -> SizedType.to_unsized st
-          | None -> UnsizedType.UMatrix in
-        [ Stmt.Fixed.
-            { pattern=
-                Decl
-                  { decl_adtype= DataOnly
-                  ; decl_id= vident
-                  ; decl_type= Type.Unsized type_of_input_var
-                  ; initialize= true }
-            ; meta= Location_span.empty }
-        ; { pattern=
-              Assignment
-                ( Stmt.Helpers.lvariable vident
-                , type_of_input_var
-                , to_matrix_cl
-                    { pattern= Var vident_sans_opencl
-                    ; meta= Expr.Typed.Meta.empty } )
-          ; meta= Location_span.empty } ] ) in
+  let log_prob = p.log_prob |> add_reads p.output_vars param_deserializer_read in
   let p =
     let params =
       List.filter
         ~f:(fun (_, _, ov) -> ov.Program.out_block = Parameters)
         p.output_vars in
     { p with
-      log_prob=
-        log_prob @ maybe_add_opencl_events_clear
-        (*First initialization of reverse mode log prob *)
-    ; reverse_mode_log_prob= log_prob @ maybe_add_opencl_events_clear
+      log_prob (*First initialization of reverse mode log prob *)
+    ; reverse_mode_log_prob= log_prob
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
-        (p.prepare_data |> add_reads p.input_vars var_context_read)
-        @ to_matrix_cl_stmts
+        p.prepare_data
+        |> add_reads p.input_vars var_context_read
         |> maybe_add_pos
     ; transform_inits=
         List.concat_map ~f:var_context_unconstrain_transform params

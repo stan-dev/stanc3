@@ -56,7 +56,7 @@
             (Decl (decl_adtype AutoDiffable) (decl_id dydt)
              (decl_type
               (Sized
-               (SArray SReal
+               (SArray AoS (SReal AoS)
                 ((pattern (Lit Int 2))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (initialize true)))
@@ -336,8 +336,8 @@
              ((pattern
                (Block
                 (((pattern
-                   (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type (Sized SInt))
-                    (initialize true)))
+                   (Decl (decl_adtype AutoDiffable) (decl_id b)
+                    (decl_type (Sized (SInt AoS))) (initialize true)))
                   (meta <opaque>))
                  ((pattern
                    (Assignment ((LVariable b) ()) UInt
@@ -419,8 +419,8 @@
                    (Decl (decl_adtype AutoDiffable) (decl_id vs)
                     (decl_type
                      (Sized
-                      (SArray
-                       (SArray SInt
+                      (SArray AoS
+                       (SArray AoS (SInt AoS)
                         ((pattern (Lit Int 3))
                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                        ((pattern (Lit Int 2))
@@ -428,8 +428,8 @@
                     (initialize true)))
                   (meta <opaque>))
                  ((pattern
-                   (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SInt))
-                    (initialize true)))
+                   (Decl (decl_adtype AutoDiffable) (decl_id z)
+                    (decl_type (Sized (SInt AoS))) (initialize true)))
                   (meta <opaque>))
                  ((pattern
                    (For (loopvar sym1__)
@@ -631,8 +631,8 @@
              ((pattern
                (Block
                 (((pattern
-                   (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SReal))
-                    (initialize true)))
+                   (Decl (decl_adtype AutoDiffable) (decl_id z)
+                    (decl_type (Sized (SReal AoS))) (initialize true)))
                   (meta <opaque>))
                  ((pattern
                    (Decl (decl_adtype AutoDiffable) (decl_id vs)
@@ -822,8 +822,8 @@
              ((pattern
                (Block
                 (((pattern
-                   (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SReal))
-                    (initialize true)))
+                   (Decl (decl_adtype AutoDiffable) (decl_id z)
+                    (decl_type (Sized (SReal AoS))) (initialize true)))
                   (meta <opaque>))
                  ((pattern
                    (Decl (decl_adtype AutoDiffable) (decl_id vs)
@@ -938,8 +938,8 @@
              ((pattern
                (Block
                 (((pattern
-                   (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SReal))
-                    (initialize true)))
+                   (Decl (decl_adtype AutoDiffable) (decl_id z)
+                    (decl_type (Sized (SReal AoS))) (initialize true)))
                   (meta <opaque>))
                  ((pattern
                    (Decl (decl_adtype AutoDiffable) (decl_id vs)
@@ -1056,8 +1056,8 @@
              ((pattern
                (Block
                 (((pattern
-                   (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type (Sized SInt))
-                    (initialize true)))
+                   (Decl (decl_adtype AutoDiffable) (decl_id b)
+                    (decl_type (Sized (SInt AoS))) (initialize true)))
                   (meta <opaque>))
                  ((pattern
                    (Assignment ((LVariable b) ()) UInt
@@ -1068,7 +1068,7 @@
                    (Block
                     (((pattern
                        (Decl (decl_adtype AutoDiffable) (decl_id c)
-                        (decl_type (Sized SInt)) (initialize true)))
+                        (decl_type (Sized (SInt AoS))) (initialize true)))
                       (meta <opaque>))
                      ((pattern
                        (Assignment ((LVariable c) ()) UInt
@@ -1095,13 +1095,13 @@
             (Decl (decl_adtype AutoDiffable) (decl_id vs)
              (decl_type
               (Sized
-               (SArray SInt
+               (SArray AoS (SInt AoS)
                 ((pattern (Lit Int 2))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (initialize true)))
            (meta <opaque>))
           ((pattern
-            (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type (Sized SInt))
+            (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type (Sized (SInt AoS)))
              (initialize true)))
            (meta <opaque>))
           ((pattern
@@ -1217,12 +1217,12 @@
      (((pattern
         (Block
          (((pattern
-            (Decl (decl_adtype AutoDiffable) (decl_id abs_diff) (decl_type (Sized SReal))
-             (initialize true)))
+            (Decl (decl_adtype AutoDiffable) (decl_id abs_diff)
+             (decl_type (Sized (SReal AoS))) (initialize true)))
            (meta <opaque>))
           ((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id avg_scale)
-             (decl_type (Sized SReal)) (initialize true)))
+             (decl_type (Sized (SReal AoS))) (initialize true)))
            (meta <opaque>))
           ((pattern
             (Assignment ((LVariable abs_diff) ()) UReal
@@ -1746,19 +1746,19 @@
      (((pattern
         (Block
          (((pattern
-            (Decl (decl_adtype AutoDiffable) (decl_id a) (decl_type (Sized SInt))
+            (Decl (decl_adtype AutoDiffable) (decl_id a) (decl_type (Sized (SInt AoS)))
              (initialize true)))
            (meta <opaque>))
           ((pattern
-            (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type (Sized SReal))
+            (Decl (decl_adtype AutoDiffable) (decl_id b) (decl_type (Sized (SReal AoS)))
              (initialize true)))
            (meta <opaque>))
           ((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id c)
              (decl_type
               (Sized
-               (SArray
-                (SArray SReal
+               (SArray AoS
+                (SArray AoS (SReal AoS)
                  ((pattern (Lit Int 30))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                 ((pattern (Lit Int 20))
@@ -1769,8 +1769,8 @@
             (Decl (decl_adtype AutoDiffable) (decl_id ar_mat)
              (decl_type
               (Sized
-               (SArray
-                (SArray
+               (SArray AoS
+                (SArray AoS
                  (SMatrix AoS
                   ((pattern (Lit Int 40))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -2460,44 +2460,44 @@
   ((N
     ((begin_loc ((filename mother.stan) (line_num 348) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 348) (col_num 17) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (M
     ((begin_loc ((filename mother.stan) (line_num 349) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 349) (col_num 17) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (K
     ((begin_loc ((filename mother.stan) (line_num 350) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 350) (col_num 30) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (d_int_1d_ar
     ((begin_loc ((filename mother.stan) (line_num 351) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 351) (col_num 36) (included_from ()))))
-    (SArray SInt
+    (SArray AoS (SInt AoS)
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_int_3d_ar
     ((begin_loc ((filename mother.stan) (line_num 352) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 352) (col_num 42) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray SInt
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS (SInt AoS)
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (J
     ((begin_loc ((filename mother.stan) (line_num 353) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 353) (col_num 32) (included_from ()))))
-    SReal)
+    (SReal AoS))
    (d_real_1d_ar
     ((begin_loc ((filename mother.stan) (line_num 354) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 354) (col_num 29) (included_from ()))))
-    (SArray SReal
+    (SArray AoS (SReal AoS)
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_real_3d_ar
     ((begin_loc ((filename mother.stan) (line_num 355) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 355) (col_num 35) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray SReal
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS (SReal AoS)
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -2509,16 +2509,16 @@
    (d_1d_vec
     ((begin_loc ((filename mother.stan) (line_num 357) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 357) (col_num 30) (included_from ()))))
-    (SArray
+    (SArray AoS
      (SVector AoS
       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_3d_vec
     ((begin_loc ((filename mother.stan) (line_num 358) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 358) (col_num 36) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2532,16 +2532,16 @@
    (d_1d_row_vec
     ((begin_loc ((filename mother.stan) (line_num 360) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 360) (col_num 38) (included_from ()))))
-    (SArray
+    (SArray AoS
      (SRowVector AoS
       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_3d_row_vec
     ((begin_loc ((filename mother.stan) (line_num 361) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 361) (col_num 44) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2550,8 +2550,8 @@
    (d_ar_mat
     ((begin_loc ((filename mother.stan) (line_num 362) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 362) (col_num 54) (included_from ()))))
-    (SArray
-     (SArray
+    (SArray AoS
+     (SArray AoS
       (SMatrix AoS
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2565,16 +2565,16 @@
    (d_1d_simplex
     ((begin_loc ((filename mother.stan) (line_num 364) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 364) (col_num 35) (included_from ()))))
-    (SArray
+    (SArray AoS
      (SVector AoS
       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_3d_simplex
     ((begin_loc ((filename mother.stan) (line_num 365) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 365) (col_num 41) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2595,7 +2595,7 @@
    (d_cfcov_33_ar
     ((begin_loc ((filename mother.stan) (line_num 368) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 368) (col_num 48) (included_from ()))))
-    (SArray
+    (SArray AoS
      (SMatrix AoS
       ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
       ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2603,50 +2603,50 @@
    (d_int
     ((begin_loc ((filename mother.stan) (line_num 369) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 369) (col_num 12) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (d_int_array
     ((begin_loc ((filename mother.stan) (line_num 370) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 370) (col_num 31) (included_from ()))))
-    (SArray SInt
+    (SArray AoS (SInt AoS)
      ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_int_array_2d
     ((begin_loc ((filename mother.stan) (line_num 371) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 371) (col_num 37) (included_from ()))))
-    (SArray
-     (SArray SInt
+    (SArray AoS
+     (SArray AoS (SInt AoS)
       ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_int_array_3d
     ((begin_loc ((filename mother.stan) (line_num 372) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 372) (col_num 40) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray SInt
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS (SInt AoS)
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_real
     ((begin_loc ((filename mother.stan) (line_num 373) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 373) (col_num 14) (included_from ()))))
-    SReal)
+    (SReal AoS))
    (d_real_array
     ((begin_loc ((filename mother.stan) (line_num 374) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 374) (col_num 33) (included_from ()))))
-    (SArray SReal
+    (SArray AoS (SReal AoS)
      ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_real_array_2d
     ((begin_loc ((filename mother.stan) (line_num 375) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 375) (col_num 39) (included_from ()))))
-    (SArray
-     (SArray SReal
+    (SArray AoS
+     (SArray AoS (SReal AoS)
       ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_real_array_3d
     ((begin_loc ((filename mother.stan) (line_num 376) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 376) (col_num 42) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray SReal
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS (SReal AoS)
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -2659,7 +2659,7 @@
    (d_matrix_array
     ((begin_loc ((filename mother.stan) (line_num 378) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 378) (col_num 51) (included_from ()))))
-    (SArray
+    (SArray AoS
      (SMatrix AoS
       ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
       ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2667,8 +2667,8 @@
    (d_matrix_array_2d
     ((begin_loc ((filename mother.stan) (line_num 379) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 379) (col_num 57) (included_from ()))))
-    (SArray
-     (SArray
+    (SArray AoS
+     (SArray AoS
       (SMatrix AoS
        ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2677,9 +2677,9 @@
    (d_matrix_array_3d
     ((begin_loc ((filename mother.stan) (line_num 380) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 380) (col_num 60) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2694,15 +2694,15 @@
    (d_vector_array
     ((begin_loc ((filename mother.stan) (line_num 382) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 382) (col_num 44) (included_from ()))))
-    (SArray
+    (SArray AoS
      (SVector AoS
       ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_vector_array_2d
     ((begin_loc ((filename mother.stan) (line_num 383) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 383) (col_num 50) (included_from ()))))
-    (SArray
-     (SArray
+    (SArray AoS
+     (SArray AoS
       (SVector AoS
        ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2710,9 +2710,9 @@
    (d_vector_array_3d
     ((begin_loc ((filename mother.stan) (line_num 384) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 384) (col_num 53) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS
        (SVector AoS
         ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2726,15 +2726,15 @@
    (d_row_vector_array
     ((begin_loc ((filename mother.stan) (line_num 386) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 386) (col_num 52) (included_from ()))))
-    (SArray
+    (SArray AoS
      (SRowVector AoS
       ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_row_vector_array_2d
     ((begin_loc ((filename mother.stan) (line_num 387) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 387) (col_num 58) (included_from ()))))
-    (SArray
-     (SArray
+    (SArray AoS
+     (SArray AoS
       (SRowVector AoS
        ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2742,9 +2742,9 @@
    (d_row_vector_array_3d
     ((begin_loc ((filename mother.stan) (line_num 388) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 388) (col_num 61) (included_from ()))))
-    (SArray
-     (SArray
-      (SArray
+    (SArray AoS
+     (SArray AoS
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -2752,7 +2752,7 @@
      ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -2760,7 +2760,8 @@
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable N) ()) UInt
@@ -2788,7 +2789,8 @@
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable M) ()) UInt
@@ -2816,7 +2818,8 @@
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id K) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id K) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable K) ()) UInt
@@ -2873,7 +2876,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_int_1d_ar)
       (decl_type
        (Sized
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -2923,9 +2926,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_int_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SInt
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SInt AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3047,7 +3050,7 @@
       (((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id J) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id J) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -3109,7 +3112,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -3146,9 +3149,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3345,7 +3348,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3457,9 +3460,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -3686,7 +3689,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3798,9 +3801,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -3941,8 +3944,8 @@
      (Decl (decl_adtype DataOnly) (decl_id d_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -4206,7 +4209,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -4327,9 +4330,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -4673,7 +4676,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -4790,7 +4793,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id d_int) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id d_int) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -4819,7 +4822,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_int_array)
       (decl_type
        (Sized
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -4843,8 +4846,8 @@
      (Decl (decl_adtype DataOnly) (decl_id d_int_array_2d)
       (decl_type
        (Sized
-        (SArray
-         (SArray SInt
+        (SArray AoS
+         (SArray AoS (SInt AoS)
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
@@ -4936,9 +4939,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_int_array_3d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SInt
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SInt AoS)
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -5048,7 +5051,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id d_real) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id d_real) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5077,7 +5080,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_real_array)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -5101,8 +5104,8 @@
      (Decl (decl_adtype DataOnly) (decl_id d_real_array_2d)
       (decl_type
        (Sized
-        (SArray
-         (SArray SReal
+        (SArray AoS
+         (SArray AoS (SReal AoS)
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
@@ -5194,9 +5197,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_real_array_3d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -5433,7 +5436,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_matrix_array)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -5568,8 +5571,8 @@
      (Decl (decl_adtype DataOnly) (decl_id d_matrix_array_2d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Var d_int))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -5736,9 +5739,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_matrix_array_3d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SMatrix AoS
             ((pattern (Var d_int))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -6006,7 +6009,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_vector_array)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -6107,8 +6110,8 @@
      (Decl (decl_adtype DataOnly) (decl_id d_vector_array_2d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SVector AoS
            ((pattern (Var d_int))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -6237,9 +6240,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_vector_array_3d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var d_int))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -6473,7 +6476,7 @@
      (Decl (decl_adtype DataOnly) (decl_id d_row_vector_array)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -6574,8 +6577,8 @@
      (Decl (decl_adtype DataOnly) (decl_id d_row_vector_array_2d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SRowVector AoS
            ((pattern (Var d_int))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -6704,9 +6707,9 @@
      (Decl (decl_adtype DataOnly) (decl_id d_row_vector_array_3d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var d_int))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -6848,7 +6851,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id td_int) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id td_int) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -6862,7 +6865,7 @@
      (Decl (decl_adtype DataOnly) (decl_id td_1d)
       (decl_type
        (Sized
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -6877,7 +6880,7 @@
      (Decl (decl_adtype DataOnly) (decl_id td_1dk)
       (decl_type
        (Sized
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -6890,7 +6893,7 @@
        (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id td_a) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id td_a) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -6898,7 +6901,7 @@
       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id td_b) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id td_b) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -6914,7 +6917,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id td_c) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id td_c) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -6928,8 +6931,8 @@
      (Decl (decl_adtype DataOnly) (decl_id td_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -6972,7 +6975,7 @@
      (Decl (decl_adtype DataOnly) (decl_id td_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -7010,9 +7013,9 @@
      (Decl (decl_adtype DataOnly) (decl_id td_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -7058,7 +7061,7 @@
      (Decl (decl_adtype DataOnly) (decl_id dat)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -7066,7 +7069,7 @@
      (Decl (decl_adtype DataOnly) (decl_id dat_int)
       (decl_type
        (Sized
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -7074,8 +7077,8 @@
      (Decl (decl_adtype DataOnly) (decl_id x_r)
       (decl_type
        (Sized
-        (SArray
-         (SArray SReal
+        (SArray AoS
+         (SArray AoS (SReal AoS)
           ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
@@ -7084,8 +7087,8 @@
      (Decl (decl_adtype DataOnly) (decl_id x_i)
       (decl_type
        (Sized
-        (SArray
-         (SArray SInt
+        (SArray AoS
+         (SArray AoS (SInt AoS)
           ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
@@ -7426,7 +7429,7 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype DataOnly) (decl_id z) (decl_type (Sized SReal))
+         (Decl (decl_adtype DataOnly) (decl_id z) (decl_type (Sized (SReal AoS)))
           (initialize true)))
         (meta <opaque>))
        ((pattern
@@ -7485,7 +7488,7 @@
          (Decl (decl_adtype DataOnly) (decl_id indices)
           (decl_type
            (Sized
-            (SArray SInt
+            (SArray AoS (SInt AoS)
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize true)))
@@ -7623,8 +7626,8 @@
      (Decl (decl_adtype DataOnly) (decl_id arr_mul_ind)
       (decl_type
        (Sized
-        (SArray
-         (SArray SInt
+        (SArray AoS
+         (SArray AoS (SInt AoS)
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
@@ -7648,7 +7651,7 @@
      (Decl (decl_adtype DataOnly) (decl_id x_mul_ind)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -7672,7 +7675,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_real)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -7686,7 +7689,7 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_real_array)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -7702,8 +7705,8 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_real_array_2d)
       (decl_type
        (Sized
-        (SArray
-         (SArray SReal
+        (SArray AoS
+         (SArray AoS (SReal AoS)
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
@@ -7720,9 +7723,9 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_real_array_3d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -7782,7 +7785,7 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_matrix_array)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -7817,8 +7820,8 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_matrix_array_2d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Var d_int))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -7856,9 +7859,9 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_matrix_array_3d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SMatrix AoS
             ((pattern (Var d_int))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -7906,7 +7909,7 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_vector_array)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -7932,8 +7935,8 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_vector_array_2d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SVector AoS
            ((pattern (Var d_int))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -7961,9 +7964,9 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_vector_array_3d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var d_int))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -8009,7 +8012,7 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_row_vector_array)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -8035,8 +8038,8 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_row_vector_array_2d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SRowVector AoS
            ((pattern (Var d_int))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -8064,9 +8067,9 @@
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_row_vector_array_3d)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var d_int))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -9844,7 +9847,7 @@
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_real) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_real) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -9857,7 +9860,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_upper) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_upper) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -9875,7 +9878,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_lower) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_lower) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -9896,7 +9899,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -9923,7 +9926,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id no_offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -9948,7 +9951,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id offset_no_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -9973,7 +9976,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -9997,9 +10000,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10052,7 +10055,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10075,9 +10078,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10126,7 +10129,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10149,9 +10152,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10204,8 +10207,8 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -10264,7 +10267,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10287,9 +10290,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10366,7 +10369,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10435,7 +10438,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -10443,9 +10446,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10463,7 +10466,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10473,9 +10476,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10495,7 +10498,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10505,9 +10508,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10528,8 +10531,8 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -10551,7 +10554,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10561,9 +10564,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10593,7 +10596,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -10609,7 +10612,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id tp_real) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_real) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -11177,7 +11180,7 @@
          (Decl (decl_adtype AutoDiffable) (decl_id tmp2)
           (decl_type
            (Sized
-            (SArray
+            (SArray AoS
              (SVector AoS
               ((pattern (Lit Int 0))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -11186,7 +11189,7 @@
           (initialize true)))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id r1) (decl_type (Sized SReal))
+         (Decl (decl_adtype AutoDiffable) (decl_id r1) (decl_type (Sized (SReal AoS)))
           (initialize true)))
         (meta <opaque>))
        ((pattern
@@ -11198,7 +11201,7 @@
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id r2) (decl_type (Sized SReal))
+         (Decl (decl_adtype AutoDiffable) (decl_id r2) (decl_type (Sized (SReal AoS)))
           (initialize true)))
         (meta <opaque>))
        ((pattern
@@ -11962,7 +11965,7 @@
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_real) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_real) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -11975,7 +11978,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_upper) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_upper) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -11993,7 +11996,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_lower) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_lower) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -12014,7 +12017,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -12041,7 +12044,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id no_offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -12066,7 +12069,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id offset_no_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -12091,7 +12094,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -12115,9 +12118,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12170,7 +12173,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12193,9 +12196,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12244,7 +12247,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12267,9 +12270,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12322,8 +12325,8 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -12382,7 +12385,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12405,9 +12408,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12484,7 +12487,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12553,7 +12556,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -12561,9 +12564,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12581,7 +12584,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12591,9 +12594,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12613,7 +12616,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12623,9 +12626,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12646,8 +12649,8 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -12669,7 +12672,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12679,9 +12682,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12711,7 +12714,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12727,7 +12730,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id tp_real) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_real) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -13295,7 +13298,7 @@
          (Decl (decl_adtype AutoDiffable) (decl_id tmp2)
           (decl_type
            (Sized
-            (SArray
+            (SArray AoS
              (SVector AoS
               ((pattern (Lit Int 0))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -13304,7 +13307,7 @@
           (initialize true)))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id r1) (decl_type (Sized SReal))
+         (Decl (decl_adtype AutoDiffable) (decl_id r1) (decl_type (Sized (SReal AoS)))
           (initialize true)))
         (meta <opaque>))
        ((pattern
@@ -13316,7 +13319,7 @@
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id r2) (decl_type (Sized SReal))
+         (Decl (decl_adtype AutoDiffable) (decl_id r2) (decl_type (Sized (SReal AoS)))
           (initialize true)))
         (meta <opaque>))
        ((pattern
@@ -14080,7 +14083,7 @@
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id p_real) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id p_real) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -14093,7 +14096,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id p_upper) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id p_upper) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -14111,7 +14114,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id p_lower) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id p_lower) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -14132,7 +14135,7 @@
      (Decl (decl_adtype DataOnly) (decl_id offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -14159,7 +14162,7 @@
      (Decl (decl_adtype DataOnly) (decl_id no_offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -14184,7 +14187,7 @@
      (Decl (decl_adtype DataOnly) (decl_id offset_no_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -14209,7 +14212,7 @@
      (Decl (decl_adtype DataOnly) (decl_id p_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -14233,9 +14236,9 @@
      (Decl (decl_adtype DataOnly) (decl_id p_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14288,7 +14291,7 @@
      (Decl (decl_adtype DataOnly) (decl_id p_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14311,9 +14314,9 @@
      (Decl (decl_adtype DataOnly) (decl_id p_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14362,7 +14365,7 @@
      (Decl (decl_adtype DataOnly) (decl_id p_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14385,9 +14388,9 @@
      (Decl (decl_adtype DataOnly) (decl_id p_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14440,8 +14443,8 @@
      (Decl (decl_adtype DataOnly) (decl_id p_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14500,7 +14503,7 @@
      (Decl (decl_adtype DataOnly) (decl_id p_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14523,9 +14526,9 @@
      (Decl (decl_adtype DataOnly) (decl_id p_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14602,7 +14605,7 @@
      (Decl (decl_adtype DataOnly) (decl_id p_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14671,7 +14674,7 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -14679,9 +14682,9 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14699,7 +14702,7 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14709,9 +14712,9 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14731,7 +14734,7 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14741,9 +14744,9 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14764,8 +14767,8 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14787,7 +14790,7 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14797,9 +14800,9 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14829,7 +14832,7 @@
      (Decl (decl_adtype DataOnly) (decl_id tp_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14845,7 +14848,7 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id tp_real) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id tp_real) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16900,7 +16903,7 @@
       ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id gq_r1) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id gq_r1) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16912,7 +16915,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id gq_r2) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id gq_r2) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16926,7 +16929,7 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -16934,9 +16937,9 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16954,7 +16957,7 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16964,9 +16967,9 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -16986,7 +16989,7 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16996,9 +16999,9 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17010,8 +17013,8 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17033,7 +17036,7 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -17043,9 +17046,9 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17075,7 +17078,7 @@
      (Decl (decl_adtype DataOnly) (decl_id gq_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17086,7 +17089,7 @@
      (Decl (decl_adtype DataOnly) (decl_id indices)
       (decl_type
        (Sized
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -17103,7 +17106,7 @@
      (Decl (decl_adtype DataOnly) (decl_id indexing_mat)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17114,7 +17117,7 @@
      (Decl (decl_adtype DataOnly) (decl_id idx_res1)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17125,7 +17128,7 @@
      (Decl (decl_adtype DataOnly) (decl_id idx_res2)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17136,7 +17139,7 @@
      (Decl (decl_adtype DataOnly) (decl_id idx_res3)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17147,7 +17150,7 @@
      (Decl (decl_adtype DataOnly) (decl_id idx_res11)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17158,7 +17161,7 @@
      (Decl (decl_adtype DataOnly) (decl_id idx_res21)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17169,7 +17172,7 @@
      (Decl (decl_adtype DataOnly) (decl_id idx_res31)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -17180,7 +17183,7 @@
      (Decl (decl_adtype DataOnly) (decl_id idx_res4)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -17190,7 +17193,7 @@
      (Decl (decl_adtype DataOnly) (decl_id idx_res5)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -19245,7 +19248,7 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -19253,7 +19256,7 @@
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_real) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_real) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -19280,7 +19283,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_upper) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_upper) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -19311,7 +19314,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_lower) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_lower) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -19345,7 +19348,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -19376,7 +19379,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id no_offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -19405,7 +19408,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id offset_no_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -19434,7 +19437,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -19463,9 +19466,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -19668,7 +19671,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -19761,9 +19764,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -19988,7 +19991,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20081,9 +20084,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -20328,8 +20331,8 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -20561,7 +20564,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20654,9 +20657,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -20993,7 +20996,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -21259,7 +21262,7 @@
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_real) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_real) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -21277,7 +21280,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_upper) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_upper) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -21299,7 +21302,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_lower) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id p_lower) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -21324,7 +21327,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -21354,7 +21357,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id no_offset_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -21382,7 +21385,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id offset_no_multiplier)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -21410,7 +21413,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_real_1d_ar)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -21438,9 +21441,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_real_3d_ar)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray SReal
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS (SReal AoS)
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -21546,7 +21549,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -21601,9 +21604,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -21728,7 +21731,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_row_vec)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -21783,9 +21786,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_row_vec)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SRowVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -21913,8 +21916,8 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_ar_mat)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -22047,7 +22050,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_1d_simplex)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22102,9 +22105,9 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_3d_simplex)
       (decl_type
        (Sized
-        (SArray
-         (SArray
-          (SArray
+        (SArray AoS
+         (SArray AoS
+          (SArray AoS
            (SVector AoS
             ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -22257,7 +22260,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_cfcov_33_ar)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -22378,12 +22381,13 @@
   ((p_real
     ((begin_loc ((filename mother.stan) (line_num 599) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 599) (col_num 14) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters) (out_trans Identity)))
    (p_upper
     ((begin_loc ((filename mother.stan) (line_num 600) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 600) (col_num 29) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters)
      (out_trans
       (Lower
        ((pattern (Var p_real))
@@ -22391,7 +22395,8 @@
    (p_lower
     ((begin_loc ((filename mother.stan) (line_num 601) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 601) (col_num 30) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters)
      (out_trans
       (Upper
        ((pattern (Var p_upper))
@@ -22400,10 +22405,10 @@
     ((begin_loc ((filename mother.stan) (line_num 602) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 602) (col_num 58) (included_from ()))))
     ((out_unconstrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters)
      (out_trans
@@ -22414,10 +22419,10 @@
     ((begin_loc ((filename mother.stan) (line_num 603) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 603) (col_num 51) (included_from ()))))
     ((out_unconstrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters)
      (out_trans
@@ -22427,10 +22432,10 @@
     ((begin_loc ((filename mother.stan) (line_num 604) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 604) (col_num 47) (included_from ()))))
     ((out_unconstrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters)
      (out_trans
@@ -22440,10 +22445,10 @@
     ((begin_loc ((filename mother.stan) (line_num 605) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 605) (col_num 38) (included_from ()))))
     ((out_unconstrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters)
      (out_trans
@@ -22453,16 +22458,16 @@
     ((begin_loc ((filename mother.stan) (line_num 606) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 606) (col_num 44) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray SReal
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS (SReal AoS)
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray SReal
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS (SReal AoS)
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -22487,12 +22492,12 @@
     ((begin_loc ((filename mother.stan) (line_num 608) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 608) (col_num 30) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -22501,18 +22506,18 @@
     ((begin_loc ((filename mother.stan) (line_num 609) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 609) (col_num 36) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -22533,12 +22538,12 @@
     ((begin_loc ((filename mother.stan) (line_num 611) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 611) (col_num 38) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -22547,18 +22552,18 @@
     ((begin_loc ((filename mother.stan) (line_num 612) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 612) (col_num 44) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -22581,16 +22586,16 @@
     ((begin_loc ((filename mother.stan) (line_num 614) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 614) (col_num 54) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
+      (SArray AoS
+       (SArray AoS
         (SMatrix AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
+      (SArray AoS
+       (SArray AoS
         (SMatrix AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -22620,7 +22625,7 @@
     ((begin_loc ((filename mother.stan) (line_num 616) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 616) (col_num 35) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern
           (FunApp (StanLib Minus__ FnPlain AoS)
@@ -22630,7 +22635,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -22639,9 +22644,9 @@
     ((begin_loc ((filename mother.stan) (line_num 617) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 617) (col_num 41) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern
             (FunApp (StanLib Minus__ FnPlain AoS)
@@ -22653,9 +22658,9 @@
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -22760,7 +22765,7 @@
     ((begin_loc ((filename mother.stan) (line_num 620) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 620) (col_num 48) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern
           (FunApp (StanLib Plus__ FnPlain AoS)
@@ -22801,7 +22806,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -22831,10 +22836,10 @@
     ((begin_loc ((filename mother.stan) (line_num 625) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 625) (col_num 39) (included_from ()))))
     ((out_unconstrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters)
      (out_trans
@@ -22844,16 +22849,16 @@
     ((begin_loc ((filename mother.stan) (line_num 626) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 626) (col_num 45) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray SReal
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS (SReal AoS)
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray SReal
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS (SReal AoS)
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -22878,12 +22883,12 @@
     ((begin_loc ((filename mother.stan) (line_num 628) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 628) (col_num 31) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -22892,18 +22897,18 @@
     ((begin_loc ((filename mother.stan) (line_num 629) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 629) (col_num 37) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -22924,12 +22929,12 @@
     ((begin_loc ((filename mother.stan) (line_num 631) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 631) (col_num 39) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -22938,18 +22943,18 @@
     ((begin_loc ((filename mother.stan) (line_num 632) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 632) (col_num 45) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -22972,16 +22977,16 @@
     ((begin_loc ((filename mother.stan) (line_num 634) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 634) (col_num 55) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
+      (SArray AoS
+       (SArray AoS
         (SMatrix AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
+      (SArray AoS
+       (SArray AoS
         (SMatrix AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23011,7 +23016,7 @@
     ((begin_loc ((filename mother.stan) (line_num 636) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 636) (col_num 36) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern
           (FunApp (StanLib Minus__ FnPlain AoS)
@@ -23021,7 +23026,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -23030,9 +23035,9 @@
     ((begin_loc ((filename mother.stan) (line_num 637) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 637) (col_num 42) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern
             (FunApp (StanLib Minus__ FnPlain AoS)
@@ -23044,9 +23049,9 @@
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23151,7 +23156,7 @@
     ((begin_loc ((filename mother.stan) (line_num 640) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 640) (col_num 49) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern
           (FunApp (StanLib Plus__ FnPlain AoS)
@@ -23192,7 +23197,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23211,26 +23216,26 @@
    (tp_real
     ((begin_loc ((filename mother.stan) (line_num 642) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 642) (col_num 15) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block TransformedParameters) (out_trans Identity)))
    (gq_r1
     ((begin_loc ((filename mother.stan) (line_num 733) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 733) (col_num 32) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_r2
     ((begin_loc ((filename mother.stan) (line_num 734) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 734) (col_num 27) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_real_1d_ar
     ((begin_loc ((filename mother.stan) (line_num 735) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 735) (col_num 39) (included_from ()))))
     ((out_unconstrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block GeneratedQuantities)
      (out_trans
@@ -23240,16 +23245,16 @@
     ((begin_loc ((filename mother.stan) (line_num 736) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 736) (col_num 45) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray SReal
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS (SReal AoS)
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray SReal
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS (SReal AoS)
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -23274,12 +23279,12 @@
     ((begin_loc ((filename mother.stan) (line_num 738) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 738) (col_num 31) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -23288,18 +23293,18 @@
     ((begin_loc ((filename mother.stan) (line_num 739) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 739) (col_num 37) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23320,12 +23325,12 @@
     ((begin_loc ((filename mother.stan) (line_num 741) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 741) (col_num 39) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -23334,18 +23339,18 @@
     ((begin_loc ((filename mother.stan) (line_num 742) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 742) (col_num 45) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SRowVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23356,16 +23361,16 @@
     ((begin_loc ((filename mother.stan) (line_num 743) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 743) (col_num 55) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
+      (SArray AoS
+       (SArray AoS
         (SMatrix AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
+      (SArray AoS
+       (SArray AoS
         (SMatrix AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23395,7 +23400,7 @@
     ((begin_loc ((filename mother.stan) (line_num 745) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 745) (col_num 36) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern
           (FunApp (StanLib Minus__ FnPlain AoS)
@@ -23405,7 +23410,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -23414,9 +23419,9 @@
     ((begin_loc ((filename mother.stan) (line_num 746) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 746) (col_num 42) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern
             (FunApp (StanLib Minus__ FnPlain AoS)
@@ -23428,9 +23433,9 @@
         ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
-        (SArray
+      (SArray AoS
+       (SArray AoS
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23535,7 +23540,7 @@
     ((begin_loc ((filename mother.stan) (line_num 749) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 749) (col_num 49) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern
           (FunApp (StanLib Plus__ FnPlain AoS)
@@ -23576,7 +23581,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23586,23 +23591,23 @@
     ((begin_loc ((filename mother.stan) (line_num 750) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 750) (col_num 35) (included_from ()))))
     ((out_unconstrained_st
-      (SArray SInt
+      (SArray AoS (SInt AoS)
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray SInt
+      (SArray AoS (SInt AoS)
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block GeneratedQuantities) (out_trans Identity)))
    (indexing_mat
     ((begin_loc ((filename mother.stan) (line_num 751) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 751) (col_num 37) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23612,13 +23617,13 @@
     ((begin_loc ((filename mother.stan) (line_num 752) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 752) (col_num 33) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23628,13 +23633,13 @@
     ((begin_loc ((filename mother.stan) (line_num 753) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 753) (col_num 33) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23644,13 +23649,13 @@
     ((begin_loc ((filename mother.stan) (line_num 754) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 754) (col_num 33) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23660,13 +23665,13 @@
     ((begin_loc ((filename mother.stan) (line_num 755) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 755) (col_num 34) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23676,13 +23681,13 @@
     ((begin_loc ((filename mother.stan) (line_num 756) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 756) (col_num 34) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23692,13 +23697,13 @@
     ((begin_loc ((filename mother.stan) (line_num 757) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 757) (col_num 34) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SMatrix AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -23708,12 +23713,12 @@
     ((begin_loc ((filename mother.stan) (line_num 758) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 758) (col_num 34) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SRowVector AoS
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -23722,12 +23727,12 @@
     ((begin_loc ((filename mother.stan) (line_num 759) (col_num 2) (included_from ())))
      (end_loc ((filename mother.stan) (line_num 759) (col_num 30) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))

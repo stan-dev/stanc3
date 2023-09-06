@@ -244,12 +244,22 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   std::vector<int> y2_vi_d_td;
   int y_s_d_td;
   double y_r_d_td;
-  matrix_cl<double> X_d_opencl__;
-  matrix_cl<double> X_d_td_opencl__;
-  matrix_cl<double> y_v_d_opencl__;
-  matrix_cl<double> y_v_d_td_opencl__;
-  matrix_cl<int> y_vi_d_opencl__;
-  matrix_cl<double> y_vi_d_td_opencl__;
+  stan::math::matrix_cl<double> X_d_opencl__;
+  std::vector<Eigen::Matrix<stan::math::matrix_cl<double>,-1,-1>>
+    X_d_a_opencl__;
+  stan::math::matrix_cl<double> y_v_d_opencl__;
+  stan::math::matrix_cl<double> X_rv_d_opencl__;
+  stan::math::matrix_cl<int> y_vi_d_opencl__;
+  stan::math::matrix_cl<int> y2_vi_d_opencl__;
+  stan::math::matrix_cl<int> y_s_d_opencl__;
+  stan::math::matrix_cl<double> y_r_d_opencl__;
+  stan::math::matrix_cl<double> X_d_td_opencl__;
+  stan::math::matrix_cl<double> y_v_d_td_opencl__;
+  stan::math::matrix_cl<double> X_rv_d_td_opencl__;
+  stan::math::matrix_cl<int> y_vi_d_td_opencl__;
+  stan::math::matrix_cl<int> y2_vi_d_td_opencl__;
+  stan::math::matrix_cl<int> y_s_d_td_opencl__;
+  stan::math::matrix_cl<double> y_r_d_td_opencl__;
   Eigen::Map<Eigen::Matrix<double,-1,-1>> X_d{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<double,-1,1>> y_v_d{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double,1,-1>> X_rv_d{nullptr, 0};
@@ -473,12 +483,70 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::validate_non_negative_index("beta_m", "k", k);
       current_statement__ = 216;
       stan::math::validate_non_negative_index("X_rv_p", "n", n);
+      current_statement__ = 180;
       X_d_opencl__ = stan::math::to_matrix_cl(X_d);
-      X_d_td_opencl__ = stan::math::to_matrix_cl(X_d_td);
+      current_statement__ = 180;
+      X_d_opencl__ = stan::math::to_matrix_cl(X_d);
+      current_statement__ = 183;
+      X_d_a_opencl__ = std::vector<Eigen::Matrix<double,-1,-1>>(2,
+                         Eigen::Matrix<double,-1,-1>::Constant(n, k,
+                           std::numeric_limits<double>::quiet_NaN()));
+      current_statement__ = 183;
+      X_d_a_opencl__ = stan::math::to_matrix_cl(X_d_a);
+      current_statement__ = 185;
       y_v_d_opencl__ = stan::math::to_matrix_cl(y_v_d);
-      y_v_d_td_opencl__ = stan::math::to_matrix_cl(y_v_d_td);
+      current_statement__ = 185;
+      y_v_d_opencl__ = stan::math::to_matrix_cl(y_v_d);
+      current_statement__ = 187;
+      X_rv_d_opencl__ = stan::math::to_matrix_cl(X_rv_d);
+      current_statement__ = 187;
+      X_rv_d_opencl__ = stan::math::to_matrix_cl(X_rv_d);
+      current_statement__ = 189;
+      y_vi_d_opencl__ = std::vector<int>(n, std::numeric_limits<int>::min());
+      current_statement__ = 189;
       y_vi_d_opencl__ = stan::math::to_matrix_cl(y_vi_d);
+      current_statement__ = 191;
+      y2_vi_d_opencl__ = std::vector<int>(n, std::numeric_limits<int>::min());
+      current_statement__ = 191;
+      y2_vi_d_opencl__ = stan::math::to_matrix_cl(y2_vi_d);
+      current_statement__ = 192;
+      y_s_d_opencl__ = std::numeric_limits<int>::min();
+      current_statement__ = 192;
+      y_s_d_opencl__ = stan::math::to_matrix_cl(y_s_d);
+      current_statement__ = 193;
+      y_r_d_opencl__ = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 193;
+      y_r_d_opencl__ = stan::math::to_matrix_cl(y_r_d);
+      current_statement__ = 198;
+      X_d_td_opencl__ = stan::math::to_matrix_cl(X_d_td);
+      current_statement__ = 198;
+      X_d_td_opencl__ = stan::math::to_matrix_cl(X_d_td);
+      current_statement__ = 200;
+      y_v_d_td_opencl__ = stan::math::to_matrix_cl(y_v_d_td);
+      current_statement__ = 200;
+      y_v_d_td_opencl__ = stan::math::to_matrix_cl(y_v_d_td);
+      current_statement__ = 202;
+      X_rv_d_td_opencl__ = stan::math::to_matrix_cl(X_rv_d_td);
+      current_statement__ = 202;
+      X_rv_d_td_opencl__ = stan::math::to_matrix_cl(X_rv_d_td);
+      current_statement__ = 204;
+      y_vi_d_td_opencl__ = std::vector<int>(n,
+                             std::numeric_limits<int>::min());
+      current_statement__ = 204;
       y_vi_d_td_opencl__ = stan::math::to_matrix_cl(y_vi_d_td);
+      current_statement__ = 206;
+      y2_vi_d_td_opencl__ = std::vector<int>(n,
+                              std::numeric_limits<int>::min());
+      current_statement__ = 206;
+      y2_vi_d_td_opencl__ = stan::math::to_matrix_cl(y2_vi_d_td);
+      current_statement__ = 207;
+      y_s_d_td_opencl__ = std::numeric_limits<int>::min();
+      current_statement__ = 207;
+      y_s_d_td_opencl__ = stan::math::to_matrix_cl(y_s_d_td);
+      current_statement__ = 208;
+      y_r_d_td_opencl__ = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 208;
+      y_r_d_td_opencl__ = stan::math::to_matrix_cl(y_r_d_td);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -550,39 +618,29 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       {
         current_statement__ = 10;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta),
-                         sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d, X_d,
+                         alpha, beta, sigma));
         current_statement__ = 11;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
-                         y_v_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d, X_d,
+                         alpha, beta, sigma));
         current_statement__ = 12;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d, X_p,
+                         alpha, beta, sigma));
         current_statement__ = 13;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
-                         y_v_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d, X_p,
+                         alpha, beta, sigma));
         current_statement__ = 14;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d, X_d,
+                         alpha, beta, beta));
         current_statement__ = 15;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d, X_d,
+                         alpha, beta, beta));
         current_statement__ = 16;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d, X_p,
+                         alpha, beta, beta));
         current_statement__ = 17;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d, X_p,
+                         alpha, beta, beta));
         current_statement__ = 18;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d, X_rv_d,
                          alpha, beta, beta));
@@ -596,41 +654,29 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d,
                          X_rv_p, alpha, beta, beta));
         current_statement__ = 22;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(
-                         y_v_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_td,
+                         X_d_td, alpha, beta, sigma));
         current_statement__ = 23;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
-                         y_v_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d_td,
+                         X_d_td, alpha, beta, sigma));
         current_statement__ = 24;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(
-                         y_v_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_td, X_p,
+                         alpha, beta, sigma));
         current_statement__ = 25;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
-                         y_v_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d_td,
+                         X_p, alpha, beta, sigma));
         current_statement__ = 26;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+                         X_d_td, alpha, beta, beta));
         current_statement__ = 27;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+                         X_d_td, alpha, beta, beta));
         current_statement__ = 28;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d_td, X_p,
+                         alpha, beta, beta));
         current_statement__ = 29;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+                         X_p, alpha, beta, beta));
         current_statement__ = 30;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_td,
                          X_rv_d_td, alpha, beta, beta));
@@ -644,21 +690,17 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d_td,
                          X_rv_p, alpha, beta, beta));
         current_statement__ = 34;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d,
+                         X_d, alpha, beta));
         current_statement__ = 35;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(y_vi_d,
+                         X_d, alpha, beta));
         current_statement__ = 36;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d,
+                         X_p, alpha, beta));
         current_statement__ = 37;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(y_vi_d,
+                         X_p, alpha, beta));
         current_statement__ = 38;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d,
                          X_rv_d, alpha, beta));
@@ -673,34 +715,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                          X_rv_p, alpha, beta));
         current_statement__ = 42;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta)));
+                         X_d, alpha, beta));
         current_statement__ = 43;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta)));
+                         X_d, alpha, beta));
         current_statement__ = 44;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         X_p, alpha, beta));
         current_statement__ = 45;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         X_p, alpha, beta));
         current_statement__ = 46;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d_td,
+                         X_d_td, alpha, beta));
         current_statement__ = 47;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td, X_d_td, alpha, beta));
         current_statement__ = 48;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d_td,
+                         X_p, alpha, beta));
         current_statement__ = 49;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td, X_p, alpha, beta));
         current_statement__ = 50;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d_td,
                          X_rv_d_td, alpha, beta));
@@ -715,50 +751,40 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                          y_vi_d_td, X_rv_p, alpha, beta));
         current_statement__ = 54;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_s_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         X_d_td, alpha, beta));
         current_statement__ = 55;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_s_d_td, X_d_td, alpha, beta));
         current_statement__ = 56;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         X_p, alpha, beta));
         current_statement__ = 57;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_s_d_td, X_p, alpha, beta));
         current_statement__ = 58;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d, X_d,
+                         alpha, beta));
         current_statement__ = 59;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d,
+                         X_d, alpha, beta));
         current_statement__ = 60;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d, X_p,
+                         alpha, beta));
         current_statement__ = 61;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d,
+                         X_p, alpha, beta));
         current_statement__ = 62;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d, X_d,
+                         alpha, beta));
         current_statement__ = 63;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d, X_d,
+                         alpha, beta));
         current_statement__ = 64;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d, X_p,
+                         alpha, beta));
         current_statement__ = 65;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d, X_p,
+                         alpha, beta));
         current_statement__ = 66;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d,
                          X_rv_d, alpha, beta));
@@ -772,37 +798,29 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d,
                          X_rv_p, alpha, beta));
         current_statement__ = 70;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d_td,
+                         X_d_td, alpha, beta));
         current_statement__ = 71;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d_td,
+                         X_d_td, alpha, beta));
         current_statement__ = 72;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d_td,
+                         X_p, alpha, beta));
         current_statement__ = 73;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d_td,
+                         X_p, alpha, beta));
         current_statement__ = 74;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         X_d_td, alpha, beta));
         current_statement__ = 75;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         X_d_td, alpha, beta));
         current_statement__ = 76;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d_td, X_p,
+                         alpha, beta));
         current_statement__ = 77;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         X_p, alpha, beta));
         current_statement__ = 78;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d_td,
                          X_rv_d_td, alpha, beta));
@@ -816,37 +834,29 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d_td,
                          X_rv_p, alpha, beta));
         current_statement__ = 82;
-        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(y_vi_d,
+                         X_d, alpha, beta, phi));
         current_statement__ = 83;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d, X_d, alpha, beta, phi));
         current_statement__ = 84;
-        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), phi));
+        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(y_vi_d,
+                         X_p, alpha, beta, phi));
         current_statement__ = 85;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d, X_p, alpha, beta, phi));
         current_statement__ = 86;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta),
-                         phi));
+                         X_d, alpha, beta, phi));
         current_statement__ = 87;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_s_d, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d, X_d, alpha, beta, phi));
         current_statement__ = 88;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         X_p, alpha, beta, phi));
         current_statement__ = 89;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_s_d, stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d, X_p, alpha, beta, phi));
         current_statement__ = 90;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(y_vi_d,
                          X_rv_d, alpha, beta, phi));
@@ -861,36 +871,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                          y_vi_d, X_rv_p, alpha, beta, phi));
         current_statement__ = 94;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_td, X_d_td, alpha, beta, phi));
         current_statement__ = 95;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_td, X_d_td, alpha, beta, phi));
         current_statement__ = 96;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_td, X_p, alpha, beta, phi));
         current_statement__ = 97;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_td, X_p, alpha, beta, phi));
         current_statement__ = 98;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_s_d_td, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_td, X_d_td, alpha, beta, phi));
         current_statement__ = 99;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_td, X_d_td, alpha, beta, phi));
         current_statement__ = 100;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_td, X_p, alpha, beta, phi));
         current_statement__ = 101;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_td, X_p, alpha, beta, phi));
         current_statement__ = 102;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
                          y_vi_d_td, X_rv_d_td, alpha, beta, phi));
@@ -905,78 +907,52 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                          y_vi_d_td, X_rv_p, alpha, beta, phi));
         current_statement__ = 106;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_d, beta, cuts));
         current_statement__ = 107;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_d, beta, cuts));
         current_statement__ = 108;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_p, beta, cuts));
         current_statement__ = 109;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_p, beta, cuts));
         current_statement__ = 110;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d_td,
-                         X_d_td_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_d_td, beta, cuts));
         current_statement__ = 111;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_s_d_td, X_d_td, beta, cuts));
         current_statement__ = 112;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_p, beta, cuts));
         current_statement__ = 113;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_s_d_td, X_p, beta, cuts));
         current_statement__ = 114;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_d, beta, cuts));
         current_statement__ = 115;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_d, beta, cuts));
         current_statement__ = 116;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_p, beta, cuts));
         current_statement__ = 117;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_p, beta, cuts));
         current_statement__ = 118;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d_td,
-                         X_d_td_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_d_td, beta, cuts));
         current_statement__ = 119;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_s_d_td, X_d_td, beta, cuts));
         current_statement__ = 120;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         X_p, beta, cuts));
         current_statement__ = 121;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_s_d_td, X_p, beta, cuts));
         current_statement__ = 122;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
                          X_rv_d, beta, cuts));
@@ -990,45 +966,29 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
                          X_rv_p, beta, cuts));
         current_statement__ = 126;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_vi_d,
+                         X_d, beta, cuts));
         current_statement__ = 127;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d, X_d, beta, cuts));
         current_statement__ = 128;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_vi_d,
+                         X_p, beta, cuts));
         current_statement__ = 129;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d, X_p, beta, cuts));
         current_statement__ = 130;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_td, X_d_td, beta, cuts));
         current_statement__ = 131;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_td, X_d_td, beta, cuts));
         current_statement__ = 132;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_td, X_p, beta, cuts));
         current_statement__ = 133;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_td, X_p, beta, cuts));
         current_statement__ = 134;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_vi_d,
                          X_rv_d, beta, cuts));
@@ -1043,43 +1003,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                          y_vi_d, X_rv_p, beta, cuts));
         current_statement__ = 138;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         X_d, alpha_v, beta_m));
         current_statement__ = 139;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d, X_d_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d, X_d, alpha_v, beta_m));
         current_statement__ = 140;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         X_p, alpha_v, beta_m));
         current_statement__ = 141;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d, X_p, alpha_v, beta_m));
         current_statement__ = 142;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_s_d_td, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_td, X_d_td, alpha_v, beta_m));
         current_statement__ = 143;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_td, X_d_td, alpha_v, beta_m));
         current_statement__ = 144;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_td, X_p, alpha_v, beta_m));
         current_statement__ = 145;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_td, X_p, alpha_v, beta_m));
         current_statement__ = 146;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_s_d,
                          X_rv_d, alpha_v, beta_m));
@@ -1105,45 +1050,29 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
                          y_s_d_td, X_rv_p, alpha_v, beta_m));
         current_statement__ = 154;
-        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_vi_d,
+                         X_d, alpha_v, beta_m));
         current_statement__ = 155;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d, X_d, alpha_v, beta_m));
         current_statement__ = 156;
-        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_vi_d,
+                         X_p, alpha_v, beta_m));
         current_statement__ = 157;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d, X_p, alpha_v, beta_m));
         current_statement__ = 158;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_td, X_d_td, alpha_v, beta_m));
         current_statement__ = 159;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_td, X_d_td, alpha_v, beta_m));
         current_statement__ = 160;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_td, X_p, alpha_v, beta_m));
         current_statement__ = 161;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_td, X_p, alpha_v, beta_m));
         current_statement__ = 162;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_vi_d,
                          X_rv_d, alpha_v, beta_m));
@@ -1181,25 +1110,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
                          y2_vi_d_td, X_rv_p, alpha_v, beta_m));
         current_statement__ = 174;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
-                         stan::math::to_matrix_cl(
-                           stan::model::rvalue(X_d_a, "X_d_a",
-                             stan::model::index_uni(1))), alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d,
+                         stan::model::rvalue(X_d_a, "X_d_a",
+                           stan::model::index_uni(1)), alpha, beta, sigma));
         current_statement__ = 175;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
-                         y_v_d_opencl__,
-                         stan::math::to_matrix_cl(
-                           stan::model::rvalue(X_d_a, "X_d_a",
-                             stan::model::index_uni(1))), alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d,
+                         stan::model::rvalue(X_d_a, "X_d_a",
+                           stan::model::index_uni(1)), alpha, beta, sigma));
       }
-      X_d_opencl__.wait_for_read_write_events();
-      X_d_td_opencl__.wait_for_read_write_events();
-      y_v_d_opencl__.wait_for_read_write_events();
-      y_v_d_td_opencl__.wait_for_read_write_events();
-      y_vi_d_opencl__.wait_for_read_write_events();
-      y_vi_d_td_opencl__.wait_for_read_write_events();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1228,693 +1146,579 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> alpha_v =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
+      stan::math::var_value<stan::math::matrix_cl<double>> alpha_v =
+        stan::math::var_value<stan::math::matrix_cl<double>>(Eigen::Matrix<double,-1,1>::Constant(k,
+                                                               std::numeric_limits<double>::quiet_NaN(
+                                                                 )));
       current_statement__ = 1;
-      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
+      alpha_v = in__.template read<
+                  stan::math::var_value<stan::math::matrix_cl<double>>>(k);
+      stan::math::var_value<stan::math::matrix_cl<double>> beta =
+        stan::math::var_value<stan::math::matrix_cl<double>>(Eigen::Matrix<double,-1,1>::Constant(k,
+                                                               std::numeric_limits<double>::quiet_NaN(
+                                                                 )));
       current_statement__ = 2;
-      beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      Eigen::Matrix<local_scalar_t__,-1,1> cuts =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
+      beta = in__.template read<
+               stan::math::var_value<stan::math::matrix_cl<double>>>(k);
+      stan::math::var_value<stan::math::matrix_cl<double>> cuts =
+        stan::math::var_value<stan::math::matrix_cl<double>>(Eigen::Matrix<double,-1,1>::Constant(k,
+                                                               std::numeric_limits<double>::quiet_NaN(
+                                                                 )));
       current_statement__ = 3;
-      cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      local_scalar_t__ sigma = DUMMY_VAR__;
+      cuts = in__.template read<
+               stan::math::var_value<stan::math::matrix_cl<double>>>(k);
+      stan::math::matrix_cl<local_scalar_t__> sigma = DUMMY_VAR__;
       current_statement__ = 4;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      local_scalar_t__ alpha = DUMMY_VAR__;
+      sigma = in__.template read_constrain_lb<
+                stan::math::matrix_cl<local_scalar_t__>, jacobian__>(0, lp__);
+      stan::math::matrix_cl<local_scalar_t__> alpha = DUMMY_VAR__;
       current_statement__ = 5;
-      alpha = in__.template read<local_scalar_t__>();
-      local_scalar_t__ phi = DUMMY_VAR__;
+      alpha = in__.template read<stan::math::matrix_cl<local_scalar_t__>>();
+      stan::math::matrix_cl<local_scalar_t__> phi = DUMMY_VAR__;
       current_statement__ = 6;
-      phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n, k, DUMMY_VAR__);
+      phi = in__.template read<stan::math::matrix_cl<local_scalar_t__>>();
+      stan::math::var_value<stan::math::matrix_cl<double>> X_p =
+        stan::math::var_value<stan::math::matrix_cl<double>>(Eigen::Matrix<double,-1,-1>::Constant(n,
+                                                               k,
+                                                               std::numeric_limits<double>::quiet_NaN(
+                                                                 )));
       current_statement__ = 7;
-      X_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
-      Eigen::Matrix<local_scalar_t__,-1,-1> beta_m =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n, k, DUMMY_VAR__);
+      X_p = in__.template read<
+              stan::math::var_value<stan::math::matrix_cl<double>>>(n, k);
+      stan::math::var_value<stan::math::matrix_cl<double>> beta_m =
+        stan::math::var_value<stan::math::matrix_cl<double>>(Eigen::Matrix<double,-1,-1>::Constant(n,
+                                                               k,
+                                                               std::numeric_limits<double>::quiet_NaN(
+                                                                 )));
       current_statement__ = 8;
-      beta_m = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n,
-                 k);
-      Eigen::Matrix<local_scalar_t__,1,-1> X_rv_p =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(n, DUMMY_VAR__);
+      beta_m = in__.template read<
+                 stan::math::var_value<stan::math::matrix_cl<double>>>(n, k);
+      stan::math::var_value<stan::math::matrix_cl<double>> X_rv_p =
+        stan::math::var_value<stan::math::matrix_cl<double>>(Eigen::Matrix<double,1,-1>::Constant(n,
+                                                               std::numeric_limits<double>::quiet_NaN(
+                                                                 )));
       current_statement__ = 9;
-      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
+      X_rv_p = in__.template read<
+                 stan::math::var_value<stan::math::matrix_cl<double>>>(n);
       {
         current_statement__ = 10;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta),
-                         sigma));
+                         X_d_opencl__, alpha, beta, sigma));
         current_statement__ = 11;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
-                         y_v_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+                         y_v_d_opencl__, X_d_opencl__, alpha, beta, sigma));
         current_statement__ = 12;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+                         X_p, alpha, beta, sigma));
         current_statement__ = 13;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
-                         y_v_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), sigma));
+                         y_v_d_opencl__, X_p, alpha, beta, sigma));
         current_statement__ = 14;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d_opencl__,
+                         X_d_opencl__, alpha, beta, beta));
         current_statement__ = 15;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
+                         y_r_d_opencl__, X_d_opencl__, alpha, beta, beta));
         current_statement__ = 16;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d_opencl__,
+                         X_p, alpha, beta, beta));
         current_statement__ = 17;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
+                         y_r_d_opencl__, X_p, alpha, beta, beta));
         current_statement__ = 18;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d, X_rv_d,
-                         alpha, beta, beta));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
+                         X_rv_d_opencl__, alpha, beta, beta));
         current_statement__ = 19;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d,
-                         X_rv_d, alpha, beta, beta));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
+                         y_v_d_opencl__, X_rv_d_opencl__, alpha, beta, beta));
         current_statement__ = 20;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d, X_rv_p,
-                         alpha, beta, beta));
-        current_statement__ = 21;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d,
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
                          X_rv_p, alpha, beta, beta));
+        current_statement__ = 21;
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
+                         y_v_d_opencl__, X_rv_p, alpha, beta, beta));
         current_statement__ = 22;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(
-                         y_v_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+                         y_v_d_td_opencl__, X_d_td_opencl__, alpha, beta,
+                         sigma));
         current_statement__ = 23;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
-                         y_v_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+                         y_v_d_td_opencl__, X_d_td_opencl__, alpha, beta,
+                         sigma));
         current_statement__ = 24;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(
-                         y_v_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), sigma));
+                         y_v_d_td_opencl__, X_p, alpha, beta, sigma));
         current_statement__ = 25;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
-                         y_v_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), sigma));
+                         y_v_d_td_opencl__, X_p, alpha, beta, sigma));
         current_statement__ = 26;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(
+                         y_r_d_td_opencl__, X_d_td_opencl__, alpha, beta,
+                         beta));
         current_statement__ = 27;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
+                         y_r_d_td_opencl__, X_d_td_opencl__, alpha, beta,
+                         beta));
         current_statement__ = 28;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_r_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(
+                         y_r_d_td_opencl__, X_p, alpha, beta, beta));
         current_statement__ = 29;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_r_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
+                         y_r_d_td_opencl__, X_p, alpha, beta, beta));
         current_statement__ = 30;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_td,
-                         X_rv_d_td, alpha, beta, beta));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(
+                         y_v_d_td_opencl__, X_rv_d_td_opencl__, alpha, beta,
+                         beta));
         current_statement__ = 31;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d_td,
-                         X_rv_d_td, alpha, beta, beta));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
+                         y_v_d_td_opencl__, X_rv_d_td_opencl__, alpha, beta,
+                         beta));
         current_statement__ = 32;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_td,
-                         X_rv_p, alpha, beta, beta));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(
+                         y_v_d_td_opencl__, X_rv_p, alpha, beta, beta));
         current_statement__ = 33;
-        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(y_v_d_td,
-                         X_rv_p, alpha, beta, beta));
+        lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
+                         y_v_d_td_opencl__, X_rv_p, alpha, beta, beta));
         current_statement__ = 34;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_vi_d_opencl__, X_d_opencl__, alpha, beta));
         current_statement__ = 35;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_vi_d_opencl__, X_d_opencl__, alpha, beta));
         current_statement__ = 36;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+                         y_vi_d_opencl__, X_p, alpha, beta));
         current_statement__ = 37;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+                         y_vi_d_opencl__, X_p, alpha, beta));
         current_statement__ = 38;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d,
-                         X_rv_d, alpha, beta));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_d_opencl__, alpha, beta));
         current_statement__ = 39;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(y_vi_d,
-                         X_rv_d, alpha, beta));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
+                         y_vi_d_opencl__, X_rv_d_opencl__, alpha, beta));
         current_statement__ = 40;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d,
-                         X_rv_p, alpha, beta));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_p, alpha, beta));
         current_statement__ = 41;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(y_vi_d,
-                         X_rv_p, alpha, beta));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
+                         y_vi_d_opencl__, X_rv_p, alpha, beta));
         current_statement__ = 42;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
+                         y_s_d_opencl__, X_d_opencl__, alpha, beta));
         current_statement__ = 43;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_d_opencl__, alpha, beta));
         current_statement__ = 44;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
+                         y_s_d_opencl__, X_p, alpha, beta));
         current_statement__ = 45;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_p, alpha, beta));
         current_statement__ = 46;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha, beta));
         current_statement__ = 47;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha, beta));
         current_statement__ = 48;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td_opencl__, X_p, alpha, beta));
         current_statement__ = 49;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td_opencl__, X_p, alpha, beta));
         current_statement__ = 50;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d_td,
-                         X_rv_d_td, alpha, beta));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
+                         y_vi_d_td_opencl__, X_rv_d_td_opencl__, alpha, beta));
         current_statement__ = 51;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_td, X_rv_d_td, alpha, beta));
+                         y_vi_d_td_opencl__, X_rv_d_td_opencl__, alpha, beta));
         current_statement__ = 52;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_vi_d_td,
-                         X_rv_p, alpha, beta));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
+                         y_vi_d_td_opencl__, X_rv_p, alpha, beta));
         current_statement__ = 53;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_vi_d_td, X_rv_p, alpha, beta));
+                         y_vi_d_td_opencl__, X_rv_p, alpha, beta));
         current_statement__ = 54;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_s_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
+                         y_s_d_td_opencl__, X_d_td_opencl__, alpha, beta));
         current_statement__ = 55;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_s_d_td_opencl__, X_d_td_opencl__, alpha, beta));
         current_statement__ = 56;
-        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<false>(
+                         y_s_d_td_opencl__, X_p, alpha, beta));
         current_statement__ = 57;
         lp_accum__.add(stan::math::bernoulli_logit_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_s_d_td_opencl__, X_p, alpha, beta));
         current_statement__ = 58;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_vi_d_opencl__, X_d_opencl__, alpha, beta));
         current_statement__ = 59;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_vi_d_opencl__, X_d_opencl__, alpha, beta));
         current_statement__ = 60;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+                         y_vi_d_opencl__, X_p, alpha, beta));
         current_statement__ = 61;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+                         y_vi_d_opencl__, X_p, alpha, beta));
         current_statement__ = 62;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
+                         y_s_d_opencl__, X_d_opencl__, alpha, beta));
         current_statement__ = 63;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_d_opencl__, alpha, beta));
         current_statement__ = 64;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
+                         y_s_d_opencl__, X_p, alpha, beta));
         current_statement__ = 65;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_p, alpha, beta));
         current_statement__ = 66;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d,
-                         X_rv_d, alpha, beta));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_d_opencl__, alpha, beta));
         current_statement__ = 67;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d,
-                         X_rv_d, alpha, beta));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
+                         y_vi_d_opencl__, X_rv_d_opencl__, alpha, beta));
         current_statement__ = 68;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d,
-                         X_rv_p, alpha, beta));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_p, alpha, beta));
         current_statement__ = 69;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d,
-                         X_rv_p, alpha, beta));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
+                         y_vi_d_opencl__, X_rv_p, alpha, beta));
         current_statement__ = 70;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha, beta));
         current_statement__ = 71;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha, beta));
         current_statement__ = 72;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td_opencl__, X_p, alpha, beta));
         current_statement__ = 73;
         lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta)));
+                         y_vi_d_td_opencl__, X_p, alpha, beta));
         current_statement__ = 74;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
+                         y_s_d_td_opencl__, X_d_td_opencl__, alpha, beta));
         current_statement__ = 75;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d_td,
-                         X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
+                         y_s_d_td_opencl__, X_d_td_opencl__, alpha, beta));
         current_statement__ = 76;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
+                         y_s_d_td_opencl__, X_p, alpha, beta));
         current_statement__ = 77;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta)));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
+                         y_s_d_td_opencl__, X_p, alpha, beta));
         current_statement__ = 78;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d_td,
-                         X_rv_d_td, alpha, beta));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
+                         y_vi_d_td_opencl__, X_rv_d_td_opencl__, alpha, beta));
         current_statement__ = 79;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d_td,
-                         X_rv_d_td, alpha, beta));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
+                         y_vi_d_td_opencl__, X_rv_d_td_opencl__, alpha, beta));
         current_statement__ = 80;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(y_vi_d_td,
-                         X_rv_p, alpha, beta));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<false>(
+                         y_vi_d_td_opencl__, X_rv_p, alpha, beta));
         current_statement__ = 81;
-        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(y_vi_d_td,
-                         X_rv_p, alpha, beta));
+        lp_accum__.add(stan::math::poisson_log_glm_lpmf<propto__>(
+                         y_vi_d_td_opencl__, X_rv_p, alpha, beta));
         current_statement__ = 82;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_opencl__, X_d_opencl__, alpha, beta, phi));
         current_statement__ = 83;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_opencl__, X_d_opencl__, alpha, beta, phi));
         current_statement__ = 84;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_opencl__, X_p, alpha, beta, phi));
         current_statement__ = 85;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_opencl__, X_p, alpha, beta, phi));
         current_statement__ = 86;
-        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, alpha, stan::math::to_matrix_cl(beta),
-                         phi));
+        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
+                         y_s_d_opencl__, X_d_opencl__, alpha, beta, phi));
         current_statement__ = 87;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_s_d, X_d_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_opencl__, X_d_opencl__, alpha, beta, phi));
         current_statement__ = 88;
-        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
+                         y_s_d_opencl__, X_p, alpha, beta, phi));
         current_statement__ = 89;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_s_d, stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_opencl__, X_p, alpha, beta, phi));
         current_statement__ = 90;
-        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(y_vi_d,
-                         X_rv_d, alpha, beta, phi));
+        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_d_opencl__, alpha, beta, phi));
         current_statement__ = 91;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d, X_rv_d, alpha, beta, phi));
+                         y_vi_d_opencl__, X_rv_d_opencl__, alpha, beta, phi));
         current_statement__ = 92;
-        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(y_vi_d,
-                         X_rv_p, alpha, beta, phi));
+        lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_p, alpha, beta, phi));
         current_statement__ = 93;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d, X_rv_p, alpha, beta, phi));
+                         y_vi_d_opencl__, X_rv_p, alpha, beta, phi));
         current_statement__ = 94;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha, beta,
+                         phi));
         current_statement__ = 95;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha, beta,
+                         phi));
         current_statement__ = 96;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_td_opencl__, X_p, alpha, beta, phi));
         current_statement__ = 97;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         alpha, stan::math::to_matrix_cl(beta), phi));
+                         y_vi_d_td_opencl__, X_p, alpha, beta, phi));
         current_statement__ = 98;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_s_d_td, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_td_opencl__, X_d_td_opencl__, alpha, beta, phi));
         current_statement__ = 99;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__, alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_td_opencl__, X_d_td_opencl__, alpha, beta, phi));
         current_statement__ = 100;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_td_opencl__, X_p, alpha, beta, phi));
         current_statement__ = 101;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p), alpha,
-                         stan::math::to_matrix_cl(beta), phi));
+                         y_s_d_td_opencl__, X_p, alpha, beta, phi));
         current_statement__ = 102;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_td, X_rv_d_td, alpha, beta, phi));
+                         y_vi_d_td_opencl__, X_rv_d_td_opencl__, alpha, beta,
+                         phi));
         current_statement__ = 103;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_td, X_rv_d_td, alpha, beta, phi));
+                         y_vi_d_td_opencl__, X_rv_d_td_opencl__, alpha, beta,
+                         phi));
         current_statement__ = 104;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<false>(
-                         y_vi_d_td, X_rv_p, alpha, beta, phi));
+                         y_vi_d_td_opencl__, X_rv_p, alpha, beta, phi));
         current_statement__ = 105;
         lp_accum__.add(stan::math::neg_binomial_2_log_glm_lpmf<propto__>(
-                         y_vi_d_td, X_rv_p, alpha, beta, phi));
+                         y_vi_d_td_opencl__, X_rv_p, alpha, beta, phi));
         current_statement__ = 106;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_opencl__, X_d_opencl__, beta, cuts));
         current_statement__ = 107;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_d_opencl__, beta, cuts));
         current_statement__ = 108;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_opencl__, X_p, beta, cuts));
         current_statement__ = 109;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_p, beta, cuts));
         current_statement__ = 110;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d_td,
-                         X_d_td_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_td_opencl__, X_d_td_opencl__, beta, cuts));
         current_statement__ = 111;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_s_d_td_opencl__, X_d_td_opencl__, beta, cuts));
         current_statement__ = 112;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_td_opencl__, X_p, beta, cuts));
         current_statement__ = 113;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_s_d_td_opencl__, X_p, beta, cuts));
         current_statement__ = 114;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_opencl__, X_d_opencl__, beta, cuts));
         current_statement__ = 115;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_d_opencl__, beta, cuts));
         current_statement__ = 116;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_opencl__, X_p, beta, cuts));
         current_statement__ = 117;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_p, beta, cuts));
         current_statement__ = 118;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d_td,
-                         X_d_td_opencl__, stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_td_opencl__, X_d_td_opencl__, beta, cuts));
         current_statement__ = 119;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_s_d_td_opencl__, X_d_td_opencl__, beta, cuts));
         current_statement__ = 120;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d_td,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_td_opencl__, X_p, beta, cuts));
         current_statement__ = 121;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_s_d_td_opencl__, X_p, beta, cuts));
         current_statement__ = 122;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         X_rv_d, beta, cuts));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_opencl__, X_rv_d_opencl__, beta, cuts));
         current_statement__ = 123;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         X_rv_d, beta, cuts));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_rv_d_opencl__, beta, cuts));
         current_statement__ = 124;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_s_d,
-                         X_rv_p, beta, cuts));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_s_d_opencl__, X_rv_p, beta, cuts));
         current_statement__ = 125;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(y_s_d,
-                         X_rv_p, beta, cuts));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
+                         y_s_d_opencl__, X_rv_p, beta, cuts));
         current_statement__ = 126;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_opencl__, X_d_opencl__, beta, cuts));
         current_statement__ = 127;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_opencl__, X_d_opencl__, beta, cuts));
         current_statement__ = 128;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_opencl__, X_p, beta, cuts));
         current_statement__ = 129;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_opencl__, X_p, beta, cuts));
         current_statement__ = 130;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, beta, cuts));
         current_statement__ = 131;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, beta, cuts));
         current_statement__ = 132;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_td_opencl__, X_p, beta, cuts));
         current_statement__ = 133;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(beta),
-                         stan::math::to_matrix_cl(cuts)));
+                         y_vi_d_td_opencl__, X_p, beta, cuts));
         current_statement__ = 134;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_vi_d,
-                         X_rv_d, beta, cuts));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_d_opencl__, beta, cuts));
         current_statement__ = 135;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d, X_rv_d, beta, cuts));
+                         y_vi_d_opencl__, X_rv_d_opencl__, beta, cuts));
         current_statement__ = 136;
-        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(y_vi_d,
-                         X_rv_p, beta, cuts));
+        lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_p, beta, cuts));
         current_statement__ = 137;
         lp_accum__.add(stan::math::ordered_logistic_glm_lpmf<propto__>(
-                         y_vi_d, X_rv_p, beta, cuts));
+                         y_vi_d_opencl__, X_rv_p, beta, cuts));
         current_statement__ = 138;
-        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_s_d,
-                         X_d_opencl__, stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
+                         y_s_d_opencl__, X_d_opencl__, alpha_v, beta_m));
         current_statement__ = 139;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d, X_d_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_opencl__, X_d_opencl__, alpha_v, beta_m));
         current_statement__ = 140;
-        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_s_d,
-                         stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
+                         y_s_d_opencl__, X_p, alpha_v, beta_m));
         current_statement__ = 141;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_opencl__, X_p, alpha_v, beta_m));
         current_statement__ = 142;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_s_d_td, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_td_opencl__, X_d_td_opencl__, alpha_v, beta_m));
         current_statement__ = 143;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d_td, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_td_opencl__, X_d_td_opencl__, alpha_v, beta_m));
         current_statement__ = 144;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_td_opencl__, X_p, alpha_v, beta_m));
         current_statement__ = 145;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d_td, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_s_d_td_opencl__, X_p, alpha_v, beta_m));
         current_statement__ = 146;
-        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_s_d,
-                         X_rv_d, alpha_v, beta_m));
+        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
+                         y_s_d_opencl__, X_rv_d_opencl__, alpha_v, beta_m));
         current_statement__ = 147;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d, X_rv_d, alpha_v, beta_m));
+                         y_s_d_opencl__, X_rv_d_opencl__, alpha_v, beta_m));
         current_statement__ = 148;
-        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_s_d,
-                         X_rv_p, alpha_v, beta_m));
+        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
+                         y_s_d_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 149;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d, X_rv_p, alpha_v, beta_m));
+                         y_s_d_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 150;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_s_d_td, X_rv_d_td, alpha_v, beta_m));
+                         y_s_d_td_opencl__, X_rv_d_td_opencl__, alpha_v,
+                         beta_m));
         current_statement__ = 151;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d_td, X_rv_d_td, alpha_v, beta_m));
+                         y_s_d_td_opencl__, X_rv_d_td_opencl__, alpha_v,
+                         beta_m));
         current_statement__ = 152;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_s_d_td, X_rv_p, alpha_v, beta_m));
+                         y_s_d_td_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 153;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_s_d_td, X_rv_p, alpha_v, beta_m));
+                         y_s_d_td_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 154;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_opencl__, X_d_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_opencl__, X_d_opencl__, alpha_v, beta_m));
         current_statement__ = 155;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, X_d_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_opencl__, X_d_opencl__, alpha_v, beta_m));
         current_statement__ = 156;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_opencl__, X_p, alpha_v, beta_m));
         current_statement__ = 157;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_opencl__, X_p, alpha_v, beta_m));
         current_statement__ = 158;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha_v, beta_m));
         current_statement__ = 159;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, X_d_td_opencl__,
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_td_opencl__, X_d_td_opencl__, alpha_v, beta_m));
         current_statement__ = 160;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_td_opencl__, X_p, alpha_v, beta_m));
         current_statement__ = 161;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_td_opencl__, stan::math::to_matrix_cl(X_p),
-                         stan::math::to_matrix_cl(alpha_v),
-                         stan::math::to_matrix_cl(beta_m)));
+                         y_vi_d_td_opencl__, X_p, alpha_v, beta_m));
         current_statement__ = 162;
-        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_vi_d,
-                         X_rv_d, alpha_v, beta_m));
+        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_d_opencl__, alpha_v, beta_m));
         current_statement__ = 163;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d, X_rv_d, alpha_v, beta_m));
+                         y_vi_d_opencl__, X_rv_d_opencl__, alpha_v, beta_m));
         current_statement__ = 164;
-        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y_vi_d,
-                         X_rv_p, alpha_v, beta_m));
+        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
+                         y_vi_d_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 165;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d, X_rv_p, alpha_v, beta_m));
+                         y_vi_d_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 166;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_td, X_rv_d_td, alpha_v, beta_m));
+                         y_vi_d_td_opencl__, X_rv_d_td_opencl__, alpha_v,
+                         beta_m));
         current_statement__ = 167;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_td, X_rv_d_td, alpha_v, beta_m));
+                         y_vi_d_td_opencl__, X_rv_d_td_opencl__, alpha_v,
+                         beta_m));
         current_statement__ = 168;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y_vi_d_td, X_rv_p, alpha_v, beta_m));
+                         y_vi_d_td_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 169;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y_vi_d_td, X_rv_p, alpha_v, beta_m));
+                         y_vi_d_td_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 170;
-        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(y2_vi_d,
-                         X_rv_p, alpha_v, beta_m));
+        lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
+                         y2_vi_d_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 171;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y2_vi_d, X_rv_p, alpha_v, beta_m));
+                         y2_vi_d_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 172;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<false>(
-                         y2_vi_d_td, X_rv_p, alpha_v, beta_m));
+                         y2_vi_d_td_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 173;
         lp_accum__.add(stan::math::categorical_logit_glm_lpmf<propto__>(
-                         y2_vi_d_td, X_rv_p, alpha_v, beta_m));
+                         y2_vi_d_td_opencl__, X_rv_p, alpha_v, beta_m));
         current_statement__ = 174;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
-                         stan::math::to_matrix_cl(
-                           stan::model::rvalue(X_d_a, "X_d_a",
-                             stan::model::index_uni(1))), alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+                         stan::model::rvalue(X_d_a_opencl__,
+                           "X_d_a_opencl__", stan::model::index_uni(1)),
+                         alpha, beta, sigma));
         current_statement__ = 175;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<propto__>(
                          y_v_d_opencl__,
-                         stan::math::to_matrix_cl(
-                           stan::model::rvalue(X_d_a, "X_d_a",
-                             stan::model::index_uni(1))), alpha,
-                         stan::math::to_matrix_cl(beta), sigma));
+                         stan::model::rvalue(X_d_a_opencl__,
+                           "X_d_a_opencl__", stan::model::index_uni(1)),
+                         alpha, beta, sigma));
       }
-      X_d_opencl__.wait_for_read_write_events();
-      X_d_td_opencl__.wait_for_read_write_events();
-      y_v_d_opencl__.wait_for_read_write_events();
-      y_v_d_td_opencl__.wait_for_read_write_events();
-      y_vi_d_opencl__.wait_for_read_write_events();
-      y_vi_d_td_opencl__.wait_for_read_write_events();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

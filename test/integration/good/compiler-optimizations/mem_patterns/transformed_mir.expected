@@ -1,4 +1,6 @@
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns ad_scalar_data_matrix.stan
+real alpha: SoA
+real sigma: SoA
 vector[N] beta: SoA
 vector[N] soa_simple: SoA
 vector[N] aos_deep: AoS
@@ -17,7 +19,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
       ((filename ad_scalar_data_matrix.stan) (line_num 2) (col_num 2) (included_from ())))
      (end_loc
       ((filename ad_scalar_data_matrix.stan) (line_num 2) (col_num 8) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (X_data
     ((begin_loc
       ((filename ad_scalar_data_matrix.stan) (line_num 3) (col_num 2) (included_from ())))
@@ -37,7 +39,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -45,7 +47,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable N) ()) UInt
@@ -238,7 +241,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -251,7 +254,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -817,7 +820,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -830,7 +833,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -1396,7 +1399,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -1409,7 +1412,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -1491,7 +1494,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -1499,7 +1502,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -1525,7 +1528,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -1626,7 +1629,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -1643,7 +1646,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -1690,16 +1693,16 @@ matrix[2, 2] aos_mat_from_vecs: AoS
      (end_loc
       ((filename ad_scalar_data_matrix.stan) (line_num 7) (col_num 13)
        (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters) (out_trans Identity)))
    (sigma
     ((begin_loc
       ((filename ad_scalar_data_matrix.stan) (line_num 8) (col_num 2) (included_from ())))
      (end_loc
       ((filename ad_scalar_data_matrix.stan) (line_num 8) (col_num 13)
        (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters) (out_trans Identity)))
    (beta
     ((begin_loc
       ((filename ad_scalar_data_matrix.stan) (line_num 9) (col_num 2) (included_from ())))
@@ -1714,6 +1717,10 @@ matrix[2, 2] aos_mat_from_vecs: AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))))
  (prog_name ad_scalar_data_matrix_model) (prog_path ad_scalar_data_matrix.stan))
+SoA (Line 13) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_deep
+SoA (Line 17) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_from_data
+SoA (Line 21) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_mat_from_vecs
+SoA (Line 1) warning: Right hand side contains only AoS expressions: aos_mat_rep
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns complex-fails.stan
 matrix[10, 10] A_p: AoS
 ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -1897,7 +1904,7 @@ matrix[10, 10] A_p: AoS
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -2059,8 +2066,13 @@ vector[N] high_low_est: SoA
 vector[K] b: SoA
 vector[Nr] h: SoA
 vector[2] ar: SoA
+real ma: SoA
+real phi_beta: SoA
+real sigma2: SoA
+real Intercept: SoA
 vector[N] mean_price: SoA
 vector[N] sigma_price: SoA
+real theta: SoA
 vector[N] upper_test: SoA
 vector[N] lower_upper_test: SoA
 row_vector[N] row_vec_lower_upper_test: SoA
@@ -2072,6 +2084,8 @@ matrix[N, N] corr_matrix_test: SoA
 matrix[N, N] cov_matrix_test: SoA
 matrix[K, K] chol_fac_cov_test: SoA
 matrix[K, K] chol_fac_corr_test: SoA
+real phi: SoA
+real sigma: SoA
 vector[N] prices: SoA
 vector[Nr] prices_diff: SoA
 vector[Nr] mu: SoA
@@ -2085,12 +2099,12 @@ vector[Nr] h_sigma: SoA
     ((begin_loc
       ((filename constraints.stan) (line_num 3) (col_num 2) (included_from ())))
      (end_loc ((filename constraints.stan) (line_num 3) (col_num 17) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (K
     ((begin_loc
       ((filename constraints.stan) (line_num 4) (col_num 2) (included_from ())))
      (end_loc ((filename constraints.stan) (line_num 4) (col_num 17) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (diff_low_mid
     ((begin_loc
       ((filename constraints.stan) (line_num 5) (col_num 2) (included_from ())))
@@ -2120,40 +2134,40 @@ vector[Nr] h_sigma: SoA
     ((begin_loc
       ((filename constraints.stan) (line_num 9) (col_num 2) (included_from ())))
      (end_loc ((filename constraints.stan) (line_num 9) (col_num 28) (included_from ()))))
-    SReal)
+    (SReal AoS))
    (phi_prior_b
     ((begin_loc
       ((filename constraints.stan) (line_num 10) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 10) (col_num 28) (included_from ()))))
-    SReal)
+    (SReal AoS))
    (mu_prior_mu
     ((begin_loc
       ((filename constraints.stan) (line_num 11) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 11) (col_num 19) (included_from ()))))
-    SReal)
+    (SReal AoS))
    (mu_prior_sigma
     ((begin_loc
       ((filename constraints.stan) (line_num 12) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 12) (col_num 31) (included_from ()))))
-    SReal)
+    (SReal AoS))
    (sigma_prior_shape
     ((begin_loc
       ((filename constraints.stan) (line_num 13) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 13) (col_num 34) (included_from ()))))
-    SReal)
+    (SReal AoS))
    (sigma_prior_rate
     ((begin_loc
       ((filename constraints.stan) (line_num 14) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 14) (col_num 33) (included_from ()))))
-    SReal)))
+    (SReal AoS))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -2161,7 +2175,8 @@ vector[Nr] h_sigma: SoA
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable N) ()) UInt
@@ -2189,7 +2204,8 @@ vector[Nr] h_sigma: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id K) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id K) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable K) ()) UInt
@@ -2530,7 +2546,7 @@ vector[Nr] h_sigma: SoA
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id phi_prior_a) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id phi_prior_a) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -2561,7 +2577,7 @@ vector[Nr] h_sigma: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id phi_prior_b) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id phi_prior_b) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -2592,7 +2608,7 @@ vector[Nr] h_sigma: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id mu_prior_mu) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id mu_prior_mu) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -2610,8 +2626,8 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id mu_prior_sigma) (decl_type (Sized SReal))
-      (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id mu_prior_sigma)
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable mu_prior_sigma) ()) UReal
@@ -2641,8 +2657,8 @@ vector[Nr] h_sigma: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sigma_prior_shape) (decl_type (Sized SReal))
-      (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id sigma_prior_shape)
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma_prior_shape) ()) UReal
@@ -2672,8 +2688,8 @@ vector[Nr] h_sigma: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sigma_prior_rate) (decl_type (Sized SReal))
-      (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id sigma_prior_rate)
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma_prior_rate) ()) UReal
@@ -2703,7 +2719,7 @@ vector[Nr] h_sigma: SoA
       (((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id Nr) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id Nr) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -3023,7 +3039,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -3036,7 +3052,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -3056,7 +3072,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -3074,7 +3090,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -3131,7 +3147,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -3481,7 +3497,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -3500,7 +3516,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -4245,7 +4261,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -4258,7 +4274,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -4278,7 +4294,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -4296,7 +4312,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -4353,7 +4369,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -4703,7 +4719,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -4722,7 +4738,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5467,7 +5483,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id ma) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id ma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5480,7 +5496,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id phi_beta) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id phi_beta) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5500,7 +5516,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sigma2) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id sigma2) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5518,7 +5534,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id Intercept) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id Intercept) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5575,7 +5591,7 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id theta) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id theta) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5925,11 +5941,11 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id phi) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id phi) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -6714,7 +6730,7 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -7022,7 +7038,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -7048,7 +7064,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -7081,7 +7097,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -7112,7 +7128,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -7291,7 +7307,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -8332,7 +8348,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -8349,7 +8365,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -8373,7 +8389,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -8395,7 +8411,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -8465,7 +8481,7 @@ vector[Nr] h_sigma: SoA
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -8841,14 +8857,15 @@ vector[Nr] h_sigma: SoA
       ((filename constraints.stan) (line_num 24) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 24) (col_num 10) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters) (out_trans Identity)))
    (phi_beta
     ((begin_loc
       ((filename constraints.stan) (line_num 25) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 25) (col_num 33) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters)
      (out_trans
       (LowerUpper
        ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -8858,7 +8875,8 @@ vector[Nr] h_sigma: SoA
       ((filename constraints.stan) (line_num 26) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 26) (col_num 23) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters)
      (out_trans
       (Lower
        ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
@@ -8867,8 +8885,8 @@ vector[Nr] h_sigma: SoA
       ((filename constraints.stan) (line_num 27) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 27) (col_num 17) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters) (out_trans Identity)))
    (mean_price
     ((begin_loc
       ((filename constraints.stan) (line_num 28) (col_num 2) (included_from ())))
@@ -8902,8 +8920,8 @@ vector[Nr] h_sigma: SoA
       ((filename constraints.stan) (line_num 30) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 30) (col_num 13) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters) (out_trans Identity)))
    (upper_test
     ((begin_loc
       ((filename constraints.stan) (line_num 31) (col_num 2) (included_from ())))
@@ -9160,7 +9178,7 @@ vector[Nr] h_sigma: SoA
       ((filename constraints.stan) (line_num 47) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 47) (col_num 56) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block TransformedParameters)
      (out_trans
       (LowerUpper
@@ -9175,7 +9193,7 @@ vector[Nr] h_sigma: SoA
       ((filename constraints.stan) (line_num 48) (col_num 2) (included_from ())))
      (end_loc
       ((filename constraints.stan) (line_num 48) (col_num 37) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block TransformedParameters)
      (out_trans
       (Lower
@@ -9965,7 +9983,7 @@ matrix[10, 10] X_tp7: AoS
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10206,7 +10224,9 @@ matrix[10, 10] X_tp7: AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name deep_dependence_model) (prog_path deep_dependence.stan))
+SoA (Line 19) warning: Accessed by element in a for loop: X_tp7
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns indexing.stan
+real alpha: SoA
 vector[M] p_soa_vec_v: SoA
 matrix[N, M] p_soa_mat: SoA
 array[vector[N], 10] p_soa_arr_vec_v: SoA
@@ -10227,6 +10247,7 @@ matrix[N, M] p_aos_mat_pass_func_outer_single_indexed1: AoS
 matrix[N, M] p_aos_mat_pass_func_outer_single_indexed2: AoS
 matrix[N, M] p_aos_mat_fail_uni_uni_idx1: AoS
 matrix[N, M] p_aos_mat_fail_uni_uni_idx2: AoS
+real tp_real_from_aos: SoA
 vector[M] tp_aos_vec_v: AoS
 vector[M] tp_soa_single_idx_uninit: SoA
 vector[M] tp_aos_fail_func_vec_v: AoS
@@ -10264,11 +10285,11 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
   ((N
     ((begin_loc ((filename indexing.stan) (line_num 11) (col_num 1) (included_from ())))
      (end_loc ((filename indexing.stan) (line_num 11) (col_num 7) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (M
     ((begin_loc ((filename indexing.stan) (line_num 12) (col_num 1) (included_from ())))
      (end_loc ((filename indexing.stan) (line_num 12) (col_num 7) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (dat_x
     ((begin_loc ((filename indexing.stan) (line_num 13) (col_num 1) (included_from ())))
      (end_loc ((filename indexing.stan) (line_num 13) (col_num 20) (included_from ()))))
@@ -10283,11 +10304,11 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    (idx_tester
     ((begin_loc ((filename indexing.stan) (line_num 15) (col_num 1) (included_from ())))
      (end_loc ((filename indexing.stan) (line_num 15) (col_num 25) (included_from ()))))
-    (SArray SInt
+    (SArray AoS (SInt AoS)
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10295,7 +10316,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable N) ()) UInt
@@ -10312,7 +10334,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable M) ()) UInt
@@ -10507,7 +10530,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (Decl (decl_adtype DataOnly) (decl_id idx_tester)
       (decl_type
        (Sized
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -10759,7 +10782,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10817,7 +10840,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_arr_vec_v)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -11197,7 +11220,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_aos)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_aos) ()) UReal
@@ -12147,7 +12170,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -12205,7 +12228,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_arr_vec_v)
       (decl_type
        (Sized
-        (SArray
+        (SArray SoA
          (SVector SoA
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12585,7 +12608,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_aos)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized (SReal SoA))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_aos) ()) UReal
@@ -13535,7 +13558,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -13593,7 +13616,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (Decl (decl_adtype DataOnly) (decl_id p_soa_arr_vec_v)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -13972,8 +13995,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id tp_real_from_aos) (decl_type (Sized SReal))
-      (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id tp_real_from_aos)
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_aos_vec_v)
@@ -14390,7 +14413,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -14398,7 +14421,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -14593,7 +14616,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_arr_vec_v)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16122,7 +16145,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16192,7 +16215,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_arr_vec_v)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16673,8 +16696,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
   ((alpha
     ((begin_loc ((filename indexing.stan) (line_num 19) (col_num 2) (included_from ())))
      (end_loc ((filename indexing.stan) (line_num 19) (col_num 13) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters) (out_trans Identity)))
    (p_soa_vec_v
     ((begin_loc ((filename indexing.stan) (line_num 21) (col_num 2) (included_from ())))
      (end_loc ((filename indexing.stan) (line_num 21) (col_num 24) (included_from ()))))
@@ -16701,12 +16724,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     ((begin_loc ((filename indexing.stan) (line_num 23) (col_num 2) (included_from ())))
      (end_loc ((filename indexing.stan) (line_num 23) (col_num 38) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -16902,7 +16925,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
    (tp_real_from_aos
     ((begin_loc ((filename indexing.stan) (line_num 56) (col_num 2) (included_from ())))
      (end_loc ((filename indexing.stan) (line_num 56) (col_num 41) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_aos_vec_v
     ((begin_loc ((filename indexing.stan) (line_num 59) (col_num 2) (included_from ())))
@@ -16945,7 +16968,18 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name indexing_model) (prog_path indexing.stan))
+SoA (Line 59) warning: Right hand side of assignment is all AoS: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 59) warning: Function on right hand side of assignment is not supported by SoA: p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 80) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 81) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 82) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 83) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 101) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 101) warning: Used in user defined function:p_aos_vec_v_assign_to_aos, tp_aos_vec_v
+SoA (Line 111) warning: Accessed by element in a for loop: tp_aos_loop_vec_v_uni_idx
+SoA (Line 112) warning: Accessed by element in a for loop: tp_aos_loop_vec_v_multi_uni_idx
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns indexing2.stan
+real alpha: SoA
 vector[10] p_aos_loop_single_idx: AoS
 vector[N] tp_soa_multi_idx_assign_in_loop: SoA
 vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
@@ -16954,19 +16988,20 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
   ((N
     ((begin_loc ((filename indexing2.stan) (line_num 2) (col_num 1) (included_from ())))
      (end_loc ((filename indexing2.stan) (line_num 2) (col_num 7) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (M
     ((begin_loc ((filename indexing2.stan) (line_num 3) (col_num 1) (included_from ())))
      (end_loc ((filename indexing2.stan) (line_num 3) (col_num 7) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (Idx
     ((begin_loc ((filename indexing2.stan) (line_num 4) (col_num 1) (included_from ())))
      (end_loc ((filename indexing2.stan) (line_num 4) (col_num 18) (included_from ()))))
-    (SArray SInt
+    (SArray AoS (SInt AoS)
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable N) ()) UInt
@@ -16983,7 +17018,8 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable M) ()) UInt
@@ -17009,7 +17045,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
      (Decl (decl_adtype DataOnly) (decl_id Idx)
       (decl_type
        (Sized
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -17023,7 +17059,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -17162,7 +17198,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -17301,7 +17337,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -17376,7 +17412,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -17384,7 +17420,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -17486,7 +17522,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -17531,8 +17567,8 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
   ((alpha
     ((begin_loc ((filename indexing2.stan) (line_num 8) (col_num 2) (included_from ())))
      (end_loc ((filename indexing2.stan) (line_num 8) (col_num 13) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters) (out_trans Identity)))
    (p_aos_loop_single_idx
     ((begin_loc ((filename indexing2.stan) (line_num 9) (col_num 2) (included_from ())))
      (end_loc ((filename indexing2.stan) (line_num 9) (col_num 35) (included_from ()))))
@@ -17548,6 +17584,7 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
 matrix[5, 10] soa_x: SoA
 matrix[5, 10] aos_x: AoS
 matrix[5, 10] aos_y: AoS
+real tp_real_from_soa: SoA
 matrix[5, 10] tp_matrix_aos_from_mix: AoS
 matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
 ((functions_block
@@ -17586,10 +17623,10 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
       ((filename reductions_allowed.stan) (line_num 12) (col_num 4) (included_from ())))
      (end_loc
       ((filename reductions_allowed.stan) (line_num 12) (col_num 16) (included_from ()))))
-    SReal)))
+    (SReal AoS))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -17681,7 +17718,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_soa)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_soa) ()) UReal
@@ -17841,7 +17878,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_soa)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized (SReal SoA))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_soa) ()) UReal
@@ -18000,8 +18037,8 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id tp_real_from_soa) (decl_type (Sized SReal))
-      (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id tp_real_from_soa)
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_matrix_aos_from_mix)
@@ -18174,7 +18211,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -18590,7 +18627,7 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
       ((filename reductions_allowed.stan) (line_num 22) (col_num 4) (included_from ())))
      (end_loc
       ((filename reductions_allowed.stan) (line_num 22) (col_num 56) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_matrix_aos_from_mix
     ((begin_loc
@@ -18621,6 +18658,10 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name reductions_allowed_model) (prog_path reductions_allowed.stan))
+SoA (Line 23) warning: Right hand side of assignment is all AoS: aos_x, aos_y, tp_matrix_aos_from_mix
+SoA (Line 24) warning: Used in user defined function:aos_x, aos_y, tp_matrix_aos_from_mix
+SoA (Line 24) warning: Right hand side of assignment is all AoS: aos_x, tp_matrix_from_udf_reduced_soa
+SoA (Line 24) warning: Function on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_from_udf_reduced_soa
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns return_types_and_udfs_demotes.stan
 matrix[10, 10] row_soa: SoA
 matrix[10, 10] udf_input_aos: AoS
@@ -19240,7 +19281,7 @@ matrix[10, 10] mul_two_aos: AoS
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -19605,9 +19646,18 @@ matrix[10, 10] mul_two_aos: AoS
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name return_types_and_udfs_demotes_model)
  (prog_path return_types_and_udfs_demotes.stan))
+SoA (Line 25) warning: Right hand side of assignment is all AoS: udf_input_aos, user_func_aos
+SoA (Line 25) warning: Function on right hand side of assignment is not supported by SoA: udf_input_aos, user_func_aos
+SoA (Line 26) warning: Used in user defined function:udf_input_aos, user_func_aos
+SoA (Line 26) warning: Function on right hand side of assignment is not supported by SoA: empty_user_func_aos
+SoA (Line 27) warning: Used in user defined function:empty_user_func_aos, udf_input_aos, user_func_aos
+SoA (Line 27) warning: Right hand side of assignment is all AoS: inner_empty_user_func_aos, udf_input_aos
+SoA (Line 28) warning: Right hand side of assignment is all AoS: empty_user_func_aos, int_aos_mul_aos
+SoA (Line 29) warning: Right hand side of assignment is all AoS: int_aos_mul_aos, mul_two_aos, user_func_aos
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns single_indexing.stan
 matrix[10, 10] aos_p: AoS
 matrix[10, 10] soa_p: SoA
+real tp_real_from_soa: SoA
 row_vector[10] tp_row_vector_from_soa_loop: SoA
 matrix[10, 10] tp_matrix_from_soa_loop: SoA
 ((functions_block ()) (input_vars ()) (prepare_data ())
@@ -19662,7 +19712,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_soa)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_soa) ()) UReal
@@ -19795,7 +19845,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_soa)
-      (decl_type (Sized SReal)) (initialize true)))
+      (decl_type (Sized (SReal SoA))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_soa) ()) UReal
@@ -19927,8 +19977,8 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id tp_real_from_soa) (decl_type (Sized SReal))
-      (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id tp_real_from_soa)
+      (decl_type (Sized (SReal AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -20071,7 +20121,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -20355,7 +20405,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
       ((filename single_indexing.stan) (line_num 11) (col_num 5) (included_from ())))
      (end_loc
       ((filename single_indexing.stan) (line_num 11) (col_num 41) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name single_indexing_model) (prog_path single_indexing.stan))
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns tp_reused.stan
@@ -20396,10 +20446,10 @@ matrix[5, 10] tp_matrix_aos: AoS
   ((data_r
     ((begin_loc ((filename tp_reused.stan) (line_num 12) (col_num 4) (included_from ())))
      (end_loc ((filename tp_reused.stan) (line_num 12) (col_num 16) (included_from ()))))
-    SReal)))
+    (SReal AoS))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -20690,7 +20740,7 @@ matrix[5, 10] tp_matrix_aos: AoS
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -20976,6 +21026,8 @@ matrix[5, 10] tp_matrix_aos: AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name tp_reused_model) (prog_path tp_reused.stan))
+SoA (Line 22) warning: Right hand side of assignment is all AoS: aos_x, tp_matrix_aos
+SoA (Line 22) warning: Function on right hand side of assignment is not supported by SoA: aos_x, tp_matrix_aos
   $ ../../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir --debug-mem-patterns tuple_test.stan
 tuple(array[matrix[1, 1], 1], matrix[1, 2], matrix[1, 3]) xx: AoS
 matrix[1, 1] x: AoS
@@ -21030,7 +21082,7 @@ matrix[1, 1] x: AoS
       (decl_type
        (Sized
         (STuple
-         ((SArray
+         ((SArray AoS
            (SMatrix AoS
             ((pattern (Lit Int 1))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21130,7 +21182,7 @@ matrix[1, 1] x: AoS
       (decl_type
        (Sized
         (STuple
-         ((SArray
+         ((SArray AoS
            (SMatrix AoS
             ((pattern (Lit Int 1))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21229,7 +21281,7 @@ matrix[1, 1] x: AoS
       (decl_type
        (Sized
         (STuple
-         ((SArray
+         ((SArray AoS
            (SMatrix AoS
             ((pattern (Lit Int 1))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21466,7 +21518,7 @@ matrix[1, 1] x: AoS
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -21479,7 +21531,7 @@ matrix[1, 1] x: AoS
       (decl_type
        (Sized
         (STuple
-         ((SArray
+         ((SArray AoS
            (SMatrix AoS
             ((pattern (Lit Int 1))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21801,7 +21853,7 @@ matrix[1, 1] x: AoS
       (decl_type
        (Sized
         (STuple
-         ((SArray
+         ((SArray AoS
            (SMatrix AoS
             ((pattern (Lit Int 1))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21943,7 +21995,7 @@ matrix[1, 1] x: AoS
      (end_loc ((filename tuple_test.stan) (line_num 3) (col_num 61) (included_from ()))))
     ((out_unconstrained_st
       (STuple
-       ((SArray
+       ((SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -21956,7 +22008,7 @@ matrix[1, 1] x: AoS
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_constrained_st
       (STuple
-       ((SArray
+       ((SArray AoS
          (SMatrix AoS
           ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -21982,3 +22034,5 @@ matrix[1, 1] x: AoS
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name tuple_test_model) (prog_path tuple_test.stan))
+SoA (Line 6) warning: Right hand side of assignment is all AoS: x, xx
+SoA (Line 6) warning: The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: x, xx

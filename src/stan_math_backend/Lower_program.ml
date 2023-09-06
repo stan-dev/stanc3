@@ -22,7 +22,8 @@ let get_unconstrained_param_st lst =
 let gen_function__ prog_name fname =
   [ VariableDefn
       (make_variable_defn ~static:true ~constexpr:true
-         ~type_:(Const (Pointer (TypeLiteral "char"))) ~name:"function__"
+         ~type_:(Const (Pointer (TypeLiteral ("char", AoS))))
+         ~name:"function__"
          ~init:
            (Assignment
               (Exprs.literal_string (prog_name ^ "_namespace::" ^ fname)) )
@@ -38,17 +39,16 @@ let includes = Preprocessor (Include "stan/model/model_header.hpp")
   @param vident name of the private member.
   @param ut The unsized type to print.
  *)
-let lower_data_decl (vident, ut) : defn =
+let lower_data_decl (vident, (st : 'a SizedType.t)) : defn =
   let data_vident =
-    if UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var vident)
-    then vident ^ "_data__"
-    else vident in
+    if SizedType.is_eigen_type st then vident ^ "_data__" else vident in
   GlobalVariableDefn
-    (lower_unsized_decl data_vident ut
-       (UnsizedType.fill_adtype_for_type DataOnly ut) )
+    (lower_unsized_decl data_vident (SizedType.to_unsized st)
+       (UnsizedType.fill_adtype_for_type DataOnly (SizedType.to_unsized st))
+       (SizedType.get_mem_pattern st) )
 
 (** Create maps of Eigen types*)
-let lower_map_decl (vident, ut) : defn =
+let lower_map_decl (vident, (st : 'a SizedType.t)) : defn =
   let eigen_map t ndims =
     GlobalVariableDefn
       (make_variable_defn
@@ -59,6 +59,7 @@ let lower_map_decl (vident, ut) : defn =
               (Literal "nullptr" :: List.init ndims ~f:(fun _ -> Literal "0"))
            )
          () ) in
+  let ut = SizedType.to_unsized st in
   let scalar = local_scalar ut DataOnly in
   let open Types in
   match ut with
@@ -76,8 +77,9 @@ let lower_map_decl (vident, ut) : defn =
 
 let rec top_level_decls Stmt.Fixed.{pattern; _} =
   match pattern with
-  | Decl d when d.decl_id <> "pos__" ->
-      [(d.decl_id, Type.to_unsized d.decl_type)]
+  | Decl {decl_id; decl_type= Type.Sized decl_type_st; _}
+    when decl_id <> "pos__" ->
+      [(decl_id, decl_type_st)]
   | SList stmts -> List.concat_map ~f:top_level_decls stmts
   | _ -> []
 
@@ -85,9 +87,8 @@ let rec top_level_decls Stmt.Fixed.{pattern; _} =
 let lower_model_private {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
   (*Filter out Any data that is not an Eigen matrix*)
-  let get_eigen_map (name, ut) =
-    UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var name) in
-  let eigen_map_decls = (List.filter ~f:get_eigen_map) data_decls in
+  let get_eigen_map (_, (st : 'a SizedType.t)) = SizedType.is_eigen_type st in
+  let eigen_map_decls = List.filter ~f:get_eigen_map data_decls in
   List.map ~f:lower_data_decl data_decls
   @ List.map ~f:lower_map_decl eigen_map_decls
 
@@ -102,8 +103,8 @@ let rec validate_dims ~stage name st =
   else
     let vector args =
       let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
-      InitializerExpr (Types.std_vector Types.size_t, List.map ~f:cast args)
-    in
+      InitializerExpr
+        (Types.std_vector (Types.size_t, AoS), List.map ~f:cast args) in
     let open Expression_syntax in
     let context = Var "context__" in
     let validate =
@@ -120,7 +121,11 @@ let gen_assign_data decl_id st =
   let lower_placement_new decl_id st =
     let open Expression_syntax in
     match st with
-    | SizedType.SVector (_, d)
+    | SizedType.SVector (Mem_pattern.OpenCL, _)
+     |SRowVector (OpenCL, _)
+     |SMatrix (OpenCL, _, _) ->
+        []
+    | SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d
      |SComplexRowVector d ->
@@ -140,28 +145,48 @@ let gen_assign_data decl_id st =
     | _ -> [] in
   let underlying_var decl_id st =
     match st with
+    | SizedType.SVector (Mem_pattern.OpenCL, _)
+     |SRowVector (OpenCL, _)
+     |SMatrix (OpenCL, _, _) ->
+        Var decl_id
     | SizedType.SVector _ | SRowVector _ | SMatrix _ | SComplexVector _
      |SComplexRowVector _ | SComplexMatrix _ ->
         Var (decl_id ^ "_data__")
-    | SInt | SReal | SComplex | SArray _ | STuple _ -> Var decl_id in
-  Expression
-    (Assign
-       ( underlying_var decl_id st
-       , initialize_value st
-           (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
-              (SizedType.to_unsized st) ) ) )
-  :: lower_placement_new decl_id st
+    | SInt _ | SReal _ | SComplex | SArray _ | STuple _ -> Var decl_id in
+  match st with
+  | (SizedType.SVector (mem, _) | SRowVector (mem, _) | SMatrix (mem, _, _))
+    when Mem_pattern.is_opencl mem ->
+      [ Expression
+          (Assign
+             ( underlying_var decl_id st (*9 here for _opencl__*)
+             , FunCall
+                 ( "stan::math::to_matrix_cl"
+                 , []
+                 , [ Var
+                       (String.sub decl_id ~pos:0
+                          ~len:(String.length decl_id - 9) ) ] ) ) ) ]
+  | _ ->
+      (* I think we don't want to initialize to NA for OpenCL types?*)
+      Expression
+        (Assign
+           ( underlying_var decl_id st
+           , initialize_value st
+               (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
+                  (SizedType.to_unsized st) ) ) )
+      :: lower_placement_new decl_id st
 
 let lower_constructor
     {Program.prog_name; input_vars; prepare_data; output_vars; _} =
   let args =
-    [ (Ref (TypeLiteral "stan::io::var_context"), "context__")
-    ; (TypeLiteral "unsigned int", "random_seed__ = 0")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    [ (Ref (TypeLiteral ("stan::io::var_context", AoS)), "context__")
+    ; (TypeLiteral ("unsigned int", AoS), "random_seed__ = 0")
+    ; (Pointer (TypeLiteral ("std::ostream", AoS)), "pstream__ = nullptr") ]
+  in
   let preamble =
-    [ Decls.current_statement; Using ("local_scalar_t__", Some Double)
+    [ Decls.current_statement; Using ("local_scalar_t__", Some (Double AoS))
     ; VariableDefn
-        (make_variable_defn ~type_:(TypeLiteral "boost::ecuyer1988")
+        (make_variable_defn
+           ~type_:(TypeLiteral ("boost::ecuyer1988", AoS))
            ~name:"base_rng__"
            ~init:
              (Assignment
@@ -205,7 +230,8 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
   let args : (type_ * string) list =
     [ (Ref (TemplateType "VecR"), "params_r__")
     ; (Ref (TemplateType "VecI"), "params_i__")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer (TypeLiteral ("std::ostream", AoS)), "pstream__ = nullptr") ]
+  in
   (*
      NOTE: There is a bug in clang-6.0 where removing this T__ causes the
       reverse mode autodiff path to fail with an initializer list error
@@ -213,7 +239,7 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
       more into why this is happening
       *)
   let intro =
-    let t__ = TypeLiteral "T__" in
+    let t__ = TypeLiteral ("T__", AoS) in
     [ Using
         ("T__", Some (TypeTrait ("stan::scalar_type_t", [TemplateType "VecR"])))
     ; Using ("local_scalar_t__", Some t__)
@@ -266,19 +292,20 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
     ; (Ref (TemplateType "VecVar"), "vars__")
     ; (Const Types.bool, "emit_transformed_parameters__ = true")
     ; (Const Types.bool, "emit_generated_quantities__ = true")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer (TypeLiteral ("std::ostream", AoS)), "pstream__ = nullptr") ]
+  in
   let intro =
-    [ Using ("local_scalar_t__", Some Double); Decls.serializer_in
+    [ Using ("local_scalar_t__", Some (Double AoS)); Decls.serializer_in
     ; Decls.serializer_out
     ; VariableDefn
         (make_variable_defn ~static:true ~constexpr:true ~type_:Types.bool
            ~name:"propto__" ~init:(Assignment (Literal "true")) () ) ]
     @ Stmts.unused "propto__"
     @ VariableDefn
-        (make_variable_defn ~type_:Double ~name:"lp__"
+        (make_variable_defn ~type_:(Double AoS) ~name:"lp__"
            ~init:(Assignment (Literal "0.0")) () )
       :: Stmts.unused "lp__"
-    @ [Decls.current_statement; Decls.lp_accum Double]
+    @ [Decls.current_statement; Decls.lp_accum (Double AoS)]
     @ Decls.dummy_var
     @ VariableDefn
         (make_variable_defn ~constexpr:true ~type_:Types.bool ~name:"jacobian__"
@@ -297,11 +324,12 @@ let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
   let templates =
     [Typename "VecVar"; Require ("stan::require_vector_t", ["VecVar"])] in
   let args =
-    [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context__")
+    [ (Types.const_ref (TypeLiteral ("stan::io::var_context", AoS)), "context__")
     ; (Ref (TemplateType "VecVar"), "vars__")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer (TypeLiteral ("std::ostream", AoS)), "pstream__ = nullptr") ]
+  in
   let intro =
-    [ Using ("local_scalar_t__", Some Double); Decls.serializer_out
+    [ Using ("local_scalar_t__", Some (Double AoS)); Decls.serializer_out
     ; Decls.current_statement ]
     @ Decls.dummy_var in
   let validate_params
@@ -335,9 +363,10 @@ let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
     [ (Types.const_ref (TemplateType "VecVar"), "params_r__")
     ; (Types.const_ref (TemplateType "VecI"), "params_i__")
     ; (Ref (TemplateType "VecVar"), "vars__")
-    ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+    ; (Pointer (TypeLiteral ("std::ostream", AoS)), "pstream__ = nullptr") ]
+  in
   let intro =
-    [ Using ("local_scalar_t__", Some Double); Decls.serializer_in
+    [ Using ("local_scalar_t__", Some (Double AoS)); Decls.serializer_in
     ; Decls.serializer_out; Decls.current_statement ]
     @ Decls.dummy_var in
   FunDef
@@ -374,7 +403,7 @@ let gen_get_param_names {Program.output_vars; _} =
       | id, _, {out_block= GeneratedQuantities; out_constrained_st= st; _} ->
           `Trd (param_to_names id st) ) in
   let args =
-    [ (Ref (Types.std_vector Types.string), "names__")
+    [ (Ref (Types.std_vector (Types.string, AoS)), "names__")
     ; (Const Types.bool, "emit_transformed_parameters__ = true")
     ; (Const Types.bool, "emit_generated_quantities__ = true") ] in
   let names = Var "names__" in
@@ -387,14 +416,14 @@ let gen_get_param_names {Program.output_vars; _} =
           ( Var "emit_transformed_parameters__"
           , Stmts.block
               (gen_extend_vector names
-                 (Types.std_vector Types.string)
+                 (Types.std_vector (Types.string, AoS))
                  (List.concat tparams) )
           , None )
       ; IfElse
           ( Var "emit_generated_quantities__"
           , Stmts.block
               (gen_extend_vector names
-                 (Types.std_vector Types.string)
+                 (Types.std_vector (Types.string, AoS))
                  (List.concat gqs) )
           , None ) ] in
   FunDef
@@ -429,8 +458,8 @@ let gen_get_dims {Program.output_vars; _} =
         ->
           `Trd (pack st) ) in
   let args =
-    [ (Ref (Types.std_vector (Types.std_vector Types.size_t)), "dimss__")
-    ; (Const Types.bool, "emit_transformed_parameters__ = true")
+    [ ( Ref (Types.std_vector (Types.std_vector (Types.size_t, AoS), AoS))
+      , "dimss__" ); (Const Types.bool, "emit_transformed_parameters__ = true")
     ; (Const Types.bool, "emit_generated_quantities__ = true") ] in
   let dimss = Var "dimss__" in
   let body =
@@ -438,20 +467,20 @@ let gen_get_dims {Program.output_vars; _} =
         (Assign
            ( dimss
            , Exprs.std_vector_init_expr
-               (Types.std_vector Types.size_t)
+               (Types.std_vector (Types.size_t, AoS))
                (List.concat params) ) )
     ; IfElse
         ( Var "emit_transformed_parameters__"
         , Stmts.block
             (gen_extend_vector dimss
-               (Types.std_vector (Types.std_vector Types.size_t))
+               (Types.std_vector (Types.std_vector (Types.size_t, AoS), AoS))
                (List.concat tparams) )
         , None )
     ; IfElse
         ( Var "emit_generated_quantities__"
         , Stmts.block
             (gen_extend_vector dimss
-               (Types.std_vector (Types.std_vector Types.size_t))
+               (Types.std_vector (Types.std_vector (Types.size_t, AoS), AoS))
                (List.concat gqs) )
         , None ) ] in
   FunDef
@@ -519,7 +548,7 @@ let rec gen_param_names ?(outer_idcs = []) (decl_id, st) =
 
 let gen_param_names_fn name (paramvars, tparamvars, gqvars) =
   let args =
-    [ (Ref (Types.std_vector Types.string), "param_names__")
+    [ (Ref (Types.std_vector (Types.string, AoS)), "param_names__")
     ; (Types.bool, "emit_transformed_parameters__ = true")
     ; (Types.bool, "emit_generated_quantities__ = true") ] in
   let body =
@@ -593,7 +622,8 @@ let gen_constrained_types {Program.output_vars; _} =
 
 (** The generic method overloads needed in the model class. *)
 let gen_overloads {Program.output_vars; _} =
-  let pstream = (Pointer (TypeLiteral "std::ostream"), "pstream = nullptr") in
+  let pstream =
+    (Pointer (TypeLiteral ("std::ostream", AoS)), "pstream = nullptr") in
   let write_arrays =
     let open Expression_syntax in
     let templates_init = ([[Typename "RNG"]], false) in
@@ -656,18 +686,19 @@ let gen_overloads {Program.output_vars; _} =
            ~name:"write_array"
            ~args:
              ( [ (Ref (TemplateType "RNG"), "base_rng")
-               ; (Ref (Types.vector Double), "params_r")
-               ; (Ref (Types.vector Double), "vars") ]
+               ; (Ref (Types.vector (Double AoS)), "params_r")
+               ; (Ref (Types.vector (Double AoS)), "vars") ]
              @ emit_flags true @ [pstream] )
            ~body:
              ( sizes
              @ [ VariableDefn
-                   (make_variable_defn ~type_:(Types.std_vector Int)
+                   (make_variable_defn
+                      ~type_:(Types.std_vector (Int AoS, AoS))
                       ~name:"params_i" () )
                ; Expression
                    (Assign
                       ( Var "vars"
-                      , Types.vector Double
+                      , Types.vector (Double AoS)
                         |::? ("Constant", [Var "num_to_write"; Exprs.quiet_NaN])
                       ) ); call_impl ] )
            ~cv_qualifiers:[Const] () )
@@ -676,9 +707,9 @@ let gen_overloads {Program.output_vars; _} =
            ~name:"write_array"
            ~args:
              ( [ (Ref (TemplateType "RNG"), "base_rng")
-               ; (Ref (Types.std_vector Double), "params_r")
-               ; (Ref (Types.std_vector Int), "params_i")
-               ; (Ref (Types.std_vector Double), "vars") ]
+               ; (Ref (Types.std_vector (Double AoS, AoS)), "params_r")
+               ; (Ref (Types.std_vector (Int AoS, AoS)), "params_i")
+               ; (Ref (Types.std_vector (Double AoS, AoS)), "vars") ]
              @ emit_flags false @ [pstream] )
            ~body:
              ( sizes
@@ -686,7 +717,7 @@ let gen_overloads {Program.output_vars; _} =
                    (Assign
                       ( Var "vars"
                       , Constructor
-                          ( Types.std_vector Double
+                          ( Types.std_vector (Double AoS, AoS)
                           , [Var "num_to_write"; Exprs.quiet_NaN] ) ) )
                ; call_impl ] )
            ~cv_qualifiers:[Const] () ) ] in
@@ -705,32 +736,35 @@ let gen_overloads {Program.output_vars; _} =
            ~args:[(Ref (Types.vector (TemplateType "T_")), "params_r"); pstream]
            ~body:
              [ VariableDefn
-                 (make_variable_defn ~type_:(Types.vector Int) ~name:"params_i"
-                    () ); call_impl ]
+                 (make_variable_defn ~type_:(Types.vector (Int AoS))
+                    ~name:"params_i" () ); call_impl ]
            ~cv_qualifiers:[Const] () )
     ; FunDef
         (make_fun_defn ~templates_init ~inline:true
            ~return_type:(TemplateType "T_") ~name:"log_prob"
            ~args:
-             [ (Ref (Types.std_vector (TemplateType "T_")), "params_r")
-             ; (Ref (Types.std_vector Int), "params_i"); pstream ]
+             [ (Ref (Types.std_vector (TemplateType "T_", AoS)), "params_r")
+             ; (Ref (Types.std_vector (Int AoS, AoS)), "params_i"); pstream ]
            ~body:[call_impl] ~cv_qualifiers:[Const] () ) ] in
   let transform_inits =
     [ FunDef
         (make_fun_defn ~inline:true ~return_type:Void ~name:"transform_inits"
            ~args:
-             [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context")
-             ; (Ref (Types.vector Double), "params_r"); pstream ]
+             [ ( Types.const_ref (TypeLiteral ("stan::io::var_context", AoS))
+               , "context" ); (Ref (Types.vector (Double AoS)), "params_r")
+             ; pstream ]
            ~body:
              [ VariableDefn
-                 (make_variable_defn ~type_:(Types.std_vector Double)
+                 (make_variable_defn
+                    ~type_:(Types.std_vector (Double AoS, AoS))
                     ~name:"params_r_vec"
                     ~init:
                       (Construction
                          [Exprs.method_call (Var "params_r") "size" [] []] )
                     () )
              ; VariableDefn
-                 (make_variable_defn ~type_:(Types.std_vector Int)
+                 (make_variable_defn
+                    ~type_:(Types.std_vector (Int AoS, AoS))
                     ~name:"params_i" () )
              ; Expression
                  (Exprs.fun_call "transform_inits"
@@ -740,17 +774,18 @@ let gen_overloads {Program.output_vars; _} =
                  (Assign
                     ( Var "params_r"
                     , Constructor
-                        ( TypeTrait ("Eigen::Map", [Types.vector Double])
+                        ( TypeTrait ("Eigen::Map", [Types.vector (Double AoS)])
                         , let params_r_vec = Var "params_r_vec" in
                           let open Expression_syntax in
                           [params_r_vec.@!("data"); params_r_vec.@!("size")] )
                     ) ) ]
            ~cv_qualifiers:[Const; Final] () )
     ; (let args =
-         [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context")
-         ; (Ref (Types.std_vector Int), "params_i")
-         ; (Ref (Types.std_vector Double), "vars")
-         ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
+         [ ( Types.const_ref (TypeLiteral ("stan::io::var_context", AoS))
+           , "context" ); (Ref (Types.std_vector (Int AoS, AoS)), "params_i")
+         ; (Ref (Types.std_vector (Double AoS, AoS)), "vars")
+         ; (Pointer (TypeLiteral ("std::ostream", AoS)), "pstream__ = nullptr")
+         ] in
        let body =
          let open Expression_syntax in
          [ Expression (Var "vars").@?(("resize", [Var "num_params_r__"]))
@@ -770,36 +805,39 @@ let gen_overloads {Program.output_vars; _} =
     [ FunDef
         (make_fun_defn ~inline:true ~return_type:Void ~name:"unconstrain_array"
            ~args:
-             [ (Types.const_ref (Types.std_vector Double), "params_constrained")
-             ; (Ref (Types.std_vector Double), "params_unconstrained"); pstream
-             ]
+             [ ( Types.const_ref (Types.std_vector (Double AoS, AoS))
+               , "params_constrained" )
+             ; (Ref (Types.std_vector (Double AoS, AoS)), "params_unconstrained")
+             ; pstream ]
            ~body:
              [ VariableDefn
                  (make_variable_defn
-                    ~type_:Types.(Const (std_vector Int))
+                    ~type_:Types.(Const (std_vector (Int AoS, AoS)))
                     ~name:"params_i" () )
              ; Expression
                  (Assign
                     ( Var "params_unconstrained"
                     , Constructor
-                        ( Types.std_vector Double
+                        ( Types.std_vector (Double AoS, AoS)
                         , [Var "num_params_r__"; Exprs.quiet_NaN] ) ) )
              ; call_impl ]
            ~cv_qualifiers:[Const (*; Final*)] () )
     ; FunDef
         (make_fun_defn ~inline:true ~return_type:Void ~name:"unconstrain_array"
            ~args:
-             [ (Types.const_ref (Types.vector Double), "params_constrained")
-             ; (Ref (Types.vector Double), "params_unconstrained"); pstream ]
+             [ ( Types.const_ref (Types.vector (Double AoS))
+               , "params_constrained" )
+             ; (Ref (Types.vector (Double AoS)), "params_unconstrained")
+             ; pstream ]
            ~body:
              [ VariableDefn
                  (make_variable_defn
-                    ~type_:Types.(Const (std_vector Int))
+                    ~type_:Types.(Const (std_vector (Int AoS, AoS)))
                     ~name:"params_i" () )
              ; Expression
                  (Assign
                     ( Var "params_unconstrained"
-                    , Types.vector Double
+                    , Types.vector (Double AoS)
                       |::? ("Constant", [Var "num_params_r__"; Exprs.quiet_NaN])
                     ) ); call_impl ]
            ~cv_qualifiers:[Const (*; Final*)] () ) ] in
@@ -825,7 +863,7 @@ let model_public_basics name =
          () )
   ; FunDef
       (make_fun_defn ~inline:true
-         ~return_type:(Types.std_vector Types.string)
+         ~return_type:(Types.std_vector (Types.string, AoS))
          ~name:"model_compile_info"
          ~body:
            [ Return
@@ -842,7 +880,8 @@ let lower_model ({Program.prog_name; _} as p) =
   let constructor = lower_constructor p in
   Class
     (make_class_defn ~name:prog_name ~final:true
-       ~public_base:(TypeTrait ("model_base_crtp", [TypeLiteral prog_name]))
+       ~public_base:
+         (TypeTrait ("model_base_crtp", [TypeLiteral (prog_name, AoS)]))
        ~private_members ~public_members ~constructor () )
 
 (** Create the model's namespace. *)
@@ -856,31 +895,33 @@ let usings =
 let new_model_boilerplate prog_name =
   let new_model =
     let args =
-      [ (Ref (TypeLiteral "stan::io::var_context"), "data_context")
-      ; (TypeLiteral "unsigned int", "seed")
-      ; (Pointer (TypeLiteral "std::ostream"), "msg_stream") ] in
+      [ (Ref (TypeLiteral ("stan::io::var_context", AoS)), "data_context")
+      ; (TypeLiteral ("unsigned int", AoS), "seed")
+      ; (Pointer (TypeLiteral ("std::ostream", AoS)), "msg_stream") ] in
     let body =
       [ VariableDefn
-          (make_variable_defn ~type_:(Pointer (TypeLiteral "stan_model"))
+          (make_variable_defn
+             ~type_:(Pointer (TypeLiteral ("stan_model", AoS)))
              ~name:"m"
              ~init:
                (Assignment
                   (AllocNew
-                     ( TypeLiteral "stan_model"
+                     ( TypeLiteral ("stan_model", AoS)
                      , [Var "data_context"; Var "seed"; Var "msg_stream"] ) ) )
              () ); Return (Some (Literal "*m")) ] in
     FunDef
       (make_fun_defn ~name:"new_model"
-         ~return_type:(Ref (TypeLiteral "stan::model::model_base")) ~args ~body
-         () ) in
+         ~return_type:(Ref (TypeLiteral ("stan::model::model_base", AoS)))
+         ~args ~body () ) in
   let profile_data =
     FunDef
       (make_fun_defn ~name:"get_stan_profile_data"
-         ~return_type:(Ref (TypeLiteral "stan::math::profile_map"))
+         ~return_type:(Ref (TypeLiteral ("stan::math::profile_map", AoS)))
          ~body:[Return (Some (Literal (prog_name ^ "_namespace::profiles__")))]
          () ) in
   [ GlobalUsing
-      ("stan_model", Some (TypeLiteral (prog_name ^ "_namespace::" ^ prog_name)))
+      ( "stan_model"
+      , Some (TypeLiteral (prog_name ^ "_namespace::" ^ prog_name, AoS)) )
   ; Preprocessor
       (IfNDef ("USING_R", [GlobalComment "Boilerplate"; new_model; profile_data])
       ) ]
@@ -945,7 +986,7 @@ module Testing = struct
 
   let%expect_test "complex names" =
     gen_param_names
-      ("foo", SizedType.SArray (SComplex, Middle.Expr.Helpers.variable "N"))
+      ("foo", SizedType.SArray (AoS, SComplex, Middle.Expr.Helpers.variable "N"))
     |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
     |> print_endline ;
     [%expect
@@ -961,7 +1002,9 @@ module Testing = struct
     gen_param_names
       ( "tuple"
       , SizedType.(
-          STuple [SInt; SArray (SReal, Middle.Expr.Helpers.variable "nested")])
+          STuple
+            [ SInt AoS
+            ; SArray (AoS, SReal AoS, Middle.Expr.Helpers.variable "nested") ])
       )
     |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
     |> print_endline ;
@@ -978,8 +1021,11 @@ module Testing = struct
       ( "arr_tuple"
       , SizedType.(
           SArray
-            ( STuple
-                [SInt; SArray (SReal, Middle.Expr.Helpers.variable "nested")]
+            ( AoS
+            , STuple
+                [ SInt AoS
+                ; SArray (AoS, SReal AoS, Middle.Expr.Helpers.variable "nested")
+                ]
             , Middle.Expr.Helpers.variable "N" )) )
     |> str "@[<v>%a" (list ~sep:cut Cpp.Printing.pp_stmt)
     |> print_endline ;

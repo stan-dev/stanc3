@@ -10,7 +10,7 @@ open Preprocessor
 (* Takes a sized_basic_type and a list of sizes and repeatedly applies then
    SArray constructor, taking sizes off the list *)
 let reducearray (sbt, l) =
-  List.fold_right l ~f:(fun z y -> SizedType.SArray (y, z)) ~init:sbt
+  List.fold_right l ~f:(fun z y -> SizedType.SArray (Mem_pattern.AoS, y, z)) ~init:sbt
 
 let build_id id loc =
   grammar_logger ("identifier " ^ id) ;
@@ -454,9 +454,9 @@ top_var_decl_no_assign:
 
 sized_basic_type:
   | INT
-    { grammar_logger "INT_var_type" ; (SizedType.SInt, Identity) }
+    { grammar_logger "INT_var_type" ; (SizedType.SInt AoS, Identity) }
   | REAL
-    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
+    { grammar_logger "REAL_var_type" ; (SizedType.SReal AoS, Identity) }
   | COMPLEX
     { grammar_logger "COMPLEX_var_type" ; (SizedType.SComplex, Identity) }
   | VECTOR LBRACK e=expression RBRACK
@@ -474,9 +474,9 @@ sized_basic_type:
 
 top_var_type:
   | INT r=range_constraint
-    { grammar_logger "INT_top_var_type" ; (SInt, r) }
+    { grammar_logger "INT_top_var_type" ; (SInt AoS, r) }
   | REAL c=type_constraint
-    { grammar_logger "REAL_top_var_type" ; (SReal, c) }
+    { grammar_logger "REAL_top_var_type" ; (SReal AoS, c) }
   | COMPLEX c=type_constraint
     { grammar_logger "COMPLEX_var_type" ; (SComplex, c) }
   | VECTOR c=type_constraint LBRACK e=expression RBRACK

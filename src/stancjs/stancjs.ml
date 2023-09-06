@@ -19,7 +19,6 @@ let stan2cpp model_name model_string is_flag_set flag_val :
   Typechecker.model_name := model_name ;
   Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined") ;
-  Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
   Lower_program.standalone_functions :=
     is_flag_set "standalone-functions" || is_flag_set "functions-only" ;
   With_return.with_return (fun r ->
@@ -126,9 +125,12 @@ let stan2cpp model_name model_string is_flag_set flag_val :
             else if is_flag_set "Oexperimental" || is_flag_set "O" then
               Optimize.Oexperimental
             else Optimize.O0 in
-          Optimize.optimization_suite
-            ~settings:(Optimize.level_optimizations opt_lvl)
-            tx_mir in
+          let opt_flags = Optimize.level_optimizations opt_lvl in
+          let opencl_optims =
+            if is_flag_set "use-opencl" then
+              {opt_flags with optimize_opencl= true; optimize_soa= false}
+            else opt_flags in
+          Optimize.optimization_suite ~settings:opencl_optims tx_mir in
         if is_flag_set "debug-optimized-mir" then
           r.return
             ( Result.Ok

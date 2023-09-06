@@ -245,7 +245,7 @@ module Helpers = struct
 *)
   let rec for_scalar st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal | SComplex -> bodyfn st var
+    | SizedType.SInt _ | SReal _ | SComplex -> bodyfn st var
     | SVector (_, d)
      |SRowVector (_, d)
      |SComplexVector d
@@ -259,7 +259,7 @@ module Helpers = struct
         mk_for_iteratee d1
           (fun e -> for_scalar (SComplexRowVector d2) bodyfn e smeta)
           var smeta
-    | SArray (t, d) ->
+    | SArray (_, t, d) ->
         mk_for_iteratee d (fun e -> for_scalar t bodyfn e smeta) var smeta
     | STuple _ -> bodyfn st var
 
@@ -274,7 +274,7 @@ module Helpers = struct
       | _ -> e in
     let rec go st bodyfn var smeta =
       match st with
-      | SizedType.SArray (t, d) ->
+      | SizedType.SArray (_, t, d) ->
           let bodyfn' _ var = mk_for_iteratee d (bodyfn st) var smeta in
           go t bodyfn' var smeta
       | SMatrix (mem_pattern, d1, d2) ->

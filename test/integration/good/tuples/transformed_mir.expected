@@ -7,18 +7,18 @@
      (end_loc
       ((filename arrays-tuples-nested.stan) (line_num 2) (col_num 35) (included_from ()))))
     (STuple
-     ((SArray SReal
+     ((SArray AoS (SReal AoS)
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      SInt)))
+      (SInt AoS))))
    (tuple_tuple
     ((begin_loc
       ((filename arrays-tuples-nested.stan) (line_num 3) (col_num 2) (included_from ())))
      (end_loc
       ((filename arrays-tuples-nested.stan) (line_num 3) (col_num 49) (included_from ()))))
     (STuple
-     (SInt
+     ((SInt AoS)
       (STuple
-       (SReal
+       ((SReal AoS)
         (SVector AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))
    (arr_tuple
@@ -26,10 +26,10 @@
       ((filename arrays-tuples-nested.stan) (line_num 4) (col_num 2) (included_from ())))
      (end_loc
       ((filename arrays-tuples-nested.stan) (line_num 4) (col_num 58) (included_from ()))))
-    (SArray
+    (SArray AoS
      (STuple
-      (SInt
-       (SArray SReal
+      ((SInt AoS)
+       (SArray AoS (SReal AoS)
         ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        (SVector AoS
         ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -40,13 +40,13 @@
      (end_loc
       ((filename arrays-tuples-nested.stan) (line_num 5) (col_num 80) (included_from ()))))
     (STuple
-     ((SArray SReal
+     ((SArray AoS (SReal AoS)
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      SInt
-      (SArray
+      (SInt AoS)
+      (SArray AoS
        (STuple
-        (SReal
-         (SArray SInt
+        ((SReal AoS)
+         (SArray AoS (SInt AoS)
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (arr_tuple_tuple
@@ -54,13 +54,13 @@
       ((filename arrays-tuples-nested.stan) (line_num 6) (col_num 2) (included_from ())))
      (end_loc
       ((filename arrays-tuples-nested.stan) (line_num 6) (col_num 80) (included_from ()))))
-    (SArray
+    (SArray AoS
      (STuple
-      (SReal SInt
+      ((SReal AoS) (SInt AoS)
        (STuple
-        (SReal
+        ((SReal AoS)
          (STuple
-          (SInt
+          ((SInt AoS)
            (SVector AoS
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
@@ -70,12 +70,12 @@
       ((filename arrays-tuples-nested.stan) (line_num 7) (col_num 2) (included_from ())))
      (end_loc
       ((filename arrays-tuples-nested.stan) (line_num 7) (col_num 75) (included_from ()))))
-    (SArray
+    (SArray AoS
      (STuple
-      (SInt
-       (SArray
+      ((SInt AoS)
+       (SArray AoS
         (STuple
-         (SReal
+         ((SReal AoS)
           (SVector AoS
            ((pattern (Lit Int 5))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -86,13 +86,13 @@
       ((filename arrays-tuples-nested.stan) (line_num 8) (col_num 2) (included_from ())))
      (end_loc
       ((filename arrays-tuples-nested.stan) (line_num 9) (col_num 79) (included_from ()))))
-    (SArray
+    (SArray AoS
      (STuple
-      (SInt
-       (SArray
+      ((SInt AoS)
+       (SArray AoS
         (STuple
-         (SReal
-          (SArray
+         ((SReal AoS)
+          (SArray AoS
            (STuple
             (SComplex
              (SMatrix AoS
@@ -106,7 +106,7 @@
      ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -118,10 +118,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SInt))))
+          (SInt AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -152,9 +152,9 @@
       (decl_type
        (Sized
         (STuple
-         (SInt
+         ((SInt AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
@@ -254,10 +254,10 @@
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly DataOnly))) (decl_id arr_tuple)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SInt
-           (SArray SReal
+          ((SInt AoS)
+           (SArray AoS (SReal AoS)
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            (SVector AoS
@@ -336,13 +336,13 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_dot_1_temp__)
-          (decl_type (Sized SInt)) (initialize true)))
+          (decl_type (Sized (SInt AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_dot_2_temp__)
           (decl_type
            (Sized
-            (SArray SReal
+            (SArray AoS (SReal AoS)
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize true)))
@@ -548,14 +548,14 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SInt
-          (SArray
+          (SInt AoS)
+          (SArray AoS
            (STuple
-            (SReal
-             (SArray SInt
+            ((SReal AoS)
+             (SArray AoS (SInt AoS)
               ((pattern (Lit Int 4))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            ((pattern (Lit Int 3))
@@ -634,13 +634,13 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id tuple_arr_tuple_dot_3_dot_1_temp__)
-          (decl_type (Sized SReal)) (initialize true)))
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id tuple_arr_tuple_dot_3_dot_2_temp__)
           (decl_type
            (Sized
-            (SArray SInt
+            (SArray AoS (SInt AoS)
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize true)))
@@ -742,13 +742,13 @@
       (decl_id arr_tuple_tuple)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal SInt
+          ((SReal AoS) (SInt AoS)
            (STuple
-            (SReal
+            ((SReal AoS)
              (STuple
-              (SInt
+              ((SInt AoS)
                (SVector AoS
                 ((pattern (Lit Int 4))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
@@ -878,11 +878,11 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_tuple_dot_1_temp__)
-          (decl_type (Sized SReal)) (initialize true)))
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_tuple_dot_2_temp__)
-          (decl_type (Sized SInt)) (initialize true)))
+          (decl_type (Sized (SInt AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))
@@ -890,9 +890,9 @@
           (decl_type
            (Sized
             (STuple
-             (SReal
+             ((SReal AoS)
               (STuple
-               (SInt
+               ((SInt AoS)
                 (SVector AoS
                  ((pattern (Lit Int 4))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
@@ -1157,12 +1157,12 @@
       (decl_id arr_tuple_arr_tuple)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SInt
-           (SArray
+          ((SInt AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -1247,16 +1247,16 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_arr_tuple_dot_1_temp__)
-          (decl_type (Sized SInt)) (initialize true)))
+          (decl_type (Sized (SInt AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype (TupleAD (DataOnly DataOnly)))
           (decl_id arr_tuple_arr_tuple_dot_2_temp__)
           (decl_type
            (Sized
-            (SArray
+            (SArray AoS
              (STuple
-              (SReal
+              ((SReal AoS)
                (SVector AoS
                 ((pattern (Lit Int 5))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -1301,7 +1301,7 @@
                   (((pattern
                      (Decl (decl_adtype DataOnly)
                       (decl_id arr_tuple_arr_tuple_dot_2_dot_1_temp__)
-                      (decl_type (Sized SReal)) (initialize true)))
+                      (decl_type (Sized (SReal AoS))) (initialize true)))
                     (meta <opaque>))
                    ((pattern
                      (Decl (decl_adtype DataOnly)
@@ -1546,13 +1546,13 @@
       (decl_id very_deep)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SInt
-           (SArray
+          ((SInt AoS)
+           (SArray AoS
             (STuple
-             (SReal
-              (SArray
+             ((SReal AoS)
+              (SArray AoS
                (STuple
                 (SComplex
                  (SMatrix AoS
@@ -1673,17 +1673,17 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id very_deep_dot_1_temp__)
-          (decl_type (Sized SInt)) (initialize true)))
+          (decl_type (Sized (SInt AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))
           (decl_id very_deep_dot_2_temp__)
           (decl_type
            (Sized
-            (SArray
+            (SArray AoS
              (STuple
-              (SReal
-               (SArray
+              ((SReal AoS)
+               (SArray AoS
                 (STuple
                  (SComplex
                   (SMatrix AoS
@@ -1733,14 +1733,14 @@
                  (Block
                   (((pattern
                      (Decl (decl_adtype DataOnly) (decl_id very_deep_dot_2_dot_1_temp__)
-                      (decl_type (Sized SReal)) (initialize true)))
+                      (decl_type (Sized (SReal AoS))) (initialize true)))
                     (meta <opaque>))
                    ((pattern
                      (Decl (decl_adtype (TupleAD (DataOnly DataOnly)))
                       (decl_id very_deep_dot_2_dot_2_temp__)
                       (decl_type
                        (Sized
-                        (SArray
+                        (SArray AoS
                          (STuple
                           (SComplex
                            (SMatrix AoS
@@ -2179,10 +2179,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
+          (SReal AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -2213,9 +2213,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
@@ -2261,10 +2261,10 @@
       (decl_id arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
           (SComplex
-           (SArray SReal
+           (SArray AoS (SReal AoS)
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            (SVector AoS
@@ -2351,14 +2351,14 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal
-          (SArray
+          (SReal AoS)
+          (SArray AoS
            (STuple
-            (SReal
-             (SArray SReal
+            ((SReal AoS)
+             (SArray AoS (SReal AoS)
               ((pattern (Lit Int 4))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            ((pattern (Lit Int 3))
@@ -2446,11 +2446,11 @@
       (decl_id arr_tuple_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal SReal
+          ((SReal AoS) (SReal AoS)
            (STuple
-            (SReal
+            ((SReal AoS)
              (STuple
               (SComplex
                (SVector AoS
@@ -2579,12 +2579,12 @@
       (decl_id arr_tuple_arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -2690,13 +2690,13 @@
       (decl_id very_deep_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
-              (SArray
+             ((SReal AoS)
+              (SArray AoS
                (STuple
                 (SComplex
                  (SMatrix AoS
@@ -2864,10 +2864,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
+          (SReal AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -2898,9 +2898,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
@@ -2946,10 +2946,10 @@
       (decl_id arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
           (SComplex
-           (SArray SReal
+           (SArray AoS (SReal AoS)
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            (SVector AoS
@@ -3036,14 +3036,14 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal
-          (SArray
+          (SReal AoS)
+          (SArray AoS
            (STuple
-            (SReal
-             (SArray SReal
+            ((SReal AoS)
+             (SArray AoS (SReal AoS)
               ((pattern (Lit Int 4))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            ((pattern (Lit Int 3))
@@ -3131,11 +3131,11 @@
       (decl_id arr_tuple_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal SReal
+          ((SReal AoS) (SReal AoS)
            (STuple
-            (SReal
+            ((SReal AoS)
              (STuple
               (SComplex
                (SVector AoS
@@ -3264,12 +3264,12 @@
       (decl_id arr_tuple_arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3375,13 +3375,13 @@
       (decl_id very_deep_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
-              (SArray
+             ((SReal AoS)
+              (SArray AoS
                (STuple
                 (SComplex
                  (SMatrix AoS
@@ -3549,10 +3549,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
+          (SReal AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -3583,9 +3583,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
@@ -3630,10 +3630,10 @@
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly DataOnly))) (decl_id arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
           (SComplex
-           (SArray SReal
+           (SArray AoS (SReal AoS)
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            (SVector AoS
@@ -3718,14 +3718,14 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal
-          (SArray
+          (SReal AoS)
+          (SArray AoS
            (STuple
-            (SReal
-             (SArray SReal
+            ((SReal AoS)
+             (SArray AoS (SReal AoS)
               ((pattern (Lit Int 4))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            ((pattern (Lit Int 3))
@@ -3811,11 +3811,11 @@
       (decl_id arr_tuple_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal SReal
+          ((SReal AoS) (SReal AoS)
            (STuple
-            (SReal
+            ((SReal AoS)
              (STuple
               (SComplex
                (SVector AoS
@@ -3944,12 +3944,12 @@
       (decl_id arr_tuple_arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -4054,13 +4054,13 @@
       (decl_id very_deep_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
-              (SArray
+             ((SReal AoS)
+              (SArray AoS
                (STuple
                 (SComplex
                  (SMatrix AoS
@@ -5116,7 +5116,7 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5128,10 +5128,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
+          (SReal AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -5190,9 +5190,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
@@ -5346,10 +5346,10 @@
       (decl_id arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
           (SComplex
-           (SArray SReal
+           (SArray AoS (SReal AoS)
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            (SVector AoS
@@ -5434,7 +5434,7 @@
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_p_dot_2_temp__)
           (decl_type
            (Sized
-            (SArray SReal
+            (SArray AoS (SReal AoS)
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize true)))
@@ -5723,14 +5723,14 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal
-          (SArray
+          (SReal AoS)
+          (SArray AoS
            (STuple
-            (SReal
-             (SArray SReal
+            ((SReal AoS)
+             (SArray AoS (SReal AoS)
               ((pattern (Lit Int 4))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            ((pattern (Lit Int 3))
@@ -5809,13 +5809,13 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id tuple_arr_tuple_p_dot_3_dot_1_temp__)
-          (decl_type (Sized SReal)) (initialize true)))
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id tuple_arr_tuple_p_dot_3_dot_2_temp__)
           (decl_type
            (Sized
-            (SArray SReal
+            (SArray AoS (SReal AoS)
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize true)))
@@ -6027,11 +6027,11 @@
       (decl_id arr_tuple_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal SReal
+          ((SReal AoS) (SReal AoS)
            (STuple
-            (SReal
+            ((SReal AoS)
              (STuple
               (SComplex
                (SVector AoS
@@ -6170,11 +6170,11 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_tuple_p_dot_1_temp__)
-          (decl_type (Sized SReal)) (initialize true)))
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_tuple_p_dot_2_temp__)
-          (decl_type (Sized SReal)) (initialize true)))
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))
@@ -6182,7 +6182,7 @@
           (decl_type
            (Sized
             (STuple
-             (SReal
+             ((SReal AoS)
               (STuple
                (SComplex
                 (SVector AoS
@@ -6640,12 +6640,12 @@
       (decl_id arr_tuple_arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -6730,16 +6730,16 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id arr_tuple_arr_tuple_p_dot_1_temp__)
-          (decl_type (Sized SReal)) (initialize true)))
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype (TupleAD (DataOnly DataOnly)))
           (decl_id arr_tuple_arr_tuple_p_dot_2_temp__)
           (decl_type
            (Sized
-            (SArray
+            (SArray AoS
              (STuple
-              (SReal
+              ((SReal AoS)
                (SVector AoS
                 ((pattern (Lit Int 5))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -6785,7 +6785,7 @@
                   (((pattern
                      (Decl (decl_adtype DataOnly)
                       (decl_id arr_tuple_arr_tuple_p_dot_2_dot_1_temp__)
-                      (decl_type (Sized SReal)) (initialize true)))
+                      (decl_type (Sized (SReal AoS))) (initialize true)))
                     (meta <opaque>))
                    ((pattern
                      (Decl (decl_adtype DataOnly)
@@ -7168,13 +7168,13 @@
       (decl_id very_deep_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
-              (SArray
+             ((SReal AoS)
+              (SArray AoS
                (STuple
                 (SComplex
                  (SMatrix AoS
@@ -7300,17 +7300,17 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id very_deep_p_dot_1_temp__)
-          (decl_type (Sized SReal)) (initialize true)))
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))
           (decl_id very_deep_p_dot_2_temp__)
           (decl_type
            (Sized
-            (SArray
+            (SArray AoS
              (STuple
-              (SReal
-               (SArray
+              ((SReal AoS)
+               (SArray AoS
                 (STuple
                  (SComplex
                   (SMatrix AoS
@@ -7360,15 +7360,15 @@
                  (Block
                   (((pattern
                      (Decl (decl_adtype DataOnly)
-                      (decl_id very_deep_p_dot_2_dot_1_temp__) (decl_type (Sized SReal))
-                      (initialize true)))
+                      (decl_id very_deep_p_dot_2_dot_1_temp__)
+                      (decl_type (Sized (SReal AoS))) (initialize true)))
                     (meta <opaque>))
                    ((pattern
                      (Decl (decl_adtype (TupleAD (DataOnly DataOnly)))
                       (decl_id very_deep_p_dot_2_dot_2_temp__)
                       (decl_type
                        (Sized
-                        (SArray
+                        (SArray AoS
                          (STuple
                           (SComplex
                            (SMatrix AoS
@@ -8096,10 +8096,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
+          (SReal AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -8149,9 +8149,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
@@ -8236,10 +8236,10 @@
       (decl_id arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
           (SComplex
-           (SArray SReal
+           (SArray AoS (SReal AoS)
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            (SVector AoS
@@ -8392,14 +8392,14 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal
-          (SArray
+          (SReal AoS)
+          (SArray AoS
            (STuple
-            (SReal
-             (SArray SReal
+            ((SReal AoS)
+             (SArray AoS (SReal AoS)
               ((pattern (Lit Int 4))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            ((pattern (Lit Int 3))
@@ -8575,11 +8575,11 @@
       (decl_id arr_tuple_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal SReal
+          ((SReal AoS) (SReal AoS)
            (STuple
-            (SReal
+            ((SReal AoS)
              (STuple
               (SComplex
                (SVector AoS
@@ -8871,12 +8871,12 @@
       (decl_id arr_tuple_arr_tuple_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -9101,13 +9101,13 @@
       (decl_id very_deep_p)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
-              (SArray
+             ((SReal AoS)
+              (SArray AoS
                (STuple
                 (SComplex
                  (SMatrix AoS
@@ -9546,14 +9546,14 @@
        (included_from ()))))
     ((out_unconstrained_st
       (STuple
-       ((SArray SReal
+       ((SArray AoS (SReal AoS)
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        SReal)))
+        (SReal AoS))))
      (out_constrained_st
       (STuple
-       ((SArray SReal
+       ((SArray AoS (SReal AoS)
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        SReal)))
+        (SReal AoS))))
      (out_block Parameters) (out_trans (TupleTransformation (Identity Identity)))))
    (tuple_tuple_p
     ((begin_loc
@@ -9563,17 +9563,17 @@
        (included_from ()))))
     ((out_unconstrained_st
       (STuple
-       (SReal
+       ((SReal AoS)
         (STuple
-         (SReal
+         ((SReal AoS)
           (SVector AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))
      (out_constrained_st
       (STuple
-       (SReal
+       ((SReal AoS)
         (STuple
-         (SReal
+         ((SReal AoS)
           (SVector AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))
@@ -9587,19 +9587,19 @@
       ((filename arrays-tuples-nested.stan) (line_num 14) (col_num 64)
        (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (STuple
         (SComplex
-         (SArray SReal
+         (SArray AoS (SReal AoS)
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          (SVector AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (STuple
         (SComplex
-         (SArray SReal
+         (SArray AoS (SReal AoS)
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          (SVector AoS
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -9614,25 +9614,25 @@
        (included_from ()))))
     ((out_unconstrained_st
       (STuple
-       ((SArray SReal
+       ((SArray AoS (SReal AoS)
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        SReal
-        (SArray
+        (SReal AoS)
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray SReal
+          ((SReal AoS)
+           (SArray AoS (SReal AoS)
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_constrained_st
       (STuple
-       ((SArray SReal
+       ((SArray AoS (SReal AoS)
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        SReal
-        (SArray
+        (SReal AoS)
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray SReal
+          ((SReal AoS)
+           (SArray AoS (SReal AoS)
             ((pattern (Lit Int 4))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
@@ -9646,11 +9646,11 @@
       ((filename arrays-tuples-nested.stan) (line_num 16) (col_num 87)
        (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal SReal
+        ((SReal AoS) (SReal AoS)
          (STuple
-          (SReal
+          ((SReal AoS)
            (STuple
             (SComplex
              (SVector AoS
@@ -9658,11 +9658,11 @@
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal SReal
+        ((SReal AoS) (SReal AoS)
          (STuple
-          (SReal
+          ((SReal AoS)
            (STuple
             (SComplex
              (SVector AoS
@@ -9681,24 +9681,24 @@
       ((filename arrays-tuples-nested.stan) (line_num 17) (col_num 78)
        (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal
-         (SArray
+        ((SReal AoS)
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 5))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal
-         (SArray
+        ((SReal AoS)
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 5))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -9714,13 +9714,13 @@
       ((filename arrays-tuples-nested.stan) (line_num 19) (col_num 81)
        (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal
-         (SArray
+        ((SReal AoS)
+         (SArray AoS
           (STuple
-           (SReal
-            (SArray
+           ((SReal AoS)
+            (SArray AoS
              (STuple
               (SComplex
                (SMatrix AoS
@@ -9733,13 +9733,13 @@
           ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal
-         (SArray
+        ((SReal AoS)
+         (SArray AoS
           (STuple
-           (SReal
-            (SArray
+           ((SReal AoS)
+            (SArray AoS
              (STuple
               (SComplex
                (SMatrix AoS
@@ -9761,7 +9761,7 @@
 ((functions_block ()) (input_vars ()) (prepare_data ())
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -9779,7 +9779,7 @@
          (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id z)
           (decl_type
            (Sized
-            (SArray (STuple (SReal SReal))
+            (SArray AoS (STuple ((SReal AoS) (SReal AoS)))
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize true)))
@@ -9829,7 +9829,7 @@
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -9847,7 +9847,7 @@
          (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id z)
           (decl_type
            (Sized
-            (SArray (STuple (SReal SReal))
+            (SArray SoA (STuple ((SReal AoS) (SReal AoS)))
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (initialize true)))
@@ -9897,7 +9897,7 @@
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -9942,7 +9942,7 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -9969,7 +9969,7 @@
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id x) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -9991,14 +9991,14 @@
       ((filename infer_tuple_ad.stan) (line_num 2) (col_num 2) (included_from ())))
      (end_loc
       ((filename infer_tuple_ad.stan) (line_num 2) (col_num 9) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))))
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters) (out_trans Identity)))))
  (prog_name infer_tuple_ad_model) (prog_path infer_tuple_ad.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir simple.stan
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10007,7 +10007,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x)
-      (decl_type (Sized (STuple (SReal SInt)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SInt AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) (UTuple (UReal UInt))
@@ -10062,7 +10062,7 @@
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10074,10 +10074,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SInt))))
+          (SInt AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10144,7 +10144,7 @@
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10156,13 +10156,13 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray
-           (SArray SReal
+         ((SArray AoS
+           (SArray AoS (SReal AoS)
             ((pattern (Lit Int 3))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SInt))))
+          (SInt AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10252,7 +10252,7 @@
      (end_loc
       ((filename tuple-constraints-data.stan) (line_num 2) (col_num 60)
        (included_from ()))))
-    (STuple (SInt (STuple (SReal SInt)))))
+    (STuple ((SInt AoS) (STuple ((SReal AoS) (SInt AoS))))))
    (x
     ((begin_loc
       ((filename tuple-constraints-data.stan) (line_num 3) (col_num 2)
@@ -10261,7 +10261,7 @@
       ((filename tuple-constraints-data.stan) (line_num 3) (col_num 51)
        (included_from ()))))
     (STuple
-     (SInt SReal
+     ((SInt AoS) (SReal AoS)
       (SVector AoS
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (z
@@ -10271,17 +10271,17 @@
      (end_loc
       ((filename tuple-constraints-data.stan) (line_num 4) (col_num 48)
        (included_from ()))))
-    (SArray
-     (SArray
+    (SArray AoS
+     (SArray AoS
       (STuple
-       (SReal
+       ((SReal AoS)
         (SVector AoS
          ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10290,7 +10290,8 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly (TupleAD (DataOnly DataOnly))))) 
-      (decl_id y) (decl_type (Sized (STuple (SInt (STuple (SReal SInt))))))
+      (decl_id y)
+      (decl_type (Sized (STuple ((SInt AoS) (STuple ((SReal AoS) (SInt AoS)))))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -10417,7 +10418,7 @@
       (decl_type
        (Sized
         (STuple
-         (SInt SReal
+         ((SInt AoS) (SReal AoS)
           (SVector AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
@@ -10571,10 +10572,10 @@
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id z)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -10629,8 +10630,8 @@
           ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
        ((pattern
-         (Decl (decl_adtype DataOnly) (decl_id z_dot_1_temp__) (decl_type (Sized SReal))
-          (initialize true)))
+         (Decl (decl_adtype DataOnly) (decl_id z_dot_1_temp__)
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id z_dot_2_temp__)
@@ -10983,10 +10984,10 @@
      (end_loc
       ((filename tuple-constraints-params.stan) (line_num 7) (col_num 34)
        (included_from ()))))
-    SInt)))
+    (SInt AoS))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id indicator) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id indicator) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -11031,7 +11032,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id complicated_brack_dot2_1dim__)
-      (decl_type (Sized SInt)) (initialize true)))
+      (decl_type (Sized (SInt AoS))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable complicated_brack_dot2_1dim__) ()) UInt
@@ -11064,7 +11065,7 @@
  (log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -11098,10 +11099,10 @@
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -11183,7 +11184,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -11221,12 +11222,12 @@
       (decl_id complicated)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -11360,7 +11361,7 @@
  (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -11394,10 +11395,10 @@
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -11479,7 +11480,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -11517,12 +11518,12 @@
       (decl_id complicated)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -11656,7 +11657,7 @@
  (generate_quantities
   (((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -11690,10 +11691,10 @@
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps2)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -11775,7 +11776,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id t) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id t) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -11811,12 +11812,12 @@
       (decl_id complicated)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12263,7 +12264,7 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -12272,7 +12273,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -12340,10 +12341,10 @@
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12399,7 +12400,7 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id ps2_dot_1_temp__)
-          (decl_type (Sized SReal)) (initialize true)))
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id ps2_dot_2_temp__)
@@ -12674,7 +12675,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -12724,12 +12725,12 @@
       (decl_id complicated)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12842,16 +12843,16 @@
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id complicated_dot_1_temp__)
-          (decl_type (Sized SReal)) (initialize true)))
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype (TupleAD (DataOnly DataOnly DataOnly)))
           (decl_id complicated_dot_2_temp__)
           (decl_type
            (Sized
-            (SArray
+            (SArray AoS
              (STuple
-              (SReal
+              ((SReal AoS)
                (SVector AoS
                 ((pattern (Lit Int 5))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -12900,8 +12901,8 @@
                  (Block
                   (((pattern
                      (Decl (decl_adtype DataOnly)
-                      (decl_id complicated_dot_2_dot_1_temp__) (decl_type (Sized SReal))
-                      (initialize true)))
+                      (decl_id complicated_dot_2_dot_1_temp__)
+                      (decl_type (Sized (SReal AoS))) (initialize true)))
                     (meta <opaque>))
                    ((pattern
                      (Decl (decl_adtype DataOnly)
@@ -13505,7 +13506,7 @@
  (unconstrain_array
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -13555,10 +13556,10 @@
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps2)
       (decl_type
        (Sized
-        (SArray
-         (SArray
+        (SArray AoS
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 4))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -13706,7 +13707,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -13747,12 +13748,12 @@
       (decl_id complicated)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray
+          ((SReal AoS)
+           (SArray AoS
             (STuple
-             (SReal
+             ((SReal AoS)
               (SVector AoS
                ((pattern (Lit Int 5))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14054,8 +14055,8 @@
      (end_loc
       ((filename tuple-constraints-params.stan) (line_num 10) (col_num 41)
        (included_from ()))))
-    ((out_unconstrained_st (STuple (SReal SReal)))
-     (out_constrained_st (STuple (SReal SReal))) (out_block Parameters)
+    ((out_unconstrained_st (STuple ((SReal AoS) (SReal AoS))))
+     (out_constrained_st (STuple ((SReal AoS) (SReal AoS)))) (out_block Parameters)
      (out_trans
       (TupleTransformation
        ((Lower
@@ -14070,10 +14071,10 @@
       ((filename tuple-constraints-params.stan) (line_num 11) (col_num 51)
        (included_from ()))))
     ((out_unconstrained_st
-      (SArray
-       (SArray
+      (SArray AoS
+       (SArray AoS
         (STuple
-         (SReal
+         ((SReal AoS)
           (SVector AoS
            ((pattern
              (FunApp (StanLib Minus__ FnPlain AoS)
@@ -14085,10 +14086,10 @@
         ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
-       (SArray
+      (SArray AoS
+       (SArray AoS
         (STuple
-         (SReal
+         ((SReal AoS)
           (SVector AoS
            ((pattern (Lit Int 4))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -14107,7 +14108,8 @@
      (end_loc
       ((filename tuple-constraints-params.stan) (line_num 12) (col_num 36)
        (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters)
      (out_trans
       (LowerUpper
        ((pattern
@@ -14134,12 +14136,12 @@
       ((filename tuple-constraints-params.stan) (line_num 15) (col_num 81)
        (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal
-         (SArray
+        ((SReal AoS)
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern
                (FunApp (StanLib Minus__ FnPlain AoS)
@@ -14190,12 +14192,12 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal
-         (SArray
+        ((SReal AoS)
+         (SArray AoS
           (STuple
-           (SReal
+           ((SReal AoS)
             (SVector AoS
              ((pattern (Lit Int 5))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
@@ -14242,10 +14244,10 @@
       ((filename tuple-dataonly.stan) (line_num 7) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-dataonly.stan) (line_num 7) (col_num 22) (included_from ()))))
-    (STuple (SReal SReal)))))
+    (STuple ((SReal AoS) (SReal AoS))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -14254,7 +14256,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id d)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable d) ()) 1) ()) UReal
@@ -14342,7 +14344,7 @@
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -14353,7 +14355,7 @@
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id arr)
       (decl_type
        (Sized
-        (SArray (STuple (SReal SReal))
+        (SArray AoS (STuple ((SReal AoS) (SReal AoS)))
          ((pattern (Lit Int 100))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
@@ -14431,15 +14433,15 @@
     ((begin_loc ((filename tuple-full.stan) (line_num 2) (col_num 2) (included_from ())))
      (end_loc ((filename tuple-full.stan) (line_num 2) (col_num 69) (included_from ()))))
     (STuple
-     (SInt
+     ((SInt AoS)
       (STuple
-       ((SArray SInt
+       ((SArray AoS (SInt AoS)
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -14452,12 +14454,12 @@
       (decl_type
        (Sized
         (STuple
-         (SInt
+         ((SInt AoS)
           (STuple
-           ((SArray SInt
+           ((SArray AoS (SInt AoS)
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            (SArray SInt
+            (SArray AoS (SInt AoS)
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
       (initialize true)))
@@ -14541,7 +14543,7 @@
  (log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -14670,7 +14672,7 @@
  (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -14799,7 +14801,7 @@
  (generate_quantities
   (((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -14880,7 +14882,7 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -14889,7 +14891,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -14956,7 +14958,7 @@
  (unconstrain_array
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -15006,8 +15008,8 @@
   ((ps
     ((begin_loc ((filename tuple-full.stan) (line_num 5) (col_num 2) (included_from ())))
      (end_loc ((filename tuple-full.stan) (line_num 5) (col_num 41) (included_from ()))))
-    ((out_unconstrained_st (STuple (SReal SReal)))
-     (out_constrained_st (STuple (SReal SReal))) (out_block Parameters)
+    ((out_unconstrained_st (STuple ((SReal AoS) (SReal AoS))))
+     (out_constrained_st (STuple ((SReal AoS) (SReal AoS)))) (out_block Parameters)
      (out_trans
       (TupleTransformation
        ((Lower
@@ -15019,7 +15021,7 @@
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -15028,7 +15030,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x)
-      (decl_type (Sized (STuple (SInt SInt)))) (initialize true)))
+      (decl_type (Sized (STuple ((SInt AoS) (SInt AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable x) ()) 1) ()) UInt
@@ -15065,7 +15067,7 @@
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -15077,10 +15079,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SInt
+         ((SArray AoS (SInt AoS)
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SInt))))
+          (SInt AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -15122,7 +15124,7 @@
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -15133,7 +15135,7 @@
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x)
       (decl_type
        (Sized
-        (SArray (STuple (SInt SInt))
+        (SArray AoS (STuple ((SInt AoS) (SInt AoS)))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -15180,7 +15182,7 @@
 ((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -15193,15 +15195,15 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray
+         ((SArray AoS
            (STuple
-            (SInt
-             (SArray SReal
+            ((SInt AoS)
+             (SArray AoS (SReal AoS)
               ((pattern (Lit Int 100))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SInt))))
+          (SInt AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -15248,7 +15250,7 @@
  (log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -15274,9 +15276,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SMatrix AoS
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -15322,7 +15324,7 @@
  (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -15348,9 +15350,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SMatrix AoS
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -15396,7 +15398,7 @@
  (generate_quantities
   (((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -15422,9 +15424,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SMatrix AoS
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -15571,7 +15573,7 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -15580,7 +15582,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -15642,9 +15644,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SMatrix AoS
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -15813,7 +15815,7 @@
  (unconstrain_array
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -15857,9 +15859,9 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
+         ((SReal AoS)
           (STuple
-           (SReal
+           ((SReal AoS)
             (SMatrix AoS
              ((pattern (Lit Int 10))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -15948,8 +15950,8 @@
       ((filename tuple-nested-param.stan) (line_num 2) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-nested-param.stan) (line_num 2) (col_num 23) (included_from ()))))
-    ((out_unconstrained_st (STuple (SReal SReal)))
-     (out_constrained_st (STuple (SReal SReal))) (out_block Parameters)
+    ((out_unconstrained_st (STuple ((SReal AoS) (SReal AoS))))
+     (out_constrained_st (STuple ((SReal AoS) (SReal AoS)))) (out_block Parameters)
      (out_trans (TupleTransformation (Identity Identity)))))
    (ps2
     ((begin_loc
@@ -15958,9 +15960,9 @@
       ((filename tuple-nested-param.stan) (line_num 3) (col_num 47) (included_from ()))))
     ((out_unconstrained_st
       (STuple
-       (SReal
+       ((SReal AoS)
         (STuple
-         (SReal
+         ((SReal AoS)
           (SMatrix AoS
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -15968,9 +15970,9 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))
      (out_constrained_st
       (STuple
-       (SReal
+       ((SReal AoS)
         (STuple
-         (SReal
+         ((SReal AoS)
           (SMatrix AoS
            ((pattern (Lit Int 10))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -15985,7 +15987,7 @@
  (log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -16013,7 +16015,7 @@
  (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -16041,7 +16043,7 @@
  (generate_quantities
   (((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -16117,7 +16119,7 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16126,7 +16128,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -16189,7 +16191,7 @@
  (unconstrain_array
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -16237,8 +16239,8 @@
       ((filename tuple-params.stan) (line_num 2) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-params.stan) (line_num 2) (col_num 32) (included_from ()))))
-    ((out_unconstrained_st (STuple (SReal SReal)))
-     (out_constrained_st (STuple (SReal SReal))) (out_block Parameters)
+    ((out_unconstrained_st (STuple ((SReal AoS) (SReal AoS))))
+     (out_constrained_st (STuple ((SReal AoS) (SReal AoS)))) (out_block Parameters)
      (out_trans
       (TupleTransformation
        (Identity
@@ -16300,13 +16302,13 @@
      (end_loc
       ((filename tuple-promotion.stan) (line_num 8) (col_num 38) (included_from ()))))
     (STuple
-     ((SArray SInt
+     ((SArray AoS (SInt AoS)
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (SArray SInt
+      (SArray AoS (SInt AoS)
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16384,10 +16386,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SInt
+         ((SArray AoS (SInt AoS)
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          (SArray SInt
+          (SArray AoS (SInt AoS)
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
       (initialize true)))
@@ -16412,10 +16414,10 @@
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id arrs)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SInt
-           (SArray SInt
+          ((SInt AoS)
+           (SArray AoS (SInt AoS)
             ((pattern (Lit Int 2))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16430,16 +16432,16 @@
        (Sized
         (STuple
          ((STuple
-           (SInt
-            (SArray SInt
+           ((SInt AoS)
+            (SArray AoS (SInt AoS)
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          SInt
+          (SInt AoS)
           (STuple
            ((SVector AoS
              ((pattern (Lit Int 3))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            SInt))))))
+            (SInt AoS)))))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16447,7 +16449,7 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SReal
+         ((SArray AoS (SReal AoS)
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           SComplex))))
@@ -16490,7 +16492,7 @@
          ((SComplexVector
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
+          (SReal AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16521,7 +16523,7 @@
          ((SVector AoS
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SInt))))
+          (SInt AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16548,7 +16550,7 @@
          (adlevel (TupleAD (DataOnly DataOnly))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id t) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id t) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16573,10 +16575,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SComplex
+         ((SArray AoS SComplex
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          (SArray SComplex
+          (SArray AoS SComplex
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
       (initialize true)))
@@ -16602,7 +16604,7 @@
          ((SVector AoS
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
+          (SReal AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16622,10 +16624,10 @@
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id arrs2)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray SComplex
+          ((SReal AoS)
+           (SArray AoS SComplex
             ((pattern (Lit Int 2))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16655,16 +16657,16 @@
        (Sized
         (STuple
          ((STuple
-           (SReal
-            (SArray SComplex
+           ((SReal AoS)
+            (SArray AoS SComplex
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          SReal
+          (SReal AoS)
           (STuple
            ((SVector AoS
              ((pattern (Lit Int 3))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            SReal))))))
+            (SReal AoS)))))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16704,16 +16706,16 @@
        (Sized
         (STuple
          ((STuple
-           (SReal
-            (SArray SComplex
+           ((SReal AoS)
+            (SArray AoS SComplex
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          SReal
+          (SReal AoS)
           (STuple
            ((SVector AoS
              ((pattern (Lit Int 3))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            SReal))))))
+            (SReal AoS)))))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16748,10 +16750,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SComplex
+         ((SArray AoS SComplex
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          (SArray SComplex
+          (SArray AoS SComplex
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
       (initialize true)))
@@ -16777,7 +16779,7 @@
          ((SVector AoS
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
+          (SReal AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16797,10 +16799,10 @@
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id arrs2)
       (decl_type
        (Sized
-        (SArray
+        (SArray SoA
          (STuple
-          (SReal
-           (SArray SComplex
+          ((SReal AoS)
+           (SArray AoS SComplex
             ((pattern (Lit Int 2))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16830,16 +16832,16 @@
        (Sized
         (STuple
          ((STuple
-           (SReal
-            (SArray SComplex
+           ((SReal AoS)
+            (SArray AoS SComplex
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          SReal
+          (SReal AoS)
           (STuple
            ((SVector AoS
              ((pattern (Lit Int 3))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            SReal))))))
+            (SReal AoS)))))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16879,16 +16881,16 @@
        (Sized
         (STuple
          ((STuple
-           (SReal
-            (SArray SComplex
+           ((SReal AoS)
+            (SArray AoS SComplex
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          SReal
+          (SReal AoS)
           (STuple
            ((SVector AoS
              ((pattern (Lit Int 3))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            SReal))))))
+            (SReal AoS)))))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16923,10 +16925,10 @@
       (decl_type
        (Sized
         (STuple
-         ((SArray SComplex
+         ((SArray AoS SComplex
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          (SArray SComplex
+          (SArray AoS SComplex
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
       (initialize true)))
@@ -16939,17 +16941,17 @@
          ((SVector AoS
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal))))
+          (SReal AoS)))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id arrs2)
       (decl_type
        (Sized
-        (SArray
+        (SArray AoS
          (STuple
-          (SReal
-           (SArray SComplex
+          ((SReal AoS)
+           (SArray AoS SComplex
             ((pattern (Lit Int 2))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16964,16 +16966,16 @@
        (Sized
         (STuple
          ((STuple
-           (SReal
-            (SArray SComplex
+           ((SReal AoS)
+            (SArray AoS SComplex
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          SReal
+          (SReal AoS)
           (STuple
            ((SVector AoS
              ((pattern (Lit Int 3))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            SReal))))))
+            (SReal AoS)))))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -16985,16 +16987,16 @@
        (Sized
         (STuple
          ((STuple
-           (SReal
-            (SArray SComplex
+           ((SReal AoS)
+            (SArray AoS SComplex
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          SReal
+          (SReal AoS)
           (STuple
            ((SVector AoS
              ((pattern (Lit Int 3))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-            SReal))))))
+            (SReal AoS)))))))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -17572,7 +17574,8 @@
       ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id y) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id y) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable y) ()) UInt
@@ -17580,7 +17583,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize true)))
+      (decl_type (Sized (STuple ((SReal AoS) (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) (UTuple (UReal UReal))
@@ -17603,7 +17606,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id z)
-      (decl_type (Sized (STuple (SComplex SReal)))) (initialize true)))
+      (decl_type (Sized (STuple (SComplex (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable z) ()) (UTuple (UComplex UReal))
@@ -17620,7 +17623,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id z2)
-      (decl_type (Sized (STuple (SComplex SReal)))) (initialize true)))
+      (decl_type (Sized (STuple (SComplex (SReal AoS))))) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable z2) ()) (UTuple (UComplex UReal))
@@ -17723,15 +17726,15 @@
       ((filename tuple-promotion.stan) (line_num 24) (col_num 51) (included_from ()))))
     ((out_unconstrained_st
       (STuple
-       ((SArray SComplex
+       ((SArray AoS SComplex
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        (SArray SComplex
+        (SArray AoS SComplex
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_constrained_st
       (STuple
-       ((SArray SComplex
+       ((SArray AoS SComplex
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        (SArray SComplex
+        (SArray AoS SComplex
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_block TransformedParameters)
      (out_trans (TupleTransformation (Identity Identity)))))
@@ -17744,12 +17747,12 @@
       (STuple
        ((SVector AoS
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        SReal)))
+        (SReal AoS))))
      (out_constrained_st
       (STuple
        ((SVector AoS
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        SReal)))
+        (SReal AoS))))
      (out_block TransformedParameters)
      (out_trans (TupleTransformation (Identity Identity)))))
    (arrs2
@@ -17758,17 +17761,17 @@
      (end_loc
       ((filename tuple-promotion.stan) (line_num 27) (col_num 54) (included_from ()))))
     ((out_unconstrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal
-         (SArray SComplex
+        ((SReal AoS)
+         (SArray AoS SComplex
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray
+      (SArray AoS
        (STuple
-        (SReal
-         (SArray SComplex
+        ((SReal AoS)
+         (SArray AoS SComplex
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters)
@@ -17781,29 +17784,29 @@
     ((out_unconstrained_st
       (STuple
        ((STuple
-         (SReal
-          (SArray SComplex
+         ((SReal AoS)
+          (SArray AoS SComplex
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        SReal
+        (SReal AoS)
         (STuple
          ((SVector AoS
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal)))))
+          (SReal AoS))))))
      (out_constrained_st
       (STuple
        ((STuple
-         (SReal
-          (SArray SComplex
+         ((SReal AoS)
+          (SArray AoS SComplex
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        SReal
+        (SReal AoS)
         (STuple
          ((SVector AoS
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal)))))
+          (SReal AoS))))))
      (out_block TransformedParameters)
      (out_trans
       (TupleTransformation
@@ -17817,29 +17820,29 @@
     ((out_unconstrained_st
       (STuple
        ((STuple
-         (SReal
-          (SArray SComplex
+         ((SReal AoS)
+          (SArray AoS SComplex
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        SReal
+        (SReal AoS)
         (STuple
          ((SVector AoS
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal)))))
+          (SReal AoS))))))
      (out_constrained_st
       (STuple
        ((STuple
-         (SReal
-          (SArray SComplex
+         ((SReal AoS)
+          (SArray AoS SComplex
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        SReal
+        (SReal AoS)
         (STuple
          ((SVector AoS
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          SReal)))))
+          (SReal AoS))))))
      (out_block TransformedParameters)
      (out_trans
       (TupleTransformation
@@ -17850,31 +17853,32 @@
       ((filename tuple-promotion.stan) (line_num 34) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-promotion.stan) (line_num 34) (col_num 12) (included_from ()))))
-    ((out_unconstrained_st SInt) (out_constrained_st SInt)
+    ((out_unconstrained_st (SInt AoS)) (out_constrained_st (SInt AoS))
      (out_block GeneratedQuantities) (out_trans Identity)))
    (x
     ((begin_loc
       ((filename tuple-promotion.stan) (line_num 35) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-promotion.stan) (line_num 35) (col_num 31) (included_from ()))))
-    ((out_unconstrained_st (STuple (SReal SReal)))
-     (out_constrained_st (STuple (SReal SReal))) (out_block GeneratedQuantities)
+    ((out_unconstrained_st (STuple ((SReal AoS) (SReal AoS))))
+     (out_constrained_st (STuple ((SReal AoS) (SReal AoS))))
+     (out_block GeneratedQuantities)
      (out_trans (TupleTransformation (Identity Identity)))))
    (z
     ((begin_loc
       ((filename tuple-promotion.stan) (line_num 36) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-promotion.stan) (line_num 36) (col_num 29) (included_from ()))))
-    ((out_unconstrained_st (STuple (SComplex SReal)))
-     (out_constrained_st (STuple (SComplex SReal))) (out_block GeneratedQuantities)
+    ((out_unconstrained_st (STuple (SComplex (SReal AoS))))
+     (out_constrained_st (STuple (SComplex (SReal AoS)))) (out_block GeneratedQuantities)
      (out_trans (TupleTransformation (Identity Identity)))))
    (z2
     ((begin_loc
       ((filename tuple-promotion.stan) (line_num 37) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-promotion.stan) (line_num 37) (col_num 30) (included_from ()))))
-    ((out_unconstrained_st (STuple (SComplex SReal)))
-     (out_constrained_st (STuple (SComplex SReal))) (out_block GeneratedQuantities)
+    ((out_unconstrained_st (STuple (SComplex (SReal AoS))))
+     (out_constrained_st (STuple (SComplex (SReal AoS)))) (out_block GeneratedQuantities)
      (out_trans (TupleTransformation (Identity Identity)))))))
  (prog_name tuple_promotion_model) (prog_path tuple-promotion.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple-templating.stan
@@ -17997,7 +18001,7 @@
       ((filename tuple-templating.stan) (line_num 24) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-templating.stan) (line_num 24) (col_num 8) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (m1
     ((begin_loc
       ((filename tuple-templating.stan) (line_num 25) (col_num 2) (included_from ())))
@@ -18019,18 +18023,18 @@
       ((filename tuple-templating.stan) (line_num 27) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-templating.stan) (line_num 27) (col_num 18) (included_from ()))))
-    (SArray SInt
+    (SArray AoS (SInt AoS)
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (a2
     ((begin_loc
       ((filename tuple-templating.stan) (line_num 28) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-templating.stan) (line_num 28) (col_num 19) (included_from ()))))
-    (SArray SReal
+    (SArray AoS (SReal AoS)
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -18038,7 +18042,8 @@
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable N) ()) UInt
@@ -18254,7 +18259,7 @@
      (Decl (decl_adtype DataOnly) (decl_id a1)
       (decl_type
        (Sized
-        (SArray SInt
+        (SArray AoS (SInt AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -18276,7 +18281,7 @@
      (Decl (decl_adtype DataOnly) (decl_id a2)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -18331,7 +18336,7 @@
           (adlevel (TupleAD (DataOnly DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id s) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id s) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -18439,7 +18444,7 @@
       ((filename tuple-templating.stan) (line_num 34) (col_num 2) (included_from ())))
      (end_loc
       ((filename tuple-templating.stan) (line_num 34) (col_num 26) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block GeneratedQuantities) (out_trans Identity)))))
  (prog_name tuple_templating_model) (prog_path tuple-templating.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_hof.stan
@@ -18477,22 +18482,22 @@
   ((N
     ((begin_loc ((filename tuple_hof.stan) (line_num 8) (col_num 2) (included_from ())))
      (end_loc ((filename tuple_hof.stan) (line_num 8) (col_num 8) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (data_y
     ((begin_loc ((filename tuple_hof.stan) (line_num 9) (col_num 2) (included_from ())))
      (end_loc ((filename tuple_hof.stan) (line_num 9) (col_num 23) (included_from ()))))
-    (SArray SReal
+    (SArray AoS (SReal AoS)
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (data_m
     ((begin_loc ((filename tuple_hof.stan) (line_num 10) (col_num 2) (included_from ())))
      (end_loc ((filename tuple_hof.stan) (line_num 10) (col_num 35) (included_from ()))))
     (STuple
-     (SReal
-      (SArray SInt
+     ((SReal AoS)
+      (SArray AoS (SInt AoS)
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -18500,7 +18505,8 @@
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable N) ()) UInt
@@ -18527,7 +18533,7 @@
      (Decl (decl_adtype DataOnly) (decl_id data_y)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -18551,8 +18557,8 @@
       (decl_type
        (Sized
         (STuple
-         (SReal
-          (SArray SInt
+         ((SReal AoS)
+          (SArray AoS (SInt AoS)
            ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
       (initialize true)))
     (meta <opaque>))
@@ -18579,7 +18585,7 @@
        (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sum1) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id sum1) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -18615,7 +18621,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id param_y)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -18632,7 +18638,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sum2) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sum2) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -18661,7 +18667,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id param_y)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray SoA (SReal SoA)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -18678,7 +18684,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sum2) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sum2) (decl_type (Sized (SReal SoA)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -18707,7 +18713,7 @@
      (Decl (decl_adtype DataOnly) (decl_id param_y)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -18724,7 +18730,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sum2) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id sum2) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -18803,7 +18809,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id param_y)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -18829,7 +18835,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id param_y)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -18854,16 +18860,16 @@
     ((begin_loc ((filename tuple_hof.stan) (line_num 16) (col_num 2) (included_from ())))
      (end_loc ((filename tuple_hof.stan) (line_num 16) (col_num 24) (included_from ()))))
     ((out_unconstrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SArray SReal
+      (SArray AoS (SReal AoS)
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (sum2
     ((begin_loc ((filename tuple_hof.stan) (line_num 19) (col_num 2) (included_from ())))
      (end_loc ((filename tuple_hof.stan) (line_num 19) (col_num 50) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name tuple_hof_model) (prog_path tuple_hof.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_lpdf.stan

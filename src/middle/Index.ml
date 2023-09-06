@@ -43,6 +43,13 @@ let apply ~default ~merge op (ind : 'a t) =
   | Between (expr_top, expr_bottom) -> merge (op expr_top) (op expr_bottom)
   | MultiIndex exprs -> op exprs
 
+let map_expr ~f = function
+  | All -> All
+  | Single ind_expr -> Single (f ind_expr)
+  | Upfrom ind_expr -> Upfrom ind_expr
+  | Between (expr_top, expr_bottom) -> Between (f expr_top, f expr_bottom)
+  | MultiIndex exprs -> MultiIndex (f exprs)
+
 let folder (acc : string Set.Poly.t) op (ind : 'a t) : string Set.Poly.t =
   match ind with
   | All -> acc

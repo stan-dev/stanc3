@@ -40,8 +40,8 @@ let%expect_test "Prefix-Op-Example" =
       (((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))
-              (initialize true)))
+             (Decl (decl_adtype AutoDiffable) (decl_id i)
+              (decl_type (Sized (SInt AoS))) (initialize true)))
             (meta <opaque>))
            ((pattern
              (IfElse
@@ -73,7 +73,7 @@ let%expect_test "read data" =
        (Decl (decl_adtype DataOnly) (decl_id mat)
         (decl_type
          (Sized
-          (SArray
+          (SArray AoS
            (SMatrix AoS
             ((pattern (Lit Int 10))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -95,7 +95,7 @@ let%expect_test "read param" =
        (Decl (decl_adtype AutoDiffable) (decl_id mat)
         (decl_type
          (Sized
-          (SArray
+          (SArray AoS
            (SMatrix AoS
             ((pattern (Lit Int 10))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -140,7 +140,7 @@ let%expect_test "gen quant" =
        (Decl (decl_adtype DataOnly) (decl_id mat)
         (decl_type
          (Sized
-          (SArray
+          (SArray AoS
            (SMatrix AoS
             ((pattern (Lit Int 10))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -175,7 +175,7 @@ let%expect_test "read data - constraint " =
      (Decl (decl_adtype DataOnly) (decl_id y)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Lit Int 5))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
@@ -207,9 +207,9 @@ let%expect_test "read data - tuple" =
        (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id x)
         (decl_type
          (Sized
-          (SArray
+          (SArray AoS
            (STuple
-            (SReal
+            ((SReal AoS)
              (SVector AoS
               ((pattern (Lit Int 20))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))

@@ -1,6 +1,7 @@
 (** A set of data types representing the C++ we generate *)
 
 open Core_kernel
+open Middle
 
 type identifier = string [@@deriving sexp]
 
@@ -8,15 +9,16 @@ type identifier = string [@@deriving sexp]
 type type_ =
   | Auto
   | Void
-  | Int
-  | Double
+  | Int of Mem_pattern.t
+  | Double of Mem_pattern.t
   | Complex of type_
   | TemplateType of identifier
-  | StdVector of type_
+  | StdVector of type_ * Mem_pattern.t
       (** A std::vector. For Eigen Vectors, use [Matrix] with a row or column size of 1 *)
-  | Array of type_ * int
+  | Array of type_ * int * Mem_pattern.t
   | Tuple of type_ list
-  | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
+  | TypeLiteral of identifier * Mem_pattern.t
+      (** Used for things like Eigen::Index *)
   | Matrix of type_ * int * int * Middle.Mem_pattern.t
   | Ref of type_
   | Const of type_
@@ -28,12 +30,12 @@ type type_ =
 module Types = struct
   (** Helpers for constructing types *)
 
-  let local_scalar = TypeLiteral "local_scalar_t__"
+  let local_scalar mem_pattern = TypeLiteral ("local_scalar_t__", mem_pattern)
 
   (** A [std::vector<t>] *)
-  let std_vector t = StdVector t
+  let std_vector (t, mem) = StdVector (t, mem)
 
-  let bool = TypeLiteral "bool"
+  let bool = TypeLiteral ("bool", AoS)
   let complex s = Complex s
 
   (** An [Eigen::Matrix<s, -1, 1>]*)
@@ -49,11 +51,13 @@ module Types = struct
     Matrix (s, -1, -1, mem_pattern)
 
   (** A [std::string]*)
-  let string = TypeLiteral "std::string"
+  let string = TypeLiteral ("std::string", AoS)
 
-  let size_t = TypeLiteral "size_t"
+  let size_t = TypeLiteral ("size_t", AoS)
   let const_ref t = Const (Ref t)
-  let const_char_array i = Array (Const (Pointer (TypeLiteral "char")), i)
+
+  let const_char_array i =
+    Array (Const (Pointer (TypeLiteral ("char", AoS))), i, Mem_pattern.AoS)
 end
 
 type operator =
@@ -114,7 +118,8 @@ module Exprs = struct
   let literal_string s = Literal ("\"" ^ Cpp_str.escaped s ^ "\"")
 
   (** Equivalent to [std::vector<t>{e1,...,en}] *)
-  let std_vector_init_expr t elements = InitializerExpr (StdVector t, elements)
+  let std_vector_init_expr t elements =
+    InitializerExpr (StdVector (t, Mem_pattern.AoS), elements)
 
   let fun_call name args = FunCall (name, [], args)
   let templated_fun_call name templates args = FunCall (name, templates, args)
@@ -234,7 +239,7 @@ module Stmts = struct
     | _ ->
         [ TryCatch
             ( stmts
-            , (Types.const_ref (TypeLiteral "std::exception"), "e")
+            , (Types.const_ref (TypeLiteral ("std::exception", AoS)), "e")
             , [ Expression
                   (FunCall
                      ( "stan::lang::rethrow_located"
@@ -246,8 +251,8 @@ module Stmts = struct
 
   let fori loopvar lower upper body =
     let init =
-      make_variable_defn ~type_:Int ~name:loopvar ~init:(Assignment lower) ()
-    in
+      make_variable_defn ~type_:(Int AoS) ~name:loopvar ~init:(Assignment lower)
+        () in
     let stop = BinOp (Var loopvar, LEq, upper) in
     let incr = Increment (Var loopvar) in
     For (init, stop, incr, body)
@@ -264,12 +269,12 @@ module Decls = struct
 
   let current_statement =
     VariableDefn
-      (make_variable_defn ~type_:Int ~name:"current_statement__"
+      (make_variable_defn ~type_:(Int AoS) ~name:"current_statement__"
          ~init:(Assignment (Literal "0")) () )
 
   let dummy_var =
     VariableDefn
-      (make_variable_defn ~type_:Types.local_scalar ~name:"DUMMY_VAR__"
+      (make_variable_defn ~type_:(Types.local_scalar AoS) ~name:"DUMMY_VAR__"
          ~init:(Construction [Exprs.quiet_NaN])
          () )
     :: Stmts.unused "DUMMY_VAR__"
@@ -277,7 +282,7 @@ module Decls = struct
   let serializer_in =
     VariableDefn
       (make_variable_defn
-         ~type_:(TypeTrait ("stan::io::deserializer", [Types.local_scalar]))
+         ~type_:(TypeTrait ("stan::io::deserializer", [Types.local_scalar AoS]))
          ~name:"in__"
          ~init:(Construction [Var "params_r__"; Var "params_i__"])
          () )
@@ -285,7 +290,7 @@ module Decls = struct
   let serializer_out =
     VariableDefn
       (make_variable_defn
-         ~type_:(TypeTrait ("stan::io::serializer", [Types.local_scalar]))
+         ~type_:(TypeTrait ("stan::io::serializer", [Types.local_scalar AoS]))
          ~name:"out__"
          ~init:(Construction [Var "vars__"])
          () )
@@ -385,28 +390,51 @@ module Printing = struct
   let trailing_space (t : 'a Fmt.t) : 'a Fmt.t = fun ppf -> pf ppf "%a@ " t
   let pp_identifier ppf = string ppf
 
-  let rec pp_type_ ppf t =
+  let rec pp_type_ ppf (t : type_) =
+    let is_base_scalar_type = function
+      | Auto | Int _ | Double _ -> true
+      | _ -> false in
     match t with
     | Auto -> string ppf "auto"
     | Void -> string ppf "void"
-    | Int -> string ppf "int"
-    | Double -> string ppf "double"
+    | Int mem when Mem_pattern.is_opencl mem ->
+        string ppf "stan::math::matrix_cl<int>"
+    | Int _ -> string ppf "int"
+    | Double mem when Mem_pattern.is_opencl mem ->
+        string ppf "stan::math::matrix_cl<double>"
+    | Double _ -> string ppf "double"
     | Complex t -> pf ppf "std::complex<%a>" pp_type_ t
     | TemplateType id -> pp_identifier ppf id
-    | StdVector t -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ t
-    | Array (t, i) -> pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ t i
+    | StdVector (inner_t, mem)
+      when Mem_pattern.is_opencl mem && is_base_scalar_type inner_t -> (
+      match inner_t with
+      | Double _ -> pf ppf "@[<2>stan::math::matrix_cl<@,%a>@]" pp_type_ inner_t
+      | Int _ -> pf ppf "@[<2>stan::math::matrix_cl<@,%a>@]" pp_type_ inner_t
+      | _ -> pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ inner_t )
+    | StdVector (inner_t, _) ->
+        pf ppf "@[<2>std::vector<@,%a>@]" pp_type_ inner_t
+    | Array (inner_t, _, mem) when Mem_pattern.is_opencl mem ->
+        pf ppf "@[<2>stan::math::matrix_cl<@,%a>@]" pp_type_ inner_t
+    | Array (inner_t, i, _) ->
+        pf ppf "@[<2>std::array<@,%a,@ %i>@]" pp_type_ inner_t i
     | Tuple subtypes ->
         pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) subtypes
-    | TypeLiteral id -> pp_identifier ppf id
-    | Matrix (t, i, j, mem_pattern) -> (
+    | TypeLiteral (id, mem) when Mem_pattern.is_opencl mem ->
+        pf ppf "@[<2>stan::math::matrix_cl<@,%a>@]" pp_identifier id
+    | TypeLiteral (id, _) -> pp_identifier ppf id
+    | Matrix (inner_t, i, j, mem_pattern) -> (
       match mem_pattern with
       | Middle.Mem_pattern.AoS ->
-          pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
-      | Middle.Mem_pattern.SoA ->
-          pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j )
-    | Const t -> pf ppf "const %a" pp_type_ t
-    | Ref t -> pf ppf "%a&" pp_type_ t
-    | Pointer t -> pf ppf "%a*" pp_type_ t
+          pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ inner_t i j
+      | SoA -> pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j
+      | OpenCL -> (
+        match inner_t with
+        | Double _ -> pf ppf "stan::math::matrix_cl<double>"
+        | Int _ -> pf ppf "stan::math::matrix_cl<int>"
+        | _ -> pf ppf "stan::math::var_value<stan::math::matrix_cl<double>>" ) )
+    | Const inner_t -> pf ppf "const %a" pp_type_ inner_t
+    | Ref inner_t -> pf ppf "%a&" pp_type_ inner_t
+    | Pointer inner_t -> pf ppf "%a*" pp_type_ inner_t
     | TypeTrait (s, types) ->
         pf ppf "@[<2>%s<%a>@]" s (list ~sep:comma pp_type_) types
 
@@ -726,8 +754,9 @@ module Tests = struct
   let%expect_test "types" =
     let ts =
       let open Types in
-      [ matrix (complex local_scalar); const_char_array 43
-      ; std_vector (std_vector Double); const_ref (TemplateType "T0__") ] in
+      [ matrix (complex (local_scalar AoS)); const_char_array 43
+      ; std_vector (std_vector (Double Mem_pattern.AoS, AoS), AoS)
+      ; const_ref (TemplateType "T0__") ] in
     let open Fmt in
     pf stdout "@[<v>%a@]" (list ~sep:comma Printing.pp_type_) ts ;
     [%expect
@@ -742,7 +771,7 @@ module Tests = struct
   let%expect_test "eigen init" =
     let open Expression_syntax in
     let open Types in
-    let vector = Constructor (row_vector Double, [Literal "3"]) in
+    let vector = Constructor (row_vector (Double AoS), [Literal "3"]) in
     let values = [Literal "1"; Var "a"; Literal "3"] in
     let e = (vector << values).@!("finished") in
     print_s [%sexp (e : expr)] ;
@@ -752,7 +781,7 @@ module Tests = struct
       {|
           (MethodCall
            (Parens
-            (StreamInsertion (Constructor (Matrix Double 1 -1 AoS) ((Literal 3)))
+            (StreamInsertion (Constructor (Matrix (Double AoS) 1 -1 AoS) ((Literal 3)))
              ((Literal 1) (Var a) (Literal 3))))
            finished () ())
 

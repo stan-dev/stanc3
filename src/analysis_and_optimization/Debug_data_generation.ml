@@ -264,8 +264,8 @@ and gen_tuple m st t =
 
 and generate_value m st t =
   match st with
-  | SizedType.SInt -> Expr.Helpers.int (gen_num_int m t)
-  | SReal -> Expr.Helpers.float (gen_num_real m t)
+  | SizedType.SInt _ -> Expr.Helpers.int (gen_num_int m t)
+  | SReal _ -> Expr.Helpers.float (gen_num_real m t)
   | SComplex -> gen_complex ()
   | SVector (_, e) -> gen_vector m (unwrap_int_exn m e) t
   | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
@@ -275,7 +275,7 @@ and generate_value m st t =
   | SComplexRowVector e -> gen_complex_row_vector (unwrap_int_exn m e)
   | SComplexMatrix (e1, e2) ->
       gen_complex_matrix (unwrap_int_exn m e1) (unwrap_int_exn m e2)
-  | SArray (st, e) -> gen_array m st (unwrap_int_exn m e) t
+  | SArray (_, st, e) -> gen_array m st (unwrap_int_exn m e) t
   | STuple _ -> gen_tuple m st t
 
 let generate_expressions input data =

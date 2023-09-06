@@ -97,9 +97,10 @@ module Helpers = struct
   let zero = int 0
   let one = int 1
 
-  let unary_op op e =
+  let unary_op ?(mem_pattern = Mem_pattern.SoA) op e =
     { Fixed.meta= Typed.Meta.empty
-    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain, AoS), [e]) }
+    ; pattern=
+        FunApp (StanLib (Operator.to_string op, FnPlain, mem_pattern), [e]) }
 
   let binop e1 op e2 =
     { Fixed.meta= Typed.Meta.empty

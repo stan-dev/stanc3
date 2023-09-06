@@ -6,13 +6,13 @@
       ((filename simple_function.stan) (line_num 2) (col_num 2) (included_from ())))
      (end_loc
       ((filename simple_function.stan) (line_num 2) (col_num 17) (included_from ()))))
-    SInt)
+    (SInt AoS))
    (x
     ((begin_loc
       ((filename simple_function.stan) (line_num 3) (col_num 2) (included_from ())))
      (end_loc
       ((filename simple_function.stan) (line_num 3) (col_num 18) (included_from ()))))
-    (SArray SReal
+    (SArray AoS (SReal AoS)
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (y
     ((begin_loc
@@ -23,7 +23,7 @@
      ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized (SInt AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -31,7 +31,8 @@
       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) (initialize true)))
+     (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized (SInt AoS)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable N) ()) UInt
@@ -68,7 +69,7 @@
      (Decl (decl_adtype DataOnly) (decl_id x)
       (decl_type
        (Sized
-        (SArray SReal
+        (SArray AoS (SReal AoS)
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true)))
     (meta <opaque>))
@@ -152,7 +153,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sum_y) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id sum_y) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -168,7 +169,7 @@
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -186,7 +187,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -204,7 +205,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -405,7 +406,7 @@
     (meta <opaque>))))
  (reverse_mode_log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -423,7 +424,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -441,7 +442,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -642,7 +643,7 @@
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id rho) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id rho) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -660,7 +661,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -678,7 +679,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -744,7 +745,7 @@
     (meta <opaque>))))
  (transform_inits
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -774,7 +775,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -804,7 +805,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -835,7 +836,7 @@
     (meta <opaque>))))
  (unconstrain_array
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id rho) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -856,7 +857,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -877,7 +878,7 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized (SReal AoS)))
       (initialize true)))
     (meta <opaque>))
    ((pattern
@@ -903,7 +904,8 @@
       ((filename simple_function.stan) (line_num 13) (col_num 2) (included_from ())))
      (end_loc
       ((filename simple_function.stan) (line_num 13) (col_num 20) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters)
      (out_trans
       (Lower
        ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
@@ -912,7 +914,8 @@
       ((filename simple_function.stan) (line_num 14) (col_num 2) (included_from ())))
      (end_loc
       ((filename simple_function.stan) (line_num 14) (col_num 22) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters)
      (out_trans
       (Lower
        ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
@@ -921,7 +924,8 @@
       ((filename simple_function.stan) (line_num 15) (col_num 2) (included_from ())))
      (end_loc
       ((filename simple_function.stan) (line_num 15) (col_num 22) (included_from ()))))
-    ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
+    ((out_unconstrained_st (SReal AoS)) (out_constrained_st (SReal AoS))
+     (out_block Parameters)
      (out_trans
       (Lower
        ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))

@@ -84,7 +84,7 @@ let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
   (* Possibly remove ints from the data set *)
   let filtered_data =
     let remove_ints =
-      Set.Poly.filter ~f:(fun (_, _, st) -> st <> SizedType.SInt) in
+      Set.Poly.filter ~f:(fun (_, _, st) -> st <> SizedType.SInt AoS) in
     Set.Poly.map ~f:fst3 ((if exclude_ints then remove_ints else ident) data)
   in
   (* Transformed data are declarations in prepare_data but excluding data *)
@@ -480,10 +480,10 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
   | Unsized ut ->
       let rec to_sized a =
         match a with
-        | UnsizedType.UReal -> SizedType.SReal
-        | UInt -> SInt
+        | UnsizedType.UReal -> SizedType.SReal AoS
+        | UInt -> SInt AoS
         | UComplex -> SComplex
-        | UArray t -> SArray (to_sized t, Expr.Helpers.int 0)
+        | UArray t -> SArray (AoS, to_sized t, Expr.Helpers.int 0)
         | UMatrix ->
             SMatrix (Mem_pattern.AoS, Expr.Helpers.int 0, Expr.Helpers.int 0)
         | UVector -> SVector (AoS, Expr.Helpers.int 0)

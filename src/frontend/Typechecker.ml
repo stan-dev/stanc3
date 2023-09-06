@@ -1412,7 +1412,7 @@ and verify_valid_transformation_for_type loc is_global sized_ty trans =
     | Upper e -> is_real e
     | LowerUpper (e1, e2) -> is_real e1 || is_real e2
     | _ -> false in
-  if is_global && sized_ty = SizedType.SInt && is_real_transformation then
+  if is_global && sized_ty = SizedType.SInt AoS && is_real_transformation then
     Semantic_error.non_int_bounds loc |> error ;
   let is_transformation =
     match trans with Transformation.Identity -> false | _ -> true in
@@ -1429,8 +1429,8 @@ and verify_transformed_param_ty loc cf is_global unsized_ty =
 and check_sizedtype cf tenv sizedty =
   let check e msg = check_expression_of_int_type cf tenv e msg in
   match sizedty with
-  | SizedType.SInt -> SizedType.SInt
-  | SReal -> SReal
+  | SizedType.SInt mem -> SizedType.SInt mem
+  | SReal mem -> SReal mem
   | SComplex -> SComplex
   | SVector (mem_pattern, e) ->
       let te = check e "Vector sizes" in
@@ -1452,10 +1452,10 @@ and check_sizedtype cf tenv sizedty =
       let te1 = check e1 "Complex matrix row size" in
       let te2 = check e2 "Complex matrix column size" in
       SComplexMatrix (te1, te2)
-  | SArray (st, e) ->
+  | SArray (mem, st, e) ->
       let tst = check_sizedtype cf tenv st in
       let te = check e "Array sizes" in
-      SArray (tst, te)
+      SArray (mem, tst, te)
   | STuple subtypes ->
       let typed_subtypes = List.map ~f:(check_sizedtype cf tenv) subtypes in
       STuple typed_subtypes

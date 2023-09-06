@@ -95,10 +95,10 @@ let suffix_args = function
   | FnTarget -> ["lp__"; "lp_accum__"]
   | FnPlain | FnLpdf _ -> []
 
-let rec stantype_prim = function
-  | UnsizedType.UInt -> Int
+let rec stantype_prim ?(mem_pattern = Mem_pattern.AoS) = function
+  | UnsizedType.UInt -> Int mem_pattern
   | UArray t -> stantype_prim t
-  | _ -> Double
+  | _ -> Double mem_pattern
 
 let templates udf suffix =
   match suffix with
@@ -109,11 +109,12 @@ let templates udf suffix =
 
 let deserializer = Var "in__"
 
-let rec local_scalar ut ad =
+let rec local_scalar ?(mem_pattern = Mem_pattern.AoS) ut ad =
   match (ut, ad) with
-  | UnsizedType.UArray t, _ -> local_scalar t ad
-  | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim ut
-  | _, AutoDiffable -> Types.local_scalar
+  | UnsizedType.UArray t, _ -> local_scalar ~mem_pattern t ad
+  | _, UnsizedType.DataOnly | UInt, AutoDiffable ->
+      stantype_prim ~mem_pattern ut
+  | _, AutoDiffable -> Types.local_scalar mem_pattern
   | _, TupleAD _ ->
       Common.FatalError.fatal_error_msg
         [%message
@@ -132,10 +133,10 @@ let plus_one e =
 let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
     (scalar : type_) : type_ =
   match t with
-  | UInt -> Int
+  | UInt -> Int mem_pattern
   | UReal -> scalar
   | UComplex -> Types.complex scalar
-  | UArray t -> StdVector (lower_type t scalar)
+  | UArray t -> StdVector (lower_type t scalar, mem_pattern)
   | UTuple ts -> Tuple (List.map ~f:(fun t -> lower_type t scalar) ts)
   | UVector -> Types.vector ~mem_pattern scalar
   | URowVector -> Types.row_vector ~mem_pattern scalar
@@ -152,7 +153,8 @@ let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
   | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
       Tuple (List.map2_exn ~f:(lower_unsizedtype_local ~mem_pattern) ads ts)
   | UnsizedType.TupleAD _, UnsizedType.UArray t ->
-      Types.std_vector (lower_unsizedtype_local ~mem_pattern adtype t)
+      Types.std_vector
+        (lower_unsizedtype_local ~mem_pattern adtype t, mem_pattern)
   | _, UnsizedType.UTuple _ | TupleAD _, _ ->
       Common.FatalError.fatal_error_msg
         [%message
@@ -160,19 +162,21 @@ let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
             (ut : UnsizedType.t)
             (adtype : UnsizedType.autodifftype)]
   | _, _ ->
-      let s = local_scalar ut adtype in
+      let s = local_scalar ~mem_pattern ut adtype in
       lower_type ~mem_pattern ut s
 
 let rec lower_possibly_var_decl adtype ut mem_pattern =
   let var_decl p_ut = lower_unsizedtype_local ~mem_pattern adtype p_ut in
   match (ut, adtype) with
   | UnsizedType.UArray t, _ ->
-      Types.std_vector (lower_possibly_var_decl adtype t mem_pattern)
+      Types.std_vector
+        (lower_possibly_var_decl adtype t mem_pattern, mem_pattern)
   | ( ( UMatrix | UVector | URowVector | UComplexRowVector | UComplexVector
       | UComplexMatrix )
     , _ ) ->
       var_decl ut
-  | (UReal | UInt | UComplex), _ -> lower_unsizedtype_local adtype ut
+  | (UReal | UInt | UComplex), _ ->
+      lower_unsizedtype_local ~mem_pattern adtype ut
   | UTuple t_lst, TupleAD ads ->
       Tuple
         (List.map2_exn
@@ -276,7 +280,7 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
         (fun _ ->
           Exprs.fun_call "stan::math::get_lp" [Var "lp__"; Var "lp_accum__"] )
   | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row" | "append_col"
-    when mem_pattern = Mem_pattern.SoA -> (
+    when mem_pattern = Mem_pattern.SoA || mem_pattern = OpenCL -> (
       let is_autodiffable Expr.Fixed.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
         adlevel = UnsizedType.AutoDiffable in
       match ret_type with
@@ -527,7 +531,7 @@ and lower_expr ?(promote_reals = false)
       if promote_reals then
         (* this can be important for e.g. templated function calls
            where we might generate an incorrect specification for int *)
-        static_cast Cpp.Double (lower_expr expr)
+        static_cast (Cpp.Double AoS) (lower_expr expr)
       else lower_expr expr
   | Promotion (expr, UComplex, DataOnly) when is_scalar expr ->
       (* this is in principle a little better than promote_scalar since it is constexpr *)
@@ -577,7 +581,7 @@ and lower_expr ?(promote_reals = false)
     | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e) )
   | TupleProjection (t, ix) ->
       templated_fun_call "std::get"
-        [TypeLiteral (string_of_int (ix - 1))]
+        [TypeLiteral (string_of_int (ix - 1), Mem_pattern.AoS)]
         [lower_expr t]
 
 and lower_exprs ?(promote_reals = false) =
@@ -656,10 +660,10 @@ module Testing = struct
 
   let%expect_test "pp_expr12" =
     printf "%s\n"
-      (Fmt.str "%a" Cpp.Printing.pp_expr (vector_literal Cpp.Double [])) ;
+      (Fmt.str "%a" Cpp.Printing.pp_expr (vector_literal (Cpp.Double AoS) [])) ;
     printf "%s"
       (Fmt.str "%a" Cpp.Printing.pp_expr
-         (vector_literal ~column:true Cpp.Double []) ) ;
+         (vector_literal ~column:true (Cpp.Double AoS) []) ) ;
     [%expect
       {|
       Eigen::Matrix<double,1,-1>(0)

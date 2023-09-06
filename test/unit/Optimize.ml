@@ -336,7 +336,7 @@ let%expect_test "list collapsing" =
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym2__)
-          (decl_type (Sized SReal)) (initialize false)))
+          (decl_type (Sized (SReal AoS))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Block
@@ -3288,26 +3288,26 @@ let%expect_test "adlevel_optimization expressions" =
   [%expect
     {|
       (((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))
-          (initialize true)))
+         (Decl (decl_adtype AutoDiffable) (decl_id w)
+          (decl_type (Sized (SReal AoS))) (initialize true)))
         (meta <opaque>))
        ((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))
-              (initialize true)))
+             (Decl (decl_adtype DataOnly) (decl_id x)
+              (decl_type (Sized (SInt AoS))) (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type (Sized SReal))
-              (initialize true)))
+             (Decl (decl_adtype AutoDiffable) (decl_id y)
+              (decl_type (Sized (SReal AoS))) (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SReal))
-              (initialize true)))
+             (Decl (decl_adtype AutoDiffable) (decl_id z)
+              (decl_type (Sized (SReal AoS))) (initialize true)))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype DataOnly) (decl_id z_data)
-              (decl_type (Sized SReal)) (initialize true)))
+              (decl_type (Sized (SReal AoS))) (initialize true)))
             (meta <opaque>))
            ((pattern
              (IfElse
