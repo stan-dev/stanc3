@@ -25,7 +25,7 @@ def tagName() {
     }
 }
 
-def runPerformanceTests(String testsPath, String stancFlags = ""){
+def runPerformanceTests(String testsPath, String stancFlags = "", Bool opencl = false){
     unstash 'ubuntu-exe'
 
     sh """
@@ -37,7 +37,6 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
     utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
     utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
     utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-
     sh """
         cd performance-tests-cmdstan
         mkdir cmdstan/bin
@@ -51,6 +50,15 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
 
     sh """
         cd performance-tests-cmdstan/cmdstan
+    """
+    if (opencl) {
+        sh """
+            echo STAN_OPENCL=true > make/local
+            echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
+            echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
+        """
+    }
+    sh """
         echo 'O=0' >> make/local
         make -j${env.PARALLEL} build; cd ..
         ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
@@ -427,11 +435,6 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/compile-good-O1cl"){
                             unstash "Stanc3Setup"
-                            sh """
-                                echo STAN_OPENCL=true > make/local
-                                echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
-                                echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
-                            """
                             script {
                                 runPerformanceTests("../test/integration/good", "--O1 --use-opencl")
                             }
@@ -470,11 +473,6 @@ pipeline {
                         dir("${env.WORKSPACE}/compile-example-O1cl"){   
                             script {
                                 unstash "Stanc3Setup"
-                                sh """
-                                    echo STAN_OPENCL=true > make/local
-                                    echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
-                                    echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
-                                """
                                 runPerformanceTests("example-models", "--O1 --use-opencl")
                             }
 
