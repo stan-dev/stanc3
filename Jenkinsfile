@@ -425,13 +425,13 @@ pipeline {
                         }
                     }
                     steps {
-                        sh """
-                            echo STAN_OPENCL=true > make/local
-                            echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
-                            echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
-                        """
                         dir("${env.WORKSPACE}/compile-good-O1cl"){
                             unstash "Stanc3Setup"
+                            sh """
+                                echo STAN_OPENCL=true > make/local
+                                echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
+                                echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
+                            """
                             script {
                                 runPerformanceTests("../test/integration/good", "--O1 --use-opencl")
                             }
@@ -467,14 +467,14 @@ pipeline {
                         }
                     }
                     steps {
-                        sh """
-                            echo STAN_OPENCL=true > make/local
-                            echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
-                            echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
-                        """
                         dir("${env.WORKSPACE}/compile-example-O1cl"){   
                             script {
                                 unstash "Stanc3Setup"
+                                sh """
+                                    echo STAN_OPENCL=true > make/local
+                                    echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
+                                    echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
+                                """
                                 runPerformanceTests("example-models", "--O1 --use-opencl")
                             }
 
