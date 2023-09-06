@@ -425,6 +425,11 @@ pipeline {
                         }
                     }
                     steps {
+                        sh """
+                            echo STAN_OPENCL=true > make/local
+                            echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
+                            echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
+                        """
                         dir("${env.WORKSPACE}/compile-good-O1cl"){
                             unstash "Stanc3Setup"
                             script {
@@ -462,7 +467,12 @@ pipeline {
                         }
                     }
                     steps {
-                        dir("${env.WORKSPACE}/compile-example-O1cl"){
+                        sh """
+                            echo STAN_OPENCL=true > make/local
+                            echo OPENCL_PLATFORM_ID=${OPENCL_PLATFORM_ID_GPU} >> make/local
+                            echo OPENCL_DEVICE_ID=${OPENCL_DEVICE_ID_GPU} >> make/local
+                        """
+                        dir("${env.WORKSPACE}/compile-example-O1cl"){   
                             script {
                                 unstash "Stanc3Setup"
                                 runPerformanceTests("example-models", "--O1 --use-opencl")
