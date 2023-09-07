@@ -942,8 +942,9 @@ f(const T0__& x,
   try {
     current_statement__ = 9;
     return std::tuple<int, std::vector<std::tuple<int, local_scalar_t__>>>(1,
-             std::vector<std::tuple<int, local_scalar_t__>>{std::forward_as_tuple(
-                                                              2, 3.4)});
+             std::vector<std::tuple<int, local_scalar_t__>>{std::tuple<int,
+                                                              local_scalar_t__>(2,
+                                                              3.4)});
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -1045,8 +1046,8 @@ class complex_tuples_model final : public model_base_crtp<complex_tuples_model> 
       current_statement__ = 8;
       stan::model::assign(d,
         std::tuple<int, double, std::vector<std::tuple<int, int>>>(1, 2.5,
-          std::vector<std::tuple<int, int>>{std::forward_as_tuple(1, 2),
-            std::forward_as_tuple(3, 4)}), "assigning variable d");
+          std::vector<std::tuple<int, int>>{std::tuple<int, int>(1, 2),
+            std::tuple<int, int>(3, 4)}), "assigning variable d");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

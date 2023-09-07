@@ -401,32 +401,21 @@ and lower_user_defined_fun f suffix es =
 
 and lower_compiler_internal ad ut f es =
   let open Expression_syntax in
-  let gen_tuple_literal es : expr =
-    let is_simple (e : Expr.Typed.t) =
-      match e.pattern with
-      | Var _ ->
-          (* Because the data members are [const], they can't be passed without more templating *)
-          e.meta.adlevel <> DataOnly
-      | Lit _ -> true
-      | Promotion ({pattern= Var _ | Lit _; _}, _, _) -> is_scalar e
-      | _ -> false in
-    if List.for_all ~f:is_simple es then
-      fun_call "std::forward_as_tuple" (lower_exprs es)
-    else
-      (* we make full copies of tuples
-         due to a lack of templating sophistication
-         in function generation *)
-      let types =
-        List.map es ~f:(fun {meta= {adlevel; type_; _}; _} ->
-            let base_type = lower_unsizedtype_local adlevel type_ in
-            if
-              UnsizedType.is_dataonlytype adlevel
-              && not
-                   ( UnsizedType.is_scalar_type type_
-                   || UnsizedType.contains_tuple type_ )
-            then Types.const_ref base_type
-            else base_type ) in
-      Constructor (Tuple types, lower_exprs es) in
+  let gen_tuple_literal (es : Expr.Typed.t list) : expr =
+    (* we make full copies of tuples
+       due to a lack of templating sophistication
+       in function generation *)
+    let types =
+      List.map es ~f:(fun {meta= {adlevel; type_; _}; _} ->
+          let base_type = lower_unsizedtype_local adlevel type_ in
+          if
+            UnsizedType.is_dataonlytype adlevel
+            && not
+                 ( UnsizedType.is_scalar_type type_
+                 || UnsizedType.contains_tuple type_ )
+          then Types.const_ref base_type
+          else base_type ) in
+    Constructor (Tuple types, lower_exprs es) in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =
