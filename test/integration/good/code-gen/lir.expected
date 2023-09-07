@@ -802,7 +802,9 @@
          (Literal "\" (in 'mother.stan', line 341, column 41 to line 345, column 3)\"")))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs std::is_integral (TemplateType T0__)))) true))
+      ((((Typename T0__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))))
+       true))
      (inline false) (return_type Int) (name foo)
      (args
       (((Const (Ref (TemplateType T0__))) n)
@@ -811,17 +813,13 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_autodiff
-          (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_floating_point
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T2__))))))
        true))
      (inline false)
@@ -834,8 +832,9 @@
      (name sho)
      (args
       (((Const (Ref (TemplateType T0__))) t) ((Const (Ref (TemplateType T1__))) y)
-       ((Const (Ref (TemplateType T2__))) theta) ((Const (Ref Double)) x)
-       ((Const (Ref Int)) x_int) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+       ((Const (Ref (TemplateType T2__))) theta) ((Const (Ref (StdVector Double))) x)
+       ((Const (Ref (StdVector Int))) x_int)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init ((()) true)) (inline false) (return_type Double) 
@@ -843,8 +842,9 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+      ((((Typename T0__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        true))
      (inline false)
      (return_type
@@ -857,10 +857,10 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        true))
      (inline false)
      (return_type
@@ -874,9 +874,9 @@
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T1__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        true))
      (inline false)
      (return_type
@@ -888,9 +888,10 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+      ((((Typename T0__) (Typename T1__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        true))
      (inline false)
      (return_type
@@ -902,9 +903,10 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+      ((((Typename T0__) (Typename T1__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        true))
      (inline false)
      (return_type
@@ -917,10 +919,10 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename RNG)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        true))
      (inline false)
      (return_type
@@ -935,8 +937,8 @@
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        true))
      (inline false) (return_type Void) (name unit_normal_lp)
      (args
@@ -946,7 +948,9 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs std::is_integral (TemplateType T0__)))) true))
+      ((((Typename T0__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))))
+       true))
      (inline false) (return_type Int) (name foo_1)
      (args
       (((Const (Ref (TemplateType T0__))) a)
@@ -954,7 +958,9 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs std::is_integral (TemplateType T0__)))) true))
+      ((((Typename T0__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))))
+       true))
      (inline false) (return_type Int) (name foo_2)
      (args
       (((Const (Ref (TemplateType T0__))) a)
@@ -963,9 +969,9 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs std::is_integral (TemplateType T1__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T1__))))
        true))
      (inline false)
      (return_type
@@ -979,8 +985,8 @@
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        true))
      (inline false)
      (return_type
@@ -993,10 +999,9 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_std_vector (TemplateType T0__))
-         (RequireIs stan::is_autodiff
-          (TypeTrait stan::value_type_t ((TemplateType T0__))))
-         (RequireIs std::is_floating_point
+      ((((Typename T0__)
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T0__))))))
        true))
      (inline false) (return_type Void) (name foo_4)
@@ -1007,14 +1012,14 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))
-         (RequireIs stan::is_autodiff (TemplateType T2__))
-         (RequireIs std::is_floating_point (TemplateType T2__))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))))
        true))
      (inline false)
      (return_type
@@ -1031,10 +1036,10 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_col_vector (TemplateType T0__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-         (RequireIs stan::is_col_vector (TemplateType T1__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T1__))))
        true))
      (inline false)
      (return_type
@@ -1046,22 +1051,24 @@
      (name foo_5)
      (args
       (((Const (Ref (TemplateType T0__))) shared_params_arg__)
-       ((Const (Ref (TemplateType T1__))) job_params_arg__) ((Const (Ref Double)) data_r)
-       ((Const (Ref Int)) data_i) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+       ((Const (Ref (TemplateType T1__))) job_params_arg__)
+       ((Const (Ref (StdVector Double))) data_r) ((Const (Ref (StdVector Int))) data_i)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
-         (Typename T4__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))
-         (RequireIs stan::is_autodiff (TemplateType T2__))
-         (RequireIs std::is_floating_point (TemplateType T2__))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_autodiff (TemplateType T4__))
-         (RequireIs std::is_floating_point (TemplateType T4__))))
+         (Typename T4__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T4__))))
        true))
      (inline false)
      (return_type
@@ -1080,18 +1087,19 @@
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T1__) (Typename T2__) 
          (Typename T3__) (Typename T4__) (Typename T5__) (Typename T_lp__)
-         (Typename T_lp_accum__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))
-         (RequireIs stan::is_autodiff (TemplateType T2__))
-         (RequireIs std::is_floating_point (TemplateType T2__))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_autodiff (TemplateType T4__))
-         (RequireIs std::is_floating_point (TemplateType T4__))
-         (RequireIs stan::is_autodiff (TemplateType T5__))
-         (RequireIs std::is_floating_point (TemplateType T5__))))
+         (Typename T_lp_accum__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T5__))))
        true))
      (inline false)
      (return_type
@@ -1112,9 +1120,9 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T0__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-         (RequireIs std::is_integral (TemplateType T1__))))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T1__))))
        true))
      (inline false)
      (return_type
@@ -1133,62 +1141,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1208,62 +1211,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1283,62 +1281,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1358,62 +1351,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1433,62 +1421,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1521,62 +1504,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1610,62 +1588,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1700,62 +1673,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1790,62 +1758,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1881,62 +1844,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -1974,62 +1932,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -2064,62 +2017,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -2155,62 +2103,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        true))
@@ -2257,8 +2200,9 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+      ((((Typename T0__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        true))
      (inline false)
      (return_type
@@ -2272,8 +2216,9 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+      ((((Typename T0__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        true))
      (inline false)
      (return_type
@@ -2288,17 +2233,15 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-         (RequireIs stan::is_col_vector (TemplateType T0__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-         (RequireIs stan::is_col_vector (TemplateType T1__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T1__))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T1__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs stan::is_std_vector (TemplateType T3__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T3__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T3__))))))
        true))
      (inline false)
@@ -2320,10 +2263,10 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_col_vector (TemplateType T0__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-         (RequireIs stan::is_col_vector (TemplateType T1__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T1__))))
        true))
      (inline false)
      (return_type
@@ -2335,8 +2278,9 @@
      (name binomialf)
      (args
       (((Const (Ref (TemplateType T0__))) phi_arg__)
-       ((Const (Ref (TemplateType T1__))) theta_arg__) ((Const (Ref Double)) x_r)
-       ((Const (Ref Int)) x_i) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+       ((Const (Ref (TemplateType T1__))) theta_arg__)
+       ((Const (Ref (StdVector Double))) x_r) ((Const (Ref (StdVector Int))) x_i)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (Struct
     ((param ()) (struct_name algebra_system_functor__)
@@ -2344,17 +2288,15 @@
       ((FunDef
         ((templates_init
           ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-             (RequireIs stan::is_col_vector (TemplateType T0__))
-             (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-             (RequireIs stan::is_col_vector (TemplateType T1__))
-             (RequireIs stan::is_vt_not_complex (TemplateType T1__))
-             (RequireIs stan::is_std_vector (TemplateType T2__))
-             (RequireIs stan::is_autodiff
+             (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T0__))
+             (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+             (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T1__))
+             (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T1__))
+             (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+             (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
               (TypeTrait stan::value_type_t ((TemplateType T2__))))
-             (RequireIs std::is_floating_point
-              (TypeTrait stan::value_type_t ((TemplateType T2__))))
-             (RequireIs stan::is_std_vector (TemplateType T3__))
-             (RequireIs std::is_integral
+             (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T3__))
+             (RequireAllCondition (Exact std::is_integral)
               (TypeTrait stan::value_type_t ((TemplateType T3__))))))
            true))
          (inline false)
@@ -2383,10 +2325,10 @@
       ((FunDef
         ((templates_init
           ((((Typename T0__) (Typename T1__)
-             (RequireIs stan::is_col_vector (TemplateType T0__))
-             (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-             (RequireIs stan::is_col_vector (TemplateType T1__))
-             (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
+             (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T0__))
+             (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+             (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T1__))
+             (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T1__))))
            true))
          (inline false)
          (return_type
@@ -2399,8 +2341,9 @@
          (name "operator()")
          (args
           (((Const (Ref (TemplateType T0__))) phi)
-           ((Const (Ref (TemplateType T1__))) theta) ((Const (Ref Double)) x_r)
-           ((Const (Ref Int)) x_i) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+           ((Const (Ref (TemplateType T1__))) theta)
+           ((Const (Ref (StdVector Double))) x_r) ((Const (Ref (StdVector Int))) x_i)
+           ((Pointer (TypeLiteral std::ostream)) pstream__)))
          (cv_qualifiers (Const))
          (body
           (((Return
@@ -2408,7 +2351,9 @@
                ((Var phi) (Var theta) (Var x_r) (Var x_i) (Var pstream__))))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs std::is_integral (TemplateType T0__)))) false))
+      ((((Typename T0__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))))
+       false))
      (inline false) (return_type Int) (name foo)
      (args
       (((Const (Ref (TemplateType T0__))) n)
@@ -2451,17 +2396,13 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_autodiff
-          (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_floating_point
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T2__))))))
        false))
      (inline false)
@@ -2474,8 +2415,9 @@
      (name sho)
      (args
       (((Const (Ref (TemplateType T0__))) t) ((Const (Ref (TemplateType T1__))) y)
-       ((Const (Ref (TemplateType T2__))) theta) ((Const (Ref Double)) x)
-       ((Const (Ref Int)) x_int) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+       ((Const (Ref (TemplateType T2__))) theta) ((Const (Ref (StdVector Double))) x)
+       ((Const (Ref (StdVector Int))) x_int)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
@@ -2573,8 +2515,9 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+      ((((Typename T0__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        false))
      (inline false)
      (return_type
@@ -2613,10 +2556,10 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        false))
      (inline false)
      (return_type
@@ -2656,9 +2599,9 @@
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T1__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        false))
      (inline false)
      (return_type
@@ -2692,9 +2635,10 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+      ((((Typename T0__) (Typename T1__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        false))
      (inline false)
      (return_type
@@ -2732,9 +2676,10 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+      ((((Typename T0__) (Typename T1__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        false))
      (inline false)
      (return_type
@@ -2773,10 +2718,10 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename RNG)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))))
        false))
      (inline false)
      (return_type
@@ -2818,8 +2763,8 @@
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        false))
      (inline false) (return_type Void) (name unit_normal_lp)
      (args
@@ -2859,7 +2804,9 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs std::is_integral (TemplateType T0__)))) false))
+      ((((Typename T0__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))))
+       false))
      (inline false) (return_type Int) (name foo_1)
      (args
       (((Const (Ref (TemplateType T0__))) a)
@@ -3201,7 +3148,9 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs std::is_integral (TemplateType T0__)))) false))
+      ((((Typename T0__)
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))))
+       false))
      (inline false) (return_type Int) (name foo_2)
      (args
       (((Const (Ref (TemplateType T0__))) a)
@@ -3260,9 +3209,9 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs std::is_integral (TemplateType T1__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T1__))))
        false))
      (inline false)
      (return_type
@@ -3302,8 +3251,8 @@
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        false))
      (inline false)
      (return_type
@@ -3341,10 +3290,9 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_std_vector (TemplateType T0__))
-         (RequireIs stan::is_autodiff
-          (TypeTrait stan::value_type_t ((TemplateType T0__))))
-         (RequireIs std::is_floating_point
+      ((((Typename T0__)
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T0__))))))
        false))
      (inline false) (return_type Void) (name foo_4)
@@ -3399,14 +3347,14 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-         (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))
-         (RequireIs stan::is_autodiff (TemplateType T2__))
-         (RequireIs std::is_floating_point (TemplateType T2__))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))))
        false))
      (inline false)
      (return_type
@@ -3528,10 +3476,10 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_col_vector (TemplateType T0__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-         (RequireIs stan::is_col_vector (TemplateType T1__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T1__))))
        false))
      (inline false)
      (return_type
@@ -3543,8 +3491,9 @@
      (name foo_5)
      (args
       (((Const (Ref (TemplateType T0__))) shared_params_arg__)
-       ((Const (Ref (TemplateType T1__))) job_params_arg__) ((Const (Ref Double)) data_r)
-       ((Const (Ref Int)) data_i) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+       ((Const (Ref (TemplateType T1__))) job_params_arg__)
+       ((Const (Ref (StdVector Double))) data_r) ((Const (Ref (StdVector Int))) data_i)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
@@ -3591,16 +3540,17 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
-         (Typename T4__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))
-         (RequireIs stan::is_autodiff (TemplateType T2__))
-         (RequireIs std::is_floating_point (TemplateType T2__))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_autodiff (TemplateType T4__))
-         (RequireIs std::is_floating_point (TemplateType T4__))))
+         (Typename T4__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T4__))))
        false))
      (inline false)
      (return_type
@@ -3647,18 +3597,19 @@
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T1__) (Typename T2__) 
          (Typename T3__) (Typename T4__) (Typename T5__) (Typename T_lp__)
-         (Typename T_lp_accum__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))
-         (RequireIs stan::is_autodiff (TemplateType T1__))
-         (RequireIs std::is_floating_point (TemplateType T1__))
-         (RequireIs stan::is_autodiff (TemplateType T2__))
-         (RequireIs std::is_floating_point (TemplateType T2__))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_autodiff (TemplateType T4__))
-         (RequireIs std::is_floating_point (TemplateType T4__))
-         (RequireIs stan::is_autodiff (TemplateType T5__))
-         (RequireIs std::is_floating_point (TemplateType T5__))))
+         (Typename T_lp_accum__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T1__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T5__))))
        false))
      (inline false)
      (return_type
@@ -3705,9 +3656,9 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T0__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-         (RequireIs std::is_integral (TemplateType T1__))))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T1__))))
        false))
      (inline false)
      (return_type
@@ -3800,62 +3751,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -3923,62 +3869,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -4041,62 +3982,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -4159,62 +4095,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -4277,62 +4208,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -4408,62 +4334,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -4540,62 +4461,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -4673,62 +4589,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -4806,62 +4717,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -4940,62 +4846,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -5076,62 +4977,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -5209,62 +5105,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -5343,62 +5234,57 @@
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
          (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
          (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
-         (RequireIs std::is_integral (TemplateType T0__))
-         (RequireIs stan::is_std_vector (TemplateType T1__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T1__))))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T2__))))))
-         (RequireIs stan::is_autodiff (TemplateType T3__))
-         (RequireIs std::is_floating_point (TemplateType T3__))
-         (RequireIs stan::is_std_vector (TemplateType T4__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T3__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T4__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T4__))))
-         (RequireIs stan::is_std_vector (TemplateType T5__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T5__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T5__))))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t
-           ((TypeTrait stan::value_type_t ((TemplateType T5__))))))
-         (RequireIs stan::is_col_vector (TemplateType T6__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
-         (RequireIs stan::is_std_vector (TemplateType T7__))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T6__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T7__))
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T7__))))
-         (RequireIs stan::is_std_vector (TemplateType T8__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T8__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T8__))))
-         (RequireIs stan::is_col_vector
+         (RequireAllCondition (Exact stan::is_col_vector)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T8__))))))
-         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
-         (RequireIs stan::is_std_vector (TemplateType T10__))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T9__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T10__))
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t ((TemplateType T10__))))
-         (RequireIs stan::is_std_vector (TemplateType T11__))
-         (RequireIs stan::is_std_vector
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T11__))
+         (RequireAllCondition (Exact stan::is_std_vector)
           (TypeTrait stan::value_type_t ((TemplateType T11__))))
-         (RequireIs stan::is_eigen_matrix_dynamic
+         (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))
-         (RequireIs stan::is_vt_not_complex
+         (RequireAllCondition (Exact stan::is_vt_not_complex)
           (TypeTrait stan::value_type_t
            ((TypeTrait stan::value_type_t ((TemplateType T11__))))))))
        false))
@@ -5631,8 +5517,9 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+      ((((Typename T0__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        false))
      (inline false)
      (return_type
@@ -5687,8 +5574,9 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_autodiff (TemplateType T0__))
-         (RequireIs std::is_floating_point (TemplateType T0__))))
+      ((((Typename T0__)
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+          (TemplateType T0__))))
        false))
      (inline false)
      (return_type
@@ -5755,17 +5643,15 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-         (RequireIs stan::is_col_vector (TemplateType T0__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-         (RequireIs stan::is_col_vector (TemplateType T1__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T1__))
-         (RequireIs stan::is_std_vector (TemplateType T2__))
-         (RequireIs stan::is_autodiff
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T1__))
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T2__))
+         (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs std::is_floating_point
-          (TypeTrait stan::value_type_t ((TemplateType T2__))))
-         (RequireIs stan::is_std_vector (TemplateType T3__))
-         (RequireIs std::is_integral
+         (RequireAllCondition (Exact stan::is_std_vector) (TemplateType T3__))
+         (RequireAllCondition (Exact std::is_integral)
           (TypeTrait stan::value_type_t ((TemplateType T3__))))))
        false))
      (inline false)
@@ -5860,10 +5746,10 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
-         (RequireIs stan::is_col_vector (TemplateType T0__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
-         (RequireIs stan::is_col_vector (TemplateType T1__))
-         (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__))
+         (RequireAllCondition (Exact stan::is_col_vector) (TemplateType T1__))
+         (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T1__))))
        false))
      (inline false)
      (return_type
@@ -5875,8 +5761,9 @@
      (name binomialf)
      (args
       (((Const (Ref (TemplateType T0__))) phi_arg__)
-       ((Const (Ref (TemplateType T1__))) theta_arg__) ((Const (Ref Double)) x_r)
-       ((Const (Ref Int)) x_i) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+       ((Const (Ref (TemplateType T1__))) theta_arg__)
+       ((Const (Ref (StdVector Double))) x_r) ((Const (Ref (StdVector Int))) x_i)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__

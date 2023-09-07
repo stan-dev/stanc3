@@ -7220,41 +7220,51 @@ static constexpr std::array<const char*, 428> locations_array__ =
 std::complex<double> foo(std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_complex<T0__>,
-                              stan::is_autodiff<stan::value_type_t<T0__>>,
-                              std::is_floating_point<stan::value_type_t<T0__>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<T0__>>>>* = nullptr>
 std::decay_t<stan::promote_args_t<T0__>>
 foo1(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_autodiff<T0__>,
-                              std::is_floating_point<T0__>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>* = nullptr>
 std::complex<std::decay_t<stan::promote_args_t<T0__>>>
 foo2(const T0__& r, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_complex<T0__>,
-                              stan::is_autodiff<stan::value_type_t<T0__>>,
-                              std::is_floating_point<stan::value_type_t<T0__>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<T0__>>>>* = nullptr>
 std::complex<std::decay_t<stan::promote_args_t<T0__>>>
 foo3(const T0__& z, std::ostream* pstream__);
 std::vector<std::complex<double>> foo4(std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_complex<stan::value_type_t<T0__>>,
-                              stan::is_autodiff<stan::value_type_t<stan::value_type_t<T0__>>>,
-                              std::is_floating_point<stan::value_type_t<
-                                                       stan::value_type_t<T0__>>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>>>* = nullptr>
 std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
 foo5(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_autodiff<T0__>,
-                              std::is_floating_point<T0__>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>* = nullptr>
 std::vector<std::complex<std::decay_t<stan::promote_args_t<T0__>>>>
 foo6(const T0__& r, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_complex<stan::value_type_t<T0__>>,
-                              stan::is_autodiff<stan::value_type_t<stan::value_type_t<T0__>>>,
-                              std::is_floating_point<stan::value_type_t<
-                                                       stan::value_type_t<T0__>>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>>>* = nullptr>
 std::vector<
   std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>
 foo7(const T0__& z, std::ostream* pstream__);
@@ -7262,16 +7272,19 @@ template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
                               stan::is_complex<stan::value_type_t<stan::value_type_t<T0__>>>,
-                              stan::is_autodiff<stan::value_type_t<stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>,
-                              std::is_floating_point<stan::value_type_t<
-                                                       stan::value_type_t<
-                                                         stan::value_type_t<T0__>>>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>>>* = nullptr>
 std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
 foo8(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_autodiff<T0__>,
-                              std::is_floating_point<T0__>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>* = nullptr>
 std::vector<
   std::vector<std::complex<std::decay_t<stan::promote_args_t<T0__>>>>>
 foo9(const T0__& r, std::ostream* pstream__);
@@ -7279,11 +7292,14 @@ template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
                               stan::is_complex<stan::value_type_t<stan::value_type_t<T0__>>>,
-                              stan::is_autodiff<stan::value_type_t<stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>,
-                              std::is_floating_point<stan::value_type_t<
-                                                       stan::value_type_t<
-                                                         stan::value_type_t<T0__>>>>>* = nullptr>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>>>* = nullptr>
 std::vector<
   std::vector<
     std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>>
@@ -7309,8 +7325,10 @@ std::complex<double> foo(std::ostream* pstream__) {
 }
 template <typename T0__,
           stan::require_all_t<stan::is_complex<T0__>,
-                              stan::is_autodiff<stan::value_type_t<T0__>>,
-                              std::is_floating_point<stan::value_type_t<T0__>>>*>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<T0__>>>>*>
 std::decay_t<stan::promote_args_t<T0__>>
 foo1(const T0__& z, std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
@@ -7331,8 +7349,8 @@ foo1(const T0__& z, std::ostream* pstream__) {
   }
 }
 template <typename T0__,
-          stan::require_all_t<stan::is_autodiff<T0__>,
-                              std::is_floating_point<T0__>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>*>
 std::complex<std::decay_t<stan::promote_args_t<T0__>>>
 foo2(const T0__& r, std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
@@ -7354,8 +7372,10 @@ foo2(const T0__& r, std::ostream* pstream__) {
 }
 template <typename T0__,
           stan::require_all_t<stan::is_complex<T0__>,
-                              stan::is_autodiff<stan::value_type_t<T0__>>,
-                              std::is_floating_point<stan::value_type_t<T0__>>>*>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<T0__>>>>*>
 std::complex<std::decay_t<stan::promote_args_t<T0__>>>
 foo3(const T0__& z, std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
@@ -7401,9 +7421,12 @@ std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_complex<stan::value_type_t<T0__>>,
-                              stan::is_autodiff<stan::value_type_t<stan::value_type_t<T0__>>>,
-                              std::is_floating_point<stan::value_type_t<
-                                                       stan::value_type_t<T0__>>>>*>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>>>*>
 std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
 foo5(const T0__& z, std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
@@ -7424,8 +7447,8 @@ foo5(const T0__& z, std::ostream* pstream__) {
   }
 }
 template <typename T0__,
-          stan::require_all_t<stan::is_autodiff<T0__>,
-                              std::is_floating_point<T0__>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>*>
 std::vector<std::complex<std::decay_t<stan::promote_args_t<T0__>>>>
 foo6(const T0__& r, std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
@@ -7450,9 +7473,12 @@ foo6(const T0__& r, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_complex<stan::value_type_t<T0__>>,
-                              stan::is_autodiff<stan::value_type_t<stan::value_type_t<T0__>>>,
-                              std::is_floating_point<stan::value_type_t<
-                                                       stan::value_type_t<T0__>>>>*>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>>>*>
 std::vector<
   std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>
 foo7(const T0__& z, std::ostream* pstream__) {
@@ -7477,11 +7503,14 @@ template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
                               stan::is_complex<stan::value_type_t<stan::value_type_t<T0__>>>,
-                              stan::is_autodiff<stan::value_type_t<stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>,
-                              std::is_floating_point<stan::value_type_t<
-                                                       stan::value_type_t<
-                                                         stan::value_type_t<T0__>>>>>*>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>>>*>
 std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
 foo8(const T0__& z, std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
@@ -7502,8 +7531,8 @@ foo8(const T0__& z, std::ostream* pstream__) {
   }
 }
 template <typename T0__,
-          stan::require_all_t<stan::is_autodiff<T0__>,
-                              std::is_floating_point<T0__>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>*>
 std::vector<
   std::vector<std::complex<std::decay_t<stan::promote_args_t<T0__>>>>>
 foo9(const T0__& r, std::ostream* pstream__) {
@@ -7538,11 +7567,14 @@ template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
                               stan::is_complex<stan::value_type_t<stan::value_type_t<T0__>>>,
-                              stan::is_autodiff<stan::value_type_t<stan::value_type_t<
-                                                                    stan::value_type_t<T0__>>>>,
-                              std::is_floating_point<stan::value_type_t<
-                                                       stan::value_type_t<
-                                                         stan::value_type_t<T0__>>>>>*>
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>>>*>
 std::vector<
   std::vector<
     std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>>

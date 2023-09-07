@@ -4,16 +4,31 @@ open Lower_expr
 open Lower_stmt
 open Cpp
 
-let rec lower_type_for_arg (t : UnsizedType.t) (inner_type : type_) : type_ =
+let rec arg_type_prim (t : UnsizedType.t) : type_ =
   match t with
-  | UArray t when UnsizedType.contains_tuple t ->
-      StdVector (lower_type_for_arg t inner_type)
-  | _ -> inner_type
+  | UInt -> Int
+  | UReal | UMatrix | URowVector | UVector | UComplexVector | UComplexMatrix
+   |UComplexRowVector | UTuple _ ->
+      stantype_prim t
+  | UComplex -> Types.complex (stantype_prim t)
+  | UArray t when UnsizedType.contains_tuple t -> StdVector (arg_type_prim t)
+  | UArray t ->
+      (* Expressions are not accepted for arrays of Eigen::Matrix *)
+      StdVector (lower_type t (stantype_prim t))
+  | UMathLibraryFunction | UFun _ ->
+      Common.FatalError.fatal_error_msg
+        [%message "Function types not implemented"]
 
-let arg_type custom_scalar ut =
-  let scalar =
-    match custom_scalar with None -> stantype_prim ut | Some s -> s in
-  lower_type_for_arg ut scalar
+let template_arg_type template_or_type ut =
+  let rec lower_type_for_arg (t : UnsizedType.t) : type_ =
+    match t with
+    (* stdvectors are templates except for when they contain tuples*)
+    | UArray t when UnsizedType.contains_tuple t ->
+        StdVector (lower_type_for_arg t)
+    (* NB: tuples are handled by this function's caller,
+       [template_parameters] *)
+    | _ -> template_or_type in
+  lower_type_for_arg ut
 
 let lower_arg ~is_possibly_eigen_expr type_ (_, name, ut) =
   (* we add the _arg suffix for any Eigen types *)
@@ -28,34 +43,34 @@ let requires ut t =
   let rec requires_in ut t =
     match ut with
     | UnsizedType.URowVector ->
-        [ RequireIs ("stan::is_row_vector", t)
-        ; RequireIs ("stan::is_vt_not_complex", t) ]
+        [ RequireAllCondition (`Exact "stan::is_row_vector", t)
+        ; RequireAllCondition (`Exact "stan::is_vt_not_complex", t) ]
     | UComplexRowVector ->
-        [ RequireIs ("stan::is_row_vector", t)
-        ; RequireIs ("stan::is_vt_complex", t) ]
+        [ RequireAllCondition (`Exact "stan::is_row_vector", t)
+        ; RequireAllCondition (`Exact "stan::is_vt_complex", t) ]
     | UVector ->
-        [ RequireIs ("stan::is_col_vector", t)
-        ; RequireIs ("stan::is_vt_not_complex", t) ]
+        [ RequireAllCondition (`Exact "stan::is_col_vector", t)
+        ; RequireAllCondition (`Exact "stan::is_vt_not_complex", t) ]
     | UComplexVector ->
-        [ RequireIs ("stan::is_col_vector", t)
-        ; RequireIs ("stan::is_vt_complex", t) ]
+        [ RequireAllCondition (`Exact "stan::is_col_vector", t)
+        ; RequireAllCondition (`Exact "stan::is_vt_complex", t) ]
     | UMatrix ->
-        [ RequireIs ("stan::is_eigen_matrix_dynamic", t)
-        ; RequireIs ("stan::is_vt_not_complex", t) ]
+        [ RequireAllCondition (`Exact "stan::is_eigen_matrix_dynamic", t)
+        ; RequireAllCondition (`Exact "stan::is_vt_not_complex", t) ]
     | UComplexMatrix ->
-        [ RequireIs ("stan::is_eigen_matrix_dynamic", t)
-        ; RequireIs ("stan::is_vt_complex", t) ]
-    | UInt -> [RequireIs ("std::is_integral", t)]
+        [ RequireAllCondition (`Exact "stan::is_eigen_matrix_dynamic", t)
+        ; RequireAllCondition (`Exact "stan::is_vt_complex", t) ]
+    | UInt -> [RequireAllCondition (`Exact "std::is_integral", t)]
     | UComplex ->
-        RequireIs ("stan::is_complex", t)
-        :: requires_in UReal (TypeTrait ("stan::value_type_t", [t]))
+        RequireAllCondition (`Exact "stan::is_complex", t)
+        :: requires_in UReal (TypeTrait ("stan::base_type_t", [t]))
     | UArray inner_ut ->
-        RequireIs ("stan::is_std_vector", t)
+        RequireAllCondition (`Exact "stan::is_std_vector", t)
         :: requires_in inner_ut (TypeTrait ("stan::value_type_t", [t]))
     | _ ->
         (* not using stan::is_stan_scalar to explictly exclude int *)
-        [ RequireIs ("stan::is_autodiff", t)
-        ; RequireIs ("std::is_floating_point", t) ] in
+        [ RequireAllCondition
+            (`OneOf ["stan::is_autodiff"; "std::is_floating_point"], t) ] in
   requires_in ut t
 
 let return_optional_arg_types (args : Program.fun_arg_decl) =
@@ -102,14 +117,14 @@ let template_parameters (args : Program.fun_arg_decl) =
         let templates = List.concat temps in
         let requires = List.concat reqs in
         let scalar = Tuple sclrs in
-        (templates, requires, arg_type (Some scalar) typ)
+        (templates, requires, template_arg_type scalar typ)
     | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) ->
-        ([], [], arg_type None typ)
+        ([], [], arg_type_prim typ)
     | _ ->
         let template = sprintf "%s%d__" start i in
         ( [template]
         , requires typ template
-        , arg_type (Some (TemplateType template)) typ ) in
+        , template_arg_type (TemplateType template) typ ) in
   List.mapi args ~f:(fun i (ad, _, ty) -> template_p "T" i (ad, ty))
 
 let%expect_test "arg types templated correctly" =
@@ -132,11 +147,12 @@ let%expect_test "arg types tuple template" =
   [%expect
     {|
     T0__0__,T0__1__,T0__2__
-    ((RequireIs stan::is_autodiff (TemplateType T0__0__))
-     (RequireIs std::is_floating_point (TemplateType T0__0__))
-     (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T0__1__))
-     (RequireIs stan::is_vt_not_complex (TemplateType T0__1__))
-     (RequireIs std::is_integral (TemplateType T0__2__)))
+    ((RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
+      (TemplateType T0__0__))
+     (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
+      (TemplateType T0__1__))
+     (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__1__))
+     (RequireAllCondition (Exact std::is_integral) (TemplateType T0__2__)))
     std::tuple<T0__0__, T0__1__, T0__2__> |}]
 
 let%expect_test "arg types tuple template" =
@@ -151,11 +167,12 @@ let%expect_test "arg types tuple template" =
   [%expect
     {|
   T0__0__,T0__1__
-  ((RequireIs stan::is_std_vector (TemplateType T0__0__))
-   (RequireIs std::is_integral
+  ((RequireAllCondition (Exact stan::is_std_vector) (TemplateType T0__0__))
+   (RequireAllCondition (Exact std::is_integral)
     (TypeTrait stan::value_type_t ((TemplateType T0__0__))))
-   (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T0__1__))
-   (RequireIs stan::is_vt_not_complex (TemplateType T0__1__)))
+   (RequireAllCondition (Exact stan::is_eigen_matrix_dynamic)
+    (TemplateType T0__1__))
+   (RequireAllCondition (Exact stan::is_vt_not_complex) (TemplateType T0__1__)))
   std::vector<std::tuple<T0__0__, T0__1__>> |}]
 
 let lower_promoted_scalar args =

@@ -300,7 +300,7 @@ end
 
 type template_parameter =
   | Typename of string  (** The name of a template typename *)
-  | RequireIs of string * type_
+  | RequireAllCondition of [`Exact of string | `OneOf of string list] * type_
       (** A C++ type trait (e.g. is_arithmetic) and the template
           name which needs to satisfy that.
           These are collated into one require_all_t<> *)
@@ -413,7 +413,14 @@ module Printing = struct
 
   let pp_requires ~default ppf requires =
     if not (List.is_empty requires) then
-      let pp_require ppf (trait, t) = pf ppf "%s<%a>" trait pp_type_ t in
+      let pp_single_require t ppf trait = pf ppf "%s<%a>" trait pp_type_ t in
+      let pp_require ppf (req, t) =
+        match req with
+        | `Exact trait -> pp_single_require t ppf trait
+        | `OneOf traits ->
+            pf ppf "stan::math::disjunction<@[%a@]>"
+              (list ~sep:comma (pp_single_require t))
+              traits in
       pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
         (list ~sep:comma pp_require)
         requires
@@ -421,7 +428,7 @@ module Printing = struct
 
   (**
    Pretty print a list of templates as [template <parameter-list>].name
-   This function pools together [RequireIs] nodes into a [require_all_t]
+   This function pools together [RequireAllCondition] nodes into a [require_all_t]
   *)
   let pp_template ~default ppf template_parameters =
     let pp_basic_template ppf = function
@@ -433,7 +440,7 @@ module Printing = struct
     if not (List.is_empty template_parameters) then
       let templates, requires =
         List.partition_map template_parameters ~f:(function
-          | RequireIs (trait, name) -> Second (trait, name)
+          | RequireAllCondition (trait, name) -> Second (trait, name)
           | Typename name -> First (`Typename name)
           | Bool name -> First (`Bool name)
           | Require (requirement, args) -> First (`Require (requirement, args)) )
@@ -764,7 +771,8 @@ module Tests = struct
       [ make_fun_defn
           ~templates_init:
             ( [ [ Typename "T0__"
-                ; RequireIs ("stan::is_foobar", TemplateType "T0__") ] ]
+                ; RequireAllCondition
+                    (`Exact "stan::is_foobar", TemplateType "T0__") ] ]
             , true )
           ~name:"foobar" ~return_type:Void ~inline:true ()
       ; (let s =
@@ -774,7 +782,8 @@ module Tests = struct
          make_fun_defn
            ~templates_init:
              ( [ [ Typename "T0__"
-                 ; RequireIs ("stan::is_foobar", TemplateType "T0__") ] ]
+                 ; RequireAllCondition
+                     (`Exact "stan::is_foobar", TemplateType "T0__") ] ]
              , false )
            ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow () ) ]
     in
