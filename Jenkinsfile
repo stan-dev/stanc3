@@ -52,6 +52,7 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
     sh """
         cd performance-tests-cmdstan/cmdstan
         echo 'O=0' >> make/local
+        echo 'CXXFLAGS+=-Wall' >> make/local
         make -j${env.PARALLEL} build; cd ..
         ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
     """
