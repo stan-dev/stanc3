@@ -284,14 +284,6 @@ pipeline {
                             script {
                                 checkCompilation("../test/integration/good", params.stanc_flags)
                             }
-
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-good/*") }}
@@ -316,14 +308,6 @@ pipeline {
                                 unstash "Stanc3Setup"
                                 checkCompilation("example-models", params.stanc_flags)
                             }
-
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-example/*") }}
@@ -353,14 +337,6 @@ pipeline {
                             script {
                                 checkCompilation("../test/integration/good", "--O1")
                             }
-
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-good-O1/*") }}
@@ -390,14 +366,6 @@ pipeline {
                                 unstash "Stanc3Setup"
                                 checkCompilation("example-models", "--O1")
                             }
-
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-example-O1/*") }}
