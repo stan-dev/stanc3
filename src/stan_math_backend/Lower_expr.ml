@@ -401,8 +401,6 @@ and lower_user_defined_fun f suffix es =
 and lower_compiler_internal ad ut f es =
   let open Expression_syntax in
   let gen_tuple_literal es : expr =
-    (* NB: This causes some inefficencies such as eagerly
-         evaluating eigen expressions and copying data vectors *)
     let is_simple (e : Expr.Typed.t) =
       match e.pattern with
       | Var _ ->
@@ -414,11 +412,20 @@ and lower_compiler_internal ad ut f es =
     if List.for_all ~f:is_simple es then
       fun_call "std::forward_as_tuple" (lower_exprs es)
     else
-      Constructor
-        ( Tuple
-            (List.map es ~f:(fun {meta= {adlevel; type_; _}; _} ->
-                 lower_unsizedtype_local adlevel type_ ) )
-        , lower_exprs es ) in
+      (* we make full copies of tuples
+         due to a lack of templating sophistication
+         in function generation *)
+      let types =
+        List.map es ~f:(fun {meta= {adlevel; type_; _}; _} ->
+            let base_type = lower_unsizedtype_local adlevel type_ in
+            if
+              UnsizedType.is_dataonlytype adlevel
+              && not
+                   ( UnsizedType.is_scalar_type type_
+                   || UnsizedType.contains_tuple type_ )
+            then Types.const_ref base_type
+            else base_type ) in
+      Constructor (Tuple types, lower_exprs es) in
   match f with
   | Internal_fun.FnMakeArray ->
       let ut =

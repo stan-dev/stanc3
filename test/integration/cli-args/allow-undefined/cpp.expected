@@ -9,9 +9,7 @@ static constexpr std::array<const char*, 3> locations_array__ =
   {" (found before start of program)",
   " (in 'external.stan', line 10, column 4 to column 66)",
   " (in 'external.stan', line 9, column 63 to line 11, column 3)"};
-double
-internal_fun(const std::vector<std::vector<double>>& a,
-             const std::vector<std::vector<int>>& d, std::ostream* pstream__);
+double internal_fun(const double& a, const int& d, std::ostream* pstream__);
 struct external_map_rectable_functor__ {
   template <typename T0__, typename T1__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -20,14 +18,12 @@ struct external_map_rectable_functor__ {
                                 stan::is_vt_not_complex<T1__>>* = nullptr>
   Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                                stan::base_type_t<T1__>>>,-1,1>
-  operator()(const T0__& phi, const T1__& theta, const std::vector<double>&
-             x_r, const std::vector<int>& x_i, std::ostream* pstream__) const {
+  operator()(const T0__& phi, const T1__& theta, const double& x_r,
+             const int& x_i, std::ostream* pstream__) const {
     return external_map_rectable(phi, theta, x_r, x_i, pstream__);
   }
 };
-double
-internal_fun(const std::vector<std::vector<double>>& a,
-             const std::vector<std::vector<int>>& d, std::ostream* pstream__) {
+double internal_fun(const double& a, const int& d, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning

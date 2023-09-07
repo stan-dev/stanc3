@@ -610,29 +610,37 @@ static constexpr std::array<const char*, 13> locations_array__ =
   " (in 'simple_function.stan', line 11, column 37 to line 13, column 3)"};
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              std::is_integral<std::decay_t<T1__>>,
-                              stan::is_stan_scalar<T2__>,
+          stan::require_all_t<stan::is_autodiff<T0__>,
+                              std::is_floating_point<T0__>,
+                              std::is_integral<T1__>,
+                              stan::is_std_vector<T2__>,
+                              stan::is_autodiff<stan::value_type_t<T2__>>,
+                              std::is_floating_point<stan::value_type_t<T2__>>,
                               stan::is_col_vector<T3__>,
                               stan::is_vt_not_complex<T3__>,
                               stan::is_eigen_matrix_dynamic<T4__>,
                               stan::is_vt_not_complex<T4__>,
                               stan::is_row_vector<T5__>,
                               stan::is_vt_not_complex<T5__>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__, T2__, stan::base_type_t<T3__>,
-               stan::base_type_t<T4__>, stan::base_type_t<T5__>>>
-foo1(const T0__& a, const T1__& b, const std::vector<T2__>& c, const T3__&
-     d_arg__, const T4__& e_arg__, const T5__& f_arg__, std::ostream*
-     pstream__);
+std::decay_t<stan::promote_args_t<T0__, stan::base_type_t<T2__>,
+               stan::base_type_t<T3__>, stan::base_type_t<T4__>,
+               stan::base_type_t<T5__>>>
+foo1(const T0__& a, const T1__& b, const T2__& c, const T3__& d_arg__,
+     const T4__& e_arg__, const T5__& f_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::is_stan_scalar<T1__>,
-                              stan::is_stan_scalar<T2__>>* = nullptr>
+                              stan::is_std_vector<T1__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T1__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T1__>>,
+                              stan::is_std_vector<T2__>,
+                              stan::is_row_vector<stan::value_type_t<T2__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T2__>>>* = nullptr>
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
-                             T1__, T2__>>,-1,1>
-foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__,-1,-1>>& b,
-     const std::vector<Eigen::Matrix<T2__,1,-1>>& c, std::ostream* pstream__);
+                             stan::base_type_t<T1__>,
+                             stan::base_type_t<T2__>>>,-1,1>
+foo2(const T0__& a_arg__, const T1__& b, const T2__& c, std::ostream*
+     pstream__);
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -651,21 +659,25 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
 add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              std::is_integral<std::decay_t<T1__>>,
-                              stan::is_stan_scalar<T2__>,
+          stan::require_all_t<stan::is_autodiff<T0__>,
+                              std::is_floating_point<T0__>,
+                              std::is_integral<T1__>,
+                              stan::is_std_vector<T2__>,
+                              stan::is_autodiff<stan::value_type_t<T2__>>,
+                              std::is_floating_point<stan::value_type_t<T2__>>,
                               stan::is_col_vector<T3__>,
                               stan::is_vt_not_complex<T3__>,
                               stan::is_eigen_matrix_dynamic<T4__>,
                               stan::is_vt_not_complex<T4__>,
                               stan::is_row_vector<T5__>,
                               stan::is_vt_not_complex<T5__>>*>
-std::decay_t<stan::promote_args_t<T0__, T2__, stan::base_type_t<T3__>,
-               stan::base_type_t<T4__>, stan::base_type_t<T5__>>>
-foo1(const T0__& a, const T1__& b, const std::vector<T2__>& c, const T3__&
-     d_arg__, const T4__& e_arg__, const T5__& f_arg__, std::ostream*
-     pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__, T2__,
+std::decay_t<stan::promote_args_t<T0__, stan::base_type_t<T2__>,
+               stan::base_type_t<T3__>, stan::base_type_t<T4__>,
+               stan::base_type_t<T5__>>>
+foo1(const T0__& a, const T1__& b, const T2__& c, const T3__& d_arg__,
+     const T4__& e_arg__, const T5__& f_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__,
+                                          stan::base_type_t<T2__>,
                                           stan::base_type_t<T3__>,
                                           stan::base_type_t<T4__>,
                                           stan::base_type_t<T5__>>>;
@@ -691,14 +703,20 @@ foo1(const T0__& a, const T1__& b, const std::vector<T2__>& c, const T3__&
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
-                              stan::is_stan_scalar<T1__>,
-                              stan::is_stan_scalar<T2__>>*>
+                              stan::is_std_vector<T1__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T1__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T1__>>,
+                              stan::is_std_vector<T2__>,
+                              stan::is_row_vector<stan::value_type_t<T2__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T2__>>>*>
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
-                             T1__, T2__>>,-1,1>
-foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__,-1,-1>>& b,
-     const std::vector<Eigen::Matrix<T2__,1,-1>>& c, std::ostream* pstream__) {
+                             stan::base_type_t<T1__>,
+                             stan::base_type_t<T2__>>>,-1,1>
+foo2(const T0__& a_arg__, const T1__& b, const T2__& c, std::ostream*
+     pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
-                                          T1__, T2__>>;
+                                          stan::base_type_t<T1__>,
+                                          stan::base_type_t<T2__>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
