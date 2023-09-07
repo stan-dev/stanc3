@@ -7224,7 +7224,7 @@ template <typename T0__,
                                                       stan::base_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::base_type_t<T0__>>>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__>>
+std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
 foo1(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -7237,7 +7237,7 @@ template <typename T0__,
                                                       stan::base_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::base_type_t<T0__>>>>* = nullptr>
-std::complex<std::decay_t<stan::promote_args_t<T0__>>>
+std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>
 foo3(const T0__& z, std::ostream* pstream__);
 std::vector<std::complex<double>> foo4(std::ostream* pstream__);
 template <typename T0__,
@@ -7329,9 +7329,9 @@ template <typename T0__,
                                                       stan::base_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::base_type_t<T0__>>>>*>
-std::decay_t<stan::promote_args_t<T0__>>
+std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
 foo1(const T0__& z, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -7376,9 +7376,9 @@ template <typename T0__,
                                                       stan::base_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::base_type_t<T0__>>>>*>
-std::complex<std::decay_t<stan::promote_args_t<T0__>>>
+std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>
 foo3(const T0__& z, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;

@@ -95,11 +95,11 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
                   (internal : UnsizedType.t)
                   (ad : UnsizedType.autodifftype)] )
     | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) -> []
-    | _, UnsizedType.UArray _ -> [sprintf "stan::base_type_t<%s%d__>" start i]
-    | _ ->
-        if UnsizedType.is_eigen_type typ then
-          [sprintf "stan::base_type_t<%s%d__>" start i]
-        else [sprintf "%s%d__" start i] in
+    | ( _
+      , ( UnsizedType.UArray _ | UComplex | UVector | URowVector | UMatrix
+        | UComplexRowVector | UComplexVector | UComplexMatrix ) ) ->
+        [sprintf "stan::base_type_t<%s%d__>" start i]
+    | _ -> [sprintf "%s%d__" start i] in
   List.mapi args ~f:(fun i (ad, _, ty) -> template_p "T" i (ad, ty))
 
 (** Print template arguments for C++ functions that need templates
