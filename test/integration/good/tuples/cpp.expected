@@ -10544,7 +10544,7 @@ template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_stan_scalar<T0__0__>,
                               stan::is_stan_scalar<T0__1__>>* = nullptr>
 std::decay_t<stan::promote_args_t<T0__1__>>
-tsum(const std::tuple<std::vector<int>, std::vector<T0__1__>>& s,
+tsum(const std::tuple<std::vector<T0__0__>, std::vector<T0__1__>>& s,
      std::ostream* pstream__);
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
@@ -10603,7 +10603,7 @@ template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_stan_scalar<T0__0__>,
                               stan::is_stan_scalar<T0__1__>>*>
 std::decay_t<stan::promote_args_t<T0__1__>>
-tsum(const std::tuple<std::vector<int>, std::vector<T0__1__>>& s,
+tsum(const std::tuple<std::vector<T0__0__>, std::vector<T0__1__>>& s,
      std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__1__>>;
   int current_statement__ = 0;
@@ -11164,7 +11164,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__0__,
                               stan::is_stan_scalar<T3__1__>>* = nullptr>
 std::decay_t<stan::promote_args_t<T0__, T3__0__>>
 fun(const std::vector<T0__>& y_slice, const T1__& start, const T2__& end,
-    const std::tuple<T3__0__, std::vector<int>>& m, std::ostream* pstream__);
+    const std::tuple<T3__0__, std::vector<T3__1__>>& m, std::ostream*
+    pstream__);
 struct fun_rsfunctor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__0__,
             typename T3__1__,
@@ -11176,7 +11177,7 @@ struct fun_rsfunctor__ {
   std::decay_t<stan::promote_args_t<T0__, T3__0__>>
   operator()(const std::vector<T0__>& y_slice, const T1__& start, const T2__&
              end, std::ostream* pstream__,
-             const std::tuple<T3__0__, std::vector<int>>& m) const {
+             const std::tuple<T3__0__, std::vector<T3__1__>>& m) const {
     return fun(y_slice, (start + 1), (end + 1), m, pstream__);
   }
 };
@@ -11189,7 +11190,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__0__,
                               stan::is_stan_scalar<T3__1__>>*>
 std::decay_t<stan::promote_args_t<T0__, T3__0__>>
 fun(const std::vector<T0__>& y_slice, const T1__& start, const T2__& end,
-    const std::tuple<T3__0__, std::vector<int>>& m, std::ostream* pstream__) {
+    const std::tuple<T3__0__, std::vector<T3__1__>>& m, std::ostream*
+    pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__, T3__0__>>;
   int current_statement__ = 0;
   // suppress unused var warning

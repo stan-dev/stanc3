@@ -41,7 +41,7 @@ std::decay_t<stan::promote_args_t<T0__>>
 array_fun(const std::vector<T0__>& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-double int_array_fun(const std::vector<int>& a, std::ostream* pstream__);
+double int_array_fun(const std::vector<T0__>& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
@@ -124,7 +124,7 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   }
 }
 template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
+double int_array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -421,7 +421,7 @@ std::decay_t<stan::promote_args_t<T0__>>
 array_fun(const std::vector<T0__>& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-double int_array_fun(const std::vector<int>& a, std::ostream* pstream__);
+double int_array_fun(const std::vector<T0__>& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
@@ -492,7 +492,7 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   }
 }
 template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-double int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
+double int_array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -726,7 +726,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 std::vector<std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>>
 integrand_ode(const T0__& r, const std::vector<T1__>& f,
               const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-              const std::vector<int>& x_i, std::ostream* pstream__);
+              const std::vector<T4__>& x_i, std::ostream* pstream__);
 double ode_integrate(std::ostream* pstream__);
 struct integrand_ode_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -739,7 +739,7 @@ struct integrand_ode_functor__ {
   std::vector<std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>>
   operator()(const T0__& r, const std::vector<T1__>& f,
              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-             const std::vector<int>& x_i, std::ostream* pstream__) const {
+             const std::vector<T4__>& x_i, std::ostream* pstream__) const {
     return integrand_ode(r, f, theta, x_r, x_i, pstream__);
   }
 };
@@ -776,7 +776,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 std::vector<std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>>
 integrand_ode(const T0__& r, const std::vector<T1__>& f,
               const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-              const std::vector<int>& x_i, std::ostream* pstream__) {
+              const std::vector<T4__>& x_i, std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__, T1__,
                                           T2__, T3__>>;
   int current_statement__ = 0;

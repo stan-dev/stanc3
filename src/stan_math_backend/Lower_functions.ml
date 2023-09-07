@@ -4,19 +4,18 @@ open Lower_expr
 open Lower_stmt
 open Cpp
 
-let rec lower_type_eigen_expr (t : UnsizedType.t) (inner_type : type_) : type_ =
+let rec lower_type_for_arg (t : UnsizedType.t) (inner_type : type_) : type_ =
   match t with
-  | UInt
-  (* | UInt -> Int *)
-   |UReal | UMatrix | URowVector | UVector | UComplexVector | UComplexMatrix
-   |UComplexRowVector | UTuple _ ->
+  | UInt | UReal | UMatrix | URowVector | UVector | UComplexVector
+   |UComplexMatrix | UComplexRowVector | UTuple _ ->
       inner_type
   | UComplex -> Types.complex inner_type
   | UArray t when UnsizedType.contains_tuple t ->
-      StdVector (lower_type_eigen_expr t inner_type)
-  | UArray t ->
+      StdVector (lower_type_for_arg t inner_type)
+  | UArray t when UnsizedType.contains_eigen_type t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
       StdVector (lower_type t inner_type)
+  | UArray t -> StdVector (lower_type_for_arg t inner_type)
   | UMathLibraryFunction | UFun _ ->
       Common.FatalError.fatal_error_msg
         [%message "Function types not implemented"]
@@ -24,7 +23,7 @@ let rec lower_type_eigen_expr (t : UnsizedType.t) (inner_type : type_) : type_ =
 let arg_type custom_scalar ut =
   let scalar =
     match custom_scalar with None -> stantype_prim ut | Some s -> s in
-  lower_type_eigen_expr ut scalar
+  lower_type_for_arg ut scalar
 
 let lower_arg ~is_possibly_eigen_expr type_ (_, name, ut) =
   (* we add the _arg suffix for any Eigen types *)
@@ -94,7 +93,6 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
 let template_parameters (args : Program.fun_arg_decl) =
   let rec template_p start i (ad, typ) =
     match (ad, fst (UnsizedType.unwind_array_type typ)) with
-    (* | _, UInt -> ([], [], arg_type None typ) *)
     | _, UTuple tys ->
         let temps, reqs, sclrs =
           List.map ~f:(fun ty -> (ad, ty)) tys
@@ -155,7 +153,7 @@ let%expect_test "arg types tuple template" =
   ((RequireIs stan::is_stan_scalar (TemplateType T0__0__))
    (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T0__1__))
    (RequireIs stan::is_vt_not_complex (TemplateType T0__1__)))
-  std::vector<std::tuple<std::vector<int>, T0__1__>> |}]
+  std::vector<std::tuple<std::vector<T0__0__>, T0__1__>> |}]
 
 let lower_promoted_scalar args =
   match args with

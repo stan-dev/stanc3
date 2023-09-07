@@ -405,7 +405,9 @@ and lower_compiler_internal ad ut f es =
          evaluating eigen expressions and copying data vectors *)
     let is_simple (e : Expr.Typed.t) =
       match e.pattern with
-      | Var _ -> e.meta.adlevel <> DataOnly
+      | Var _ ->
+          (* Because the data members are [const], they can't be passed without more templating *)
+          e.meta.adlevel <> DataOnly
       | Lit _ -> true
       | Promotion ({pattern= Var _ | Lit _; _}, _, _) -> is_scalar e
       | _ -> false in

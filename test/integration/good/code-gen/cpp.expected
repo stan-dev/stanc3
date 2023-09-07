@@ -912,7 +912,8 @@ f(const T0__& x,
   const std::vector<
           std::vector<
             std::tuple<std::vector<std::tuple<T1__0__0__, T1__0__1__>>,
-              std::vector<std::vector<int>>>>>& x2, std::ostream* pstream__);
+              std::vector<std::vector<T1__1__>>>>>& x2, std::ostream*
+  pstream__);
 template <typename T0__, typename T1__0__0__, typename T1__0__1__,
           typename T1__1__,
           stan::require_all_t<std::is_integral<std::decay_t<T0__>>,
@@ -924,7 +925,8 @@ f(const T0__& x,
   const std::vector<
           std::vector<
             std::tuple<std::vector<std::tuple<T1__0__0__, T1__0__1__>>,
-              std::vector<std::vector<int>>>>>& x2, std::ostream* pstream__) {
+              std::vector<std::vector<T1__1__>>>>>& x2, std::ostream*
+  pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -5599,8 +5601,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T10__>,
                               stan::is_stan_scalar<T11__>>* = nullptr>
 void
-f0(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f0(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5625,8 +5627,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T10__>,
                               stan::is_stan_scalar<T11__>>* = nullptr>
 int
-f1(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f1(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5651,8 +5653,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T10__>,
                               stan::is_stan_scalar<T11__>>* = nullptr>
 std::vector<int>
-f2(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f2(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5677,8 +5679,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T10__>,
                               stan::is_stan_scalar<T11__>>* = nullptr>
 std::vector<std::vector<int>>
-f3(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f3(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5706,8 +5708,8 @@ std::decay_t<stan::promote_args_t<T3__, T4__, T5__, stan::base_type_t<T6__>,
                T7__,
                std::decay_t<stan::promote_args_t<T8__,
                               stan::base_type_t<T9__>, T10__, T11__>>>>
-f4(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f4(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5736,8 +5738,8 @@ std::vector<
                  stan::base_type_t<T6__>, T7__,
                  std::decay_t<stan::promote_args_t<T8__,
                                 stan::base_type_t<T9__>, T10__, T11__>>>>>
-f5(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f5(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5767,8 +5769,8 @@ std::vector<
                    stan::base_type_t<T6__>, T7__,
                    std::decay_t<stan::promote_args_t<T8__,
                                   stan::base_type_t<T9__>, T10__, T11__>>>>>>
-f6(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f6(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5797,8 +5799,8 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<T3__, T4__, T5__,
                              std::decay_t<stan::promote_args_t<T8__,
                                             stan::base_type_t<T9__>, T10__,
                                             T11__>>>>,-1,1>
-f7(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f7(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5828,8 +5830,8 @@ std::vector<
                                std::decay_t<stan::promote_args_t<T8__,
                                               stan::base_type_t<T9__>, T10__,
                                               T11__>>>>,-1,1>>
-f8(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f8(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5860,8 +5862,8 @@ std::vector<
                                  std::decay_t<stan::promote_args_t<T8__,
                                                 stan::base_type_t<T9__>,
                                                 T10__, T11__>>>>,-1,1>>>
-f9(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f9(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5890,8 +5892,8 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<T3__, T4__, T5__,
                              std::decay_t<stan::promote_args_t<T8__,
                                             stan::base_type_t<T9__>, T10__,
                                             T11__>>>>,-1,-1>
-f10(const T0__& a1, const std::vector<int>& a2,
-    const std::vector<std::vector<int>>& a3, const T3__& a4,
+f10(const T0__& a1, const std::vector<T1__>& a2,
+    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
     const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
     const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5921,8 +5923,8 @@ std::vector<
                                std::decay_t<stan::promote_args_t<T8__,
                                               stan::base_type_t<T9__>, T10__,
                                               T11__>>>>,-1,-1>>
-f11(const T0__& a1, const std::vector<int>& a2,
-    const std::vector<std::vector<int>>& a3, const T3__& a4,
+f11(const T0__& a1, const std::vector<T1__>& a2,
+    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
     const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
     const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5953,8 +5955,8 @@ std::vector<
                                  std::decay_t<stan::promote_args_t<T8__,
                                                 stan::base_type_t<T9__>,
                                                 T10__, T11__>>>>,-1,-1>>>
-f12(const T0__& a1, const std::vector<int>& a2,
-    const std::vector<std::vector<int>>& a3, const T3__& a4,
+f12(const T0__& a1, const std::vector<T1__>& a2,
+    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
     const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
     const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -5982,8 +5984,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>, T2__>>,-1,1>
 algebra_system(const T0__& x_arg__, const T1__& y_arg__,
-               const std::vector<T2__>& dat, const std::vector<int>& dat_int,
-               std::ostream* pstream__);
+               const std::vector<T2__>& dat, const std::vector<T3__>&
+               dat_int, std::ostream* pstream__);
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -6005,7 +6007,7 @@ struct algebra_system_functor__ {
   Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                                stan::base_type_t<T1__>, T2__>>,-1,1>
   operator()(const T0__& x, const T1__& y, const std::vector<T2__>& dat,
-             const std::vector<int>& dat_int, std::ostream* pstream__) const {
+             const std::vector<T3__>& dat_int, std::ostream* pstream__) const {
     return algebra_system(x, y, dat, dat_int, pstream__);
   }
 };
@@ -6771,8 +6773,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T10__>,
                               stan::is_stan_scalar<T11__>>*>
 void
-f0(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f0(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -6824,8 +6826,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T10__>,
                               stan::is_stan_scalar<T11__>>*>
 int
-f1(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f1(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -6874,8 +6876,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T10__>,
                               stan::is_stan_scalar<T11__>>*>
 std::vector<int>
-f2(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f2(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -6924,8 +6926,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T10__>,
                               stan::is_stan_scalar<T11__>>*>
 std::vector<std::vector<int>>
-f3(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f3(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -6977,8 +6979,8 @@ std::decay_t<stan::promote_args_t<T3__, T4__, T5__, stan::base_type_t<T6__>,
                T7__,
                std::decay_t<stan::promote_args_t<T8__,
                               stan::base_type_t<T9__>, T10__, T11__>>>>
-f4(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f4(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -7031,8 +7033,8 @@ std::vector<
                  stan::base_type_t<T6__>, T7__,
                  std::decay_t<stan::promote_args_t<T8__,
                                 stan::base_type_t<T9__>, T10__, T11__>>>>>
-f5(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f5(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -7086,8 +7088,8 @@ std::vector<
                    stan::base_type_t<T6__>, T7__,
                    std::decay_t<stan::promote_args_t<T8__,
                                   stan::base_type_t<T9__>, T10__, T11__>>>>>>
-f6(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f6(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -7140,8 +7142,8 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<T3__, T4__, T5__,
                              std::decay_t<stan::promote_args_t<T8__,
                                             stan::base_type_t<T9__>, T10__,
                                             T11__>>>>,-1,1>
-f7(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f7(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -7195,8 +7197,8 @@ std::vector<
                                std::decay_t<stan::promote_args_t<T8__,
                                               stan::base_type_t<T9__>, T10__,
                                               T11__>>>>,-1,1>>
-f8(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f8(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -7251,8 +7253,8 @@ std::vector<
                                  std::decay_t<stan::promote_args_t<T8__,
                                                 stan::base_type_t<T9__>,
                                                 T10__, T11__>>>>,-1,1>>>
-f9(const T0__& a1, const std::vector<int>& a2,
-   const std::vector<std::vector<int>>& a3, const T3__& a4,
+f9(const T0__& a1, const std::vector<T1__>& a2,
+   const std::vector<std::vector<T2__>>& a3, const T3__& a4,
    const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
    const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
    const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -7305,8 +7307,8 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<T3__, T4__, T5__,
                              std::decay_t<stan::promote_args_t<T8__,
                                             stan::base_type_t<T9__>, T10__,
                                             T11__>>>>,-1,-1>
-f10(const T0__& a1, const std::vector<int>& a2,
-    const std::vector<std::vector<int>>& a3, const T3__& a4,
+f10(const T0__& a1, const std::vector<T1__>& a2,
+    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
     const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
     const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -7360,8 +7362,8 @@ std::vector<
                                std::decay_t<stan::promote_args_t<T8__,
                                               stan::base_type_t<T9__>, T10__,
                                               T11__>>>>,-1,-1>>
-f11(const T0__& a1, const std::vector<int>& a2,
-    const std::vector<std::vector<int>>& a3, const T3__& a4,
+f11(const T0__& a1, const std::vector<T1__>& a2,
+    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
     const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
     const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -7416,8 +7418,8 @@ std::vector<
                                  std::decay_t<stan::promote_args_t<T8__,
                                                 stan::base_type_t<T9__>,
                                                 T10__, T11__>>>>,-1,-1>>>
-f12(const T0__& a1, const std::vector<int>& a2,
-    const std::vector<std::vector<int>>& a3, const T3__& a4,
+f12(const T0__& a1, const std::vector<T1__>& a2,
+    const std::vector<std::vector<T2__>>& a3, const T3__& a4,
     const std::vector<T4__>& a5, const std::vector<std::vector<T5__>>& a6,
     const T6__& a7_arg__, const std::vector<Eigen::Matrix<T7__,-1,1>>& a8,
     const std::vector<std::vector<Eigen::Matrix<T8__,-1,1>>>& a9, const T9__&
@@ -7586,8 +7588,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>, T2__>>,-1,1>
 algebra_system(const T0__& x_arg__, const T1__& y_arg__,
-               const std::vector<T2__>& dat, const std::vector<int>& dat_int,
-               std::ostream* pstream__) {
+               const std::vector<T2__>& dat, const std::vector<T3__>&
+               dat_int, std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                                           stan::base_type_t<T1__>, T2__>>;
   int current_statement__ = 0;
@@ -14191,7 +14193,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T4__>>* = nullptr>
 std::vector<std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>>
 sho(const T0__& t, const std::vector<T1__>& y, const std::vector<T2__>&
-    theta, const std::vector<T3__>& x, const std::vector<int>& x_int,
+    theta, const std::vector<T3__>& x, const std::vector<T4__>& x_int,
     std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
@@ -14202,7 +14204,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T4__>>* = nullptr>
 std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>
 integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
-          const std::vector<T3__>& x_r, const std::vector<int>& x_i,
+          const std::vector<T3__>& x_r, const std::vector<T4__>& x_i,
           std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
@@ -14214,7 +14216,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>, T2__>>,-1,1>
 foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
-    const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+    const std::vector<T2__>& data_r, const std::vector<T3__>& data_i,
     std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
@@ -14226,7 +14228,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>, T2__>>,-1,1>
 goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
-    const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+    const std::vector<T2__>& data_r, const std::vector<T3__>& data_i,
     std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
@@ -14242,8 +14244,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>, T2__>>,-1,1>
 algebra_system(const T0__& x_arg__, const T1__& y_arg__,
-               const std::vector<T2__>& dat, const std::vector<int>& dat_int,
-               std::ostream* pstream__);
+               const std::vector<T2__>& dat, const std::vector<T3__>&
+               dat_int, std::ostream* pstream__);
 struct goo_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
             stan::require_all_t<stan::is_col_vector<T0__>,
@@ -14255,8 +14257,8 @@ struct goo_functor__ {
   Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                                stan::base_type_t<T1__>, T2__>>,-1,1>
   operator()(const T0__& shared_params, const T1__& job_params,
-             const std::vector<T2__>& data_r, const std::vector<int>& data_i,
-             std::ostream* pstream__) const {
+             const std::vector<T2__>& data_r, const std::vector<T3__>&
+             data_i, std::ostream* pstream__) const {
     return goo(shared_params, job_params, data_r, data_i, pstream__);
   }
 };
@@ -14271,8 +14273,8 @@ struct foo_functor__ {
   Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                                stan::base_type_t<T1__>, T2__>>,-1,1>
   operator()(const T0__& shared_params, const T1__& job_params,
-             const std::vector<T2__>& data_r, const std::vector<int>& data_i,
-             std::ostream* pstream__) const {
+             const std::vector<T2__>& data_r, const std::vector<T3__>&
+             data_i, std::ostream* pstream__) const {
     return foo(shared_params, job_params, data_r, data_i, pstream__);
   }
 };
@@ -14286,7 +14288,7 @@ struct integrand_functor__ {
                                 stan::is_stan_scalar<T4__>>* = nullptr>
   std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>
   operator()(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
-             const std::vector<T3__>& x_r, const std::vector<int>& x_i,
+             const std::vector<T3__>& x_r, const std::vector<T4__>& x_i,
              std::ostream* pstream__) const {
     return integrand(x, xc, theta, x_r, x_i, pstream__);
   }
@@ -14302,7 +14304,7 @@ struct algebra_system_functor__ {
   Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                                stan::base_type_t<T1__>, T2__>>,-1,1>
   operator()(const T0__& x, const T1__& y, const std::vector<T2__>& dat,
-             const std::vector<int>& dat_int, std::ostream* pstream__) const {
+             const std::vector<T3__>& dat_int, std::ostream* pstream__) const {
     return algebra_system(x, y, dat, dat_int, pstream__);
   }
 };
@@ -14317,7 +14319,7 @@ struct sho_functor__ {
   std::vector<std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>>
   operator()(const T0__& t, const std::vector<T1__>& y,
              const std::vector<T2__>& theta, const std::vector<T3__>& x,
-             const std::vector<int>& x_int, std::ostream* pstream__) const {
+             const std::vector<T4__>& x_int, std::ostream* pstream__) const {
     return sho(t, y, theta, x, x_int, pstream__);
   }
 };
@@ -14330,7 +14332,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T4__>>*>
 std::vector<std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>>
 sho(const T0__& t, const std::vector<T1__>& y, const std::vector<T2__>&
-    theta, const std::vector<T3__>& x, const std::vector<int>& x_int,
+    theta, const std::vector<T3__>& x, const std::vector<T4__>& x_int,
     std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__, T1__,
                                           T2__, T3__>>;
@@ -14371,7 +14373,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T4__>>*>
 std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>
 integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
-          const std::vector<T3__>& x_r, const std::vector<int>& x_i,
+          const std::vector<T3__>& x_r, const std::vector<T4__>& x_i,
           std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__, T1__,
                                           T2__, T3__>>;
@@ -14401,7 +14403,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>, T2__>>,-1,1>
 foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
-    const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+    const std::vector<T2__>& data_r, const std::vector<T3__>& data_i,
     std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                                           stan::base_type_t<T1__>, T2__>>;
@@ -14434,7 +14436,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>, T2__>>,-1,1>
 goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
-    const std::vector<T2__>& data_r, const std::vector<int>& data_i,
+    const std::vector<T2__>& data_r, const std::vector<T3__>& data_i,
     std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                                           stan::base_type_t<T1__>, T2__>>;
@@ -14487,8 +14489,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>, T2__>>,-1,1>
 algebra_system(const T0__& x_arg__, const T1__& y_arg__,
-               const std::vector<T2__>& dat, const std::vector<int>& dat_int,
-               std::ostream* pstream__) {
+               const std::vector<T2__>& dat, const std::vector<T3__>&
+               dat_int, std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                                           stan::base_type_t<T1__>, T2__>>;
   int current_statement__ = 0;
@@ -22610,7 +22612,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T4__>>* = nullptr>
 std::vector<std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>>
 dz_dt(const T0__& t, const std::vector<T1__>& z, const std::vector<T2__>&
-      theta, const std::vector<T3__>& x_r, const std::vector<int>& x_i,
+      theta, const std::vector<T3__>& x_r, const std::vector<T4__>& x_i,
       std::ostream* pstream__);
 struct dz_dt_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -22623,7 +22625,7 @@ struct dz_dt_functor__ {
   std::vector<std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>>
   operator()(const T0__& t, const std::vector<T1__>& z,
              const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-             const std::vector<int>& x_i, std::ostream* pstream__) const {
+             const std::vector<T4__>& x_i, std::ostream* pstream__) const {
     return dz_dt(t, z, theta, x_r, x_i, pstream__);
   }
 };
@@ -22636,7 +22638,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_stan_scalar<T4__>>*>
 std::vector<std::decay_t<stan::promote_args_t<T0__, T1__, T2__, T3__>>>
 dz_dt(const T0__& t, const std::vector<T1__>& z, const std::vector<T2__>&
-      theta, const std::vector<T3__>& x_r, const std::vector<int>& x_i,
+      theta, const std::vector<T3__>& x_r, const std::vector<T4__>& x_i,
       std::ostream* pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__, T1__,
                                           T2__, T3__>>;
@@ -25604,7 +25606,7 @@ std::decay_t<stan::promote_args_t<T0__>>
 foo(const std::vector<std::vector<T0__>>& p, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-double foo(const std::vector<int>& p, std::ostream* pstream__);
+double foo(const std::vector<T0__>& p, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<std::is_integral<std::decay_t<T0__>>>*>
 double foo(const T0__& p, std::ostream* pstream__) {
@@ -25823,7 +25825,7 @@ foo(const std::vector<std::vector<T0__>>& p, std::ostream* pstream__) {
   }
 }
 template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-double foo(const std::vector<int>& p, std::ostream* pstream__) {
+double foo(const std::vector<T0__>& p, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -32372,21 +32374,21 @@ template <typename T0__, typename T1__, typename T2__,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>>* = nullptr>
 double
-f9(const std::vector<int>& y_slice, const T1__& start, const T2__& end,
+f9(const std::vector<T0__>& y_slice, const T1__& start, const T2__& end,
    std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>>* = nullptr>
 double
-f10(const std::vector<std::vector<int>>& y_slice, const T1__& start,
+f10(const std::vector<std::vector<T0__>>& y_slice, const T1__& start,
     const T2__& end, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>>* = nullptr>
 double
-f11(const std::vector<std::vector<std::vector<int>>>& y_slice, const T1__&
+f11(const std::vector<std::vector<std::vector<T0__>>>& y_slice, const T1__&
     start, const T2__& end, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_stan_scalar<T0__>,
@@ -32533,16 +32535,16 @@ std::decay_t<stan::promote_args_t<T0__, T4__, stan::base_type_t<T5__>,
                                              T17__, T19__>>>>>>
 s(const std::vector<T0__>& y_slice, const T1__& start, const T2__& end,
   const T3__& a, const T4__& b, const T5__& c_arg__, const T6__& d_arg__,
-  const T7__& e_arg__, const std::vector<int>& f, const std::vector<T9__>& g,
-  const std::vector<Eigen::Matrix<T10__,-1,1>>& h,
+  const T7__& e_arg__, const std::vector<T8__>& f, const std::vector<T9__>&
+  g, const std::vector<Eigen::Matrix<T10__,-1,1>>& h,
   const std::vector<Eigen::Matrix<T11__,1,-1>>& i,
   const std::vector<Eigen::Matrix<T12__,-1,-1>>& j,
-  const std::vector<std::vector<int>>& k,
+  const std::vector<std::vector<T13__>>& k,
   const std::vector<std::vector<T14__>>& l,
   const std::vector<std::vector<Eigen::Matrix<T15__,-1,1>>>& m,
   const std::vector<std::vector<Eigen::Matrix<T16__,1,-1>>>& n,
   const std::vector<std::vector<Eigen::Matrix<T17__,-1,-1>>>& o,
-  const std::vector<std::vector<std::vector<int>>>& p,
+  const std::vector<std::vector<std::vector<T18__>>>& p,
   const std::vector<std::vector<std::vector<T19__>>>& q, std::ostream*
   pstream__);
 double r(std::ostream* pstream__);
@@ -32552,7 +32554,7 @@ struct f11_rsfunctor__ {
                                 std::is_integral<std::decay_t<T1__>>,
                                 std::is_integral<std::decay_t<T2__>>>* = nullptr>
   double
-  operator()(const std::vector<std::vector<std::vector<int>>>& y_slice,
+  operator()(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
              const T1__& start, const T2__& end, std::ostream* pstream__) const {
     return f11(y_slice, (start + 1), (end + 1), pstream__);
   }
@@ -32563,8 +32565,8 @@ struct f10_rsfunctor__ {
                                 std::is_integral<std::decay_t<T1__>>,
                                 std::is_integral<std::decay_t<T2__>>>* = nullptr>
   double
-  operator()(const std::vector<std::vector<int>>& y_slice, const T1__& start,
-             const T2__& end, std::ostream* pstream__) const {
+  operator()(const std::vector<std::vector<T0__>>& y_slice, const T1__&
+             start, const T2__& end, std::ostream* pstream__) const {
     return f10(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
@@ -32807,7 +32809,7 @@ struct f9_rsfunctor__ {
                                 std::is_integral<std::decay_t<T1__>>,
                                 std::is_integral<std::decay_t<T2__>>>* = nullptr>
   double
-  operator()(const std::vector<int>& y_slice, const T1__& start, const T2__&
+  operator()(const std::vector<T0__>& y_slice, const T1__& start, const T2__&
              end, std::ostream* pstream__) const {
     return f9(y_slice, (start + 1), (end + 1), pstream__);
   }
@@ -32861,16 +32863,16 @@ struct s_rsfunctor__ {
   operator()(const std::vector<T0__>& y_slice, const T1__& start, const T2__&
              end, std::ostream* pstream__, const T3__& a, const T4__& b,
              const T5__& c, const T6__& d, const T7__& e,
-             const std::vector<int>& f, const std::vector<T9__>& g,
+             const std::vector<T8__>& f, const std::vector<T9__>& g,
              const std::vector<Eigen::Matrix<T10__,-1,1>>& h,
              const std::vector<Eigen::Matrix<T11__,1,-1>>& i,
              const std::vector<Eigen::Matrix<T12__,-1,-1>>& j,
-             const std::vector<std::vector<int>>& k,
+             const std::vector<std::vector<T13__>>& k,
              const std::vector<std::vector<T14__>>& l,
              const std::vector<std::vector<Eigen::Matrix<T15__,-1,1>>>& m,
              const std::vector<std::vector<Eigen::Matrix<T16__,1,-1>>>& n,
              const std::vector<std::vector<Eigen::Matrix<T17__,-1,-1>>>& o,
-             const std::vector<std::vector<std::vector<int>>>& p,
+             const std::vector<std::vector<std::vector<T18__>>>& p,
              const std::vector<std::vector<std::vector<T19__>>>& q) const {
     return s(y_slice, (start + 1), (end + 1), a, b, c, d, e, f, g, h, i, j,
              k, l, m, n, o, p, q, pstream__);
@@ -33120,7 +33122,7 @@ template <typename T0__, typename T1__, typename T2__,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>>*>
 double
-f9(const std::vector<int>& y_slice, const T1__& start, const T2__& end,
+f9(const std::vector<T0__>& y_slice, const T1__& start, const T2__& end,
    std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -33144,7 +33146,7 @@ template <typename T0__, typename T1__, typename T2__,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>>*>
 double
-f10(const std::vector<std::vector<int>>& y_slice, const T1__& start,
+f10(const std::vector<std::vector<T0__>>& y_slice, const T1__& start,
     const T2__& end, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -33168,7 +33170,7 @@ template <typename T0__, typename T1__, typename T2__,
                               std::is_integral<std::decay_t<T1__>>,
                               std::is_integral<std::decay_t<T2__>>>*>
 double
-f11(const std::vector<std::vector<std::vector<int>>>& y_slice, const T1__&
+f11(const std::vector<std::vector<std::vector<T0__>>>& y_slice, const T1__&
     start, const T2__& end, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -33559,16 +33561,16 @@ std::decay_t<stan::promote_args_t<T0__, T4__, stan::base_type_t<T5__>,
                                              T17__, T19__>>>>>>
 s(const std::vector<T0__>& y_slice, const T1__& start, const T2__& end,
   const T3__& a, const T4__& b, const T5__& c_arg__, const T6__& d_arg__,
-  const T7__& e_arg__, const std::vector<int>& f, const std::vector<T9__>& g,
-  const std::vector<Eigen::Matrix<T10__,-1,1>>& h,
+  const T7__& e_arg__, const std::vector<T8__>& f, const std::vector<T9__>&
+  g, const std::vector<Eigen::Matrix<T10__,-1,1>>& h,
   const std::vector<Eigen::Matrix<T11__,1,-1>>& i,
   const std::vector<Eigen::Matrix<T12__,-1,-1>>& j,
-  const std::vector<std::vector<int>>& k,
+  const std::vector<std::vector<T13__>>& k,
   const std::vector<std::vector<T14__>>& l,
   const std::vector<std::vector<Eigen::Matrix<T15__,-1,1>>>& m,
   const std::vector<std::vector<Eigen::Matrix<T16__,1,-1>>>& n,
   const std::vector<std::vector<Eigen::Matrix<T17__,-1,-1>>>& o,
-  const std::vector<std::vector<std::vector<int>>>& p,
+  const std::vector<std::vector<std::vector<T18__>>>& p,
   const std::vector<std::vector<std::vector<T19__>>>& q, std::ostream*
   pstream__) {
   using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__, T4__,
