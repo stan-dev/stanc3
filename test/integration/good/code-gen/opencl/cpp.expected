@@ -797,6 +797,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                       random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -922,6 +924,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3976,6 +3980,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7037,6 +7043,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -10101,6 +10109,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10153,6 +10163,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10500,6 +10512,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                    random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -10622,6 +10636,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10729,6 +10745,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10843,6 +10861,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -10963,6 +10983,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -11015,6 +11037,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;

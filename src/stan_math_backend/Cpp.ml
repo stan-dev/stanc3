@@ -266,6 +266,7 @@ module Decls = struct
     VariableDefn
       (make_variable_defn ~type_:Int ~name:"current_statement__"
          ~init:(Assignment (Literal "0")) () )
+    :: Stmts.unused "current_statement__"
 
   let dummy_var =
     VariableDefn
@@ -299,7 +300,7 @@ end
 
 type template_parameter =
   | Typename of string  (** The name of a template typename *)
-  | RequireIs of string * string
+  | RequireIs of string * type_
       (** A C++ type trait (e.g. is_arithmetic) and the template
           name which needs to satisfy that.
           These are collated into one require_all_t<> *)
@@ -412,7 +413,7 @@ module Printing = struct
 
   let pp_requires ~default ppf requires =
     if not (List.is_empty requires) then
-      let pp_require ppf (trait, name) = pf ppf "%s<%s>" trait name in
+      let pp_require ppf (trait, t) = pf ppf "%s<%a>" trait pp_type_ t in
       pf ppf ",@ stan::require_all_t<@[%a@]>*%s"
         (list ~sep:comma pp_require)
         requires
@@ -762,7 +763,9 @@ module Tests = struct
     let funs =
       [ make_fun_defn
           ~templates_init:
-            ([[Typename "T0__"; RequireIs ("stan::is_foobar", "T0__")]], true)
+            ( [ [ Typename "T0__"
+                ; RequireIs ("stan::is_foobar", TemplateType "T0__") ] ]
+            , true )
           ~name:"foobar" ~return_type:Void ~inline:true ()
       ; (let s =
            [ Comment "A potentially \n long comment"
@@ -770,7 +773,9 @@ module Tests = struct
          let rethrow = Stmts.rethrow_located s in
          make_fun_defn
            ~templates_init:
-             ([[Typename "T0__"; RequireIs ("stan::is_foobar", "T0__")]], false)
+             ( [ [ Typename "T0__"
+                 ; RequireIs ("stan::is_foobar", TemplateType "T0__") ] ]
+             , false )
            ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow () ) ]
     in
     let open Fmt in

@@ -6,8 +6,9 @@ open Cpp
 
 let rec lower_type_eigen_expr (t : UnsizedType.t) (inner_type : type_) : type_ =
   match t with
-  | UInt -> Int
-  | UReal | UMatrix | URowVector | UVector | UComplexVector | UComplexMatrix
+  | UInt
+  (* | UInt -> Int *)
+   |UReal | UMatrix | URowVector | UVector | UComplexVector | UComplexMatrix
    |UComplexRowVector | UTuple _ ->
       inner_type
   | UComplex -> Types.complex inner_type
@@ -34,6 +35,7 @@ let lower_arg ~is_possibly_eigen_expr type_ (_, name, ut) =
   (Types.const_ref type_, opt_arg_suffix)
 
 let requires ut t =
+  let t = TemplateType t in
   match ut with
   | UnsizedType.URowVector ->
       [ RequireIs ("stan::is_row_vector", t)
@@ -54,6 +56,7 @@ let requires ut t =
       [ RequireIs ("stan::is_eigen_matrix_dynamic", t)
       ; RequireIs ("stan::is_vt_complex", t) ]
       (* NB: Not unwinding array types due to the way arrays of eigens are printed *)
+  | UInt -> [RequireIs ("std::is_integral", TypeTrait ("std::decay_t", [t]))]
   | _ -> [RequireIs ("stan::is_stan_scalar", t)]
 
 let return_optional_arg_types (args : Program.fun_arg_decl) =
@@ -91,7 +94,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
 let template_parameters (args : Program.fun_arg_decl) =
   let rec template_p start i (ad, typ) =
     match (ad, fst (UnsizedType.unwind_array_type typ)) with
-    | _, UInt -> ([], [], arg_type None typ)
+    (* | _, UInt -> ([], [], arg_type None typ) *)
     | _, UTuple tys ->
         let temps, reqs, sclrs =
           List.map ~f:(fun ty -> (ad, ty)) tys
@@ -111,14 +114,16 @@ let template_parameters (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i (ad, _, ty) -> template_p "T" i (ad, ty))
 
 let%expect_test "arg types templated correctly" =
-  [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
+  [(AutoDiffable, "xreal", UReal); (AutoDiffable, "yint", UInt)]
   |> template_parameters |> List.map ~f:fst3 |> List.concat
   |> String.concat ~sep:"," |> print_endline ;
-  [%expect {| T0__ |}]
+  [%expect {| T0__,T1__ |}]
 
 let%expect_test "arg types tuple template" =
   let templates, reqs, type_ =
-    [(AutoDiffable, "xreal", UTuple [UReal; UMatrix])]
+    [ ( TupleAD [AutoDiffable; AutoDiffable; DataOnly]
+      , "xreal"
+      , UTuple [UReal; UMatrix; UInt] ) ]
     |> template_parameters |> List.unzip3 in
   templates |> List.concat |> String.concat ~sep:"," |> print_endline ;
   reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s ;
@@ -127,11 +132,13 @@ let%expect_test "arg types tuple template" =
   |> print_endline ;
   [%expect
     {|
-    T0__0__,T0__1__
-    ((RequireIs stan::is_stan_scalar T0__0__)
-     (RequireIs stan::is_eigen_matrix_dynamic T0__1__)
-     (RequireIs stan::is_vt_not_complex T0__1__))
-    std::tuple<T0__0__, T0__1__> |}]
+    T0__0__,T0__1__,T0__2__
+    ((RequireIs stan::is_stan_scalar (TemplateType T0__0__))
+     (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T0__1__))
+     (RequireIs stan::is_vt_not_complex (TemplateType T0__1__))
+     (RequireIs std::is_integral
+      (TypeTrait std::decay_t ((TemplateType T0__2__)))))
+    std::tuple<T0__0__, T0__1__, T0__2__> |}]
 
 let%expect_test "arg types tuple template" =
   let templates, reqs, type_ =
@@ -144,9 +151,10 @@ let%expect_test "arg types tuple template" =
   |> print_endline ;
   [%expect
     {|
-  T0__1__
-  ((RequireIs stan::is_eigen_matrix_dynamic T0__1__)
-   (RequireIs stan::is_vt_not_complex T0__1__))
+  T0__0__,T0__1__
+  ((RequireIs stan::is_stan_scalar (TemplateType T0__0__))
+   (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T0__1__))
+   (RequireIs stan::is_vt_not_complex (TemplateType T0__1__)))
   std::vector<std::tuple<std::vector<int>, T0__1__>> |}]
 
 let lower_promoted_scalar args =
@@ -160,8 +168,11 @@ let lower_promoted_scalar args =
         match args with
         | [] -> Double
         | hd :: list_tail ->
-            TypeTrait ("stan::promote_args_t", hd @ chunk_till_empty list_tail)
-      in
+            TypeTrait
+              ( "std::decay_t"
+              , [ TypeTrait
+                    ("stan::promote_args_t", hd @ chunk_till_empty list_tail) ]
+              ) in
       promote_args_chunked
         List.(
           chunks_of ~length:5
@@ -222,7 +233,7 @@ let lower_fun_body fdargs fdsuffix fdbody =
              ~name:"propto__" ~init:(Assignment (Literal "true")) () )
         :: Stmts.unused "propto__" in
   let body = lower_statement fdbody in
-  (local_scalar :: Decls.current_statement :: to_refs)
+  ((local_scalar :: Decls.current_statement) @ to_refs)
   @ propto @ Decls.dummy_var @ Stmts.rethrow_located body
 
 let mk_extra_args templates args =
@@ -441,9 +452,11 @@ module Testing = struct
                                   stan::is_row_vector<T1__>,
                                   stan::is_vt_not_complex<T1__>>* = nullptr>
     void sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
-                                 stan::base_type_t<T1__>>;
+      using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
+                                              stan::base_type_t<T1__>>>;
       int current_statement__ = 0;
+      // suppress unused var warning
+      (void) current_statement__;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
       static constexpr bool propto__ = true;
@@ -503,14 +516,17 @@ module Testing = struct
                                   stan::is_row_vector<T2__>,
                                   stan::is_vt_not_complex<T2__>,
                                   stan::is_stan_scalar<T3__>>* = nullptr>
-    Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
-                    stan::base_type_t<T1__>, stan::base_type_t<T2__>, T3__>,-1,-1>
+    Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
+                                 stan::base_type_t<T1__>,
+                                 stan::base_type_t<T2__>, T3__>>,-1,-1>
     sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
          const std::vector<Eigen::Matrix<T3__,-1,-1>>& w, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
-                                 stan::base_type_t<T1__>,
-                                 stan::base_type_t<T2__>, T3__>;
+      using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
+                                              stan::base_type_t<T1__>,
+                                              stan::base_type_t<T2__>, T3__>>;
       int current_statement__ = 0;
+      // suppress unused var warning
+      (void) current_statement__;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
       const auto& z = stan::math::to_ref(z_arg__);
@@ -535,8 +551,9 @@ module Testing = struct
                                     stan::is_row_vector<T2__>,
                                     stan::is_vt_not_complex<T2__>,
                                     stan::is_stan_scalar<T3__>>* = nullptr>
-      Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
-                      stan::base_type_t<T1__>, stan::base_type_t<T2__>, T3__>,-1,-1>
+      Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
+                                   stan::base_type_t<T1__>,
+                                   stan::base_type_t<T2__>, T3__>>,-1,-1>
       operator()(const T0__& x, const T1__& y, const T2__& z,
                  const std::vector<Eigen::Matrix<T3__,-1,-1>>& w, std::ostream*
                  pstream__) const {

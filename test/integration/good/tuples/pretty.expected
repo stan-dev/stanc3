@@ -86,6 +86,16 @@ model {
   target += foo(d);
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-dataonly2.stan
+functions {
+  real tuple_tester(data tuple(array[] real, int) x) {
+    return x.1[1];
+  }
+}
+model {
+  print(tuple_tester(({1.0}, 2)));
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format tuple-foreach.stan
 transformed data {
   array[100] tuple(real, real) arr;
@@ -254,6 +264,16 @@ functions {
 }
 model {
   (1.5, 2) ~ foo((1.2, 1.5, 4.5));
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple_lpdf2.stan
+functions {
+  real foo_lpdf(tuple(real, int) x) {
+    return 0;
+  }
+}
+model {
+  (1.5, 2) ~ foo();
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format tuple_lpmf.stan

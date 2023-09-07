@@ -801,20 +801,28 @@
          (Literal "\" (in 'mother.stan', line 344, column 4 to column 16)\"")
          (Literal "\" (in 'mother.stan', line 341, column 41 to line 345, column 3)\"")))))))
    (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type Int) (name foo)
-     (args (((Const (Ref Int)) n) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+    ((templates_init
+      ((((Typename T0__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))))
+       true))
+     (inline false) (return_type Int) (name foo)
+     (args
+      (((Const (Ref (TemplateType T0__))) n)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__)
-         (RequireIs stan::is_stan_scalar T0__) (RequireIs stan::is_stan_scalar T1__)
-         (RequireIs stan::is_stan_scalar T2__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))))
        true))
      (inline false)
      (return_type
       (StdVector
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))))
      (name sho)
      (args
       (((Const (Ref (TemplateType T0__))) t)
@@ -828,8 +836,11 @@
      (name foo_bar0) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar (TemplateType T0__)))) true))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__))))))
      (name foo_bar1)
      (args
       (((Const (Ref (TemplateType T0__))) x)
@@ -837,12 +848,14 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__)))
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
        true))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))))
      (name foo_bar2)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Const (Ref (TemplateType T1__))) y)
@@ -850,37 +863,56 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Bool propto__) (Typename T1__) (RequireIs stan::is_stan_scalar T1__))) true))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
+      ((((Bool propto__) (Typename T0__) (Typename T1__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
+       true))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
      (name foo_lpmf)
      (args
-      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
+      (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) true))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
+    ((templates_init
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
+       true))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
      (name foo_lcdf)
      (args
-      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
+      (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) true))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
+    ((templates_init
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
+       true))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
      (name foo_lccdf)
      (args
-      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
+      (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename RNG)
-         (RequireIs stan::is_stan_scalar T0__) (RequireIs stan::is_stan_scalar T1__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
        true))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))))
      (name foo_rng)
      (args
       (((Const (Ref (TemplateType T0__))) mu) ((Const (Ref (TemplateType T1__))) sigma)
@@ -890,7 +922,7 @@
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
-         (RequireIs stan::is_stan_scalar T0__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))))
        true))
      (inline false) (return_type Void) (name unit_normal_lp)
      (args
@@ -899,28 +931,48 @@
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type Int) (name foo_1)
-     (args (((Const (Ref Int)) a) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+    ((templates_init
+      ((((Typename T0__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))))
+       true))
+     (inline false) (return_type Int) (name foo_1)
+     (args
+      (((Const (Ref (TemplateType T0__))) a)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type Int) (name foo_2)
-     (args (((Const (Ref Int)) a) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+    ((templates_init
+      ((((Typename T0__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))))
+       true))
+     (inline false) (return_type Int) (name foo_2)
+     (args
+      (((Const (Ref (TemplateType T0__))) a)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+    ((templates_init
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T1__))))))
+       true))
      (inline false)
-     (return_type (StdVector (TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+     (return_type
+      (StdVector
+       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
      (name foo_3)
      (args
-      (((Const (Ref (TemplateType T0__))) t) ((Const (Ref Int)) n)
+      (((Const (Ref (TemplateType T0__))) t) ((Const (Ref (TemplateType T1__))) n)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
-         (RequireIs stan::is_stan_scalar T0__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))))
        true))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__))))))
      (name foo_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Ref (TemplateType T_lp__)) lp__)
@@ -928,7 +980,8 @@
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar (TemplateType T0__)))) true))
      (inline false) (return_type Void) (name foo_4)
      (args
       (((Const (Ref (StdVector (TemplateType T0__)))) x)
@@ -937,13 +990,17 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-         (RequireIs stan::is_stan_scalar T0__) (RequireIs stan::is_stan_scalar T1__)
-         (RequireIs stan::is_stan_scalar T2__) (RequireIs stan::is_stan_scalar T3__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))))
        true))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t
+         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+          (TemplateType T3__))))))
      (name relative_diff)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Const (Ref (TemplateType T1__))) y)
@@ -952,15 +1009,18 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
-         (RequireIs stan::is_vt_not_complex T0__) (RequireIs stan::is_col_vector T1__)
-         (RequireIs stan::is_vt_not_complex T1__)))
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_col_vector (TemplateType T0__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+         (RequireIs stan::is_col_vector (TemplateType T1__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
        true))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)))))
        -1 1 AoS))
      (name foo_5)
      (args
@@ -972,15 +1032,18 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
-         (Typename T4__) (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__) (RequireIs stan::is_stan_scalar T2__)
-         (RequireIs stan::is_stan_scalar T3__) (RequireIs stan::is_stan_scalar T4__)))
+         (Typename T4__) (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))))
        true))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
-        (TemplateType T4__))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t
+         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) 
+          (TemplateType T3__) (TemplateType T4__))))))
      (name foo_five_args)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -992,16 +1055,21 @@
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T1__) (Typename T2__) 
          (Typename T3__) (Typename T4__) (Typename T5__) (Typename T_lp__)
-         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__) (RequireIs stan::is_stan_scalar T2__)
-         (RequireIs stan::is_stan_scalar T3__) (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)))
+         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))))
        true))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
-        (TemplateType T4__) (TypeTrait stan::promote_args_t ((TemplateType T5__))))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t
+         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) 
+          (TemplateType T3__) (TemplateType T4__)
+          (TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T5__))))))))))
      (name foo_five_args_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -1012,33 +1080,46 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_eigen_matrix_dynamic T0__)
-         (RequireIs stan::is_vt_not_complex T0__)))
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T0__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T1__))))))
        true))
      (inline false)
      (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType stan::base_type_t<T0__>)))
+      (Matrix
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t ((TemplateType stan::base_type_t<T0__>)))))
        -1 -1 AoS))
      (name covsqrt2corsqrt)
      (args
-      (((Const (Ref (TemplateType T0__))) mat_arg__) ((Const (Ref Int)) invert)
+      (((Const (Ref (TemplateType T0__))) mat_arg__)
+       ((Const (Ref (TemplateType T1__))) invert)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false) (return_type Void) (name f0)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1054,19 +1135,27 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false) (return_type Int) (name f1)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1082,19 +1171,27 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false) (return_type (StdVector Int)) (name f2)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1110,19 +1207,27 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false) (return_type (StdVector (StdVector Int))) (name f3)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1138,27 +1243,37 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-        (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>) 
-          (TemplateType T10__) (TemplateType T11__))))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+          (TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+              (TemplateType T10__) (TemplateType T11__))))))))))
      (name f4)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1174,28 +1289,38 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false)
      (return_type
       (StdVector
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-           (TemplateType T10__) (TemplateType T11__)))))))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+           (TypeTrait std::decay_t
+            ((TypeTrait stan::promote_args_t
+              ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+               (TemplateType T10__) (TemplateType T11__)))))))))))
      (name f5)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1211,29 +1336,39 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false)
      (return_type
       (StdVector
        (StdVector
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-            (TemplateType T10__) (TemplateType T11__))))))))
+        (TypeTrait std::decay_t
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+            (TypeTrait std::decay_t
+             ((TypeTrait stan::promote_args_t
+               ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                (TemplateType T10__) (TemplateType T11__))))))))))))
      (name f6)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1249,29 +1384,39 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-           (TemplateType T10__) (TemplateType T11__)))))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+           (TypeTrait std::decay_t
+            ((TypeTrait stan::promote_args_t
+              ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+               (TemplateType T10__) (TemplateType T11__)))))))))
        -1 1 AoS))
      (name f7)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1287,30 +1432,40 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false)
      (return_type
       (StdVector
        (Matrix
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-            (TemplateType T10__) (TemplateType T11__)))))
+        (TypeTrait std::decay_t
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+            (TypeTrait std::decay_t
+             ((TypeTrait stan::promote_args_t
+               ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                (TemplateType T10__) (TemplateType T11__)))))))))
         -1 1 AoS)))
      (name f8)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1326,31 +1481,41 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false)
      (return_type
       (StdVector
        (StdVector
         (Matrix
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-           (TypeTrait stan::promote_args_t
-            ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-             (TemplateType T10__) (TemplateType T11__)))))
+         (TypeTrait std::decay_t
+          ((TypeTrait stan::promote_args_t
+            ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+             (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+             (TypeTrait std::decay_t
+              ((TypeTrait stan::promote_args_t
+                ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                 (TemplateType T10__) (TemplateType T11__)))))))))
          -1 1 AoS))))
      (name f9)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1366,29 +1531,39 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-           (TemplateType T10__) (TemplateType T11__)))))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+           (TypeTrait std::decay_t
+            ((TypeTrait stan::promote_args_t
+              ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+               (TemplateType T10__) (TemplateType T11__)))))))))
        -1 -1 AoS))
      (name f10)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1404,30 +1579,40 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false)
      (return_type
       (StdVector
        (Matrix
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-            (TemplateType T10__) (TemplateType T11__)))))
+        (TypeTrait std::decay_t
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+            (TypeTrait std::decay_t
+             ((TypeTrait stan::promote_args_t
+               ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                (TemplateType T10__) (TemplateType T11__)))))))))
         -1 -1 AoS)))
      (name f11)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1443,31 +1628,41 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        true))
      (inline false)
      (return_type
       (StdVector
        (StdVector
         (Matrix
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-           (TypeTrait stan::promote_args_t
-            ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-             (TemplateType T10__) (TemplateType T11__)))))
+         (TypeTrait std::decay_t
+          ((TypeTrait stan::promote_args_t
+            ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+             (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+             (TypeTrait std::decay_t
+              ((TypeTrait stan::promote_args_t
+                ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                 (TemplateType T10__) (TemplateType T11__)))))))))
          -1 -1 AoS))))
      (name f12)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -1494,20 +1689,26 @@
      (name vecfoo) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar (TemplateType T0__)))) true))
      (inline false)
      (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
+      (Matrix
+       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+       -1 1 AoS))
      (name vecmufoo)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) true))
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar (TemplateType T0__)))) true))
      (inline false)
      (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
+      (Matrix
+       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+       -1 1 AoS))
      (name vecmubar)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
@@ -1515,17 +1716,21 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (Typename T2__)
-         (RequireIs stan::is_col_vector T0__) (RequireIs stan::is_vt_not_complex T0__)
-         (RequireIs stan::is_col_vector T1__) (RequireIs stan::is_vt_not_complex T1__)
-         (RequireIs stan::is_stan_scalar T2__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
+         (RequireIs stan::is_col_vector (TemplateType T0__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+         (RequireIs stan::is_col_vector (TemplateType T1__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))))
        true))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)
-         (TemplateType T2__)))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)
+           (TemplateType T2__)))))
        -1 1 AoS))
      (name algebra_system)
      (args
@@ -1537,15 +1742,18 @@
      (cv_qualifiers ()) (body ())))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
-         (RequireIs stan::is_vt_not_complex T0__) (RequireIs stan::is_col_vector T1__)
-         (RequireIs stan::is_vt_not_complex T1__)))
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_col_vector (TemplateType T0__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+         (RequireIs stan::is_col_vector (TemplateType T1__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
        true))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)))))
        -1 1 AoS))
      (name binomialf)
      (args
@@ -1559,19 +1767,21 @@
      (body
       ((FunDef
         ((templates_init
-          ((((Typename T0__) (Typename T1__) (Typename T2__)
-             (RequireIs stan::is_col_vector T0__)
-             (RequireIs stan::is_vt_not_complex T0__)
-             (RequireIs stan::is_col_vector T1__)
-             (RequireIs stan::is_vt_not_complex T1__)
-             (RequireIs stan::is_stan_scalar T2__)))
+          ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
+             (RequireIs stan::is_col_vector (TemplateType T0__))
+             (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+             (RequireIs stan::is_col_vector (TemplateType T1__))
+             (RequireIs stan::is_vt_not_complex (TemplateType T1__))
+             (RequireIs stan::is_stan_scalar (TemplateType T2__))
+             (RequireIs stan::is_stan_scalar (TemplateType T3__))))
            true))
          (inline false)
          (return_type
           (Matrix
-           (TypeTrait stan::promote_args_t
-            ((TemplateType stan::base_type_t<T0__>)
-             (TemplateType stan::base_type_t<T1__>) (TemplateType T2__)))
+           (TypeTrait std::decay_t
+            ((TypeTrait stan::promote_args_t
+              ((TemplateType stan::base_type_t<T0__>)
+               (TemplateType stan::base_type_t<T1__>) (TemplateType T2__)))))
            -1 1 AoS))
          (name "operator()")
          (args
@@ -1589,17 +1799,19 @@
      (body
       ((FunDef
         ((templates_init
-          ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
-             (RequireIs stan::is_vt_not_complex T0__)
-             (RequireIs stan::is_col_vector T1__)
-             (RequireIs stan::is_vt_not_complex T1__)))
+          ((((Typename T0__) (Typename T1__)
+             (RequireIs stan::is_col_vector (TemplateType T0__))
+             (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+             (RequireIs stan::is_col_vector (TemplateType T1__))
+             (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
            true))
          (inline false)
          (return_type
           (Matrix
-           (TypeTrait stan::promote_args_t
-            ((TemplateType stan::base_type_t<T0__>)
-             (TemplateType stan::base_type_t<T1__>)))
+           (TypeTrait std::decay_t
+            ((TypeTrait stan::promote_args_t
+              ((TemplateType stan::base_type_t<T0__>)
+               (TemplateType stan::base_type_t<T1__>)))))
            -1 1 AoS))
          (name "operator()")
          (args
@@ -1613,14 +1825,22 @@
              ((FunCall binomialf ()
                ((Var phi) (Var theta) (Var x_r) (Var x_i) (Var pstream__))))))))))))))
    (FunDef
-    ((templates_init ((()) false)) (inline false) (return_type Int) (name foo)
-     (args (((Const (Ref Int)) n) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+    ((templates_init
+      ((((Typename T0__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))))
+       false))
+     (inline false) (return_type Int) (name foo)
+     (args
+      (((Const (Ref (TemplateType T0__))) n)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__ (Double))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -1651,14 +1871,16 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__)
-         (RequireIs stan::is_stan_scalar T0__) (RequireIs stan::is_stan_scalar T1__)
-         (RequireIs stan::is_stan_scalar T2__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))))
        false))
      (inline false)
      (return_type
       (StdVector
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))))
      (name sho)
      (args
       (((Const (Ref (TemplateType T0__))) t)
@@ -1669,11 +1891,14 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -1738,6 +1963,8 @@
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -1756,18 +1983,25 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar (TemplateType T0__)))) false))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__))))))
      (name foo_bar1)
      (args
       (((Const (Ref (TemplateType T0__))) x)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -1787,12 +2021,14 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__)))
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
        false))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))))
      (name foo_bar2)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Const (Ref (TemplateType T1__))) y)
@@ -1800,10 +2036,13 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__)))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -1823,18 +2062,27 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Bool propto__) (Typename T1__) (RequireIs stan::is_stan_scalar T1__))) false))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
+      ((((Bool propto__) (Typename T0__) (Typename T1__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
+       false))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
      (name foo_lpmf)
      (args
-      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
+      (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
           (name DUMMY_VAR__)
@@ -1849,18 +2097,28 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) false))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
+    ((templates_init
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
+       false))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
      (name foo_lcdf)
      (args
-      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
+      (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -1879,18 +2137,28 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((((Typename T1__) (RequireIs stan::is_stan_scalar T1__))) false))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
+    ((templates_init
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
+       false))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
      (name foo_lccdf)
      (args
-      (((Const (Ref Int)) y) ((Const (Ref (TemplateType T1__))) lambda)
+      (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -1911,11 +2179,13 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename RNG)
-         (RequireIs stan::is_stan_scalar T0__) (RequireIs stan::is_stan_scalar T1__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))))
        false))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))))
      (name foo_rng)
      (args
       (((Const (Ref (TemplateType T0__))) mu) ((Const (Ref (TemplateType T1__))) sigma)
@@ -1924,10 +2194,13 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__)))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -1949,7 +2222,7 @@
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
-         (RequireIs stan::is_stan_scalar T0__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))))
        false))
      (inline false) (return_type Void) (name unit_normal_lp)
      (args
@@ -1958,10 +2231,14 @@
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
           (name DUMMY_VAR__)
@@ -1984,14 +2261,22 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((()) false)) (inline false) (return_type Int) (name foo_1)
-     (args (((Const (Ref Int)) a) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+    ((templates_init
+      ((((Typename T0__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))))
+       false))
+     (inline false) (return_type Int) (name foo_1)
+     (args
+      (((Const (Ref (TemplateType T0__))) a)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__ (Double))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -2320,14 +2605,22 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((()) false)) (inline false) (return_type Int) (name foo_2)
-     (args (((Const (Ref Int)) a) ((Pointer (TypeLiteral std::ostream)) pstream__)))
+    ((templates_init
+      ((((Typename T0__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))))
+       false))
+     (inline false) (return_type Int) (name foo_2)
+     (args
+      (((Const (Ref (TemplateType T0__))) a)
+       ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__ (Double))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -2372,19 +2665,29 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
+    ((templates_init
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T1__))))))
+       false))
      (inline false)
-     (return_type (StdVector (TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+     (return_type
+      (StdVector
+       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
      (name foo_3)
      (args
-      (((Const (Ref (TemplateType T0__))) t) ((Const (Ref Int)) n)
+      (((Const (Ref (TemplateType T0__))) t) ((Const (Ref (TemplateType T1__))) n)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -2405,9 +2708,11 @@
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
-         (RequireIs stan::is_stan_scalar T0__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))))
        false))
-     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
+     (inline false)
+     (return_type
+      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__))))))
      (name foo_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Ref (TemplateType T_lp__)) lp__)
@@ -2415,10 +2720,14 @@
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
           (name DUMMY_VAR__)
@@ -2436,17 +2745,22 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar (TemplateType T0__)))) false))
      (inline false) (return_type Void) (name foo_4)
      (args
       (((Const (Ref (StdVector (TemplateType T0__)))) x)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -2485,13 +2799,17 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
-         (RequireIs stan::is_stan_scalar T0__) (RequireIs stan::is_stan_scalar T1__)
-         (RequireIs stan::is_stan_scalar T2__) (RequireIs stan::is_stan_scalar T3__)))
+         (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))))
        false))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t
+         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+          (TemplateType T3__))))))
      (name relative_diff)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Const (Ref (TemplateType T1__))) y)
@@ -2500,12 +2818,15 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-            (TemplateType T3__)))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+              (TemplateType T3__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -2602,15 +2923,18 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
-         (RequireIs stan::is_vt_not_complex T0__) (RequireIs stan::is_col_vector T1__)
-         (RequireIs stan::is_vt_not_complex T1__)))
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_col_vector (TemplateType T0__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+         (RequireIs stan::is_col_vector (TemplateType T1__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
        false))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)))))
        -1 1 AoS))
      (name foo_5)
      (args
@@ -2621,12 +2945,15 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType stan::base_type_t<T0__>)
-            (TemplateType stan::base_type_t<T1__>)))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType stan::base_type_t<T0__>)
+              (TemplateType stan::base_type_t<T1__>)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto)))
           (name shared_params)
@@ -2661,15 +2988,18 @@
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
-         (Typename T4__) (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__) (RequireIs stan::is_stan_scalar T2__)
-         (RequireIs stan::is_stan_scalar T3__) (RequireIs stan::is_stan_scalar T4__)))
+         (Typename T4__) (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))))
        false))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
-        (TemplateType T4__))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t
+         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) 
+          (TemplateType T3__) (TemplateType T4__))))))
      (name foo_five_args)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -2679,12 +3009,15 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-            (TemplateType T3__) (TemplateType T4__)))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+              (TemplateType T3__) (TemplateType T4__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -2706,16 +3039,21 @@
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T1__) (Typename T2__) 
          (Typename T3__) (Typename T4__) (Typename T5__) (Typename T_lp__)
-         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar T0__)
-         (RequireIs stan::is_stan_scalar T1__) (RequireIs stan::is_stan_scalar T2__)
-         (RequireIs stan::is_stan_scalar T3__) (RequireIs stan::is_stan_scalar T4__)
-         (RequireIs stan::is_stan_scalar T5__)))
+         (Typename T_lp_accum__) (RequireIs stan::is_stan_scalar (TemplateType T0__))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))))
        false))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
-        (TemplateType T4__) (TypeTrait stan::promote_args_t ((TemplateType T5__))))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t
+         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) 
+          (TemplateType T3__) (TemplateType T4__)
+          (TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T5__))))))))))
      (name foo_five_args_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -2726,13 +3064,17 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-            (TemplateType T3__) (TemplateType T4__)
-            (TypeTrait stan::promote_args_t ((TemplateType T5__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+              (TemplateType T3__) (TemplateType T4__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t ((TemplateType T5__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
           (name DUMMY_VAR__)
@@ -2748,24 +3090,32 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (RequireIs stan::is_eigen_matrix_dynamic T0__)
-         (RequireIs stan::is_vt_not_complex T0__)))
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T0__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T1__))))))
        false))
      (inline false)
      (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType stan::base_type_t<T0__>)))
+      (Matrix
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t ((TemplateType stan::base_type_t<T0__>)))))
        -1 -1 AoS))
      (name covsqrt2corsqrt)
      (args
-      (((Const (Ref (TemplateType T0__))) mat_arg__) ((Const (Ref Int)) invert)
+      (((Const (Ref (TemplateType T0__))) mat_arg__)
+       ((Const (Ref (TemplateType T1__))) invert)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t ((TemplateType stan::base_type_t<T0__>)))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType stan::base_type_t<T0__>)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name mat)
@@ -2833,19 +3183,27 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false) (return_type Void) (name f0)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -2861,15 +3219,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -2901,19 +3263,27 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false) (return_type Int) (name f1)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -2929,15 +3299,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -2964,19 +3338,27 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false) (return_type (StdVector Int)) (name f2)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -2992,15 +3374,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3027,19 +3413,27 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false) (return_type (StdVector (StdVector Int))) (name f3)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3055,15 +3449,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3090,27 +3488,37 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false)
      (return_type
-      (TypeTrait stan::promote_args_t
-       ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-        (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>) 
-          (TemplateType T10__) (TemplateType T11__))))))
+      (TypeTrait std::decay_t
+       ((TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+          (TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+              (TemplateType T10__) (TemplateType T11__))))))))))
      (name f4)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3126,15 +3534,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3161,28 +3573,38 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false)
      (return_type
       (StdVector
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-           (TemplateType T10__) (TemplateType T11__)))))))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+           (TypeTrait std::decay_t
+            ((TypeTrait stan::promote_args_t
+              ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+               (TemplateType T10__) (TemplateType T11__)))))))))))
      (name f5)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3198,15 +3620,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3233,29 +3659,39 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false)
      (return_type
       (StdVector
        (StdVector
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-            (TemplateType T10__) (TemplateType T11__))))))))
+        (TypeTrait std::decay_t
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+            (TypeTrait std::decay_t
+             ((TypeTrait stan::promote_args_t
+               ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                (TemplateType T10__) (TemplateType T11__))))))))))))
      (name f6)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3271,15 +3707,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3306,29 +3746,39 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-           (TemplateType T10__) (TemplateType T11__)))))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+           (TypeTrait std::decay_t
+            ((TypeTrait stan::promote_args_t
+              ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+               (TemplateType T10__) (TemplateType T11__)))))))))
        -1 1 AoS))
      (name f7)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3344,15 +3794,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3379,30 +3833,40 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false)
      (return_type
       (StdVector
        (Matrix
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-            (TemplateType T10__) (TemplateType T11__)))))
+        (TypeTrait std::decay_t
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+            (TypeTrait std::decay_t
+             ((TypeTrait stan::promote_args_t
+               ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                (TemplateType T10__) (TemplateType T11__)))))))))
         -1 1 AoS)))
      (name f8)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3418,15 +3882,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3453,31 +3921,41 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false)
      (return_type
       (StdVector
        (StdVector
         (Matrix
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-           (TypeTrait stan::promote_args_t
-            ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-             (TemplateType T10__) (TemplateType T11__)))))
+         (TypeTrait std::decay_t
+          ((TypeTrait stan::promote_args_t
+            ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+             (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+             (TypeTrait std::decay_t
+              ((TypeTrait stan::promote_args_t
+                ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                 (TemplateType T10__) (TemplateType T11__)))))))))
          -1 1 AoS))))
      (name f9)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3493,15 +3971,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3528,29 +4010,39 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-         (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-           (TemplateType T10__) (TemplateType T11__)))))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+           (TypeTrait std::decay_t
+            ((TypeTrait stan::promote_args_t
+              ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+               (TemplateType T10__) (TemplateType T11__)))))))))
        -1 -1 AoS))
      (name f10)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3566,15 +4058,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3601,30 +4097,40 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false)
      (return_type
       (StdVector
        (Matrix
-        (TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-          (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-          (TypeTrait stan::promote_args_t
-           ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-            (TemplateType T10__) (TemplateType T11__)))))
+        (TypeTrait std::decay_t
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+            (TypeTrait std::decay_t
+             ((TypeTrait stan::promote_args_t
+               ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                (TemplateType T10__) (TemplateType T11__)))))))))
         -1 -1 AoS)))
      (name f11)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3640,15 +4146,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3675,31 +4185,41 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T3__) (Typename T4__) (Typename T5__) (Typename T6__) 
-         (Typename T7__) (Typename T8__) (Typename T9__) (Typename T10__)
-         (Typename T11__) (RequireIs stan::is_stan_scalar T3__)
-         (RequireIs stan::is_stan_scalar T4__) (RequireIs stan::is_stan_scalar T5__)
-         (RequireIs stan::is_col_vector T6__) (RequireIs stan::is_vt_not_complex T6__)
-         (RequireIs stan::is_stan_scalar T7__) (RequireIs stan::is_stan_scalar T8__)
-         (RequireIs stan::is_eigen_matrix_dynamic T9__)
-         (RequireIs stan::is_vt_not_complex T9__) (RequireIs stan::is_stan_scalar T10__)
-         (RequireIs stan::is_stan_scalar T11__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
+         (Typename T4__) (Typename T5__) (Typename T6__) (Typename T7__) 
+         (Typename T8__) (Typename T9__) (Typename T10__) (Typename T11__)
+         (RequireIs std::is_integral (TypeTrait std::decay_t ((TemplateType T0__))))
+         (RequireIs stan::is_stan_scalar (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))
+         (RequireIs stan::is_stan_scalar (TemplateType T4__))
+         (RequireIs stan::is_stan_scalar (TemplateType T5__))
+         (RequireIs stan::is_col_vector (TemplateType T6__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T6__))
+         (RequireIs stan::is_stan_scalar (TemplateType T7__))
+         (RequireIs stan::is_stan_scalar (TemplateType T8__))
+         (RequireIs stan::is_eigen_matrix_dynamic (TemplateType T9__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T9__))
+         (RequireIs stan::is_stan_scalar (TemplateType T10__))
+         (RequireIs stan::is_stan_scalar (TemplateType T11__))))
        false))
      (inline false)
      (return_type
       (StdVector
        (StdVector
         (Matrix
-         (TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-           (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-           (TypeTrait stan::promote_args_t
-            ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-             (TemplateType T10__) (TemplateType T11__)))))
+         (TypeTrait std::decay_t
+          ((TypeTrait stan::promote_args_t
+            ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+             (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+             (TypeTrait std::decay_t
+              ((TypeTrait stan::promote_args_t
+                ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                 (TemplateType T10__) (TemplateType T11__)))))))))
          -1 -1 AoS))))
      (name f12)
      (args
-      (((Const (Ref Int)) a1) ((Const (Ref (StdVector Int))) a2)
+      (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (StdVector Int))) a2)
        ((Const (Ref (StdVector (StdVector Int)))) a3)
        ((Const (Ref (TemplateType T3__))) a4)
        ((Const (Ref (StdVector (TemplateType T4__)))) a5)
@@ -3715,15 +4235,19 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
-            (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
-            (TypeTrait stan::promote_args_t
-             ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
-              (TemplateType T10__) (TemplateType T11__)))))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType T3__) (TemplateType T4__) (TemplateType T5__)
+              (TemplateType stan::base_type_t<T6__>) (TemplateType T7__)
+              (TypeTrait std::decay_t
+               ((TypeTrait stan::promote_args_t
+                 ((TemplateType T8__) (TemplateType stan::base_type_t<T9__>)
+                  (TemplateType T10__) (TemplateType T11__)))))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name a7) (init (Assignment (FunCall stan::math::to_ref () ((Var a7_arg__)))))))
@@ -3757,6 +4281,8 @@
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -3820,6 +4346,8 @@
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -3873,6 +4401,8 @@
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -3898,20 +4428,27 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar (TemplateType T0__)))) false))
      (inline false)
      (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
+      (Matrix
+       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+       -1 1 AoS))
      (name vecmufoo)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -3945,20 +4482,27 @@
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
-    ((templates_init ((((Typename T0__) (RequireIs stan::is_stan_scalar T0__))) false))
+    ((templates_init
+      ((((Typename T0__) (RequireIs stan::is_stan_scalar (TemplateType T0__)))) false))
      (inline false)
      (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
+      (Matrix
+       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+       -1 1 AoS))
      (name vecmubar)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
+      (((Using local_scalar_t__
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static true) (constexpr true) (type_ (TypeLiteral bool)) (name propto__)
           (init (Assignment (Literal true)))))
@@ -4004,17 +4548,21 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (Typename T2__)
-         (RequireIs stan::is_col_vector T0__) (RequireIs stan::is_vt_not_complex T0__)
-         (RequireIs stan::is_col_vector T1__) (RequireIs stan::is_vt_not_complex T1__)
-         (RequireIs stan::is_stan_scalar T2__)))
+      ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
+         (RequireIs stan::is_col_vector (TemplateType T0__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+         (RequireIs stan::is_col_vector (TemplateType T1__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T1__))
+         (RequireIs stan::is_stan_scalar (TemplateType T2__))
+         (RequireIs stan::is_stan_scalar (TemplateType T3__))))
        false))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)
-         (TemplateType T2__)))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)
+           (TemplateType T2__)))))
        -1 1 AoS))
      (name algebra_system)
      (args
@@ -4026,12 +4574,15 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)
-            (TemplateType T2__)))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType stan::base_type_t<T0__>)
+              (TemplateType stan::base_type_t<T1__>) (TemplateType T2__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name x) (init (Assignment (FunCall stan::math::to_ref () ((Var x_arg__)))))))
@@ -4095,15 +4646,18 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (FunDef
     ((templates_init
-      ((((Typename T0__) (Typename T1__) (RequireIs stan::is_col_vector T0__)
-         (RequireIs stan::is_vt_not_complex T0__) (RequireIs stan::is_col_vector T1__)
-         (RequireIs stan::is_vt_not_complex T1__)))
+      ((((Typename T0__) (Typename T1__)
+         (RequireIs stan::is_col_vector (TemplateType T0__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T0__))
+         (RequireIs stan::is_col_vector (TemplateType T1__))
+         (RequireIs stan::is_vt_not_complex (TemplateType T1__))))
        false))
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait stan::promote_args_t
-        ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)))
+       (TypeTrait std::decay_t
+        ((TypeTrait stan::promote_args_t
+          ((TemplateType stan::base_type_t<T0__>) (TemplateType stan::base_type_t<T1__>)))))
        -1 1 AoS))
      (name binomialf)
      (args
@@ -4114,12 +4668,15 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType stan::base_type_t<T0__>)
-            (TemplateType stan::base_type_t<T1__>)))))
+         ((TypeTrait std::decay_t
+           ((TypeTrait stan::promote_args_t
+             ((TemplateType stan::base_type_t<T0__>)
+              (TemplateType stan::base_type_t<T1__>)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
+        (Comment "suppress unused var warning")
+        (Expression (Cast Void (Var current_statement__)))
         (VariableDefn
          ((static false) (constexpr false) (type_ (Const (Ref Auto))) 
           (name phi)
@@ -4521,6 +5078,8 @@
             (VariableDefn
              ((static false) (constexpr false) (type_ Int) (name current_statement__)
               (init (Assignment (Literal 0)))))
+            (Comment "suppress unused var warning")
+            (Expression (Cast Void (Var current_statement__)))
             (VariableDefn
              ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
               (name DUMMY_VAR__)
@@ -5675,6 +6234,8 @@
             (VariableDefn
              ((static false) (constexpr false) (type_ Int) (name current_statement__)
               (init (Assignment (Literal 0)))))
+            (Comment "suppress unused var warning")
+            (Expression (Cast Void (Var current_statement__)))
             (VariableDefn
              ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
               (name DUMMY_VAR__)
@@ -6834,6 +7395,8 @@
             (VariableDefn
              ((static false) (constexpr false) (type_ Int) (name current_statement__)
               (init (Assignment (Literal 0)))))
+            (Comment "suppress unused var warning")
+            (Expression (Cast Void (Var current_statement__)))
             (VariableDefn
              ((static false) (constexpr false)
               (type_ (TypeTrait stan::math::accumulator (Double))) (name lp_accum__)
@@ -9263,6 +9826,8 @@
             (VariableDefn
              ((static false) (constexpr false) (type_ Int) (name current_statement__)
               (init (Assignment (Literal 0)))))
+            (Comment "suppress unused var warning")
+            (Expression (Cast Void (Var current_statement__)))
             (VariableDefn
              ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
               (name DUMMY_VAR__)
@@ -9931,6 +10496,8 @@
             (VariableDefn
              ((static false) (constexpr false) (type_ Int) (name current_statement__)
               (init (Assignment (Literal 0)))))
+            (Comment "suppress unused var warning")
+            (Expression (Cast Void (Var current_statement__)))
             (VariableDefn
              ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
               (name DUMMY_VAR__)
@@ -15155,6 +15722,8 @@
         ((VariableDefn
           ((static false) (constexpr false) (type_ Int) (name current_statement__)
            (init (Assignment (Literal 0)))))
+         (Comment "suppress unused var warning")
+         (Expression (Cast Void (Var current_statement__)))
          (Using local_scalar_t__ (Double))
          (VariableDefn
           ((static false) (constexpr false) (type_ (TypeLiteral boost::ecuyer1988))
