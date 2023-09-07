@@ -960,8 +960,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           "assigning variable theta");
         current_statement__ = 7;
         stan::model::assign(y,
-          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t,
-            theta, x_r, x_i, pstream__), "assigning variable y");
+          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0,
+            static_cast<double>(0), t, theta, x_r, x_i, pstream__),
+          "assigning variable y");
       }
       current_statement__ = 5;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
@@ -1059,8 +1060,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           "assigning variable theta");
         current_statement__ = 7;
         stan::model::assign(y,
-          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t,
-            theta, x_r, x_i, pstream__), "assigning variable y");
+          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0,
+            static_cast<double>(0), t, theta, x_r, x_i, pstream__),
+          "assigning variable y");
       }
       current_statement__ = 5;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
@@ -1178,8 +1180,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           "assigning variable theta");
         current_statement__ = 7;
         stan::model::assign(y,
-          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t,
-            theta, x_r, x_i, pstream__), "assigning variable y");
+          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0,
+            static_cast<double>(0), t, theta, x_r, x_i, pstream__),
+          "assigning variable y");
       }
       current_statement__ = 5;
       stan::math::check_greater_or_equal(function__, "y", y, 0);

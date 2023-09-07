@@ -6960,7 +6960,7 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x) (Var y) 
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01) 
-                   (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 98)))
               (Expression
@@ -6969,7 +6969,7 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x) (Var y_p) 
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01) 
-                   (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 99)))
               (Expression
@@ -6986,7 +6986,7 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x_p) 
                    (Var y) (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01)
-                   (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 101)))
               (Expression
@@ -7003,7 +7003,8 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x_p) 
                    (Var y_p) (Var dat) (Var dat_int) (Var pstream__) 
-                   (Literal 0.01) (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (Literal 0.01)
+                   (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 103)))
               (Expression
@@ -8116,7 +8117,7 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x) (Var y) 
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01) 
-                   (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 98)))
               (Expression
@@ -8125,7 +8126,7 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x) (Var y_p) 
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01) 
-                   (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 99)))
               (Expression
@@ -8142,7 +8143,7 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x_p) 
                    (Var y) (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01)
-                   (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 101)))
               (Expression
@@ -8159,7 +8160,8 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x_p) 
                    (Var y_p) (Var dat) (Var dat_int) (Var pstream__) 
-                   (Literal 0.01) (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (Literal 0.01)
+                   (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 103)))
               (Expression
@@ -9441,7 +9443,7 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x) (Var y) 
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01) 
-                   (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 98)))
               (Expression
@@ -9450,7 +9452,7 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x) (Var y_p) 
                    (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01) 
-                   (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 99)))
               (Expression
@@ -9467,7 +9469,7 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x_p) 
                    (Var y) (Var dat) (Var dat_int) (Var pstream__) (Literal 0.01)
-                   (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 101)))
               (Expression
@@ -9484,7 +9486,8 @@
                  (FunCall stan::math::algebra_solver ()
                   ((FunCall algebra_system_functor__ () ()) (Var x_p) 
                    (Var y_p) (Var dat) (Var dat_int) (Var pstream__) 
-                   (Literal 0.01) (Literal 0.01) (Literal 10)))
+                   (Literal 0.01) (Literal 0.01)
+                   (FunCall static_cast (Double) ((Literal 10)))))
                  (Literal "\"assigning variable theta_p\""))))
               (Expression (Assign (Var current_statement__) (Literal 103)))
               (Expression

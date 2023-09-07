@@ -2210,8 +2210,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           std::vector<local_scalar_t__>{beta, 1000000, gamma, xi, delta},
           "assigning variable lcm_sym35__");
         stan::model::assign(lcm_sym30__,
-          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t,
-            lcm_sym35__, x_r, x_i, pstream__),
+          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0,
+            static_cast<double>(0), t, lcm_sym35__, x_r, x_i, pstream__),
           "assigning variable lcm_sym30__");
         stan::model::assign(y, lcm_sym30__, "assigning variable y");
       }
@@ -2333,8 +2333,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           std::vector<local_scalar_t__>{beta, 1000000, gamma, xi, delta},
           "assigning variable lcm_sym24__");
         stan::model::assign(lcm_sym19__,
-          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t,
-            lcm_sym24__, x_r, x_i, pstream__),
+          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0,
+            static_cast<double>(0), t, lcm_sym24__, x_r, x_i, pstream__),
           "assigning variable lcm_sym19__");
         stan::model::assign(y, lcm_sym19__, "assigning variable y");
       }
@@ -2474,8 +2474,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
           std::vector<double>{beta, 1000000, gamma, xi, delta},
           "assigning variable lcm_sym9__");
         stan::model::assign(lcm_sym8__,
-          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t,
-            lcm_sym9__, x_r, x_i, pstream__), "assigning variable lcm_sym8__");
+          stan::math::integrate_ode_rk45(simple_SIR_functor__(), y0,
+            static_cast<double>(0), t, lcm_sym9__, x_r, x_i, pstream__),
+          "assigning variable lcm_sym8__");
         stan::model::assign(y, lcm_sym8__, "assigning variable y");
       }
       current_statement__ = 5;

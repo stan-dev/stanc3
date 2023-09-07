@@ -11072,11 +11072,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 97;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x, y, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 98;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x, y_p, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 99;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y, dat,
@@ -11084,7 +11086,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 100;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 101;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y_p, dat,
@@ -11092,7 +11095,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 102;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y_p, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 103;
       tp_real = (p_real * p_real);
       current_statement__ = 104;
@@ -11591,11 +11595,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 97;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x, y, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 98;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x, y_p, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 99;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y, dat,
@@ -11603,7 +11609,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 100;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 101;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y_p, dat,
@@ -11611,7 +11618,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 102;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y_p, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 103;
       tp_real = (p_real * p_real);
       current_statement__ = 104;
@@ -12241,11 +12249,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 97;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x, y, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 98;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x, y_p, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 99;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y, dat,
@@ -12253,7 +12263,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 100;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 101;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y_p, dat,
@@ -12261,7 +12272,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 102;
       stan::model::assign(theta_p,
         stan::math::algebra_solver(algebra_system_functor__(), x_p, y_p, dat,
-          dat_int, pstream__, 0.01, 0.01, 10), "assigning variable theta_p");
+          dat_int, pstream__, 0.01, 0.01, static_cast<double>(10)),
+        "assigning variable theta_p");
       current_statement__ = 103;
       tp_real = (p_real * p_real);
       current_statement__ = 104;
@@ -15822,12 +15834,12 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 27;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_v, y_v,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 28;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_v, y_p,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 29;
       stan::model::assign(theta_p_as,
@@ -15836,7 +15848,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 30;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_p_v, y_v,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 31;
       stan::model::assign(theta_p_as,
@@ -15845,7 +15857,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 32;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_p_v, y_p,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 33;
       stan::model::assign(theta_p_as,
@@ -15854,12 +15866,12 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 34;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_v,
-          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 35;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_v,
-          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 36;
       stan::model::assign(theta_p_as,
@@ -15868,7 +15880,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 37;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_p_v,
-          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 38;
       stan::model::assign(theta_p_as,
@@ -15877,7 +15889,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 39;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_p_v,
-          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       {
         current_statement__ = 80;
@@ -15966,69 +15978,76 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
             theta_p, x, x_int, pstream__), "assigning variable y_hat");
         local_scalar_t__ y_1d = DUMMY_VAR__;
         current_statement__ = 100;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), static_cast<double>(1), x, x_d_r,
+                 x_d_i, pstream__);
         current_statement__ = 101;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(), 0.0,
+                 static_cast<double>(1), x, x_d_r, x_d_i, pstream__);
         current_statement__ = 102;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1.0, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), 1.0, x, x_d_r, x_d_i, pstream__);
         current_statement__ = 103;
         y_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1.0, x,
                  x_d_r, x_d_i, pstream__);
         current_statement__ = 104;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), static_cast<double>(1), x, x_d_r,
+                 x_d_i, pstream__);
         current_statement__ = 105;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), x_r, 1, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(), x_r,
+                 static_cast<double>(1), x, x_d_r, x_d_i, pstream__);
         current_statement__ = 106;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, x_r, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), x_r, x, x_d_r, x_d_i, pstream__);
         current_statement__ = 107;
         y_1d = stan::math::integrate_1d(integrand_functor__(), x_r, x_r, x,
                  x_d_r, x_d_i, pstream__);
         current_statement__ = 108;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), x_r, 1, x_d_r,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(), x_r,
+                 static_cast<double>(1), x_d_r, x_d_r, x_d_i, pstream__);
         current_statement__ = 109;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, x_r, x_d_r,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), x_r, x_d_r, x_d_r, x_d_i, pstream__);
         current_statement__ = 110;
         y_1d = stan::math::integrate_1d(integrand_functor__(), x_r, x_r,
                  x_d_r, x_d_r, x_d_i, pstream__);
         local_scalar_t__ z_1d = DUMMY_VAR__;
         current_statement__ = 111;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), static_cast<double>(1), x, x_d_r,
+                 x_d_i, pstream__, 1e-8);
         current_statement__ = 112;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(), 0.0,
+                 static_cast<double>(1), x, x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 113;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1.0, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), 1.0, x, x_d_r, x_d_i, pstream__,
+                 1e-8);
         current_statement__ = 114;
         z_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1.0, x,
                  x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 115;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), static_cast<double>(1), x, x_d_r,
+                 x_d_i, pstream__, 1e-8);
         current_statement__ = 116;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), x_r, 1, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(), x_r,
+                 static_cast<double>(1), x, x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 117;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, x_r, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), x_r, x, x_d_r, x_d_i, pstream__,
+                 1e-8);
         current_statement__ = 118;
         z_1d = stan::math::integrate_1d(integrand_functor__(), x_r, x_r, x,
                  x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 119;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), x_r, 1, x_d_r,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(), x_r,
+                 static_cast<double>(1), x_d_r, x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 120;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, x_r, x_d_r,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), x_r, x_d_r, x_d_r, x_d_i, pstream__,
+                 1e-8);
         current_statement__ = 121;
         z_1d = stan::math::integrate_1d(integrand_functor__(), x_r, x_r,
                  x_d_r, x_d_r, x_d_i, pstream__, 1e-8);
@@ -16139,12 +16158,12 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 27;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_v, y_v,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 28;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_v, y_p,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 29;
       stan::model::assign(theta_p_as,
@@ -16153,7 +16172,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 30;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_p_v, y_v,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 31;
       stan::model::assign(theta_p_as,
@@ -16162,7 +16181,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 32;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_p_v, y_p,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 33;
       stan::model::assign(theta_p_as,
@@ -16171,12 +16190,12 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 34;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_v,
-          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 35;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_v,
-          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 36;
       stan::model::assign(theta_p_as,
@@ -16185,7 +16204,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 37;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_p_v,
-          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 38;
       stan::model::assign(theta_p_as,
@@ -16194,7 +16213,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 39;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_p_v,
-          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       {
         current_statement__ = 80;
@@ -16283,69 +16302,76 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
             theta_p, x, x_int, pstream__), "assigning variable y_hat");
         local_scalar_t__ y_1d = DUMMY_VAR__;
         current_statement__ = 100;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), static_cast<double>(1), x, x_d_r,
+                 x_d_i, pstream__);
         current_statement__ = 101;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(), 0.0,
+                 static_cast<double>(1), x, x_d_r, x_d_i, pstream__);
         current_statement__ = 102;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1.0, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), 1.0, x, x_d_r, x_d_i, pstream__);
         current_statement__ = 103;
         y_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1.0, x,
                  x_d_r, x_d_i, pstream__);
         current_statement__ = 104;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), static_cast<double>(1), x, x_d_r,
+                 x_d_i, pstream__);
         current_statement__ = 105;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), x_r, 1, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(), x_r,
+                 static_cast<double>(1), x, x_d_r, x_d_i, pstream__);
         current_statement__ = 106;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, x_r, x,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), x_r, x, x_d_r, x_d_i, pstream__);
         current_statement__ = 107;
         y_1d = stan::math::integrate_1d(integrand_functor__(), x_r, x_r, x,
                  x_d_r, x_d_i, pstream__);
         current_statement__ = 108;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), x_r, 1, x_d_r,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(), x_r,
+                 static_cast<double>(1), x_d_r, x_d_r, x_d_i, pstream__);
         current_statement__ = 109;
-        y_1d = stan::math::integrate_1d(integrand_functor__(), 0, x_r, x_d_r,
-                 x_d_r, x_d_i, pstream__);
+        y_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), x_r, x_d_r, x_d_r, x_d_i, pstream__);
         current_statement__ = 110;
         y_1d = stan::math::integrate_1d(integrand_functor__(), x_r, x_r,
                  x_d_r, x_d_r, x_d_i, pstream__);
         local_scalar_t__ z_1d = DUMMY_VAR__;
         current_statement__ = 111;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), static_cast<double>(1), x, x_d_r,
+                 x_d_i, pstream__, 1e-8);
         current_statement__ = 112;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(), 0.0,
+                 static_cast<double>(1), x, x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 113;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1.0, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), 1.0, x, x_d_r, x_d_i, pstream__,
+                 1e-8);
         current_statement__ = 114;
         z_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1.0, x,
                  x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 115;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), static_cast<double>(1), x, x_d_r,
+                 x_d_i, pstream__, 1e-8);
         current_statement__ = 116;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), x_r, 1, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(), x_r,
+                 static_cast<double>(1), x, x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 117;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, x_r, x,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), x_r, x, x_d_r, x_d_i, pstream__,
+                 1e-8);
         current_statement__ = 118;
         z_1d = stan::math::integrate_1d(integrand_functor__(), x_r, x_r, x,
                  x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 119;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), x_r, 1, x_d_r,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(), x_r,
+                 static_cast<double>(1), x_d_r, x_d_r, x_d_i, pstream__, 1e-8);
         current_statement__ = 120;
-        z_1d = stan::math::integrate_1d(integrand_functor__(), 0, x_r, x_d_r,
-                 x_d_r, x_d_i, pstream__, 1e-8);
+        z_1d = stan::math::integrate_1d(integrand_functor__(),
+                 static_cast<double>(0), x_r, x_d_r, x_d_r, x_d_i, pstream__,
+                 1e-8);
         current_statement__ = 121;
         z_1d = stan::math::integrate_1d(integrand_functor__(), x_r, x_r,
                  x_d_r, x_d_r, x_d_i, pstream__, 1e-8);
@@ -16494,12 +16520,12 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 27;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_v, y_v,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 28;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_v, y_p,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 29;
       stan::model::assign(theta_p_as,
@@ -16508,7 +16534,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 30;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_p_v, y_v,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 31;
       stan::model::assign(theta_p_as,
@@ -16517,7 +16543,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 32;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver(algebra_system_functor__(), x_p_v, y_p,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 33;
       stan::model::assign(theta_p_as,
@@ -16526,12 +16552,12 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 34;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_v,
-          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 35;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_v,
-          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 36;
       stan::model::assign(theta_p_as,
@@ -16540,7 +16566,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 37;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_p_v,
-          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       current_statement__ = 38;
       stan::model::assign(theta_p_as,
@@ -16549,7 +16575,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 39;
       stan::model::assign(theta_p_as,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_p_v,
-          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_p_as");
       if (emit_transformed_parameters__) {
         out__.write(abc1_p);
@@ -16655,27 +16681,29 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
           theta_p, x, x_int, pstream__), "assigning variable y_hat");
       double y_1d = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 19;
-      y_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x, x_d_r,
+      y_1d = stan::math::integrate_1d(integrand_functor__(),
+               static_cast<double>(0), static_cast<double>(1), x, x_d_r,
                x_d_i, pstream__);
       current_statement__ = 60;
-      y_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1, x,
-               x_d_r, x_d_i, pstream__);
+      y_1d = stan::math::integrate_1d(integrand_functor__(), 0.0,
+               static_cast<double>(1), x, x_d_r, x_d_i, pstream__);
       current_statement__ = 61;
-      y_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1.0, x,
-               x_d_r, x_d_i, pstream__);
+      y_1d = stan::math::integrate_1d(integrand_functor__(),
+               static_cast<double>(0), 1.0, x, x_d_r, x_d_i, pstream__);
       current_statement__ = 62;
       y_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1.0, x,
                x_d_r, x_d_i, pstream__);
       double z_1d = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 20;
-      z_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1, x, x_d_r,
+      z_1d = stan::math::integrate_1d(integrand_functor__(),
+               static_cast<double>(0), static_cast<double>(1), x, x_d_r,
                x_d_i, pstream__, 1e-8);
       current_statement__ = 63;
-      z_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1, x,
-               x_d_r, x_d_i, pstream__, 1e-8);
+      z_1d = stan::math::integrate_1d(integrand_functor__(), 0.0,
+               static_cast<double>(1), x, x_d_r, x_d_i, pstream__, 1e-8);
       current_statement__ = 64;
-      z_1d = stan::math::integrate_1d(integrand_functor__(), 0, 1.0, x,
-               x_d_r, x_d_i, pstream__, 1e-8);
+      z_1d = stan::math::integrate_1d(integrand_functor__(),
+               static_cast<double>(0), 1.0, x, x_d_r, x_d_i, pstream__, 1e-8);
       current_statement__ = 65;
       z_1d = stan::math::integrate_1d(integrand_functor__(), 0.0, 1.0, x,
                x_d_r, x_d_i, pstream__, 1e-8);
@@ -16713,12 +16741,12 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 67;
       stan::model::assign(theta_dbl,
         stan::math::algebra_solver(algebra_system_functor__(), x_v, y_v,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_dbl");
       current_statement__ = 68;
       stan::model::assign(theta_dbl,
         stan::math::algebra_solver(algebra_system_functor__(), x_v, y_p,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_dbl");
       current_statement__ = 69;
       stan::model::assign(theta_dbl,
@@ -16727,7 +16755,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 70;
       stan::model::assign(theta_dbl,
         stan::math::algebra_solver(algebra_system_functor__(), x_p_v, y_v,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_dbl");
       current_statement__ = 71;
       stan::model::assign(theta_dbl,
@@ -16736,7 +16764,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 72;
       stan::model::assign(theta_dbl,
         stan::math::algebra_solver(algebra_system_functor__(), x_p_v, y_p,
-          x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_dbl");
       current_statement__ = 73;
       stan::model::assign(theta_dbl,
@@ -16745,12 +16773,12 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 74;
       stan::model::assign(theta_dbl,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_v,
-          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_dbl");
       current_statement__ = 75;
       stan::model::assign(theta_dbl,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_v,
-          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_dbl");
       current_statement__ = 76;
       stan::model::assign(theta_dbl,
@@ -16759,7 +16787,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 77;
       stan::model::assign(theta_dbl,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_p_v,
-          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_v, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_dbl");
       current_statement__ = 78;
       stan::model::assign(theta_dbl,
@@ -16768,7 +16796,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 79;
       stan::model::assign(theta_dbl,
         stan::math::algebra_solver_newton(algebra_system_functor__(), x_p_v,
-          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, 10),
+          y_p, x_d_r, x_d_i, pstream__, 0.01, 0.01, static_cast<double>(10)),
         "assigning variable theta_dbl");
       current_statement__ = 18;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
@@ -18268,48 +18296,54 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, rd, vd), "assigning variable zd");
       current_statement__ = 611;
       stan::model::assign(zd,
-        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable zd");
+        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable zd");
       current_statement__ = 612;
       stan::model::assign(zd,
         stan::math::ode_adams_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
           1e-6, 100, pstream__, rd, vd), "assigning variable zd");
       current_statement__ = 613;
       stan::model::assign(zd,
-        stan::math::ode_adams_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable zd");
+        stan::math::ode_adams_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable zd");
       current_statement__ = 614;
       stan::model::assign(zd,
         stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
           1e-6, 100, pstream__, rd, vd), "assigning variable zd");
       current_statement__ = 615;
       stan::model::assign(zd,
-        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable zd");
+        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable zd");
       current_statement__ = 616;
       stan::model::assign(zd,
         stan::math::ode_bdf(f_variadic2_functor__(), vd, rd, rad, pstream__,
           rd, vd), "assigning variable zd");
       current_statement__ = 617;
       stan::model::assign(zd,
-        stan::math::ode_bdf(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable zd");
+        stan::math::ode_bdf(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable zd");
       current_statement__ = 618;
       stan::model::assign(zd,
         stan::math::ode_adams(f_variadic2_functor__(), vd, rd, rad,
           pstream__, rd, vd), "assigning variable zd");
       current_statement__ = 619;
       stan::model::assign(zd,
-        stan::math::ode_adams(f_variadic2_functor__(), vd, id, rad,
-          pstream__, rd, vd), "assigning variable zd");
+        stan::math::ode_adams(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable zd");
       current_statement__ = 620;
       stan::model::assign(zd,
         stan::math::ode_rk45(f_variadic2_functor__(), vd, rd, rad, pstream__,
           rd, vd), "assigning variable zd");
       current_statement__ = 621;
       stan::model::assign(zd,
-        stan::math::ode_rk45(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable zd");
+        stan::math::ode_rk45(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable zd");
       current_statement__ = 622;
       stan::math::validate_non_negative_index("ra", "N", N);
       current_statement__ = 623;
@@ -18374,8 +18408,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 4;
       stan::model::assign(z,
-        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 6;
       stan::model::assign(z,
         stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -18506,8 +18541,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable z");
       current_statement__ = 38;
       stan::model::assign(z,
-        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 39;
       stan::model::assign(z,
         stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -18638,8 +18674,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable z");
       current_statement__ = 71;
       stan::model::assign(z,
-        stan::math::ode_adams_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_adams_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 72;
       stan::model::assign(z,
         stan::math::ode_adams_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -18770,8 +18807,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable z");
       current_statement__ = 104;
       stan::model::assign(z,
-        stan::math::ode_adams(f_variadic2_functor__(), vd, id, rad,
-          pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_adams(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 105;
       stan::model::assign(z,
         stan::math::ode_adams(f_variadic2_functor__(), vd, rd, rad,
@@ -18902,8 +18940,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           r, v), "assigning variable z");
       current_statement__ = 137;
       stan::model::assign(z,
-        stan::math::ode_bdf(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable z");
+        stan::math::ode_bdf(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 138;
       stan::model::assign(z,
         stan::math::ode_bdf(f_variadic2_functor__(), vd, rd, rad, pstream__,
@@ -19034,8 +19073,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           v), "assigning variable z");
       current_statement__ = 170;
       stan::model::assign(z,
-        stan::math::ode_rk45(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable z");
+        stan::math::ode_rk45(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 171;
       stan::model::assign(z,
         stan::math::ode_rk45(f_variadic2_functor__(), vd, rd, rad, pstream__,
@@ -19174,8 +19214,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
         current_statement__ = 402;
         stan::model::assign(zm,
-          stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-            1e-6, 100, pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_bdf_tol(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 403;
         stan::model::assign(zm,
           stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -19306,8 +19347,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             1e-6, 100, pstream__, r, v), "assigning variable zm");
         current_statement__ = 435;
         stan::model::assign(zm,
-          stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, id, rad,
-            1e-6, 1e-6, 100, pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_rk45_tol(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 436;
         stan::model::assign(zm,
           stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, rd, rad,
@@ -19438,8 +19480,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             1e-6, 100, pstream__, r, v), "assigning variable zm");
         current_statement__ = 468;
         stan::model::assign(zm,
-          stan::math::ode_adams_tol(f_variadic2_functor__(), vd, id, rad,
-            1e-6, 1e-6, 100, pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_adams_tol(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 469;
         stan::model::assign(zm,
           stan::math::ode_adams_tol(f_variadic2_functor__(), vd, rd, rad,
@@ -19570,8 +19613,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             1e-6, 100, pstream__, r, v), "assigning variable zm");
         current_statement__ = 501;
         stan::model::assign(zm,
-          stan::math::ode_adams(f_variadic2_functor__(), vd, id, rad,
-            pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_adams(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 502;
         stan::model::assign(zm,
           stan::math::ode_adams(f_variadic2_functor__(), vd, rd, rad,
@@ -19702,8 +19746,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             r, v), "assigning variable zm");
         current_statement__ = 534;
         stan::model::assign(zm,
-          stan::math::ode_rk45(f_variadic2_functor__(), vd, id, rad,
-            pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_rk45(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 535;
         stan::model::assign(zm,
           stan::math::ode_rk45(f_variadic2_functor__(), vd, rd, rad,
@@ -19834,8 +19879,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             r, v), "assigning variable zm");
         current_statement__ = 567;
         stan::model::assign(zm,
-          stan::math::ode_bdf(f_variadic2_functor__(), vd, id, rad,
-            pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_bdf(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 568;
         stan::model::assign(zm,
           stan::math::ode_bdf(f_variadic2_functor__(), vd, rd, rad,
@@ -20013,8 +20059,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
       current_statement__ = 4;
       stan::model::assign(z,
-        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 6;
       stan::model::assign(z,
         stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -20145,8 +20192,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable z");
       current_statement__ = 38;
       stan::model::assign(z,
-        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 39;
       stan::model::assign(z,
         stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -20277,8 +20325,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable z");
       current_statement__ = 71;
       stan::model::assign(z,
-        stan::math::ode_adams_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_adams_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 72;
       stan::model::assign(z,
         stan::math::ode_adams_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -20409,8 +20458,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable z");
       current_statement__ = 104;
       stan::model::assign(z,
-        stan::math::ode_adams(f_variadic2_functor__(), vd, id, rad,
-          pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_adams(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 105;
       stan::model::assign(z,
         stan::math::ode_adams(f_variadic2_functor__(), vd, rd, rad,
@@ -20541,8 +20591,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           r, v), "assigning variable z");
       current_statement__ = 137;
       stan::model::assign(z,
-        stan::math::ode_bdf(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable z");
+        stan::math::ode_bdf(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 138;
       stan::model::assign(z,
         stan::math::ode_bdf(f_variadic2_functor__(), vd, rd, rad, pstream__,
@@ -20673,8 +20724,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           v), "assigning variable z");
       current_statement__ = 170;
       stan::model::assign(z,
-        stan::math::ode_rk45(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable z");
+        stan::math::ode_rk45(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 171;
       stan::model::assign(z,
         stan::math::ode_rk45(f_variadic2_functor__(), vd, rd, rad, pstream__,
@@ -20813,8 +20865,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
         current_statement__ = 402;
         stan::model::assign(zm,
-          stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-            1e-6, 100, pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_bdf_tol(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 403;
         stan::model::assign(zm,
           stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -20945,8 +20998,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             1e-6, 100, pstream__, r, v), "assigning variable zm");
         current_statement__ = 435;
         stan::model::assign(zm,
-          stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, id, rad,
-            1e-6, 1e-6, 100, pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_rk45_tol(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 436;
         stan::model::assign(zm,
           stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, rd, rad,
@@ -21077,8 +21131,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             1e-6, 100, pstream__, r, v), "assigning variable zm");
         current_statement__ = 468;
         stan::model::assign(zm,
-          stan::math::ode_adams_tol(f_variadic2_functor__(), vd, id, rad,
-            1e-6, 1e-6, 100, pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_adams_tol(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 469;
         stan::model::assign(zm,
           stan::math::ode_adams_tol(f_variadic2_functor__(), vd, rd, rad,
@@ -21209,8 +21264,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             1e-6, 100, pstream__, r, v), "assigning variable zm");
         current_statement__ = 501;
         stan::model::assign(zm,
-          stan::math::ode_adams(f_variadic2_functor__(), vd, id, rad,
-            pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_adams(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 502;
         stan::model::assign(zm,
           stan::math::ode_adams(f_variadic2_functor__(), vd, rd, rad,
@@ -21341,8 +21397,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             r, v), "assigning variable zm");
         current_statement__ = 534;
         stan::model::assign(zm,
-          stan::math::ode_rk45(f_variadic2_functor__(), vd, id, rad,
-            pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_rk45(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 535;
         stan::model::assign(zm,
           stan::math::ode_rk45(f_variadic2_functor__(), vd, rd, rad,
@@ -21473,8 +21530,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             r, v), "assigning variable zm");
         current_statement__ = 567;
         stan::model::assign(zm,
-          stan::math::ode_bdf(f_variadic2_functor__(), vd, id, rad,
-            pstream__, rd, vd), "assigning variable zm");
+          stan::math::ode_bdf(f_variadic2_functor__(), vd,
+            static_cast<double>(id), rad, pstream__, rd, vd),
+          "assigning variable zm");
         current_statement__ = 568;
         stan::model::assign(zm,
           stan::math::ode_bdf(f_variadic2_functor__(), vd, rd, rad,
@@ -21673,8 +21731,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       }
       current_statement__ = 4;
       stan::model::assign(z,
-        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 6;
       stan::model::assign(z,
         stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -21805,8 +21864,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable z");
       current_statement__ = 38;
       stan::model::assign(z,
-        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 39;
       stan::model::assign(z,
         stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -21937,8 +21997,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable z");
       current_statement__ = 71;
       stan::model::assign(z,
-        stan::math::ode_adams_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_adams_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 72;
       stan::model::assign(z,
         stan::math::ode_adams_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -22069,8 +22130,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable z");
       current_statement__ = 104;
       stan::model::assign(z,
-        stan::math::ode_adams(f_variadic2_functor__(), vd, id, rad,
-          pstream__, rd, vd), "assigning variable z");
+        stan::math::ode_adams(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 105;
       stan::model::assign(z,
         stan::math::ode_adams(f_variadic2_functor__(), vd, rd, rad,
@@ -22201,8 +22263,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           r, v), "assigning variable z");
       current_statement__ = 137;
       stan::model::assign(z,
-        stan::math::ode_bdf(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable z");
+        stan::math::ode_bdf(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 138;
       stan::model::assign(z,
         stan::math::ode_bdf(f_variadic2_functor__(), vd, rd, rad, pstream__,
@@ -22333,8 +22396,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           v), "assigning variable z");
       current_statement__ = 170;
       stan::model::assign(z,
-        stan::math::ode_rk45(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable z");
+        stan::math::ode_rk45(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable z");
       current_statement__ = 171;
       stan::model::assign(z,
         stan::math::ode_rk45(f_variadic2_functor__(), vd, rd, rad, pstream__,
@@ -22480,8 +22544,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
             std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 5;
       stan::model::assign(zg,
-        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable zg");
+        stan::math::ode_bdf_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable zg");
       current_statement__ = 203;
       stan::model::assign(zg,
         stan::math::ode_bdf_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -22612,8 +22677,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable zg");
       current_statement__ = 235;
       stan::model::assign(zg,
-        stan::math::ode_adams_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable zg");
+        stan::math::ode_adams_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable zg");
       current_statement__ = 236;
       stan::model::assign(zg,
         stan::math::ode_adams_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -22744,8 +22810,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable zg");
       current_statement__ = 268;
       stan::model::assign(zg,
-        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, id, rad, 1e-6,
-          1e-6, 100, pstream__, rd, vd), "assigning variable zg");
+        stan::math::ode_rk45_tol(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, 1e-6, 1e-6, 100, pstream__, rd, vd),
+        "assigning variable zg");
       current_statement__ = 269;
       stan::model::assign(zg,
         stan::math::ode_rk45_tol(f_variadic2_functor__(), vd, rd, rad, 1e-6,
@@ -22876,8 +22943,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           1e-6, 100, pstream__, r, v), "assigning variable zg");
       current_statement__ = 301;
       stan::model::assign(zg,
-        stan::math::ode_rk45(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable zg");
+        stan::math::ode_rk45(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable zg");
       current_statement__ = 302;
       stan::model::assign(zg,
         stan::math::ode_rk45(f_variadic2_functor__(), vd, rd, rad, pstream__,
@@ -23008,8 +23076,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           v), "assigning variable zg");
       current_statement__ = 334;
       stan::model::assign(zg,
-        stan::math::ode_adams(f_variadic2_functor__(), vd, id, rad,
-          pstream__, rd, vd), "assigning variable zg");
+        stan::math::ode_adams(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable zg");
       current_statement__ = 335;
       stan::model::assign(zg,
         stan::math::ode_adams(f_variadic2_functor__(), vd, rd, rad,
@@ -23140,8 +23209,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
           r, v), "assigning variable zg");
       current_statement__ = 367;
       stan::model::assign(zg,
-        stan::math::ode_bdf(f_variadic2_functor__(), vd, id, rad, pstream__,
-          rd, vd), "assigning variable zg");
+        stan::math::ode_bdf(f_variadic2_functor__(), vd,
+          static_cast<double>(id), rad, pstream__, rd, vd),
+        "assigning variable zg");
       current_statement__ = 368;
       stan::model::assign(zg,
         stan::math::ode_bdf(f_variadic2_functor__(), vd, rd, rad, pstream__,
@@ -23881,7 +23951,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
           std::vector<local_scalar_t__>(2, DUMMY_VAR__));
       current_statement__ = 7;
       stan::model::assign(z,
-        stan::math::integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
+        stan::math::integrate_ode_bdf(dz_dt_functor__(), z_init,
+          static_cast<double>(0), ts,
           std::vector<local_scalar_t__>{alpha, beta, gamma, delta},
           stan::math::rep_array(0.0, 0), stan::math::rep_array(0, 0),
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
@@ -23984,7 +24055,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
           std::vector<local_scalar_t__>(2, DUMMY_VAR__));
       current_statement__ = 7;
       stan::model::assign(z,
-        stan::math::integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
+        stan::math::integrate_ode_bdf(dz_dt_functor__(), z_init,
+          static_cast<double>(0), ts,
           std::vector<local_scalar_t__>{alpha, beta, gamma, delta},
           stan::math::rep_array(0.0, 0), stan::math::rep_array(0, 0),
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
@@ -24109,7 +24181,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       }
       current_statement__ = 7;
       stan::model::assign(z,
-        stan::math::integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
+        stan::math::integrate_ode_bdf(dz_dt_functor__(), z_init,
+          static_cast<double>(0), ts,
           std::vector<local_scalar_t__>{alpha, beta, gamma, delta},
           stan::math::rep_array(0.0, 0), stan::math::rep_array(0, 0),
           pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
