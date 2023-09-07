@@ -373,7 +373,8 @@ and lower_functionals fname suffix es mem_pattern =
         | _, args -> (fname, args @ [msgs]) in
       let fname = stan_namespace_qualify fname in
       let templates = templates false suffix in
-      Exprs.templated_fun_call fname templates (lower_exprs args) in
+      Exprs.templated_fun_call fname templates
+        (lower_exprs ~promote_reals:true args) in
     Some lower_hov
 
 and lower_fun_app suffix fname es mem_pattern
