@@ -825,10 +825,9 @@
      (inline false)
      (return_type
       (StdVector
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TemplateType T0__) (TypeTrait stan::base_type_t ((TemplateType T1__)))
-           (TypeTrait stan::base_type_t ((TemplateType T2__)))))))))
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T0__) (TypeTrait stan::base_type_t ((TemplateType T1__)))
+         (TypeTrait stan::base_type_t ((TemplateType T2__)))))))
      (name sho)
      (args
       (((Const (Ref (TemplateType T0__))) t) ((Const (Ref (TemplateType T1__))) y)
@@ -846,9 +845,7 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T0__))))
        true))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
      (name foo_bar1)
      (args
       (((Const (Ref (TemplateType T0__))) x)
@@ -864,8 +861,7 @@
        true))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))))
+      (TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))
      (name foo_bar2)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Const (Ref (TemplateType T1__))) y)
@@ -878,9 +874,7 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T1__))))
        true))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
      (name foo_lpmf)
      (args
       (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
@@ -893,9 +887,7 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T1__))))
        true))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
      (name foo_lcdf)
      (args
       (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
@@ -908,9 +900,7 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T1__))))
        true))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
      (name foo_lccdf)
      (args
       (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
@@ -926,8 +916,7 @@
        true))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))))
+      (TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))
      (name foo_rng)
      (args
       (((Const (Ref (TemplateType T0__))) mu) ((Const (Ref (TemplateType T1__))) sigma)
@@ -974,9 +963,7 @@
          (RequireAllCondition (Exact std::is_integral) (TemplateType T1__))))
        true))
      (inline false)
-     (return_type
-      (StdVector
-       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
+     (return_type (StdVector (TypeTrait stan::promote_args_t ((TemplateType T0__)))))
      (name foo_3)
      (args
       (((Const (Ref (TemplateType T0__))) t) ((Const (Ref (TemplateType T1__))) n)
@@ -988,9 +975,7 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T0__))))
        true))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
      (name foo_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Ref (TemplateType T_lp__)) lp__)
@@ -1023,10 +1008,8 @@
        true))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t
-         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-          (TemplateType T3__))))))
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__))))
      (name relative_diff)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Const (Ref (TemplateType T1__))) y)
@@ -1044,10 +1027,9 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-           (TypeTrait stan::base_type_t ((TemplateType T1__)))))))
+       (TypeTrait stan::promote_args_t
+        ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+         (TypeTrait stan::base_type_t ((TemplateType T1__)))))
        -1 1 AoS))
      (name foo_5)
      (args
@@ -1073,10 +1055,9 @@
        true))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t
-         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) 
-          (TemplateType T3__) (TemplateType T4__))))))
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
+        (TemplateType T4__))))
      (name foo_five_args)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -1104,12 +1085,9 @@
        true))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t
-         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) 
-          (TemplateType T3__) (TemplateType T4__)
-          (TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T5__))))))))))
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
+        (TemplateType T4__) (TypeTrait stan::promote_args_t ((TemplateType T5__))))))
      (name foo_five_args_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -1128,9 +1106,8 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TypeTrait stan::base_type_t ((TemplateType T0__)))))))
+       (TypeTrait stan::promote_args_t
+        ((TypeTrait stan::base_type_t ((TemplateType T0__)))))
        -1 -1 AoS))
      (name covsqrt2corsqrt)
      (args
@@ -1479,18 +1456,16 @@
        true))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-          (TypeTrait stan::base_type_t ((TemplateType T5__)))
-          (TypeTrait stan::base_type_t ((TemplateType T6__)))
-          (TypeTrait stan::base_type_t ((TemplateType T7__)))
-          (TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-              (TypeTrait stan::base_type_t ((TemplateType T9__)))
-              (TypeTrait stan::base_type_t ((TemplateType T10__)))
-              (TypeTrait stan::base_type_t ((TemplateType T11__))))))))))))
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+        (TypeTrait stan::base_type_t ((TemplateType T5__)))
+        (TypeTrait stan::base_type_t ((TemplateType T6__)))
+        (TypeTrait stan::base_type_t ((TemplateType T7__)))
+        (TypeTrait stan::promote_args_t
+         ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+          (TypeTrait stan::base_type_t ((TemplateType T9__)))
+          (TypeTrait stan::base_type_t ((TemplateType T10__)))
+          (TypeTrait stan::base_type_t ((TemplateType T11__))))))))
      (name f4)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -1564,18 +1539,16 @@
      (inline false)
      (return_type
       (StdVector
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-           (TypeTrait stan::base_type_t ((TemplateType T5__)))
-           (TypeTrait stan::base_type_t ((TemplateType T6__)))
-           (TypeTrait stan::base_type_t ((TemplateType T7__)))
-           (TypeTrait std::decay_t
-            ((TypeTrait stan::promote_args_t
-              ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-               (TypeTrait stan::base_type_t ((TemplateType T9__)))
-               (TypeTrait stan::base_type_t ((TemplateType T10__)))
-               (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+         (TypeTrait stan::base_type_t ((TemplateType T5__)))
+         (TypeTrait stan::base_type_t ((TemplateType T6__)))
+         (TypeTrait stan::base_type_t ((TemplateType T7__)))
+         (TypeTrait stan::promote_args_t
+          ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+           (TypeTrait stan::base_type_t ((TemplateType T9__)))
+           (TypeTrait stan::base_type_t ((TemplateType T10__)))
+           (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
      (name f5)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -1650,18 +1623,16 @@
      (return_type
       (StdVector
        (StdVector
-        (TypeTrait std::decay_t
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-            (TypeTrait stan::base_type_t ((TemplateType T5__)))
-            (TypeTrait stan::base_type_t ((TemplateType T6__)))
-            (TypeTrait stan::base_type_t ((TemplateType T7__)))
-            (TypeTrait std::decay_t
-             ((TypeTrait stan::promote_args_t
-               ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                (TypeTrait stan::base_type_t ((TemplateType T11__))))))))))))))
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+          (TypeTrait stan::base_type_t ((TemplateType T5__)))
+          (TypeTrait stan::base_type_t ((TemplateType T6__)))
+          (TypeTrait stan::base_type_t ((TemplateType T7__)))
+          (TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+            (TypeTrait stan::base_type_t ((TemplateType T9__)))
+            (TypeTrait stan::base_type_t ((TemplateType T10__)))
+            (TypeTrait stan::base_type_t ((TemplateType T11__))))))))))
      (name f6)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -1735,18 +1706,16 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-           (TypeTrait stan::base_type_t ((TemplateType T5__)))
-           (TypeTrait stan::base_type_t ((TemplateType T6__)))
-           (TypeTrait stan::base_type_t ((TemplateType T7__)))
-           (TypeTrait std::decay_t
-            ((TypeTrait stan::promote_args_t
-              ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-               (TypeTrait stan::base_type_t ((TemplateType T9__)))
-               (TypeTrait stan::base_type_t ((TemplateType T10__)))
-               (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+         (TypeTrait stan::base_type_t ((TemplateType T5__)))
+         (TypeTrait stan::base_type_t ((TemplateType T6__)))
+         (TypeTrait stan::base_type_t ((TemplateType T7__)))
+         (TypeTrait stan::promote_args_t
+          ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+           (TypeTrait stan::base_type_t ((TemplateType T9__)))
+           (TypeTrait stan::base_type_t ((TemplateType T10__)))
+           (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
        -1 1 AoS))
      (name f7)
      (args
@@ -1822,18 +1791,16 @@
      (return_type
       (StdVector
        (Matrix
-        (TypeTrait std::decay_t
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-            (TypeTrait stan::base_type_t ((TemplateType T5__)))
-            (TypeTrait stan::base_type_t ((TemplateType T6__)))
-            (TypeTrait stan::base_type_t ((TemplateType T7__)))
-            (TypeTrait std::decay_t
-             ((TypeTrait stan::promote_args_t
-               ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+          (TypeTrait stan::base_type_t ((TemplateType T5__)))
+          (TypeTrait stan::base_type_t ((TemplateType T6__)))
+          (TypeTrait stan::base_type_t ((TemplateType T7__)))
+          (TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+            (TypeTrait stan::base_type_t ((TemplateType T9__)))
+            (TypeTrait stan::base_type_t ((TemplateType T10__)))
+            (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
         -1 1 AoS)))
      (name f8)
      (args
@@ -1910,18 +1877,16 @@
       (StdVector
        (StdVector
         (Matrix
-         (TypeTrait std::decay_t
-          ((TypeTrait stan::promote_args_t
-            ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-             (TypeTrait stan::base_type_t ((TemplateType T5__)))
-             (TypeTrait stan::base_type_t ((TemplateType T6__)))
-             (TypeTrait stan::base_type_t ((TemplateType T7__)))
-             (TypeTrait std::decay_t
-              ((TypeTrait stan::promote_args_t
-                ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+         (TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+           (TypeTrait stan::base_type_t ((TemplateType T5__)))
+           (TypeTrait stan::base_type_t ((TemplateType T6__)))
+           (TypeTrait stan::base_type_t ((TemplateType T7__)))
+           (TypeTrait stan::promote_args_t
+            ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+             (TypeTrait stan::base_type_t ((TemplateType T9__)))
+             (TypeTrait stan::base_type_t ((TemplateType T10__)))
+             (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
          -1 1 AoS))))
      (name f9)
      (args
@@ -1996,18 +1961,16 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-           (TypeTrait stan::base_type_t ((TemplateType T5__)))
-           (TypeTrait stan::base_type_t ((TemplateType T6__)))
-           (TypeTrait stan::base_type_t ((TemplateType T7__)))
-           (TypeTrait std::decay_t
-            ((TypeTrait stan::promote_args_t
-              ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-               (TypeTrait stan::base_type_t ((TemplateType T9__)))
-               (TypeTrait stan::base_type_t ((TemplateType T10__)))
-               (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+         (TypeTrait stan::base_type_t ((TemplateType T5__)))
+         (TypeTrait stan::base_type_t ((TemplateType T6__)))
+         (TypeTrait stan::base_type_t ((TemplateType T7__)))
+         (TypeTrait stan::promote_args_t
+          ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+           (TypeTrait stan::base_type_t ((TemplateType T9__)))
+           (TypeTrait stan::base_type_t ((TemplateType T10__)))
+           (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
        -1 -1 AoS))
      (name f10)
      (args
@@ -2083,18 +2046,16 @@
      (return_type
       (StdVector
        (Matrix
-        (TypeTrait std::decay_t
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-            (TypeTrait stan::base_type_t ((TemplateType T5__)))
-            (TypeTrait stan::base_type_t ((TemplateType T6__)))
-            (TypeTrait stan::base_type_t ((TemplateType T7__)))
-            (TypeTrait std::decay_t
-             ((TypeTrait stan::promote_args_t
-               ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+          (TypeTrait stan::base_type_t ((TemplateType T5__)))
+          (TypeTrait stan::base_type_t ((TemplateType T6__)))
+          (TypeTrait stan::base_type_t ((TemplateType T7__)))
+          (TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+            (TypeTrait stan::base_type_t ((TemplateType T9__)))
+            (TypeTrait stan::base_type_t ((TemplateType T10__)))
+            (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
         -1 -1 AoS)))
      (name f11)
      (args
@@ -2171,18 +2132,16 @@
       (StdVector
        (StdVector
         (Matrix
-         (TypeTrait std::decay_t
-          ((TypeTrait stan::promote_args_t
-            ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-             (TypeTrait stan::base_type_t ((TemplateType T5__)))
-             (TypeTrait stan::base_type_t ((TemplateType T6__)))
-             (TypeTrait stan::base_type_t ((TemplateType T7__)))
-             (TypeTrait std::decay_t
-              ((TypeTrait stan::promote_args_t
-                ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+         (TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+           (TypeTrait stan::base_type_t ((TemplateType T5__)))
+           (TypeTrait stan::base_type_t ((TemplateType T6__)))
+           (TypeTrait stan::base_type_t ((TemplateType T7__)))
+           (TypeTrait stan::promote_args_t
+            ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+             (TypeTrait stan::base_type_t ((TemplateType T9__)))
+             (TypeTrait stan::base_type_t ((TemplateType T10__)))
+             (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
          -1 -1 AoS))))
      (name f12)
      (args
@@ -2215,9 +2174,7 @@
        true))
      (inline false)
      (return_type
-      (Matrix
-       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
-       -1 1 AoS))
+      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
      (name vecmufoo)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
@@ -2231,9 +2188,7 @@
        true))
      (inline false)
      (return_type
-      (Matrix
-       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
-       -1 1 AoS))
+      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
      (name vecmubar)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
@@ -2256,11 +2211,10 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-           (TypeTrait stan::base_type_t ((TemplateType T1__)))
-           (TypeTrait stan::base_type_t ((TemplateType T2__)))))))
+       (TypeTrait stan::promote_args_t
+        ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+         (TypeTrait stan::base_type_t ((TemplateType T1__)))
+         (TypeTrait stan::base_type_t ((TemplateType T2__)))))
        -1 1 AoS))
      (name algebra_system)
      (args
@@ -2281,10 +2235,9 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-           (TypeTrait stan::base_type_t ((TemplateType T1__)))))))
+       (TypeTrait stan::promote_args_t
+        ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+         (TypeTrait stan::base_type_t ((TemplateType T1__)))))
        -1 1 AoS))
      (name binomialf)
      (args
@@ -2313,11 +2266,10 @@
          (inline false)
          (return_type
           (Matrix
-           (TypeTrait std::decay_t
-            ((TypeTrait stan::promote_args_t
-              ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-               (TypeTrait stan::base_type_t ((TemplateType T1__)))
-               (TypeTrait stan::base_type_t ((TemplateType T2__)))))))
+           (TypeTrait stan::promote_args_t
+            ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+             (TypeTrait stan::base_type_t ((TemplateType T1__)))
+             (TypeTrait stan::base_type_t ((TemplateType T2__)))))
            -1 1 AoS))
          (name "operator()")
          (args
@@ -2344,10 +2296,9 @@
          (inline false)
          (return_type
           (Matrix
-           (TypeTrait std::decay_t
-            ((TypeTrait stan::promote_args_t
-              ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-               (TypeTrait stan::base_type_t ((TemplateType T1__)))))))
+           (TypeTrait stan::promote_args_t
+            ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+             (TypeTrait stan::base_type_t ((TemplateType T1__)))))
            -1 1 AoS))
          (name "operator()")
          (args
@@ -2423,10 +2374,9 @@
      (inline false)
      (return_type
       (StdVector
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TemplateType T0__) (TypeTrait stan::base_type_t ((TemplateType T1__)))
-           (TypeTrait stan::base_type_t ((TemplateType T2__)))))))))
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T0__) (TypeTrait stan::base_type_t ((TemplateType T1__)))
+         (TypeTrait stan::base_type_t ((TemplateType T2__)))))))
      (name sho)
      (args
       (((Const (Ref (TemplateType T0__))) t) ((Const (Ref (TemplateType T1__))) y)
@@ -2436,10 +2386,9 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T0__) (TypeTrait stan::base_type_t ((TemplateType T1__)))
-              (TypeTrait stan::base_type_t ((TemplateType T2__)))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T0__) (TypeTrait stan::base_type_t ((TemplateType T1__)))
+            (TypeTrait stan::base_type_t ((TemplateType T2__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -2536,18 +2485,14 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T0__))))
        false))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
      (name foo_bar1)
      (args
       (((Const (Ref (TemplateType T0__))) x)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
+      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -2581,8 +2526,7 @@
        false))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))))
+      (TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))
      (name foo_bar2)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Const (Ref (TemplateType T1__))) y)
@@ -2590,8 +2534,7 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__)))))))
+         ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -2622,18 +2565,14 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T1__))))
        false))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
      (name foo_lpmf)
      (args
       (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))))
+      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -2660,18 +2599,14 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T1__))))
        false))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
      (name foo_lcdf)
      (args
       (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))))
+      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -2702,18 +2637,14 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T1__))))
        false))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T1__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T1__))))
      (name foo_lccdf)
      (args
       (((Const (Ref (TemplateType T0__))) y) ((Const (Ref (TemplateType T1__))) lambda)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))))
+      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T1__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -2747,8 +2678,7 @@
        false))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))))
+      (TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__))))
      (name foo_rng)
      (args
       (((Const (Ref (TemplateType T0__))) mu) ((Const (Ref (TemplateType T1__))) sigma)
@@ -2757,8 +2687,7 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__)))))))
+         ((TypeTrait stan::promote_args_t ((TemplateType T0__) (TemplateType T1__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -2796,9 +2725,7 @@
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
+      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3240,18 +3167,14 @@
          (RequireAllCondition (Exact std::is_integral) (TemplateType T1__))))
        false))
      (inline false)
-     (return_type
-      (StdVector
-       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
+     (return_type (StdVector (TypeTrait stan::promote_args_t ((TemplateType T0__)))))
      (name foo_3)
      (args
       (((Const (Ref (TemplateType T0__))) t) ((Const (Ref (TemplateType T1__))) n)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
+      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3281,9 +3204,7 @@
          (RequireAllCondition (OneOf (stan::is_autodiff std::is_floating_point))
           (TemplateType T0__))))
        false))
-     (inline false)
-     (return_type
-      (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__))))))
+     (inline false) (return_type (TypeTrait stan::promote_args_t ((TemplateType T0__))))
      (name foo_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Ref (TemplateType T_lp__)) lp__)
@@ -3291,9 +3212,7 @@
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
+      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3330,9 +3249,8 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TypeTrait stan::base_type_t ((TemplateType T0__)))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T0__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3388,10 +3306,8 @@
        false))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t
-         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-          (TemplateType T3__))))))
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__))))
      (name relative_diff)
      (args
       (((Const (Ref (TemplateType T0__))) x) ((Const (Ref (TemplateType T1__))) y)
@@ -3400,10 +3316,9 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-              (TemplateType T3__)))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+            (TemplateType T3__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3515,10 +3430,9 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-           (TypeTrait stan::base_type_t ((TemplateType T1__)))))))
+       (TypeTrait stan::promote_args_t
+        ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+         (TypeTrait stan::base_type_t ((TemplateType T1__)))))
        -1 1 AoS))
      (name foo_5)
      (args
@@ -3529,10 +3443,9 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-              (TypeTrait stan::base_type_t ((TemplateType T1__)))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+            (TypeTrait stan::base_type_t ((TemplateType T1__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3587,10 +3500,9 @@
        false))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t
-         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) 
-          (TemplateType T3__) (TemplateType T4__))))))
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
+        (TemplateType T4__))))
      (name foo_five_args)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -3600,10 +3512,9 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-              (TemplateType T3__) (TemplateType T4__)))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+            (TemplateType T3__) (TemplateType T4__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3647,12 +3558,9 @@
        false))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t
-         ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) 
-          (TemplateType T3__) (TemplateType T4__)
-          (TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T5__))))))))))
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__) (TemplateType T3__)
+        (TemplateType T4__) (TypeTrait stan::promote_args_t ((TemplateType T5__))))))
      (name foo_five_args_lp)
      (args
       (((Const (Ref (TemplateType T0__))) x1) ((Const (Ref (TemplateType T1__))) x2)
@@ -3663,12 +3571,10 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
-              (TemplateType T3__) (TemplateType T4__)
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t ((TemplateType T5__)))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T0__) (TemplateType T1__) (TemplateType T2__)
+            (TemplateType T3__) (TemplateType T4__)
+            (TypeTrait stan::promote_args_t ((TemplateType T5__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3698,9 +3604,8 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TypeTrait stan::base_type_t ((TemplateType T0__)))))))
+       (TypeTrait stan::promote_args_t
+        ((TypeTrait stan::base_type_t ((TemplateType T0__)))))
        -1 -1 AoS))
      (name covsqrt2corsqrt)
      (args
@@ -3710,9 +3615,8 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TypeTrait stan::base_type_t ((TemplateType T0__)))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T0__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3859,18 +3763,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -3981,18 +3883,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -4098,18 +3998,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -4215,18 +4113,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -4321,18 +4217,16 @@
        false))
      (inline false)
      (return_type
-      (TypeTrait std::decay_t
-       ((TypeTrait stan::promote_args_t
-         ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-          (TypeTrait stan::base_type_t ((TemplateType T5__)))
-          (TypeTrait stan::base_type_t ((TemplateType T6__)))
-          (TypeTrait stan::base_type_t ((TemplateType T7__)))
-          (TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-              (TypeTrait stan::base_type_t ((TemplateType T9__)))
-              (TypeTrait stan::base_type_t ((TemplateType T10__)))
-              (TypeTrait stan::base_type_t ((TemplateType T11__))))))))))))
+      (TypeTrait stan::promote_args_t
+       ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+        (TypeTrait stan::base_type_t ((TemplateType T5__)))
+        (TypeTrait stan::base_type_t ((TemplateType T6__)))
+        (TypeTrait stan::base_type_t ((TemplateType T7__)))
+        (TypeTrait stan::promote_args_t
+         ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+          (TypeTrait stan::base_type_t ((TemplateType T9__)))
+          (TypeTrait stan::base_type_t ((TemplateType T10__)))
+          (TypeTrait stan::base_type_t ((TemplateType T11__))))))))
      (name f4)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -4346,18 +4240,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -4453,18 +4345,16 @@
      (inline false)
      (return_type
       (StdVector
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-           (TypeTrait stan::base_type_t ((TemplateType T5__)))
-           (TypeTrait stan::base_type_t ((TemplateType T6__)))
-           (TypeTrait stan::base_type_t ((TemplateType T7__)))
-           (TypeTrait std::decay_t
-            ((TypeTrait stan::promote_args_t
-              ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-               (TypeTrait stan::base_type_t ((TemplateType T9__)))
-               (TypeTrait stan::base_type_t ((TemplateType T10__)))
-               (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+         (TypeTrait stan::base_type_t ((TemplateType T5__)))
+         (TypeTrait stan::base_type_t ((TemplateType T6__)))
+         (TypeTrait stan::base_type_t ((TemplateType T7__)))
+         (TypeTrait stan::promote_args_t
+          ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+           (TypeTrait stan::base_type_t ((TemplateType T9__)))
+           (TypeTrait stan::base_type_t ((TemplateType T10__)))
+           (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
      (name f5)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -4478,18 +4368,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -4586,18 +4474,16 @@
      (return_type
       (StdVector
        (StdVector
-        (TypeTrait std::decay_t
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-            (TypeTrait stan::base_type_t ((TemplateType T5__)))
-            (TypeTrait stan::base_type_t ((TemplateType T6__)))
-            (TypeTrait stan::base_type_t ((TemplateType T7__)))
-            (TypeTrait std::decay_t
-             ((TypeTrait stan::promote_args_t
-               ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                (TypeTrait stan::base_type_t ((TemplateType T11__))))))))))))))
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+          (TypeTrait stan::base_type_t ((TemplateType T5__)))
+          (TypeTrait stan::base_type_t ((TemplateType T6__)))
+          (TypeTrait stan::base_type_t ((TemplateType T7__)))
+          (TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+            (TypeTrait stan::base_type_t ((TemplateType T9__)))
+            (TypeTrait stan::base_type_t ((TemplateType T10__)))
+            (TypeTrait stan::base_type_t ((TemplateType T11__))))))))))
      (name f6)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -4611,18 +4497,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -4718,18 +4602,16 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-           (TypeTrait stan::base_type_t ((TemplateType T5__)))
-           (TypeTrait stan::base_type_t ((TemplateType T6__)))
-           (TypeTrait stan::base_type_t ((TemplateType T7__)))
-           (TypeTrait std::decay_t
-            ((TypeTrait stan::promote_args_t
-              ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-               (TypeTrait stan::base_type_t ((TemplateType T9__)))
-               (TypeTrait stan::base_type_t ((TemplateType T10__)))
-               (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+         (TypeTrait stan::base_type_t ((TemplateType T5__)))
+         (TypeTrait stan::base_type_t ((TemplateType T6__)))
+         (TypeTrait stan::base_type_t ((TemplateType T7__)))
+         (TypeTrait stan::promote_args_t
+          ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+           (TypeTrait stan::base_type_t ((TemplateType T9__)))
+           (TypeTrait stan::base_type_t ((TemplateType T10__)))
+           (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
        -1 1 AoS))
      (name f7)
      (args
@@ -4744,18 +4626,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -4852,18 +4732,16 @@
      (return_type
       (StdVector
        (Matrix
-        (TypeTrait std::decay_t
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-            (TypeTrait stan::base_type_t ((TemplateType T5__)))
-            (TypeTrait stan::base_type_t ((TemplateType T6__)))
-            (TypeTrait stan::base_type_t ((TemplateType T7__)))
-            (TypeTrait std::decay_t
-             ((TypeTrait stan::promote_args_t
-               ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+          (TypeTrait stan::base_type_t ((TemplateType T5__)))
+          (TypeTrait stan::base_type_t ((TemplateType T6__)))
+          (TypeTrait stan::base_type_t ((TemplateType T7__)))
+          (TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+            (TypeTrait stan::base_type_t ((TemplateType T9__)))
+            (TypeTrait stan::base_type_t ((TemplateType T10__)))
+            (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
         -1 1 AoS)))
      (name f8)
      (args
@@ -4878,18 +4756,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -4987,18 +4863,16 @@
       (StdVector
        (StdVector
         (Matrix
-         (TypeTrait std::decay_t
-          ((TypeTrait stan::promote_args_t
-            ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-             (TypeTrait stan::base_type_t ((TemplateType T5__)))
-             (TypeTrait stan::base_type_t ((TemplateType T6__)))
-             (TypeTrait stan::base_type_t ((TemplateType T7__)))
-             (TypeTrait std::decay_t
-              ((TypeTrait stan::promote_args_t
-                ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+         (TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+           (TypeTrait stan::base_type_t ((TemplateType T5__)))
+           (TypeTrait stan::base_type_t ((TemplateType T6__)))
+           (TypeTrait stan::base_type_t ((TemplateType T7__)))
+           (TypeTrait stan::promote_args_t
+            ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+             (TypeTrait stan::base_type_t ((TemplateType T9__)))
+             (TypeTrait stan::base_type_t ((TemplateType T10__)))
+             (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
          -1 1 AoS))))
      (name f9)
      (args
@@ -5013,18 +4887,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -5120,18 +4992,16 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-           (TypeTrait stan::base_type_t ((TemplateType T5__)))
-           (TypeTrait stan::base_type_t ((TemplateType T6__)))
-           (TypeTrait stan::base_type_t ((TemplateType T7__)))
-           (TypeTrait std::decay_t
-            ((TypeTrait stan::promote_args_t
-              ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-               (TypeTrait stan::base_type_t ((TemplateType T9__)))
-               (TypeTrait stan::base_type_t ((TemplateType T10__)))
-               (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+       (TypeTrait stan::promote_args_t
+        ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+         (TypeTrait stan::base_type_t ((TemplateType T5__)))
+         (TypeTrait stan::base_type_t ((TemplateType T6__)))
+         (TypeTrait stan::base_type_t ((TemplateType T7__)))
+         (TypeTrait stan::promote_args_t
+          ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+           (TypeTrait stan::base_type_t ((TemplateType T9__)))
+           (TypeTrait stan::base_type_t ((TemplateType T10__)))
+           (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
        -1 -1 AoS))
      (name f10)
      (args
@@ -5146,18 +5016,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -5254,18 +5122,16 @@
      (return_type
       (StdVector
        (Matrix
-        (TypeTrait std::decay_t
-         ((TypeTrait stan::promote_args_t
-           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-            (TypeTrait stan::base_type_t ((TemplateType T5__)))
-            (TypeTrait stan::base_type_t ((TemplateType T6__)))
-            (TypeTrait stan::base_type_t ((TemplateType T7__)))
-            (TypeTrait std::decay_t
-             ((TypeTrait stan::promote_args_t
-               ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+        (TypeTrait stan::promote_args_t
+         ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+          (TypeTrait stan::base_type_t ((TemplateType T5__)))
+          (TypeTrait stan::base_type_t ((TemplateType T6__)))
+          (TypeTrait stan::base_type_t ((TemplateType T7__)))
+          (TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+            (TypeTrait stan::base_type_t ((TemplateType T9__)))
+            (TypeTrait stan::base_type_t ((TemplateType T10__)))
+            (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
         -1 -1 AoS)))
      (name f11)
      (args
@@ -5280,18 +5146,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -5389,18 +5253,16 @@
       (StdVector
        (StdVector
         (Matrix
-         (TypeTrait std::decay_t
-          ((TypeTrait stan::promote_args_t
-            ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-             (TypeTrait stan::base_type_t ((TemplateType T5__)))
-             (TypeTrait stan::base_type_t ((TemplateType T6__)))
-             (TypeTrait stan::base_type_t ((TemplateType T7__)))
-             (TypeTrait std::decay_t
-              ((TypeTrait stan::promote_args_t
-                ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                 (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))
+         (TypeTrait stan::promote_args_t
+          ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+           (TypeTrait stan::base_type_t ((TemplateType T5__)))
+           (TypeTrait stan::base_type_t ((TemplateType T6__)))
+           (TypeTrait stan::base_type_t ((TemplateType T7__)))
+           (TypeTrait stan::promote_args_t
+            ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+             (TypeTrait stan::base_type_t ((TemplateType T9__)))
+             (TypeTrait stan::base_type_t ((TemplateType T10__)))
+             (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
          -1 -1 AoS))))
      (name f12)
      (args
@@ -5415,18 +5277,16 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
-              (TypeTrait stan::base_type_t ((TemplateType T5__)))
-              (TypeTrait stan::base_type_t ((TemplateType T6__)))
-              (TypeTrait stan::base_type_t ((TemplateType T7__)))
-              (TypeTrait std::decay_t
-               ((TypeTrait stan::promote_args_t
-                 ((TypeTrait stan::base_type_t ((TemplateType T8__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T9__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T10__)))
-                  (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TemplateType T3__) (TypeTrait stan::base_type_t ((TemplateType T4__)))
+            (TypeTrait stan::base_type_t ((TemplateType T5__)))
+            (TypeTrait stan::base_type_t ((TemplateType T6__)))
+            (TypeTrait stan::base_type_t ((TemplateType T7__)))
+            (TypeTrait stan::promote_args_t
+             ((TypeTrait stan::base_type_t ((TemplateType T8__)))
+              (TypeTrait stan::base_type_t ((TemplateType T9__)))
+              (TypeTrait stan::base_type_t ((TemplateType T10__)))
+              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -5623,18 +5483,14 @@
        false))
      (inline false)
      (return_type
-      (Matrix
-       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
-       -1 1 AoS))
+      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
      (name vecmufoo)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
+      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -5681,18 +5537,14 @@
        false))
      (inline false)
      (return_type
-      (Matrix
-       (TypeTrait std::decay_t ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
-       -1 1 AoS))
+      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
      (name vecmubar)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
        ((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
-      (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))))
+      (((Using local_scalar_t__ ((TypeTrait stan::promote_args_t ((TemplateType T0__)))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -5759,11 +5611,10 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-           (TypeTrait stan::base_type_t ((TemplateType T1__)))
-           (TypeTrait stan::base_type_t ((TemplateType T2__)))))))
+       (TypeTrait stan::promote_args_t
+        ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+         (TypeTrait stan::base_type_t ((TemplateType T1__)))
+         (TypeTrait stan::base_type_t ((TemplateType T2__)))))
        -1 1 AoS))
      (name algebra_system)
      (args
@@ -5775,11 +5626,10 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-              (TypeTrait stan::base_type_t ((TemplateType T1__)))
-              (TypeTrait stan::base_type_t ((TemplateType T2__)))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+            (TypeTrait stan::base_type_t ((TemplateType T1__)))
+            (TypeTrait stan::base_type_t ((TemplateType T2__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))
@@ -5859,10 +5709,9 @@
      (inline false)
      (return_type
       (Matrix
-       (TypeTrait std::decay_t
-        ((TypeTrait stan::promote_args_t
-          ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-           (TypeTrait stan::base_type_t ((TemplateType T1__)))))))
+       (TypeTrait stan::promote_args_t
+        ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+         (TypeTrait stan::base_type_t ((TemplateType T1__)))))
        -1 1 AoS))
      (name binomialf)
      (args
@@ -5873,10 +5722,9 @@
      (cv_qualifiers ())
      (body
       (((Using local_scalar_t__
-         ((TypeTrait std::decay_t
-           ((TypeTrait stan::promote_args_t
-             ((TypeTrait stan::base_type_t ((TemplateType T0__)))
-              (TypeTrait stan::base_type_t ((TemplateType T1__)))))))))
+         ((TypeTrait stan::promote_args_t
+           ((TypeTrait stan::base_type_t ((TemplateType T0__)))
+            (TypeTrait stan::base_type_t ((TemplateType T1__)))))))
         (VariableDefn
          ((static false) (constexpr false) (type_ Int) (name current_statement__)
           (init (Assignment (Literal 0)))))

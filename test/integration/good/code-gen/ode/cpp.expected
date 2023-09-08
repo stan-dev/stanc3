@@ -47,8 +47,7 @@ template <typename T0__, typename T1__,
                                                       std::is_floating_point<T0__>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,1>
 f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -57,8 +56,7 @@ template <typename T0__, typename T1__, typename T2__,
                               stan::is_vt_not_complex<T1__>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<T2__>>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>, T2__>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
 f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
         pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -69,8 +67,7 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               std::is_integral<T2__>,
                               stan::math::disjunction<stan::is_autodiff<T3__>,
                                                       std::is_floating_point<T3__>>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>, T3__>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
 f_2_arg(const T0__& t, const T1__& z_arg__, const T2__& b, const T3__& a,
         std::ostream* pstream__);
 struct f_1_arg_variadic2_functor__ {
@@ -81,8 +78,7 @@ struct f_1_arg_variadic2_functor__ {
                                 stan::is_vt_not_complex<T1__>,
                                 stan::math::disjunction<stan::is_autodiff<T2__>,
                                                         std::is_floating_point<T2__>>>* = nullptr>
-  Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                               stan::base_type_t<T1__>, T2__>>,-1,1>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
              const T2__& a) const {
     return f_1_arg(t, z, a, pstream__);
@@ -97,8 +93,7 @@ struct f_2_arg_variadic2_functor__ {
                                 std::is_integral<T2__>,
                                 stan::math::disjunction<stan::is_autodiff<T3__>,
                                                         std::is_floating_point<T3__>>>* = nullptr>
-  Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                               stan::base_type_t<T1__>, T3__>>,-1,1>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
              const T2__& b, const T3__& a) const {
     return f_2_arg(t, z, b, a, pstream__);
@@ -110,8 +105,7 @@ struct f_0_arg_variadic2_functor__ {
                                                         std::is_floating_point<T0__>>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                               stan::base_type_t<T1__>>>,-1,1>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,1>
   operator()(const T0__& t, const T1__& z, std::ostream* pstream__) const {
     return f_0_arg(t, z, pstream__);
   }
@@ -122,11 +116,10 @@ template <typename T0__, typename T1__,
                                                       std::is_floating_point<T0__>>,
                               stan::is_col_vector<T1__>,
                               stan::is_vt_not_complex<T1__>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>>,-1,1>
 f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__,
-                                          stan::base_type_t<T1__>>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__,
+                             stan::base_type_t<T1__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -152,12 +145,11 @@ template <typename T0__, typename T1__, typename T2__,
                               stan::is_vt_not_complex<T1__>,
                               stan::math::disjunction<stan::is_autodiff<T2__>,
                                                       std::is_floating_point<T2__>>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>, T2__>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__>,-1,1>
 f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
         pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__,
-                                          stan::base_type_t<T1__>, T2__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__,
+                             stan::base_type_t<T1__>, T2__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -184,12 +176,11 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               std::is_integral<T2__>,
                               stan::math::disjunction<stan::is_autodiff<T3__>,
                                                       std::is_floating_point<T3__>>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>, T3__>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T3__>,-1,1>
 f_2_arg(const T0__& t, const T1__& z_arg__, const T2__& b, const T3__& a,
         std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__,
-                                          stan::base_type_t<T1__>, T3__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__,
+                             stan::base_type_t<T1__>, T3__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -918,9 +909,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                                                       std::is_floating_point<T5__>>,
                               stan::math::disjunction<stan::is_autodiff<T6__>,
                                                       std::is_floating_point<T6__>>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>, T2__, T3__, T4__,
-                             std::decay_t<stan::promote_args_t<T5__, T6__>>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__,
+                T4__, stan::promote_args_t<T5__, T6__>>,-1,1>
 simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
            kappa, const T4__& gamma, const T5__& xi, const T6__& delta,
            std::ostream* pstream__);
@@ -941,9 +931,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::math::disjunction<stan::is_autodiff<T6__>,
                                                       std::is_floating_point<T6__>>,
                               std::is_integral<T7__>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>, T2__, T3__, T4__,
-                             std::decay_t<stan::promote_args_t<T5__, T6__>>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__,
+                T4__, stan::promote_args_t<T5__, T6__>>,-1,1>
 simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
            kappa, const T4__& gamma, const T5__& xi, const T6__& delta,
            const T7__& unused, std::ostream* pstream__);
@@ -964,9 +953,8 @@ struct simple_SIR_variadic2_functor__ {
                                                         std::is_floating_point<T5__>>,
                                 stan::math::disjunction<stan::is_autodiff<T6__>,
                                                         std::is_floating_point<T6__>>>* = nullptr>
-  Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                               stan::base_type_t<T1__>, T2__, T3__, T4__,
-                               std::decay_t<stan::promote_args_t<T5__, T6__>>>>,-1,1>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__,
+                  T3__, T4__, stan::promote_args_t<T5__, T6__>>,-1,1>
   operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
              const T2__& beta, const T3__& kappa, const T4__& gamma,
              const T5__& xi, const T6__& delta) const {
@@ -989,9 +977,8 @@ struct simple_SIR_variadic2_functor__ {
                                 stan::math::disjunction<stan::is_autodiff<T6__>,
                                                         std::is_floating_point<T6__>>,
                                 std::is_integral<T7__>>* = nullptr>
-  Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                               stan::base_type_t<T1__>, T2__, T3__, T4__,
-                               std::decay_t<stan::promote_args_t<T5__, T6__>>>>,-1,1>
+  Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__,
+                  T3__, T4__, stan::promote_args_t<T5__, T6__>>,-1,1>
   operator()(const T0__& t, const T1__& y, std::ostream* pstream__,
              const T2__& beta, const T3__& kappa, const T4__& gamma,
              const T5__& xi, const T6__& delta, const T7__& unused) const {
@@ -1015,17 +1002,14 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                                                       std::is_floating_point<T5__>>,
                               stan::math::disjunction<stan::is_autodiff<T6__>,
                                                       std::is_floating_point<T6__>>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>, T2__, T3__, T4__,
-                             std::decay_t<stan::promote_args_t<T5__, T6__>>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__,
+                T4__, stan::promote_args_t<T5__, T6__>>,-1,1>
 simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
            kappa, const T4__& gamma, const T5__& xi, const T6__& delta,
            std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__,
-                                          stan::base_type_t<T1__>, T2__,
-                                          T3__, T4__,
-                                          std::decay_t<stan::promote_args_t<T5__,
-                                                         T6__>>>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__,
+                             stan::base_type_t<T1__>, T2__, T3__, T4__,
+                             stan::promote_args_t<T5__, T6__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -1085,17 +1069,14 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::math::disjunction<stan::is_autodiff<T6__>,
                                                       std::is_floating_point<T6__>>,
                               std::is_integral<T7__>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
-                             stan::base_type_t<T1__>, T2__, T3__, T4__,
-                             std::decay_t<stan::promote_args_t<T5__, T6__>>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>, T2__, T3__,
+                T4__, stan::promote_args_t<T5__, T6__>>,-1,1>
 simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
            kappa, const T4__& gamma, const T5__& xi, const T6__& delta,
            const T7__& unused, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__,
-                                          stan::base_type_t<T1__>, T2__,
-                                          T3__, T4__,
-                                          std::decay_t<stan::promote_args_t<T5__,
-                                                         T6__>>>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__,
+                             stan::base_type_t<T1__>, T2__, T3__, T4__,
+                             stan::promote_args_t<T5__, T6__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;

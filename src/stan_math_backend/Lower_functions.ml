@@ -59,7 +59,10 @@ let requires ut t =
 let return_optional_arg_types (args : Program.fun_arg_decl) =
   let rec template_p start i (ad, typ) =
     match (ad, typ) with
-    | _, t when UnsizedType.is_int_type t -> []
+    | _, t when UnsizedType.is_int_type t ->
+        (* integers are templated,
+           but can never make the return type into a var *)
+        []
     | _, ut when UnsizedType.contains_tuple ut -> (
         let internal, _ = UnsizedType.unwind_array_type ut in
         match internal with
@@ -173,11 +176,8 @@ let lower_promoted_scalar args =
         match args with
         | [] -> Double
         | hd :: list_tail ->
-            TypeTrait
-              ( "std::decay_t"
-              , [ TypeTrait
-                    ("stan::promote_args_t", hd @ chunk_till_empty list_tail) ]
-              ) in
+            TypeTrait ("stan::promote_args_t", hd @ chunk_till_empty list_tail)
+      in
       promote_args_chunked
         List.(chunks_of ~length:5 (concat (return_optional_arg_types args)))
 
@@ -462,8 +462,8 @@ module Testing = struct
                                   stan::is_row_vector<T1__>,
                                   stan::is_vt_not_complex<T1__>>* = nullptr>
     void sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
-      using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
-                                              stan::base_type_t<T1__>>>;
+      using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
+                                 stan::base_type_t<T1__>>;
       int current_statement__ = 0;
       // suppress unused var warning
       (void) current_statement__;
@@ -529,16 +529,15 @@ module Testing = struct
                                   stan::is_std_vector<T3__>,
                                   stan::is_eigen_matrix_dynamic<stan::value_type_t<T3__>>,
                                   stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
-    Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
-                                 stan::base_type_t<T1__>,
-                                 stan::base_type_t<T2__>,
-                                 stan::base_type_t<T3__>>>,-1,-1>
+    Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+                    stan::base_type_t<T1__>, stan::base_type_t<T2__>,
+                    stan::base_type_t<T3__>>,-1,-1>
     sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
          const T3__& w, std::ostream* pstream__) {
-      using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
-                                              stan::base_type_t<T1__>,
-                                              stan::base_type_t<T2__>,
-                                              stan::base_type_t<T3__>>>;
+      using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
+                                 stan::base_type_t<T1__>,
+                                 stan::base_type_t<T2__>,
+                                 stan::base_type_t<T3__>>;
       int current_statement__ = 0;
       // suppress unused var warning
       (void) current_statement__;
@@ -568,10 +567,9 @@ module Testing = struct
                                     stan::is_std_vector<T3__>,
                                     stan::is_eigen_matrix_dynamic<stan::value_type_t<T3__>>,
                                     stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
-      Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
-                                   stan::base_type_t<T1__>,
-                                   stan::base_type_t<T2__>,
-                                   stan::base_type_t<T3__>>>,-1,-1>
+      Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+                      stan::base_type_t<T1__>, stan::base_type_t<T2__>,
+                      stan::base_type_t<T3__>>,-1,-1>
       operator()(const T0__& x, const T1__& y, const T2__& z, const T3__& w,
                  std::ostream* pstream__) const {
         return sars(x, y, z, w, pstream__);

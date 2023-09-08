@@ -18,8 +18,8 @@ struct external_map_rectable_functor__ {
                                 stan::is_vt_not_complex<T0__>,
                                 stan::is_col_vector<T1__>,
                                 stan::is_vt_not_complex<T1__>>* = nullptr>
-  Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
-                               stan::base_type_t<T1__>>>,-1,1>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+                  stan::base_type_t<T1__>>,-1,1>
   operator()(const T0__& phi, const T1__& theta, const std::vector<double>&
              x_r, const std::vector<int>& x_i, std::ostream* pstream__) const {
     return external_map_rectable(phi, theta, x_r, x_i, pstream__);

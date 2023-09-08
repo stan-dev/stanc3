@@ -7224,12 +7224,12 @@ template <typename T0__,
                                                       stan::base_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::base_type_t<T0__>>>>* = nullptr>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 foo1(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>* = nullptr>
-std::complex<std::decay_t<stan::promote_args_t<T0__>>>
+std::complex<stan::promote_args_t<T0__>>
 foo2(const T0__& r, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_complex<T0__>,
@@ -7237,7 +7237,7 @@ template <typename T0__,
                                                       stan::base_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::base_type_t<T0__>>>>* = nullptr>
-std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>
+std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>
 foo3(const T0__& z, std::ostream* pstream__);
 std::vector<std::complex<double>> foo4(std::ostream* pstream__);
 template <typename T0__,
@@ -7249,12 +7249,12 @@ template <typename T0__,
                                                       std::is_floating_point<
                                                       stan::base_type_t<
                                                         stan::value_type_t<T0__>>>>>* = nullptr>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 foo5(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>* = nullptr>
-std::vector<std::complex<std::decay_t<stan::promote_args_t<T0__>>>>
+std::vector<std::complex<stan::promote_args_t<T0__>>>
 foo6(const T0__& r, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
@@ -7265,8 +7265,7 @@ template <typename T0__,
                                                       std::is_floating_point<
                                                       stan::base_type_t<
                                                         stan::value_type_t<T0__>>>>>* = nullptr>
-std::vector<
-  std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>
+std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>
 foo7(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
@@ -7280,13 +7279,12 @@ template <typename T0__,
                                                       stan::base_type_t<
                                                         stan::value_type_t<
                                                           stan::value_type_t<T0__>>>>>>* = nullptr>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 foo8(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>* = nullptr>
-std::vector<
-  std::vector<std::complex<std::decay_t<stan::promote_args_t<T0__>>>>>
+std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
 foo9(const T0__& r, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
@@ -7301,8 +7299,7 @@ template <typename T0__,
                                                         stan::value_type_t<
                                                           stan::value_type_t<T0__>>>>>>* = nullptr>
 std::vector<
-  std::vector<
-    std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>>
+  std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>>
 foo10(const T0__& z, std::ostream* pstream__);
 // complex foo()
 std::complex<double> foo(std::ostream* pstream__) {
@@ -7331,9 +7328,9 @@ template <typename T0__,
                                                       stan::base_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::base_type_t<T0__>>>>*>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 foo1(const T0__& z, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -7354,9 +7351,9 @@ foo1(const T0__& z, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
-std::complex<std::decay_t<stan::promote_args_t<T0__>>>
+std::complex<stan::promote_args_t<T0__>>
 foo2(const T0__& r, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -7380,9 +7377,9 @@ template <typename T0__,
                                                       stan::base_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::base_type_t<T0__>>>>*>
-std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>
+std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>
 foo3(const T0__& z, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -7433,9 +7430,9 @@ template <typename T0__,
                                                       std::is_floating_point<
                                                       stan::base_type_t<
                                                         stan::value_type_t<T0__>>>>>*>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 foo5(const T0__& z, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -7456,9 +7453,9 @@ foo5(const T0__& z, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
-std::vector<std::complex<std::decay_t<stan::promote_args_t<T0__>>>>
+std::vector<std::complex<stan::promote_args_t<T0__>>>
 foo6(const T0__& r, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -7487,10 +7484,9 @@ template <typename T0__,
                                                       std::is_floating_point<
                                                       stan::base_type_t<
                                                         stan::value_type_t<T0__>>>>>*>
-std::vector<
-  std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>
+std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>
 foo7(const T0__& z, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -7520,9 +7516,9 @@ template <typename T0__,
                                                       stan::base_type_t<
                                                         stan::value_type_t<
                                                           stan::value_type_t<T0__>>>>>>*>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 foo8(const T0__& z, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -7543,10 +7539,9 @@ foo8(const T0__& z, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
-std::vector<
-  std::vector<std::complex<std::decay_t<stan::promote_args_t<T0__>>>>>
+std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
 foo9(const T0__& r, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -7587,10 +7582,9 @@ template <typename T0__,
                                                         stan::value_type_t<
                                                           stan::value_type_t<T0__>>>>>>*>
 std::vector<
-  std::vector<
-    std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>>
+  std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>>
 foo10(const T0__& z, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10495,54 +10489,54 @@ static constexpr std::array<const char*, 31> locations_array__ =
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,-1,-1>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
 foo(const T0__& Z_arg__, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
 foo(const T0__& A_arg__, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,-1,1>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
 foo(const T0__& Z_arg__, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 foo(const T0__& A_arg__, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_row_vector<T0__>,
                               stan::is_vt_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,1,-1>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,1,-1>
 foo(const T0__& Z_arg__, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_row_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,1,-1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,1,-1>
 foo(const T0__& A_arg__, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
                               stan::is_vt_complex<stan::value_type_t<T0__>>>* = nullptr>
 std::vector<
-  Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,-1,-1>>
+  Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>>
 foo(const T0__& Z, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T0__>>>* = nullptr>
 std::vector<
-  Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>>
 foo(const T0__& A, std::ostream* pstream__);
 // complex_matrix foo(complex_matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_complex<T0__>>*>
-Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,-1,-1>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
 foo(const T0__& Z_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10564,9 +10558,9 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
 foo(const T0__& A_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10590,9 +10584,9 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_complex<T0__>>*>
-Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,-1,1>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
 foo(const T0__& Z_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10614,9 +10608,9 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 foo(const T0__& A_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10640,9 +10634,9 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_row_vector<T0__>,
                               stan::is_vt_complex<T0__>>*>
-Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,1,-1>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,1,-1>
 foo(const T0__& Z_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10664,9 +10658,9 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_row_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,1,-1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,1,-1>
 foo(const T0__& A_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10692,9 +10686,9 @@ template <typename T0__,
                               stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
                               stan::is_vt_complex<stan::value_type_t<T0__>>>*>
 std::vector<
-  Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,-1,-1>>
+  Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>>
 foo(const T0__& Z, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -10717,9 +10711,9 @@ template <typename T0__,
                               stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T0__>>>*>
 std::vector<
-  Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>>
 foo(const T0__& A, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;

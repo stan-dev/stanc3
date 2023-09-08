@@ -34,7 +34,7 @@ static constexpr std::array<const char*, 25> locations_array__ =
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
@@ -42,7 +42,7 @@ template <typename T0__,
                                                       stan::value_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::value_type_t<T0__>>>>* = nullptr>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 array_fun(const T0__& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
@@ -51,7 +51,7 @@ double int_array_fun(const T0__& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>>* = nullptr>
@@ -60,7 +60,7 @@ int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 test_lgamma(const T0__& x, std::ostream* pstream__);
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
@@ -72,19 +72,19 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
 template <typename T0__, typename RNG,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__);
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<T1__>>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__, T1__>>
+stan::promote_args_t<T0__, T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,-1,-1>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
 test_complex(const T0__& a_arg__, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
@@ -105,16 +105,15 @@ template <typename T0__,
                                                             stan::value_type_t<T0__>>>>>>>* = nullptr>
 std::vector<
   std::vector<
-    std::vector<
-      std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>>>
+    std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>>>
 array_fun(const T0__& a, std::ostream* pstream__);
 // real my_log1p_exp(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -138,9 +137,9 @@ template <typename T0__,
                                                       stan::value_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::value_type_t<T0__>>>>*>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 array_fun(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -183,9 +182,9 @@ double int_array_fun(const T0__& a, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -238,9 +237,9 @@ int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 test_lgamma(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -265,7 +264,7 @@ template <bool propto__, typename T0__, typename T_lp__,
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -283,9 +282,9 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
 template <typename T0__, typename RNG,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -308,9 +307,9 @@ template <bool propto__, typename T0__, typename T1__,
                                                       std::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<T1__>>>*>
-std::decay_t<stan::promote_args_t<T0__, T1__>>
+stan::promote_args_t<T0__, T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__, T1__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -328,9 +327,9 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_complex<T0__>>*>
-Eigen::Matrix<std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>,-1,-1>
+Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
 test_complex(const T0__& a_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -368,10 +367,9 @@ template <typename T0__,
                                                             stan::value_type_t<T0__>>>>>>>*>
 std::vector<
   std::vector<
-    std::vector<
-      std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>>>
+    std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>>>
 array_fun(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -480,7 +478,7 @@ static constexpr std::array<const char*, 21> locations_array__ =
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
@@ -488,7 +486,7 @@ template <typename T0__,
                                                       stan::value_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::value_type_t<T0__>>>>* = nullptr>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 array_fun(const T0__& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
@@ -497,7 +495,7 @@ double int_array_fun(const T0__& a, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>>* = nullptr>
@@ -506,7 +504,7 @@ int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 test_lgamma(const T0__& x, std::ostream* pstream__);
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
@@ -518,22 +516,22 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
 template <typename T0__, typename RNG,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__);
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<T1__>>>* = nullptr>
-std::decay_t<stan::promote_args_t<T0__, T1__>>
+stan::promote_args_t<T0__, T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__);
 // real my_log1p_exp(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -557,9 +555,9 @@ template <typename T0__,
                                                       stan::value_type_t<T0__>>,
                                                       std::is_floating_point<
                                                       stan::value_type_t<T0__>>>>*>
-std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
+stan::promote_args_t<stan::base_type_t<T0__>>
 array_fun(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -602,9 +600,9 @@ double int_array_fun(const T0__& a, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -657,9 +655,9 @@ int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__) {
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 test_lgamma(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -684,7 +682,7 @@ template <bool propto__, typename T0__, typename T_lp__,
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -702,9 +700,9 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
 template <typename T0__, typename RNG,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
-std::decay_t<stan::promote_args_t<T0__>>
+stan::promote_args_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -727,9 +725,9 @@ template <bool propto__, typename T0__, typename T1__,
                                                       std::is_floating_point<T0__>>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<T1__>>>*>
-std::decay_t<stan::promote_args_t<T0__, T1__>>
+stan::promote_args_t<T0__, T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__, T1__>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -813,7 +811,7 @@ static constexpr std::array<const char*, 11> locations_array__ =
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 integrand(const T0__& x_arg__, std::ostream* pstream__);
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
@@ -837,8 +835,8 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_std_vector<T4__>,
                               std::is_integral<stan::value_type_t<T4__>>>* = nullptr>
 std::vector<
-  std::decay_t<stan::promote_args_t<T0__, stan::base_type_t<T1__>,
-                 stan::base_type_t<T2__>, stan::base_type_t<T3__>>>>
+  stan::promote_args_t<T0__, stan::base_type_t<T1__>,
+    stan::base_type_t<T2__>, stan::base_type_t<T3__>>>
 integrand_ode(const T0__& r, const T1__& f, const T2__& theta, const T3__&
               x_r, const T4__& x_i, std::ostream* pstream__);
 double ode_integrate(std::ostream* pstream__);
@@ -865,8 +863,8 @@ struct integrand_ode_functor__ {
                                 stan::is_std_vector<T4__>,
                                 std::is_integral<stan::value_type_t<T4__>>>* = nullptr>
   std::vector<
-    std::decay_t<stan::promote_args_t<T0__, stan::base_type_t<T1__>,
-                   stan::base_type_t<T2__>, stan::base_type_t<T3__>>>>
+    stan::promote_args_t<T0__, stan::base_type_t<T1__>,
+      stan::base_type_t<T2__>, stan::base_type_t<T3__>>>
   operator()(const T0__& r, const T1__& f, const T2__& theta, const T3__&
              x_r, const T4__& x_i, std::ostream* pstream__) const {
     return integrand_ode(r, f, theta, x_r, x_i, pstream__);
@@ -876,9 +874,9 @@ struct integrand_ode_functor__ {
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
-Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 integrand(const T0__& x_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -921,14 +919,14 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                               stan::is_std_vector<T4__>,
                               std::is_integral<stan::value_type_t<T4__>>>*>
 std::vector<
-  std::decay_t<stan::promote_args_t<T0__, stan::base_type_t<T1__>,
-                 stan::base_type_t<T2__>, stan::base_type_t<T3__>>>>
+  stan::promote_args_t<T0__, stan::base_type_t<T1__>,
+    stan::base_type_t<T2__>, stan::base_type_t<T3__>>>
 integrand_ode(const T0__& r, const T1__& f, const T2__& theta, const T3__&
               x_r, const T4__& x_i, std::ostream* pstream__) {
-  using local_scalar_t__ = std::decay_t<stan::promote_args_t<T0__,
-                                          stan::base_type_t<T1__>,
-                                          stan::base_type_t<T2__>,
-                                          stan::base_type_t<T3__>>>;
+  using local_scalar_t__ = stan::promote_args_t<T0__,
+                             stan::base_type_t<T1__>,
+                             stan::base_type_t<T2__>,
+                             stan::base_type_t<T3__>>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
