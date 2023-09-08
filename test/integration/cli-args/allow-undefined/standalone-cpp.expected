@@ -25,6 +25,7 @@ struct external_map_rectable_functor__ {
     return external_map_rectable(phi, theta, x_r, x_i, pstream__);
   }
 };
+// real internal_fun(data array[,] real, data array[,] int)
 double
 internal_fun(const std::vector<std::vector<double>>& a,
              const std::vector<std::vector<int>>& d, std::ostream* pstream__) {

@@ -750,6 +750,9 @@ struct simple_SIR_functor__ {
     return simple_SIR(t, y, theta, x_r, x_i, pstream__);
   }
 };
+/* array[] real simple_SIR(real, array[] real, array[] real, array[] real,
+                          array[] int)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -2548,6 +2551,7 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T2__>,
                              stan::base_type_t<T3__>>>,-1,-1>
 prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
                 p_arg__, const T3__& phi_arg__, std::ostream* pstream__);
+// int first_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -2577,6 +2581,7 @@ int first_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int last_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -2609,6 +2614,7 @@ int last_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix prob_uncaptured(int, int, matrix, matrix)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>,
                               stan::is_eigen_matrix_dynamic<T2__>,
@@ -8544,6 +8550,7 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T2__>,
                              stan::base_type_t<T3__>>>,-1,-1>
 prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
                 p_arg__, const T3__& phi_arg__, std::ostream* pstream__);
+// int first_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -8573,6 +8580,7 @@ int first_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int last_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -8605,6 +8613,7 @@ int last_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix prob_uncaptured(int, int, matrix, matrix)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>,
                               stan::is_eigen_matrix_dynamic<T2__>,
@@ -9754,6 +9763,7 @@ js_super_lp(const T0__& y, const T1__& first, const T2__& last, const T3__&
             p_arg__, const T4__& phi_arg__, const T5__& psi, const T6__&
             nu_arg__, const T7__& chi_arg__, T_lp__& lp__, T_lp_accum__&
             lp_accum__, std::ostream* pstream__);
+// int first_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -9783,6 +9793,7 @@ int first_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int last_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -9815,6 +9826,7 @@ int last_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix prob_uncaptured(matrix, matrix)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -9883,6 +9895,9 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* void js_super_lp(array[,] int, array[] int, array[] int, matrix, matrix,
+                   real, vector, matrix)
+ */
 template <bool propto__, typename T0__, typename T1__, typename T2__,
           typename T3__, typename T4__, typename T5__, typename T6__,
           typename T7__, typename T_lp__, typename T_lp_accum__,
@@ -12873,6 +12888,7 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T2__>,
                              stan::base_type_t<T3__>>>,-1,-1>
 prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
                 p_arg__, const T3__& phi_arg__, std::ostream* pstream__);
+// int first_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -12902,6 +12918,7 @@ int first_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int last_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -12934,6 +12951,7 @@ int last_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix prob_uncaptured(int, int, matrix, matrix)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>,
                               stan::is_eigen_matrix_dynamic<T2__>,
@@ -13854,6 +13872,7 @@ template <bool propto__, typename T0__,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
 std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
 outer_lpdf(const T0__& phi_arg__, std::ostream* pstream__);
+// real inner_lpdf(vector)
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -13874,6 +13893,7 @@ inner_lpdf(const T0__& phi_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real outer_lpdf(vector)
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -14265,6 +14285,7 @@ template <typename T0__,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
 std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
 summer(const T0__& et_arg__, std::ostream* pstream__);
+// real do_something(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -14293,6 +14314,7 @@ do_something(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real summer(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -15566,6 +15588,7 @@ template <typename T0__,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
 multi_ret_fun(const T0__& A_arg__, std::ostream* pstream__);
+// vector single_ret_fun(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -15589,6 +15612,7 @@ single_ret_fun(const T0__& A_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector multi_ret_fun(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -16126,6 +16150,7 @@ template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>>* = nullptr>
 Eigen::Matrix<double,-1,-1>
 foo(const T0__& N, const T1__& M, std::ostream* pstream__);
+// matrix foo(int, int)
 template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>>*>
 Eigen::Matrix<double,-1,-1>
@@ -16542,6 +16567,7 @@ template <typename T0__,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
 foo(const T0__& oR_arg__, std::ostream* pstream__);
+// vector foo(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -17151,6 +17177,7 @@ template <typename T0__,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
 seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__);
+// int first_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -17180,6 +17207,7 @@ int first_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int last_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -17212,6 +17240,7 @@ int last_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix prob_uncaptured(matrix, matrix)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -17280,6 +17309,10 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* void jolly_seber_lp(array[,] int, array[] int, array[] int, matrix,
+  matrix,
+                      vector, matrix)
+ */
 template <bool propto__, typename T0__, typename T1__, typename T2__,
           typename T3__, typename T4__, typename T5__, typename T6__,
           typename T_lp__, typename T_lp_accum__,
@@ -17526,6 +17559,7 @@ jolly_seber_lp(const T0__& y, const T1__& first, const T2__& last,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector seq_cprob(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -19804,6 +19838,7 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T2__>,
                              stan::base_type_t<T3__>>>,-1,-1>
 prob_uncaptured(const T0__& nind, const T1__& n_occasions, const T2__&
                 p_arg__, const T3__& phi_arg__, std::ostream* pstream__);
+// int first_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -19833,6 +19868,7 @@ int first_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int last_capture(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -19865,6 +19901,7 @@ int last_capture(const T0__& y_i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix prob_uncaptured(int, int, matrix, matrix)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>,
                               stan::is_eigen_matrix_dynamic<T2__>,
@@ -20717,6 +20754,7 @@ template <bool propto__, typename T0__,
                                                       std::is_floating_point<T0__>>>* = nullptr>
 std::decay_t<stan::promote_args_t<T0__>>
 baz_lpdf(const T0__& x, std::ostream* pstream__);
+// real foo_lpdf(real, real)
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -20738,6 +20776,7 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real bar_lpmf(int, real)
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
@@ -20758,6 +20797,7 @@ bar_lpmf(const T0__& n, const T1__& mu, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real baz_lpdf(real)
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -23033,6 +23073,7 @@ template <typename T0__,
 int rfun(const T0__& y, std::ostream* pstream__);
 template <bool propto__, typename T_lp__, typename T_lp_accum__> int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__);
+// void nrfun_lp(real, int)
 template <bool propto__, typename T0__, typename T1__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -23060,6 +23101,7 @@ nrfun_lp(const T0__& x, const T1__& y, T_lp__& lp__, T_lp_accum__&
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int rfun(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> int
 rfun(const T0__& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -23084,6 +23126,7 @@ rfun(const T0__& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int rfun_lp()
 template <bool propto__, typename T_lp__, typename T_lp_accum__> int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -24136,6 +24179,7 @@ dumb(const T0__& x, std::ostream* pstream__);
 template <typename T0__,
           stan::require_all_t<std::is_integral<T0__>>* = nullptr>
 double dumb(const T0__& x, std::ostream* pstream__);
+// real dumb(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -24158,6 +24202,7 @@ dumb(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real dumb(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> double
 dumb(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -24509,6 +24554,7 @@ template <typename T0__,
                                                       std::is_floating_point<T0__>>>* = nullptr>
 Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__>>,-1,1>
 foo(const T0__& x, std::ostream* pstream__);
+// real foo(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -24532,6 +24578,7 @@ foo(const T0__& x_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void bar_lp()
 template <bool propto__, typename T_lp__, typename T_lp_accum__> void
 bar_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -24549,6 +24596,7 @@ bar_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector foo(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>

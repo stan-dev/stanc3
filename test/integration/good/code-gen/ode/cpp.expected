@@ -116,6 +116,7 @@ struct f_0_arg_variadic2_functor__ {
     return f_0_arg(t, z, pstream__);
   }
 };
+// vector f_0_arg(real, vector)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -143,6 +144,7 @@ f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector f_1_arg(real, vector, real)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -173,6 +175,7 @@ f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector f_2_arg(real, vector, int, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -995,6 +998,7 @@ struct simple_SIR_variadic2_functor__ {
     return simple_SIR(t, y, beta, kappa, gamma, xi, delta, unused, pstream__);
   }
 };
+// vector simple_SIR(real, vector, real, real, real, real, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -1063,6 +1067,7 @@ simple_SIR(const T0__& t, const T1__& y_arg__, const T2__& beta, const T3__&
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector simple_SIR(real, vector, real, real, real, real, real, int)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,

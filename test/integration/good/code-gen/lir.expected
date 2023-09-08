@@ -2349,6 +2349,7 @@
           (((Return
              ((FunCall binomialf ()
                ((Var phi) (Var theta) (Var x_r) (Var x_i) (Var pstream__))))))))))))))
+   (GlobalComment "int foo(int)")
    (FunDef
     ((templates_init
       ((((Typename T0__)
@@ -2393,6 +2394,9 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "array[] real sho(real, array[] real, array[] real, data array[] real,\
+    \n                 data array[] int)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__)
@@ -2485,6 +2489,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_bar0()")
    (FunDef
     ((templates_init ((()) false)) (inline false) (return_type Double) 
      (name foo_bar0) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
@@ -2513,6 +2518,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_bar1(real)")
    (FunDef
     ((templates_init
       ((((Typename T0__)
@@ -2553,6 +2559,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_bar2(real, real)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
@@ -2596,6 +2603,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_lpmf(int, real)")
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T1__)
@@ -2633,6 +2641,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_lcdf(int, real)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
@@ -2674,6 +2683,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_lccdf(int, real)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
@@ -2715,6 +2725,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_rng(real, real)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename RNG)
@@ -2760,6 +2771,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "void unit_normal_lp(real)")
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
@@ -2802,6 +2814,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "int foo_1(int)")
    (FunDef
     ((templates_init
       ((((Typename T0__)
@@ -3146,6 +3159,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "int foo_2(int)")
    (FunDef
     ((templates_init
       ((((Typename T0__)
@@ -3206,6 +3220,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "array[] real foo_3(real, int)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
@@ -3248,6 +3263,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_lp(real)")
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T_lp__) (Typename T_lp_accum__)
@@ -3288,6 +3304,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "void foo_4(array[] real)")
    (FunDef
     ((templates_init
       ((((Typename T0__)
@@ -3344,6 +3361,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real relative_diff(real, real, real, real)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
@@ -3473,6 +3491,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "vector foo_5(vector, vector, data array[] real, data array[] int)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
@@ -3537,6 +3556,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_five_args(real, real, real, real, real)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -3593,6 +3613,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "real foo_five_args_lp(real, real, real, real, real, real)")
    (FunDef
     ((templates_init
       ((((Bool propto__) (Typename T0__) (Typename T1__) (Typename T2__) 
@@ -3653,6 +3674,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "matrix covsqrt2corsqrt(matrix, int)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)
@@ -3746,6 +3768,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "void f0(int, array[] int, array[,] int, real, array[] real, array[,] real,\
+    \n        vector, array[] vector, array[,] vector, matrix, array[] matrix,\
+    \n        array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -3864,6 +3890,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "int f1(int, array[] int, array[,] int, real, array[] real, array[,] real,\
+    \n       vector, array[] vector, array[,] vector, matrix, array[] matrix,\
+    \n       array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -3977,6 +4007,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "array[] int f2(int, array[] int, array[,] int, real, array[] real,\
+    \n               array[,] real, vector, array[] vector, array[,] vector,\
+    \n               matrix, array[] matrix, array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -4090,6 +4124,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "array[,] int f3(int, array[] int, array[,] int, real, array[] real,\
+    \n                array[,] real, vector, array[] vector, array[,] vector,\
+    \n                matrix, array[] matrix, array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -4203,6 +4241,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "real f4(int, array[] int, array[,] int, real, array[] real, array[,] real,\
+    \n        vector, array[] vector, array[,] vector, matrix, array[] matrix,\
+    \n        array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -4329,6 +4371,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "array[] real f5(int, array[] int, array[,] int, real, array[] real,\
+    \n                array[,] real, vector, array[] vector, array[,] vector,\
+    \n                matrix, array[] matrix, array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -4456,6 +4502,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "array[,] real f6(int, array[] int, array[,] int, real, array[] real,\
+    \n                 array[,] real, vector, array[] vector, array[,] vector,\
+    \n                 matrix, array[] matrix, array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -4584,6 +4634,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "vector f7(int, array[] int, array[,] int, real, array[] real, array[,] real,\
+    \n          vector, array[] vector, array[,] vector, matrix, array[] matrix,\
+    \n          array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -4712,6 +4766,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "array[] vector f8(int, array[] int, array[,] int, real, array[] real,\
+    \n                  array[,] real, vector, array[] vector, array[,] vector,\
+    \n                  matrix, array[] matrix, array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -4841,6 +4899,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "array[,] vector f9(int, array[] int, array[,] int, real, array[] real,\
+    \n                   array[,] real, vector, array[] vector, array[,] vector,\
+    \n                   matrix, array[] matrix, array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -4972,6 +5034,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "matrix f10(int, array[] int, array[,] int, real, array[] real, array[,] real,\
+    \n           vector, array[] vector, array[,] vector, matrix, array[] matrix,\
+    \n           array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -5100,6 +5166,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "array[] matrix f11(int, array[] int, array[,] int, real, array[] real,\
+    \n                   array[,] real, vector, array[] vector, array[,] vector,\
+    \n                   matrix, array[] matrix, array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -5229,6 +5299,10 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+     "array[,] matrix f12(int, array[] int, array[,] int, real, array[] real,\
+    \n                    array[,] real, vector, array[] vector, array[,] vector,\
+    \n                    matrix, array[] matrix, array[,] matrix)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__) 
@@ -5360,6 +5434,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "void foo_6()")
    (FunDef
     ((templates_init ((()) false)) (inline false) (return_type Void) 
      (name foo_6) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
@@ -5425,6 +5500,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "matrix matfoo()")
    (FunDef
     ((templates_init ((()) false)) (inline false) (return_type (Matrix Double -1 -1 AoS))
      (name matfoo) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
@@ -5480,6 +5556,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "vector vecfoo()")
    (FunDef
     ((templates_init ((()) false)) (inline false) (return_type (Matrix Double -1 1 AoS))
      (name vecfoo) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
@@ -5515,6 +5592,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "vector vecmufoo(real)")
    (FunDef
     ((templates_init
       ((((Typename T0__)
@@ -5572,6 +5650,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "vector vecmubar(real)")
    (FunDef
     ((templates_init
       ((((Typename T0__)
@@ -5640,6 +5719,7 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment "vector algebra_system(vector, vector, array[] real, array[] int)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__) (Typename T2__) (Typename T3__)
@@ -5743,6 +5823,8 @@
          ((Expression
            (FunCall stan::lang::rethrow_located ()
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+   (GlobalComment
+    "vector binomialf(vector, vector, data array[] real, data array[] int)")
    (FunDef
     ((templates_init
       ((((Typename T0__) (Typename T1__)

@@ -108,6 +108,7 @@ std::vector<
     std::vector<
       std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>>>
 array_fun(const T0__& a, std::ostream* pstream__);
+// real my_log1p_exp(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -130,6 +131,7 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real array_fun(array[] real)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -155,6 +157,7 @@ array_fun(const T0__& a, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real int_array_fun(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -176,6 +179,7 @@ double int_array_fun(const T0__& a, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector my_vector_mul_by_5(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -208,6 +212,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int int_only_multiplication(int, int)
 template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>>*>
 int
@@ -229,6 +234,7 @@ int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real test_lgamma(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -251,6 +257,7 @@ test_lgamma(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void test_lp(real)
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -272,6 +279,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real test_rng(real)
 template <typename T0__, typename RNG,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -294,6 +302,7 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real test_lpdf(real, real)
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -315,6 +324,7 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// complex_matrix test_complex(complex_matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_complex<T0__>>*>
@@ -338,6 +348,7 @@ test_complex(const T0__& a_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[,,] complex array_fun(array[,,] complex)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -516,6 +527,7 @@ template <bool propto__, typename T0__, typename T1__,
                                                       std::is_floating_point<T1__>>>* = nullptr>
 std::decay_t<stan::promote_args_t<T0__, T1__>>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__);
+// real my_log1p_exp(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -538,6 +550,7 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real array_fun(array[] real)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -563,6 +576,7 @@ array_fun(const T0__& a, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real int_array_fun(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -584,6 +598,7 @@ double int_array_fun(const T0__& a, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector my_vector_mul_by_5(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -616,6 +631,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int int_only_multiplication(int, int)
 template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>, std::is_integral<T1__>>*>
 int
@@ -637,6 +653,7 @@ int_only_multiplication(const T0__& a, const T1__& b, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real test_lgamma(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -659,6 +676,7 @@ test_lgamma(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void test_lp(real)
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -680,6 +698,7 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real test_rng(real)
 template <typename T0__, typename RNG,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -702,6 +721,7 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real test_lpdf(real, real)
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -852,6 +872,7 @@ struct integrand_ode_functor__ {
     return integrand_ode(r, f, theta, x_r, x_i, pstream__);
   }
 };
+// vector integrand(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -875,6 +896,9 @@ integrand(const T0__& x_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[] real integrand_ode(real, array[] real, array[] real, array[] real,
+                             array[] int)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -930,6 +954,7 @@ integrand_ode(const T0__& r, const T1__& f, const T2__& theta, const T3__&
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real ode_integrate()
 double ode_integrate(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;

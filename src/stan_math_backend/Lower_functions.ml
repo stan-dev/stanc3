@@ -110,6 +110,7 @@ let template_parameters (args : Program.fun_arg_decl) =
   let rec template_p start i (ad, typ) =
     match (ad, fst (UnsizedType.unwind_array_type typ)) with
     | _, UTuple tys ->
+        (* TODO/future: use [std::tuple_element] to fully templatize tuples *)
         let temps, reqs, sclrs =
           List.map ~f:(fun ty -> (ad, ty)) tys
           |> List.mapi ~f:(template_p (sprintf "%s%d__" start i))
@@ -280,7 +281,13 @@ let extra_suffix_args fdsuffix =
 
 let lower_fun_def (functors : Lower_expr.variadic list)
     Program.{fdrt; fdname; fdsuffix; fdargs; fdbody; _} :
-    fun_defn * struct_defn list =
+    defn * fun_defn * struct_defn list =
+  let comment =
+    GlobalComment
+      Fmt.(
+        str "%a %s(@[%a@])" UnsizedType.pp_returntype fdrt fdname
+          (list ~sep:comma UnsizedType.pp_fun_arg)
+          (List.map ~f:(fun (ad, _id, ty) -> (ad, ty)) fdargs)) in
   let extra_arg_names, extra_template_names = extra_suffix_args fdsuffix in
   let template_parameter_and_arg_names is_possibly_eigen_expr variadic_fun_type
       =
@@ -340,7 +347,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
         ~args:cpp_args ~cv_qualifiers:[Const] ~body:defn_body () in
     make_struct_defn ~param:struct_template ~name:functor_name
       ~body:[FunDef functor_decl] () in
-  (fd, functors |> List.map ~f:register_functor)
+  (comment, fd, functors |> List.map ~f:register_functor)
 
 let get_functor_requirements (p : Program.Numbered.t) =
   let open Expr.Fixed in
@@ -376,24 +383,24 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
       |> List.stable_dedup
       |> List.filter_map ~f:(fun (hof, types) ->
              if matching_argtypes d types then Some hof else None ) in
-    let fn, st = lower_fun_def functors d in
+    let comment, fn, st = lower_fun_def functors d in
     List.iter st ~f:(fun s ->
         (* Side effecting, collates functor structs *)
         Hashtbl.update structs s.struct_name ~f:(function
           | Some x -> {x with body= x.body @ s.body}
           | None -> s ) ) ;
-    fn in
+    (comment, fn) in
   let fun_decls, fun_defns =
     p.functions_block
     |> List.filter_map ~f:(fun d ->
-           let fn = register_functors d in
+           let comment, fn = register_functors d in
            if Option.is_none d.fdbody then None
            else
              let decl, defn = Cpp.split_fun_decl_defn fn in
-             Some (FunDef decl, FunDef defn) )
+             Some (FunDef decl, [comment; FunDef defn]) )
     |> List.unzip in
   let structs = Hashtbl.data structs |> List.map ~f:(fun s -> Struct s) in
-  fun_decls @ structs @ fun_defns
+  fun_decls @ structs @ List.concat fun_defns
 
 let lower_standalone_fun_def namespace_fun
     Program.{fdname; fdsuffix; fdargs; fdrt; _} =
@@ -437,7 +444,9 @@ module Testing = struct
   open Fmt
 
   let pp_fun_def_test ppf a =
-    let defn, st = lower_fun_def [FixedArgs] a in
+    let comment, defn, st = lower_fun_def [FixedArgs] a in
+    Cpp.Printing.pp_defn ppf comment ;
+    cut ppf () ;
     Cpp.Printing.pp_fun_defn ppf defn ;
     cut ppf () ;
     (list ~sep:cut Cpp.Printing.pp_struct_defn) ppf st
@@ -464,6 +473,7 @@ module Testing = struct
     |> print_endline ;
     [%expect
       {|
+    // void sars(data matrix, row_vector)
     template <typename T0__, typename T1__,
               stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                                   stan::is_vt_not_complex<T0__>,
@@ -526,6 +536,7 @@ module Testing = struct
     |> print_endline ;
     [%expect
       {|
+    // matrix sars(data matrix, row_vector, row_vector, array[] matrix)
     template <typename T0__, typename T1__, typename T2__, typename T3__,
               stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                                   stan::is_vt_not_complex<T0__>,

@@ -659,6 +659,7 @@ template <typename T0__, typename T1__,
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>,
                              stan::base_type_t<T1__>>>,-1,-1>
 add_udf(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__);
+// real foo1(real, int, array[] real, vector, matrix, row_vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -704,6 +705,7 @@ foo1(const T0__& a, const T1__& b, const T2__& c, const T3__& d_arg__,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector foo2(vector, array[] matrix, array[] row_vector)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -738,6 +740,7 @@ foo2(const T0__& a_arg__, const T1__& b, const T2__& c, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix foo3(vector, matrix)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -766,6 +769,7 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix add_udf(matrix, matrix)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>,

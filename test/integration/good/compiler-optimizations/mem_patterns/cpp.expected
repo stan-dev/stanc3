@@ -4341,6 +4341,7 @@ template <typename T0__,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
 udf_fun(const T0__& A_arg__, std::ostream* pstream__);
+// int mask_fun(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> int
 mask_fun(const T0__& i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -4360,6 +4361,7 @@ mask_fun(const T0__& i, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector udf_fun(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -7341,6 +7343,7 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
                              stan::base_type_t<T1__>>>,-1,-1>
 okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
                pstream__);
+// matrix nono_func(matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -7364,6 +7367,7 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix okay_reduction(real, matrix)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -8033,6 +8037,7 @@ template <typename T0__,
                               stan::is_vt_not_complex<T0__>>* = nullptr>
 Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
 mat_ret_user_func(const T0__& A_arg__, std::ostream* pstream__);
+// matrix empty_user_func()
 Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -8053,6 +8058,7 @@ Eigen::Matrix<double,-1,-1> empty_user_func(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix mat_ret_user_func(matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -9272,6 +9278,7 @@ Eigen::Matrix<std::decay_t<stan::promote_args_t<T0__,
                              stan::base_type_t<T1__>>>,-1,-1>
 okay_reduction(const T0__& sum_x, const T1__& y_arg__, std::ostream*
                pstream__);
+// matrix nono_func(matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -9295,6 +9302,7 @@ nono_func(const T0__& x_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix okay_reduction(real, matrix)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,

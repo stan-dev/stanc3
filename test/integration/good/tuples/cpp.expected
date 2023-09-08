@@ -4732,6 +4732,7 @@ static constexpr std::array<const char*, 10> locations_array__ =
   " (in 'tuple-constraints-params.stan', line 3, column 4 to column 22)",
   " (in 'tuple-constraints-params.stan', line 2, column 26 to line 4, column 3)"};
 std::tuple<double, double> foo(std::ostream* pstream__);
+// tuple(real, real) foo()
 std::tuple<double, double> foo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -5874,6 +5875,7 @@ static constexpr std::array<const char*, 5> locations_array__ =
   " (in 'tuple-dataonly.stan', line 3, column 4 to column 15)",
   " (in 'tuple-dataonly.stan', line 2, column 37 to line 4, column 3)"};
 double foo(const std::tuple<double, double>& x, std::ostream* pstream__);
+// real foo(data tuple(real, real))
 double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -6227,6 +6229,7 @@ static constexpr std::array<const char*, 4> locations_array__ =
 double
 tuple_tester(const std::tuple<std::vector<double>, int>& x, std::ostream*
              pstream__);
+// real tuple_tester(data tuple(array[] real, int))
 double
 tuple_tester(const std::tuple<std::vector<double>, int>& x, std::ostream*
              pstream__) {
@@ -9509,6 +9512,7 @@ template <typename T0__0__, typename T0__1__,
 std::decay_t<stan::promote_args_t<stan::base_type_t<T0__0__>,
                stan::base_type_t<T0__1__>>>
 dummy(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__);
+// real dummy(tuple(array[] real, array[] real))
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_std_vector<T0__0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -10601,6 +10605,7 @@ overly_complicated(const std::tuple<T0__0__,
                            std::tuple<T0__1__0__, T0__1__1__>, T0__2__>& t1,
                    const std::vector<std::tuple<T1__0__, T1__1__>>& t2,
                    std::ostream* pstream__);
+// void foo(tuple(matrix, int))
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
                               stan::is_vt_not_complex<T0__0__>,
@@ -10626,6 +10631,7 @@ void foo(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real tsum(tuple(array[] int, array[] real))
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_std_vector<T0__0__>,
                               std::is_integral<stan::value_type_t<T0__0__>>,
@@ -10653,6 +10659,7 @@ tsum(const std::tuple<T0__0__, T0__1__>& s, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void foo2(array[] tuple(matrix, int))
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
                               stan::is_vt_not_complex<T0__0__>,
@@ -10682,6 +10689,7 @@ foo2(const std::vector<std::tuple<T0__0__, T0__1__>>& test, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void foo3(tuple(real, matrix))
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
                                                       std::is_floating_point<T0__0__>>,
@@ -10709,6 +10717,9 @@ void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* void overly_complicated(tuple(array[] matrix, tuple(int, matrix), real),
+                          array[] tuple(int, matrix))
+ */
 template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
           typename T0__2__, typename T1__0__, typename T1__1__,
           stan::require_all_t<stan::is_std_vector<T0__0__>,
@@ -11214,6 +11225,7 @@ template <typename T0__0__, typename T0__1__, typename T0__2__,
                                                       stan::value_type_t<T0__2__>>>>* = nullptr>
 void
 g(const std::tuple<T0__0__, T0__1__, T0__2__>& x, std::ostream* pstream__);
+// void f(tuple(matrix, matrix))
 template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
                               stan::is_vt_not_complex<T0__0__>,
@@ -11246,6 +11258,7 @@ void f(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void g(tuple(matrix, int, array[] real))
 template <typename T0__0__, typename T0__1__, typename T0__2__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
                               stan::is_vt_not_complex<T0__0__>,
@@ -11877,6 +11890,7 @@ struct fun_rsfunctor__ {
     return fun(y_slice, (start + 1), (end + 1), m, pstream__);
   }
 };
+// real fun(array[] real, int, int, tuple(real, array[] int))
 template <typename T0__, typename T1__, typename T2__, typename T3__0__,
           typename T3__1__,
           stan::require_all_t<stan::is_std_vector<T0__>,
@@ -12355,6 +12369,7 @@ std::decay_t<stan::promote_args_t<T0__0__, T0__1__, T1__0__, T1__1__,
 foo_lpdf(const std::tuple<T0__0__, T0__1__>& x,
          const std::tuple<T1__0__, T1__1__, T1__2__>& y, std::ostream*
          pstream__);
+// real foo_lpdf(tuple(real, real), tuple(real, real, real))
 template <bool propto__, typename T0__0__, typename T0__1__,
           typename T1__0__, typename T1__1__, typename T1__2__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
@@ -12713,6 +12728,7 @@ template <bool propto__, typename T0__0__, typename T0__1__,
                               std::is_integral<T0__1__>>* = nullptr>
 std::decay_t<stan::promote_args_t<T0__0__>>
 foo_lpdf(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__);
+// real foo_lpdf(tuple(real, int))
 template <bool propto__, typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
                                                       std::is_floating_point<T0__0__>>,
@@ -13059,6 +13075,7 @@ template <bool propto__, typename T0__0__, typename T0__1__, typename T1__,
 std::decay_t<stan::promote_args_t<T1__>>
 foo_lpmf(const std::tuple<T0__0__, T0__1__>& x, const T1__& y, std::ostream*
          pstream__);
+// real foo_lpmf(tuple(int, int), real)
 template <bool propto__, typename T0__0__, typename T0__1__, typename T1__,
           stan::require_all_t<std::is_integral<T0__0__>,
                               std::is_integral<T0__1__>,

@@ -7304,6 +7304,7 @@ std::vector<
   std::vector<
     std::complex<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>>>>
 foo10(const T0__& z, std::ostream* pstream__);
+// complex foo()
 std::complex<double> foo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -7323,6 +7324,7 @@ std::complex<double> foo(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo1(complex)
 template <typename T0__,
           stan::require_all_t<stan::is_complex<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -7348,6 +7350,7 @@ foo1(const T0__& z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// complex foo2(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -7370,6 +7373,7 @@ foo2(const T0__& r, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// complex foo3(complex)
 template <typename T0__,
           stan::require_all_t<stan::is_complex<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -7395,6 +7399,7 @@ foo3(const T0__& z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[] complex foo4()
 std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -7418,6 +7423,7 @@ std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo5(array[] complex)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_complex<stan::value_type_t<T0__>>,
@@ -7446,6 +7452,7 @@ foo5(const T0__& z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[] complex foo6(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -7470,6 +7477,7 @@ foo6(const T0__& r, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[] complex foo7(array[] complex)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_complex<stan::value_type_t<T0__>>,
@@ -7499,6 +7507,7 @@ foo7(const T0__& z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo8(array[,] complex)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -7530,6 +7539,7 @@ foo8(const T0__& z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[,] complex foo9(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -7563,6 +7573,7 @@ foo9(const T0__& r, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[,] complex foo10(array[,] complex)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -10525,6 +10536,7 @@ template <typename T0__,
 std::vector<
   Eigen::Matrix<std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>>
 foo(const T0__& A, std::ostream* pstream__);
+// complex_matrix foo(complex_matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_complex<T0__>>*>
@@ -10548,6 +10560,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix foo(matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -10573,6 +10586,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// complex_vector foo(complex_vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_complex<T0__>>*>
@@ -10596,6 +10610,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector foo(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -10621,6 +10636,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// complex_row_vector foo(complex_row_vector)
 template <typename T0__,
           stan::require_all_t<stan::is_row_vector<T0__>,
                               stan::is_vt_complex<T0__>>*>
@@ -10644,6 +10660,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// row_vector foo(row_vector)
 template <typename T0__,
           stan::require_all_t<stan::is_row_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -10669,6 +10686,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[] complex_matrix foo(array[] complex_matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
@@ -10693,6 +10711,7 @@ foo(const T0__& Z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[] matrix foo(array[] matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,

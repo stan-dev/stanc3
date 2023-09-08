@@ -915,6 +915,11 @@ f(const T0__& x,
           std::vector<
             std::tuple<std::vector<std::tuple<T1__0__0__, T1__0__1__>>,
               T1__1__>>>& x2, std::ostream* pstream__);
+/* tuple(int, array[] tuple(int, real)) f(int,
+                                         array[,] tuple(array[] tuple(int,
+  int),
+                                                        array[,] int))
+ */
 template <typename T0__, typename T1__0__0__, typename T1__0__1__,
           typename T1__1__,
           stan::require_all_t<std::is_integral<T0__>,
@@ -2153,6 +2158,7 @@ void _stan_catch(std::ostream* pstream__);
 void _stan_char(std::ostream* pstream__);
 void _stan_char16_t(std::ostream* pstream__);
 void _stan_char32_t(std::ostream* pstream__);
+// void _stan_alignas(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> void
 _stan_alignas(const T0__& _stan_asm, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2166,6 +2172,7 @@ _stan_alignas(const T0__& _stan_asm, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_alignof(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> void
 _stan_alignof(const T0__& _stan_char, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2179,6 +2186,7 @@ _stan_alignof(const T0__& _stan_char, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// int _stan_and(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> int
 _stan_and(const T0__& _stan_STAN_MAJOR, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2198,6 +2206,7 @@ _stan_and(const T0__& _stan_STAN_MAJOR, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void _stan_and_eq(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -2213,6 +2222,7 @@ void _stan_and_eq(const T0__& _stan_STAN_MINOR, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_asm(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -2229,6 +2239,7 @@ void _stan_asm(const T0__& _stan_class_arg__, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_bitand(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> void
 _stan_bitand(const T0__& _stan_constexpr, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -2242,6 +2253,7 @@ _stan_bitand(const T0__& _stan_constexpr, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_bitor()
 void _stan_bitor(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -2254,6 +2266,7 @@ void _stan_bitor(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_bool()
 void _stan_bool(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -2266,6 +2279,7 @@ void _stan_bool(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_case()
 void _stan_case(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -2278,6 +2292,7 @@ void _stan_case(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_catch()
 void _stan_catch(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -2290,6 +2305,7 @@ void _stan_catch(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_char()
 void _stan_char(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -2302,6 +2318,7 @@ void _stan_char(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_char16_t()
 void _stan_char16_t(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -2314,6 +2331,7 @@ void _stan_char16_t(std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
 }
+// void _stan_char32_t()
 void _stan_char32_t(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -3779,6 +3797,7 @@ template <typename T0__, typename T1__,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<T1__>>>* = nullptr>
 void bar(const T0__& x, const T1__& y, std::ostream* pstream__);
+// real foo(real, real)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -3803,6 +3822,7 @@ foo(const T0__& x, const T1__& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void bar(real, real)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -6446,6 +6466,7 @@ struct binomialf_functor__ {
     return binomialf(phi, theta, x_r, x_i, pstream__);
   }
 };
+// int foo(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> int
 foo(const T0__& n, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -6470,6 +6491,9 @@ foo(const T0__& n, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[] real sho(real, array[] real, array[] real, data array[] real,
+                   data array[] int)
+ */
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -6520,6 +6544,7 @@ sho(const T0__& t, const T1__& y, const T2__& theta,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_bar0()
 double foo_bar0(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -6538,6 +6563,7 @@ double foo_bar0(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_bar1(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -6560,6 +6586,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_bar2(real, real)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -6584,6 +6611,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_lpmf(int, real)
 template <bool propto__, typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
@@ -6604,6 +6632,7 @@ foo_lpmf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_lcdf(int, real)
 template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
@@ -6627,6 +6656,7 @@ foo_lcdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_lccdf(int, real)
 template <typename T0__, typename T1__,
           stan::require_all_t<std::is_integral<T0__>,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
@@ -6650,6 +6680,7 @@ foo_lccdf(const T0__& y, const T1__& lambda, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_rng(real, real)
 template <typename T0__, typename T1__, typename RNG,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -6675,6 +6706,7 @@ foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void unit_normal_lp(real)
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -6698,6 +6730,7 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int foo_1(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> int
 foo_1(const T0__& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -6906,6 +6939,7 @@ foo_1(const T0__& a, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// int foo_2(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> int
 foo_2(const T0__& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -6936,6 +6970,7 @@ foo_2(const T0__& a, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[] real foo_3(real, int)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -6959,6 +6994,7 @@ foo_3(const T0__& t, const T1__& n, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_lp(real)
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -6980,6 +7016,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void foo_4(array[] real)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -7010,6 +7047,7 @@ void foo_4(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real relative_diff(real, real, real, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -7072,6 +7110,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_, const T3__&
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector foo_5(vector, vector, data array[] real, data array[] int)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -7103,6 +7142,7 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_five_args(real, real, real, real, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -7136,6 +7176,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_five_args_lp(real, real, real, real, real, real)
 template <bool propto__, typename T0__, typename T1__, typename T2__,
           typename T3__, typename T4__, typename T5__, typename T_lp__,
           typename T_lp_accum__,
@@ -7172,6 +7213,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3, const T3__&
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix covsqrt2corsqrt(matrix, int)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -7218,6 +7260,10 @@ covsqrt2corsqrt(const T0__& mat_arg__, const T1__& invert, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* void f0(int, array[] int, array[,] int, real, array[] real, array[,] real,
+          vector, array[] vector, array[,] vector, matrix, array[] matrix,
+          array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -7299,6 +7345,10 @@ f0(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* int f1(int, array[] int, array[,] int, real, array[] real, array[,] real,
+         vector, array[] vector, array[,] vector, matrix, array[] matrix,
+         array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -7377,6 +7427,10 @@ f1(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[] int f2(int, array[] int, array[,] int, real, array[] real,
+                 array[,] real, vector, array[] vector, array[,] vector,
+                 matrix, array[] matrix, array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -7455,6 +7509,10 @@ f2(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[,] int f3(int, array[] int, array[,] int, real, array[] real,
+                  array[,] real, vector, array[] vector, array[,] vector,
+                  matrix, array[] matrix, array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -7533,6 +7591,10 @@ f3(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* real f4(int, array[] int, array[,] int, real, array[] real, array[,] real,
+          vector, array[] vector, array[,] vector, matrix, array[] matrix,
+          array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -7617,6 +7679,10 @@ f4(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[] real f5(int, array[] int, array[,] int, real, array[] real,
+                  array[,] real, vector, array[] vector, array[,] vector,
+                  matrix, array[] matrix, array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -7702,6 +7768,10 @@ f5(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[,] real f6(int, array[] int, array[,] int, real, array[] real,
+                   array[,] real, vector, array[] vector, array[,] vector,
+                   matrix, array[] matrix, array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -7788,6 +7858,11 @@ f6(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* vector f7(int, array[] int, array[,] int, real, array[] real, array[,]
+  real,
+            vector, array[] vector, array[,] vector, matrix, array[] matrix,
+            array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -7874,6 +7949,10 @@ f7(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[] vector f8(int, array[] int, array[,] int, real, array[] real,
+                    array[,] real, vector, array[] vector, array[,] vector,
+                    matrix, array[] matrix, array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -7961,6 +8040,10 @@ f8(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[,] vector f9(int, array[] int, array[,] int, real, array[] real,
+                     array[,] real, vector, array[] vector, array[,] vector,
+                     matrix, array[] matrix, array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -8049,6 +8132,11 @@ f9(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* matrix f10(int, array[] int, array[,] int, real, array[] real, array[,]
+  real,
+             vector, array[] vector, array[,] vector, matrix, array[] matrix,
+             array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -8135,6 +8223,10 @@ f10(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[] matrix f11(int, array[] int, array[,] int, real, array[] real,
+                     array[,] real, vector, array[] vector, array[,] vector,
+                     matrix, array[] matrix, array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -8222,6 +8314,10 @@ f11(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* array[,] matrix f12(int, array[] int, array[,] int, real, array[] real,
+                      array[,] real, vector, array[] vector, array[,] vector,
+                      matrix, array[] matrix, array[,] matrix)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -8310,6 +8406,7 @@ f12(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void foo_6()
 void foo_6(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -8340,6 +8437,7 @@ void foo_6(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix matfoo()
 Eigen::Matrix<double,-1,-1> matfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -8366,6 +8464,7 @@ Eigen::Matrix<double,-1,-1> matfoo(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector vecfoo()
 Eigen::Matrix<double,-1,1> vecfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -8385,6 +8484,7 @@ Eigen::Matrix<double,-1,1> vecfoo(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector vecmufoo(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -8412,6 +8512,7 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector vecmubar(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -8442,6 +8543,7 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector algebra_system(vector, vector, array[] real, array[] int)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -8492,6 +8594,7 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__, const T2__& dat,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector binomialf(vector, vector, data array[] real, data array[] int)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -15289,6 +15392,7 @@ struct sho_functor__ {
     return sho(t, y, theta, x, x_int, pstream__);
   }
 };
+// array[] real sho(real, array[] real, array[] real, array[] real, array[] int)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -15347,6 +15451,7 @@ sho(const T0__& t, const T1__& y, const T2__& theta, const T3__& x,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real integrand(real, real, array[] real, array[] real, array[] int)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -15388,6 +15493,7 @@ integrand(const T0__& x, const T1__& xc, const T2__& theta, const T3__& x_r,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector foo(vector, vector, array[] real, array[] int)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -15427,6 +15533,7 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector goo(vector, vector, array[] real, array[] int)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -15466,6 +15573,7 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real map_rectfake(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -15488,6 +15596,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector algebra_system(vector, vector, array[] real, array[] int)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -18171,6 +18280,7 @@ struct f_variadic2_functor__ {
     return f(t, z, a, b, pstream__);
   }
 };
+// vector f(real, vector, real, vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -23738,6 +23848,9 @@ struct dz_dt_functor__ {
     return dz_dt(t, z, theta, x_r, x_i, pstream__);
   }
 };
+/* array[] real dz_dt(real, array[] real, array[] real, array[] real,
+                     array[] int)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -26755,6 +26868,7 @@ template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>* = nullptr>
 double foo(const T0__& p, std::ostream* pstream__);
+// real foo(int)
 template <typename T0__, stan::require_all_t<std::is_integral<T0__>>*> double
 foo(const T0__& p, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -26774,6 +26888,7 @@ foo(const T0__& p, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -26796,6 +26911,7 @@ foo(const T0__& p, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(row_vector)
 template <typename T0__,
           stan::require_all_t<stan::is_row_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -26819,6 +26935,7 @@ foo(const T0__& p_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -26842,6 +26959,7 @@ foo(const T0__& p_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -26865,6 +26983,7 @@ foo(const T0__& p_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(array[] real)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -26890,6 +27009,7 @@ foo(const T0__& p, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(array[] row_vector)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_row_vector<stan::value_type_t<T0__>>,
@@ -26915,6 +27035,7 @@ foo(const T0__& p, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(array[] vector)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
@@ -26940,6 +27061,7 @@ foo(const T0__& p, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(array[] matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
@@ -26965,6 +27087,7 @@ foo(const T0__& p, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(array[,] real)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -26995,6 +27118,7 @@ foo(const T0__& p, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(array[] int)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>>*>
@@ -28351,6 +28475,7 @@ template <typename T0__,
                                                       stan::value_type_t<T0__>>>>* = nullptr>
 std::decay_t<stan::promote_args_t<stan::base_type_t<T0__>>>
 foo(const T0__& zs, std::ostream* pstream__);
+// complex ident(complex)
 template <typename T0__,
           stan::require_all_t<stan::is_complex<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -28376,6 +28501,7 @@ ident(const T0__& x, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(array[] real)
 template <typename T0__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -28864,6 +28990,7 @@ struct foo_variadic2_functor__ {
     return foo(x, s, y, pstream__);
   }
 };
+// vector test2(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -28900,6 +29027,7 @@ test2(const T0__& gamma_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix matrix_pow(matrix, int)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -28938,6 +29066,7 @@ matrix_pow(const T0__& a_arg__, const T1__& n, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -28961,6 +29090,7 @@ foo(const T0__& a_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -28990,6 +29120,7 @@ foo(const T0__& b, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector test4(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -29025,6 +29156,7 @@ test4(const T0__& gamma_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector test3(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -29048,6 +29180,7 @@ test3(const T0__& gamma_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void test6(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -29086,6 +29219,7 @@ void test6(const T0__& alpha_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector test7(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -29120,6 +29254,7 @@ test7(const T0__& gamma_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector foo(real, vector, matrix)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -29728,6 +29863,7 @@ struct foo_lpdf_rsfunctor__ {
     return foo_lpdf<propto__>(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
+// real g(array[] real, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -29761,6 +29897,7 @@ g(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real h(array[] real, int, int, array[] real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -29803,6 +29940,7 @@ h(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo_lpdf(array[] real, int, int)
 template <bool propto__, typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -30967,6 +31105,7 @@ struct g1_rsfunctor__ {
     return g1(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
+// real g1(array[] real, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -30994,6 +31133,7 @@ g1(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g2(array[] vector, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
@@ -31030,6 +31170,7 @@ g2(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g3(array[] row_vector, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_row_vector<stan::value_type_t<T0__>>,
@@ -31066,6 +31207,7 @@ g3(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g4(array[] matrix, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
@@ -31103,6 +31245,7 @@ g4(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g5(array[,] real, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -31150,6 +31293,7 @@ g5(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g6(array[,] vector, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -31196,6 +31340,7 @@ g6(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g7(array[,] row_vector, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -31242,6 +31387,7 @@ g7(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g8(array[,] matrix, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -31288,6 +31434,7 @@ g8(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real h1(array[] real, int, int, array[] real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -31324,6 +31471,7 @@ h1(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real h2(array[] real, int, int, array[] vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -31366,6 +31514,7 @@ h2(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real h3(array[] real, int, int, array[] row_vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -31408,6 +31557,7 @@ h3(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real h4(array[] real, int, int, array[] matrix)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -31451,6 +31601,7 @@ h4(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real h5(array[] real, int, int, array[,] real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -31504,6 +31655,7 @@ h5(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real h6(array[] real, int, int, array[,] vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -31556,6 +31708,7 @@ h6(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real h7(array[] real, int, int, array[,] row_vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -31608,6 +31761,7 @@ h7(const T0__& y, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real h8(array[] real, int, int, array[,] matrix)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -34780,6 +34934,7 @@ struct f1a_rsfunctor__ {
     return f1a(y_slice, (start + 1), (end + 1), pstream__);
   }
 };
+// real f1(array[] real, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -34807,6 +34962,7 @@ f1(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f1a(array[] real, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -34834,6 +34990,7 @@ f1a(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f2(array[] vector, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
@@ -34859,6 +35016,7 @@ f2(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f3(array[] row_vector, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_row_vector<stan::value_type_t<T0__>>,
@@ -34884,6 +35042,7 @@ f3(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f4(array[] matrix, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
@@ -34909,6 +35068,7 @@ f4(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f5(array[,] real, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -34939,6 +35099,7 @@ f5(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f6(array[,] vector, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -34967,6 +35128,7 @@ f6(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f7(array[,] row_vector, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -34995,6 +35157,7 @@ f7(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f8(array[,] matrix, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -35023,6 +35186,7 @@ f8(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f9(array[] int, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               std::is_integral<stan::value_type_t<T0__>>,
@@ -35047,6 +35211,7 @@ f9(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f10(array[,] int, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -35072,6 +35237,7 @@ f10(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f11(array[,,] int, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -35100,6 +35266,7 @@ f11(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real f12(array[,,] real, int, int)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_std_vector<stan::value_type_t<T0__>>,
@@ -35134,6 +35301,7 @@ f12(const T0__& y_slice, const T1__& start, const T2__& end, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g1(array[] real, int, int, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35164,6 +35332,7 @@ g1(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g2(array[] real, int, int, vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35196,6 +35365,7 @@ g2(const T0__& y_slice, const T1__& start, const T2__& end, const T3__&
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g3(array[] real, int, int, row_vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35228,6 +35398,7 @@ g3(const T0__& y_slice, const T1__& start, const T2__& end, const T3__&
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g4(array[] real, int, int, matrix)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35260,6 +35431,7 @@ g4(const T0__& y_slice, const T1__& start, const T2__& end, const T3__&
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g5(array[] real, int, int, array[] real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35294,6 +35466,7 @@ g5(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g6(array[] real, int, int, array[] vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35326,6 +35499,7 @@ g6(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g7(array[] real, int, int, array[] row_vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35358,6 +35532,7 @@ g7(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g8(array[] real, int, int, array[] matrix)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35390,6 +35565,7 @@ g8(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g9(array[] real, int, int, array[,] real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35427,6 +35603,7 @@ g9(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g10(array[] real, int, int, array[,] vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35462,6 +35639,7 @@ g10(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g11(array[] real, int, int, array[,] row_vector)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35497,6 +35675,7 @@ g11(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real g12(array[] real, int, int, array[,] matrix)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::math::disjunction<stan::is_autodiff<
@@ -35532,6 +35711,11 @@ g12(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+/* real s(array[] real, int, int, int, real, vector, row_vector, matrix,
+         array[] int, array[] real, array[] vector, array[] row_vector,
+         array[] matrix, array[,] int, array[,] real, array[,] vector,
+         array[,] row_vector, array[,] matrix, array[,,] int, array[,,] real)
+ */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
           typename T8__, typename T9__, typename T10__, typename T11__,
@@ -35668,6 +35852,7 @@ s(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real r()
 double r(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
@@ -38197,6 +38382,7 @@ template <typename T0__,
                                                       std::is_floating_point<T0__>>>* = nullptr>
 std::vector<std::complex<std::decay_t<stan::promote_args_t<T0__>>>>
 bar(const T0__& a, std::ostream* pstream__);
+// array[] real foo(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -38219,6 +38405,7 @@ foo(const T0__& a, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// tuple(array[] real, real) baz(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -38243,6 +38430,7 @@ baz(const T0__& a, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[] complex bar(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -38719,6 +38907,7 @@ struct rhs_variadic2_functor__ {
     return rhs(t, y, alpha, pstream__);
   }
 };
+// vector rhs(real, vector, real)
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
@@ -40209,6 +40398,7 @@ template <bool propto__, typename T0__, typename T_lp__,
 std::decay_t<stan::promote_args_t<T0__>>
 foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
         pstream__);
+// real foo0_lpmf(int)
 template <bool propto__, typename T0__,
           stan::require_all_t<std::is_integral<T0__>>*>
 double foo0_lpmf(const T0__& y, std::ostream* pstream__) {
@@ -40226,6 +40416,7 @@ double foo0_lpmf(const T0__& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo1_lpmf(int)
 template <bool propto__, typename T0__,
           stan::require_all_t<std::is_integral<T0__>>*>
 double foo1_lpmf(const T0__& y, std::ostream* pstream__) {
@@ -40243,6 +40434,7 @@ double foo1_lpmf(const T0__& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo4_lp(int)
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__, stan::require_all_t<std::is_integral<T0__>>*>
 double
@@ -40262,6 +40454,7 @@ foo4_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo2_lpdf(real)
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -40281,6 +40474,7 @@ foo2_lpdf(const T0__& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo3_lpdf(real)
 template <bool propto__, typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -40300,6 +40494,7 @@ foo3_lpdf(const T0__& y, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// real foo5_lp(real)
 template <bool propto__, typename T0__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -44823,6 +45018,7 @@ template <typename T0__,
                                                       std::is_floating_point<T0__>>>* = nullptr>
 std::decay_t<stan::promote_args_t<T0__>>
 normal(const T0__& a, std::ostream* pstream__);
+// real normal(real)
 template <typename T0__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>>*>
@@ -45204,6 +45400,7 @@ template <typename T0__, typename T1__,
                                                       std::is_floating_point<T1__>>>* = nullptr>
 std::decay_t<stan::promote_args_t<T0__, T1__>>
 lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__);
+// real lb_constrain(real, real)
 template <typename T0__, typename T1__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                       std::is_floating_point<T0__>>,
