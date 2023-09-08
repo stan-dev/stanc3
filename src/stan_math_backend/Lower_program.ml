@@ -444,14 +444,14 @@ let gen_get_dims {Program.output_vars; _} =
         ( Var "emit_transformed_parameters__"
         , Stmts.block
             (gen_extend_vector dimss
-               (Types.std_vector (Types.std_vector Types.size_t))
+               (Types.std_vector ~dims:2 Types.size_t)
                (List.concat tparams) )
         , None )
     ; IfElse
         ( Var "emit_generated_quantities__"
         , Stmts.block
             (gen_extend_vector dimss
-               (Types.std_vector (Types.std_vector Types.size_t))
+               (Types.std_vector ~dims:2 Types.size_t)
                (List.concat gqs) )
         , None ) ] in
   FunDef

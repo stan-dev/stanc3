@@ -8013,7 +8013,8 @@ f0(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8098,7 +8099,8 @@ f1(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8180,7 +8182,8 @@ f2(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8262,7 +8265,8 @@ f3(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8350,7 +8354,8 @@ f4(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8439,7 +8444,8 @@ f5(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8529,7 +8535,8 @@ f6(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8620,7 +8627,8 @@ f7(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8711,7 +8719,8 @@ f8(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8803,7 +8812,8 @@ f9(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8894,7 +8904,8 @@ f10(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -8985,7 +8996,8 @@ f11(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -9077,7 +9089,8 @@ f12(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
                                           stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T8__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T8__>,
                                                          stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>>>>>;
@@ -36514,13 +36527,15 @@ s(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
                                           T4__, stan::base_type_t<T5__>,
                                           stan::base_type_t<T6__>,
                                           stan::base_type_t<T7__>,
-                                          std::decay_t<stan::promote_args_t<stan::base_type_t<T9__>,
+                                          std::decay_t<stan::promote_args_t<
+                                                         stan::base_type_t<T9__>,
                                                          stan::base_type_t<T10__>,
                                                          stan::base_type_t<T11__>,
                                                          stan::base_type_t<T12__>,
                                                          stan::base_type_t<T14__>,
                                                          std::decay_t<
-                                                           stan::promote_args_t<stan::base_type_t<T15__>,
+                                                           stan::promote_args_t<
+                                                             stan::base_type_t<T15__>,
                                                              stan::base_type_t<T16__>,
                                                              stan::base_type_t<T17__>,
                                                              stan::base_type_t<T19__>>>>>>>;

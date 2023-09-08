@@ -31,7 +31,8 @@ module Types = struct
   let local_scalar = TypeLiteral "local_scalar_t__"
 
   (** A [std::vector<t>] *)
-  let std_vector t = StdVector t
+  let rec std_vector ?(dims = 1) t =
+    if dims = 0 then t else std_vector ~dims:(dims - 1) (StdVector t)
 
   let bool = TypeLiteral "bool"
   let complex s = Complex s
@@ -735,7 +736,7 @@ module Tests = struct
     let ts =
       let open Types in
       [ matrix (complex local_scalar); const_char_array 43
-      ; std_vector (std_vector Double); const_ref (TemplateType "T0__") ] in
+      ; std_vector ~dims:2 Double; const_ref (TemplateType "T0__") ] in
     let open Fmt in
     pf stdout "@[<v>%a@]" (list ~sep:comma Printing.pp_type_) ts ;
     [%expect

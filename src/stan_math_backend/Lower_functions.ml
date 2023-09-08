@@ -4,31 +4,6 @@ open Lower_expr
 open Lower_stmt
 open Cpp
 
-let rec arg_type_prim (t : UnsizedType.t) : type_ =
-  match t with
-  | UInt | UReal | UMatrix | URowVector | UVector | UComplexVector
-   |UComplexMatrix | UComplexRowVector | UTuple _ ->
-      stantype_prim t
-  | UComplex -> Types.complex (stantype_prim t)
-  | UArray t when UnsizedType.contains_tuple t -> StdVector (arg_type_prim t)
-  | UArray t ->
-      (* Expressions are not accepted for arrays of Eigen::Matrix *)
-      StdVector (lower_type t (stantype_prim t))
-  | UMathLibraryFunction | UFun _ ->
-      Common.FatalError.fatal_error_msg
-        [%message "Function types not implemented"]
-
-let template_arg_type template_or_type ut =
-  let rec lower_type_for_arg (t : UnsizedType.t) : type_ =
-    match t with
-    (* stdvectors are templates except for when they contain tuples*)
-    | UArray t when UnsizedType.contains_tuple t ->
-        StdVector (lower_type_for_arg t)
-    (* NB: tuples are handled by this function's caller,
-       [template_parameters] *)
-    | _ -> template_or_type in
-  lower_type_for_arg ut
-
 let lower_arg ~is_possibly_eigen_expr type_ (_, name, ut) =
   (* we add the _arg suffix for any Eigen types *)
   let opt_arg_suffix =
@@ -37,6 +12,8 @@ let lower_arg ~is_possibly_eigen_expr type_ (_, name, ut) =
     else name in
   (Types.const_ref type_, opt_arg_suffix)
 
+(** Generate the require_* templates to constrain an argument to a specific type
+    NB: Currently, tuples are not handled by this function *)
 let requires ut t =
   let t = TemplateType t in
   let rec requires_in ut t =
@@ -66,12 +43,19 @@ let requires ut t =
     | UArray inner_ut ->
         RequireAllCondition (`Exact "stan::is_std_vector", t)
         :: requires_in inner_ut (TypeTrait ("stan::value_type_t", [t]))
-    | _ ->
+    | UReal ->
         (* not using stan::is_stan_scalar to explictly exclude int *)
         [ RequireAllCondition
-            (`OneOf ["stan::is_autodiff"; "std::is_floating_point"], t) ] in
+            (`OneOf ["stan::is_autodiff"; "std::is_floating_point"], t) ]
+    | UTuple _ | UMathLibraryFunction | UFun _ ->
+        Common.FatalError.fatal_error_msg
+          [%message
+            "Cannot formulate require templates for type " (ut : UnsizedType.t)]
+  in
   requires_in ut t
 
+(** Identify the templates which need to be considered in
+      the return type of the function (i.e., the scalar types) *)
 let return_optional_arg_types (args : Program.fun_arg_decl) =
   let rec template_p start i (ad, typ) =
     match (ad, typ) with
@@ -97,8 +81,9 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
     | ( _
       , ( UnsizedType.UArray _ | UComplex | UVector | URowVector | UMatrix
         | UComplexRowVector | UComplexVector | UComplexMatrix ) ) ->
-        [sprintf "stan::base_type_t<%s%d__>" start i]
-    | _ -> [sprintf "%s%d__" start i] in
+        [ TypeTrait
+            ("stan::base_type_t", [TemplateType (sprintf "%s%d__" start i)]) ]
+    | _ -> [TemplateType (sprintf "%s%d__" start i)] in
   List.mapi args ~f:(fun i (ad, _, ty) -> template_p "T" i (ad, ty))
 
 (** Print template arguments for C++ functions that need templates
@@ -107,8 +92,9 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
  *)
 let template_parameters (args : Program.fun_arg_decl) =
   let rec template_p start i (ad, typ) =
-    match (ad, fst (UnsizedType.unwind_array_type typ)) with
-    | _, UTuple tys ->
+    match (ad, UnsizedType.unwind_array_type typ) with
+    | _, (UTuple tys, dims) ->
+        (* (arrays of) Tuples directly print std::tuple *)
         (* TODO/future: use [std::tuple_element] to fully templatize tuples *)
         let temps, reqs, sclrs =
           List.map ~f:(fun ty -> (ad, ty)) tys
@@ -117,14 +103,15 @@ let template_parameters (args : Program.fun_arg_decl) =
         let templates = List.concat temps in
         let requires = List.concat reqs in
         let scalar = Tuple sclrs in
-        (templates, requires, template_arg_type scalar typ)
+        (templates, requires, Types.std_vector ~dims scalar)
     | UnsizedType.DataOnly, _ when not (UnsizedType.is_eigen_type typ) ->
-        ([], [], arg_type_prim typ)
+        (* For types that are [DataOnly] as not either a tuple or eigen type,
+           we can just directly print the type *)
+        ([], [], lower_type typ (stantype_prim typ))
     | _ ->
+        (* all other types are templated *)
         let template = sprintf "%s%d__" start i in
-        ( [template]
-        , requires typ template
-        , template_arg_type (TemplateType template) typ ) in
+        ([template], requires typ template, TemplateType template) in
   List.mapi args ~f:(fun i (ad, _, ty) -> template_p "T" i (ad, ty))
 
 let%expect_test "arg types templated correctly" =
@@ -192,11 +179,7 @@ let lower_promoted_scalar args =
                     ("stan::promote_args_t", hd @ chunk_till_empty list_tail) ]
               ) in
       promote_args_chunked
-        List.(
-          chunks_of ~length:5
-            (List.map
-               ~f:(fun t -> TemplateType t)
-               (concat (return_optional_arg_types args)) ))
+        List.(chunks_of ~length:5 (concat (return_optional_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
 promotion.*)
