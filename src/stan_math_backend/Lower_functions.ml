@@ -6,9 +6,8 @@ open Cpp
 
 let rec arg_type_prim (t : UnsizedType.t) : type_ =
   match t with
-  | UInt -> Int
-  | UReal | UMatrix | URowVector | UVector | UComplexVector | UComplexMatrix
-   |UComplexRowVector | UTuple _ ->
+  | UInt | UReal | UMatrix | URowVector | UVector | UComplexVector
+   |UComplexMatrix | UComplexRowVector | UTuple _ ->
       stantype_prim t
   | UComplex -> Types.complex (stantype_prim t)
   | UArray t when UnsizedType.contains_tuple t -> StdVector (arg_type_prim t)
@@ -119,7 +118,7 @@ let template_parameters (args : Program.fun_arg_decl) =
         let requires = List.concat reqs in
         let scalar = Tuple sclrs in
         (templates, requires, template_arg_type scalar typ)
-    | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) ->
+    | UnsizedType.DataOnly, _ when not (UnsizedType.is_eigen_type typ) ->
         ([], [], arg_type_prim typ)
     | _ ->
         let template = sprintf "%s%d__" start i in

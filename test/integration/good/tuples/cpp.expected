@@ -5868,13 +5868,25 @@ namespace tuple_dataonly_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 5> locations_array__ =
+static constexpr std::array<const char*, 11> locations_array__ =
   {" (found before start of program)",
-  " (in 'tuple-dataonly.stan', line 10, column 2 to column 19)",
-  " (in 'tuple-dataonly.stan', line 7, column 2 to column 22)",
+  " (in 'tuple-dataonly.stan', line 16, column 2 to column 19)",
+  " (in 'tuple-dataonly.stan', line 17, column 2 to column 24)",
+  " (in 'tuple-dataonly.stan', line 18, column 2 to column 34)",
+  " (in 'tuple-dataonly.stan', line 13, column 2 to column 22)",
   " (in 'tuple-dataonly.stan', line 3, column 4 to column 15)",
-  " (in 'tuple-dataonly.stan', line 2, column 37 to line 4, column 3)"};
+  " (in 'tuple-dataonly.stan', line 2, column 37 to line 4, column 3)",
+  " (in 'tuple-dataonly.stan', line 6, column 4 to column 18)",
+  " (in 'tuple-dataonly.stan', line 5, column 45 to line 7, column 3)",
+  " (in 'tuple-dataonly.stan', line 9, column 4 to column 27)",
+  " (in 'tuple-dataonly.stan', line 8, column 55 to line 10, column 3)"};
 double foo(const std::tuple<double, double>& x, std::ostream* pstream__);
+double
+bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__);
+double
+baz(const std::vector<
+            std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>& x,
+    std::ostream* pstream__);
 // real foo(data tuple(real, real))
 double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -5888,8 +5900,55 @@ double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 3;
+    current_statement__ = 5;
     return std::get<0>(x);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+// real bar(data array[] tuple(real, real))
+double
+bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__) {
+  using local_scalar_t__ = double;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 7;
+    return std::get<1>(stan::model::rvalue(x, "x", stan::model::index_uni(1)));
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+// real baz(data array[] tuple(array[] matrix, real))
+double
+baz(const std::vector<
+            std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>& x,
+    std::ostream* pstream__) {
+  using local_scalar_t__ = double;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 9;
+    return stan::model::rvalue(
+             stan::model::rvalue(
+               std::get<0>(
+                 stan::model::rvalue(x, "x", stan::model::index_uni(1))),
+               "x[1].1", stan::model::index_uni(1)), "x[1].1[1]",
+             stan::model::index_uni(1), stan::model::index_uni(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -5920,14 +5979,14 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 2;
+      current_statement__ = 4;
       context__.validate_dims("data initialization", "d.1", "double",
         std::vector<size_t>{});
       context__.validate_dims("data initialization", "d.2", "double",
         std::vector<size_t>{});
       d = std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()};
-      current_statement__ = 2;
+      current_statement__ = 4;
       std::get<0>(d) = context__.vals_r("d.1")[(1 - 1)];
       std::get<1>(d) = context__.vals_r("d.2")[(1 - 1)];
     } catch (const std::exception& e) {
@@ -5968,6 +6027,29 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     try {
       current_statement__ = 1;
       lp_accum__.add(foo(d, pstream__));
+      current_statement__ = 2;
+      lp_accum__.add(bar(
+                       std::vector<std::tuple<double, double>>{stan::math::promote_scalar<
+                                                                 std::tuple<
+                                                                   double,
+                                                                   double>>(d),
+                         stan::math::promote_scalar<
+                           std::tuple<double, double>>(d)}, pstream__));
+      current_statement__ = 3;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{std::tuple<
+                                      const std::vector<
+                                              Eigen::Matrix<double,-1,-1>>&,
+                                      double>(std::vector<
+                                                Eigen::Matrix<double,-1,-1>>{
+                                                stan::math::to_matrix(
+                                                  std::vector<
+                                                    Eigen::Matrix<double,1,-1>>{
+                                                    (Eigen::Matrix<double,1,-1>(1) <<
+                                                       1).finished()})},
+                                      std::get<1>(d))}, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6000,6 +6082,29 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     try {
       current_statement__ = 1;
       lp_accum__.add(foo(d, pstream__));
+      current_statement__ = 2;
+      lp_accum__.add(bar(
+                       std::vector<std::tuple<double, double>>{stan::math::promote_scalar<
+                                                                 std::tuple<
+                                                                   double,
+                                                                   double>>(d),
+                         stan::math::promote_scalar<
+                           std::tuple<double, double>>(d)}, pstream__));
+      current_statement__ = 3;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{std::tuple<
+                                      const std::vector<
+                                              Eigen::Matrix<double,-1,-1>>&,
+                                      double>(std::vector<
+                                                Eigen::Matrix<double,-1,-1>>{
+                                                stan::math::to_matrix(
+                                                  std::vector<
+                                                    Eigen::Matrix<double,1,-1>>{
+                                                    (Eigen::Matrix<double,1,-1>(1) <<
+                                                       1).finished()})},
+                                      std::get<1>(d))}, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
