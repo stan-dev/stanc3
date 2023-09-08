@@ -18837,21 +18837,79 @@
                (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta <opaque>)))))
        (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt Void) (fdname h) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable x (UTuple (UReal (UTuple (UMatrix (UArray UReal))))))))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (NRFunApp (CompilerInternal FnPrint)
+             (((pattern
+                (TupleProjection
+                 ((pattern (Var x))
+                  (meta
+                   ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal))))))
+                    (loc <opaque>)
+                    (adlevel
+                     (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable))))))))
+                 1))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp (CompilerInternal FnPrint)
+             (((pattern
+                (TupleProjection
+                 ((pattern
+                   (TupleProjection
+                    ((pattern (Var x))
+                     (meta
+                      ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal))))))
+                       (loc <opaque>)
+                       (adlevel
+                        (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable))))))))
+                    2))
+                  (meta
+                   ((type_ (UTuple (UMatrix (UArray UReal)))) (loc <opaque>)
+                    (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                 1))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp (CompilerInternal FnPrint)
+             (((pattern
+                (TupleProjection
+                 ((pattern
+                   (TupleProjection
+                    ((pattern (Var x))
+                     (meta
+                      ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal))))))
+                       (loc <opaque>)
+                       (adlevel
+                        (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable))))))))
+                    2))
+                  (meta
+                   ((type_ (UTuple (UMatrix (UArray UReal)))) (loc <opaque>)
+                    (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
+                 2))
+               (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
     (fdloc <opaque>))))
  (input_vars
   ((x
     ((begin_loc
-      ((filename tuple_copying.stan) (line_num 14) (col_num 2) (included_from ())))
+      ((filename tuple_copying.stan) (line_num 20) (col_num 2) (included_from ())))
      (end_loc
-      ((filename tuple_copying.stan) (line_num 14) (col_num 17) (included_from ()))))
+      ((filename tuple_copying.stan) (line_num 20) (col_num 17) (included_from ()))))
     (SMatrix AoS
      ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
      ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (y
     ((begin_loc
-      ((filename tuple_copying.stan) (line_num 15) (col_num 2) (included_from ())))
+      ((filename tuple_copying.stan) (line_num 21) (col_num 2) (included_from ())))
      (end_loc
-      ((filename tuple_copying.stan) (line_num 15) (col_num 19) (included_from ()))))
+      ((filename tuple_copying.stan) (line_num 21) (col_num 19) (included_from ()))))
     (SArray SReal
      ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
  (prepare_data
@@ -18962,6 +19020,21 @@
          (((pattern (Lit Str y))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id data_tuple)
+      (decl_type
+       (Sized
+        (STuple
+         ((SMatrix AoS
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (SArray SReal
+           ((pattern (Lit Int 10))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+      (initialize true)))
     (meta <opaque>))))
  (log_prob
   (((pattern
@@ -19133,6 +19206,95 @@
             (meta
              ((type_ (UTuple (UMatrix UInt (UArray UReal)))) (loc <opaque>)
               (adlevel (TupleAD (AutoDiffable DataOnly DataOnly)))))))))
+        (meta <opaque>))
+       ((pattern
+         (Decl
+          (decl_adtype (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))
+          (decl_id temp3)
+          (decl_type
+           (Sized
+            (STuple
+             (SReal
+              (STuple
+               ((SMatrix AoS
+                 ((pattern (Lit Int 2))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 2))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (SArray SReal
+                 ((pattern (Lit Int 10))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
+          (initialize true)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable temp3) ())
+          (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))
+          ((pattern
+            (FunApp (CompilerInternal FnMakeTuple)
+             (((pattern
+                (Promotion
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Var data_tuple))
+               (meta
+                ((type_ (UTuple (UMatrix (UArray UReal)))) (loc <opaque>)
+                 (adlevel (TupleAD (DataOnly DataOnly)))))))))
+           (meta
+            ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))) 
+             (loc <opaque>) (adlevel (TupleAD (DataOnly (TupleAD (DataOnly DataOnly))))))))))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (UserDefined h FnPlain)
+          (((pattern (Var temp3))
+            (meta
+             ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))) 
+              (loc <opaque>)
+              (adlevel (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))))))))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (UserDefined h FnPlain)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern
+                 (Promotion
+                  ((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  UReal DataOnly))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var data_tuple))
+                (meta
+                 ((type_ (UTuple (UMatrix (UArray UReal)))) (loc <opaque>)
+                  (adlevel (TupleAD (DataOnly DataOnly)))))))))
+            (meta
+             ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))) 
+              (loc <opaque>)
+              (adlevel (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))))))))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (UserDefined h FnPlain)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern
+                 (Promotion
+                  ((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  UReal DataOnly))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern
+                 (FunApp (CompilerInternal FnMakeTuple)
+                  (((pattern (Var x))
+                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+                   ((pattern (Var y))
+                    (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta
+                 ((type_ (UTuple (UMatrix (UArray UReal)))) (loc <opaque>)
+                  (adlevel (TupleAD (DataOnly DataOnly)))))))))
+            (meta
+             ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))) 
+              (loc <opaque>)
+              (adlevel (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))))))))
         (meta <opaque>)))))
     (meta <opaque>))))
  (reverse_mode_log_prob
@@ -19305,6 +19467,95 @@
             (meta
              ((type_ (UTuple (UMatrix UInt (UArray UReal)))) (loc <opaque>)
               (adlevel (TupleAD (AutoDiffable DataOnly DataOnly)))))))))
+        (meta <opaque>))
+       ((pattern
+         (Decl
+          (decl_adtype (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))
+          (decl_id temp3)
+          (decl_type
+           (Sized
+            (STuple
+             (SReal
+              (STuple
+               ((SMatrix AoS
+                 ((pattern (Lit Int 2))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 2))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (SArray SReal
+                 ((pattern (Lit Int 10))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))))
+          (initialize true)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable temp3) ())
+          (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))
+          ((pattern
+            (FunApp (CompilerInternal FnMakeTuple)
+             (((pattern
+                (Promotion
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 UReal DataOnly))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Var data_tuple))
+               (meta
+                ((type_ (UTuple (UMatrix (UArray UReal)))) (loc <opaque>)
+                 (adlevel (TupleAD (DataOnly DataOnly)))))))))
+           (meta
+            ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))) 
+             (loc <opaque>) (adlevel (TupleAD (DataOnly (TupleAD (DataOnly DataOnly))))))))))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (UserDefined h FnPlain)
+          (((pattern (Var temp3))
+            (meta
+             ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))) 
+              (loc <opaque>)
+              (adlevel (TupleAD (AutoDiffable (TupleAD (AutoDiffable AutoDiffable)))))))))))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (UserDefined h FnPlain)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern
+                 (Promotion
+                  ((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  UReal DataOnly))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern (Var data_tuple))
+                (meta
+                 ((type_ (UTuple (UMatrix (UArray UReal)))) (loc <opaque>)
+                  (adlevel (TupleAD (DataOnly DataOnly)))))))))
+            (meta
+             ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))) 
+              (loc <opaque>)
+              (adlevel (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))))))))
+        (meta <opaque>))
+       ((pattern
+         (NRFunApp (UserDefined h FnPlain)
+          (((pattern
+             (FunApp (CompilerInternal FnMakeTuple)
+              (((pattern
+                 (Promotion
+                  ((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  UReal DataOnly))
+                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+               ((pattern
+                 (FunApp (CompilerInternal FnMakeTuple)
+                  (((pattern (Var x))
+                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+                   ((pattern (Var y))
+                    (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta
+                 ((type_ (UTuple (UMatrix (UArray UReal)))) (loc <opaque>)
+                  (adlevel (TupleAD (DataOnly DataOnly)))))))))
+            (meta
+             ((type_ (UTuple (UReal (UTuple (UMatrix (UArray UReal)))))) 
+              (loc <opaque>)
+              (adlevel (TupleAD (DataOnly (TupleAD (DataOnly DataOnly)))))))))))
         (meta <opaque>)))))
     (meta <opaque>))))
  (generate_quantities
@@ -19642,9 +19893,9 @@
  (output_vars
   ((m1
     ((begin_loc
-      ((filename tuple_copying.stan) (line_num 18) (col_num 2) (included_from ())))
+      ((filename tuple_copying.stan) (line_num 27) (col_num 2) (included_from ())))
      (end_loc
-      ((filename tuple_copying.stan) (line_num 18) (col_num 22) (included_from ()))))
+      ((filename tuple_copying.stan) (line_num 27) (col_num 22) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -19656,9 +19907,9 @@
      (out_block Parameters) (out_trans Identity)))
    (m2
     ((begin_loc
-      ((filename tuple_copying.stan) (line_num 18) (col_num 2) (included_from ())))
+      ((filename tuple_copying.stan) (line_num 27) (col_num 2) (included_from ())))
      (end_loc
-      ((filename tuple_copying.stan) (line_num 18) (col_num 22) (included_from ()))))
+      ((filename tuple_copying.stan) (line_num 27) (col_num 22) (included_from ()))))
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
