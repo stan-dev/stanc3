@@ -25,11 +25,14 @@ struct external_map_rectable_functor__ {
     return external_map_rectable(phi, theta, x_r, x_i, pstream__);
   }
 };
+// real internal_fun(data array[,] real, data array[,] int)
 double
 internal_fun(const std::vector<std::vector<double>>& a,
              const std::vector<std::vector<int>>& d, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;

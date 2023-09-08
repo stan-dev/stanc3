@@ -51,6 +51,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                              random_seed__ = 0, std::ostream*
                              pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -177,7 +179,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
             arr_tuple_dot_3_flat__pos__ = (arr_tuple_dot_3_flat__pos__ + 3);
           }
           stan::model::assign(arr_tuple,
-            std::tuple<int, std::vector<double>, Eigen::Matrix<double,-1,1>>(arr_tuple_dot_1_temp__,
+            std::tuple<int, const std::vector<double>&,
+              const Eigen::Matrix<double,-1,1>&>(arr_tuple_dot_1_temp__,
               arr_tuple_dot_2_temp__, arr_tuple_dot_3_temp__),
             "assigning variable arr_tuple", stan::model::index_uni(sym1__));
         }
@@ -234,7 +237,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           tuple_arr_tuple_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_dot_3_dot_2_flat__pos__
             + 4);
           stan::model::assign(std::get<2>(tuple_arr_tuple),
-            std::tuple<double, std::vector<int>>(tuple_arr_tuple_dot_3_dot_1_temp__,
+            std::tuple<double, const std::vector<int>&>(tuple_arr_tuple_dot_3_dot_1_temp__,
               tuple_arr_tuple_dot_3_dot_2_temp__),
             "assigning variable tuple_arr_tuple.3",
             stan::model::index_uni(sym1__));
@@ -451,7 +454,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   + 5);
               }
               stan::model::assign(arr_tuple_arr_tuple_dot_2_temp__,
-                std::tuple<double, Eigen::Matrix<double,-1,1>>(arr_tuple_arr_tuple_dot_2_dot_1_temp__,
+                std::tuple<double, const Eigen::Matrix<double,-1,1>&>(arr_tuple_arr_tuple_dot_2_dot_1_temp__,
                   arr_tuple_arr_tuple_dot_2_dot_2_temp__),
                 "assigning variable arr_tuple_arr_tuple_dot_2_temp__",
                 stan::model::index_uni(sym2__));
@@ -622,8 +625,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                       + (6 * 7));
                   }
                   stan::model::assign(very_deep_dot_2_dot_2_temp__,
-                    std::tuple<std::complex<double>,
-                      Eigen::Matrix<double,-1,-1>>(very_deep_dot_2_dot_2_dot_1_temp__,
+                    std::tuple<const std::complex<double>&,
+                      const Eigen::Matrix<double,-1,-1>&>(very_deep_dot_2_dot_2_dot_1_temp__,
                       very_deep_dot_2_dot_2_dot_2_temp__),
                     "assigning variable very_deep_dot_2_dot_2_temp__",
                     stan::model::index_uni(sym3__));
@@ -678,6 +681,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -928,6 +933,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -1185,6 +1192,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -1504,6 +1513,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -1806,6 +1817,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -1997,8 +2010,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
               3);
           }
           stan::model::assign(arr_tuple_p,
-            std::tuple<std::complex<double>, std::vector<double>,
-              Eigen::Matrix<double,-1,1>>(arr_tuple_p_dot_1_temp__,
+            std::tuple<const std::complex<double>&,
+              const std::vector<double>&, const Eigen::Matrix<double,-1,1>&>(arr_tuple_p_dot_1_temp__,
               arr_tuple_p_dot_2_temp__, arr_tuple_p_dot_3_temp__),
             "assigning variable arr_tuple_p", stan::model::index_uni(sym1__));
         }
@@ -2052,7 +2065,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           tuple_arr_tuple_p_dot_3_dot_2_flat__pos__ = (tuple_arr_tuple_p_dot_3_dot_2_flat__pos__
             + 4);
           stan::model::assign(std::get<2>(tuple_arr_tuple_p),
-            std::tuple<double, std::vector<double>>(tuple_arr_tuple_p_dot_3_dot_1_temp__,
+            std::tuple<double, const std::vector<double>&>(tuple_arr_tuple_p_dot_3_dot_1_temp__,
               tuple_arr_tuple_p_dot_3_dot_2_temp__),
             "assigning variable tuple_arr_tuple_p.3",
             stan::model::index_uni(sym1__));
@@ -2286,7 +2299,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   + 5);
               }
               stan::model::assign(arr_tuple_arr_tuple_p_dot_2_temp__,
-                std::tuple<double, Eigen::Matrix<double,-1,1>>(arr_tuple_arr_tuple_p_dot_2_dot_1_temp__,
+                std::tuple<double, const Eigen::Matrix<double,-1,1>&>(arr_tuple_arr_tuple_p_dot_2_dot_1_temp__,
                   arr_tuple_arr_tuple_p_dot_2_dot_2_temp__),
                 "assigning variable arr_tuple_arr_tuple_p_dot_2_temp__",
                 stan::model::index_uni(sym2__));
@@ -2458,8 +2471,8 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                       + (6 * 7));
                   }
                   stan::model::assign(very_deep_p_dot_2_dot_2_temp__,
-                    std::tuple<std::complex<double>,
-                      Eigen::Matrix<double,-1,-1>>(very_deep_p_dot_2_dot_2_dot_1_temp__,
+                    std::tuple<const std::complex<double>&,
+                      const Eigen::Matrix<double,-1,-1>&>(very_deep_p_dot_2_dot_2_dot_1_temp__,
                       very_deep_p_dot_2_dot_2_dot_2_temp__),
                     "assigning variable very_deep_p_dot_2_dot_2_temp__",
                     stan::model::index_uni(sym3__));
@@ -2934,6 +2947,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -2969,6 +2984,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -2988,7 +3005,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
+            std::tuple<local_scalar_t__, local_scalar_t__>(1, x),
+            std::tuple<local_scalar_t__, local_scalar_t__>(x, 1)},
           "assigning variable z");
       }
     } catch (const std::exception& e) {
@@ -3011,6 +3029,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3030,7 +3050,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
         current_statement__ = 2;
         stan::model::assign(z,
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>{
-            std::forward_as_tuple(1, x), std::forward_as_tuple(x, 1)},
+            std::tuple<local_scalar_t__, local_scalar_t__>(1, x),
+            std::tuple<local_scalar_t__, local_scalar_t__>(x, 1)},
           "assigning variable z");
       }
     } catch (const std::exception& e) {
@@ -3060,6 +3081,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -3098,6 +3121,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3117,6 +3142,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3286,6 +3313,8 @@ class simple_model final : public model_base_crtp<simple_model> {
                random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -3305,7 +3334,7 @@ class simple_model final : public model_base_crtp<simple_model> {
       x = std::tuple<double, int>{std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<int>::min()};
       current_statement__ = 1;
-      stan::model::assign(x, std::forward_as_tuple(3.14, 2),
+      stan::model::assign(x, std::tuple<double, int>(3.14, 2),
         "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
@@ -3338,6 +3367,8 @@ class simple_model final : public model_base_crtp<simple_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3362,6 +3393,8 @@ class simple_model final : public model_base_crtp<simple_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3393,6 +3426,8 @@ class simple_model final : public model_base_crtp<simple_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -3427,6 +3462,8 @@ class simple_model final : public model_base_crtp<simple_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3438,6 +3475,8 @@ class simple_model final : public model_base_crtp<simple_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3594,6 +3633,8 @@ class simple2_model final : public model_base_crtp<simple2_model> {
                 random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -3616,8 +3657,9 @@ class simple2_model final : public model_base_crtp<simple2_model> {
             std::numeric_limits<int>::min()};
       current_statement__ = 1;
       stan::model::assign(x,
-        std::tuple<std::vector<double>, int>(std::vector<double>{1.01, 3.14},
-          2), "assigning variable x");
+        std::tuple<const std::vector<double>&, int>(std::vector<double>{1.01,
+                                                      3.14}, 2),
+        "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__,
@@ -3651,6 +3693,8 @@ class simple2_model final : public model_base_crtp<simple2_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3675,6 +3719,8 @@ class simple2_model final : public model_base_crtp<simple2_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3706,6 +3752,8 @@ class simple2_model final : public model_base_crtp<simple2_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -3740,6 +3788,8 @@ class simple2_model final : public model_base_crtp<simple2_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3751,6 +3801,8 @@ class simple2_model final : public model_base_crtp<simple2_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3907,6 +3959,8 @@ class simple3_model final : public model_base_crtp<simple3_model> {
                 random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -3933,19 +3987,19 @@ class simple3_model final : public model_base_crtp<simple3_model> {
             std::numeric_limits<int>::min()};
       current_statement__ = 1;
       stan::model::assign(x,
-        std::tuple<std::vector<std::vector<double>>, int>(std::vector<
-                                                            std::vector<
-                                                              double>>{
-                                                            std::vector<
-                                                              double>{1.01,
-                                                              3.14},
-                                                            std::vector<
-                                                              double>{1.01,
-                                                              3.14},
-                                                            std::vector<
-                                                              double>{1.01,
-                                                              3.14}}, 2),
-        "assigning variable x");
+        std::tuple<const std::vector<std::vector<double>>&, int>(std::vector<
+                                                                   std::vector<
+                                                                    double>>{
+                                                                   std::vector<
+                                                                    double>{1.01,
+                                                                    3.14},
+                                                                   std::vector<
+                                                                    double>{1.01,
+                                                                    3.14},
+                                                                   std::vector<
+                                                                    double>{1.01,
+                                                                    3.14}},
+          2), "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__,
@@ -3979,6 +4033,8 @@ class simple3_model final : public model_base_crtp<simple3_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4003,6 +4059,8 @@ class simple3_model final : public model_base_crtp<simple3_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4034,6 +4092,8 @@ class simple3_model final : public model_base_crtp<simple3_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -4068,6 +4128,8 @@ class simple3_model final : public model_base_crtp<simple3_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4079,6 +4141,8 @@ class simple3_model final : public model_base_crtp<simple3_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4238,6 +4302,8 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
                                random_seed__ = 0, std::ostream*
                                pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -4357,7 +4423,7 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
               z_dot_2_flat__pos__ = (z_dot_2_flat__pos__ + 4);
             }
             stan::model::assign(z,
-              std::tuple<double, Eigen::Matrix<double,-1,1>>(z_dot_1_temp__,
+              std::tuple<double, const Eigen::Matrix<double,-1,1>&>(z_dot_1_temp__,
                 z_dot_2_temp__), "assigning variable z",
               stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
           }
@@ -4401,6 +4467,8 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4425,6 +4493,8 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4456,6 +4526,8 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -4490,6 +4562,8 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4501,6 +4575,8 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4656,9 +4732,12 @@ static constexpr std::array<const char*, 10> locations_array__ =
   " (in 'tuple-constraints-params.stan', line 3, column 4 to column 22)",
   " (in 'tuple-constraints-params.stan', line 2, column 26 to line 4, column 3)"};
 std::tuple<double, double> foo(std::ostream* pstream__);
+// tuple(real, real) foo()
 std::tuple<double, double> foo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -4667,7 +4746,7 @@ std::tuple<double, double> foo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 8;
-    return std::forward_as_tuple(1.0, 2.0);
+    return std::tuple<local_scalar_t__, local_scalar_t__>(1.0, 2.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -4683,6 +4762,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                                  std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -4746,6 +4827,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4865,6 +4948,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4991,6 +5076,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -5132,6 +5219,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -5260,6 +5349,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -5356,7 +5447,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               ps2_dot_2_flat__pos__ = (ps2_dot_2_flat__pos__ + 4);
             }
             stan::model::assign(ps2,
-              std::tuple<double, Eigen::Matrix<double,-1,1>>(ps2_dot_1_temp__,
+              std::tuple<double, const Eigen::Matrix<double,-1,1>&>(ps2_dot_1_temp__,
                 ps2_dot_2_temp__), "assigning variable ps2",
               stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
           }
@@ -5504,8 +5595,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                   + (5 * 4));
               }
               stan::model::assign(complicated_dot_2_temp__,
-                std::tuple<double, Eigen::Matrix<double,-1,1>,
-                  Eigen::Matrix<double,-1,-1>>(complicated_dot_2_dot_1_temp__,
+                std::tuple<double, const Eigen::Matrix<double,-1,1>&,
+                  const Eigen::Matrix<double,-1,-1>&>(complicated_dot_2_dot_1_temp__,
                   complicated_dot_2_dot_2_temp__,
                   complicated_dot_2_dot_3_temp__),
                 "assigning variable complicated_dot_2_temp__",
@@ -5777,16 +5868,31 @@ namespace tuple_dataonly_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 5> locations_array__ =
+static constexpr std::array<const char*, 11> locations_array__ =
   {" (found before start of program)",
-  " (in 'tuple-dataonly.stan', line 10, column 2 to column 19)",
-  " (in 'tuple-dataonly.stan', line 7, column 2 to column 22)",
+  " (in 'tuple-dataonly.stan', line 16, column 2 to column 19)",
+  " (in 'tuple-dataonly.stan', line 17, column 2 to column 24)",
+  " (in 'tuple-dataonly.stan', line 18, column 2 to column 34)",
+  " (in 'tuple-dataonly.stan', line 13, column 2 to column 22)",
   " (in 'tuple-dataonly.stan', line 3, column 4 to column 15)",
-  " (in 'tuple-dataonly.stan', line 2, column 37 to line 4, column 3)"};
+  " (in 'tuple-dataonly.stan', line 2, column 37 to line 4, column 3)",
+  " (in 'tuple-dataonly.stan', line 6, column 4 to column 18)",
+  " (in 'tuple-dataonly.stan', line 5, column 45 to line 7, column 3)",
+  " (in 'tuple-dataonly.stan', line 9, column 4 to column 27)",
+  " (in 'tuple-dataonly.stan', line 8, column 55 to line 10, column 3)"};
 double foo(const std::tuple<double, double>& x, std::ostream* pstream__);
+double
+bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__);
+double
+baz(const std::vector<
+            std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>& x,
+    std::ostream* pstream__);
+// real foo(data tuple(real, real))
 double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -5794,8 +5900,55 @@ double foo(const std::tuple<double, double>& x, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 3;
+    current_statement__ = 5;
     return std::get<0>(x);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+// real bar(data array[] tuple(real, real))
+double
+bar(const std::vector<std::tuple<double, double>>& x, std::ostream* pstream__) {
+  using local_scalar_t__ = double;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 7;
+    return std::get<1>(stan::model::rvalue(x, "x", stan::model::index_uni(1)));
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+// real baz(data array[] tuple(array[] matrix, real))
+double
+baz(const std::vector<
+            std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>, double>>& x,
+    std::ostream* pstream__) {
+  using local_scalar_t__ = double;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 9;
+    return stan::model::rvalue(
+             stan::model::rvalue(
+               std::get<0>(
+                 stan::model::rvalue(x, "x", stan::model::index_uni(1))),
+               "x[1].1", stan::model::index_uni(1)), "x[1].1[1]",
+             stan::model::index_uni(1), stan::model::index_uni(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -5809,6 +5962,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -5824,14 +5979,14 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 2;
+      current_statement__ = 4;
       context__.validate_dims("data initialization", "d.1", "double",
         std::vector<size_t>{});
       context__.validate_dims("data initialization", "d.2", "double",
         std::vector<size_t>{});
       d = std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()};
-      current_statement__ = 2;
+      current_statement__ = 4;
       std::get<0>(d) = context__.vals_r("d.1")[(1 - 1)];
       std::get<1>(d) = context__.vals_r("d.2")[(1 - 1)];
     } catch (const std::exception& e) {
@@ -5860,6 +6015,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -5870,6 +6027,29 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     try {
       current_statement__ = 1;
       lp_accum__.add(foo(d, pstream__));
+      current_statement__ = 2;
+      lp_accum__.add(bar(
+                       std::vector<std::tuple<double, double>>{stan::math::promote_scalar<
+                                                                 std::tuple<
+                                                                   double,
+                                                                   double>>(d),
+                         stan::math::promote_scalar<
+                           std::tuple<double, double>>(d)}, pstream__));
+      current_statement__ = 3;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{std::tuple<
+                                      const std::vector<
+                                              Eigen::Matrix<double,-1,-1>>&,
+                                      double>(std::vector<
+                                                Eigen::Matrix<double,-1,-1>>{
+                                                stan::math::to_matrix(
+                                                  std::vector<
+                                                    Eigen::Matrix<double,1,-1>>{
+                                                    (Eigen::Matrix<double,1,-1>(1) <<
+                                                       1).finished()})},
+                                      std::get<1>(d))}, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5890,6 +6070,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -5900,6 +6082,29 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     try {
       current_statement__ = 1;
       lp_accum__.add(foo(d, pstream__));
+      current_statement__ = 2;
+      lp_accum__.add(bar(
+                       std::vector<std::tuple<double, double>>{stan::math::promote_scalar<
+                                                                 std::tuple<
+                                                                   double,
+                                                                   double>>(d),
+                         stan::math::promote_scalar<
+                           std::tuple<double, double>>(d)}, pstream__));
+      current_statement__ = 3;
+      lp_accum__.add(baz(
+                       std::vector<
+                         std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+                           double>>{std::tuple<
+                                      const std::vector<
+                                              Eigen::Matrix<double,-1,-1>>&,
+                                      double>(std::vector<
+                                                Eigen::Matrix<double,-1,-1>>{
+                                                stan::math::to_matrix(
+                                                  std::vector<
+                                                    Eigen::Matrix<double,1,-1>>{
+                                                    (Eigen::Matrix<double,1,-1>(1) <<
+                                                       1).finished()})},
+                                      std::get<1>(d))}, pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -5927,6 +6132,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -5961,6 +6168,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -5972,6 +6181,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6108,6 +6319,359 @@ stan::math::profile_map& get_stan_profile_data() {
   return tuple_dataonly_model_namespace::profiles__;
 }
 #endif
+  $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuple-dataonly2.stan
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace tuple_dataonly2_model_namespace {
+using stan::model::model_base_crtp;
+using namespace stan::math;
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 4> locations_array__ =
+  {" (found before start of program)",
+  " (in 'tuple-dataonly2.stan', line 7, column 2 to column 34)",
+  " (in 'tuple-dataonly2.stan', line 3, column 4 to column 18)",
+  " (in 'tuple-dataonly2.stan', line 2, column 53 to line 4, column 3)"};
+double
+tuple_tester(const std::tuple<std::vector<double>, int>& x, std::ostream*
+             pstream__);
+// real tuple_tester(data tuple(array[] real, int))
+double
+tuple_tester(const std::tuple<std::vector<double>, int>& x, std::ostream*
+             pstream__) {
+  using local_scalar_t__ = double;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 2;
+    return stan::model::rvalue(std::get<0>(x), "x.1",
+             stan::model::index_uni(1));
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+class tuple_dataonly2_model final : public model_base_crtp<tuple_dataonly2_model> {
+ private:
+  
+ public:
+  ~tuple_dataonly2_model() {}
+  tuple_dataonly2_model(stan::io::var_context& context__, unsigned int
+                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    using local_scalar_t__ = double;
+    boost::ecuyer1988 base_rng__ =
+      stan::services::util::create_rng(random_seed__, 0);
+    // suppress unused var warning
+    (void) base_rng__;
+    static constexpr const char* function__ =
+      "tuple_dataonly2_model_namespace::tuple_dataonly2_model";
+    // suppress unused var warning
+    (void) function__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    num_params_r__ = 0U;
+  }
+  inline std::string model_name() const final {
+    return "tuple_dataonly2_model";
+  }
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
+             "stancflags = -fsoa --print-cpp"};
+  }
+  // Base log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_not_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "tuple_dataonly2_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      current_statement__ = 1;
+      if (pstream__) {
+        stan::math::stan_print(pstream__,
+          tuple_tester(
+            std::tuple<const std::vector<double>&, int>(std::vector<double>{1.0},
+              2), pstream__));
+        *(pstream__) << std::endl;
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  // Reverse mode autodiff log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "tuple_dataonly2_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      current_statement__ = 1;
+      if (pstream__) {
+        stan::math::stan_print(pstream__,
+          tuple_tester(
+            std::tuple<const std::vector<double>&, int>(std::vector<double>{1.0},
+              2), pstream__));
+        *(pstream__) << std::endl;
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  template <typename RNG, typename VecR, typename VecI, typename VecVar,
+            stan::require_vector_like_vt<std::is_floating_point,
+            VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral,
+            VecI>* = nullptr, stan::require_vector_vt<std::is_floating_point,
+            VecVar>* = nullptr>
+  inline void
+  write_array_impl(RNG& base_rng__, VecR& params_r__, VecI& params_i__,
+                   VecVar& vars__, const bool
+                   emit_transformed_parameters__ = true, const bool
+                   emit_generated_quantities__ = true, std::ostream*
+                   pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    static constexpr bool propto__ = true;
+    // suppress unused var warning
+    (void) propto__;
+    double lp__ = 0.0;
+    // suppress unused var warning
+    (void) lp__;
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
+    static constexpr const char* function__ =
+      "tuple_dataonly2_model_namespace::write_array";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, typename VecI,
+            stan::require_vector_t<VecVar>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  inline void
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+  }
+  inline void
+  get_param_names(std::vector<std::string>& names__, const bool
+                  emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    names__ = std::vector<std::string>{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline void
+  get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
+           emit_transformed_parameters__ = true, const bool
+           emit_generated_quantities__ = true) const {
+    dimss__ = std::vector<std::vector<size_t>>{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline void
+  constrained_param_names(std::vector<std::string>& param_names__, bool
+                          emit_transformed_parameters__ = true, bool
+                          emit_generated_quantities__ = true) const final {
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline void
+  unconstrained_param_names(std::vector<std::string>& param_names__, bool
+                            emit_transformed_parameters__ = true, bool
+                            emit_generated_quantities__ = true) const final {
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline std::string get_constrained_sizedtypes() const {
+    return std::string("[]");
+  }
+  inline std::string get_unconstrained_sizedtypes() const {
+    return std::string("[]");
+  }
+  // Begin method overload boilerplate
+  template <typename RNG> inline void
+  write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
+              Eigen::Matrix<double,-1,1>& vars, const bool
+              emit_transformed_parameters = true, const bool
+              emit_generated_quantities = true, std::ostream*
+              pstream = nullptr) const {
+    const size_t num_params__ = 0;
+    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_to_write = num_params__ + num_transformed +
+      num_gen_quantities;
+    std::vector<int> params_i;
+    vars = Eigen::Matrix<double,-1,1>::Constant(num_to_write,
+             std::numeric_limits<double>::quiet_NaN());
+    write_array_impl(base_rng, params_r, params_i, vars,
+      emit_transformed_parameters, emit_generated_quantities, pstream);
+  }
+  template <typename RNG> inline void
+  write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
+              params_i, std::vector<double>& vars, bool
+              emit_transformed_parameters = true, bool
+              emit_generated_quantities = true, std::ostream*
+              pstream = nullptr) const {
+    const size_t num_params__ = 0;
+    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_to_write = num_params__ + num_transformed +
+      num_gen_quantities;
+    vars = std::vector<double>(num_to_write,
+             std::numeric_limits<double>::quiet_NaN());
+    write_array_impl(base_rng, params_r, params_i, vars,
+      emit_transformed_parameters, emit_generated_quantities, pstream);
+  }
+  template <bool propto__, bool jacobian__, typename T_> inline T_
+  log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream* pstream = nullptr) const {
+    Eigen::Matrix<int,-1,1> params_i;
+    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+  }
+  template <bool propto__, bool jacobian__, typename T_> inline T_
+  log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
+           std::ostream* pstream = nullptr) const {
+    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+  }
+  inline void
+  transform_inits(const stan::io::var_context& context,
+                  Eigen::Matrix<double,-1,1>& params_r, std::ostream*
+                  pstream = nullptr) const final {
+    std::vector<double> params_r_vec(params_r.size());
+    std::vector<int> params_i;
+    transform_inits(context, params_i, params_r_vec, pstream);
+    params_r = Eigen::Map<Eigen::Matrix<double,-1,1>>(params_r_vec.data(),
+                 params_r_vec.size());
+  }
+  inline void
+  transform_inits(const stan::io::var_context& context, std::vector<int>&
+                  params_i, std::vector<double>& vars, std::ostream*
+                  pstream__ = nullptr) const {
+    vars.resize(num_params_r__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+};
+}
+using stan_model = tuple_dataonly2_model_namespace::tuple_dataonly2_model;
+#ifndef USING_R
+// Boilerplate
+stan::model::model_base&
+new_model(stan::io::var_context& data_context, unsigned int seed,
+          std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+stan::math::profile_map& get_stan_profile_data() {
+  return tuple_dataonly2_model_namespace::profiles__;
+}
+#endif
   $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuple-foreach.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -6128,6 +6692,8 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
                       random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -6180,6 +6746,8 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6204,6 +6772,8 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6235,6 +6805,8 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -6269,6 +6841,8 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6280,6 +6854,8 @@ class tuple_foreach_model final : public model_base_crtp<tuple_foreach_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6438,6 +7014,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
                    random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -6501,6 +7079,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6549,6 +7129,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6604,6 +7186,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -6649,6 +7233,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6673,6 +7259,8 @@ class tuple_full_model final : public model_base_crtp<tuple_full_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6857,6 +7445,8 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
                         random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -6903,6 +7493,8 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6927,6 +7519,8 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6958,6 +7552,8 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -6992,6 +7588,8 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7003,6 +7601,8 @@ class tuple_ix_assign_model final : public model_base_crtp<tuple_ix_assign_model
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7159,6 +7759,8 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
                          random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -7207,6 +7809,8 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7231,6 +7835,8 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7262,6 +7868,8 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -7296,6 +7904,8 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7307,6 +7917,8 @@ class tuple_ix_assign2_model final : public model_base_crtp<tuple_ix_assign2_mod
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7463,6 +8075,8 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
                          random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -7510,6 +8124,8 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7534,6 +8150,8 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7565,6 +8183,8 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -7599,6 +8219,8 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7610,6 +8232,8 @@ class tuple_ix_assign3_model final : public model_base_crtp<tuple_ix_assign3_mod
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7766,6 +8390,8 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
                          random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -7817,6 +8443,8 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7841,6 +8469,8 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7872,6 +8502,8 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -7906,6 +8538,8 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7917,6 +8551,8 @@ class tuple_ix_assign4_model final : public model_base_crtp<tuple_ix_assign4_mod
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8073,6 +8709,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
                            random_seed__ = 0, std::ostream*
                            pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -8108,6 +8746,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8159,6 +8799,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8217,6 +8859,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -8279,6 +8923,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8322,6 +8968,8 @@ class tuple_nested_param_model final : public model_base_crtp<tuple_nested_param
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8567,6 +9215,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
                      random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -8602,6 +9252,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8638,6 +9290,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8681,6 +9335,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -8725,6 +9381,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8749,6 +9407,8 @@ class tuple_params_model final : public model_base_crtp<tuple_params_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8944,19 +9604,37 @@ static constexpr std::array<const char*, 22> locations_array__ =
   " (in 'tuple-promotion.stan', line 3, column 4 to column 37)",
   " (in 'tuple-promotion.stan', line 2, column 53 to line 4, column 3)"};
 template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                              stan::is_stan_scalar<T0__1__>>* = nullptr>
-stan::promote_args_t<T0__0__, T0__1__>
-dummy(const std::tuple<std::vector<T0__0__>, std::vector<T0__1__>>& test,
-      std::ostream* pstream__);
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__0__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__0__>>>,
+                              stan::is_std_vector<T0__1__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__1__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__1__>>>>* = nullptr>
+stan::promote_args_t<stan::base_type_t<T0__0__>, stan::base_type_t<T0__1__>>
+dummy(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__);
+// real dummy(tuple(array[] real, array[] real))
 template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                              stan::is_stan_scalar<T0__1__>>*>
-stan::promote_args_t<T0__0__, T0__1__>
-dummy(const std::tuple<std::vector<T0__0__>, std::vector<T0__1__>>& test,
-      std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__0__, T0__1__>;
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__0__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__0__>>>,
+                              stan::is_std_vector<T0__1__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__1__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__1__>>>>*>
+stan::promote_args_t<stan::base_type_t<T0__0__>, stan::base_type_t<T0__1__>>
+dummy(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__0__>,
+                             stan::base_type_t<T0__1__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -8989,6 +9667,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                         random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -9063,9 +9743,9 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                   std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 15;
       stan::model::assign(basic,
-        std::tuple<std::vector<double>, std::complex<double>>(std::vector<
-                                                                double>{1, 2},
-          stan::math::to_complex(3, 0)), "assigning variable basic");
+        std::tuple<const std::vector<double>&, const std::complex<double>&>(
+          std::vector<double>{1, 2}, stan::math::to_complex(3, 0)),
+        "assigning variable basic");
       current_statement__ = 16;
       CV = std::tuple<Eigen::Matrix<std::complex<double>,-1,1>, double>{
              Eigen::Matrix<std::complex<double>,-1,1>::Constant(3,
@@ -9074,7 +9754,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
              std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 16;
       stan::model::assign(CV,
-        std::tuple<Eigen::Matrix<std::complex<double>,-1,1>, double>(
+        std::tuple<const Eigen::Matrix<std::complex<double>,-1,1>&, double>(
           stan::math::promote_scalar<std::complex<double>>(V), 2),
         "assigning variable CV");
       current_statement__ = 17;
@@ -9084,7 +9764,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
              std::numeric_limits<int>::min()};
       current_statement__ = 17;
       stan::model::assign(V2,
-        std::tuple<Eigen::Matrix<double,-1,1>, int>(V, 2),
+        std::tuple<const Eigen::Matrix<double,-1,1>&, int>(V, 2),
         "assigning variable V2");
       current_statement__ = 18;
       stan::model::assign(CV,
@@ -9121,6 +9801,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -9239,6 +9921,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -9364,6 +10048,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -9523,7 +10209,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
         std::tuple<double, double>{std::numeric_limits<double>::quiet_NaN(),
           std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 7;
-      stan::model::assign(x, std::forward_as_tuple(y, 3),
+      stan::model::assign(x, std::tuple<double, double>(y, 3),
         "assigning variable x");
       std::tuple<std::complex<double>, double> z =
         std::tuple<std::complex<double>, double>{std::complex<double>(
@@ -9566,6 +10252,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -9577,6 +10265,8 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -9972,46 +10662,62 @@ static constexpr std::array<const char*, 26> locations_array__ =
   " (in 'tuple-templating.stan', line 14, column 38 to line 16, column 3)",
   " (in 'tuple-templating.stan', line 20, column 4 to column 18)",
   " (in 'tuple-templating.stan', line 19, column 57 to line 21, column 3)"};
-template <typename T0__0__,
+template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>>* = nullptr>
-void foo(const std::tuple<T0__0__, int>& test, std::ostream* pstream__);
-template <typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__1__>>* = nullptr>
-stan::promote_args_t<T0__1__>
-tsum(const std::tuple<std::vector<int>, std::vector<T0__1__>>& s,
-     std::ostream* pstream__);
-template <typename T0__0__,
+                              stan::is_vt_not_complex<T0__0__>,
+                              std::is_integral<T0__1__>>* = nullptr>
+void foo(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__);
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              std::is_integral<stan::value_type_t<T0__0__>>,
+                              stan::is_std_vector<T0__1__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__1__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__1__>>>>* = nullptr>
+stan::promote_args_t<stan::base_type_t<T0__1__>>
+tsum(const std::tuple<T0__0__, T0__1__>& s, std::ostream* pstream__);
+template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>>* = nullptr>
+                              stan::is_vt_not_complex<T0__0__>,
+                              std::is_integral<T0__1__>>* = nullptr>
 void
-foo2(const std::vector<std::tuple<T0__0__, int>>& test, std::ostream*
+foo2(const std::vector<std::tuple<T0__0__, T0__1__>>& test, std::ostream*
      pstream__);
 template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+                                                      std::is_floating_point<T0__0__>>,
                               stan::is_eigen_matrix_dynamic<T0__1__>,
                               stan::is_vt_not_complex<T0__1__>>* = nullptr>
 void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__);
-template <typename T0__0__, typename T0__1__1__, typename T0__2__,
-          typename T1__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
+          typename T0__2__, typename T1__0__, typename T1__1__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__0__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
+                              std::is_integral<T0__1__0__>,
                               stan::is_eigen_matrix_dynamic<T0__1__1__>,
                               stan::is_vt_not_complex<T0__1__1__>,
-                              stan::is_stan_scalar<T0__2__>,
+                              stan::math::disjunction<stan::is_autodiff<T0__2__>,
+                                                      std::is_floating_point<T0__2__>>,
+                              std::is_integral<T1__0__>,
                               stan::is_eigen_matrix_dynamic<T1__1__>,
                               stan::is_vt_not_complex<T1__1__>>* = nullptr>
 void
-overly_complicated(const std::tuple<
-                           std::vector<Eigen::Matrix<T0__0__,-1,-1>>,
-                           std::tuple<int, T0__1__1__>, T0__2__>& t1,
-                   const std::vector<std::tuple<int, T1__1__>>& t2,
+overly_complicated(const std::tuple<T0__0__,
+                           std::tuple<T0__1__0__, T0__1__1__>, T0__2__>& t1,
+                   const std::vector<std::tuple<T1__0__, T1__1__>>& t2,
                    std::ostream* pstream__);
-template <typename T0__0__,
+// void foo(tuple(matrix, int))
+template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>>*>
-void foo(const std::tuple<T0__0__, int>& test, std::ostream* pstream__) {
+                              stan::is_vt_not_complex<T0__0__>,
+                              std::is_integral<T0__1__>>*>
+void foo(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10028,13 +10734,21 @@ void foo(const std::tuple<T0__0__, int>& test, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__1__>>*>
-stan::promote_args_t<T0__1__>
-tsum(const std::tuple<std::vector<int>, std::vector<T0__1__>>& s,
-     std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__1__>;
+// real tsum(tuple(array[] int, array[] real))
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              std::is_integral<stan::value_type_t<T0__0__>>,
+                              stan::is_std_vector<T0__1__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__1__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__1__>>>>*>
+stan::promote_args_t<stan::base_type_t<T0__1__>>
+tsum(const std::tuple<T0__0__, T0__1__>& s, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__1__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10048,14 +10762,18 @@ tsum(const std::tuple<std::vector<int>, std::vector<T0__1__>>& s,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__0__,
+// void foo2(array[] tuple(matrix, int))
+template <typename T0__0__, typename T0__1__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
-                              stan::is_vt_not_complex<T0__0__>>*>
+                              stan::is_vt_not_complex<T0__0__>,
+                              std::is_integral<T0__1__>>*>
 void
-foo2(const std::vector<std::tuple<T0__0__, int>>& test, std::ostream*
+foo2(const std::vector<std::tuple<T0__0__, T0__1__>>& test, std::ostream*
      pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10074,14 +10792,18 @@ foo2(const std::vector<std::tuple<T0__0__, int>>& test, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// void foo3(tuple(real, matrix))
 template <typename T0__0__, typename T0__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+                                                      std::is_floating_point<T0__0__>>,
                               stan::is_eigen_matrix_dynamic<T0__1__>,
                               stan::is_vt_not_complex<T0__1__>>*>
 void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__0__,
                              stan::base_type_t<T0__1__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10098,24 +10820,34 @@ void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__0__, typename T0__1__1__, typename T0__2__,
-          typename T1__1__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
+/* void
+   overly_complicated(tuple(array[] matrix, tuple(int, matrix), real),
+                      array[] tuple(int, matrix))
+ */
+template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
+          typename T0__2__, typename T1__0__, typename T1__1__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__0__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
+                              std::is_integral<T0__1__0__>,
                               stan::is_eigen_matrix_dynamic<T0__1__1__>,
                               stan::is_vt_not_complex<T0__1__1__>,
-                              stan::is_stan_scalar<T0__2__>,
+                              stan::math::disjunction<stan::is_autodiff<T0__2__>,
+                                                      std::is_floating_point<T0__2__>>,
+                              std::is_integral<T1__0__>,
                               stan::is_eigen_matrix_dynamic<T1__1__>,
                               stan::is_vt_not_complex<T1__1__>>*>
 void
-overly_complicated(const std::tuple<
-                           std::vector<Eigen::Matrix<T0__0__,-1,-1>>,
-                           std::tuple<int, T0__1__1__>, T0__2__>& t1,
-                   const std::vector<std::tuple<int, T1__1__>>& t2,
+overly_complicated(const std::tuple<T0__0__,
+                           std::tuple<T0__1__0__, T0__1__1__>, T0__2__>& t1,
+                   const std::vector<std::tuple<T1__0__, T1__1__>>& t2,
                    std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__0__,
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__0__>,
                              stan::base_type_t<T0__1__1__>, T0__2__,
                              stan::base_type_t<T1__1__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10147,6 +10879,8 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
                          random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -10260,6 +10994,8 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10284,6 +11020,8 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10315,6 +11053,8 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -10337,16 +11077,18 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       }
       current_statement__ = 2;
       foo(
-        std::tuple<Eigen::Matrix<double,-1,-1>, int>(stan::math::add(m1, m2),
-          1), pstream__);
+        std::tuple<const Eigen::Matrix<double,-1,-1>&, int>(stan::math::add(
+                                                              m1, m2), 1),
+        pstream__);
       double s = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      s = tsum(std::tuple<std::vector<int>, std::vector<double>>(a1, a2),
-            pstream__);
+      s = tsum(
+            std::tuple<const std::vector<int>&, const std::vector<double>&>(a1,
+              a2), pstream__);
       current_statement__ = 3;
       foo2(
         std::vector<std::tuple<Eigen::Matrix<double,-1,-1>, int>>{std::tuple<
-                                                                    Eigen::Matrix<double,-1,-1>,
+                                                                    const Eigen::Matrix<double,-1,-1>&,
                                                                     int>(
                                                                     stan::math::add(
                                                                     m1, m2),
@@ -10354,17 +11096,18 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
         pstream__);
       current_statement__ = 4;
       overly_complicated(
-        std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+        std::tuple<const std::vector<Eigen::Matrix<double,-1,-1>>&,
           std::tuple<int, Eigen::Matrix<double,-1,-1>>, double>(std::vector<
                                                                   Eigen::Matrix<double,-1,-1>>{
                                                                   stan::math::add(
                                                                     m1, m2)},
-          std::tuple<int, Eigen::Matrix<double,-1,-1>>(1, m1), 3.5),
+          std::tuple<int, const Eigen::Matrix<double,-1,-1>&>(1, m1), 3.5),
         std::vector<std::tuple<int, Eigen::Matrix<double,-1,-1>>>{std::tuple<
                                                                     int,
-                                                                    Eigen::Matrix<double,-1,-1>>(1,
+                                                                    const Eigen::Matrix<double,-1,-1>&>(1,
                                                                     m1),
-          std::tuple<int, Eigen::Matrix<double,-1,-1>>(2, m2)}, pstream__);
+          std::tuple<int, const Eigen::Matrix<double,-1,-1>&>(2, m2)},
+        pstream__);
       out__.write(s);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -10380,6 +11123,8 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10391,6 +11136,8 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10539,6 +11286,791 @@ stan::math::profile_map& get_stan_profile_data() {
   return tuple_templating_model_namespace::profiles__;
 }
 #endif
+  $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuple_copying.stan
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace tuple_copying_model_namespace {
+using stan::model::model_base_crtp;
+using namespace stan::math;
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 26> locations_array__ =
+  {" (found before start of program)",
+  " (in 'tuple_copying.stan', line 27, column 2 to column 22)",
+  " (in 'tuple_copying.stan', line 30, column 2 to column 56)",
+  " (in 'tuple_copying.stan', line 31, column 2 to column 10)",
+  " (in 'tuple_copying.stan', line 33, column 2 to column 18)",
+  " (in 'tuple_copying.stan', line 35, column 2 to column 67)",
+  " (in 'tuple_copying.stan', line 36, column 2 to column 11)",
+  " (in 'tuple_copying.stan', line 38, column 2 to column 21)",
+  " (in 'tuple_copying.stan', line 41, column 2 to column 75)",
+  " (in 'tuple_copying.stan', line 42, column 2 to column 11)",
+  " (in 'tuple_copying.stan', line 43, column 2 to column 21)",
+  " (in 'tuple_copying.stan', line 44, column 2 to column 17)",
+  " (in 'tuple_copying.stan', line 20, column 2 to column 17)",
+  " (in 'tuple_copying.stan', line 21, column 2 to column 19)",
+  " (in 'tuple_copying.stan', line 24, column 2 to column 49)",
+  " (in 'tuple_copying.stan', line 3, column 4 to column 15)",
+  " (in 'tuple_copying.stan', line 4, column 4 to column 15)",
+  " (in 'tuple_copying.stan', line 2, column 34 to line 5, column 3)",
+  " (in 'tuple_copying.stan', line 8, column 4 to column 15)",
+  " (in 'tuple_copying.stan', line 9, column 4 to column 15)",
+  " (in 'tuple_copying.stan', line 10, column 4 to column 15)",
+  " (in 'tuple_copying.stan', line 7, column 45 to line 11, column 3)",
+  " (in 'tuple_copying.stan', line 14, column 4 to column 15)",
+  " (in 'tuple_copying.stan', line 15, column 4 to column 17)",
+  " (in 'tuple_copying.stan', line 16, column 4 to column 17)",
+  " (in 'tuple_copying.stan', line 13, column 53 to line 17, column 3)"};
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<T0__1__>,
+                              stan::is_vt_not_complex<T0__1__>>* = nullptr>
+void f(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__);
+template <typename T0__0__, typename T0__1__, typename T0__2__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>,
+                              std::is_integral<T0__1__>,
+                              stan::is_std_vector<T0__2__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__2__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__2__>>>>* = nullptr>
+void
+g(const std::tuple<T0__0__, T0__1__, T0__2__>& x, std::ostream* pstream__);
+template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+                                                      std::is_floating_point<T0__0__>>,
+                              stan::is_eigen_matrix_dynamic<T0__1__0__>,
+                              stan::is_vt_not_complex<T0__1__0__>,
+                              stan::is_std_vector<T0__1__1__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__1__1__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__1__1__>>>>* = nullptr>
+void
+h(const std::tuple<T0__0__, std::tuple<T0__1__0__, T0__1__1__>>& x,
+  std::ostream* pstream__);
+// void f(tuple(matrix, matrix))
+template <typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>,
+                              stan::is_eigen_matrix_dynamic<T0__1__>,
+                              stan::is_vt_not_complex<T0__1__>>*>
+void f(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__0__>,
+                             stan::base_type_t<T0__1__>>;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 15;
+    if (pstream__) {
+      stan::math::stan_print(pstream__, std::get<0>(x));
+      *(pstream__) << std::endl;
+    }
+    current_statement__ = 16;
+    if (pstream__) {
+      stan::math::stan_print(pstream__, std::get<1>(x));
+      *(pstream__) << std::endl;
+    }
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+// void g(tuple(matrix, int, array[] real))
+template <typename T0__0__, typename T0__1__, typename T0__2__,
+          stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__0__>,
+                              stan::is_vt_not_complex<T0__0__>,
+                              std::is_integral<T0__1__>,
+                              stan::is_std_vector<T0__2__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__2__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__2__>>>>*>
+void
+g(const std::tuple<T0__0__, T0__1__, T0__2__>& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__0__>,
+                             stan::base_type_t<T0__2__>>;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 18;
+    if (pstream__) {
+      stan::math::stan_print(pstream__, std::get<0>(x));
+      *(pstream__) << std::endl;
+    }
+    current_statement__ = 19;
+    if (pstream__) {
+      stan::math::stan_print(pstream__, std::get<1>(x));
+      *(pstream__) << std::endl;
+    }
+    current_statement__ = 20;
+    if (pstream__) {
+      stan::math::stan_print(pstream__, std::get<2>(x));
+      *(pstream__) << std::endl;
+    }
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+// void h(tuple(real, tuple(matrix, array[] real)))
+template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+                                                      std::is_floating_point<T0__0__>>,
+                              stan::is_eigen_matrix_dynamic<T0__1__0__>,
+                              stan::is_vt_not_complex<T0__1__0__>,
+                              stan::is_std_vector<T0__1__1__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__1__1__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__1__1__>>>>*>
+void
+h(const std::tuple<T0__0__, std::tuple<T0__1__0__, T0__1__1__>>& x,
+  std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T0__0__,
+                             stan::base_type_t<T0__1__0__>,
+                             stan::base_type_t<T0__1__1__>>;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 22;
+    if (pstream__) {
+      stan::math::stan_print(pstream__, std::get<0>(x));
+      *(pstream__) << std::endl;
+    }
+    current_statement__ = 23;
+    if (pstream__) {
+      stan::math::stan_print(pstream__, std::get<0>(std::get<1>(x)));
+      *(pstream__) << std::endl;
+    }
+    current_statement__ = 24;
+    if (pstream__) {
+      stan::math::stan_print(pstream__, std::get<1>(std::get<1>(x)));
+      *(pstream__) << std::endl;
+    }
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
+ private:
+  Eigen::Matrix<double,-1,-1> x_data__;
+  std::vector<double> y;
+  std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>> data_tuple;
+  Eigen::Map<Eigen::Matrix<double,-1,-1>> x{nullptr, 0, 0};
+ public:
+  ~tuple_copying_model() {}
+  tuple_copying_model(stan::io::var_context& context__, unsigned int
+                      random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    using local_scalar_t__ = double;
+    boost::ecuyer1988 base_rng__ =
+      stan::services::util::create_rng(random_seed__, 0);
+    // suppress unused var warning
+    (void) base_rng__;
+    static constexpr const char* function__ =
+      "tuple_copying_model_namespace::tuple_copying_model";
+    // suppress unused var warning
+    (void) function__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      current_statement__ = 12;
+      context__.validate_dims("data initialization", "x", "double",
+        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)});
+      x_data__ = Eigen::Matrix<double,-1,-1>::Constant(2, 2,
+                   std::numeric_limits<double>::quiet_NaN());
+      new (&x) Eigen::Map<Eigen::Matrix<double,-1,-1>>(x_data__.data(), 2, 2);
+      {
+        std::vector<local_scalar_t__> x_flat__;
+        current_statement__ = 12;
+        x_flat__ = context__.vals_r("x");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            stan::model::assign(x, x_flat__[(pos__ - 1)],
+              "assigning variable x", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
+      current_statement__ = 13;
+      context__.validate_dims("data initialization", "y", "double",
+        std::vector<size_t>{static_cast<size_t>(10)});
+      y = std::vector<double>(10, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 13;
+      y = context__.vals_r("y");
+      current_statement__ = 14;
+      data_tuple = std::tuple<Eigen::Matrix<double,-1,-1>,
+                     std::vector<double>>{Eigen::Matrix<double,-1,-1>::Constant(2,
+                                            2,
+                                            std::numeric_limits<double>::quiet_NaN(
+                                              )),
+                     std::vector<double>(10,
+                       std::numeric_limits<double>::quiet_NaN())};
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    num_params_r__ = (3 * 3) + (3 * 3);
+  }
+  inline std::string model_name() const final {
+    return "tuple_copying_model";
+  }
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
+             "stancflags = -fsoa --print-cpp"};
+  }
+  // Base log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_not_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "tuple_copying_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      Eigen::Matrix<local_scalar_t__,-1,-1> m1 =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      current_statement__ = 1;
+      m1 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
+      Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      current_statement__ = 1;
+      m2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
+      {
+        std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+          Eigen::Matrix<local_scalar_t__,-1,-1>> temp =
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+            Eigen::Matrix<local_scalar_t__,-1,-1>>{Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2,
+                                                     2, DUMMY_VAR__),
+            Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3,
+              DUMMY_VAR__)};
+        current_statement__ = 2;
+        stan::model::assign(temp,
+          std::tuple<const Eigen::Matrix<double,-1,-1>&,
+            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
+            stan::math::multiply(m1, m2)), "assigning variable temp");
+        current_statement__ = 3;
+        f(temp, pstream__);
+        current_statement__ = 4;
+        f(
+          std::tuple<const Eigen::Matrix<double,-1,-1>&,
+            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
+            stan::math::multiply(m1, m2)), pstream__);
+        std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
+          std::vector<local_scalar_t__>> temp2 =
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
+            std::vector<local_scalar_t__>>{Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3,
+                                             3, DUMMY_VAR__),
+            std::numeric_limits<int>::min(),
+            std::vector<local_scalar_t__>(10, DUMMY_VAR__)};
+        current_statement__ = 5;
+        stan::model::assign(temp2,
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
+            const std::vector<double>&>(stan::math::add(m1, m2), 1, y),
+          "assigning variable temp2");
+        current_statement__ = 6;
+        g(temp2, pstream__);
+        current_statement__ = 7;
+        g(
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
+            const std::vector<double>&>(stan::math::add(m1, m2), 1, y),
+          pstream__);
+        std::tuple<local_scalar_t__,
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+            std::vector<local_scalar_t__>>> temp3 =
+          std::tuple<local_scalar_t__,
+            std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+              std::vector<local_scalar_t__>>>{DUMMY_VAR__,
+            std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+              std::vector<local_scalar_t__>>{Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2,
+                                               2, DUMMY_VAR__),
+              std::vector<local_scalar_t__>(10, DUMMY_VAR__)}};
+        current_statement__ = 8;
+        stan::model::assign(temp3,
+          std::tuple<double,
+            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
+            data_tuple), "assigning variable temp3");
+        current_statement__ = 9;
+        h(temp3, pstream__);
+        current_statement__ = 10;
+        h(
+          std::tuple<double,
+            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
+            data_tuple), pstream__);
+        current_statement__ = 11;
+        h(
+          std::tuple<double,
+            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
+            std::tuple<const Eigen::Matrix<double,-1,-1>&,
+              const std::vector<double>&>(x, y)), pstream__);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  // Reverse mode autodiff log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "tuple_copying_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      Eigen::Matrix<local_scalar_t__,-1,-1> m1 =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      current_statement__ = 1;
+      m1 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
+      Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      current_statement__ = 1;
+      m2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
+      {
+        std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+          Eigen::Matrix<local_scalar_t__,-1,-1>> temp =
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+            Eigen::Matrix<local_scalar_t__,-1,-1>>{Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2,
+                                                     2, DUMMY_VAR__),
+            Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3,
+              DUMMY_VAR__)};
+        current_statement__ = 2;
+        stan::model::assign(temp,
+          std::tuple<const Eigen::Matrix<double,-1,-1>&,
+            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
+            stan::math::multiply(m1, m2)), "assigning variable temp");
+        current_statement__ = 3;
+        f(temp, pstream__);
+        current_statement__ = 4;
+        f(
+          std::tuple<const Eigen::Matrix<double,-1,-1>&,
+            Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
+            stan::math::multiply(m1, m2)), pstream__);
+        std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
+          std::vector<local_scalar_t__>> temp2 =
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
+            std::vector<local_scalar_t__>>{Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3,
+                                             3, DUMMY_VAR__),
+            std::numeric_limits<int>::min(),
+            std::vector<local_scalar_t__>(10, DUMMY_VAR__)};
+        current_statement__ = 5;
+        stan::model::assign(temp2,
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
+            const std::vector<double>&>(stan::math::add(m1, m2), 1, y),
+          "assigning variable temp2");
+        current_statement__ = 6;
+        g(temp2, pstream__);
+        current_statement__ = 7;
+        g(
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
+            const std::vector<double>&>(stan::math::add(m1, m2), 1, y),
+          pstream__);
+        std::tuple<local_scalar_t__,
+          std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+            std::vector<local_scalar_t__>>> temp3 =
+          std::tuple<local_scalar_t__,
+            std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+              std::vector<local_scalar_t__>>>{DUMMY_VAR__,
+            std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
+              std::vector<local_scalar_t__>>{Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(2,
+                                               2, DUMMY_VAR__),
+              std::vector<local_scalar_t__>(10, DUMMY_VAR__)}};
+        current_statement__ = 8;
+        stan::model::assign(temp3,
+          std::tuple<double,
+            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
+            data_tuple), "assigning variable temp3");
+        current_statement__ = 9;
+        h(temp3, pstream__);
+        current_statement__ = 10;
+        h(
+          std::tuple<double,
+            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
+            data_tuple), pstream__);
+        current_statement__ = 11;
+        h(
+          std::tuple<double,
+            std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
+            std::tuple<const Eigen::Matrix<double,-1,-1>&,
+              const std::vector<double>&>(x, y)), pstream__);
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  template <typename RNG, typename VecR, typename VecI, typename VecVar,
+            stan::require_vector_like_vt<std::is_floating_point,
+            VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral,
+            VecI>* = nullptr, stan::require_vector_vt<std::is_floating_point,
+            VecVar>* = nullptr>
+  inline void
+  write_array_impl(RNG& base_rng__, VecR& params_r__, VecI& params_i__,
+                   VecVar& vars__, const bool
+                   emit_transformed_parameters__ = true, const bool
+                   emit_generated_quantities__ = true, std::ostream*
+                   pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    static constexpr bool propto__ = true;
+    // suppress unused var warning
+    (void) propto__;
+    double lp__ = 0.0;
+    // suppress unused var warning
+    (void) lp__;
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
+    static constexpr const char* function__ =
+      "tuple_copying_model_namespace::write_array";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      Eigen::Matrix<double,-1,-1> m1 =
+        Eigen::Matrix<double,-1,-1>::Constant(3, 3,
+          std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 1;
+      m1 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
+      Eigen::Matrix<double,-1,-1> m2 =
+        Eigen::Matrix<double,-1,-1>::Constant(3, 3,
+          std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 1;
+      m2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
+      out__.write(m1);
+      out__.write(m2);
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, typename VecI,
+            stan::require_vector_t<VecVar>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  inline void
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      Eigen::Matrix<local_scalar_t__,-1,-1> m1 =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      current_statement__ = 1;
+      stan::model::assign(m1,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3),
+        "assigning variable m1");
+      out__.write(m1);
+      Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      current_statement__ = 1;
+      stan::model::assign(m2,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3),
+        "assigning variable m2");
+      out__.write(m2);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    try {
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "m1", "double",
+        std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(3)});
+      current_statement__ = 1;
+      context__.validate_dims("parameter initialization", "m2", "double",
+        std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(3)});
+      int pos__ = std::numeric_limits<int>::min();
+      pos__ = 1;
+      Eigen::Matrix<local_scalar_t__,-1,-1> m1 =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      {
+        std::vector<local_scalar_t__> m1_flat__;
+        current_statement__ = 1;
+        m1_flat__ = context__.vals_r("m1");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            stan::model::assign(m1, m1_flat__[(pos__ - 1)],
+              "assigning variable m1", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
+      out__.write(m1);
+      Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      {
+        std::vector<local_scalar_t__> m2_flat__;
+        current_statement__ = 1;
+        m2_flat__ = context__.vals_r("m2");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            stan::model::assign(m2, m2_flat__[(pos__ - 1)],
+              "assigning variable m2", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
+      out__.write(m2);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  inline void
+  get_param_names(std::vector<std::string>& names__, const bool
+                  emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    names__ = std::vector<std::string>{"m1", "m2"};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline void
+  get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
+           emit_transformed_parameters__ = true, const bool
+           emit_generated_quantities__ = true) const {
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
+                                                                    size_t>(3),
+                                                 static_cast<size_t>(3)},
+                std::vector<size_t>{static_cast<size_t>(3),
+                  static_cast<size_t>(3)}};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline void
+  constrained_param_names(std::vector<std::string>& param_names__, bool
+                          emit_transformed_parameters__ = true, bool
+                          emit_generated_quantities__ = true) const final {
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        param_names__.emplace_back(std::string() + "m1" + '.' +
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+      }
+    }
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        param_names__.emplace_back(std::string() + "m2" + '.' +
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+      }
+    }
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline void
+  unconstrained_param_names(std::vector<std::string>& param_names__, bool
+                            emit_transformed_parameters__ = true, bool
+                            emit_generated_quantities__ = true) const final {
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        param_names__.emplace_back(std::string() + "m1" + '.' +
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+      }
+    }
+    for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+        param_names__.emplace_back(std::string() + "m2" + '.' +
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+      }
+    }
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline std::string get_constrained_sizedtypes() const {
+    return std::string("[{\"name\":\"m1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"},{\"name\":\"m2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"}]");
+  }
+  inline std::string get_unconstrained_sizedtypes() const {
+    return std::string("[{\"name\":\"m1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"},{\"name\":\"m2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(3) + ",\"cols\":" + std::to_string(3) + "},\"block\":\"parameters\"}]");
+  }
+  // Begin method overload boilerplate
+  template <typename RNG> inline void
+  write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
+              Eigen::Matrix<double,-1,1>& vars, const bool
+              emit_transformed_parameters = true, const bool
+              emit_generated_quantities = true, std::ostream*
+              pstream = nullptr) const {
+    const size_t num_params__ = ((3 * 3) + (3 * 3));
+    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_to_write = num_params__ + num_transformed +
+      num_gen_quantities;
+    std::vector<int> params_i;
+    vars = Eigen::Matrix<double,-1,1>::Constant(num_to_write,
+             std::numeric_limits<double>::quiet_NaN());
+    write_array_impl(base_rng, params_r, params_i, vars,
+      emit_transformed_parameters, emit_generated_quantities, pstream);
+  }
+  template <typename RNG> inline void
+  write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
+              params_i, std::vector<double>& vars, bool
+              emit_transformed_parameters = true, bool
+              emit_generated_quantities = true, std::ostream*
+              pstream = nullptr) const {
+    const size_t num_params__ = ((3 * 3) + (3 * 3));
+    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_to_write = num_params__ + num_transformed +
+      num_gen_quantities;
+    vars = std::vector<double>(num_to_write,
+             std::numeric_limits<double>::quiet_NaN());
+    write_array_impl(base_rng, params_r, params_i, vars,
+      emit_transformed_parameters, emit_generated_quantities, pstream);
+  }
+  template <bool propto__, bool jacobian__, typename T_> inline T_
+  log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream* pstream = nullptr) const {
+    Eigen::Matrix<int,-1,1> params_i;
+    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+  }
+  template <bool propto__, bool jacobian__, typename T_> inline T_
+  log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
+           std::ostream* pstream = nullptr) const {
+    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+  }
+  inline void
+  transform_inits(const stan::io::var_context& context,
+                  Eigen::Matrix<double,-1,1>& params_r, std::ostream*
+                  pstream = nullptr) const final {
+    std::vector<double> params_r_vec(params_r.size());
+    std::vector<int> params_i;
+    transform_inits(context, params_i, params_r_vec, pstream);
+    params_r = Eigen::Map<Eigen::Matrix<double,-1,1>>(params_r_vec.data(),
+                 params_r_vec.size());
+  }
+  inline void
+  transform_inits(const stan::io::var_context& context, std::vector<int>&
+                  params_i, std::vector<double>& vars, std::ostream*
+                  pstream__ = nullptr) const {
+    vars.resize(num_params_r__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+};
+}
+using stan_model = tuple_copying_model_namespace::tuple_copying_model;
+#ifndef USING_R
+// Boilerplate
+stan::model::model_base&
+new_model(stan::io::var_context& data_context, unsigned int seed,
+          std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+stan::math::profile_map& get_stan_profile_data() {
+  return tuple_copying_model_namespace::profiles__;
+}
+#endif
   $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuple_hof.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -10559,31 +12091,62 @@ static constexpr std::array<const char*, 12> locations_array__ =
   " (in 'tuple_hof.stan', line 16, column 8 to column 9)",
   " (in 'tuple_hof.stan', line 4, column 4 to column 30)",
   " (in 'tuple_hof.stan', line 3, column 39 to line 5, column 3)"};
-template <typename T0__, typename T3__0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_stan_scalar<T3__0__>>* = nullptr>
-stan::promote_args_t<T0__, T3__0__>
-fun(const std::vector<T0__>& y_slice, const int& start, const int& end,
-    const std::tuple<T3__0__, std::vector<int>>& m, std::ostream* pstream__);
+template <typename T0__, typename T1__, typename T2__, typename T3__0__,
+          typename T3__1__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__>>>,
+                              std::is_integral<T1__>, std::is_integral<T2__>,
+                              stan::math::disjunction<stan::is_autodiff<T3__0__>,
+                                                      std::is_floating_point<T3__0__>>,
+                              stan::is_std_vector<T3__1__>,
+                              std::is_integral<stan::value_type_t<T3__1__>>>* = nullptr>
+stan::promote_args_t<stan::base_type_t<T0__>, T3__0__>
+fun(const T0__& y_slice, const T1__& start, const T2__& end,
+    const std::tuple<T3__0__, T3__1__>& m, std::ostream* pstream__);
 struct fun_rsfunctor__ {
-  template <typename T0__, typename T3__0__,
-            stan::require_all_t<stan::is_stan_scalar<T0__>,
-                                stan::is_stan_scalar<T3__0__>>* = nullptr>
-  stan::promote_args_t<T0__, T3__0__>
-  operator()(const std::vector<T0__>& y_slice, const int& start, const int&
-             end, std::ostream* pstream__,
-             const std::tuple<T3__0__, std::vector<int>>& m) const {
+  template <typename T0__, typename T1__, typename T2__, typename T3__0__,
+            typename T3__1__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::math::disjunction<stan::is_autodiff<
+                                                        stan::value_type_t<T0__>>,
+                                                        std::is_floating_point<
+                                                        stan::value_type_t<T0__>>>,
+                                std::is_integral<T1__>,
+                                std::is_integral<T2__>,
+                                stan::math::disjunction<stan::is_autodiff<T3__0__>,
+                                                        std::is_floating_point<T3__0__>>,
+                                stan::is_std_vector<T3__1__>,
+                                std::is_integral<stan::value_type_t<T3__1__>>>* = nullptr>
+  stan::promote_args_t<stan::base_type_t<T0__>, T3__0__>
+  operator()(const T0__& y_slice, const T1__& start, const T2__& end,
+             std::ostream* pstream__, const std::tuple<T3__0__, T3__1__>& m) const {
     return fun(y_slice, (start + 1), (end + 1), m, pstream__);
   }
 };
-template <typename T0__, typename T3__0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>,
-                              stan::is_stan_scalar<T3__0__>>*>
-stan::promote_args_t<T0__, T3__0__>
-fun(const std::vector<T0__>& y_slice, const int& start, const int& end,
-    const std::tuple<T3__0__, std::vector<int>>& m, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__0__>;
+// real fun(array[] real, int, int, tuple(real, array[] int))
+template <typename T0__, typename T1__, typename T2__, typename T3__0__,
+          typename T3__1__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::value_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::value_type_t<T0__>>>,
+                              std::is_integral<T1__>, std::is_integral<T2__>,
+                              stan::math::disjunction<stan::is_autodiff<T3__0__>,
+                                                      std::is_floating_point<T3__0__>>,
+                              stan::is_std_vector<T3__1__>,
+                              std::is_integral<stan::value_type_t<T3__1__>>>*>
+stan::promote_args_t<stan::base_type_t<T0__>, T3__0__>
+fun(const T0__& y_slice, const T1__& start, const T2__& end,
+    const std::tuple<T3__0__, T3__1__>& m, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
+                             T3__0__>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10609,6 +12172,8 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
                   random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -10685,6 +12250,8 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10721,6 +12288,8 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10764,6 +12333,8 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -10810,6 +12381,8 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10832,6 +12405,8 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -11015,22 +12590,33 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple_lpdf.stan', line 2, column 63 to line 4, column 4)"};
 template <bool propto__, typename T0__0__, typename T0__1__,
           typename T1__0__, typename T1__1__, typename T1__2__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                              stan::is_stan_scalar<T0__1__>,
-                              stan::is_stan_scalar<T1__0__>,
-                              stan::is_stan_scalar<T1__1__>,
-                              stan::is_stan_scalar<T1__2__>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+                                                      std::is_floating_point<T0__0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T0__1__>,
+                                                      std::is_floating_point<T0__1__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__0__>,
+                                                      std::is_floating_point<T1__0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__1__>,
+                                                      std::is_floating_point<T1__1__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__2__>,
+                                                      std::is_floating_point<T1__2__>>>* = nullptr>
 stan::promote_args_t<T0__0__, T0__1__, T1__0__, T1__1__, T1__2__>
 foo_lpdf(const std::tuple<T0__0__, T0__1__>& x,
          const std::tuple<T1__0__, T1__1__, T1__2__>& y, std::ostream*
          pstream__);
+// real foo_lpdf(tuple(real, real), tuple(real, real, real))
 template <bool propto__, typename T0__0__, typename T0__1__,
           typename T1__0__, typename T1__1__, typename T1__2__,
-          stan::require_all_t<stan::is_stan_scalar<T0__0__>,
-                              stan::is_stan_scalar<T0__1__>,
-                              stan::is_stan_scalar<T1__0__>,
-                              stan::is_stan_scalar<T1__1__>,
-                              stan::is_stan_scalar<T1__2__>>*>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+                                                      std::is_floating_point<T0__0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T0__1__>,
+                                                      std::is_floating_point<T0__1__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__0__>,
+                                                      std::is_floating_point<T1__0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__1__>,
+                                                      std::is_floating_point<T1__1__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__2__>,
+                                                      std::is_floating_point<T1__2__>>>*>
 stan::promote_args_t<T0__0__, T0__1__, T1__0__, T1__1__, T1__2__>
 foo_lpdf(const std::tuple<T0__0__, T0__1__>& x,
          const std::tuple<T1__0__, T1__1__, T1__2__>& y, std::ostream*
@@ -11038,6 +12624,8 @@ foo_lpdf(const std::tuple<T0__0__, T0__1__>& x,
   using local_scalar_t__ = stan::promote_args_t<T0__0__, T0__1__, T1__0__,
                              T1__1__, T1__2__>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
@@ -11057,6 +12645,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
                    random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -11092,6 +12682,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -11101,8 +12693,9 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpdf<propto__>(std::forward_as_tuple(1.5, 2),
-                       std::forward_as_tuple(1.2, 1.5, 4.5), pstream__));
+      lp_accum__.add(foo_lpdf<propto__>(std::tuple<double, double>(1.5, 2),
+                       std::tuple<double, double, double>(1.2, 1.5, 4.5),
+                       pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -11123,6 +12716,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -11132,8 +12727,9 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpdf<propto__>(std::forward_as_tuple(1.5, 2),
-                       std::forward_as_tuple(1.2, 1.5, 4.5), pstream__));
+      lp_accum__.add(foo_lpdf<propto__>(std::tuple<double, double>(1.5, 2),
+                       std::tuple<double, double, double>(1.2, 1.5, 4.5),
+                       pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -11161,6 +12757,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -11195,6 +12793,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -11206,6 +12806,8 @@ class tuple_lpdf_model final : public model_base_crtp<tuple_lpdf_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -11342,6 +12944,351 @@ stan::math::profile_map& get_stan_profile_data() {
   return tuple_lpdf_model_namespace::profiles__;
 }
 #endif
+  $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuple_lpdf2.stan
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace tuple_lpdf2_model_namespace {
+using stan::model::model_base_crtp;
+using namespace stan::math;
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 4> locations_array__ =
+  {" (found before start of program)",
+  " (in 'tuple_lpdf2.stan', line 8, column 3 to column 20)",
+  " (in 'tuple_lpdf2.stan', line 3, column 5 to column 14)",
+  " (in 'tuple_lpdf2.stan', line 2, column 37 to line 4, column 4)"};
+template <bool propto__, typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+                                                      std::is_floating_point<T0__0__>>,
+                              std::is_integral<T0__1__>>* = nullptr>
+stan::promote_args_t<T0__0__>
+foo_lpdf(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__);
+// real foo_lpdf(tuple(real, int))
+template <bool propto__, typename T0__0__, typename T0__1__,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__0__>,
+                                                      std::is_floating_point<T0__0__>>,
+                              std::is_integral<T0__1__>>*>
+stan::promote_args_t<T0__0__>
+foo_lpdf(const std::tuple<T0__0__, T0__1__>& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T0__0__>;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 2;
+    return 0;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+class tuple_lpdf2_model final : public model_base_crtp<tuple_lpdf2_model> {
+ private:
+  
+ public:
+  ~tuple_lpdf2_model() {}
+  tuple_lpdf2_model(stan::io::var_context& context__, unsigned int
+                    random_seed__ = 0, std::ostream* pstream__ = nullptr)
+      : model_base_crtp(0) {
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    using local_scalar_t__ = double;
+    boost::ecuyer1988 base_rng__ =
+      stan::services::util::create_rng(random_seed__, 0);
+    // suppress unused var warning
+    (void) base_rng__;
+    static constexpr const char* function__ =
+      "tuple_lpdf2_model_namespace::tuple_lpdf2_model";
+    // suppress unused var warning
+    (void) function__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    num_params_r__ = 0U;
+  }
+  inline std::string model_name() const final {
+    return "tuple_lpdf2_model";
+  }
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%",
+             "stancflags = -fsoa --print-cpp"};
+  }
+  // Base log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_not_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "tuple_lpdf2_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      current_statement__ = 1;
+      lp_accum__.add(foo_lpdf<propto__>(std::tuple<double, int>(1.5, 2),
+                       pstream__));
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  // Reverse mode autodiff log prob
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI,
+            stan::require_vector_like_t<VecR>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,
+            stan::require_st_var<VecR>* = nullptr>
+  inline stan::scalar_type_t<VecR>
+  log_prob_impl(VecR& params_r__, VecI& params_i__, std::ostream*
+                pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    static constexpr const char* function__ =
+      "tuple_lpdf2_model_namespace::log_prob";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      current_statement__ = 1;
+      lp_accum__.add(foo_lpdf<propto__>(std::tuple<double, int>(1.5, 2),
+                       pstream__));
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+  }
+  template <typename RNG, typename VecR, typename VecI, typename VecVar,
+            stan::require_vector_like_vt<std::is_floating_point,
+            VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral,
+            VecI>* = nullptr, stan::require_vector_vt<std::is_floating_point,
+            VecVar>* = nullptr>
+  inline void
+  write_array_impl(RNG& base_rng__, VecR& params_r__, VecI& params_i__,
+                   VecVar& vars__, const bool
+                   emit_transformed_parameters__ = true, const bool
+                   emit_generated_quantities__ = true, std::ostream*
+                   pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    static constexpr bool propto__ = true;
+    // suppress unused var warning
+    (void) propto__;
+    double lp__ = 0.0;
+    // suppress unused var warning
+    (void) lp__;
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+    constexpr bool jacobian__ = false;
+    // suppress unused var warning
+    (void) jacobian__;
+    static constexpr const char* function__ =
+      "tuple_lpdf2_model_namespace::write_array";
+    // suppress unused var warning
+    (void) function__;
+    try {
+      if (stan::math::logical_negation(
+            (stan::math::primitive_value(emit_transformed_parameters__) ||
+            stan::math::primitive_value(emit_generated_quantities__)))) {
+        return ;
+      }
+      if (stan::math::logical_negation(emit_generated_quantities__)) {
+        return ;
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
+  }
+  template <typename VecVar, typename VecI,
+            stan::require_vector_t<VecVar>* = nullptr,
+            stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  inline void
+  unconstrain_array_impl(const VecVar& params_r__, const VecI& params_i__,
+                         VecVar& vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+  }
+  template <typename VecVar, stan::require_vector_t<VecVar>* = nullptr>
+  inline void
+  transform_inits_impl(const stan::io::var_context& context__, VecVar&
+                       vars__, std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    // suppress unused var warning
+    (void) DUMMY_VAR__;
+  }
+  inline void
+  get_param_names(std::vector<std::string>& names__, const bool
+                  emit_transformed_parameters__ = true, const bool
+                  emit_generated_quantities__ = true) const {
+    names__ = std::vector<std::string>{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline void
+  get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
+           emit_transformed_parameters__ = true, const bool
+           emit_generated_quantities__ = true) const {
+    dimss__ = std::vector<std::vector<size_t>>{};
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline void
+  constrained_param_names(std::vector<std::string>& param_names__, bool
+                          emit_transformed_parameters__ = true, bool
+                          emit_generated_quantities__ = true) const final {
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline void
+  unconstrained_param_names(std::vector<std::string>& param_names__, bool
+                            emit_transformed_parameters__ = true, bool
+                            emit_generated_quantities__ = true) const final {
+    if (emit_transformed_parameters__) {}
+    if (emit_generated_quantities__) {}
+  }
+  inline std::string get_constrained_sizedtypes() const {
+    return std::string("[]");
+  }
+  inline std::string get_unconstrained_sizedtypes() const {
+    return std::string("[]");
+  }
+  // Begin method overload boilerplate
+  template <typename RNG> inline void
+  write_array(RNG& base_rng, Eigen::Matrix<double,-1,1>& params_r,
+              Eigen::Matrix<double,-1,1>& vars, const bool
+              emit_transformed_parameters = true, const bool
+              emit_generated_quantities = true, std::ostream*
+              pstream = nullptr) const {
+    const size_t num_params__ = 0;
+    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_to_write = num_params__ + num_transformed +
+      num_gen_quantities;
+    std::vector<int> params_i;
+    vars = Eigen::Matrix<double,-1,1>::Constant(num_to_write,
+             std::numeric_limits<double>::quiet_NaN());
+    write_array_impl(base_rng, params_r, params_i, vars,
+      emit_transformed_parameters, emit_generated_quantities, pstream);
+  }
+  template <typename RNG> inline void
+  write_array(RNG& base_rng, std::vector<double>& params_r, std::vector<int>&
+              params_i, std::vector<double>& vars, bool
+              emit_transformed_parameters = true, bool
+              emit_generated_quantities = true, std::ostream*
+              pstream = nullptr) const {
+    const size_t num_params__ = 0;
+    const size_t num_transformed = emit_transformed_parameters * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_to_write = num_params__ + num_transformed +
+      num_gen_quantities;
+    vars = std::vector<double>(num_to_write,
+             std::numeric_limits<double>::quiet_NaN());
+    write_array_impl(base_rng, params_r, params_i, vars,
+      emit_transformed_parameters, emit_generated_quantities, pstream);
+  }
+  template <bool propto__, bool jacobian__, typename T_> inline T_
+  log_prob(Eigen::Matrix<T_,-1,1>& params_r, std::ostream* pstream = nullptr) const {
+    Eigen::Matrix<int,-1,1> params_i;
+    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+  }
+  template <bool propto__, bool jacobian__, typename T_> inline T_
+  log_prob(std::vector<T_>& params_r, std::vector<int>& params_i,
+           std::ostream* pstream = nullptr) const {
+    return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+  }
+  inline void
+  transform_inits(const stan::io::var_context& context,
+                  Eigen::Matrix<double,-1,1>& params_r, std::ostream*
+                  pstream = nullptr) const final {
+    std::vector<double> params_r_vec(params_r.size());
+    std::vector<int> params_i;
+    transform_inits(context, params_i, params_r_vec, pstream);
+    params_r = Eigen::Map<Eigen::Matrix<double,-1,1>>(params_r_vec.data(),
+                 params_r_vec.size());
+  }
+  inline void
+  transform_inits(const stan::io::var_context& context, std::vector<int>&
+                  params_i, std::vector<double>& vars, std::ostream*
+                  pstream__ = nullptr) const {
+    vars.resize(num_params_r__);
+    transform_inits_impl(context, vars, pstream__);
+  }
+  inline void
+  unconstrain_array(const std::vector<double>& params_constrained,
+                    std::vector<double>& params_unconstrained, std::ostream*
+                    pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = std::vector<double>(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+  inline void
+  unconstrain_array(const Eigen::Matrix<double,-1,1>& params_constrained,
+                    Eigen::Matrix<double,-1,1>& params_unconstrained,
+                    std::ostream* pstream = nullptr) const {
+    const std::vector<int> params_i;
+    params_unconstrained = Eigen::Matrix<double,-1,1>::Constant(num_params_r__,
+                             std::numeric_limits<double>::quiet_NaN());
+    unconstrain_array_impl(params_constrained, params_i,
+      params_unconstrained, pstream);
+  }
+};
+}
+using stan_model = tuple_lpdf2_model_namespace::tuple_lpdf2_model;
+#ifndef USING_R
+// Boilerplate
+stan::model::model_base&
+new_model(stan::io::var_context& data_context, unsigned int seed,
+          std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+stan::math::profile_map& get_stan_profile_data() {
+  return tuple_lpdf2_model_namespace::profiles__;
+}
+#endif
   $ ../../../../../install/default/bin/stanc -fsoa --print-cpp tuple_lpmf.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -11354,18 +13301,27 @@ static constexpr std::array<const char*, 4> locations_array__ =
   " (in 'tuple_lpmf.stan', line 8, column 2 to column 20)",
   " (in 'tuple_lpmf.stan', line 3, column 6 to column 25)",
   " (in 'tuple_lpmf.stan', line 2, column 42 to line 4, column 4)"};
-template <bool propto__, typename T1__,
-          stan::require_all_t<stan::is_stan_scalar<T1__>>* = nullptr>
+template <bool propto__, typename T0__0__, typename T0__1__, typename T1__,
+          stan::require_all_t<std::is_integral<T0__0__>,
+                              std::is_integral<T0__1__>,
+                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                                                      std::is_floating_point<T1__>>>* = nullptr>
 stan::promote_args_t<T1__>
-foo_lpmf(const std::tuple<int, int>& x, const T1__& y, std::ostream*
+foo_lpmf(const std::tuple<T0__0__, T0__1__>& x, const T1__& y, std::ostream*
          pstream__);
-template <bool propto__, typename T1__,
-          stan::require_all_t<stan::is_stan_scalar<T1__>>*>
+// real foo_lpmf(tuple(int, int), real)
+template <bool propto__, typename T0__0__, typename T0__1__, typename T1__,
+          stan::require_all_t<std::is_integral<T0__0__>,
+                              std::is_integral<T0__1__>,
+                              stan::math::disjunction<stan::is_autodiff<T1__>,
+                                                      std::is_floating_point<T1__>>>*>
 stan::promote_args_t<T1__>
-foo_lpmf(const std::tuple<int, int>& x, const T1__& y, std::ostream*
+foo_lpmf(const std::tuple<T0__0__, T0__1__>& x, const T1__& y, std::ostream*
          pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T1__>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   // suppress unused var warning
   (void) DUMMY_VAR__;
@@ -11385,6 +13341,8 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
                    random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -11420,6 +13378,8 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -11429,7 +13389,7 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpmf<propto__>(std::forward_as_tuple(1, 3), 0.5,
+      lp_accum__.add(foo_lpmf<propto__>(std::tuple<int, int>(1, 3), 0.5,
                        pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -11451,6 +13411,8 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -11460,7 +13422,7 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      lp_accum__.add(foo_lpmf<propto__>(std::forward_as_tuple(1, 3), 0.5,
+      lp_accum__.add(foo_lpmf<propto__>(std::tuple<int, int>(1, 3), 0.5,
                        pstream__));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -11489,6 +13451,8 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -11523,6 +13487,8 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -11534,6 +13500,8 @@ class tuple_lpmf_model final : public model_base_crtp<tuple_lpmf_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;

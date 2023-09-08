@@ -81,6 +81,13 @@ functions {
 }
 model {
   print(something(1));
+  print(something(1.0));
+  print(something(1i));
+}
+generated quantities {
+  print(something(1));
+  print(something(1.0));
+  print(something(1i));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format multi_fun.stan

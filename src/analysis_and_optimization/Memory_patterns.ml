@@ -189,17 +189,17 @@ and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
       match is_fun_soa_supported name exprs with
       | true -> Set.Poly.union acc demoted_eigen_names
       | false -> Set.Poly.union acc demoted_and_top_level_names ) )
-  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) ->
+  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec | FnMakeTuple) ->
       Set.Poly.union acc demoted_and_top_level_names
   | CompilerInternal (_ : 'a Internal_fun.t) -> acc
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) ->
       Set.Poly.union acc demoted_and_top_level_names
 
-(** 
-  * Recurse through subexpressions and return a list of Unsized types. 
-  * Recursion continues until 
-  * 1. A non-autodiffable type is found  
-  * 2. An autodiffable scalar is found 
+(**
+  * Recurse through subexpressions and return a list of Unsized types.
+  * Recursion continues until
+  * 1. A non-autodiffable type is found
+  * 2. An autodiffable scalar is found
   * 3. A `Var` type is found that is an autodiffable matrix
   *)
 let rec extract_nonderived_admatrix_types
@@ -225,11 +225,11 @@ let rec extract_nonderived_admatrix_types
   else [(adlevel, type_)]
 
 (**
- * Recurse through functions to find nonderived ad matrix types. 
- * Special cases for StanLib functions are for 
+ * Recurse through functions to find nonderived ad matrix types.
+ * Special cases for StanLib functions are for
  * - `check_matching_dims`: compiler function that has no effect on optimization
- * - `rep_*vector` These are templated in the C++ to cast up to `Var<Matrix>` types 
- * - `rep_matrix`. When it's only a scalar being propogated an math library overload can upcast to `Var<Matrix>` 
+ * - `rep_*vector` These are templated in the C++ to cast up to `Var<Matrix>` types
+ * - `rep_matrix`. When it's only a scalar being propogated an math library overload can upcast to `Var<Matrix>`
  *)
 and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) =

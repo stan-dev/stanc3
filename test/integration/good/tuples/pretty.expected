@@ -78,12 +78,30 @@ functions {
   real foo(data tuple(real, real) x) {
     return x.1;
   }
+  real bar(data array[] tuple(real, real) x) {
+    return x[1].2;
+  }
+  real baz(data array[] tuple(array[] matrix, real) x) {
+    return x[1].1[1][1, 1];
+  }
 }
 data {
   tuple(real, real) d;
 }
 model {
   target += foo(d);
+  target += bar({d, d});
+  target += baz({({[[1]]}, d.2)});
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple-dataonly2.stan
+functions {
+  real tuple_tester(data tuple(array[] real, int) x) {
+    return x.1[1];
+  }
+}
+model {
+  print(tuple_tester(({1.0}, 2)));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format tuple-foreach.stan
@@ -224,6 +242,53 @@ generated quantities {
   overly_complicated(({m1 + m2}, (1, m1), 3.5), {(1, m1), (2, m2)});
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format tuple_copying.stan
+functions {
+  void f(tuple(matrix, matrix) x) {
+    print(x.1);
+    print(x.2);
+  }
+  
+  void g(tuple(matrix, int, array[] real) x) {
+    print(x.1);
+    print(x.2);
+    print(x.3);
+  }
+  
+  void h(tuple(real, tuple(matrix, array[] real)) x) {
+    print(x.1);
+    print(x.2.1);
+    print(x.2.2);
+  }
+}
+data {
+  matrix[2, 2] x;
+  array[10] real y;
+}
+transformed data {
+  tuple(matrix[2, 2], array[10] real) data_tuple;
+}
+parameters {
+  matrix[3, 3] m1, m2;
+}
+model {
+  tuple(matrix[2, 2], matrix[3, 3]) temp = (x, m1 * m2);
+  f(temp);
+  
+  f((x, m1 * m2));
+  
+  tuple(matrix[3, 3], int, array[10] real) temp2 = (m1 + m2, 1, y);
+  g(temp2);
+  
+  g((m1 + m2, 1, y));
+  
+  // note: these will have additional copies for now
+  tuple(real, tuple(matrix[2, 2], array[10] real)) temp3 = (1, data_tuple);
+  h(temp3);
+  h((1, data_tuple));
+  h((1, (x, y)));
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format tuple_hof.stan
 functions {
   real fun(array[] real y_slice, int start, int end,
@@ -254,6 +319,16 @@ functions {
 }
 model {
   (1.5, 2) ~ foo((1.2, 1.5, 4.5));
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple_lpdf2.stan
+functions {
+  real foo_lpdf(tuple(real, int) x) {
+    return 0;
+  }
+}
+model {
+  (1.5, 2) ~ foo();
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format tuple_lpmf.stan

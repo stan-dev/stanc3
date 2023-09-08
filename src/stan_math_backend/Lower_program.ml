@@ -159,15 +159,16 @@ let lower_constructor
     ; (TypeLiteral "unsigned int", "random_seed__ = 0")
     ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
   let preamble =
-    [ Decls.current_statement; Using ("local_scalar_t__", Some Double)
-    ; VariableDefn
-        (make_variable_defn ~type_:(TypeLiteral "boost::ecuyer1988")
-           ~name:"base_rng__"
-           ~init:
-             (Assignment
-                (Exprs.fun_call "stan::services::util::create_rng"
-                   [Var "random_seed__"; Literal "0"] ) )
-           () ) ]
+    Decls.current_statement
+    @ [ Using ("local_scalar_t__", Some Double)
+      ; VariableDefn
+          (make_variable_defn ~type_:(TypeLiteral "boost::ecuyer1988")
+             ~name:"base_rng__"
+             ~init:
+               (Assignment
+                  (Exprs.fun_call "stan::services::util::create_rng"
+                     [Var "random_seed__"; Literal "0"] ) )
+             () ) ]
     @ Stmts.unused "base_rng__"
     @ gen_function__ prog_name prog_name
     @ Decls.dummy_var in
@@ -220,9 +221,8 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     ; VariableDefn
         (make_variable_defn ~type_:t__ ~name:"lp__"
            ~init:(Construction [Literal "0.0"])
-           () ); Decls.lp_accum t__; Decls.serializer_in
-    ; Decls.current_statement ]
-    @ Decls.dummy_var
+           () ); Decls.lp_accum t__; Decls.serializer_in ]
+    @ Decls.current_statement @ Decls.dummy_var
     @ gen_function__ prog_name "log_prob" in
   let outro =
     let open Expression_syntax in
@@ -278,8 +278,8 @@ let gen_write_array {Program.prog_name; generate_quantities; _} =
         (make_variable_defn ~type_:Double ~name:"lp__"
            ~init:(Assignment (Literal "0.0")) () )
       :: Stmts.unused "lp__"
-    @ [Decls.current_statement; Decls.lp_accum Double]
-    @ Decls.dummy_var
+    @ Decls.current_statement
+    @ (Decls.lp_accum Double :: Decls.dummy_var)
     @ VariableDefn
         (make_variable_defn ~constexpr:true ~type_:Types.bool ~name:"jacobian__"
            ~init:(Assignment (Literal "false")) () )
@@ -301,8 +301,8 @@ let gen_transform_inits_impl {Program.transform_inits; output_vars; _} =
     ; (Ref (TemplateType "VecVar"), "vars__")
     ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
   let intro =
-    [ Using ("local_scalar_t__", Some Double); Decls.serializer_out
-    ; Decls.current_statement ]
+    Using ("local_scalar_t__", Some Double)
+    :: Decls.serializer_out :: Decls.current_statement
     @ Decls.dummy_var in
   let validate_params
       ( (name : string)
@@ -338,8 +338,8 @@ let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
     ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
   let intro =
     [ Using ("local_scalar_t__", Some Double); Decls.serializer_in
-    ; Decls.serializer_out; Decls.current_statement ]
-    @ Decls.dummy_var in
+    ; Decls.serializer_out ]
+    @ Decls.current_statement @ Decls.dummy_var in
   FunDef
     (make_fun_defn
        ~templates_init:([templates], true)
@@ -444,14 +444,14 @@ let gen_get_dims {Program.output_vars; _} =
         ( Var "emit_transformed_parameters__"
         , Stmts.block
             (gen_extend_vector dimss
-               (Types.std_vector (Types.std_vector Types.size_t))
+               (Types.std_vector ~dims:2 Types.size_t)
                (List.concat tparams) )
         , None )
     ; IfElse
         ( Var "emit_generated_quantities__"
         , Stmts.block
             (gen_extend_vector dimss
-               (Types.std_vector (Types.std_vector Types.size_t))
+               (Types.std_vector ~dims:2 Types.size_t)
                (List.concat gqs) )
         , None ) ] in
   FunDef

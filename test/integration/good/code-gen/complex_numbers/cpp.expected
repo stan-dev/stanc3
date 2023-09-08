@@ -149,6 +149,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -223,6 +225,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -735,6 +739,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -1254,6 +1260,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -1804,6 +1812,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -1873,6 +1883,8 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -2491,6 +2503,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
                          random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -2702,6 +2716,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -2726,6 +2742,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -2757,6 +2775,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -3232,6 +3252,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3243,6 +3265,8 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -3665,6 +3689,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
                       random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -3893,6 +3919,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -4464,6 +4492,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -5042,6 +5072,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -5651,6 +5683,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -5720,6 +5754,8 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6231,6 +6267,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
                      random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -6497,6 +6535,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6521,6 +6561,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6552,6 +6594,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -6586,6 +6630,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -6597,6 +6643,8 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7171,47 +7219,94 @@ static constexpr std::array<const char*, 428> locations_array__ =
   " (in 'complex_scalar.stan', line 33, column 45 to line 35, column 3)"};
 std::complex<double> foo(std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-stan::promote_args_t<T0__>
-foo1(const std::complex<T0__>& z, std::ostream* pstream__);
+          stan::require_all_t<stan::is_complex<T0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<T0__>>>>* = nullptr>
+stan::promote_args_t<stan::base_type_t<T0__>>
+foo1(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>* = nullptr>
 std::complex<stan::promote_args_t<T0__>>
 foo2(const T0__& r, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-std::complex<stan::promote_args_t<T0__>>
-foo3(const std::complex<T0__>& z, std::ostream* pstream__);
+          stan::require_all_t<stan::is_complex<T0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<T0__>>>>* = nullptr>
+std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>
+foo3(const T0__& z, std::ostream* pstream__);
 std::vector<std::complex<double>> foo4(std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-stan::promote_args_t<T0__>
-foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__);
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_complex<stan::value_type_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>>>* = nullptr>
+stan::promote_args_t<stan::base_type_t<T0__>>
+foo5(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>* = nullptr>
 std::vector<std::complex<stan::promote_args_t<T0__>>>
 foo6(const T0__& r, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-std::vector<std::complex<stan::promote_args_t<T0__>>>
-foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__);
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_complex<stan::value_type_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>>>* = nullptr>
+std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>
+foo7(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-stan::promote_args_t<T0__>
-foo8(const std::vector<std::vector<std::complex<T0__>>>& z, std::ostream*
-     pstream__);
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_std_vector<stan::value_type_t<T0__>>,
+                              stan::is_complex<stan::value_type_t<stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>>>* = nullptr>
+stan::promote_args_t<stan::base_type_t<T0__>>
+foo8(const T0__& z, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>* = nullptr>
 std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
 foo9(const T0__& r, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
-foo10(const std::vector<std::vector<std::complex<T0__>>>& z, std::ostream*
-      pstream__);
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_std_vector<stan::value_type_t<T0__>>,
+                              stan::is_complex<stan::value_type_t<stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>>>* = nullptr>
+std::vector<
+  std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>>
+foo10(const T0__& z, std::ostream* pstream__);
+// complex foo()
 std::complex<double> foo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7226,11 +7321,19 @@ std::complex<double> foo(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-stan::promote_args_t<T0__>
-foo1(const std::complex<T0__>& z, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+// real foo1(complex)
+template <typename T0__,
+          stan::require_all_t<stan::is_complex<T0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<T0__>>>>*>
+stan::promote_args_t<stan::base_type_t<T0__>>
+foo1(const T0__& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7244,11 +7347,16 @@ foo1(const std::complex<T0__>& z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+// complex foo2(real)
+template <typename T0__,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>*>
 std::complex<stan::promote_args_t<T0__>>
 foo2(const T0__& r, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7262,11 +7370,19 @@ foo2(const T0__& r, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-std::complex<stan::promote_args_t<T0__>>
-foo3(const std::complex<T0__>& z, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+// complex foo3(complex)
+template <typename T0__,
+          stan::require_all_t<stan::is_complex<T0__>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<T0__>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<T0__>>>>*>
+std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>
+foo3(const T0__& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7280,9 +7396,12 @@ foo3(const std::complex<T0__>& z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// array[] complex foo4()
 std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7301,11 +7420,22 @@ std::vector<std::complex<double>> foo4(std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-stan::promote_args_t<T0__>
-foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+// real foo5(array[] complex)
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_complex<stan::value_type_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>>>*>
+stan::promote_args_t<stan::base_type_t<T0__>>
+foo5(const T0__& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7319,11 +7449,16 @@ foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+// array[] complex foo6(real)
+template <typename T0__,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>*>
 std::vector<std::complex<stan::promote_args_t<T0__>>>
 foo6(const T0__& r, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7339,11 +7474,22 @@ foo6(const T0__& r, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-std::vector<std::complex<stan::promote_args_t<T0__>>>
-foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+// array[] complex foo7(array[] complex)
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_complex<stan::value_type_t<T0__>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<T0__>>>>>*>
+std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>
+foo7(const T0__& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7357,12 +7503,25 @@ foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-stan::promote_args_t<T0__>
-foo8(const std::vector<std::vector<std::complex<T0__>>>& z, std::ostream*
-     pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+// real foo8(array[,] complex)
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_std_vector<stan::value_type_t<T0__>>,
+                              stan::is_complex<stan::value_type_t<stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>>>*>
+stan::promote_args_t<stan::base_type_t<T0__>>
+foo8(const T0__& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7376,11 +7535,16 @@ foo8(const std::vector<std::vector<std::complex<T0__>>>& z, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
+// array[,] complex foo9(real)
+template <typename T0__,
+          stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                      std::is_floating_point<T0__>>>*>
 std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
 foo9(const T0__& r, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7404,12 +7568,26 @@ foo9(const T0__& r, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-std::vector<std::vector<std::complex<stan::promote_args_t<T0__>>>>
-foo10(const std::vector<std::vector<std::complex<T0__>>>& z, std::ostream*
-      pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+// array[,] complex foo10(array[,] complex)
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_std_vector<stan::value_type_t<T0__>>,
+                              stan::is_complex<stan::value_type_t<stan::value_type_t<T0__>>>,
+                              stan::math::disjunction<stan::is_autodiff<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>,
+                                                      std::is_floating_point<
+                                                      stan::base_type_t<
+                                                        stan::value_type_t<
+                                                          stan::value_type_t<T0__>>>>>>*>
+std::vector<
+  std::vector<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>>>
+foo10(const T0__& z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -7441,6 +7619,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                        random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -7723,6 +7903,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -7982,6 +8164,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -8248,6 +8432,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -9208,6 +9394,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -9256,6 +9444,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -9687,6 +9877,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                         random_seed__ = 0, std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -9722,6 +9914,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -9808,6 +10002,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -9901,6 +10097,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -10005,6 +10203,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10016,6 +10216,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10315,14 +10517,20 @@ template <typename T0__,
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,1,-1>
 foo(const T0__& A_arg__, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-std::vector<Eigen::Matrix<std::complex<stan::promote_args_t<T0__>>,-1,-1>>
-foo(const std::vector<Eigen::Matrix<std::complex<T0__>,-1,-1>>& Z,
-    std::ostream* pstream__);
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
+                              stan::is_vt_complex<stan::value_type_t<T0__>>>* = nullptr>
+std::vector<
+  Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>>
+foo(const T0__& Z, std::ostream* pstream__);
 template <typename T0__,
-          stan::require_all_t<stan::is_stan_scalar<T0__>>* = nullptr>
-std::vector<Eigen::Matrix<stan::promote_args_t<T0__>,-1,-1>>
-foo(const std::vector<Eigen::Matrix<T0__,-1,-1>>& A, std::ostream* pstream__);
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__>>>* = nullptr>
+std::vector<
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>>
+foo(const T0__& A, std::ostream* pstream__);
+// complex_matrix foo(complex_matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_complex<T0__>>*>
@@ -10330,6 +10538,8 @@ Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>
 foo(const T0__& Z_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   const auto& Z = stan::math::to_ref(Z_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
@@ -10344,6 +10554,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// matrix foo(matrix)
 template <typename T0__,
           stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -10351,6 +10562,8 @@ Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>
 foo(const T0__& A_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   const auto& A = stan::math::to_ref(A_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
@@ -10367,6 +10580,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// complex_vector foo(complex_vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_complex<T0__>>*>
@@ -10374,6 +10588,8 @@ Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,1>
 foo(const T0__& Z_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   const auto& Z = stan::math::to_ref(Z_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
@@ -10388,6 +10604,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// vector foo(vector)
 template <typename T0__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -10395,6 +10612,8 @@ Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,1>
 foo(const T0__& A_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   const auto& A = stan::math::to_ref(A_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
@@ -10411,6 +10630,7 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// complex_row_vector foo(complex_row_vector)
 template <typename T0__,
           stan::require_all_t<stan::is_row_vector<T0__>,
                               stan::is_vt_complex<T0__>>*>
@@ -10418,6 +10638,8 @@ Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,1,-1>
 foo(const T0__& Z_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   const auto& Z = stan::math::to_ref(Z_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
@@ -10432,6 +10654,7 @@ foo(const T0__& Z_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
+// row_vector foo(row_vector)
 template <typename T0__,
           stan::require_all_t<stan::is_row_vector<T0__>,
                               stan::is_vt_not_complex<T0__>>*>
@@ -10439,6 +10662,8 @@ Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,1,-1>
 foo(const T0__& A_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   const auto& A = stan::math::to_ref(A_arg__);
   static constexpr bool propto__ = true;
   // suppress unused var warning
@@ -10455,12 +10680,18 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-std::vector<Eigen::Matrix<std::complex<stan::promote_args_t<T0__>>,-1,-1>>
-foo(const std::vector<Eigen::Matrix<std::complex<T0__>,-1,-1>>& Z,
-    std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+// array[] complex_matrix foo(array[] complex_matrix)
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
+                              stan::is_vt_complex<stan::value_type_t<T0__>>>*>
+std::vector<
+  Eigen::Matrix<std::complex<stan::promote_args_t<stan::base_type_t<T0__>>>,-1,-1>>
+foo(const T0__& Z, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10474,11 +10705,18 @@ foo(const std::vector<Eigen::Matrix<std::complex<T0__>,-1,-1>>& Z,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-template <typename T0__, stan::require_all_t<stan::is_stan_scalar<T0__>>*>
-std::vector<Eigen::Matrix<stan::promote_args_t<T0__>,-1,-1>>
-foo(const std::vector<Eigen::Matrix<T0__,-1,-1>>& A, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+// array[] matrix foo(array[] matrix)
+template <typename T0__,
+          stan::require_all_t<stan::is_std_vector<T0__>,
+                              stan::is_eigen_matrix_dynamic<stan::value_type_t<T0__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__>>>*>
+std::vector<
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>>,-1,-1>>
+foo(const T0__& A, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>>;
   int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
   static constexpr bool propto__ = true;
   // suppress unused var warning
   (void) propto__;
@@ -10504,6 +10742,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
                                  std::ostream* pstream__ = nullptr)
       : model_base_crtp(0) {
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     using local_scalar_t__ = double;
     boost::ecuyer1988 base_rng__ =
       stan::services::util::create_rng(random_seed__, 0);
@@ -10547,6 +10787,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10614,6 +10856,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     stan::math::accumulator<T__> lp_accum__;
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10688,6 +10932,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     // suppress unused var warning
     (void) lp__;
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
@@ -10722,6 +10968,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
@@ -10733,6 +10981,8 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     using local_scalar_t__ = double;
     stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
+    // suppress unused var warning
+    (void) current_statement__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
