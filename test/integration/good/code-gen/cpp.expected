@@ -915,10 +915,8 @@ f(const T0__& x,
           std::vector<
             std::tuple<std::vector<std::tuple<T1__0__0__, T1__0__1__>>,
               T1__1__>>>& x2, std::ostream* pstream__);
-/* tuple(int, array[] tuple(int, real)) f(int,
-                                         array[,] tuple(array[] tuple(int,
-  int),
-                                                        array[,] int))
+/* tuple(int, array[] tuple(int, real))
+   f(int, array[,] tuple(array[] tuple(int, int), array[,] int))
  */
 template <typename T0__, typename T1__0__0__, typename T1__0__1__,
           typename T1__1__,
@@ -7156,8 +7154,8 @@ foo(const T0__& n, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[] real sho(real, array[] real, array[] real, data array[] real,
-                   data array[] int)
+/* array[] real
+   sho(real, array[] real, array[] real, data array[] real, data array[] int)
  */
 template <typename T0__, typename T1__, typename T2__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -7921,9 +7919,10 @@ covsqrt2corsqrt(const T0__& mat_arg__, const T1__& invert, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* void f0(int, array[] int, array[,] int, real, array[] real, array[,] real,
-          vector, array[] vector, array[,] vector, matrix, array[] matrix,
-          array[,] matrix)
+/* void
+   f0(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8006,9 +8005,10 @@ f0(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* int f1(int, array[] int, array[,] int, real, array[] real, array[,] real,
-         vector, array[] vector, array[,] vector, matrix, array[] matrix,
-         array[,] matrix)
+/* int
+   f1(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8088,9 +8088,10 @@ f1(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[] int f2(int, array[] int, array[,] int, real, array[] real,
-                 array[,] real, vector, array[] vector, array[,] vector,
-                 matrix, array[] matrix, array[,] matrix)
+/* array[] int
+   f2(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8170,9 +8171,10 @@ f2(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[,] int f3(int, array[] int, array[,] int, real, array[] real,
-                  array[,] real, vector, array[] vector, array[,] vector,
-                  matrix, array[] matrix, array[,] matrix)
+/* array[,] int
+   f3(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8252,9 +8254,10 @@ f3(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* real f4(int, array[] int, array[,] int, real, array[] real, array[,] real,
-          vector, array[] vector, array[,] vector, matrix, array[] matrix,
-          array[,] matrix)
+/* real
+   f4(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8337,9 +8340,10 @@ f4(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[] real f5(int, array[] int, array[,] int, real, array[] real,
-                  array[,] real, vector, array[] vector, array[,] vector,
-                  matrix, array[] matrix, array[,] matrix)
+/* array[] real
+   f5(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8424,9 +8428,10 @@ f5(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[,] real f6(int, array[] int, array[,] int, real, array[] real,
-                   array[,] real, vector, array[] vector, array[,] vector,
-                   matrix, array[] matrix, array[,] matrix)
+/* array[,] real
+   f6(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8512,10 +8517,10 @@ f6(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* vector f7(int, array[] int, array[,] int, real, array[] real, array[,]
-  real,
-            vector, array[] vector, array[,] vector, matrix, array[] matrix,
-            array[,] matrix)
+/* vector
+   f7(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8600,9 +8605,10 @@ f7(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[] vector f8(int, array[] int, array[,] int, real, array[] real,
-                    array[,] real, vector, array[] vector, array[,] vector,
-                    matrix, array[] matrix, array[,] matrix)
+/* array[] vector
+   f8(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8688,9 +8694,10 @@ f8(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[,] vector f9(int, array[] int, array[,] int, real, array[] real,
-                     array[,] real, vector, array[] vector, array[,] vector,
-                     matrix, array[] matrix, array[,] matrix)
+/* array[,] vector
+   f9(int, array[] int, array[,] int, real, array[] real, array[,] real,
+      vector, array[] vector, array[,] vector, matrix, array[] matrix,
+      array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8777,10 +8784,10 @@ f9(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* matrix f10(int, array[] int, array[,] int, real, array[] real, array[,]
-  real,
-             vector, array[] vector, array[,] vector, matrix, array[] matrix,
-             array[,] matrix)
+/* matrix
+   f10(int, array[] int, array[,] int, real, array[] real, array[,] real,
+       vector, array[] vector, array[,] vector, matrix, array[] matrix,
+       array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8865,9 +8872,10 @@ f10(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[] matrix f11(int, array[] int, array[,] int, real, array[] real,
-                     array[,] real, vector, array[] vector, array[,] vector,
-                     matrix, array[] matrix, array[,] matrix)
+/* array[] matrix
+   f11(int, array[] int, array[,] int, real, array[] real, array[,] real,
+       vector, array[] vector, array[,] vector, matrix, array[] matrix,
+       array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -8953,9 +8961,10 @@ f11(const T0__& a1, const T1__& a2, const T2__& a3, const T3__& a4,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[,] matrix f12(int, array[] int, array[,] int, real, array[] real,
-                      array[,] real, vector, array[] vector, array[,] vector,
-                      matrix, array[] matrix, array[,] matrix)
+/* array[,] matrix
+   f12(int, array[] int, array[,] int, real, array[] real, array[,] real,
+       vector, array[] vector, array[,] vector, matrix, array[] matrix,
+       array[,] matrix)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,
@@ -24471,8 +24480,8 @@ struct dz_dt_functor__ {
     return dz_dt(t, z, theta, x_r, x_i, pstream__);
   }
 };
-/* array[] real dz_dt(real, array[] real, array[] real, array[] real,
-                     array[] int)
+/* array[] real
+   dz_dt(real, array[] real, array[] real, array[] real, array[] int)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
@@ -36259,10 +36268,11 @@ g12(const T0__& y_slice, const T1__& start, const T2__& end, const T3__& a,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* real s(array[] real, int, int, int, real, vector, row_vector, matrix,
-         array[] int, array[] real, array[] vector, array[] row_vector,
-         array[] matrix, array[,] int, array[,] real, array[,] vector,
-         array[,] row_vector, array[,] matrix, array[,,] int, array[,,] real)
+/* real
+   s(array[] real, int, int, int, real, vector, row_vector, matrix,
+     array[] int, array[] real, array[] vector, array[] row_vector,
+     array[] matrix, array[,] int, array[,] real, array[,] vector,
+     array[,] row_vector, array[,] matrix, array[,,] int, array[,,] real)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__, typename T5__, typename T6__, typename T7__,

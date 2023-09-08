@@ -894,8 +894,8 @@ integrand(const T0__& x_arg__, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* array[] real integrand_ode(real, array[] real, array[] real, array[] real,
-                             array[] int)
+/* array[] real
+   integrand_ode(real, array[] real, array[] real, array[] real, array[] int)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,

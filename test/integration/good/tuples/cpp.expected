@@ -10820,8 +10820,9 @@ void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* void overly_complicated(tuple(array[] matrix, tuple(int, matrix), real),
-                          array[] tuple(int, matrix))
+/* void
+   overly_complicated(tuple(array[] matrix, tuple(int, matrix), real),
+                      array[] tuple(int, matrix))
  */
 template <typename T0__0__, typename T0__1__0__, typename T0__1__1__,
           typename T0__2__, typename T1__0__, typename T1__1__,

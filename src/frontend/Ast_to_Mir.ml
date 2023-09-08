@@ -143,7 +143,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
           , Some y ) } in
   let funapp meta kind name args =
     Expr.{Fixed.pattern= FunApp (trans_fn_kind kind name, args); meta} in
-  let ensure_type tp lb : Expr.Typed.t =
+  let maybe_promote_to_real tp lb : Expr.Typed.t =
     match (tp, Expr.Typed.type_of lb) with
     | UnsizedType.UInt, _ -> lb
     | _, UInt ->
@@ -153,7 +153,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
   let inclusive_bound tp (lb : Expr.Typed.t) =
     if UnsizedType.is_int_type tp then
       Expr.Helpers.binop lb Minus Expr.Helpers.one
-    else ensure_type tp lb in
+    else maybe_promote_to_real tp lb in
   let size_adjust e =
     if
       (not (UnsizedType.is_container ast_obs.Ast.emeta.type_))
@@ -185,13 +185,14 @@ let truncate_dist ud_dists (id : Ast.identifier)
           (targetme ub.meta.loc
              (size_adjust
                 (funapp ub.meta fk fn
-                   (ensure_type tp ub :: trans_exprs ast_args) ) ) ) ]
+                   (maybe_promote_to_real tp ub :: trans_exprs ast_args) ) ) )
+      ]
   | TruncateBetween (lb, ub) ->
       let fk, fn, tp = find_function_info cdf_suffices in
       let lb, ub = (trans_expr lb, trans_expr ub) in
       let expr args =
         funapp ub.meta (Ast.StanLib FnPlain) "log_diff_exp"
-          [ funapp ub.meta fk fn (ensure_type tp ub :: args)
+          [ funapp ub.meta fk fn (maybe_promote_to_real tp ub :: args)
           ; funapp ub.meta fk fn (inclusive_bound tp lb :: args) ] in
       let statement =
         match

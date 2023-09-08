@@ -732,8 +732,8 @@ struct simple_SIR_functor__ {
     return simple_SIR(t, y, theta, x_r, x_i, pstream__);
   }
 };
-/* array[] real simple_SIR(real, array[] real, array[] real, array[] real,
-                          array[] int)
+/* array[] real
+   simple_SIR(real, array[] real, array[] real, array[] real, array[] int)
  */
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           typename T4__,
@@ -10160,8 +10160,9 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* void js_super_lp(array[,] int, array[] int, array[] int, matrix, matrix,
-                   real, vector, matrix)
+/* void
+   js_super_lp(array[,] int, array[] int, array[] int, matrix, matrix, 
+               real, vector, matrix)
  */
 template <bool propto__, typename T0__, typename T1__, typename T2__,
           typename T3__, typename T4__, typename T5__, typename T6__,
@@ -18557,9 +18558,9 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__, std::ostream*
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-/* void jolly_seber_lp(array[,] int, array[] int, array[] int, matrix,
-  matrix,
-                      vector, matrix)
+/* void
+   jolly_seber_lp(array[,] int, array[] int, array[] int, matrix, matrix,
+                  vector, matrix)
  */
 template <bool propto__, typename T0__, typename T1__, typename T2__,
           typename T3__, typename T4__, typename T5__, typename T6__,
