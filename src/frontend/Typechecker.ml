@@ -982,22 +982,42 @@ let verify_assignment_non_function loc ut id =
       Semantic_error.cannot_assign_function loc ut id.name |> error
   | _ -> ()
 
+let warn_self_assignment ~is_decl loc variable_name rhs =
+  if is_decl then
+    let rhs_ids = Ast.extract_ids rhs in
+    if List.exists rhs_ids ~f:(fun id -> String.equal id.name variable_name)
+    then
+      add_warning loc
+        "Assignment of variable to itself during declaration. This is almost \
+         certainly a bug."
+    else ()
+  else
+    match rhs.expr with
+    | Variable v when String.equal variable_name v.name ->
+        add_warning loc "Assignment of variable to itself."
+    | _ -> ()
+
 let check_assignment_operator loc assop lhs rhs =
   let err op =
     Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
   in
   match assop with
   | Assign | ArrowAssign -> (
-    match
-      SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
-        rhs.emeta.type_
-    with
-    | Ok p ->
-        let rhs =
-          (* Hack: need RHS to properly get promoted to var if needed *)
-          {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}} in
-        Promotion.promote rhs p
-    | Error _ -> err Operator.Equals |> error )
+      let () =
+        match lhs.lval with
+        | LVariable v -> warn_self_assignment ~is_decl:false loc v.name rhs
+        | _ -> () in
+      match
+        SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
+          rhs.emeta.type_
+      with
+      | Ok p ->
+          let rhs =
+            (* Hack: need RHS to properly get promoted to var if needed *)
+            {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}}
+          in
+          Promotion.promote rhs p
+      | Error _ -> err Operator.Equals |> error )
   | OperatorAssign op -> (
       let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
       let return_type = assignmentoperator_stan_math_return_type op args in
@@ -1515,7 +1535,7 @@ and check_var_decl loc cf tenv sized_ty trans
   let checked_trans = check_transformation cf tenv unsized_type trans in
   let tenv, tvariables =
     List.fold_map ~init:tenv
-      ~f:(fun tenv' ({identifier; _} as var) ->
+      ~f:(fun tenv' ({identifier; initial_value} as var) ->
         verify_identifier identifier ;
         verify_name_fresh tenv' identifier ~is_udf:false ;
         let tenv'' =
@@ -1523,6 +1543,10 @@ and check_var_decl loc cf tenv sized_ty trans
             (`Variable
               {origin= cf.current_block; global= is_global; readonly= false} )
         in
+        let () =
+          match initial_value with
+          | Some e -> warn_self_assignment ~is_decl:true loc identifier.name e
+          | None -> () in
         (tenv'', check_var_decl_initial_value loc cf tenv'' var) )
       variables in
   verify_valid_transformation_for_type loc is_global checked_type checked_trans ;
