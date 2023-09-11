@@ -16,6 +16,7 @@ model {
   target += sum(vec);
 
   row_vector[N] vec3;
+  
   {
     row_vector[N] vec4 = columns_dot_self(X);
     vec3 = vec4;
