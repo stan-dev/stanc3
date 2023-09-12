@@ -616,9 +616,11 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Skip -> Skip |> swrap
 
 and trans_packed_assign loc trans_stmt lvals rhs assign_op =
-  let smeta = Ast.{loc; return_type= Incomplete} in
+  (* TODO tuple-unpacking: could be more efficient in case where rhs is a tuple expr and
+     names don't overlap *)
   (* let lhs_ids = List.concat_map ~f:Ast.id_of_lvalue lvals |> Set.Poly.of_list in
      let rhs_ids = Ast.extract_ids rhs |> Set.Poly.of_list in *)
+  let smeta = Ast.{loc; return_type= Incomplete} in
   let sym, reset = Common.Gensym.enter () in
   let rhs_type = rhs.emeta.type_ in
   let temp =
@@ -667,7 +669,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
         (* When we group indices,
            the metadata of group-indexed LHS equals the metadata of the outermost indexed LHS *)
         {lv with Ast.lval= (group_lvalue (idcs @ carry_idcs) lv').lval}
-    | LTuplePacking _ -> failwith "todo 5 maybe impossible" in
+    | LTuplePacking _ -> failwith "todo 5 impossible" in
   let grouped_lhs = group_lvalue [] assign_lhs in
   let rec trans_lvalue lv =
     match lv.Ast.lval with
@@ -677,7 +679,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
     | LIndexed (lv, idcs) ->
         let lbase, idxs = trans_lvalue lv in
         (lbase, idxs @ List.map ~f:trans_idx idcs)
-    | LTuplePacking _ -> failwith "todo 6 maybe impossible" in
+    | LTuplePacking _ -> failwith "todo 6  impossible" in
   let lhs = trans_lvalue grouped_lhs in
   (* The type of the assignee if it weren't indexed
      e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
@@ -686,7 +688,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
     match grouped_lhs.Ast.lval with
     | LVariable _ | LTupleProjection _ -> grouped_lhs.Ast.lmeta.type_
     | LIndexed (lv, _) -> lv.Ast.lmeta.type_
-    | LTuplePacking _ -> failwith "todo 7 maybe impossible" in
+    | LTuplePacking _ -> failwith "todo 7 impossible" in
   let rhs =
     match assign_op with
     | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs

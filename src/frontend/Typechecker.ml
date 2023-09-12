@@ -976,10 +976,10 @@ let verify_assignment_global loc cf block is_global id =
 (* Until function types are added to the user language, we
    disallow assignments to function values
 *)
-let verify_assignment_non_function loc ut id =
+let verify_assignment_non_function loc ut =
   match ut with
   | UnsizedType.UFun _ | UMathLibraryFunction ->
-      Semantic_error.cannot_assign_function loc ut id.name |> error
+      Semantic_error.cannot_assign_function loc ut |> error
   | _ -> ()
 
 let check_assignment_operator loc assop lhs rhs =
@@ -1008,9 +1008,17 @@ let rec check_lvalue cf tenv = function
       verify_identifier id ;
       let ad_level, type_ = check_id cf loc tenv id in
       {lval= LVariable id; lmeta= {ad_level; type_; loc}}
-  | {lval= LTuplePacking lvs; lmeta= loc} ->
-      Stdlib.ignore (lvs, loc) ;
-      failwith "todo 2"
+  | {lval= LTuplePacking lvs; lmeta= {loc}} ->
+      let inner_lvals = List.map lvs ~f:(check_lvalue cf tenv) in
+      let lval = LTuplePacking inner_lvals in
+      let lmeta =
+        Ast.
+          { loc
+          ; ad_level=
+              TupleAD (List.map inner_lvals ~f:(fun l -> l.lmeta.ad_level))
+          ; type_= UTuple (List.map inner_lvals ~f:(fun l -> l.lmeta.type_)) }
+      in
+      {lval; lmeta}
   | {lval= LTupleProjection (lval, idx); lmeta= ({loc} : located_meta)} -> (
       let tlval = check_lvalue cf tenv lval in
       match (tlval.lmeta.type_, tlval.lmeta.ad_level) with
@@ -1069,31 +1077,42 @@ let rec check_lvalue cf tenv = function
           Semantic_error.cannot_assign_to_multiindex loc |> error ) ;
       {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
 
+let verify_assignable_id loc cf tenv assign_id =
+  let block, global, readonly =
+    let var = Env.find tenv assign_id.name in
+    match var with
+    | {kind= `Variable {origin; global; readonly}; _} :: _ ->
+        (origin, global, readonly)
+    | {kind= `StanMath; _} :: _ -> (MathLibrary, true, false)
+    | {kind= `UserDefined | `UserDeclared _; _} :: _ -> (Functions, true, false)
+    | _ ->
+        Semantic_error.ident_not_in_scope loc assign_id.name
+          (Env.nearest_ident tenv assign_id.name)
+        |> error in
+  verify_assignment_global loc cf block global assign_id ;
+  verify_assignment_read_only loc readonly assign_id
+
+let check_simple_assignment loc cf tenv assign_lhs assign_op assign_rhs =
+  let assign_id = List.hd_exn @@ Ast.id_of_lvalue assign_lhs in
+  let lhs = check_lvalue cf tenv assign_lhs in
+  let rhs = check_expression cf tenv assign_rhs in
+  verify_assignable_id loc cf tenv assign_id ;
+  verify_assignment_non_function loc rhs.emeta.type_ ;
+  let rhs' = check_assignment_operator loc assign_op lhs rhs in
+  mk_typed_statement ~return_type:Incomplete ~loc
+    ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
+
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   match assign_lhs.lval with
-  | LTuplePacking _ -> failwith "todo"
-  | _ ->
-      let assign_id = List.hd_exn @@ Ast.id_of_lvalue assign_lhs in
+  | LTuplePacking _ ->
       let lhs = check_lvalue cf tenv assign_lhs in
       let rhs = check_expression cf tenv assign_rhs in
-      let block, global, readonly =
-        let var = Env.find tenv assign_id.name in
-        match var with
-        | {kind= `Variable {origin; global; readonly}; _} :: _ ->
-            (origin, global, readonly)
-        | {kind= `StanMath; _} :: _ -> (MathLibrary, true, false)
-        | {kind= `UserDefined | `UserDeclared _; _} :: _ ->
-            (Functions, true, false)
-        | _ ->
-            Semantic_error.ident_not_in_scope loc assign_id.name
-              (Env.nearest_ident tenv assign_id.name)
-            |> error in
-      verify_assignment_global loc cf block global assign_id ;
-      verify_assignment_read_only loc readonly assign_id ;
-      verify_assignment_non_function loc rhs.emeta.type_ assign_id ;
+      List.iter ~f:(verify_assignable_id loc cf tenv) (Ast.id_of_lvalue lhs) ;
+      verify_assignment_non_function loc rhs.emeta.type_ ;
       let rhs' = check_assignment_operator loc assign_op lhs rhs in
       mk_typed_statement ~return_type:Incomplete ~loc
         ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
+  | _ -> check_simple_assignment loc cf tenv assign_lhs assign_op assign_rhs
 
 (* target plus-equals / increment log-prob *)
 

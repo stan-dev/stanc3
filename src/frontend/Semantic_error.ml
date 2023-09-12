@@ -361,7 +361,7 @@ module StatementError = struct
   type t =
     | CannotAssignToReadOnly of string
     | CannotAssignToGlobal of string
-    | CannotAssignFunction of UnsizedType.t * string
+    | CannotAssignFunction of UnsizedType.t
     | LValueMultiIndexing
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
@@ -397,9 +397,9 @@ module StatementError = struct
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
           name
-    | CannotAssignFunction (ut, name) ->
-        Fmt.pf ppf "Cannot assign a function type '%a' to variable '%s'."
-          UnsizedType.pp ut name
+    | CannotAssignFunction ut ->
+        Fmt.pf ppf "Cannot assign a function type '%a' to variable."
+          UnsizedType.pp ut
     | LValueMultiIndexing ->
         Fmt.pf ppf
           "Left hand side of an assignment cannot have nested multi-indexing."
@@ -672,8 +672,8 @@ let cannot_assign_to_read_only loc name =
 let cannot_assign_to_global loc name =
   StatementError (loc, StatementError.CannotAssignToGlobal name)
 
-let cannot_assign_function loc ut name =
-  StatementError (loc, StatementError.CannotAssignFunction (ut, name))
+let cannot_assign_function loc ut =
+  StatementError (loc, StatementError.CannotAssignFunction ut)
 
 let cannot_assign_to_multiindex loc =
   StatementError (loc, StatementError.LValueMultiIndexing)
