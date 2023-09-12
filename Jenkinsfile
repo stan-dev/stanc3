@@ -54,7 +54,7 @@ def checkCompilation(String testsPath, String stancFlags = ""){
         echo 'O=0' >> make/local
         echo 'CXXFLAGS+=-Wall' >> make/local
         make -j${env.PARALLEL} build; cd ..
-        python ./checkCompilation.py -j${env.PARALLEL} --syntax-only ${testsPath}
+        python ./checkCompilation.py -j${env.PARALLEL} ${testsPath}
     """
 }
 
