@@ -982,20 +982,26 @@ let verify_assignment_non_function loc ut id =
       Semantic_error.cannot_assign_function loc ut id.name |> error
   | _ -> ()
 
-let warn_self_assignment ~is_decl loc variable_name rhs =
-  if is_decl then
-    let rhs_ids = Ast.extract_ids rhs in
-    if List.exists rhs_ids ~f:(fun id -> String.equal id.name variable_name)
-    then
-      add_warning loc
-        "Assignment of variable to itself during declaration. This is almost \
-         certainly a bug."
-    else ()
-  else
-    match rhs.expr with
-    | Variable v when String.equal variable_name v.name ->
-        add_warning loc "Assignment of variable to itself."
-    | _ -> ()
+(** We issue a warning if the initial value for a declaration contains
+    any reference to the variable being declared *)
+let warn_self_declare loc variable_name rhs_opt =
+  Option.iter rhs_opt ~f:(fun rhs ->
+      let rhs_ids = Ast.extract_ids rhs in
+      if List.exists rhs_ids ~f:(fun id -> String.equal id.name variable_name)
+      then
+        add_warning loc
+          "Assignment of variable to itself during declaration. This is almost \
+           certainly a bug." )
+
+(** For general assignments, we only warn if we believe the lhs and rhs are exactly the same value *)
+let warn_self_assignment loc lhs rhs =
+  let rhs_opt =
+    rhs |> Ast.untyped_expression_of_typed_expression |> Ast.strip_parens
+    |> Ast.lvalue_of_expr_opt in
+  Option.iter rhs_opt ~f:(fun rhs ->
+      let lhs = lhs |> Ast.untyped_lvalue_of_typed_lvalue in
+      if Ast.compare_untyped_lval lhs rhs = 0 then
+        add_warning loc "Assignment of variable to itself." )
 
 let check_assignment_operator loc assop lhs rhs =
   let err op =
@@ -1003,10 +1009,7 @@ let check_assignment_operator loc assop lhs rhs =
   in
   match assop with
   | Assign | ArrowAssign -> (
-      let () =
-        match lhs.lval with
-        | LVariable v -> warn_self_assignment ~is_decl:false loc v.name rhs
-        | _ -> () in
+      warn_self_assignment loc lhs rhs ;
       match
         SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
           rhs.emeta.type_
@@ -1543,10 +1546,7 @@ and check_var_decl loc cf tenv sized_ty trans
             (`Variable
               {origin= cf.current_block; global= is_global; readonly= false} )
         in
-        let () =
-          match initial_value with
-          | Some e -> warn_self_assignment ~is_decl:true loc identifier.name e
-          | None -> () in
+        warn_self_declare loc identifier.name initial_value ;
         (tenv'', check_var_decl_initial_value loc cf tenv'' var) )
       variables in
   verify_valid_transformation_for_type loc is_global checked_type checked_trans ;
