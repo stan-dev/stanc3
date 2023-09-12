@@ -497,40 +497,6 @@ let index_tuple (e : Ast.typed_expression) i =
     | _ -> failwith "todo 8 definitely impossible" in
   Ast.{expr= TupleProjection (e, i + 1); emeta}
 
-let temp_vars exprs =
-  let sym, reset = Common.Gensym.enter () in
-  let rec loop es sym inits vars =
-    match es with
-    | [] -> (inits, vars)
-    | (Expr.{Fixed.pattern= Var _; _} as e) :: es ->
-        loop es sym inits (e :: vars)
-    | e :: es ->
-        let decl =
-          { Fixed.pattern=
-              Decl
-                { decl_adtype= Expr.Typed.adlevel_of e
-                ; decl_id= sym
-                ; decl_type= Unsized (Expr.Typed.type_of e)
-                ; initialize= true }
-          ; meta= e.meta.loc } in
-        let assign =
-          { decl with
-            Fixed.pattern=
-              Assignment ((LVariable sym, []), Expr.Typed.type_of e, e) } in
-        loop es (Gensym.generate ()) (decl :: assign :: inits)
-          ({e with pattern= Var sym} :: vars) in
-  let setups, exprs = loop (List.rev exprs) sym [] [] in
-  (setups, exprs, reset)
-
-let ensure_var bodyfn (expr : Expr.Typed.t) meta =
-  match expr with
-  | {pattern= Var _; _} -> bodyfn expr meta
-  | _ ->
-      let preamble, temp, reset = temp_vars [expr] in
-      let body = bodyfn (List.hd_exn temp) meta in
-      reset () ;
-      {body with Fixed.pattern= Block (preamble @ [body])}
-
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt =
@@ -651,19 +617,37 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
 
 and trans_packed_assign loc trans_stmt lvals rhs assign_op =
   let smeta = Ast.{loc; return_type= Incomplete} in
-  let lhs_ids = List.concat_map ~f:Ast.id_of_lvalue lvals |> Set.Poly.of_list in
-  let rhs_ids = Ast.extract_ids rhs |> Set.Poly.of_list in
-  let f e smeta =
-    if Set.are_disjoint lhs_ids rhs_ids then
-      List.mapi lvals ~f:(fun i lval ->
-          trans_stmt
-            Ast.
-              { stmt=
-                  Assignment
-                    {assign_lhs= lval; assign_op; assign_rhs= index_tuple e i}
-              ; smeta } )
-    else (*TUPLE UNPACK TODO *) [] in
-  Stmt.Helpers.ensure_var f (trans_expr rhs) smeta
+  (* let lhs_ids = List.concat_map ~f:Ast.id_of_lvalue lvals |> Set.Poly.of_list in
+     let rhs_ids = Ast.extract_ids rhs |> Set.Poly.of_list in *)
+  let sym, reset = Common.Gensym.enter () in
+  let rhs_type = rhs.emeta.type_ in
+  let temp =
+    { Stmt.Fixed.pattern=
+        Decl
+          { decl_adtype= rhs.emeta.ad_level
+          ; decl_id= sym
+          ; decl_type= Unsized rhs_type
+          ; initialize= true }
+    ; meta= rhs.emeta.loc } in
+  let assign =
+    { temp with
+      pattern= Assignment ((LVariable sym, []), rhs_type, trans_expr rhs) }
+  in
+  let temp_expr =
+    Ast.{rhs with expr= Variable {name= sym; id_loc= Location_span.empty}} in
+  let assigns =
+    List.mapi lvals ~f:(fun i lval ->
+        trans_stmt
+          Ast.
+            { stmt=
+                Assignment
+                  { assign_lhs= lval
+                  ; assign_op
+                  ; assign_rhs= index_tuple temp_expr i }
+            ; smeta } )
+    |> List.concat in
+  reset () ;
+  [Stmt.Fixed.{pattern= Block (temp :: assign :: assigns); meta= loc}]
 
 and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
   let rec group_lvalue carry_idcs lv =
