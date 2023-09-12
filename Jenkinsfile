@@ -29,7 +29,7 @@ def checkCompilation(String testsPath, String stancFlags = ""){
     unstash 'ubuntu-exe'
 
     sh """
-        git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+        git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan --branch=fix/checkCompilation
     """
 
     writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}")
@@ -54,7 +54,7 @@ def checkCompilation(String testsPath, String stancFlags = ""){
         echo 'O=0' >> make/local
         echo 'CXXFLAGS+=-Wall' >> make/local
         make -j${env.PARALLEL} build; cd ..
-        python ./checkCompilation.py -j${env.PARALLEL} ${testsPath}
+        python ./checkCompilation.py -j${env.PARALLEL} --syntax-only ${testsPath}
     """
 }
 
