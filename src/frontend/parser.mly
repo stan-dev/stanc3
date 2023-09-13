@@ -39,6 +39,17 @@ let reserved_decl (name, loc, is_type) =
 let build_expr expr loc = {expr; emeta= {loc= location_span_of_positions loc}}
 let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 
+let parse_tuple_slot ix_str loc =
+  match int_of_string_opt (String.drop_prefix ix_str 1) with
+  | None ->
+      raise
+        (Errors.SyntaxError
+           (Errors.Parsing
+              ( "Failed to parse integer from string '" ^ ix_str
+                ^ "' in tuple index. \nThe index is likely too large.\n"
+              , location_span_of_positions loc ) ) )
+  | Some ix -> ix
+
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 
@@ -573,14 +584,7 @@ dims:
 lhs_indexing:
   | ix_str=DOTNUMERAL
   { grammar_logger "lhs_tuple_proj" ;
-
-    match int_of_string_opt (String.drop_prefix ix_str 1) with
-      | None ->
-         raise (Errors.SyntaxError (Errors.Parsing
-            ("Failed to parse integer from string '" ^ ix_str
-              ^ "' in tuple index. \nThe index is likely too large.\n",
-              location_span_of_positions $loc)))
-      | Some ix -> `TupleProj ix
+    `TupleProj (parse_tuple_slot ix_str $loc)
   }
   | LBRACK indices=indexes RBRACK
   { grammar_logger "lhs_indexing" ;
@@ -607,6 +611,7 @@ lhs:
     { grammar_logger "tuple_pack" ;
       build_expr (TupleExpr (head::pack)) $loc
     }
+
 
 (* General expressions (that can't be used in constraints declarations)
    that can't be assigned to
@@ -684,18 +689,13 @@ common_expression:
       build_expr (CondDistApp ((), id, e :: args)) $loc }
   (* written in a funny way to avoid reduce/reduce conflict *)
   | LPAREN x_head=non_lhs COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
+  (* still broken *)
   | LPAREN x_head=lhs COMMA xs=separated_nonempty_list(COMMA, non_lhs) RPAREN
     { grammar_logger "tuple_expression" ;
       build_expr (TupleExpr (x_head::xs)) $loc  }
   | e=common_expression ix_str=DOTNUMERAL
     { grammar_logger "common_expression_tuple_index" ;
-      match int_of_string_opt (String.drop_prefix ix_str 1) with
-      | None -> raise (Errors.SyntaxError (Errors.Parsing
-          ("Failed to parse integer from string '" ^ ix_str
-            ^ "' in tuple index.\nThe index is likely too large.\n",
-            location_span_of_positions $loc)))
-      | Some ix ->
-          build_expr (TupleProjection (e, ix)) $loc
+      build_expr (TupleProjection (e, parse_tuple_slot ix_str $loc)) $loc
     }
   | e=common_expression LBRACK indices=indexes RBRACK
     { grammar_logger "common_expression_indexed";
