@@ -494,7 +494,11 @@ let index_tuple (e : Ast.typed_expression) i =
           { type_= List.nth_exn ts i
           ; ad_level= List.nth_exn ads i
           ; loc= e.emeta.loc }
-    | _ -> failwith "todo 8 definitely impossible" in
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message
+            "Attempted to index into a non-tuple during lowering"
+              (e : Ast.typed_expression)] in
   Ast.{expr= TupleProjection (e, i + 1); emeta}
 
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
@@ -652,6 +656,12 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
   [Stmt.Fixed.{pattern= Block (temp :: assign :: assigns); meta= loc}]
 
 and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
+  (* Parsing rules ensure that we will not see a LTuplePacking in this function *)
+  let fail () =
+    Common.FatalError.fatal_error_msg
+      [%message
+        "Found a tuple LHS where it should never be during lowering"
+          (assign_lhs : Ast.typed_lval)] in
   let rec group_lvalue carry_idcs lv =
     (* Group up non-tuple indices
        e.g. x[1][2].1[3] -> x[1,2].1[3]
@@ -669,7 +679,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
         (* When we group indices,
            the metadata of group-indexed LHS equals the metadata of the outermost indexed LHS *)
         {lv with Ast.lval= (group_lvalue (idcs @ carry_idcs) lv').lval}
-    | LTuplePacking _ -> failwith "todo 5 impossible" in
+    | LTuplePacking _ -> fail () in
   let grouped_lhs = group_lvalue [] assign_lhs in
   let rec trans_lvalue lv =
     match lv.Ast.lval with
@@ -679,7 +689,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
     | LIndexed (lv, idcs) ->
         let lbase, idxs = trans_lvalue lv in
         (lbase, idxs @ List.map ~f:trans_idx idcs)
-    | LTuplePacking _ -> failwith "todo 6  impossible" in
+    | LTuplePacking _ -> fail () in
   let lhs = trans_lvalue grouped_lhs in
   (* The type of the assignee if it weren't indexed
      e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
@@ -688,7 +698,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
     match grouped_lhs.Ast.lval with
     | LVariable _ | LTupleProjection _ -> grouped_lhs.Ast.lmeta.type_
     | LIndexed (lv, _) -> lv.Ast.lmeta.type_
-    | LTuplePacking _ -> failwith "todo 7 impossible" in
+    | LTuplePacking _ -> fail () in
   let rhs =
     match assign_op with
     | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs

@@ -1062,7 +1062,10 @@ let check_lvalue cf tenv lv =
               , var
               , flat @ idcs )
           | {lval= LTuplePacking _; _} ->
-              failwith "todo 3 (probably should prevent)"
+              Common.FatalError.fatal_error_msg
+                [%message
+                  "Found a tuple LHS where it should never be"
+                    (lval : Ast.untyped_lval)]
           | {lval= LVariable _ | LTupleProjection _; _} as lval ->
               (*  I think the right thing to do here is treat tuples like variables *)
               let tval = check_lval lval in
