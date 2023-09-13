@@ -103,7 +103,6 @@ let note_deprecated_array ?(unsized = false) (pos1, pos2) =
 %nonassoc unary_over_binary
 %right HAT ELTPOW
 %left TRANSPOSE
-%left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE
 
@@ -568,31 +567,38 @@ dims:
       e
     }
 
-(* L-values *)
-lhs:
-  | id=identifier
-    {  grammar_logger "lhs_identifier" ;
-       {expr=Variable id
-       ;emeta = {loc=id.id_loc}}
-    }
-  | v=indexed(lhs) { v }
-  | l=lhs ix_str=DOTNUMERAL
-    { grammar_logger "lhs_tuple_index" ;
-      match int_of_string_opt (String.drop_prefix ix_str 1) with
+
+(* Expressions which are valid as L-values *)
+
+lhs_indexing:
+  | ix_str=DOTNUMERAL
+  { grammar_logger "lhs_tuple_proj" ;
+
+    match int_of_string_opt (String.drop_prefix ix_str 1) with
       | None ->
          raise (Errors.SyntaxError (Errors.Parsing
             ("Failed to parse integer from string '" ^ ix_str
               ^ "' in tuple index. \nThe index is likely too large.\n",
               location_span_of_positions $loc)))
-      | Some ix ->
-         build_expr (TupleProjection (l, ix)) $loc
-    }
+      | Some ix -> `TupleProj ix
+  }
+  | LBRACK indices=indexes RBRACK
+  { grammar_logger "lhs_indexing" ;
+    `Indexing indices
+  }
 
-(* This is separated so that it can be reused, e.g. to match array[ixs] type syntax *)
-%inline indexed(expr_type):
-  | l=expr_type LBRACK indices=indexes RBRACK
-    {  grammar_logger "lhs_index" ;
-       build_expr (Indexed (l, indices)) $loc
+lhs:
+  | id=identifier extras=list(lhs_indexing)
+    {  grammar_logger "lhs" ;
+       let rec build_indexing = function
+         | [] -> { expr=Variable id
+                 ; emeta = {loc=id.id_loc}}
+         | `TupleProj ix :: rest ->
+            build_expr (TupleProjection (build_indexing rest, ix)) $loc
+         | `Indexing indices :: rest ->
+            build_expr (Indexed (build_indexing rest, indices)) $loc
+       in
+       build_indexing (List.rev extras)
     }
 
 (* General expressions (that can't be used in constraints declarations)
@@ -607,8 +613,7 @@ non_lhs:
     { grammar_logger "prefix_expr" ; build_expr (PrefixOp (op, e)) $loc }
   | e=expression op=postfixOp
     { grammar_logger "postfix_expr" ; build_expr (PostfixOp (e, op)) $loc}
-  | e=indexed(non_lhs)
-    { e }
+
   | e=common_expression
     { grammar_logger "common_expr" ; build_expr e $loc }
 
@@ -629,32 +634,15 @@ constr_expression:
       grammar_logger "constr_expression_postfix" ;
       build_expr (PostfixOp (e, op)) $loc
     }
-  | e=indexed(constr_expression)
-    {
-      grammar_logger "constr_expression_indexed" ;
-      e
-    }
-  | e=identifier ix_str=DOTNUMERAL
-    {  grammar_logger "constr_id_tuple_index" ;
-       match int_of_string_opt (String.drop_prefix ix_str 1) with
-       | None ->
-         raise (Errors.SyntaxError (Errors.Parsing
-                  ("Failed to parse integer from string '" ^ ix_str
-                    ^ "' in tuple index. \nThe index is likely too large.\n",
-                    location_span_of_positions $loc)))
-       | Some ix ->
-        build_expr (TupleProjection (build_expr (Variable e) $loc, ix)) $loc
-    }
+  | e=lhs {
+    e
+  }
   | e=common_expression
     {
       grammar_logger "constr_expression_common_expr" ;
       build_expr e $loc
     }
-  | id=identifier
-    {
-      grammar_logger "constr_expression_identifier" ;
-      build_expr (Variable id) $loc
-    }
+
 
 common_expression:
   | i=INTNUMERAL
@@ -693,6 +681,10 @@ common_expression:
               location_span_of_positions $loc)))
        | Some ix ->
           TupleProjection (build_expr e $loc, ix)
+    }
+  | e=common_expression LBRACK indices=indexes RBRACK
+    { grammar_logger "common_expression_indexed";
+      Indexed (build_expr e $loc, indices)
     }
   | LPAREN e=expression RPAREN
     { grammar_logger "extra_paren" ; Paren e }

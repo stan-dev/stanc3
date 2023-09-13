@@ -798,10 +798,7 @@ Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing erro
      4:  }
    -------------------------------------------------
 
-Expected an expression inside "[" and "]" but found a statement. Indexing should look like
-  var[1 + i]
-not
-  var[for (n in 1:N) ...]
+Ill-formed expression. Expected expression followed by "]".
   $ ../../../../../install/default/bin/stanc reused_name.stan
 Semantic error in 'reused_name.stan', line 4, column 14 to column 15:
    -------------------------------------------------
