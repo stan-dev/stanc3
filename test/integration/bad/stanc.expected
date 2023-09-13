@@ -92,7 +92,7 @@ Semantic error in 'assigment-to-function-stanmath.stan', line 8, column 5 to col
     10:  }
    -------------------------------------------------
 
-Cannot assign a function type '<Stan Math function>' to variable 'foo'.
+Cannot assign a function type '<Stan Math function>' to variable.
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
 Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
@@ -115,7 +115,7 @@ Semantic error in 'assignment-to-function.stan', line 12, column 5 to column 15:
     14:  }
    -------------------------------------------------
 
-Cannot assign a function type '(int) => real' to variable 'foo'.
+Cannot assign a function type '(int) => real' to variable.
   $ ../../../../install/default/bin/stanc bad_fundef_returntypes1.stan
 Semantic error in 'bad_fundef_returntypes1.stan', line 3, column 4 to column 15:
    -------------------------------------------------

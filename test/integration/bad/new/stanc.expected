@@ -388,7 +388,7 @@ Syntax error in 'ill-formed-expression21.stan', line 1, column 22 to column 27, 
                                ^
    -------------------------------------------------
 
-Expression expected. Ill-formed expression. Suggested alternatives: a standalone identifier, a function application, an identifier followed by an operator or an identifier followed by an index.
+Ill-formed expression. Found identifier. There are many ways to complete this to a well-formed expression.
   $ ../../../../../install/default/bin/stanc ill-formed-expression22.stan
 Syntax error in 'ill-formed-expression22.stan', line 2, column 14 to column 15, parsing error:
    -------------------------------------------------
@@ -438,7 +438,12 @@ Syntax error in 'ill-formed-expression27.stan', line 1, column 26 to column 31, 
                                    ^
    -------------------------------------------------
 
-Ill-formed expression. Expression expected after "!".
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc ill-formed-expression28.stan
 Syntax error in 'ill-formed-expression28.stan', line 1, column 21 to column 26, parsing error:
    -------------------------------------------------
@@ -486,7 +491,12 @@ Syntax error in 'ill-formed-expression32.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed statement or expression. A statement or expression could be expected here.
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc ill-formed-expression33.stan
 Syntax error in 'ill-formed-expression33.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
@@ -518,7 +528,12 @@ Syntax error in 'ill-formed-expression36.stan', line 1, column 26 to column 31, 
                                    ^
    -------------------------------------------------
 
-Ill-formed expression. Found an expression. Expect an infix or postfix operator or "[" or "~" or "]" or ";".
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc ill-formed-expression37.stan
 Syntax error in 'ill-formed-expression37.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
@@ -542,7 +557,12 @@ Syntax error in 'ill-formed-expression39.stan', line 1, column 26 to column 31, 
                                    ^
    -------------------------------------------------
 
-Ill-formed expression. Found an expression. Expect an infix or postfix operator or "[" or "~" or "]" or ";".
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc ill-formed-expression4.stan
 Syntax error in 'ill-formed-expression4.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -1373,10 +1393,7 @@ Syntax error in 'indices-bad3.stan', line 1, column 22 to column 27, parsing err
                                ^
    -------------------------------------------------
 
-Expected an expression inside "[" and "]" but found a statement. Indexing should look like
-  var[1 + i]
-not
-  var[for (n in 1:N) ...]
+Ill-formed expression. Expected expression followed by "]".
   $ ../../../../../install/default/bin/stanc lexing_error.stan
 Syntax error in 'lexing_error.stan', line 1, column 6, lexing error:
    -------------------------------------------------
@@ -1530,10 +1547,12 @@ Syntax error in 'mystery102.stan', line 1, column 27 to column 32, parsing error
                                     ^
    -------------------------------------------------
 
-Found an incomplete ternary expression, should be "(condition) ? (true branch) : (false branch)".
-Did you forget to add a colon or a false branch?
-For example, this returns 3.0:
-  1 ? 0.0 : 3.0
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc mystery103.stan
 Syntax error in 'mystery103.stan', line 1, column 34 to column 39, parsing error:
    -------------------------------------------------
@@ -1591,7 +1610,12 @@ Syntax error in 'mystery108.stan', line 1, column 28 to column 33, parsing error
                                      ^
    -------------------------------------------------
 
-Ill-formed phrase. Found L-value "*=" expression. There are many ways in which this can be completed to a valid phrase.
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc mystery109.stan
 Syntax error in 'mystery109.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2113,7 +2137,12 @@ Syntax error in 'mystery58.stan', line 1, column 27 to column 32, parsing error:
                                     ^
    -------------------------------------------------
 
-Ill-formed phrase. Found L-value "=" expression. There are many ways in which this can be completed to a valid phrase.
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc mystery59.stan
 Syntax error in 'mystery59.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2142,7 +2171,12 @@ Syntax error in 'mystery60.stan', line 1, column 27 to column 32, parsing error:
                                     ^
    -------------------------------------------------
 
-Ill-formed phrase. Found L-value "=" expression. There are many ways in which this can be completed to a valid phrase.
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc mystery61.stan
 Syntax error in 'mystery61.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2179,7 +2213,12 @@ Syntax error in 'mystery64.stan', line 1, column 28 to column 33, parsing error:
                                      ^
    -------------------------------------------------
 
-Ill-formed phrase. Found L-value "/=" expression. There are many ways in which this can be completed to a valid phrase.
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc mystery65.stan
 Syntax error in 'mystery65.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2216,7 +2255,12 @@ Syntax error in 'mystery68.stan', line 1, column 29 to column 34, parsing error:
                                       ^
    -------------------------------------------------
 
-Ill-formed phrase. Found L-value "./=" expression. There are many ways in which this can be completed to a valid phrase.
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc mystery69.stan
 Syntax error in 'mystery69.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2261,7 +2305,12 @@ Syntax error in 'mystery72.stan', line 1, column 30 to column 35, parsing error:
                                        ^
    -------------------------------------------------
 
-Ill-formed phrase. Found L-value ".*=" expression. There are many ways in which this can be completed to a valid phrase.
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc mystery73.stan
 Syntax error in 'mystery73.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2437,7 +2486,12 @@ Syntax error in 'mystery88.stan', line 1, column 28 to column 33, parsing error:
                                      ^
    -------------------------------------------------
 
-Ill-formed phrase. Found L-value "-=" expression. There are many ways in which this can be completed to a valid phrase.
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc mystery89.stan
 Syntax error in 'mystery89.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2537,7 +2591,12 @@ Syntax error in 'mystery97.stan', line 1, column 29 to column 34, parsing error:
                                       ^
    -------------------------------------------------
 
-Ill-formed phrase. Found L-value "+=" expression. There are many ways in which this can be completed to a valid phrase.
+Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
   $ ../../../../../install/default/bin/stanc mystery98.stan
 Syntax error in 'mystery98.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
