@@ -1108,7 +1108,7 @@ let verify_assignable_id loc cf tenv assign_id =
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   let lhs = check_lvalue cf tenv assign_lhs in
   let rhs = check_expression cf tenv assign_rhs in
-  let all_ids = Ast.id_of_lvalue lhs in
+  let all_ids = Ast.ids_inside_lvalue lhs in
   List.iter ~f:(verify_assignable_id loc cf tenv) all_ids ;
   verify_assignment_non_function loc rhs.emeta.type_ ;
   let rhs' = check_assignment_operator loc assign_op lhs rhs in

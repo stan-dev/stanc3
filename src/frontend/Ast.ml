@@ -314,12 +314,12 @@ let lvalue_of_expr expr =
   Option.value_exn ~message:"Trying to convert illegal expression to lval."
     (lvalue_of_expr_opt expr)
 
-let rec id_of_lvalue {lval; _} =
+let rec ids_inside_lvalue {lval; _} =
   match lval with
   | LVariable s -> [s]
-  | LIndexed (l, _) -> id_of_lvalue l
-  | LTupleProjection (l, _) -> id_of_lvalue l
-  | LTuplePacking ls -> List.concat_map ~f:id_of_lvalue ls
+  | LIndexed (l, _) -> ids_inside_lvalue l
+  | LTupleProjection (l, _) -> ids_inside_lvalue l
+  | LTuplePacking ls -> List.concat_map ~f:ids_inside_lvalue ls
 
 let rec flatten_lvalues lv =
   match lv.lval with
