@@ -1003,79 +1003,92 @@ let check_assignment_operator loc assop lhs rhs =
       let return_type = assignmentoperator_stan_math_return_type op args in
       match return_type with Some Void -> rhs | _ -> err op |> error )
 
-let rec check_lvalue cf tenv = function
-  | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
-      verify_identifier id ;
-      let ad_level, type_ = check_id cf loc tenv id in
-      {lval= LVariable id; lmeta= {ad_level; type_; loc}}
-  | {lval= LTuplePacking lvs; lmeta= {loc}} ->
-      let inner_lvals = List.map lvs ~f:(check_lvalue cf tenv) in
-      let lval = LTuplePacking inner_lvals in
-      let lmeta =
-        Ast.
-          { loc
-          ; ad_level=
-              TupleAD (List.map inner_lvals ~f:(fun l -> l.lmeta.ad_level))
-          ; type_= UTuple (List.map inner_lvals ~f:(fun l -> l.lmeta.type_)) }
-      in
-      {lval; lmeta}
-  | {lval= LTupleProjection (lval, idx); lmeta= ({loc} : located_meta)} -> (
-      let tlval = check_lvalue cf tenv lval in
-      match (tlval.lmeta.type_, tlval.lmeta.ad_level) with
-      | UTuple types_, TupleAD ads -> (
-        match (List.nth types_ (idx - 1), List.nth ads (idx - 1)) with
-        | Some type_, Some ad_level ->
-            {lval= LTupleProjection (tlval, idx); lmeta= {ad_level; type_; loc}}
-        | None, None ->
-            Semantic_error.tuple_index_invalid_index loc (List.length types_)
-              idx
-            |> error
-        | _ ->
-            Common.FatalError.fatal_error_msg
-              [%message
-                "Error in internal representation: tuple types don't match AD"]
+let check_lvalue cf tenv lv =
+  let lvs = Ast.flatten_lvalues lv in
+  ( match List.find_a_dup ~compare:Ast.compare_untyped_lval lvs with
+  | Some l ->
+      Semantic_error.cannot_assign_duplicate_unpacking lv.lmeta.loc
+        ((Fmt.to_to_string Pretty_printing.pp_expression)
+           (Ast.expr_of_lvalue l) )
+      |> error
+  | None -> () ) ;
+  let rec check_lval {lval; lmeta= ({loc} : located_meta)} =
+    match lval with
+    | LVariable id ->
+        verify_identifier id ;
+        let ad_level, type_ = check_id cf loc tenv id in
+        {lval= LVariable id; lmeta= {ad_level; type_; loc}}
+    | LTuplePacking lvs ->
+        let inner_lvals = List.map lvs ~f:check_lval in
+        let lval = LTuplePacking inner_lvals in
+        let lmeta =
+          Ast.
+            { loc
+            ; ad_level=
+                TupleAD (List.map inner_lvals ~f:(fun l -> l.lmeta.ad_level))
+            ; type_= UTuple (List.map inner_lvals ~f:(fun l -> l.lmeta.type_))
+            } in
+        {lval; lmeta}
+    | LTupleProjection (lval, idx) -> (
+        let tlval = check_lval lval in
+        match (tlval.lmeta.type_, tlval.lmeta.ad_level) with
+        | UTuple types_, TupleAD ads -> (
+          match (List.nth types_ (idx - 1), List.nth ads (idx - 1)) with
+          | Some type_, Some ad_level ->
+              { lval= LTupleProjection (tlval, idx)
+              ; lmeta= {ad_level; type_; loc} }
+          | None, None ->
+              Semantic_error.tuple_index_invalid_index loc (List.length types_)
+                idx
+              |> error
+          | _ ->
+              Common.FatalError.fatal_error_msg
+                [%message
+                  "Error in internal representation: tuple types don't match AD"]
+          )
+        | _, _ ->
+            Semantic_error.tuple_index_not_tuple loc tlval.lmeta.type_ |> error
         )
-      | _, _ ->
-          Semantic_error.tuple_index_not_tuple loc tlval.lmeta.type_ |> error )
-  | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
-      let rec check_inner = function
-        | {lval= LIndexed (lval, idcs); lmeta= ({loc} : located_meta)} ->
-            let lval, var, flat = check_inner lval in
-            let idcs = List.map ~f:(check_index cf tenv) idcs in
-            let type_ =
-              inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
-            let ad_level =
-              inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
-            ( {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
-            , var
-            , flat @ idcs )
-        | {lval= LTuplePacking _; _} ->
-            failwith "todo 3 (probably should prevent)"
-        | {lval= LVariable _ | LTupleProjection _; _} as lval ->
-            (*  I think the right thing to do here is treat tuples like variables *)
-            let tval = check_lvalue cf tenv lval in
-            (tval, tval, []) in
-      let lval, var, flat = check_inner lval in
-      let idcs = List.map ~f:(check_index cf tenv) idcs in
-      let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
-      let ad_level =
-        inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
-      ( if List.exists ~f:is_multiindex flat then
-        (* TODO: prevent in 2.34 *)
-        let lvalue_rvalue_types_differ =
-          try
-            let flat_type =
-              inferred_unsizedtype_of_indexed ~loc var.lmeta.type_ (flat @ idcs)
-            in
-            let rec can_assign = function
-              | UnsizedType.(UArray t1, UArray t2) -> can_assign (t1, t2)
-              | UVector, URowVector | URowVector, UVector -> false
-              | t1, t2 -> UnsizedType.compare t1 t2 <> 0 in
-            can_assign (flat_type, type_)
-          with Errors.SemanticError _ -> true in
-        if lvalue_rvalue_types_differ then
-          Semantic_error.cannot_assign_to_multiindex loc |> error ) ;
-      {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
+    | LIndexed (lval, idcs) ->
+        let rec check_inner = function
+          | {lval= LIndexed (lval, idcs); lmeta= ({loc} : located_meta)} ->
+              let lval, var, flat = check_inner lval in
+              let idcs = List.map ~f:(check_index cf tenv) idcs in
+              let type_ =
+                inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
+              let ad_level =
+                inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
+              ( {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
+              , var
+              , flat @ idcs )
+          | {lval= LTuplePacking _; _} ->
+              failwith "todo 3 (probably should prevent)"
+          | {lval= LVariable _ | LTupleProjection _; _} as lval ->
+              (*  I think the right thing to do here is treat tuples like variables *)
+              let tval = check_lval lval in
+              (tval, tval, []) in
+        let lval, var, flat = check_inner lval in
+        let idcs = List.map ~f:(check_index cf tenv) idcs in
+        let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
+        let ad_level =
+          inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
+        ( if List.exists ~f:is_multiindex flat then
+          (* TODO: prevent in 2.34 *)
+          let lvalue_rvalue_types_differ =
+            try
+              let flat_type =
+                inferred_unsizedtype_of_indexed ~loc var.lmeta.type_
+                  (flat @ idcs) in
+              let rec can_assign = function
+                | UnsizedType.(UArray t1, UArray t2) -> can_assign (t1, t2)
+                | UVector, URowVector | URowVector, UVector -> false
+                | t1, t2 -> UnsizedType.compare t1 t2 <> 0 in
+              can_assign (flat_type, type_)
+            with Errors.SemanticError _ -> true in
+          if lvalue_rvalue_types_differ then
+            Semantic_error.cannot_assign_to_multiindex loc |> error ) ;
+        {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}} in
+  check_lval lv
 
 let verify_assignable_id loc cf tenv assign_id =
   let block, global, readonly =
@@ -1092,27 +1105,15 @@ let verify_assignable_id loc cf tenv assign_id =
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id
 
-let check_simple_assignment loc cf tenv assign_lhs assign_op assign_rhs =
-  let assign_id = List.hd_exn @@ Ast.id_of_lvalue assign_lhs in
+let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   let lhs = check_lvalue cf tenv assign_lhs in
   let rhs = check_expression cf tenv assign_rhs in
-  verify_assignable_id loc cf tenv assign_id ;
+  let all_ids = Ast.id_of_lvalue lhs in
+  List.iter ~f:(verify_assignable_id loc cf tenv) all_ids ;
   verify_assignment_non_function loc rhs.emeta.type_ ;
   let rhs' = check_assignment_operator loc assign_op lhs rhs in
   mk_typed_statement ~return_type:Incomplete ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
-
-let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
-  match assign_lhs.lval with
-  | LTuplePacking _ ->
-      let lhs = check_lvalue cf tenv assign_lhs in
-      let rhs = check_expression cf tenv assign_rhs in
-      List.iter ~f:(verify_assignable_id loc cf tenv) (Ast.id_of_lvalue lhs) ;
-      verify_assignment_non_function loc rhs.emeta.type_ ;
-      let rhs' = check_assignment_operator loc assign_op lhs rhs in
-      mk_typed_statement ~return_type:Incomplete ~loc
-        ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
-  | _ -> check_simple_assignment loc cf tenv assign_lhs assign_op assign_rhs
 
 (* target plus-equals / increment log-prob *)
 

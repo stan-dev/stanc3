@@ -102,13 +102,15 @@ module TypeError = struct
           UnsizedType.pp ut
     | IllTypedAssignment (Operator.Equals, lt, rt) ->
         Fmt.pf ppf
-          "Ill-typed arguments supplied to assignment operator =: lhs has type \
-           %a and rhs has type %a"
+          "Ill-typed arguments supplied to assignment operator =:@ @[<v2>The \
+           left hand side has type@ @[%a@]@]@ @[<v2>and the right hand side \
+           has type@ @[%a@]@]"
           UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedAssignment (op, lt, rt) ->
         Fmt.pf ppf
-          "@[<v>Ill-typed arguments supplied to assignment operator %a=: lhs \
-           has type %a and rhs has type %a.@ Available signatures for given \
+          "@[<v>Ill-typed arguments supplied to assignment operator %a=:@ \
+           @[<v2>The left hand side has type@ @[%a@]@]@ @[<v2>and the right \
+           hand side has type@ @[%a@]@]@ Available signatures for given \
            lhs:@]@ %a"
           Operator.pp op UnsizedType.pp lt UnsizedType.pp rt
           SignatureMismatch.pp_math_lib_assignmentoperator_sigs (lt, op)
@@ -363,6 +365,7 @@ module StatementError = struct
     | CannotAssignToGlobal of string
     | CannotAssignFunction of UnsizedType.t
     | LValueMultiIndexing
+    | LValueTupleUnpackDuplicates of string
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
     | InvalidSamplingNoSuchDistribution of string * bool
@@ -403,6 +406,11 @@ module StatementError = struct
     | LValueMultiIndexing ->
         Fmt.pf ppf
           "Left hand side of an assignment cannot have nested multi-indexing."
+    | LValueTupleUnpackDuplicates lvalue ->
+        Fmt.pf ppf
+          "Left hand side of an assignment cannot feature the same value in \
+           multiple places of an unpacking assignment:@ %s"
+          lvalue
     | TargetPlusEqualsOutsideModelOrLogProb ->
         Fmt.pf ppf
           "Target can only be accessed in the model block or in definitions of \
@@ -677,6 +685,9 @@ let cannot_assign_function loc ut =
 
 let cannot_assign_to_multiindex loc =
   StatementError (loc, StatementError.LValueMultiIndexing)
+
+let cannot_assign_duplicate_unpacking loc name =
+  StatementError (loc, StatementError.LValueTupleUnpackDuplicates name)
 
 let invalid_sampling_pdf_or_pmf loc =
   StatementError (loc, StatementError.InvalidSamplingPDForPMF)

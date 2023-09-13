@@ -315,12 +315,16 @@ let lvalue_of_expr expr =
     (lvalue_of_expr_opt expr)
 
 let rec id_of_lvalue {lval; _} =
-  (* TUPLE UNPACKING TODO: this needs to return a list *)
   match lval with
   | LVariable s -> [s]
   | LIndexed (l, _) -> id_of_lvalue l
   | LTupleProjection (l, _) -> id_of_lvalue l
   | LTuplePacking ls -> List.concat_map ~f:id_of_lvalue ls
+
+let rec flatten_lvalues lv =
+  match lv.lval with
+  | LTuplePacking lvs -> List.concat_map ~f:flatten_lvalues lvs
+  | _ -> [lv]
 
 let rec extract_ids {expr; _} =
   match expr with

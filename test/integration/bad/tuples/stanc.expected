@@ -87,8 +87,11 @@ Semantic error in 'bad_addition.stan', line 3, column 2 to column 9:
      4:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=: lhs has type tuple(
-real, real) and rhs has type int.
+Ill-typed arguments supplied to assignment operator +=:
+The left hand side has type
+  tuple(real, real)
+and the right hand side has type
+  int
 Available signatures for given lhs:
 No matching signatures
   $ ../../../../../install/default/bin/stanc empty_tuple_expr.stan
