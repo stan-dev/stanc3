@@ -50,6 +50,16 @@ let parse_tuple_slot ix_str loc =
               , location_span_of_positions loc ) ) )
   | Some ix -> ix
 
+let try_convert_to_lvalue expr loc =
+  match Ast.lvalue_of_expr_opt expr with
+  | Some l -> l
+  | None ->
+    raise
+        (Errors.SyntaxError
+           (Errors.Parsing
+              ( "Found a expression where an assignable value was expected.\n"
+              , location_span_of_positions loc ) ) )
+
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 
@@ -591,7 +601,7 @@ lhs_indexing:
     `Indexing indices
   }
 
-base_lhs:
+lhs:
   | id=identifier extras=list(lhs_indexing)
     {  grammar_logger "lhs" ;
        let rec build_indexing = function
@@ -604,14 +614,6 @@ base_lhs:
        in
        build_indexing (List.rev extras)
     }
-
-lhs:
-  | base=base_lhs { base }
-  | LPAREN head=lhs COMMA pack=separated_nonempty_list(COMMA, lhs) RPAREN
-    { grammar_logger "tuple_pack" ;
-      build_expr (TupleExpr (head::pack)) $loc
-    }
-
 
 (* General expressions (that can't be used in constraints declarations)
    that can't be assigned to
@@ -687,10 +689,7 @@ common_expression:
     RPAREN
     { grammar_logger "conditional_dist_app" ;
       build_expr (CondDistApp ((), id, e :: args)) $loc }
-  (* written in a funny way to avoid reduce/reduce conflict *)
-  | LPAREN x_head=non_lhs COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
-  (* still broken *)
-  | LPAREN x_head=lhs COMMA xs=separated_nonempty_list(COMMA, non_lhs) RPAREN
+  | LPAREN x_head=expression COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
     { grammar_logger "tuple_expression" ;
       build_expr (TupleExpr (x_head::xs)) $loc  }
   | e=common_expression ix_str=DOTNUMERAL
@@ -802,9 +801,9 @@ statement:
     }
 
 atomic_statement:
-  | l=lhs op=assignment_op e=expression SEMICOLON
+  | l=expression op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
-       Assignment {assign_lhs=lvalue_of_expr l;
+       Assignment {assign_lhs=try_convert_to_lvalue l $loc;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
