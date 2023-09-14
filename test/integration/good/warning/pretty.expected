@@ -588,6 +588,12 @@ model {
   tup.1 = tup.1;
   // line 24: should warn (decl)
   tuple(real, real) tup2 = (tup2.2, tup2.2);
+  
+  // line 27: could warn, currently does not
+  foo = (foo, foo).1;
+  // no warnings
+  real foo2 = 3;
+  foo = (foo, foo2).2;
 }
 
 Warning in 'self-assign.stan', line 4, column 2: Assignment of variable to
