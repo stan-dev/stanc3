@@ -303,8 +303,7 @@ let rec lvalue_of_expr_opt {expr; emeta} =
       | Indexed (l, i) ->
           Option.map (base_lvalue l) ~f:(fun lv -> LIndexed (lv, i))
       | TupleProjection (l, i) ->
-          Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-              LTupleProjection (lv, i) )
+          Option.map (base_lvalue l) ~f:(fun lv -> LTupleProjection (lv, i))
       | _ -> None in
     Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta}) in
   let lval_opt =
@@ -327,27 +326,6 @@ let rec ids_inside_lvalue {lval; _} =
   | LIndexed (l, _) -> ids_inside_lvalue l
   | LTupleProjection (l, _) -> ids_inside_lvalue l
   | LTuplePacking ls -> List.concat_map ~f:ids_inside_lvalue ls
-
-let rec extract_ids {expr; _} =
-  match expr with
-  | Variable id -> [id]
-  | Promotion (e, _, _)
-   |Indexed (e, _)
-   |Paren e
-   |TupleProjection (e, _)
-   |PrefixOp (_, e)
-   |PostfixOp (e, _) ->
-      extract_ids e
-  | TernaryIf (e1, e2, e3) ->
-      List.concat [extract_ids e1; extract_ids e2; extract_ids e3]
-  | BinOp (e1, _, e2) -> extract_ids e1 @ extract_ids e2
-  | ArrayExpr es
-   |RowVectorExpr es
-   |TupleExpr es
-   |CondDistApp (_, _, es)
-   |FunApp (_, _, es) ->
-      List.concat_map ~f:extract_ids es
-  | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP | GetTarget -> []
 
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list

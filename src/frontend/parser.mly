@@ -50,6 +50,8 @@ let parse_tuple_slot ix_str loc =
               , location_span_of_positions loc ) ) )
   | Some ix -> ix
 
+(** Given a parsed expression, try to convert it to
+    a valid assignable lvalue. Raises a syntax error on failure *)
 let try_convert_to_lvalue expr loc =
   match Ast.lvalue_of_expr_opt expr with
   | Some l -> l
@@ -577,9 +579,7 @@ dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
     { grammar_logger "dims" ; l  }
 
-(* General expressions (that can't be used in constraints declarations)
-   that can't be assigned to
- *)
+(* Expressions that can be used everywhere except constraint expressions *)
 expression:
   | e1=expression  QMARK e2=expression COLON e3=expression
     { grammar_logger "ifthenelse_expr" ; build_expr (TernaryIf (e1, e2, e3)) $loc }
@@ -592,6 +592,7 @@ expression:
   | e=common_expression
     { grammar_logger "common_expr" ; e }
 
+(* Same as the above, but leave out logical binary operators *)
 (* TODO: why do we not simply disallow greater than in constraints? No need to disallow all logical operations, right? *)
 constr_expression:
   | e1=constr_expression op=arithmeticBinOp e2=constr_expression

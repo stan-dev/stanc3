@@ -622,8 +622,6 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
 and trans_packed_assign loc trans_stmt lvals rhs assign_op =
   (* TODO tuple-unpacking: could be more efficient in case where rhs is a tuple expr and
      names don't overlap *)
-  (* let lhs_ids = List.concat_map ~f:Ast.ids_inside_lvalue lvals |> Set.Poly.of_list in
-     let rhs_ids = Ast.extract_ids rhs |> Set.Poly.of_list in *)
   let smeta = Ast.{loc; return_type= Incomplete} in
   let sym, reset = Common.Gensym.enter () in
   let rhs_type = rhs.emeta.type_ in

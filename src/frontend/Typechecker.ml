@@ -6,7 +6,7 @@
   Other functions which begin with "infer"/"calculate" vary. Usually they return
     a value, but a few do have error conditions.
 
-  All Error.SemanticError excpetions are caught by check_program
+  All Error.SemanticError exceptions are caught by check_program
   which turns the ast or exception into a Result.t for external usage
 
   A type environment (Env.t) is used to hold variables and functions, including
@@ -1007,13 +1007,13 @@ let check_assignment_operator loc assop lhs rhs =
     is being unpacked), we want to ensure that the same memory is not being
     written to multiple times. This lets us preserve the illusion of
     simultaneous assignment and generally avoid confusion. *)
-let verify_lvalue_unqiue lv =
+let verify_lvalue_unique lv =
   let rec flatten_lvalues lv =
     match (lv.lval, lv.lmeta.type_) with
     | LTuplePacking lvs, _ -> List.concat_map ~f:flatten_lvalues lvs
     | LIndexed (l, _), _ ->
         (* Prevent assigning to multiple indices in the same object at once.
-           In principal it is safe to assign to disjoint indicies, but statically
+           In principal it is safe to assign to disjoint indices, but statically
            checking that is impossible. *)
         flatten_lvalues l
     | _, UTuple ts ->
@@ -1133,7 +1133,7 @@ let verify_assignable_id loc cf tenv assign_id =
 
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   let lhs = check_lvalue cf tenv assign_lhs in
-  verify_lvalue_unqiue lhs ;
+  verify_lvalue_unique lhs ;
   let rhs = check_expression cf tenv assign_rhs in
   let all_ids = Ast.ids_inside_lvalue lhs in
   List.iter ~f:(verify_assignable_id loc cf tenv) all_ids ;
