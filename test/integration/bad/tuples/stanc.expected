@@ -120,6 +120,45 @@ Syntax error in 'bad_unpack2.stan', line 4, column 2 to column 15, parsing error
    -------------------------------------------------
 
 Expected an assignable value but found a general expression.
+  $ ../../../../../install/default/bin/stanc bad_unpack3.stan
+Semantic error in 'bad_unpack3.stan', line 8, column 2 to column 16:
+   -------------------------------------------------
+     6:     int y;
+     7:  
+     8:    (x,y) = (1,2);
+           ^
+     9:  
+    10:  }
+   -------------------------------------------------
+
+Cannot assign to global variable 'x' declared in previous blocks.
+  $ ../../../../../install/default/bin/stanc bad_unpack4.stan
+Semantic error in 'bad_unpack4.stan', line 4, column 2 to column 21:
+   -------------------------------------------------
+     2:    int x = 3;
+     3:    int y = 4;
+     4:    (x, y) = (y, x, x);
+           ^
+     5:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  tuple(int, int)
+and the right hand side has type
+  tuple(int, int, int)
+  $ ../../../../../install/default/bin/stanc bad_unpack5.stan
+Semantic error in 'bad_unpack5.stan', line 5, column 2 to column 8:
+   -------------------------------------------------
+     3:    int y = 4;
+     4:  
+     5:    (x, x) = (x, y);
+           ^
+     6:  }
+   -------------------------------------------------
+
+Left hand side of an assignment cannot feature the same value in multiple places:
+  x
   $ ../../../../../install/default/bin/stanc empty_tuple_expr.stan
 Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing error:
    -------------------------------------------------

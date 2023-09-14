@@ -408,8 +408,8 @@ module StatementError = struct
           "Left hand side of an assignment cannot have nested multi-indexing."
     | LValueTupleUnpackDuplicates lvalue ->
         Fmt.pf ppf
-          "Left hand side of an assignment cannot feature the same value in \
-           multiple places of an unpacking assignment:@ %s"
+          "@[<v2>Left hand side of an assignment cannot feature the same value \
+           in multiple places:@ %s@]"
           lvalue
     | TargetPlusEqualsOutsideModelOrLogProb ->
         Fmt.pf ppf
