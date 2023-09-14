@@ -995,8 +995,10 @@ let warn_self_declare loc variable_name rhs_opt =
 
 (** For general assignments, we only warn if we believe the lhs and rhs are exactly the same value *)
 let warn_self_assignment loc lhs rhs =
+  let rec strip_parens e =
+    match e.expr with Paren e -> strip_parens e | _ -> e in
   let rhs_opt =
-    rhs |> Ast.untyped_expression_of_typed_expression |> Ast.strip_parens
+    rhs |> Ast.untyped_expression_of_typed_expression |> strip_parens
     |> Ast.lvalue_of_expr_opt in
   Option.iter rhs_opt ~f:(fun rhs ->
       let lhs = lhs |> Ast.untyped_lvalue_of_typed_lvalue in

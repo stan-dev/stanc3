@@ -313,8 +313,6 @@ let rec extract_ids {expr; _} =
       List.concat_map ~f:extract_ids es
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP | GetTarget -> []
 
-let rec strip_parens e = match e.expr with Paren e -> strip_parens e | _ -> e
-
 let rec lvalue_of_expr_opt {expr; emeta} =
   let lval_opt =
     match expr with
