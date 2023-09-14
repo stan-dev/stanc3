@@ -295,24 +295,31 @@ let rec expr_of_lvalue {lval; lmeta} =
   ; emeta= lmeta }
 
 let rec lvalue_of_expr_opt {expr; emeta} =
+  (* We don't want to allow TuplePackings inside of things like indexed *)
+  let rec base_lvalue {expr; emeta} =
+    let lval_opt =
+      match expr with
+      | Variable s -> Some (LVariable s)
+      | Indexed (l, i) ->
+          Option.map (base_lvalue l) ~f:(fun lv -> LIndexed (lv, i))
+      | TupleProjection (l, i) ->
+          Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
+              LTupleProjection (lv, i) )
+      | _ -> None in
+    Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta}) in
   let lval_opt =
     match expr with
     | Variable s -> Some (LVariable s)
     | Indexed (l, i) ->
-        Option.map (lvalue_of_expr_opt l) ~f:(fun lv -> LIndexed (lv, i))
+        Option.map (base_lvalue l) ~f:(fun lv -> LIndexed (lv, i))
     | TupleProjection (l, i) ->
-        Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-            LTupleProjection (lv, i) )
+        Option.map (base_lvalue l) ~f:(fun lv -> LTupleProjection (lv, i))
     | TupleExpr l ->
         Option.map
           (List.map ~f:lvalue_of_expr_opt l |> Option.all)
           ~f:(fun lv -> LTuplePacking lv)
     | _ -> None in
   Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta})
-
-let lvalue_of_expr expr =
-  Option.value_exn ~message:"Trying to convert illegal expression to lval."
-    (lvalue_of_expr_opt expr)
 
 let rec ids_inside_lvalue {lval; _} =
   match lval with

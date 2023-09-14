@@ -94,6 +94,32 @@ and the right hand side has type
   int
 Available signatures for given lhs:
 No matching signatures
+  $ ../../../../../install/default/bin/stanc bad_unpack1.stan
+Semantic error in 'bad_unpack1.stan', line 4, column 2 to column 18:
+   -------------------------------------------------
+     2:    int x = 3;
+     3:    real y = 4.0;
+     4:    (x, y) = (y, x);
+           ^
+     5:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  tuple(int, real)
+and the right hand side has type
+  tuple(real, int)
+  $ ../../../../../install/default/bin/stanc bad_unpack2.stan
+Syntax error in 'bad_unpack2.stan', line 4, column 2 to column 15, parsing error:
+   -------------------------------------------------
+     2:    int x = 3;
+     3:    real y = 4.0;
+     4:    (x, y).1 = 2; // allowing this feels very silly and would complicate implementation
+           ^
+     5:  }
+   -------------------------------------------------
+
+Expected an assignable value but found a general expression.
   $ ../../../../../install/default/bin/stanc empty_tuple_expr.stan
 Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing error:
    -------------------------------------------------

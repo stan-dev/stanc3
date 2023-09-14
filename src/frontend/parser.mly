@@ -57,7 +57,7 @@ let try_convert_to_lvalue expr loc =
     raise
         (Errors.SyntaxError
            (Errors.Parsing
-              ( "Found a expression where an assignable value was expected.\n"
+              ( "Expected an assignable value but found a general expression.\n"
               , location_span_of_positions loc ) ) )
 
 let nest_unsized_array basic_type n =
@@ -766,7 +766,7 @@ statement:
 atomic_statement:
   | l=expression op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
-       Assignment {assign_lhs=try_convert_to_lvalue l $loc;
+       Assignment {assign_lhs=try_convert_to_lvalue l $sloc;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
