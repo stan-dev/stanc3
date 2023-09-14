@@ -148,17 +148,41 @@ The left hand side has type
 and the right hand side has type
   tuple(int, int, int)
   $ ../../../../../install/default/bin/stanc bad_unpack5.stan
-Semantic error in 'bad_unpack5.stan', line 5, column 2 to column 8:
+Semantic error in 'bad_unpack5.stan', line 5, column 2 to column 14:
    -------------------------------------------------
      3:    int y = 4;
      4:  
-     5:    (x, x) = (x, y);
+     5:    (x, y, x, y) = (y, x, y, x);
            ^
      6:  }
    -------------------------------------------------
 
-Left hand side of an assignment cannot feature the same value in multiple places:
-  x
+The same value cannot be assigned to multiple times in one assignment:
+  x, y
+  $ ../../../../../install/default/bin/stanc bad_unpack6.stan
+Semantic error in 'bad_unpack6.stan', line 9, column 2 to column 30:
+   -------------------------------------------------
+     7:    # we disallow this because it's not obvious if unique
+     8:    # locations are being assigned to
+     9:    (x_flat[ : 3], x_flat[3 : ]) = x;
+           ^
+    10:  }
+   -------------------------------------------------
+
+The same value cannot be assigned to multiple times in one assignment:
+  x_flat
+  $ ../../../../../install/default/bin/stanc bad_unpack7.stan
+Semantic error in 'bad_unpack7.stan', line 3, column 2 to column 16:
+   -------------------------------------------------
+     1:  model {
+     2:    tuple(real, tuple(int, real)) tup;
+     3:    (tup.2.2, tup) = (1.5, (2.3, (4,5.5)));
+           ^
+     4:  }
+   -------------------------------------------------
+
+The same value cannot be assigned to multiple times in one assignment:
+  tup.2.2
   $ ../../../../../install/default/bin/stanc empty_tuple_expr.stan
 Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing error:
    -------------------------------------------------

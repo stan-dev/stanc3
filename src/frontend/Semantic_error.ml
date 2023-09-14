@@ -365,7 +365,7 @@ module StatementError = struct
     | CannotAssignToGlobal of string
     | CannotAssignFunction of UnsizedType.t
     | LValueMultiIndexing
-    | LValueTupleUnpackDuplicates of string
+    | LValueTupleUnpackDuplicates of string list
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
     | InvalidSamplingNoSuchDistribution of string * bool
@@ -406,11 +406,12 @@ module StatementError = struct
     | LValueMultiIndexing ->
         Fmt.pf ppf
           "Left hand side of an assignment cannot have nested multi-indexing."
-    | LValueTupleUnpackDuplicates lvalue ->
+    | LValueTupleUnpackDuplicates names ->
         Fmt.pf ppf
-          "@[<v2>Left hand side of an assignment cannot feature the same value \
-           in multiple places:@ %s@]"
-          lvalue
+          "@[<v2>The same value cannot be assigned to multiple times in one \
+           assignment:@ @[%a@]@]"
+          Fmt.(list ~sep:comma string)
+          names
     | TargetPlusEqualsOutsideModelOrLogProb ->
         Fmt.pf ppf
           "Target can only be accessed in the model block or in definitions of \
@@ -686,8 +687,8 @@ let cannot_assign_function loc ut =
 let cannot_assign_to_multiindex loc =
   StatementError (loc, StatementError.LValueMultiIndexing)
 
-let cannot_assign_duplicate_unpacking loc name =
-  StatementError (loc, StatementError.LValueTupleUnpackDuplicates name)
+let cannot_assign_duplicate_unpacking loc names =
+  StatementError (loc, StatementError.LValueTupleUnpackDuplicates names)
 
 let invalid_sampling_pdf_or_pmf loc =
   StatementError (loc, StatementError.InvalidSamplingPDForPMF)

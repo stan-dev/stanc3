@@ -328,11 +328,6 @@ let rec ids_inside_lvalue {lval; _} =
   | LTupleProjection (l, _) -> ids_inside_lvalue l
   | LTuplePacking ls -> List.concat_map ~f:ids_inside_lvalue ls
 
-let rec flatten_lvalues lv =
-  match lv.lval with
-  | LTuplePacking lvs -> List.concat_map ~f:flatten_lvalues lvs
-  | _ -> [lv]
-
 let rec extract_ids {expr; _} =
   match expr with
   | Variable id -> [id]
