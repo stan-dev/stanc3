@@ -20,6 +20,17 @@ parameters {
                  tuple(real, array[5] tuple(complex, matrix[6, 7]))) very_deep_p;
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format basic_unpacking.stan
+transformed data {
+  int x = 3;
+  int y = 4;
+  print(x, y);
+  (x, y) = (5, 6);
+  print(x, y);
+  (x, y) = (y, x);
+  print(x, y);
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format infer_tuple_ad.stan
 parameters {
   real x;
@@ -287,6 +298,18 @@ model {
   h(temp3);
   h((1, data_tuple));
   h((1, (x, y)));
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple_exprs.stan
+generated quantities {
+  int x = 3;
+  int y = 4;
+  complex z;
+  matrix[2, 4] foo;
+  
+  print(((z, x), {1, 2}, 3));
+  print((x, (1, x)));
+  print((foo, 2, 3, x));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format tuple_hof.stan
