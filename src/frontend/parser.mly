@@ -577,48 +577,10 @@ dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
     { grammar_logger "dims" ; l  }
 
-(* General expressions (that can't be used in constraints declarations) *)
-%inline expression:
-  | l=lhs
-    { grammar_logger "lhs_expression" ;
-      l
-    }
-  | e=non_lhs
-    { grammar_logger "non_lhs_expression" ;
-      e
-    }
-
-
-(* Expressions which are valid as L-values *)
-
-lhs_indexing:
-  | ix_str=DOTNUMERAL
-  { grammar_logger "lhs_tuple_proj" ;
-    `TupleProj (parse_tuple_slot ix_str $loc)
-  }
-  | LBRACK indices=indexes RBRACK
-  { grammar_logger "lhs_indexing" ;
-    `Indexing indices
-  }
-
-lhs:
-  | id=identifier extras=list(lhs_indexing)
-    {  grammar_logger "lhs" ;
-       let rec build_indexing = function
-         | [] -> { expr=Variable id
-                 ; emeta = {loc=id.id_loc}}
-         | `TupleProj ix :: rest ->
-            build_expr (TupleProjection (build_indexing rest, ix)) $loc
-         | `Indexing indices :: rest ->
-            build_expr (Indexed (build_indexing rest, indices)) $loc
-       in
-       build_indexing (List.rev extras)
-    }
-
 (* General expressions (that can't be used in constraints declarations)
    that can't be assigned to
  *)
-non_lhs:
+expression:
   | e1=expression  QMARK e2=expression COLON e3=expression
     { grammar_logger "ifthenelse_expr" ; build_expr (TernaryIf (e1, e2, e3)) $loc }
   | e1=expression op=infixOp e2=expression
@@ -647,13 +609,14 @@ constr_expression:
       grammar_logger "constr_expression_postfix" ;
       build_expr (PostfixOp (e, op)) $loc
     }
-  | e=lhs
-    { grammar_logger "constr_expression_lvalue_expr" ; e }
   | e=common_expression
     { grammar_logger "constr_expression_common_expr" ; e }
 
 
 common_expression:
+  | id=identifier
+    { grammar_logger "identifier_expr" ;
+      build_expr (Variable id) $loc }
   | i=INTNUMERAL
     { grammar_logger ("intnumeral " ^ i) ;
       build_expr (IntNumeral i) $loc }

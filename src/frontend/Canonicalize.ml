@@ -126,7 +126,7 @@ let rec replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
     | LTuplePacking lvs ->
         ( LTuplePacking
             (List.map ~f:(replace_deprecated_lval deprecated_userdefined) lvs)
-        , None (* TUPLE UNPACK MAYBE *) )
+        , None )
     | LTupleProjection (lval, idx) ->
         ( LTupleProjection
             (replace_deprecated_lval deprecated_userdefined lval, idx)

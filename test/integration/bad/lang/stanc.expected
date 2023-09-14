@@ -748,12 +748,8 @@ Syntax error in 'incomplete2.stan', line 2, column 15 to column 20, parsing erro
      3:  }
    -------------------------------------------------
 
-Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
-Or did you mean to use the preceding expression in:
-* a function call
-* a sampling statement
-* the conditional in a for, while, or if statement
-* assignment to a variable?
+Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
   $ ../../../../../install/default/bin/stanc incomplete3.stan
 Syntax error in 'incomplete3.stan', line 2, column 10 to column 15, parsing error:
    -------------------------------------------------
@@ -763,7 +759,7 @@ Syntax error in 'incomplete3.stan', line 2, column 10 to column 15, parsing erro
      3:  }
    -------------------------------------------------
 
-Ill-formed expression. Expected expression after expression followed by "%/%".
+Found an incomplete binary expression - are you missing the right hand side?
   $ ../../../../../install/default/bin/stanc incomplete4.stan
 Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
@@ -773,12 +769,7 @@ Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing erro
      3:  }
    -------------------------------------------------
 
-Found an ill-formed expression where we expected a statement. Is there a missing semi-colon here?
-Or did you mean to use the preceding expression in:
-* a function call
-* a sampling statement
-* the conditional in a for, while, or if statement
-* assignment to a variable?
+Ill-formed phrase. Found an expression where we expected a statement.
   $ ../../../../../install/default/bin/stanc incomplete5.stan
 Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
    -------------------------------------------------
@@ -798,7 +789,7 @@ Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing erro
      4:  }
    -------------------------------------------------
 
-Ill-formed expression. Expected expression followed by "]".
+Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
   $ ../../../../../install/default/bin/stanc reused_name.stan
 Semantic error in 'reused_name.stan', line 4, column 14 to column 15:
    -------------------------------------------------

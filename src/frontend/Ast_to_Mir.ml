@@ -512,11 +512,11 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let swrap pattern = [Stmt.Fixed.{meta= smeta; pattern}] in
   let mloc = smeta in
   match stmt_typed with
-  | Ast.Assignment {assign_lhs; assign_rhs; assign_op} -> (
-    match assign_lhs.lval with
-    | LTuplePacking lvals ->
-        trans_packed_assign smeta trans_stmt lvals assign_rhs assign_op
-    | _ -> [trans_single_assignment smeta assign_lhs assign_rhs assign_op] )
+  | Ast.Assignment
+      {assign_lhs= {lval= LTuplePacking lvals; _}; assign_rhs; assign_op} ->
+      trans_packed_assign smeta trans_stmt lvals assign_rhs assign_op
+  | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
+      trans_single_assignment smeta assign_lhs assign_rhs assign_op
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       NRFunApp (trans_fn_kind fn_kind name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
@@ -705,7 +705,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
     | Ast.OperatorAssign op ->
         let assignee = Ast.expr_of_lvalue grouped_lhs in
         op_to_funapp op [assignee; assign_rhs] assignee.emeta.type_ in
-  {pattern= Assignment (lhs, unindexed_type, rhs); meta= smeta}
+  [{pattern= Assignment (lhs, unindexed_type, rhs); meta= smeta}]
 
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
