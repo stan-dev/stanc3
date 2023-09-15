@@ -765,7 +765,7 @@ statement:
     }
 
 atomic_statement:
-  | l=expression op=assignment_op e=expression SEMICOLON
+  | l=common_expression op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
        Assignment {assign_lhs=try_convert_to_lvalue l $sloc;
                    assign_op=op;

@@ -631,7 +631,7 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
           { decl_adtype= rhs.emeta.ad_level
           ; decl_id= sym
           ; decl_type= Unsized rhs_type
-          ; initialize= true }
+          ; initialize= false }
     ; meta= rhs.emeta.loc } in
   let assign =
     { temp with

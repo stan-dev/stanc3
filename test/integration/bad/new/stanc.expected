@@ -2005,7 +2005,8 @@ Syntax error in 'mystery52.stan', line 1, column 29 to column 30, parsing error:
                                       ^
    -------------------------------------------------
 
-Expected either "," followed by expression or "}" next.
+Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
   $ ../../../../../install/default/bin/stanc mystery53.stan
 Syntax error in 'mystery53.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------

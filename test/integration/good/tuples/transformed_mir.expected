@@ -9783,7 +9783,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id sym1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize true)))
+          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable sym1__) ()) (UTuple (UInt UInt))
@@ -9829,7 +9829,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id sym1__)
-          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize true)))
+          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize false)))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable sym1__) ()) (UTuple (UInt UInt))
@@ -10340,7 +10340,7 @@
               (decl_type
                (Unsized
                 (UTuple ((UArray UReal) (UTuple (UReal UVector (UArray UReal))) UInt))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ())
@@ -10378,7 +10378,7 @@
                  (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))
                   (decl_id sym2__)
                   (decl_type (Unsized (UTuple (UReal UVector (UArray UReal)))))
-                  (initialize true)))
+                  (initialize false)))
                 (meta <opaque>))
                ((pattern
                  (Assignment ((LVariable sym2__) ())
@@ -10507,7 +10507,7 @@
               (decl_type
                (Unsized
                 (UTuple ((UArray UReal) (UTuple (UReal UVector (UArray UReal))) UInt))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ())
@@ -10545,7 +10545,7 @@
                  (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable AutoDiffable)))
                   (decl_id sym2__)
                   (decl_type (Unsized (UTuple (UReal UVector (UArray UReal)))))
-                  (initialize true)))
+                  (initialize false)))
                 (meta <opaque>))
                ((pattern
                  (Assignment ((LVariable sym2__) ())
@@ -10810,7 +10810,7 @@
           (((pattern
              (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) 
               (decl_id sym1__) (decl_type (Unsized (UTuple (UMatrix UMatrix))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ()) (UTuple (UMatrix UMatrix))
@@ -10945,7 +10945,7 @@
           (((pattern
              (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) 
               (decl_id sym1__) (decl_type (Unsized (UTuple (UMatrix UMatrix))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ()) (UTuple (UMatrix UMatrix))
@@ -22331,7 +22331,7 @@
              (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) 
               (decl_id sym1__)
               (decl_type (Unsized (UTuple ((UArray UReal) UComplexVector))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ()) (UTuple ((UArray UReal) UComplexVector))
@@ -22383,7 +22383,7 @@
               (decl_id sym1__)
               (decl_type
                (Unsized (UTuple ((UArray UReal) (UArray UComplex) UComplexVector))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ())
@@ -22462,7 +22462,7 @@
               (decl_id sym1__)
               (decl_type
                (Unsized (UTuple ((UArray UReal) (UArray UComplex) UComplexVector))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ())
@@ -22559,7 +22559,7 @@
          (Block
           (((pattern
              (Decl (decl_adtype (TupleAD (AutoDiffable DataOnly))) (decl_id sym1__)
-              (decl_type (Unsized (UTuple (UComplexVector UInt)))) (initialize true)))
+              (decl_type (Unsized (UTuple (UComplexVector UInt)))) (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ()) (UTuple (UComplexVector UInt))
@@ -22705,7 +22705,7 @@
              (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) 
               (decl_id sym1__)
               (decl_type (Unsized (UTuple ((UArray UReal) UComplexVector))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ()) (UTuple ((UArray UReal) UComplexVector))
@@ -22757,7 +22757,7 @@
               (decl_id sym1__)
               (decl_type
                (Unsized (UTuple ((UArray UReal) (UArray UComplex) UComplexVector))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ())
@@ -22836,7 +22836,7 @@
               (decl_id sym1__)
               (decl_type
                (Unsized (UTuple ((UArray UReal) (UArray UComplex) UComplexVector))))
-              (initialize true)))
+              (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ())
@@ -22933,7 +22933,7 @@
          (Block
           (((pattern
              (Decl (decl_adtype (TupleAD (AutoDiffable DataOnly))) (decl_id sym1__)
-              (decl_type (Unsized (UTuple (UComplexVector UInt)))) (initialize true)))
+              (decl_type (Unsized (UTuple (UComplexVector UInt)))) (initialize false)))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable sym1__) ()) (UTuple (UComplexVector UInt))
