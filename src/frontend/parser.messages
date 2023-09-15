@@ -2010,7 +2010,7 @@ program: TRANSFORMEDDATABLOCK LBRACE IDENTIFIER WHILE
 ##
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
 
 program: TRANSFORMEDDATABLOCK LBRACE REALNUMERAL LDIVIDE WHILE
 ## Concrete syntax: transformed data { 3.1415 \ while

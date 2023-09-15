@@ -80,7 +80,7 @@ Syntax error in 'blocks-bad6.stan', line 1, column 25 to column 30, parsing erro
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc blocks-bad7.stan
 Syntax error in 'blocks-bad7.stan', line 1, column 21 to column 24, parsing error:
    -------------------------------------------------
@@ -145,7 +145,7 @@ Syntax error in 'fun-app-bad3.stan', line 1, column 27 to column 32, parsing err
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc fun-app-bad4.stan
 Syntax error in 'fun-app-bad4.stan', line 1, column 24 to column 29, parsing error:
    -------------------------------------------------
@@ -285,7 +285,7 @@ Syntax error in 'ill-formed-expression1.stan', line 1, column 34 to column 39, p
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression10.stan
 Syntax error in 'ill-formed-expression10.stan', line 1, column 22 to column 27, parsing error:
    -------------------------------------------------
@@ -376,7 +376,7 @@ Syntax error in 'ill-formed-expression2.stan', line 2, column 14 to column 19, p
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression20.stan
 Syntax error in 'ill-formed-expression20.stan', line 1, column 24 to column 29, parsing error:
    -------------------------------------------------
@@ -393,7 +393,7 @@ Syntax error in 'ill-formed-expression21.stan', line 1, column 22 to column 27, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression22.stan
 Syntax error in 'ill-formed-expression22.stan', line 2, column 14 to column 15, parsing error:
    -------------------------------------------------
@@ -404,7 +404,7 @@ Syntax error in 'ill-formed-expression22.stan', line 2, column 14 to column 15, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression23.stan
 Syntax error in 'ill-formed-expression23.stan', line 1, column 21 to column 26, parsing error:
    -------------------------------------------------
@@ -413,7 +413,7 @@ Syntax error in 'ill-formed-expression23.stan', line 1, column 21 to column 26, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression24.stan
 Syntax error in 'ill-formed-expression24.stan', line 1, column 19 to column 20, parsing error:
    -------------------------------------------------
@@ -446,7 +446,7 @@ Syntax error in 'ill-formed-expression27.stan', line 1, column 26 to column 31, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression28.stan
 Syntax error in 'ill-formed-expression28.stan', line 1, column 21 to column 26, parsing error:
    -------------------------------------------------
@@ -479,7 +479,7 @@ Syntax error in 'ill-formed-expression30.stan', line 1, column 24 to column 29, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression31.stan
 Syntax error in 'ill-formed-expression31.stan', line 1, column 20 to column 24, parsing error:
    -------------------------------------------------
@@ -496,7 +496,7 @@ Syntax error in 'ill-formed-expression32.stan', line 1, column 24 to column 29, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression33.stan
 Syntax error in 'ill-formed-expression33.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
@@ -505,7 +505,7 @@ Syntax error in 'ill-formed-expression33.stan', line 1, column 25 to column 30, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression34.stan
 Syntax error in 'ill-formed-expression34.stan', line 1, column 24 to column 29, parsing error:
    -------------------------------------------------
@@ -530,7 +530,7 @@ Syntax error in 'ill-formed-expression36.stan', line 1, column 26 to column 31, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression37.stan
 Syntax error in 'ill-formed-expression37.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
@@ -539,7 +539,7 @@ Syntax error in 'ill-formed-expression37.stan', line 1, column 25 to column 30, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression38.stan
 Syntax error in 'ill-formed-expression38.stan', line 1, column 21 to column 26, parsing error:
    -------------------------------------------------
@@ -556,7 +556,7 @@ Syntax error in 'ill-formed-expression39.stan', line 1, column 26 to column 31, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression4.stan
 Syntax error in 'ill-formed-expression4.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -752,7 +752,7 @@ Syntax error in 'ill-formed-expression60.stan', line 1, column 34 to column 39, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-expression61.stan
 Syntax error in 'ill-formed-expression61.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -1091,7 +1091,7 @@ Syntax error in 'ill-formed-statement11.stan', line 1, column 37 to column 42, p
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-statement12.stan
 Syntax error in 'ill-formed-statement12.stan', line 1, column 38 to column 42, parsing error:
    -------------------------------------------------
@@ -1220,7 +1220,7 @@ Syntax error in 'ill-formed-statement26.stan', line 2, column 0 to column 0, par
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-statement27.stan
 Syntax error in 'ill-formed-statement27.stan', line 1, column 28 to column 32, parsing error:
    -------------------------------------------------
@@ -1261,7 +1261,7 @@ Syntax error in 'ill-formed-statement30.stan', line 1, column 42 to column 47, p
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-statement31.stan
 Syntax error in 'ill-formed-statement31.stan', line 1, column 44 to column 49, parsing error:
    -------------------------------------------------
@@ -1302,7 +1302,7 @@ Syntax error in 'ill-formed-statement35.stan', line 1, column 24 to column 29, p
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-statement4.stan
 Syntax error in 'ill-formed-statement4.stan', line 1, column 35 to column 40, parsing error:
    -------------------------------------------------
@@ -1311,7 +1311,7 @@ Syntax error in 'ill-formed-statement4.stan', line 1, column 35 to column 40, pa
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-statement5.stan
 Syntax error in 'ill-formed-statement5.stan', line 1, column 34 to column 38, parsing error:
    -------------------------------------------------
@@ -1352,7 +1352,7 @@ Syntax error in 'ill-formed-statement9.stan', line 1, column 32 to column 37, pa
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc immediate_error.stan
 Syntax error in 'immediate_error.stan', line 1, column 0 to column 5, parsing error:
    -------------------------------------------------
@@ -1497,7 +1497,7 @@ Syntax error in 'mystery1.stan', line 1, column 22 to column 23, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery10.stan
 Syntax error in 'mystery10.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -1506,7 +1506,7 @@ Syntax error in 'mystery10.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery100.stan
 Syntax error in 'mystery100.stan', line 1, column 33 to column 38, parsing error:
    -------------------------------------------------
@@ -1515,7 +1515,7 @@ Syntax error in 'mystery100.stan', line 1, column 33 to column 38, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery101.stan
 Syntax error in 'mystery101.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -1524,7 +1524,7 @@ Syntax error in 'mystery101.stan', line 1, column 27 to column 32, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery102.stan
 Syntax error in 'mystery102.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -1533,7 +1533,7 @@ Syntax error in 'mystery102.stan', line 1, column 27 to column 32, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery103.stan
 Syntax error in 'mystery103.stan', line 1, column 34 to column 39, parsing error:
    -------------------------------------------------
@@ -1542,7 +1542,7 @@ Syntax error in 'mystery103.stan', line 1, column 34 to column 39, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery104.stan
 Syntax error in 'mystery104.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -1551,7 +1551,7 @@ Syntax error in 'mystery104.stan', line 1, column 27 to column 32, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery105.stan
 Syntax error in 'mystery105.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -1560,7 +1560,7 @@ Syntax error in 'mystery105.stan', line 1, column 27 to column 32, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery106.stan
 Syntax error in 'mystery106.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -1569,7 +1569,7 @@ Syntax error in 'mystery106.stan', line 1, column 27 to column 32, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery107.stan
 Syntax error in 'mystery107.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -1578,7 +1578,7 @@ Syntax error in 'mystery107.stan', line 1, column 27 to column 32, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery108.stan
 Syntax error in 'mystery108.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -1587,7 +1587,7 @@ Syntax error in 'mystery108.stan', line 1, column 28 to column 33, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery109.stan
 Syntax error in 'mystery109.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -1596,7 +1596,7 @@ Syntax error in 'mystery109.stan', line 1, column 28 to column 33, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery11.stan
 Syntax error in 'mystery11.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -1605,7 +1605,7 @@ Syntax error in 'mystery11.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery12.stan
 Syntax error in 'mystery12.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -1614,7 +1614,7 @@ Syntax error in 'mystery12.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery13.stan
 Syntax error in 'mystery13.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
@@ -1623,7 +1623,7 @@ Syntax error in 'mystery13.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery14.stan
 Syntax error in 'mystery14.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -1632,7 +1632,7 @@ Syntax error in 'mystery14.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery15.stan
 Syntax error in 'mystery15.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
@@ -1641,7 +1641,7 @@ Syntax error in 'mystery15.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery16.stan
 Syntax error in 'mystery16.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -1650,7 +1650,7 @@ Syntax error in 'mystery16.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery17.stan
 Syntax error in 'mystery17.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
@@ -1659,7 +1659,7 @@ Syntax error in 'mystery17.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery18.stan
 Syntax error in 'mystery18.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -1668,7 +1668,7 @@ Syntax error in 'mystery18.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery19.stan
 Syntax error in 'mystery19.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -1677,7 +1677,7 @@ Syntax error in 'mystery19.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery2.stan
 Syntax error in 'mystery2.stan', line 1, column 23 to column 24, parsing error:
    -------------------------------------------------
@@ -1702,7 +1702,7 @@ Syntax error in 'mystery21.stan', line 1, column 35 to column 40, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery22.stan
 Syntax error in 'mystery22.stan', line 1, column 32 to column 33, parsing error:
    -------------------------------------------------
@@ -1719,7 +1719,7 @@ Syntax error in 'mystery23.stan', line 1, column 24 to column 29, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery24.stan
 Syntax error in 'mystery24.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
@@ -1728,7 +1728,7 @@ Syntax error in 'mystery24.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery25.stan
 Syntax error in 'mystery25.stan', line 1, column 25 to column 26, parsing error:
    -------------------------------------------------
@@ -1753,7 +1753,7 @@ Syntax error in 'mystery27.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery28.stan
 Syntax error in 'mystery28.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -1762,7 +1762,7 @@ Syntax error in 'mystery28.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery29.stan
 Syntax error in 'mystery29.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -1771,7 +1771,7 @@ Syntax error in 'mystery29.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery3.stan
 Syntax error in 'mystery3.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
@@ -1780,7 +1780,7 @@ Syntax error in 'mystery3.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery30.stan
 Syntax error in 'mystery30.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -1789,7 +1789,7 @@ Syntax error in 'mystery30.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery31.stan
 Syntax error in 'mystery31.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -1798,7 +1798,7 @@ Syntax error in 'mystery31.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery32.stan
 Syntax error in 'mystery32.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -1807,7 +1807,7 @@ Syntax error in 'mystery32.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery33.stan
 Syntax error in 'mystery33.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -1816,7 +1816,7 @@ Syntax error in 'mystery33.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery34.stan
 Syntax error in 'mystery34.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -1825,7 +1825,7 @@ Syntax error in 'mystery34.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery35.stan
 Syntax error in 'mystery35.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
@@ -1834,7 +1834,7 @@ Syntax error in 'mystery35.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery36.stan
 Syntax error in 'mystery36.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -1843,7 +1843,7 @@ Syntax error in 'mystery36.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery37.stan
 Syntax error in 'mystery37.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
@@ -1852,7 +1852,7 @@ Syntax error in 'mystery37.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery38.stan
 Syntax error in 'mystery38.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
@@ -1861,7 +1861,7 @@ Syntax error in 'mystery38.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery39.stan
 Syntax error in 'mystery39.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
@@ -1870,7 +1870,7 @@ Syntax error in 'mystery39.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery4.stan
 Syntax error in 'mystery4.stan', line 1, column 32 to column 37, parsing error:
    -------------------------------------------------
@@ -1879,7 +1879,7 @@ Syntax error in 'mystery4.stan', line 1, column 32 to column 37, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery40.stan
 Syntax error in 'mystery40.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
@@ -1888,7 +1888,7 @@ Syntax error in 'mystery40.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery41.stan
 Syntax error in 'mystery41.stan', line 1, column 38 to column 43, parsing error:
    -------------------------------------------------
@@ -1897,7 +1897,7 @@ Syntax error in 'mystery41.stan', line 1, column 38 to column 43, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery42.stan
 Syntax error in 'mystery42.stan', line 1, column 38 to column 43, parsing error:
    -------------------------------------------------
@@ -1906,7 +1906,7 @@ Syntax error in 'mystery42.stan', line 1, column 38 to column 43, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery43.stan
 Syntax error in 'mystery43.stan', line 1, column 33 to column 38, parsing error:
    -------------------------------------------------
@@ -1915,7 +1915,7 @@ Syntax error in 'mystery43.stan', line 1, column 33 to column 38, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery44.stan
 Syntax error in 'mystery44.stan', line 1, column 33 to column 38, parsing error:
    -------------------------------------------------
@@ -1924,7 +1924,7 @@ Syntax error in 'mystery44.stan', line 1, column 33 to column 38, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery45.stan
 Syntax error in 'mystery45.stan', line 1, column 27 to column 28, parsing error:
    -------------------------------------------------
@@ -1944,7 +1944,7 @@ Syntax error in 'mystery46.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery47.stan
 Syntax error in 'mystery47.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -1953,7 +1953,7 @@ Syntax error in 'mystery47.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery48.stan
 Syntax error in 'mystery48.stan', line 1, column 18 to column 23, parsing error:
    -------------------------------------------------
@@ -1962,7 +1962,7 @@ Syntax error in 'mystery48.stan', line 1, column 18 to column 23, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery49.stan
 Syntax error in 'mystery49.stan', line 1, column 18 to column 23, parsing error:
    -------------------------------------------------
@@ -1971,7 +1971,7 @@ Syntax error in 'mystery49.stan', line 1, column 18 to column 23, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery5.stan
 Syntax error in 'mystery5.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
@@ -1980,7 +1980,7 @@ Syntax error in 'mystery5.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery50.stan
 Syntax error in 'mystery50.stan', line 1, column 12 to column 17, parsing error:
    -------------------------------------------------
@@ -1989,7 +1989,7 @@ Syntax error in 'mystery50.stan', line 1, column 12 to column 17, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery51.stan
 Syntax error in 'mystery51.stan', line 1, column 29 to column 30, parsing error:
    -------------------------------------------------
@@ -2006,7 +2006,7 @@ Syntax error in 'mystery52.stan', line 1, column 29 to column 30, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery53.stan
 Syntax error in 'mystery53.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2015,7 +2015,7 @@ Syntax error in 'mystery53.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery54.stan
 Syntax error in 'mystery54.stan', line 1, column 28 to column 29, parsing error:
    -------------------------------------------------
@@ -2032,7 +2032,7 @@ Syntax error in 'mystery55.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery56.stan
 Syntax error in 'mystery56.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2041,7 +2041,7 @@ Syntax error in 'mystery56.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery57.stan
 Syntax error in 'mystery57.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2050,7 +2050,7 @@ Syntax error in 'mystery57.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery58.stan
 Syntax error in 'mystery58.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2059,7 +2059,7 @@ Syntax error in 'mystery58.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery59.stan
 Syntax error in 'mystery59.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2068,7 +2068,7 @@ Syntax error in 'mystery59.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery6.stan
 Syntax error in 'mystery6.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2077,7 +2077,7 @@ Syntax error in 'mystery6.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery60.stan
 Syntax error in 'mystery60.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2086,7 +2086,7 @@ Syntax error in 'mystery60.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery61.stan
 Syntax error in 'mystery61.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2095,7 +2095,7 @@ Syntax error in 'mystery61.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery62.stan
 Syntax error in 'mystery62.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2104,7 +2104,7 @@ Syntax error in 'mystery62.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery63.stan
 Syntax error in 'mystery63.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2113,7 +2113,7 @@ Syntax error in 'mystery63.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery64.stan
 Syntax error in 'mystery64.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2122,7 +2122,7 @@ Syntax error in 'mystery64.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery65.stan
 Syntax error in 'mystery65.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2131,7 +2131,7 @@ Syntax error in 'mystery65.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery66.stan
 Syntax error in 'mystery66.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2140,7 +2140,7 @@ Syntax error in 'mystery66.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery67.stan
 Syntax error in 'mystery67.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2149,7 +2149,7 @@ Syntax error in 'mystery67.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery68.stan
 Syntax error in 'mystery68.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2158,7 +2158,7 @@ Syntax error in 'mystery68.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery69.stan
 Syntax error in 'mystery69.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2167,7 +2167,7 @@ Syntax error in 'mystery69.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery7.stan
 Syntax error in 'mystery7.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
@@ -2176,7 +2176,7 @@ Syntax error in 'mystery7.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery70.stan
 Syntax error in 'mystery70.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2185,7 +2185,7 @@ Syntax error in 'mystery70.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery71.stan
 Syntax error in 'mystery71.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2194,7 +2194,7 @@ Syntax error in 'mystery71.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery72.stan
 Syntax error in 'mystery72.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2203,7 +2203,7 @@ Syntax error in 'mystery72.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery73.stan
 Syntax error in 'mystery73.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2212,7 +2212,7 @@ Syntax error in 'mystery73.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery74.stan
 Syntax error in 'mystery74.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2221,7 +2221,7 @@ Syntax error in 'mystery74.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery75.stan
 Syntax error in 'mystery75.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2230,7 +2230,7 @@ Syntax error in 'mystery75.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery76.stan
 Syntax error in 'mystery76.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2239,7 +2239,7 @@ Syntax error in 'mystery76.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery77.stan
 Syntax error in 'mystery77.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2248,7 +2248,7 @@ Syntax error in 'mystery77.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery78.stan
 Syntax error in 'mystery78.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2257,7 +2257,7 @@ Syntax error in 'mystery78.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery79.stan
 Syntax error in 'mystery79.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2266,7 +2266,7 @@ Syntax error in 'mystery79.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery8.stan
 Syntax error in 'mystery8.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2275,7 +2275,7 @@ Syntax error in 'mystery8.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery80.stan
 Syntax error in 'mystery80.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2284,7 +2284,7 @@ Syntax error in 'mystery80.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery81.stan
 Syntax error in 'mystery81.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -2293,7 +2293,7 @@ Syntax error in 'mystery81.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery82.stan
 Syntax error in 'mystery82.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2302,7 +2302,7 @@ Syntax error in 'mystery82.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery83.stan
 Syntax error in 'mystery83.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2311,7 +2311,7 @@ Syntax error in 'mystery83.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery84.stan
 Syntax error in 'mystery84.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2320,7 +2320,7 @@ Syntax error in 'mystery84.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery85.stan
 Syntax error in 'mystery85.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2329,7 +2329,7 @@ Syntax error in 'mystery85.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery86.stan
 Syntax error in 'mystery86.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2338,7 +2338,7 @@ Syntax error in 'mystery86.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery87.stan
 Syntax error in 'mystery87.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2347,7 +2347,7 @@ Syntax error in 'mystery87.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery88.stan
 Syntax error in 'mystery88.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2356,7 +2356,7 @@ Syntax error in 'mystery88.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery89.stan
 Syntax error in 'mystery89.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2365,7 +2365,7 @@ Syntax error in 'mystery89.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery9.stan
 Syntax error in 'mystery9.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
@@ -2374,7 +2374,7 @@ Syntax error in 'mystery9.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery90.stan
 Syntax error in 'mystery90.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -2383,7 +2383,7 @@ Syntax error in 'mystery90.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery91.stan
 Syntax error in 'mystery91.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2392,7 +2392,7 @@ Syntax error in 'mystery91.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery92.stan
 Syntax error in 'mystery92.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2401,7 +2401,7 @@ Syntax error in 'mystery92.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery93.stan
 Syntax error in 'mystery93.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2410,7 +2410,7 @@ Syntax error in 'mystery93.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery94.stan
 Syntax error in 'mystery94.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2419,7 +2419,7 @@ Syntax error in 'mystery94.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery95.stan
 Syntax error in 'mystery95.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2428,7 +2428,7 @@ Syntax error in 'mystery95.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery96.stan
 Syntax error in 'mystery96.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
@@ -2437,7 +2437,7 @@ Syntax error in 'mystery96.stan', line 1, column 28 to column 33, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery97.stan
 Syntax error in 'mystery97.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2446,7 +2446,7 @@ Syntax error in 'mystery97.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery98.stan
 Syntax error in 'mystery98.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2455,7 +2455,7 @@ Syntax error in 'mystery98.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc mystery99.stan
 Syntax error in 'mystery99.stan', line 1, column 33 to column 38, parsing error:
    -------------------------------------------------
@@ -2464,7 +2464,7 @@ Syntax error in 'mystery99.stan', line 1, column 33 to column 38, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc print-bad1.stan
 Syntax error in 'print-bad1.stan', line 1, column 29 to column 34, parsing error:
    -------------------------------------------------
@@ -2505,7 +2505,7 @@ Syntax error in 'reject-bad1.stan', line 1, column 31 to column 36, parsing erro
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc reject-bad2.stan
 Syntax error in 'reject-bad2.stan', line 1, column 31 to column 36, parsing error:
    -------------------------------------------------
@@ -2621,7 +2621,7 @@ Syntax error in 'target-pe-bad2.stan', line 1, column 33 to column 38, parsing e
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc target-pe-bad3.stan
 Syntax error in 'target-pe-bad3.stan', line 1, column 30 to column 31, parsing error:
    -------------------------------------------------
@@ -2750,7 +2750,7 @@ Syntax error in 'tilde-bad4.stan', line 1, column 45 to column 50, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc tilde-bad5.stan
 Syntax error in 'tilde-bad5.stan', line 1, column 41 to column 42, parsing error:
    -------------------------------------------------
@@ -2945,7 +2945,7 @@ Syntax error in 'type-size-bad1.stan', line 1, column 31 to column 36, parsing e
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad10.stan
 Syntax error in 'type-size-bad10.stan', line 1, column 19 to column 24, parsing error:
    -------------------------------------------------
@@ -2973,7 +2973,7 @@ Syntax error in 'type-size-bad12.stan', line 1, column 22 to column 27, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad13.stan
 Syntax error in 'type-size-bad13.stan', line 1, column 20 to column 21, parsing error:
    -------------------------------------------------
@@ -3010,7 +3010,7 @@ Syntax error in 'type-size-bad16.stan', line 1, column 23 to column 28, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad17.stan
 Syntax error in 'type-size-bad17.stan', line 1, column 20 to column 21, parsing error:
    -------------------------------------------------
@@ -3037,7 +3037,7 @@ Syntax error in 'type-size-bad19.stan', line 1, column 21 to column 26, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad2.stan
 Syntax error in 'type-size-bad2.stan', line 1, column 27 to column 32, parsing error:
    -------------------------------------------------
@@ -3087,7 +3087,7 @@ Syntax error in 'type-size-bad24.stan', line 1, column 19 to column 24, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad25.stan
 Syntax error in 'type-size-bad25.stan', line 1, column 17 to column 18, parsing error:
    -------------------------------------------------
@@ -3112,7 +3112,7 @@ Syntax error in 'type-size-bad27.stan', line 1, column 28 to column 33, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad28.stan
 Syntax error in 'type-size-bad28.stan', line 1, column 25 to column 26, parsing error:
    -------------------------------------------------
@@ -3138,7 +3138,7 @@ Syntax error in 'type-size-bad3.stan', line 1, column 33 to column 38, parsing e
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad30.stan
 Syntax error in 'type-size-bad30.stan', line 1, column 24 to column 25, parsing error:
    -------------------------------------------------
@@ -3179,7 +3179,7 @@ Syntax error in 'type-size-bad34.stan', line 1, column 22 to column 27, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad35.stan
 Syntax error in 'type-size-bad35.stan', line 1, column 19 to column 20, parsing error:
    -------------------------------------------------
@@ -3204,7 +3204,7 @@ Syntax error in 'type-size-bad37.stan', line 1, column 19 to column 24, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad38.stan
 Syntax error in 'type-size-bad38.stan', line 1, column 17 to column 18, parsing error:
    -------------------------------------------------
@@ -3238,7 +3238,7 @@ Syntax error in 'type-size-bad40.stan', line 1, column 24 to column 29, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad41.stan
 Syntax error in 'type-size-bad41.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
@@ -3295,7 +3295,7 @@ Syntax error in 'type-size-bad47.stan', line 1, column 20 to column 25, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad48.stan
 Syntax error in 'type-size-bad48.stan', line 1, column 19 to column 20, parsing error:
    -------------------------------------------------
@@ -3329,7 +3329,7 @@ Syntax error in 'type-size-bad50.stan', line 1, column 17 to column 22, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad51.stan
 Syntax error in 'type-size-bad51.stan', line 1, column 19 to column 24, parsing error:
    -------------------------------------------------
@@ -3338,7 +3338,7 @@ Syntax error in 'type-size-bad51.stan', line 1, column 19 to column 24, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad52.stan
 Syntax error in 'type-size-bad52.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
@@ -3379,7 +3379,7 @@ Syntax error in 'type-size-bad56.stan', line 1, column 23 to column 28, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad57.stan
 Syntax error in 'type-size-bad57.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
@@ -3404,7 +3404,7 @@ Syntax error in 'type-size-bad59.stan', line 1, column 19 to column 24, parsing 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad6.stan
 Syntax error in 'type-size-bad6.stan', line 1, column 29 to column 30, parsing error:
    -------------------------------------------------
@@ -3458,7 +3458,7 @@ Syntax error in 'type-size-bad8.stan', line 1, column 23 to column 28, parsing e
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc type-size-bad9.stan
 Syntax error in 'type-size-bad9.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
@@ -3542,7 +3542,7 @@ Syntax error in 'while-bad2.stan', line 1, column 30 to column 35, parsing error
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc while-bad3.stan
 Syntax error in 'while-bad3.stan', line 1, column 29 to column 33, parsing error:
    -------------------------------------------------

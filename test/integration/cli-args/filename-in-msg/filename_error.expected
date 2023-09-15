@@ -18,7 +18,7 @@ Syntax error in 'foo.stan', line 2, column 4 to column 5, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc --filename-in-msg=foo.stan --include-paths=.  includes.stan
 Syntax error in './filename_syntax_error.stan', line 2, column 4, included from
 'foo.stan', line 6, column 0, parsing error:
@@ -29,4 +29,4 @@ Syntax error in './filename_syntax_error.stan', line 2, column 4, included from
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".

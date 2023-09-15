@@ -301,7 +301,7 @@ Syntax error in 'incomplete6.stan', line 2, column 30 to column 31, parsing erro
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc incomplete7.stan
 Syntax error in 'incomplete7.stan', line 2, column 20 to column 21, parsing error:
    -------------------------------------------------

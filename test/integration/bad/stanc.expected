@@ -8,7 +8,7 @@ Syntax error in 'array-expr-decl-bad1.stan', line 2, column 9 to column 10, pars
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../install/default/bin/stanc array-expr-decl-bad2.stan
 Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 10, parsing error:
    -------------------------------------------------
@@ -937,7 +937,7 @@ Syntax error in 'err-if-else.stan', line 3, column 8 to column 9, parsing error:
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../install/default/bin/stanc err-integrate-ode-comma.stan
 Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, parsing error:
    -------------------------------------------------
@@ -950,7 +950,7 @@ Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, 
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../install/default/bin/stanc err-minus-types.stan
 Semantic error in 'err-minus-types.stan', line 4, column 6 to column 11:
    -------------------------------------------------
@@ -1692,7 +1692,7 @@ Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing
    -------------------------------------------------
 
 Unexpected input after the conclusion of a valid expression.
-You may be missing a "," between expressions, an operator, or a terminating "}", ")", or "]".
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../install/default/bin/stanc multiply_sample.stan
 Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
    -------------------------------------------------
