@@ -45273,7 +45273,6 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       dependent_no_init = (no_init * y);
       double used_on_lhs = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
-      used_on_lhs = used_on_lhs;
       double no_init_if = std::numeric_limits<double>::quiet_NaN();
       {
         current_statement__ = 8;
@@ -45364,7 +45363,6 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       dependent_no_init = (no_init * y);
       double used_on_lhs = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 5;
-      used_on_lhs = used_on_lhs;
       double no_init_if = std::numeric_limits<double>::quiet_NaN();
       {
         current_statement__ = 8;
@@ -45476,7 +45474,6 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       lcm_sym3__ = (no_init * y);
       dependent_no_init = lcm_sym3__;
       current_statement__ = 5;
-      used_on_lhs = used_on_lhs;
       {
         current_statement__ = 8;
         no_init_if = 1.0;
