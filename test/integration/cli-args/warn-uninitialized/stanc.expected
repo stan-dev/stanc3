@@ -1,6 +1,16 @@
   $ ../../../../../install/default/bin/stanc --warn-uninitialized  simple.stan
-Warning in 'simple.stan', line 4, column 17 to column 21:
-    The variable zero may not have been assigned a value before its use.
-Warning in 'simple.stan', line 4, column 2 to column 7:
-    The variable theta may not have been assigned a value before its use.
+Warning in 'simple.stan', line 18, column 11 to column 12:
+    The variable q may not have been assigned a value before its first use.
+Warning in 'simple.stan', line 24, column 14 to column 15:
+    The variable p may not have been assigned a value before its first use.
+Warning in 'simple.stan', line 32, column 2 to column 7:
+    The variable theta may not have been assigned a value before its first
+    use.
+Warning in 'simple.stan', line 32, column 17 to column 21:
+    The variable zero may not have been assigned a value before its first
+    use.
+Warning in 'simple.stan', line 42, column 24 to column 25:
+    The variable g may not have been assigned a value before its first use.
+Warning in 'simple.stan', line 42, column 28 to column 29:
+    The variable h may not have been assigned a value before its first use.
 [exit 0]

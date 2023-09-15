@@ -155,11 +155,9 @@ let stmt_uninitialized_variables (exceptions : string Set.Poly.t)
 let mir_uninitialized_variables (mir : Program.Typed.t) :
     (Location_span.t * string) Set.Poly.t =
   let flag_variables = List.map ~f:Flag_vars.to_string Flag_vars.enumerate in
+  let function_names = function_names mir in
   let data_vars = data_set ~exclude_transformed:true mir in
-  let trans_data_vars = data_set ~exclude_transformed:false mir in
-  let globals =
-    Set.union (Set.Poly.of_list flag_variables) (Set.Poly.singleton "target")
-  in
+  let globals = Set.union function_names (Set.Poly.of_list flag_variables) in
   let parameters =
     Set.Poly.of_list
       (List.map ~f:fst3
@@ -167,21 +165,22 @@ let mir_uninitialized_variables (mir : Program.Typed.t) :
             ~f:(fun (_, _, {out_block; _}) -> out_block = Parameters)
             mir.output_vars)) in
   let globals_data = Set.union globals data_vars in
-  let globals_data_prep =
-    Set.Poly.union_list [globals_data; trans_data_vars; parameters] in
+  let check_against_data b =
+    stmt_uninitialized_variables globals_data
+      {pattern= SList b; meta= Location_span.empty} in
+  let check_against_data_params b =
+    let globals_data_prep = Set.union globals_data parameters in
+    stmt_uninitialized_variables globals_data_prep
+      (* prepend prepare_data to detect bad transformed data usages *)
+      {pattern= SList (mir.prepare_data @ b); meta= Location_span.empty} in
   Set.Poly.union_list
     [ (* prepare_data scope: data *)
-      stmt_uninitialized_variables globals_data
-        {pattern= SList mir.prepare_data; meta= Location_span.empty}
+      check_against_data mir.prepare_data
       (* log_prob scope: data, prep declarations *)
-    ; stmt_uninitialized_variables globals_data_prep
-        {pattern= SList mir.log_prob; meta= Location_span.empty}
-      (* log_prob scope: data, prep declarations *)
-    ; stmt_uninitialized_variables globals_data_prep
-        {pattern= SList mir.reverse_mode_log_prob; meta= Location_span.empty}
+    ; check_against_data_params mir.log_prob
+    ; check_against_data_params mir.reverse_mode_log_prob
       (* gen quant scope: data, prep declarations *)
-    ; stmt_uninitialized_variables globals_data_prep
-        {pattern= SList mir.generate_quantities; meta= Location_span.empty}
+    ; check_against_data_params mir.generate_quantities
       (* functions scope: arguments *)
     ; Set.Poly.union_list
         (List.map mir.functions_block ~f:(fun {fdbody; fdargs; _} ->

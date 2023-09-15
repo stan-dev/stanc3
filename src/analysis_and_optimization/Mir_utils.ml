@@ -68,6 +68,9 @@ let rec top_var_declarations Stmt.{pattern; _} : string Set.Poly.t =
   | SList l -> Set.Poly.union_list (List.map ~f:top_var_declarations l)
   | _ -> Set.Poly.empty
 
+let function_names {functions_block; _} : string Set.Poly.t =
+  Set.Poly.of_list (List.map functions_block ~f:(fun {fdname; _} -> fdname))
+
 let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
     (mir : Program.Typed.t) : string Set.Poly.t =
   (* Data are input_vars *)
