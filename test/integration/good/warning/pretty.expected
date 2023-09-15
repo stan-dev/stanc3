@@ -587,9 +587,10 @@ model {
   // line 22: should warn
   tup.1 = tup.1;
   // line 24: should warn (decl)
-  tuple(real, real) tup2 = (tup2.2, tup2.2);
-  
-  // line 27: could warn, currently does not
+  tuple(real, real) tup2 = (0.5, tup2.1);
+  // line 26: could warn, currently does not
+  tup = (tup.1, tup.2);
+  // line 28: could warn, currently does not
   foo = (foo, foo).1;
   // no warnings
   real foo2 = 3;
