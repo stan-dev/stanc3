@@ -191,10 +191,12 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   location
   @
   match pattern with
-  | Assignment (l, _, e)
+  | Assignment (((_, []) as l), _, e)
     when Expr.Typed.compare (Stmt.Helpers.expr_of_lvalue l ~meta:e.meta) e = 0
     ->
-      [] (* self-assign is a no-op *)
+      (* self-assign is a no-op *)
+      [ Comment
+          ("self-assignment omitted: " ^ (Fmt.to_to_string Expr.Typed.pp) e) ]
   | Assignment
       ( (((LVariable _ | LTupleProjection _) as lhs), [])
       , _

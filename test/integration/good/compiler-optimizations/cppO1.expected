@@ -30405,6 +30405,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       dependent_no_init = (no_init * y);
       local_scalar_t__ used_on_lhs = DUMMY_VAR__;
       current_statement__ = 5;
+      // self-assignment omitted: used_on_lhs
       local_scalar_t__ no_init_if = DUMMY_VAR__;
       {
         current_statement__ = 8;
@@ -30458,6 +30459,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       dependent_no_init = (no_init * y);
       local_scalar_t__ used_on_lhs = DUMMY_VAR__;
       current_statement__ = 5;
+      // self-assignment omitted: used_on_lhs
       local_scalar_t__ no_init_if = DUMMY_VAR__;
       {
         current_statement__ = 8;
@@ -30530,6 +30532,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
       current_statement__ = 4;
       dependent_no_init = (no_init * y);
       current_statement__ = 5;
+      // self-assignment omitted: used_on_lhs
       {
         current_statement__ = 8;
         no_init_if = 1.0;
