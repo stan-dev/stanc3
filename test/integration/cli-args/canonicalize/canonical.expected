@@ -238,6 +238,8 @@ generated quantities {
                                                      x_r, x_i);
 }
 
+Warning in 'deprecated.stan', line 36, column 2: Assignment of variable to
+    itself.
   $ ../../../../../install/default/bin/stanc --print-canonical deprecated_tilde.stan
 functions {
   real test_log_lpmf(int bar, real foo) {

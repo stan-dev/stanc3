@@ -294,6 +294,27 @@ let rec expr_of_lvalue {lval; lmeta} =
       | LTuplePacking l -> TupleExpr (List.map ~f:expr_of_lvalue l) )
   ; emeta= lmeta }
 
+let rec extract_ids {expr; _} =
+  match expr with
+  | Variable id -> [id]
+  | Promotion (e, _, _)
+   |Indexed (e, _)
+   |Paren e
+   |TupleProjection (e, _)
+   |PrefixOp (_, e)
+   |PostfixOp (e, _) ->
+      extract_ids e
+  | TernaryIf (e1, e2, e3) ->
+      List.concat [extract_ids e1; extract_ids e2; extract_ids e3]
+  | BinOp (e1, _, e2) -> extract_ids e1 @ extract_ids e2
+  | ArrayExpr es
+   |RowVectorExpr es
+   |TupleExpr es
+   |CondDistApp (_, _, es)
+   |FunApp (_, _, es) ->
+      List.concat_map ~f:extract_ids es
+  | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP | GetTarget -> []
+
 let rec lvalue_of_expr_opt {expr; emeta} =
   (* We don't want to allow TuplePackings inside of things like indexed *)
   let rec base_lvalue {expr; emeta} =

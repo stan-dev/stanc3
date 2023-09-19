@@ -982,22 +982,47 @@ let verify_assignment_non_function loc ut =
       Semantic_error.cannot_assign_function loc ut |> error
   | _ -> ()
 
+(** We issue a warning if the initial value for a declaration contains
+    any reference to the variable being declared *)
+let warn_self_declare loc variable_name rhs_opt =
+  Option.iter rhs_opt ~f:(fun rhs ->
+      let rhs_ids = Ast.extract_ids rhs in
+      if List.exists rhs_ids ~f:(fun id -> String.equal id.name variable_name)
+      then
+        add_warning loc
+          "Assignment of variable to itself during declaration. This is almost \
+           certainly a bug." )
+
+(** For general assignments, we only warn if we believe the lhs and rhs are exactly the same value *)
+let warn_self_assignment loc lhs rhs =
+  let rec strip_parens e =
+    match e.expr with Paren e -> strip_parens e | _ -> e in
+  let rhs_opt =
+    rhs |> Ast.untyped_expression_of_typed_expression |> strip_parens
+    |> Ast.lvalue_of_expr_opt in
+  Option.iter rhs_opt ~f:(fun rhs ->
+      let lhs = lhs |> Ast.untyped_lvalue_of_typed_lvalue in
+      if Ast.compare_untyped_lval lhs rhs = 0 then
+        add_warning loc "Assignment of variable to itself." )
+
 let check_assignment_operator loc assop lhs rhs =
   let err op =
     Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
   in
   match assop with
   | Assign | ArrowAssign -> (
-    match
-      SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
-        rhs.emeta.type_
-    with
-    | Ok p ->
-        let rhs =
-          (* Hack: need RHS to properly get promoted to var if needed *)
-          {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}} in
-        Promotion.promote rhs p
-    | Error _ -> err Operator.Equals |> error )
+      warn_self_assignment loc lhs rhs ;
+      match
+        SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
+          rhs.emeta.type_
+      with
+      | Ok p ->
+          let rhs =
+            (* Hack: need RHS to properly get promoted to var if needed *)
+            {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}}
+          in
+          Promotion.promote rhs p
+      | Error _ -> err Operator.Equals |> error )
   | OperatorAssign op -> (
       let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
       let return_type = assignmentoperator_stan_math_return_type op args in
@@ -1571,7 +1596,7 @@ and check_var_decl loc cf tenv sized_ty trans
   let checked_trans = check_transformation cf tenv unsized_type trans in
   let tenv, tvariables =
     List.fold_map ~init:tenv
-      ~f:(fun tenv' ({identifier; _} as var) ->
+      ~f:(fun tenv' ({identifier; initial_value} as var) ->
         verify_identifier identifier ;
         verify_name_fresh tenv' identifier ~is_udf:false ;
         let tenv'' =
@@ -1579,6 +1604,7 @@ and check_var_decl loc cf tenv sized_ty trans
             (`Variable
               {origin= cf.current_block; global= is_global; readonly= false} )
         in
+        warn_self_declare loc identifier.name initial_value ;
         (tenv'', check_var_decl_initial_value loc cf tenv'' var) )
       variables in
   verify_valid_transformation_for_type loc is_global checked_type checked_trans ;

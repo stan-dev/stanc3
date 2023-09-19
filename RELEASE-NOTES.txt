@@ -1,6 +1,11 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.33.1 (13 September 2023)
+======================================================================
+
+- Fixed several issues with the code generation of user-defined functions which accepted tuples (#1356)
+
 v2.33.0 (5 September 2023)
 ======================================================================
 
