@@ -29,7 +29,7 @@ def checkCompilation(String testsPath, String stancFlags = ""){
     unstash 'ubuntu-exe'
 
     sh """
-        git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan --branch=fix/checkCompilation
+        git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
     """
 
     writeFile(file:"performance-tests-cmdstan/cmdstan/make/local", text:"CXX=${CXX}")
