@@ -976,10 +976,11 @@ let verify_assignment_global loc cf block is_global id =
 (* Until function types are added to the user language, we
    disallow assignments to function values
 *)
-let verify_assignment_non_function loc ut =
+let rec verify_assignment_non_function loc ut =
   match ut with
   | UnsizedType.UFun _ | UMathLibraryFunction ->
       Semantic_error.cannot_assign_function loc ut |> error
+  | UTuple ts -> List.iter ~f:(verify_assignment_non_function loc) ts
   | _ -> ()
 
 (** We issue a warning if the initial value for a declaration contains
@@ -1033,34 +1034,35 @@ let check_assignment_operator loc assop lhs rhs =
     written to multiple times. This lets us preserve the illusion of
     simultaneous assignment and generally avoid confusion. *)
 let verify_lvalue_unique lv =
-  let rec flatten_lvalues lv =
-    match (lv.lval, lv.lmeta.type_) with
-    | LTuplePacking lvs, _ -> List.concat_map ~f:flatten_lvalues lvs
+  let rec add_tuple_idxs lv =
+    (* If we're assigning an entire tuple, we also need to prevent
+       assigning to any slot in this statement. *)
+    let type_, _ = UnsizedType.unwind_array_type lv.lmeta.type_ in
+    match (lv.lval, type_) with
+    | LTuplePacking ts, _ ->
+        [{lv with lval= LTuplePacking (List.concat_map ~f:add_tuple_idxs ts)}]
+    | _, UTuple ts ->
+        List.concat_mapi ts ~f:(fun i ty ->
+            add_tuple_idxs
+              { lval= LTupleProjection (lv, i + 1)
+              ; lmeta= {lv.lmeta with type_= ty} } )
+    | _ -> [lv] in
+  let rec flatten idx lv =
+    match (lv.lval, idx) with
     | LIndexed (l, _), _ ->
         (* Prevent assigning to multiple indices in the same object at once.
            In principal it is safe to assign to disjoint indices, but statically
            checking that is impossible. *)
-        flatten_lvalues l
-    | _, UTuple ts ->
-        (* If we're assigning an entire tuple, we also need to prevent
-           assigning to any slot in this statement. *)
-        lv
-        :: List.concat_mapi ts ~f:(fun i ty ->
-               flatten_lvalues
-                 { lval= LTupleProjection (lv, i + 1)
-                 ; lmeta= {lv.lmeta with type_= ty} } )
-    | _ -> [lv] in
-  let all_lvals =
-    flatten_lvalues lv |> List.map ~f:Ast.untyped_lvalue_of_typed_lvalue in
-  match List.find_all_dups ~compare:Ast.compare_untyped_lval all_lvals with
+        flatten idx l
+    | LTuplePacking lvs, _ -> List.concat_map ~f:(flatten []) lvs
+    | LTupleProjection (l, ix), _ -> flatten (ix :: idx) l
+    | LVariable id, _ -> [(id.name, idx)] in
+  let all_lvals = lv |> add_tuple_idxs |> List.concat_map ~f:(flatten []) in
+  match List.find_all_dups ~compare:Poly.compare all_lvals with
   | [] -> ()
   | dupes ->
       Semantic_error.cannot_assign_duplicate_unpacking lv.lmeta.loc
-        (List.map dupes
-           ~f:
-             (Fn.compose
-                (Fmt.to_to_string Pretty_printing.pp_expression)
-                Ast.expr_of_lvalue ) )
+        (List.map ~f:fst dupes |> List.dedup_and_sort ~compare:String.compare)
       |> error
 
 let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
@@ -1117,7 +1119,7 @@ let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
                   (lval : Ast.untyped_lval)]
         | {lval= LVariable _ | LTupleProjection _; _} as lval ->
             (*  I think the right thing to do here is treat tuples like variables *)
-            let tval = (check_lvalue cf tenv) lval in
+            let tval = check_lvalue cf tenv lval in
             (tval, tval, []) in
       let lval, var, flat = check_inner lval in
       let idcs = List.map ~f:(check_index cf tenv) idcs in
