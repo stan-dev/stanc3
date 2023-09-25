@@ -120,7 +120,7 @@ Semantic error in 'bad_unpack10.stan', line 3, column 2 to column 17:
    -------------------------------------------------
 
 The same value cannot be assigned to multiple times in one assignment:
-  tup
+  tup[ : ].1
   $ ../../../../../install/default/bin/stanc bad_unpack2.stan
 Syntax error in 'bad_unpack2.stan', line 4, column 2 to column 15, parsing error:
    -------------------------------------------------
@@ -182,7 +182,7 @@ Semantic error in 'bad_unpack6.stan', line 9, column 2 to column 30:
    -------------------------------------------------
 
 The same value cannot be assigned to multiple times in one assignment:
-  x_flat
+  x_flat[ : ]
   $ ../../../../../install/default/bin/stanc bad_unpack7.stan
 Semantic error in 'bad_unpack7.stan', line 3, column 2 to column 16:
    -------------------------------------------------
@@ -194,7 +194,7 @@ Semantic error in 'bad_unpack7.stan', line 3, column 2 to column 16:
    -------------------------------------------------
 
 The same value cannot be assigned to multiple times in one assignment:
-  tup
+  tup.2.2
   $ ../../../../../install/default/bin/stanc bad_unpack8.stan
 Semantic error in 'bad_unpack8.stan', line 4, column 4 to column 24:
    -------------------------------------------------
@@ -218,7 +218,7 @@ Semantic error in 'bad_unpack9.stan', line 4, column 2 to column 22:
    -------------------------------------------------
 
 The same value cannot be assigned to multiple times in one assignment:
-  tup
+  tup[ : ].1
   $ ../../../../../install/default/bin/stanc empty_tuple_expr.stan
 Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing error:
    -------------------------------------------------

@@ -1049,28 +1049,46 @@ let verify_lvalue_unique lv =
     | _ -> [lv] in
   let rec flatten lv =
     match lv.lval with
-    | LIndexed (l, _) ->
-        (* Prevent assigning to multiple indices in the same object at once.
-           In principal it is safe to assign to disjoint indices, but statically
-           checking that is impossible. *)
-        flatten l
     | LTuplePacking lvs -> List.concat_map ~f:flatten lvs
     | LTupleProjection (l, ix) ->
-        (* safety: LTuplePackings can never appear inside LTupleProjections *)
-        let inner = flatten l |> List.hd_exn in
-        let lval = LTupleProjection (inner, ix) in
-        [{lv with lval}]
+        List.map (flatten l) ~f:(fun inner ->
+            let lval = LTupleProjection (inner, ix) in
+            {lv with lval} )
+    | LIndexed (l, _) ->
+        List.map (flatten l) ~f:(fun inner ->
+            (* We replace all indices with All because we don't care
+               what they actually are, so this is the nicest option to print *)
+            let lval = LIndexed (inner, [Ast.All]) in
+            {lv with lval} )
     | LVariable _ -> [lv] in
+  let rec compare_no_indexing lv1 lv2 =
+    (* Prevent assigning to multiple indices in the same object at once.
+       In principal it is safe to assign to disjoint indices, but statically
+       checking that is impossible. *)
+    match (lv1.lval, lv2.lval) with
+    | LIndexed (l, _), _ -> compare_no_indexing l lv2
+    | _, LIndexed (l, _) -> compare_no_indexing lv1 l
+    | LVariable id1, LVariable id2 -> String.compare id1.name id2.name
+    | LTupleProjection (lv1, idx1), LTupleProjection (lv2, idx2)
+      when idx1 = idx2 ->
+        compare_no_indexing lv1 lv2
+    | LTuplePacking lvs1, LTuplePacking lvs2 ->
+        List.compare compare_no_indexing lvs1 lvs2
+    | _, _ ->
+        (* remaining cases are not equal, we don't care *)
+        Ast.compare_untyped_lval lv1 lv2 in
   let all_lvals =
     lv |> add_tuple_idxs |> List.concat_map ~f:flatten
     |> List.map ~f:Ast.untyped_lvalue_of_typed_lvalue in
-  match List.find_all_dups all_lvals ~compare:Ast.compare_untyped_lval with
+  match List.find_all_dups all_lvals ~compare:compare_no_indexing with
   | [] -> ()
   | dupes ->
       Semantic_error.cannot_assign_duplicate_unpacking lv.lmeta.loc
-        ( List.concat_map ~f:Ast.ids_inside_lvalue dupes
-        |> List.map ~f:(function {name; _} -> name)
-        |> List.dedup_and_sort ~compare:String.compare )
+        (List.map dupes
+           ~f:
+             (Fn.compose
+                (Fmt.to_to_string Pretty_printing.pp_expression)
+                Ast.expr_of_lvalue ) )
       |> error
 
 let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
