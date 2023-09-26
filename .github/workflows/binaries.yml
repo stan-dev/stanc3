@@ -17,7 +17,7 @@ jobs:
           - macos
           - ubuntu
         ocaml-compiler:
-          - 4.12.0
+          - 4.14.1
 
     runs-on: ${{ matrix.os }}-latest
 
@@ -66,11 +66,11 @@ jobs:
       - name: Install cross-compiler
         run: sudo apt-get update; sudo apt-get install -y gcc-mingw-w64-x86-64
 
-      - name: Use OCaml 4.12.0
+      - name: Use OCaml 4.14.1
         uses: ocaml/setup-ocaml@v2
         with:
           cache-prefix: v1-windows
-          ocaml-compiler: ocaml-windows64.4.12.0
+          ocaml-compiler: ocaml-windows64.4.14.1
           opam-repositories: |
               windows: http://github.com/ocaml-cross/opam-cross-windows.git
               default: https://github.com/ocaml/opam-repository.git

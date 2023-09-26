@@ -27,13 +27,7 @@
 
 (menhir
  (modules parser)
- (flags
-  :standard
-  --table
-  --strict
-  --unused-tokens
-  --fixed-exception
-  --require-aliases))
+ (flags :standard --table --strict --require-aliases))
 
 (rule
  (targets parser_updated.messages)

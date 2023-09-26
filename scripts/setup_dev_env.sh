@@ -11,7 +11,12 @@ else
     echo "OPAM already installed, not re-installing."
 fi
 
-bash -x ./install_ocaml.sh
+read -p "Supply a name for the OPAM switch to be created (default: stanc): " opam_switch_name
+if [ -z "$opam_switch_name" ]; then
+	opam_switch_name="stanc"
+fi
+
+bash -x ./install_ocaml.sh "$opam_switch_name"
 bash -x ./install_build_deps.sh
 
 

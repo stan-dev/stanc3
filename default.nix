@@ -31,7 +31,7 @@ ocamlPackages.buildDunePackage rec {
     yojson
     menhir
     menhirLib
-    core_kernel
+    core
     ppx_jane
     ppx_deriving
     findlib

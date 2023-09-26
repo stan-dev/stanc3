@@ -6,7 +6,7 @@ some OCaml exposure.
 
 {1 The Jane Street standard library}
 
-We use Jane Street's {{:https://ocaml.janestreet.com/ocaml-core/v0.14/doc/core_kernel/index.html}Core_kernel}
+We use Jane Street's {{:https://ocaml.janestreet.com/ocaml-core/v0.14/doc/core/index.html}Core}
 standard library. There are a few differences from the OCaml standard library which are instantly noticeable:
 
 {ul
@@ -14,7 +14,7 @@ standard library. There are a few differences from the OCaml standard library wh
 
   This means a call like [List.map square [1;2;3]] will look like [List.map ~f:square [1;2;3]].}
 
-{- Core_kernel defaults to safe operations which return {i options} rather than possibly erring.
+{- Core defaults to safe operations which return {i options} rather than possibly erring.
 
   In "normal" OCaml, [List.hd] has type ['a list -> 'a].
   A call [List.hd []] will throw an exception.
