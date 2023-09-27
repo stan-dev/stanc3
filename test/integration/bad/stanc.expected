@@ -119,7 +119,7 @@ Syntax error in 'assign_invalid_lhs2.stan', line 2, column 3 to column 21, parsi
 
 Expected an assignable value but found a general expression.
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
-Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
+Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 3:
    -------------------------------------------------
      9:    real b;
     10:    b = 3.2;
@@ -256,7 +256,7 @@ Available signatures:
   The first argument must be array[,,] real but got array[] real
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
-Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
+Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 3:
    -------------------------------------------------
      2:    vector[5] y;
      3:    array[5] real z;
@@ -272,7 +272,7 @@ The left hand side has type
 and the right hand side has type
   vector
   $ ../../../../install/default/bin/stanc bad_var_assignment_type2.stan
-Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 8:
+Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 3:
    -------------------------------------------------
      4:  transformed data {
      5:    array[5] real z;
@@ -288,7 +288,7 @@ The left hand side has type
 and the right hand side has type
   array[,] real
   $ ../../../../install/default/bin/stanc bad_var_assignment_vec_arr.stan
-Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column 35:
+Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column 4:
    -------------------------------------------------
      8:  
      9:    a1 = tail(v, K-1) - head(v, K-1);
@@ -1230,7 +1230,7 @@ Semantic error in 'functions-bad12.stan', line 3, column 4 to column 33:
 
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc functions-bad13.stan
-Semantic error in 'functions-bad13.stan', line 3, column 4 to column 10:
+Semantic error in 'functions-bad13.stan', line 3, column 4 to column 5:
    -------------------------------------------------
      1:  functions {
      2:    real badassign(real x) {
@@ -2646,7 +2646,7 @@ Semantic error in 'validate_allow_sample_bad3.stan', line 9, column 2 to column 
 
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc validate_array_expr_bad1.stan
-Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 41:
+Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 9:
    -------------------------------------------------
      4:  model {
      5:    array[5] int int_1_a;
@@ -2662,7 +2662,7 @@ The left hand side has type
 and the right hand side has type
   array[] real
   $ ../../../../install/default/bin/stanc validate_array_expr_bad2.stan
-Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 24:
+Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 9:
    -------------------------------------------------
      4:  model {
      5:    array[3] int int_1_a;
@@ -2726,7 +2726,7 @@ Semantic error in 'validate_conditional_op_bad-2.stan', line 5, column 7 to colu
 
 Type mismatch in ternary expression, expression when true is: real; expression when false is: array[,] row_vector
   $ ../../../../install/default/bin/stanc validate_exponentiation_bad.stan
-Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column 12:
+Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column 3:
    -------------------------------------------------
      5:  transformed data {
      6:    int z;

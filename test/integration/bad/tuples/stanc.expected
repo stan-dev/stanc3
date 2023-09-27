@@ -78,7 +78,7 @@ Semantic error in 'bad-index5.stan', line 3, column 11 to column 18:
 
 Too many indexes, expression dimensions=0, indexes found=1.
   $ ../../../../../install/default/bin/stanc bad_addition.stan
-Semantic error in 'bad_addition.stan', line 3, column 2 to column 9:
+Semantic error in 'bad_addition.stan', line 3, column 2 to column 3:
    -------------------------------------------------
      1:  model {
      2:    tuple(real, real) z;
@@ -95,20 +95,20 @@ and the right hand side has type
 Available signatures for given lhs:
 No matching signatures
   $ ../../../../../install/default/bin/stanc bad_unpack1.stan
-Semantic error in 'bad_unpack1.stan', line 4, column 2 to column 18:
+Semantic error in 'bad_unpack1.stan', line 4, column 3 to column 4:
    -------------------------------------------------
      2:    int x = 3;
      3:    real y = 4.0;
      4:    (x, y) = (y, x);
-           ^
+            ^
      5:  }
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator =:
 The left hand side has type
-  tuple(int, real)
+  int
 and the right hand side has type
-  tuple(real, int)
+  real
   $ ../../../../../install/default/bin/stanc bad_unpack10.stan
 Semantic error in 'bad_unpack10.stan', line 3, column 2 to column 17:
    -------------------------------------------------
@@ -133,19 +133,19 @@ Syntax error in 'bad_unpack2.stan', line 4, column 2 to column 15, parsing error
 
 Expected an assignable value but found a general expression.
   $ ../../../../../install/default/bin/stanc bad_unpack3.stan
-Semantic error in 'bad_unpack3.stan', line 8, column 2 to column 16:
+Semantic error in 'bad_unpack3.stan', line 8, column 3 to column 4:
    -------------------------------------------------
      6:     int y;
      7:  
      8:    (x,y) = (1,2);
-           ^
+            ^
      9:  
     10:  }
    -------------------------------------------------
 
 Cannot assign to global variable 'x' declared in previous blocks.
   $ ../../../../../install/default/bin/stanc bad_unpack4.stan
-Semantic error in 'bad_unpack4.stan', line 4, column 2 to column 21:
+Semantic error in 'bad_unpack4.stan', line 4, column 2 to column 8:
    -------------------------------------------------
      2:    int x = 3;
      3:    int y = 4;

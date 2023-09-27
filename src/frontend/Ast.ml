@@ -116,7 +116,11 @@ type ('l, 'e) lvalue =
   | LVariable of identifier
   | LIndexed of 'l * 'e index list
   | LTupleProjection of 'l * int
-  | LTuplePacking of 'l list
+[@@deriving sexp, hash, compare, map, fold]
+
+type 'l lvalue_pack =
+  | LValue of 'l
+  | LTuplePack of 'l lvalue_pack list * Location_span.t
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
@@ -124,6 +128,8 @@ type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
 
 type untyped_lval = (untyped_expression, located_meta) lval_with
 [@@deriving sexp, hash, compare, map, fold]
+
+type untyped_lval_pack = untyped_lval lvalue_pack [@@deriving sexp, compare]
 
 type typed_lval = (typed_expression, typed_expr_meta) lval_with
 [@@deriving sexp, hash, compare, map, fold]
@@ -135,7 +141,8 @@ type 'e variable = {identifier: identifier; initial_value: 'e option}
     for 'e and 's respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
 type ('e, 's, 'l, 'f) statement =
-  | Assignment of {assign_lhs: 'l; assign_op: assignmentoperator; assign_rhs: 'e}
+  | Assignment of
+      {assign_lhs: 'l lvalue_pack; assign_op: assignmentoperator; assign_rhs: 'e}
   | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
   (* IncrementLogProb is deprecated *)
@@ -272,6 +279,12 @@ let rec untyped_lvalue_of_typed_lvalue ({lval; lmeta} : typed_lval) :
         untyped_expression_of_typed_expression lval
   ; lmeta= {loc= lmeta.loc} }
 
+let rec untyped_lvalue_of_typed_lvalue_pack :
+    typed_lval lvalue_pack -> untyped_lval lvalue_pack = function
+  | LValue lv -> LValue (untyped_lvalue_of_typed_lvalue lv)
+  | LTuplePack (lvs, loc) ->
+      LTuplePack (List.map ~f:untyped_lvalue_of_typed_lvalue_pack lvs, loc)
+
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement {stmt; smeta} =
   { stmt=
@@ -290,8 +303,7 @@ let rec expr_of_lvalue {lval; lmeta} =
       ( match lval with
       | LVariable s -> Variable s
       | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i)
-      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i)
-      | LTuplePacking l -> TupleExpr (List.map ~f:expr_of_lvalue l) )
+      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i) )
   ; emeta= lmeta }
 
 let rec extract_ids {expr; _} =
@@ -315,8 +327,7 @@ let rec extract_ids {expr; _} =
       List.concat_map ~f:extract_ids es
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP | GetTarget -> []
 
-let rec lvalue_of_expr_opt {expr; emeta} =
-  (* We don't want to allow TuplePackings inside of things like indexed *)
+let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
   let rec base_lvalue {expr; emeta} =
     let lval_opt =
       match expr with
@@ -327,26 +338,12 @@ let rec lvalue_of_expr_opt {expr; emeta} =
           Option.map (base_lvalue l) ~f:(fun lv -> LTupleProjection (lv, i))
       | _ -> None in
     Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta}) in
-  let lval_opt =
-    match expr with
-    | Variable s -> Some (LVariable s)
-    | Indexed (l, i) ->
-        Option.map (base_lvalue l) ~f:(fun lv -> LIndexed (lv, i))
-    | TupleProjection (l, i) ->
-        Option.map (base_lvalue l) ~f:(fun lv -> LTupleProjection (lv, i))
-    | TupleExpr l ->
-        Option.map
-          (List.map ~f:lvalue_of_expr_opt l |> Option.all)
-          ~f:(fun lv -> LTuplePacking lv)
-    | _ -> None in
-  Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta})
-
-let rec ids_inside_lvalue {lval; _} =
-  match lval with
-  | LVariable s -> [s]
-  | LIndexed (l, _) -> ids_inside_lvalue l
-  | LTupleProjection (l, _) -> ids_inside_lvalue l
-  | LTuplePacking ls -> List.concat_map ~f:ids_inside_lvalue ls
+  match expr with
+  | TupleExpr l ->
+      List.map ~f:lvalue_of_expr_opt l
+      |> Option.all
+      |> Option.map ~f:(fun lv -> LTuplePack (lv, emeta.loc))
+  | _ -> base_lvalue {expr; emeta} |> Option.map ~f:(fun l -> LValue l)
 
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list

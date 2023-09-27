@@ -412,9 +412,7 @@ module StatementError = struct
           match l.lval with
           | LVariable id -> string ppf id.name
           | LIndexed (l, _) -> pf ppf "%a[...]" pp_lvalue l
-          | LTupleProjection (l, ix) -> pf ppf "%a.%n" pp_lvalue l ix
-          | LTuplePacking lvs ->
-              pf ppf "(@[%a@])" (list ~sep:comma pp_lvalue) lvs in
+          | LTupleProjection (l, ix) -> pf ppf "%a.%n" pp_lvalue l ix in
         Fmt.pf ppf
           "@[<v2>The same value cannot be assigned to multiple times in one \
            assignment:@ @[%a@]@]"

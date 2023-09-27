@@ -37,7 +37,7 @@ Semantic error in 'bad11.stan', line 2, column 2 to column 12:
 
 (Transformed) Parameters cannot be integers.
   $ ../../../../../install/default/bin/stanc bad2.stan
-Semantic error in 'bad2.stan', line 1, column 34 to column 42:
+Semantic error in 'bad2.stan', line 1, column 34 to column 35:
    -------------------------------------------------
      1:  data { array[3] real a; } model { a = 2.0; }
                                            ^
@@ -91,7 +91,7 @@ Semantic error in 'bad5.stan', line 3, column 6 to column 10:
 
 Identifier 'lp__' clashes with reserved keyword.
   $ ../../../../../install/default/bin/stanc bad6.stan
-Semantic error in 'bad6.stan', line 7, column 3 to column 12:
+Semantic error in 'bad6.stan', line 7, column 3 to column 4:
    -------------------------------------------------
      5:     real z;
      6:     
@@ -103,7 +103,7 @@ Semantic error in 'bad6.stan', line 7, column 3 to column 12:
 
 Cannot assign to global variable 'y' declared in previous blocks.
   $ ../../../../../install/default/bin/stanc bad7.stan
-Semantic error in 'bad7.stan', line 7, column 2 to column 11:
+Semantic error in 'bad7.stan', line 7, column 2 to column 3:
    -------------------------------------------------
      5:    real z;
      6:  
@@ -115,7 +115,7 @@ Semantic error in 'bad7.stan', line 7, column 2 to column 11:
 
 Cannot assign to global variable 'y' declared in previous blocks.
   $ ../../../../../install/default/bin/stanc bad8.stan
-Semantic error in 'bad8.stan', line 5, column 4 to column 13:
+Semantic error in 'bad8.stan', line 5, column 4 to column 5:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -718,7 +718,7 @@ Available signatures:
 (array[] int) => void
   The first argument must be array[] int but got array[] real
   $ ../../../../../install/default/bin/stanc good_all.stan
-Semantic error in 'good_all.stan', line 25, column 2 to column 8:
+Semantic error in 'good_all.stan', line 25, column 2 to column 3:
    -------------------------------------------------
     23:  
     24:  model {

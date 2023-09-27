@@ -1,5 +1,5 @@
   $ ../../../../../install/default/bin/stanc assignment-wrong-way.stan
-Semantic error in 'assignment-wrong-way.stan', line 11, column 2 to column 9:
+Semantic error in 'assignment-wrong-way.stan', line 11, column 2 to column 3:
    -------------------------------------------------
      9:  
     10:    Z1 = R; // fine

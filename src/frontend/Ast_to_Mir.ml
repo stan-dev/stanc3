@@ -512,11 +512,10 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let swrap pattern = [Stmt.Fixed.{meta= smeta; pattern}] in
   let mloc = smeta in
   match stmt_typed with
-  | Ast.Assignment
-      {assign_lhs= {lval= LTuplePacking lvals; _}; assign_rhs; assign_op} ->
+  | Ast.Assignment {assign_lhs= LTuplePack (lvals, _); assign_rhs; assign_op} ->
       trans_packed_assign smeta trans_stmt lvals assign_rhs assign_op
-  | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
-      trans_single_assignment smeta assign_lhs assign_rhs assign_op
+  | Ast.Assignment {assign_lhs= LValue lhs; assign_rhs; assign_op} ->
+      trans_single_assignment smeta lhs assign_rhs assign_op
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       NRFunApp (trans_fn_kind fn_kind name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
@@ -654,12 +653,6 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
   [Stmt.Fixed.{pattern= Block (temp :: assign :: assigns); meta= loc}]
 
 and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
-  (* Parsing rules ensure that we will not see a LTuplePacking in this function *)
-  let fail () =
-    Common.FatalError.fatal_error_msg
-      [%message
-        "Found a tuple LHS where it should never be during lowering"
-          (assign_lhs : Ast.typed_lval)] in
   let rec group_lvalue carry_idcs lv =
     (* Group up non-tuple indices
        e.g. x[1][2].1[3] -> x[1,2].1[3]
@@ -676,8 +669,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
     | LIndexed (lv', idcs) ->
         (* When we group indices,
            the metadata of group-indexed LHS equals the metadata of the outermost indexed LHS *)
-        {lv with Ast.lval= (group_lvalue (idcs @ carry_idcs) lv').lval}
-    | LTuplePacking _ -> fail () in
+        {lv with Ast.lval= (group_lvalue (idcs @ carry_idcs) lv').lval} in
   let grouped_lhs = group_lvalue [] assign_lhs in
   let rec trans_lvalue lv =
     match lv.Ast.lval with
@@ -686,8 +678,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
         (Stmt.Fixed.Pattern.LTupleProjection (trans_lvalue lv, ix), [])
     | LIndexed (lv, idcs) ->
         let lbase, idxs = trans_lvalue lv in
-        (lbase, idxs @ List.map ~f:trans_idx idcs)
-    | LTuplePacking _ -> fail () in
+        (lbase, idxs @ List.map ~f:trans_idx idcs) in
   let lhs = trans_lvalue grouped_lhs in
   (* The type of the assignee if it weren't indexed
      e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
@@ -695,8 +686,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
   let unindexed_type =
     match grouped_lhs.Ast.lval with
     | LVariable _ | LTupleProjection _ -> grouped_lhs.Ast.lmeta.type_
-    | LIndexed (lv, _) -> lv.Ast.lmeta.type_
-    | LTuplePacking _ -> fail () in
+    | LIndexed (lv, _) -> lv.Ast.lmeta.type_ in
   let rhs =
     match assign_op with
     | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
