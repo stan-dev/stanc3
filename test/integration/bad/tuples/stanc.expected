@@ -94,46 +94,32 @@ and the right hand side has type
   int
 Available signatures for given lhs:
 No matching signatures
-  $ ../../../../../install/default/bin/stanc bad_unpack1.stan
-Semantic error in 'bad_unpack1.stan', line 4, column 6 to column 7:
+  $ ../../../../../install/default/bin/stanc bad_unpack_duplicates.stan
+Semantic error in 'bad_unpack_duplicates.stan', line 5, column 2 to column 14:
    -------------------------------------------------
-     2:    real x = 3.0;
      3:    int y = 4;
-     4:    (x, y) = (y, x);
-               ^
-     5:  }
-   -------------------------------------------------
-
-Ill-typed arguments supplied to assignment operator =:
-The left hand side has type
-  int
-and the right hand side has type
-  real
-  $ ../../../../../install/default/bin/stanc bad_unpack10.stan
-Semantic error in 'bad_unpack10.stan', line 3, column 2 to column 17:
-   -------------------------------------------------
-     1:  generated quantities {
-     2:    array[1] tuple(int, int) tup;
-     3:    (tup, tup[1].1) = ({(1, 2)}, 3);
+     4:  
+     5:    (x, y, x, y) = (y, x, y, x);
            ^
-     4:  }
+     6:  }
    -------------------------------------------------
 
 The same value cannot be assigned to multiple times in one assignment:
-  tup[...].1
-  $ ../../../../../install/default/bin/stanc bad_unpack2.stan
-Syntax error in 'bad_unpack2.stan', line 4, column 2 to column 15, parsing error:
+  x, y
+  $ ../../../../../install/default/bin/stanc bad_unpack_fn_type.stan
+Semantic error in 'bad_unpack_fn_type.stan', line 4, column 4 to column 24:
    -------------------------------------------------
-     2:    int x = 3;
-     3:    real y = 4.0;
-     4:    (x, y).1 = 2; // allowing this feels very silly and would complicate implementation
-           ^
-     5:  }
+     2:    int foo() {
+     3:      int x;
+     4:      (foo, x) = (foo, 1);
+             ^
+     5:      return x;
+     6:    }
    -------------------------------------------------
 
-Expected an assignable value but found a general expression.
-  $ ../../../../../install/default/bin/stanc bad_unpack3.stan
-Semantic error in 'bad_unpack3.stan', line 8, column 3 to column 4:
+Cannot assign a function type '() => int' to variable.
+  $ ../../../../../install/default/bin/stanc bad_unpack_global.stan
+Semantic error in 'bad_unpack_global.stan', line 8, column 3 to column 4:
    -------------------------------------------------
      6:     int y;
      7:  
@@ -144,8 +130,43 @@ Semantic error in 'bad_unpack3.stan', line 8, column 3 to column 4:
    -------------------------------------------------
 
 Cannot assign to global variable 'x' declared in previous blocks.
-  $ ../../../../../install/default/bin/stanc bad_unpack4.stan
-Semantic error in 'bad_unpack4.stan', line 4, column 2 to column 8:
+  $ ../../../../../install/default/bin/stanc bad_unpack_lhs.stan
+Syntax error in 'bad_unpack_lhs.stan', line 4, column 2 to column 15, parsing error:
+   -------------------------------------------------
+     2:    int x = 3;
+     3:    real y = 4.0;
+     4:    (x, y).1 = 2; // allowing this feels very silly and would complicate implementation
+           ^
+     5:  }
+   -------------------------------------------------
+
+Expected an assignable value but found a general expression.
+  $ ../../../../../install/default/bin/stanc bad_unpack_overlap1.stan
+Semantic error in 'bad_unpack_overlap1.stan', line 9, column 2 to column 30:
+   -------------------------------------------------
+     7:    // we disallow this because it's not obvious if unique
+     8:    // locations are being assigned to
+     9:    (x_flat[ : 3], x_flat[3 : ]) = x;
+           ^
+    10:  }
+   -------------------------------------------------
+
+The same value cannot be assigned to multiple times in one assignment:
+  x_flat[...]
+  $ ../../../../../install/default/bin/stanc bad_unpack_overlap2.stan
+Semantic error in 'bad_unpack_overlap2.stan', line 4, column 2 to column 22:
+   -------------------------------------------------
+     2:    int i = 1, j = 1;
+     3:    array[1] tuple(int, int) tup;
+     4:    (tup[i].1, tup[j].1) = (1, 2);
+           ^
+     5:  }
+   -------------------------------------------------
+
+The same value cannot be assigned to multiple times in one assignment:
+  tup[...].1
+  $ ../../../../../install/default/bin/stanc bad_unpack_shape.stan
+Semantic error in 'bad_unpack_shape.stan', line 4, column 2 to column 8:
    -------------------------------------------------
      2:    int x = 3;
      3:    int y = 4;
@@ -159,32 +180,8 @@ The left hand side has type
   tuple(int, int)
 and the right hand side has type
   tuple(int, int, int)
-  $ ../../../../../install/default/bin/stanc bad_unpack5.stan
-Semantic error in 'bad_unpack5.stan', line 5, column 2 to column 14:
-   -------------------------------------------------
-     3:    int y = 4;
-     4:  
-     5:    (x, y, x, y) = (y, x, y, x);
-           ^
-     6:  }
-   -------------------------------------------------
-
-The same value cannot be assigned to multiple times in one assignment:
-  x, y
-  $ ../../../../../install/default/bin/stanc bad_unpack6.stan
-Semantic error in 'bad_unpack6.stan', line 9, column 2 to column 30:
-   -------------------------------------------------
-     7:    // we disallow this because it's not obvious if unique
-     8:    // locations are being assigned to
-     9:    (x_flat[ : 3], x_flat[3 : ]) = x;
-           ^
-    10:  }
-   -------------------------------------------------
-
-The same value cannot be assigned to multiple times in one assignment:
-  x_flat[...]
-  $ ../../../../../install/default/bin/stanc bad_unpack7.stan
-Semantic error in 'bad_unpack7.stan', line 3, column 2 to column 16:
+  $ ../../../../../install/default/bin/stanc bad_unpack_tuple_overlap1.stan
+Semantic error in 'bad_unpack_tuple_overlap1.stan', line 3, column 2 to column 16:
    -------------------------------------------------
      1:  model {
      2:    tuple(real, tuple(int, real)) tup;
@@ -195,30 +192,33 @@ Semantic error in 'bad_unpack7.stan', line 3, column 2 to column 16:
 
 The same value cannot be assigned to multiple times in one assignment:
   tup.2.2
-  $ ../../../../../install/default/bin/stanc bad_unpack8.stan
-Semantic error in 'bad_unpack8.stan', line 4, column 4 to column 24:
+  $ ../../../../../install/default/bin/stanc bad_unpack_tuple_overlap2.stan
+Semantic error in 'bad_unpack_tuple_overlap2.stan', line 3, column 2 to column 17:
    -------------------------------------------------
-     2:    int foo() {
-     3:      int x;
-     4:      (foo, x) = (foo, 1);
-             ^
-     5:      return x;
-     6:    }
-   -------------------------------------------------
-
-Cannot assign a function type '() => int' to variable.
-  $ ../../../../../install/default/bin/stanc bad_unpack9.stan
-Semantic error in 'bad_unpack9.stan', line 4, column 2 to column 22:
-   -------------------------------------------------
-     2:    int i = 1, j = 1;
-     3:    array[1] tuple(int, int) tup;
-     4:    (tup[i].1, tup[j].1) = (1, 2);
+     1:  generated quantities {
+     2:    array[1] tuple(int, int) tup;
+     3:    (tup, tup[1].1) = ({(1, 2)}, 3);
            ^
-     5:  }
+     4:  }
    -------------------------------------------------
 
 The same value cannot be assigned to multiple times in one assignment:
   tup[...].1
+  $ ../../../../../install/default/bin/stanc bad_unpack_types.stan
+Semantic error in 'bad_unpack_types.stan', line 4, column 6 to column 7:
+   -------------------------------------------------
+     2:    real x = 3.0;
+     3:    int y = 4;
+     4:    (x, y) = (y, x);
+               ^
+     5:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  int
+and the right hand side has type
+  real
   $ ../../../../../install/default/bin/stanc empty_tuple_expr.stan
 Syntax error in 'empty_tuple_expr.stan', line 2, column 25 to column 26, parsing error:
    -------------------------------------------------
