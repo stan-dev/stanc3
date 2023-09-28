@@ -1050,30 +1050,7 @@ let check_assignment_operator loc assop lhs rhs =
       | Some Void -> rhs
       | _ -> err lhs op rhs.emeta.type_ )
 
-(** When an lvalue is assigning to multiple places at once (e.g., a tuple
-    is being unpacked), we want to ensure that the same memory is not being
-    written to multiple times. This lets us preserve the illusion of
-    simultaneous assignment and generally avoid confusion. *)
-let verify_lvalue_unique lv =
-  let rec add_tuple_idxs lv =
-    (* If we're assigning an entire tuple, we also need to prevent
-       assigning to any slot in this statement. *)
-    let type_, _ = UnsizedType.unwind_array_type lv.lmeta.type_ in
-    match (lv.lval, type_) with
-    | _, UTuple ts ->
-        List.concat_mapi ts ~f:(fun i ty ->
-            add_tuple_idxs
-              { lval= LTupleProjection (lv, i + 1)
-              ; lmeta= {lv.lmeta with type_= ty} } )
-    | _ -> [lv] in
-  let rec flatten lv =
-    match lv with
-    | LTuplePack (lvs, _) -> List.concat_map ~f:flatten lvs
-    | LValue lv -> [lv] in
-  let all_lvals =
-    flatten lv
-    |> List.concat_map ~f:add_tuple_idxs
-    |> List.map ~f:Ast.untyped_lvalue_of_typed_lvalue in
+let overlapping_lvalues lvals =
   (* Prevent assigning to multiple indices in the same object at once.
      In principal it is safe to assign to disjoint indices, but statically
      checking that is impossible. *)
@@ -1088,13 +1065,90 @@ let verify_lvalue_unique lv =
     | _, _ ->
         (* remaining cases are not equal, we don't care *)
         Ast.compare_untyped_lval lv1 lv2 in
-  match List.find_all_dups all_lvals ~compare:compare_no_indexing with
+  List.find_all_dups lvals ~compare:compare_no_indexing
+
+let lvalues_written_to lv =
+  let rec add_tuple_idxs lv : typed_lval list =
+    (* If we're assigning an entire tuple, we also need to prevent
+       assigning to any slot in this statement. *)
+    let type_, _ = UnsizedType.unwind_array_type lv.lmeta.type_ in
+    match (lv.lval, type_) with
+    | _, UTuple ts ->
+        List.concat_mapi ts ~f:(fun i ty ->
+            add_tuple_idxs
+              { lval= LTupleProjection (lv, i + 1)
+              ; lmeta= {lv.lmeta with type_= ty} } )
+    | _ -> [lv] in
+  let rec flatten_lvalue_pack lv =
+    match lv with
+    | LTuplePack (lvs, _) -> List.concat_map ~f:flatten_lvalue_pack lvs
+    | LValue lv -> [lv] in
+  flatten_lvalue_pack lv
+  |> List.concat_map ~f:add_tuple_idxs
+  |> List.map ~f:Ast.untyped_lvalue_of_typed_lvalue
+
+let variables_accessed_in lv =
+  (* We only care about values being read inside the lvalue here,
+     which means only the expressions inside of LIndexed *)
+  let rec extract_indices lv =
+    match lv.lval with
+    | LVariable _ -> []
+    | LTupleProjection (lv, _) -> extract_indices lv
+    | LIndexed (lv, es) -> extract_indices lv @ es in
+  let rec extract_indices_pack lv =
+    match lv with
+    | LTuplePack (lvs, _) -> List.concat_map ~f:extract_indices_pack lvs
+    | LValue lv -> extract_indices lv in
+  let exprs_in_index = function
+    | All -> []
+    | Single e -> [e]
+    | Upfrom e -> [e]
+    | Downfrom e -> [e]
+    | Between (e1, e2) -> [e1; e2] in
+  let all_variables =
+    lv |> extract_indices_pack
+    |> List.concat_map ~f:exprs_in_index
+    |> List.concat_map ~f:extract_ids
+    |> List.dedup_and_sort ~compare:Ast.compare_identifier in
+  all_variables
+
+(** When an lvalue is assigning to multiple places at once (e.g., a tuple
+    is being unpacked), we want to ensure that the same memory is not being
+    written to multiple times. This lets us preserve the illusion of
+    simultaneous assignment and generally avoid confusion.
+    For the same reasons, we also want to avoid reading the value of
+    a variable which is being updated in this same lvalue. *)
+let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
+  let loc =
+    match lv with LValue {lmeta= {loc; _}; _} | LTuplePack (_, loc) -> loc in
+  let all_lvals = lvalues_written_to lv in
+  let () =
+    (* check that things being assigned to are all unique *)
+    match overlapping_lvalues all_lvals with
+    | [] -> ()
+    | dupes ->
+        Semantic_error.cannot_assign_duplicate_unpacking loc dupes |> error
+  in
+  (* check that things being assigned to are not also being read
+     Note: this is much less refined than the above and forbids some
+     cases that would be harmless, but this is also in general a very
+     weird thing to try to do, so I think that is acceptable
+  *)
+  let rec extract_id lv =
+    match lv.lval with
+    | LVariable id -> id
+    | LTupleProjection (lv, _) -> extract_id lv
+    | LIndexed (lv, _) -> extract_id lv in
+  let all_variables =
+    List.map ~f:extract_id all_lvals
+    |> List.dedup_and_sort ~compare:Ast.compare_identifier in
+  let accessed_lvals = variables_accessed_in lv in
+  match
+    List.find_all_dups ~compare:Ast.compare_identifier
+      (all_variables @ accessed_lvals)
+  with
   | [] -> ()
-  | dupes ->
-      let loc =
-        match lv with LValue {lmeta= {loc; _}; _} | LTuplePack (_, loc) -> loc
-      in
-      Semantic_error.cannot_assign_duplicate_unpacking loc dupes |> error
+  | dupes -> Semantic_error.cannot_access_assigning_var loc dupes |> error
 
 let verify_assignable_id loc cf tenv assign_id =
   let block, global, readonly =

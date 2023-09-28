@@ -60,6 +60,18 @@ Syntax error in 'array-multi-decl-bad2.stan', line 2, column 21 to column 22, pa
 
 Multiple declarations are not allowed when array dimensions are given in TYPE IDENTIFIER[DIMENSIONS] form.
 When all declarations share array dimensions, use 'array[DIMENSIONS] TYPE IDENTIFIER' form, otherwise use separate declarations.
+  $ ../../../../install/default/bin/stanc array-read-write-assign.stan
+Semantic error in 'array-read-write-assign.stan', line 3, column 0 to column 7:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:  array[2] int x = {1,2};
+     3:  x[x[1]] = 2;
+         ^
+     4:  }
+   -------------------------------------------------
+
+The same variable cannot be both assigned to and read from on the left hand side of an assignment:
+  x
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
 Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 38:
    -------------------------------------------------

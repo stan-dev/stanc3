@@ -134,6 +134,8 @@ type untyped_lval_pack = untyped_lval lvalue_pack [@@deriving sexp, compare]
 type typed_lval = (typed_expression, typed_expr_meta) lval_with
 [@@deriving sexp, hash, compare, map, fold]
 
+type typed_lval_pack = typed_lval lvalue_pack [@@deriving sexp, compare]
+
 type 'e variable = {identifier: identifier; initial_value: 'e option}
 [@@deriving sexp, hash, compare, map, fold]
 
@@ -344,6 +346,16 @@ let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
       |> Option.all
       |> Option.map ~f:(fun lv -> LTuplePack (lv, emeta.loc))
   | _ -> base_lvalue {expr; emeta} |> Option.map ~f:(fun l -> LValue l)
+
+let rec extract_lvalue_ids lv =
+  let rec extract_id lv =
+    match lv.lval with
+    | LVariable id -> id
+    | LTupleProjection (lv, _) -> extract_id lv
+    | LIndexed (lv, _) -> extract_id lv in
+  match lv with
+  | LValue lv -> [extract_id lv]
+  | LTuplePack (lvs, _) -> List.concat_map ~f:extract_lvalue_ids lvs
 
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list

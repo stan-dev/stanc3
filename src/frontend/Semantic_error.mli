@@ -113,6 +113,7 @@ val cannot_assign_to_multiindex : Location_span.t -> t
 val cannot_assign_duplicate_unpacking :
   Location_span.t -> Ast.untyped_lval list -> t
 
+val cannot_access_assigning_var : Location_span.t -> Ast.identifier list -> t
 val invalid_sampling_pdf_or_pmf : Location_span.t -> t
 val invalid_sampling_cdf_or_ccdf : Location_span.t -> string -> t
 val invalid_sampling_no_such_dist : Location_span.t -> string -> bool -> t

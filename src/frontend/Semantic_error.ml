@@ -366,6 +366,7 @@ module StatementError = struct
     | CannotAssignFunction of UnsizedType.t
     | LValueMultiIndexing
     | LValueTupleUnpackDuplicates of Ast.untyped_lval list
+    | LValueTupleReadAndWrite of Ast.identifier list
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
     | InvalidSamplingNoSuchDistribution of string * bool
@@ -418,6 +419,13 @@ module StatementError = struct
            assignment:@ @[%a@]@]"
           Fmt.(list ~sep:comma pp_lvalue)
           lvs
+    | LValueTupleReadAndWrite ids ->
+        let pp_id ppf Ast.{name; _} = Fmt.string ppf name in
+        Fmt.pf ppf
+          "@[<v2>The same variable cannot be both assigned to and read from on \
+           the left hand side of an assignment:@ @[%a@]@]"
+          Fmt.(list ~sep:comma pp_id)
+          ids
     | TargetPlusEqualsOutsideModelOrLogProb ->
         Fmt.pf ppf
           "Target can only be accessed in the model block or in definitions of \
@@ -695,6 +703,9 @@ let cannot_assign_to_multiindex loc =
 
 let cannot_assign_duplicate_unpacking loc names =
   StatementError (loc, StatementError.LValueTupleUnpackDuplicates names)
+
+let cannot_access_assigning_var loc names =
+  StatementError (loc, StatementError.LValueTupleReadAndWrite names)
 
 let invalid_sampling_pdf_or_pmf loc =
   StatementError (loc, StatementError.InvalidSamplingPDForPMF)
