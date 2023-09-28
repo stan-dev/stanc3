@@ -95,12 +95,12 @@ and the right hand side has type
 Available signatures for given lhs:
 No matching signatures
   $ ../../../../../install/default/bin/stanc bad_unpack1.stan
-Semantic error in 'bad_unpack1.stan', line 4, column 3 to column 4:
+Semantic error in 'bad_unpack1.stan', line 4, column 6 to column 7:
    -------------------------------------------------
-     2:    int x = 3;
-     3:    real y = 4.0;
+     2:    real x = 3.0;
+     3:    int y = 4;
      4:    (x, y) = (y, x);
-            ^
+               ^
      5:  }
    -------------------------------------------------
 

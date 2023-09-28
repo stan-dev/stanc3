@@ -1016,8 +1016,8 @@ let check_assignment_operator loc assop lhs rhs =
       match lhs with
       | LValue ({lmeta= {loc; _}; _} : typed_lval) | LTuplePack (_, loc) -> loc
     in
-    Semantic_error.illtyped_assignment loc op (type_of_lvalue lhs) rhs
-    |> error in
+    Semantic_error.illtyped_assignment loc op (type_of_lvalue lhs) rhs |> error
+  in
   match assop with
   | Assign | ArrowAssign ->
       warn_self_assignment loc lhs rhs ;
