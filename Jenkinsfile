@@ -96,7 +96,7 @@ pipeline {
         stage('Verify changes') {
             agent {
                 docker {
-                    image 'stanorg/stanc3:debianfi'
+                    image 'stanorg/stanc3:debian-js4.1.0'
                     args "--entrypoint=\'\'"
                     label 'linux'
                 }
@@ -148,7 +148,7 @@ pipeline {
             }
             agent {
                 docker {
-                    image 'stanorg/stanc3:debianfi'
+                    image 'stanorg/stanc3:debian-js4.1.0'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"
                     label 'linux'
@@ -176,7 +176,7 @@ pipeline {
             }
             agent {
                 docker {
-                    image 'stanorg/stanc3:debianfi'
+                    image 'stanorg/stanc3:debian-js4.1.0'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"
                 }
@@ -209,7 +209,7 @@ pipeline {
                 stage("Dune tests") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debianfi'
+                            image 'stanorg/stanc3:debian-js4.1.0'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                         }
@@ -243,7 +243,7 @@ pipeline {
                 stage("stancjs tests") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debianfi'
+                            image 'stanorg/stanc3:debian-js4.1.0'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                         }
@@ -623,7 +623,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debianfi'
+                            image 'stanorg/stanc3:debian-js4.1.0'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                             label 'linux'

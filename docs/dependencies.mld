@@ -20,7 +20,7 @@ These are automatically installed through the [scripts/install_ocaml.sh] and
 
 For the JavaScript interface to stanc3 we also use the following, installed
 via [scripts/install_js_deps.sh]
-- js_of_ocaml-ppx 3.11.0
+- js_of_ocaml 4.1.0
 - yojson 1.7.0
 
 The [stancjs] executable can be built with

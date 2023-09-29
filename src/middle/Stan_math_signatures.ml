@@ -513,10 +513,6 @@ let add_qualified (name, rt, argts, supports_soa) =
 let add_nullary name =
   add_unqualified (name, UnsizedType.ReturnType UReal, [], AoS)
 
-let add_binary name supports_soa =
-  add_unqualified
-    (name, ReturnType UReal, [UnsizedType.UReal; UReal], supports_soa)
-
 let add_binary_vec_general ~return_fn ~vectors ~scalars name supports_soa =
   List.iter
     ~f:(fun i ->
@@ -860,7 +856,7 @@ let () =
   add_unqualified ("asinh", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("atan", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("atanh", ReturnType UComplex, [UComplex], AoS) ;
-  add_binary "atan2" AoS ;
+  add_binary_vec "atan2" AoS ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal

@@ -7,7 +7,7 @@
   analysis_and_optimization
   stan_math_backend)
  (preprocess
-  (pps js_of_ocaml-ppx ppx_jane))
+  (pps ppx_jane))
  (modes js))
 
 (alias
