@@ -347,16 +347,6 @@ let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
       |> Option.map ~f:(fun lv -> LTuplePack (lv, emeta.loc))
   | _ -> base_lvalue {expr; emeta} |> Option.map ~f:(fun l -> LValue l)
 
-let rec extract_lvalue_ids lv =
-  let rec extract_id lv =
-    match lv.lval with
-    | LVariable id -> id
-    | LTupleProjection (lv, _) -> extract_id lv
-    | LIndexed (lv, _) -> extract_id lv in
-  match lv with
-  | LValue lv -> [extract_id lv]
-  | LTuplePack (lvs, _) -> List.concat_map ~f:extract_lvalue_ids lvs
-
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list
     -> UnsizedType.argumentlist =

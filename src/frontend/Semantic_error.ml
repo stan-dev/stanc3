@@ -363,10 +363,10 @@ module StatementError = struct
   type t =
     | CannotAssignToReadOnly of string
     | CannotAssignToGlobal of string
-    | CannotAssignFunction of UnsizedType.t
+    | CannotAssignFunction of string * UnsizedType.t
     | LValueMultiIndexing
     | LValueTupleUnpackDuplicates of Ast.untyped_lval list
-    | LValueTupleReadAndWrite of Ast.identifier list
+    | LValueTupleReadAndWrite of string list
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
     | InvalidSamplingNoSuchDistribution of string * bool
@@ -401,9 +401,9 @@ module StatementError = struct
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
           name
-    | CannotAssignFunction ut ->
-        Fmt.pf ppf "Cannot assign a function type '%a' to variable."
-          UnsizedType.pp ut
+    | CannotAssignFunction (name, ut) ->
+        Fmt.pf ppf "Cannot assign a function type '%a' to variable '%s'."
+          UnsizedType.pp ut name
     | LValueMultiIndexing ->
         Fmt.pf ppf
           "Left hand side of an assignment cannot have nested multi-indexing."
@@ -420,11 +420,10 @@ module StatementError = struct
           Fmt.(list ~sep:comma pp_lvalue)
           lvs
     | LValueTupleReadAndWrite ids ->
-        let pp_id ppf Ast.{name; _} = Fmt.string ppf name in
         Fmt.pf ppf
           "@[<v2>The same variable cannot be both assigned to and read from on \
            the left hand side of an assignment:@ @[%a@]@]"
-          Fmt.(list ~sep:comma pp_id)
+          Fmt.(list ~sep:comma string)
           ids
     | TargetPlusEqualsOutsideModelOrLogProb ->
         Fmt.pf ppf
@@ -695,8 +694,8 @@ let cannot_assign_to_read_only loc name =
 let cannot_assign_to_global loc name =
   StatementError (loc, StatementError.CannotAssignToGlobal name)
 
-let cannot_assign_function loc ut =
-  StatementError (loc, StatementError.CannotAssignFunction ut)
+let cannot_assign_function loc name ut =
+  StatementError (loc, StatementError.CannotAssignFunction (name, ut))
 
 let cannot_assign_to_multiindex loc =
   StatementError (loc, StatementError.LValueMultiIndexing)

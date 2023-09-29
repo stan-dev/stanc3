@@ -86,6 +86,12 @@ let type_of_expr_typed ue = ue.emeta.type_
 let has_int_type ue = ue.emeta.type_ = UInt
 let has_int_array_type ue = ue.emeta.type_ = UArray UInt
 
+let rec name_of_lval lv =
+  match lv.lval with
+  | LVariable id -> id.name
+  | LTupleProjection (lv, _) -> name_of_lval lv
+  | LIndexed (lv, _) -> name_of_lval lv
+
 let has_int_or_real_type ue =
   match ue.emeta.type_ with UInt | UReal -> true | _ -> false
 
@@ -976,11 +982,11 @@ let verify_assignment_global loc cf block is_global id =
 (* Until function types are added to the user language, we
    disallow assignments to function values
 *)
-let rec verify_assignment_non_function loc ut =
+let rec verify_assignment_non_function loc id ut =
   match ut with
   | UnsizedType.UFun _ | UMathLibraryFunction ->
-      Semantic_error.cannot_assign_function loc ut |> error
-  | UTuple ts -> List.iter ~f:(verify_assignment_non_function loc) ts
+      Semantic_error.cannot_assign_function loc id ut |> error
+  | UTuple ts -> List.iter ~f:(verify_assignment_non_function loc id) ts
   | _ -> ()
 
 (** We issue a warning if the initial value for a declaration contains
@@ -1023,10 +1029,11 @@ let check_assignment_operator loc assop lhs rhs =
       warn_self_assignment loc lhs rhs ;
       let rec typechk lhs rhs =
         match (lhs, rhs) with
-        | LValue {lmeta= {type_; ad_level; _}; _}, rhs -> (
-          match SignatureMismatch.check_of_same_type_mod_conv type_ rhs with
-          | Ok p -> (p, ad_level)
-          | Error _ -> err lhs Equals rhs )
+        | LValue ({lmeta= {type_; ad_level; _}; _} as lval), rhs -> (
+            verify_assignment_non_function loc (name_of_lval lval) rhs ;
+            match SignatureMismatch.check_of_same_type_mod_conv type_ rhs with
+            | Ok p -> (p, ad_level)
+            | Error _ -> err lhs Equals rhs )
         | LTuplePack (lvs, _), UnsizedType.UTuple tps ->
             let proms, ad_levels =
               match List.map2 ~f:typechk lvs tps with
@@ -1052,7 +1059,7 @@ let check_assignment_operator loc assop lhs rhs =
 
 let overlapping_lvalues lvals =
   (* Prevent assigning to multiple indices in the same object at once.
-     In principal it is safe to assign to disjoint indices, but statically
+     In principle it is safe to assign to disjoint indices, but statically
      checking that is impossible. *)
   let rec compare_no_indexing lv1 lv2 =
     match (lv1.lval, lv2.lval) with
@@ -1088,29 +1095,30 @@ let lvalues_written_to lv =
   |> List.map ~f:Ast.untyped_lvalue_of_typed_lvalue
 
 let variables_accessed_in lv =
-  (* We only care about values being read inside the lvalue here,
-     which means only the expressions inside of LIndexed *)
-  let rec extract_indices lv =
-    match lv.lval with
-    | LVariable _ -> []
-    | LTupleProjection (lv, _) -> extract_indices lv
-    | LIndexed (lv, es) -> extract_indices lv @ es in
-  let rec extract_indices_pack lv =
-    match lv with
-    | LTuplePack (lvs, _) -> List.concat_map ~f:extract_indices_pack lvs
-    | LValue lv -> extract_indices lv in
   let exprs_in_index = function
     | All -> []
     | Single e -> [e]
     | Upfrom e -> [e]
     | Downfrom e -> [e]
     | Between (e1, e2) -> [e1; e2] in
-  let all_variables =
-    lv |> extract_indices_pack
-    |> List.concat_map ~f:exprs_in_index
-    |> List.concat_map ~f:extract_ids
-    |> List.dedup_and_sort ~compare:Ast.compare_identifier in
-  all_variables
+  (* We only care about values being read inside the lvalue here,
+     which means only the expressions inside of LIndexed *)
+  let rec extract_indices lv =
+    match lv.lval with
+    | LVariable _ -> String.Set.empty
+    | LTupleProjection (lv, _) -> extract_indices lv
+    | LIndexed (lv, es) ->
+        List.concat_map ~f:exprs_in_index es
+        |> List.concat_map ~f:extract_ids
+        |> List.map ~f:(fun {name; _} -> name)
+        |> String.Set.of_list
+        |> Set.union (extract_indices lv) in
+  let rec extract_indices_pack lv =
+    match lv with
+    | LTuplePack (lvs, _) ->
+        String.Set.union_list (List.map ~f:extract_indices_pack lvs)
+    | LValue lv -> extract_indices lv in
+  extract_indices_pack lv
 
 (** When an lvalue is assigning to multiple places at once (e.g., a tuple
     is being unpacked), we want to ensure that the same memory is not being
@@ -1134,19 +1142,9 @@ let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
      cases that would be harmless, but this is also in general a very
      weird thing to try to do, so I think that is acceptable
   *)
-  let rec extract_id lv =
-    match lv.lval with
-    | LVariable id -> id
-    | LTupleProjection (lv, _) -> extract_id lv
-    | LIndexed (lv, _) -> extract_id lv in
-  let all_variables =
-    List.map ~f:extract_id all_lvals
-    |> List.dedup_and_sort ~compare:Ast.compare_identifier in
+  let all_variables = List.map ~f:name_of_lval all_lvals |> String.Set.of_list in
   let accessed_lvals = variables_accessed_in lv in
-  match
-    List.find_all_dups ~compare:Ast.compare_identifier
-      (all_variables @ accessed_lvals)
-  with
+  match String.Set.inter accessed_lvals all_variables |> String.Set.to_list with
   | [] -> ()
   | dupes -> Semantic_error.cannot_access_assigning_var loc dupes |> error
 
@@ -1238,7 +1236,6 @@ let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   let lhs = check_lvalues cf tenv assign_lhs in
   verify_lvalue_unique lhs ;
   let rhs = check_expression cf tenv assign_rhs in
-  verify_assignment_non_function loc rhs.emeta.type_ ;
   let rhs' = check_assignment_operator loc assign_op lhs rhs in
   mk_typed_statement ~return_type:Incomplete ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
