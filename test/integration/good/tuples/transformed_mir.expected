@@ -9868,6 +9868,84 @@
      (NRFunApp (CompilerInternal FnPrint)
       (((pattern (Var x)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var y)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id sym1__)
+          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable sym1__) ()) (UTuple (UInt UInt))
+          ((pattern
+            (FunApp (CompilerInternal FnMakeTuple)
+             (((pattern (Var y)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Var x)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta
+            ((type_ (UTuple (UInt UInt))) (loc <opaque>)
+             (adlevel (TupleAD (DataOnly DataOnly))))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable x) ()) UInt
+          ((pattern
+            (TupleProjection
+             ((pattern (Var sym1__))
+              (meta
+               ((type_ (UTuple (UInt UInt))) (loc <opaque>)
+                (adlevel (TupleAD (DataOnly DataOnly))))))
+             1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable y) ()) UInt
+          ((pattern
+            (TupleProjection
+             ((pattern (Var sym1__))
+              (meta
+               ((type_ (UTuple (UInt UInt))) (loc <opaque>)
+                (adlevel (TupleAD (DataOnly DataOnly))))))
+             2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id sym1__)
+          (decl_type (Unsized (UTuple (UInt UInt)))) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable sym1__) ()) (UTuple (UInt UInt))
+          ((pattern
+            (FunApp (CompilerInternal FnMakeTuple)
+             (((pattern (Var y)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Var x)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta
+            ((type_ (UTuple (UInt UInt))) (loc <opaque>)
+             (adlevel (TupleAD (DataOnly DataOnly))))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable x) ()) UInt
+          ((pattern
+            (TupleProjection
+             ((pattern (Var sym1__))
+              (meta
+               ((type_ (UTuple (UInt UInt))) (loc <opaque>)
+                (adlevel (TupleAD (DataOnly DataOnly))))))
+             1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable y) ()) UInt
+          ((pattern
+            (TupleProjection
+             ((pattern (Var sym1__))
+              (meta
+               ((type_ (UTuple (UInt UInt))) (loc <opaque>)
+                (adlevel (TupleAD (DataOnly DataOnly))))))
+             2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>)))))
     (meta <opaque>))))
  (log_prob ()) (reverse_mode_log_prob ())
  (generate_quantities

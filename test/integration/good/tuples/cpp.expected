@@ -2934,7 +2934,7 @@ namespace basic_unpacking_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 10> locations_array__ =
+static constexpr std::array<const char*, 14> locations_array__ =
   {" (found before start of program)",
   " (in 'basic_unpacking.stan', line 2, column 2 to column 12)",
   " (in 'basic_unpacking.stan', line 3, column 2 to column 12)",
@@ -2944,7 +2944,11 @@ static constexpr std::array<const char*, 10> locations_array__ =
   " (in 'basic_unpacking.stan', line 6, column 2 to column 14)",
   " (in 'basic_unpacking.stan', line 7, column 11 to column 17)",
   " (in 'basic_unpacking.stan', line 7, column 2 to column 18)",
-  " (in 'basic_unpacking.stan', line 8, column 2 to column 14)"};
+  " (in 'basic_unpacking.stan', line 8, column 2 to column 14)",
+  " (in 'basic_unpacking.stan', line 9, column 78 to column 84)",
+  " (in 'basic_unpacking.stan', line 9, column 2 to column 85)",
+  " (in 'basic_unpacking.stan', line 15, column 6 to column 12)",
+  " (in 'basic_unpacking.stan', line 10, column 2 to line 15, column 13)"};
 class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model> {
  private:
   int x;
@@ -3015,6 +3019,26 @@ class basic_unpacking_model final : public model_base_crtp<basic_unpacking_model
         stan::math::stan_print(pstream__, x);
         stan::math::stan_print(pstream__, y);
         *(pstream__) << std::endl;
+      }
+      {
+        std::tuple<int, int> sym1__;
+        current_statement__ = 10;
+        stan::model::assign(sym1__, std::tuple<int, int>(y, x),
+          "assigning variable sym1__");
+        current_statement__ = 11;
+        x = std::get<0>(sym1__);
+        current_statement__ = 11;
+        y = std::get<1>(sym1__);
+      }
+      {
+        std::tuple<int, int> sym1__;
+        current_statement__ = 12;
+        stan::model::assign(sym1__, std::tuple<int, int>(y, x),
+          "assigning variable sym1__");
+        current_statement__ = 13;
+        x = std::get<0>(sym1__);
+        current_statement__ = 13;
+        y = std::get<1>(sym1__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

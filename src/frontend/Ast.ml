@@ -120,7 +120,8 @@ type ('l, 'e) lvalue =
 
 type 'l lvalue_pack =
   | LValue of 'l
-  | LTuplePack of 'l lvalue_pack list * Location_span.t
+  | LTuplePack of
+      'l lvalue_pack list * (Location_span.t[@sexp.opaque] [@compare.ignore])
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}

@@ -29,6 +29,16 @@ transformed data {
   print(x, y);
   (x, y) = (y, x);
   print(x, y);
+  (/* comment 1*/ x /*comment 2*/, /*comment 3*/ y /* comment 4 */) = (y, x);
+  
+  /* ^^^:comment 5*/
+  (//comment 1
+   x //comment 2
+   , //comment 3
+   y //comment 4
+   ) = (y, x);
+  
+  // ^^^: comment 5
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format infer_tuple_ad.stan
