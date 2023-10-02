@@ -53,11 +53,10 @@ let rec collect_removed_expr (acc : (Location_span.t * string) list)
       acc @ w @ List.concat_map l ~f:(fun e -> collect_removed_expr [] e)
   | _ -> fold_expression collect_removed_expr (fun l _ -> l) acc expr
 
-let collect_removed_lval acc (l : Ast.typed_lval) =
-  match l.lval with
-  | LIndexed (l, _) ->
+let collect_removed_lval acc : typed_lval -> _ = function
+  | {lval= LIndexed (l, _); _} ->
       let rec flatten = function
-        | {lval= LVariable _; _} | {lval= LTupleProjection _; _} -> []
+        | {lval= LVariable _ | LTupleProjection _; _} -> []
         | {lval= LIndexed (l, idxs); _} ->
             let flat = flatten l in
             flat @ idxs in
@@ -77,19 +76,28 @@ let collect_removed_lval acc (l : Ast.typed_lval) =
                indexing can be automatically fixed using the canonicalize flag \
                for stanc." ) ]
       else fold_lval_with collect_removed_expr (fun x _ -> x) acc l
-  | _ -> fold_lval_with collect_removed_expr (fun x _ -> x) acc l
+  | l -> fold_lval_with collect_removed_expr (fun x _ -> x) acc l
+
+let rec collect_removed_lval_pack acc = function
+  | LValue l -> collect_removed_lval acc l
+  | LTuplePack {lvals; _} ->
+      List.fold ~init:acc ~f:collect_removed_lval_pack lvals
 
 let rec collect_removed_stmt (acc : (Location_span.t * string) list)
     ({stmt; _} : Ast.typed_statement) : (Location_span.t * string) list =
   match stmt with
-  | Assignment {assign_lhs; assign_op= ArrowAssign; assign_rhs} ->
+  | Assignment
+      { assign_lhs= LValue {lmeta; _} as assign_lhs
+      ; assign_op= ArrowAssign
+      ; assign_rhs } ->
       let acc =
         acc
-        @ [ ( assign_lhs.lmeta.loc
+        @ [ ( lmeta.loc
             , "The arrow-style assignment operator '<-' was removed in Stan \
                2.33, use '=' instead. This can be done automatically with the \
                canonicalize flag for stanc" ) ] in
-      collect_removed_lval [] assign_lhs @ collect_removed_expr acc assign_rhs
+      collect_removed_lval_pack [] assign_lhs
+      @ collect_removed_expr acc assign_rhs
   | IncrementLogProb e ->
       let acc =
         acc

@@ -486,6 +486,21 @@ let unwrap_block_or_skip = function
       Common.FatalError.fatal_error_msg
         [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]
 
+let index_tuple (e : Ast.typed_expression) i =
+  let emeta =
+    match (e.emeta.type_, e.emeta.ad_level) with
+    | UnsizedType.UTuple ts, UnsizedType.TupleAD ads ->
+        Ast.
+          { type_= List.nth_exn ts i
+          ; ad_level= List.nth_exn ads i
+          ; loc= e.emeta.loc }
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message
+            "Attempted to index into a non-tuple during lowering"
+              (e : Ast.typed_expression)] in
+  Ast.{expr= TupleProjection (e, i + 1); emeta}
+
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt =
@@ -497,50 +512,10 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let swrap pattern = [Stmt.Fixed.{meta= smeta; pattern}] in
   let mloc = smeta in
   match stmt_typed with
-  | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
-      let rec group_lvalue carry_idcs lv =
-        (* Group up non-tuple indices
-           e.g. x[1][2].1[3] -> x[1,2].1[3]
-           Done by passing current stack of indices down until it hits a non-indexed
-        *)
-        match lv.Ast.lval with
-        | LVariable _ ->
-            if List.is_empty carry_idcs then lv
-            else {lv with lval= LIndexed (lv, carry_idcs)}
-        | LTupleProjection (lv', ix) ->
-            let lv'' =
-              {lv with lval= LTupleProjection (group_lvalue [] lv', ix)} in
-            if List.is_empty carry_idcs then lv''
-            else {lv with lval= LIndexed (lv'', carry_idcs)}
-        | LIndexed (lv', idcs) ->
-            (* When we group indices,
-               the metadata of group-indexed LHS equals the metadata of the outermost indexed LHS *)
-            {lv with Ast.lval= (group_lvalue (idcs @ carry_idcs) lv').lval}
-      in
-      let grouped_lhs = group_lvalue [] assign_lhs in
-      let rec trans_lvalue lv =
-        match lv.Ast.lval with
-        | LVariable v -> Stmt.Helpers.lvariable v.name
-        | LTupleProjection (lv, ix) ->
-            (Stmt.Fixed.Pattern.LTupleProjection (trans_lvalue lv, ix), [])
-        | LIndexed (lv, idcs) ->
-            let lbase, idxs = trans_lvalue lv in
-            (lbase, idxs @ List.map ~f:trans_idx idcs) in
-      let lhs = trans_lvalue grouped_lhs in
-      (* The type of the assignee if it weren't indexed
-         e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
-      *)
-      let unindexed_type =
-        match grouped_lhs.Ast.lval with
-        | LVariable _ | LTupleProjection _ -> grouped_lhs.Ast.lmeta.type_
-        | LIndexed (lv, _) -> lv.Ast.lmeta.type_ in
-      let rhs =
-        match assign_op with
-        | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
-        | Ast.OperatorAssign op ->
-            let assignee = Ast.expr_of_lvalue grouped_lhs in
-            op_to_funapp op [assignee; assign_rhs] assignee.emeta.type_ in
-      Assignment (lhs, unindexed_type, rhs) |> swrap
+  | Ast.Assignment {assign_lhs= LTuplePack {lvals; _}; assign_rhs; assign_op} ->
+      trans_packed_assign smeta trans_stmt lvals assign_rhs assign_op
+  | Ast.Assignment {assign_lhs= LValue lhs; assign_rhs; assign_op} ->
+      trans_single_assignment smeta lhs assign_rhs assign_op
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       NRFunApp (trans_fn_kind fn_kind name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
@@ -642,6 +617,83 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.Break -> Break |> swrap
   | Ast.Continue -> Continue |> swrap
   | Ast.Skip -> Skip |> swrap
+
+and trans_packed_assign loc trans_stmt lvals rhs assign_op =
+  (* TODO tuple-unpacking: could be more efficient in case where rhs is a tuple expr and
+     names don't overlap *)
+  let smeta = Ast.{loc; return_type= Incomplete} in
+  let sym, reset = Common.Gensym.enter () in
+  let rhs_type = rhs.emeta.type_ in
+  let temp =
+    { Stmt.Fixed.pattern=
+        Decl
+          { decl_adtype= rhs.emeta.ad_level
+          ; decl_id= sym
+          ; decl_type= Unsized rhs_type
+          ; initialize= false }
+    ; meta= rhs.emeta.loc } in
+  let assign =
+    { temp with
+      pattern= Assignment ((LVariable sym, []), rhs_type, trans_expr rhs) }
+  in
+  let temp_expr =
+    Ast.{rhs with expr= Variable {name= sym; id_loc= Location_span.empty}} in
+  let assigns =
+    List.mapi lvals ~f:(fun i lval ->
+        trans_stmt
+          Ast.
+            { stmt=
+                Assignment
+                  { assign_lhs= lval
+                  ; assign_op
+                  ; assign_rhs= index_tuple temp_expr i }
+            ; smeta } )
+    |> List.concat in
+  reset () ;
+  [Stmt.Fixed.{pattern= Block (temp :: assign :: assigns); meta= loc}]
+
+and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
+  let rec group_lvalue carry_idcs lv =
+    (* Group up non-tuple indices
+       e.g. x[1][2].1[3] -> x[1,2].1[3]
+       Done by passing current stack of indices down until it hits a non-indexed
+    *)
+    match lv.Ast.lval with
+    | LVariable _ ->
+        if List.is_empty carry_idcs then lv
+        else {lv with lval= LIndexed (lv, carry_idcs)}
+    | LTupleProjection (lv', ix) ->
+        let lv'' = {lv with lval= LTupleProjection (group_lvalue [] lv', ix)} in
+        if List.is_empty carry_idcs then lv''
+        else {lv with lval= LIndexed (lv'', carry_idcs)}
+    | LIndexed (lv', idcs) ->
+        (* When we group indices,
+           the metadata of group-indexed LHS equals the metadata of the outermost indexed LHS *)
+        {lv with Ast.lval= (group_lvalue (idcs @ carry_idcs) lv').lval} in
+  let grouped_lhs = group_lvalue [] assign_lhs in
+  let rec trans_lvalue lv =
+    match lv.Ast.lval with
+    | LVariable v -> Stmt.Helpers.lvariable v.name
+    | LTupleProjection (lv, ix) ->
+        (Stmt.Fixed.Pattern.LTupleProjection (trans_lvalue lv, ix), [])
+    | LIndexed (lv, idcs) ->
+        let lbase, idxs = trans_lvalue lv in
+        (lbase, idxs @ List.map ~f:trans_idx idcs) in
+  let lhs = trans_lvalue grouped_lhs in
+  (* The type of the assignee if it weren't indexed
+     e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
+  *)
+  let unindexed_type =
+    match grouped_lhs.Ast.lval with
+    | LVariable _ | LTupleProjection _ -> grouped_lhs.Ast.lmeta.type_
+    | LIndexed (lv, _) -> lv.Ast.lmeta.type_ in
+  let rhs =
+    match assign_op with
+    | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
+    | Ast.OperatorAssign op ->
+        let assignee = Ast.expr_of_lvalue grouped_lhs in
+        op_to_funapp op [assignee; assign_rhs] assignee.emeta.type_ in
+  [{pattern= Assignment (lhs, unindexed_type, rhs); meta= smeta}]
 
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with

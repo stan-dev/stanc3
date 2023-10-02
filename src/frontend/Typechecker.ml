@@ -6,7 +6,7 @@
   Other functions which begin with "infer"/"calculate" vary. Usually they return
     a value, but a few do have error conditions.
 
-  All Error.SemanticError excpetions are caught by check_program
+  All Error.SemanticError exceptions are caught by check_program
   which turns the ast or exception into a Result.t for external usage
 
   A type environment (Env.t) is used to hold variables and functions, including
@@ -85,6 +85,12 @@ let get_arg_types = List.map ~f:arg_type
 let type_of_expr_typed ue = ue.emeta.type_
 let has_int_type ue = ue.emeta.type_ = UInt
 let has_int_array_type ue = ue.emeta.type_ = UArray UInt
+
+let rec name_of_lval lv =
+  match lv.lval with
+  | LVariable id -> id.name
+  | LTupleProjection (lv, _) -> name_of_lval lv
+  | LIndexed (lv, _) -> name_of_lval lv
 
 let has_int_or_real_type ue =
   match ue.emeta.type_ with UInt | UReal -> true | _ -> false
@@ -976,10 +982,11 @@ let verify_assignment_global loc cf block is_global id =
 (* Until function types are added to the user language, we
    disallow assignments to function values
 *)
-let verify_assignment_non_function loc ut id =
+let rec verify_assignment_non_function loc id ut =
   match ut with
   | UnsizedType.UFun _ | UMathLibraryFunction ->
-      Semantic_error.cannot_assign_function loc ut id.name |> error
+      Semantic_error.cannot_assign_function loc id ut |> error
+  | UTuple ts -> List.iter ~f:(verify_assignment_non_function loc id) ts
   | _ -> ()
 
 (** We issue a warning if the initial value for a declaration contains
@@ -1001,40 +1008,166 @@ let warn_self_assignment loc lhs rhs =
     rhs |> Ast.untyped_expression_of_typed_expression |> strip_parens
     |> Ast.lvalue_of_expr_opt in
   Option.iter rhs_opt ~f:(fun rhs ->
-      let lhs = lhs |> Ast.untyped_lvalue_of_typed_lvalue in
-      if Ast.compare_untyped_lval lhs rhs = 0 then
+      let lhs = lhs |> Ast.untyped_lvalue_of_typed_lvalue_pack in
+      if Ast.compare_untyped_lval_pack lhs rhs = 0 then
         add_warning loc "Assignment of variable to itself." )
 
 let check_assignment_operator loc assop lhs rhs =
-  let err op =
-    Semantic_error.illtyped_assignment loc op lhs.lmeta.type_ rhs.emeta.type_
+  let rec type_of_lvalue = function
+    | LValue {lmeta; _} -> lmeta.type_
+    | LTuplePack {lvals; _} ->
+        UnsizedType.UTuple (List.map ~f:type_of_lvalue lvals) in
+  let err lhs op rhs =
+    let loc = Ast.get_loc_lvalue_pack lhs in
+    Semantic_error.illtyped_assignment loc op (type_of_lvalue lhs) rhs |> error
   in
   match assop with
-  | Assign | ArrowAssign -> (
+  | Assign | ArrowAssign ->
       warn_self_assignment loc lhs rhs ;
-      match
-        SignatureMismatch.check_of_same_type_mod_conv lhs.lmeta.type_
-          rhs.emeta.type_
-      with
-      | Ok p ->
-          let rhs =
-            (* Hack: need RHS to properly get promoted to var if needed *)
-            {rhs with emeta= {rhs.emeta with ad_level= lhs.lmeta.ad_level}}
-          in
-          Promotion.promote rhs p
-      | Error _ -> err Operator.Equals |> error )
+      let rec typechk lhs rhs =
+        match (lhs, rhs) with
+        | LValue ({lmeta= {type_; ad_level; _}; _} as lval), rhs -> (
+            verify_assignment_non_function loc (name_of_lval lval) rhs ;
+            match SignatureMismatch.check_of_same_type_mod_conv type_ rhs with
+            | Ok p -> (p, ad_level)
+            | Error _ -> err lhs Equals rhs )
+        | LTuplePack {lvals; _}, UnsizedType.UTuple tps ->
+            let proms, ad_levels =
+              match List.map2 ~f:typechk lvals tps with
+              | Unequal_lengths -> err lhs Equals rhs
+              | Ok l -> List.unzip l in
+            if
+              List.exists ~f:(function NoPromotion -> false | _ -> true) proms
+            then (TuplePromotion proms, TupleAD ad_levels)
+            else (NoPromotion, TupleAD ad_levels)
+        | LTuplePack _, rhs -> err lhs Equals rhs in
+      let prom, ad_level = typechk lhs rhs.emeta.type_ in
+      let rhs =
+        (* Hack: need RHS to properly get promoted to var if needed *)
+        {rhs with emeta= {rhs.emeta with ad_level}} in
+      Promotion.promote rhs prom
   | OperatorAssign op -> (
-      let args = List.map ~f:arg_type [Ast.expr_of_lvalue lhs; rhs] in
+      let args =
+        [(UnsizedType.AutoDiffable, type_of_lvalue lhs); arg_type rhs] in
       let return_type = assignmentoperator_stan_math_return_type op args in
-      match return_type with Some Void -> rhs | _ -> err op |> error )
+      match return_type with
+      | Some Void -> rhs
+      | _ -> err lhs op rhs.emeta.type_ )
 
-let rec check_lvalue cf tenv = function
-  | {lval= LVariable id; lmeta= ({loc} : located_meta)} ->
+let overlapping_lvalues lvals =
+  (* Prevent assigning to multiple indices in the same object at once.
+     In principle it is safe to assign to disjoint indices, but statically
+     checking that is impossible. *)
+  let rec compare_no_indexing lv1 lv2 =
+    match (lv1.lval, lv2.lval) with
+    | LIndexed (l, _), _ -> compare_no_indexing l lv2
+    | _, LIndexed (l, _) -> compare_no_indexing lv1 l
+    | LVariable id1, LVariable id2 -> String.compare id1.name id2.name
+    | LTupleProjection (lv1, idx1), LTupleProjection (lv2, idx2)
+      when idx1 = idx2 ->
+        compare_no_indexing lv1 lv2
+    | _, _ ->
+        (* remaining cases are not equal, we don't care *)
+        Ast.compare_untyped_lval lv1 lv2 in
+  List.find_all_dups lvals ~compare:compare_no_indexing
+
+let lvalues_written_to lv =
+  let rec add_tuple_idxs lv : typed_lval list =
+    (* If we're assigning an entire tuple, we also need to prevent
+       assigning to any slot in this statement. *)
+    let type_, _ = UnsizedType.unwind_array_type lv.lmeta.type_ in
+    match (lv.lval, type_) with
+    | _, UTuple ts ->
+        List.concat_mapi ts ~f:(fun i ty ->
+            add_tuple_idxs
+              { lval= LTupleProjection (lv, i + 1)
+              ; lmeta= {lv.lmeta with type_= ty} } )
+    | _ -> [lv] in
+  let rec flatten_lvalue_pack lv =
+    match lv with
+    | LTuplePack {lvals; _} -> List.concat_map ~f:flatten_lvalue_pack lvals
+    | LValue lv -> [lv] in
+  flatten_lvalue_pack lv
+  |> List.concat_map ~f:add_tuple_idxs
+  |> List.map ~f:Ast.untyped_lvalue_of_typed_lvalue
+
+let variables_accessed_in lv =
+  let exprs_in_index = function
+    | All -> []
+    | Single e -> [e]
+    | Upfrom e -> [e]
+    | Downfrom e -> [e]
+    | Between (e1, e2) -> [e1; e2] in
+  (* We only care about values being read inside the lvalue here,
+     which means only the expressions inside of LIndexed *)
+  let rec extract_indices lv =
+    match lv.lval with
+    | LVariable _ -> String.Set.empty
+    | LTupleProjection (lv, _) -> extract_indices lv
+    | LIndexed (lv, es) ->
+        List.concat_map ~f:exprs_in_index es
+        |> List.concat_map ~f:extract_ids
+        |> List.map ~f:(fun {name; _} -> name)
+        |> String.Set.of_list
+        |> Set.union (extract_indices lv) in
+  let rec extract_indices_pack lv =
+    match lv with
+    | LTuplePack {lvals; _} ->
+        String.Set.union_list (List.map ~f:extract_indices_pack lvals)
+    | LValue lv -> extract_indices lv in
+  extract_indices_pack lv
+
+(** When an lvalue is assigning to multiple places at once (e.g., a tuple
+    is being unpacked), we want to ensure that the same memory is not being
+    written to multiple times. This lets us preserve the illusion of
+    simultaneous assignment and generally avoid confusion.
+    For the same reasons, we also want to avoid reading the value of
+    a variable which is being updated in this same lvalue. *)
+let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
+  let loc = Ast.get_loc_lvalue_pack lv in
+  let all_lvals = lvalues_written_to lv in
+  let () =
+    (* check that things being assigned to are all unique *)
+    match overlapping_lvalues all_lvals with
+    | [] -> ()
+    | dupes ->
+        Semantic_error.cannot_assign_duplicate_unpacking loc dupes |> error
+  in
+  (* check that things being assigned to are not also being read
+     Note: this is much less refined than the above and forbids some
+     cases that would be harmless, but this is also in general a very
+     weird thing to try to do, so I think that is acceptable
+  *)
+  let all_variables = List.map ~f:name_of_lval all_lvals |> String.Set.of_list in
+  let accessed_lvals = variables_accessed_in lv in
+  match String.Set.inter accessed_lvals all_variables |> String.Set.to_list with
+  | [] -> ()
+  | dupes -> Semantic_error.cannot_access_assigning_var loc dupes |> error
+
+let verify_assignable_id loc cf tenv assign_id =
+  let block, global, readonly =
+    let var = Env.find tenv assign_id.name in
+    match var with
+    | {kind= `Variable {origin; global; readonly}; _} :: _ ->
+        (origin, global, readonly)
+    | {kind= `StanMath; _} :: _ -> (MathLibrary, true, false)
+    | {kind= `UserDefined | `UserDeclared _; _} :: _ -> (Functions, true, false)
+    | _ ->
+        Semantic_error.ident_not_in_scope loc assign_id.name
+          (Env.nearest_ident tenv assign_id.name)
+        |> error in
+  verify_assignment_global loc cf block global assign_id ;
+  verify_assignment_read_only loc readonly assign_id
+
+let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
+  match lval with
+  | LVariable id ->
       verify_identifier id ;
+      verify_assignable_id id.id_loc cf tenv id ;
       let ad_level, type_ = check_id cf loc tenv id in
       {lval= LVariable id; lmeta= {ad_level; type_; loc}}
-  | {lval= LTupleProjection (lval, idx); lmeta= ({loc} : located_meta)} -> (
-      let tlval = check_lvalue cf tenv lval in
+  | LTupleProjection (lval, idx) -> (
+      let tlval = (check_lvalue cf tenv) lval in
       match (tlval.lmeta.type_, tlval.lmeta.ad_level) with
       | UTuple types_, TupleAD ads -> (
         match (List.nth types_ (idx - 1), List.nth ads (idx - 1)) with
@@ -1051,7 +1184,7 @@ let rec check_lvalue cf tenv = function
         )
       | _, _ ->
           Semantic_error.tuple_index_not_tuple loc tlval.lmeta.type_ |> error )
-  | {lval= LIndexed (lval, idcs); lmeta= {loc}} ->
+  | LIndexed (lval, idcs) ->
       let rec check_inner = function
         | {lval= LIndexed (lval, idcs); lmeta= ({loc} : located_meta)} ->
             let lval, var, flat = check_inner lval in
@@ -1089,24 +1222,16 @@ let rec check_lvalue cf tenv = function
           Semantic_error.cannot_assign_to_multiindex loc |> error ) ;
       {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
 
+let rec check_lvalues cf tenv = function
+  | LValue l -> LValue (check_lvalue cf tenv l)
+  | LTuplePack {lvals; loc} ->
+      let lvals = List.map lvals ~f:(check_lvalues cf tenv) in
+      LTuplePack {lvals; loc}
+
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
-  let assign_id = Ast.id_of_lvalue assign_lhs in
-  let lhs = check_lvalue cf tenv assign_lhs in
+  let lhs = check_lvalues cf tenv assign_lhs in
+  verify_lvalue_unique lhs ;
   let rhs = check_expression cf tenv assign_rhs in
-  let block, global, readonly =
-    let var = Env.find tenv assign_id.name in
-    match var with
-    | {kind= `Variable {origin; global; readonly}; _} :: _ ->
-        (origin, global, readonly)
-    | {kind= `StanMath; _} :: _ -> (MathLibrary, true, false)
-    | {kind= `UserDefined | `UserDeclared _; _} :: _ -> (Functions, true, false)
-    | _ ->
-        Semantic_error.ident_not_in_scope loc assign_id.name
-          (Env.nearest_ident tenv assign_id.name)
-        |> error in
-  verify_assignment_global loc cf block global assign_id ;
-  verify_assignment_read_only loc readonly assign_id ;
-  verify_assignment_non_function loc rhs.emeta.type_ assign_id ;
   let rhs' = check_assignment_operator loc assign_op lhs rhs in
   mk_typed_statement ~return_type:Incomplete ~loc
     ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})

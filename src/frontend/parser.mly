@@ -39,6 +39,29 @@ let reserved_decl (name, loc, is_type) =
 let build_expr expr loc = {expr; emeta= {loc= location_span_of_positions loc}}
 let rec iterate_n f x = function 0 -> x | n -> iterate_n f (f x) (n - 1)
 
+let parse_tuple_slot ix_str loc =
+  match int_of_string_opt (String.drop_prefix ix_str 1) with
+  | None ->
+      raise
+        (Errors.SyntaxError
+           (Errors.Parsing
+              ( "Failed to parse integer from string '" ^ ix_str
+                ^ "' in tuple index. \nThe index is likely too large.\n"
+              , location_span_of_positions loc ) ) )
+  | Some ix -> ix
+
+(** Given a parsed expression, try to convert it to
+    a valid assignable lvalue. Raises a syntax error on failure *)
+let try_convert_to_lvalue expr loc =
+  match Ast.lvalue_of_expr_opt expr with
+  | Some l -> l
+  | None ->
+    raise
+        (Errors.SyntaxError
+           (Errors.Parsing
+              ( "Expected an assignable value but found a general expression.\n"
+              , location_span_of_positions loc ) ) )
+
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 
@@ -103,7 +126,6 @@ let note_deprecated_array ?(unsized = false) (pos1, pos2) =
 %nonassoc unary_over_binary
 %right HAT ELTPOW
 %left TRANSPOSE
-%left LBRACK
 %nonassoc below_ELSE
 %nonassoc ELSE
 
@@ -557,48 +579,8 @@ dims:
   | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
     { grammar_logger "dims" ; l  }
 
-(* General expressions (that can't be used in constraints declarations) *)
-%inline expression:
-  | l=lhs
-    { grammar_logger "lhs_expression" ;
-      l
-    }
-  | e=non_lhs
-    { grammar_logger "non_lhs_expression" ;
-      e
-    }
-
-(* L-values *)
-lhs:
-  | id=identifier
-    {  grammar_logger "lhs_identifier" ;
-       {expr=Variable id
-       ;emeta = {loc=id.id_loc}}
-    }
-  | v=indexed(lhs) { v }
-  | l=lhs ix_str=DOTNUMERAL
-    { grammar_logger "lhs_tuple_index" ;
-      match int_of_string_opt (String.drop_prefix ix_str 1) with
-      | None ->
-         raise (Errors.SyntaxError (Errors.Parsing
-            ("Failed to parse integer from string '" ^ ix_str
-              ^ "' in tuple index. \nThe index is likely too large.\n",
-              location_span_of_positions $loc)))
-      | Some ix ->
-         build_expr (TupleProjection (l, ix)) $loc
-    }
-
-(* This is separated so that it can be reused, e.g. to match array[ixs] type syntax *)
-%inline indexed(expr_type):
-  | l=expr_type LBRACK indices=indexes RBRACK
-    {  grammar_logger "lhs_index" ;
-       build_expr (Indexed (l, indices)) $loc
-    }
-
-(* General expressions (that can't be used in constraints declarations)
-   that can't be assigned to
- *)
-non_lhs:
+(* Expressions that can be used everywhere except constraint expressions *)
+expression:
   | e1=expression  QMARK e2=expression COLON e3=expression
     { grammar_logger "ifthenelse_expr" ; build_expr (TernaryIf (e1, e2, e3)) $loc }
   | e1=expression op=infixOp e2=expression
@@ -607,11 +589,10 @@ non_lhs:
     { grammar_logger "prefix_expr" ; build_expr (PrefixOp (op, e)) $loc }
   | e=expression op=postfixOp
     { grammar_logger "postfix_expr" ; build_expr (PostfixOp (e, op)) $loc}
-  | e=indexed(non_lhs)
-    { e }
   | e=common_expression
-    { grammar_logger "common_expr" ; build_expr e $loc }
+    { grammar_logger "common_expr" ; e }
 
+(* Same as the above, but leave out logical binary operators *)
 (* TODO: why do we not simply disallow greater than in constraints? No need to disallow all logical operations, right? *)
 constr_expression:
   | e1=constr_expression op=arithmeticBinOp e2=constr_expression
@@ -629,73 +610,62 @@ constr_expression:
       grammar_logger "constr_expression_postfix" ;
       build_expr (PostfixOp (e, op)) $loc
     }
-  | e=indexed(constr_expression)
-    {
-      grammar_logger "constr_expression_indexed" ;
-      e
-    }
-  | e=identifier ix_str=DOTNUMERAL
-    {  grammar_logger "constr_id_tuple_index" ;
-       match int_of_string_opt (String.drop_prefix ix_str 1) with
-       | None ->
-         raise (Errors.SyntaxError (Errors.Parsing
-                  ("Failed to parse integer from string '" ^ ix_str
-                    ^ "' in tuple index. \nThe index is likely too large.\n",
-                    location_span_of_positions $loc)))
-       | Some ix ->
-        build_expr (TupleProjection (build_expr (Variable e) $loc, ix)) $loc
-    }
   | e=common_expression
-    {
-      grammar_logger "constr_expression_common_expr" ;
-      build_expr e $loc
-    }
-  | id=identifier
-    {
-      grammar_logger "constr_expression_identifier" ;
-      build_expr (Variable id) $loc
-    }
+    { grammar_logger "constr_expression_common_expr" ; e }
+
 
 common_expression:
+  | id=identifier
+    { grammar_logger "identifier_expr" ;
+      build_expr (Variable id) $loc }
   | i=INTNUMERAL
-    {  grammar_logger ("intnumeral " ^ i) ; IntNumeral i }
+    { grammar_logger ("intnumeral " ^ i) ;
+      build_expr (IntNumeral i) $loc }
   | r=REALNUMERAL
   | r=DOTNUMERAL
-    {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
+    { grammar_logger ("realnumeral " ^ r) ;
+      build_expr (RealNumeral r) $loc }
   | z=IMAGNUMERAL
-    {  grammar_logger ("imagnumeral " ^ z) ; ImagNumeral (String.drop_suffix z 1) }
+    { grammar_logger ("imagnumeral " ^ z) ;
+      build_expr (ImagNumeral (String.drop_suffix z 1)) $loc }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
-    {  grammar_logger "array_expression" ; ArrayExpr xs  }
-   | LPAREN x_head=expression COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
-    {  grammar_logger "tuple_expression" ; TupleExpr (x_head::xs)  }
+    { grammar_logger "array_expression" ;
+      build_expr (ArrayExpr xs) $loc }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
-    {  grammar_logger "row_vector_expression" ; RowVectorExpr xs }
+    { grammar_logger "row_vector_expression" ;
+      build_expr (RowVectorExpr xs) $loc }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN
-    {  grammar_logger "fun_app" ;
+    { grammar_logger "fun_app" ;
+      let app =
        if
          List.length args = 1
          && List.exists ~f:(fun x -> String.is_suffix ~suffix:x id.name) Utils.conditioning_suffices
        then CondDistApp ((), id, args)
-       else FunApp ((), id, args) }
+       else FunApp ((), id, args)
+       in build_expr app $loc }
   | TARGET LPAREN RPAREN
-    { grammar_logger "target_read" ; GetTarget }
+    { grammar_logger "target_read" ;
+      build_expr GetTarget $loc }
   | GETLP LPAREN RPAREN
-    { grammar_logger "get_lp" ; GetLP } (* deprecated *)
+    { grammar_logger "get_lp" ;
+      build_expr GetLP $loc } (* deprecated *)
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN
-    {  grammar_logger "conditional_dist_app" ; CondDistApp ((), id, e :: args) }
+    { grammar_logger "conditional_dist_app" ;
+      build_expr (CondDistApp ((), id, e :: args)) $loc }
+  | LPAREN x_head=expression COMMA xs=separated_nonempty_list(COMMA, expression) RPAREN
+    { grammar_logger "tuple_expression" ;
+      build_expr (TupleExpr (x_head::xs)) $loc  }
   | e=common_expression ix_str=DOTNUMERAL
-    {  grammar_logger "common_expression_tuple_index" ;
-       match int_of_string_opt (String.drop_prefix ix_str 1) with
-       | None -> raise (Errors.SyntaxError (Errors.Parsing
-            ("Failed to parse integer from string '" ^ ix_str
-              ^ "' in tuple index.\nThe index is likely too large.\n",
-              location_span_of_positions $loc)))
-       | Some ix ->
-          TupleProjection (build_expr e $loc, ix)
+    { grammar_logger "common_expression_tuple_index" ;
+      build_expr (TupleProjection (e, parse_tuple_slot ix_str $loc)) $loc
     }
+  | e=common_expression LBRACK indices=indexes RBRACK
+    { grammar_logger "common_expression_indexed";
+      build_expr (Indexed (e, indices)) $loc }
   | LPAREN e=expression RPAREN
-    { grammar_logger "extra_paren" ; Paren e }
+    { grammar_logger "extra_paren" ;
+      build_expr (Paren e) $loc }
 
 %inline prefixOp:
   | BANG
@@ -795,9 +765,9 @@ statement:
     }
 
 atomic_statement:
-  | l=lhs op=assignment_op e=expression SEMICOLON
+  | l=common_expression op=assignment_op e=expression SEMICOLON
     {  grammar_logger "assignment_statement" ;
-       Assignment {assign_lhs=lvalue_of_expr l;
+       Assignment {assign_lhs=try_convert_to_lvalue l $sloc;
                    assign_op=op;
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON

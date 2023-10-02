@@ -288,7 +288,13 @@ and pp_list_of_expression ppf es =
   let loc_of (x : untyped_expression) = x.emeta.loc in
   pp_list_of pp_expression loc_of ppf es
 
-let pp_lvalue ppf lhs = pp_expression ppf (expr_of_lvalue lhs)
+let rec pp_lvalue ppf = function
+  | LValue lhs -> pp_expression ppf (expr_of_lvalue lhs)
+  | LTuplePack {lvals; loc} ->
+      let loc_of = function
+        | LValue ({lmeta= {loc; _}; _} : untyped_lval) | LTuplePack {loc; _} ->
+            loc in
+      pf ppf "(@[%a@])" (pp_list_of pp_lvalue loc_of) (lvals, loc)
 
 let pp_assignmentoperator ppf = function
   | Assign -> pf ppf "="

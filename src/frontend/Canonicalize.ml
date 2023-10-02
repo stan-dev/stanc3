@@ -144,6 +144,16 @@ let rec replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
     | lval, Some (idcs, lmeta) -> LIndexed ({lval; lmeta}, idcs) in
   {lval; lmeta}
 
+let rec replace_deprecated_lval_pack deprecated_userdefined = function
+  | LValue lv -> LValue (replace_deprecated_lval deprecated_userdefined lv)
+  | LTuplePack {lvals; loc} ->
+      LTuplePack
+        { lvals=
+            List.map
+              ~f:(replace_deprecated_lval_pack deprecated_userdefined)
+              lvals
+        ; loc }
+
 let rec replace_deprecated_stmt
     (deprecated_userdefined : Middle.UnsizedType.t Core_kernel.String.Map.t)
     ({stmt; smeta} : typed_statement) =
@@ -153,7 +163,7 @@ let rec replace_deprecated_stmt
         TargetPE (replace_deprecated_expr deprecated_userdefined e)
     | Assignment {assign_lhs= l; assign_op= ArrowAssign; assign_rhs= e} ->
         Assignment
-          { assign_lhs= replace_deprecated_lval deprecated_userdefined l
+          { assign_lhs= replace_deprecated_lval_pack deprecated_userdefined l
           ; assign_op= Assign
           ; assign_rhs= (replace_deprecated_expr deprecated_userdefined) e }
     | FunDef {returntype; funname= {name; id_loc}; arguments; body} ->
