@@ -121,7 +121,8 @@ type ('l, 'e) lvalue =
 type 'l lvalue_pack =
   | LValue of 'l
   | LTuplePack of
-      'l lvalue_pack list * (Location_span.t[@sexp.opaque] [@compare.ignore])
+      { lvals: 'l lvalue_pack list
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore] }
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
@@ -285,8 +286,9 @@ let rec untyped_lvalue_of_typed_lvalue ({lval; lmeta} : typed_lval) :
 let rec untyped_lvalue_of_typed_lvalue_pack :
     typed_lval lvalue_pack -> untyped_lval lvalue_pack = function
   | LValue lv -> LValue (untyped_lvalue_of_typed_lvalue lv)
-  | LTuplePack (lvs, loc) ->
-      LTuplePack (List.map ~f:untyped_lvalue_of_typed_lvalue_pack lvs, loc)
+  | LTuplePack {lvals; loc} ->
+      LTuplePack
+        {lvals= List.map ~f:untyped_lvalue_of_typed_lvalue_pack lvals; loc}
 
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement {stmt; smeta} =
@@ -345,13 +347,17 @@ let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
   | TupleExpr l ->
       List.map ~f:lvalue_of_expr_opt l
       |> Option.all
-      |> Option.map ~f:(fun lv -> LTuplePack (lv, emeta.loc))
+      |> Option.map ~f:(fun lvals -> LTuplePack {lvals; loc= emeta.loc})
   | _ -> base_lvalue {expr; emeta} |> Option.map ~f:(fun l -> LValue l)
 
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list
     -> UnsizedType.argumentlist =
   List.map ~f:(fun (a, t, _) -> (a, t))
+
+let get_loc_lvalue_pack lhs =
+  match lhs with
+  | LValue ({lmeta= {loc; _}; _} : typed_lval) | LTuplePack {loc; _} -> loc
 
 (* XXX: the parser produces inaccurate locations: smeta.loc.begin_loc is the last
         token before the current statement and all the whitespace between two statements

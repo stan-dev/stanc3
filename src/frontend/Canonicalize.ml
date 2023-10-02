@@ -146,10 +146,13 @@ let rec replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
 
 let rec replace_deprecated_lval_pack deprecated_userdefined = function
   | LValue lv -> LValue (replace_deprecated_lval deprecated_userdefined lv)
-  | LTuplePack (lvs, loc) ->
+  | LTuplePack {lvals; loc} ->
       LTuplePack
-        ( List.map ~f:(replace_deprecated_lval_pack deprecated_userdefined) lvs
-        , loc )
+        { lvals=
+            List.map
+              ~f:(replace_deprecated_lval_pack deprecated_userdefined)
+              lvals
+        ; loc }
 
 let rec replace_deprecated_stmt
     (deprecated_userdefined : Middle.UnsizedType.t Core_kernel.String.Map.t)

@@ -512,7 +512,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let swrap pattern = [Stmt.Fixed.{meta= smeta; pattern}] in
   let mloc = smeta in
   match stmt_typed with
-  | Ast.Assignment {assign_lhs= LTuplePack (lvals, _); assign_rhs; assign_op} ->
+  | Ast.Assignment {assign_lhs= LTuplePack {lvals; _}; assign_rhs; assign_op} ->
       trans_packed_assign smeta trans_stmt lvals assign_rhs assign_op
   | Ast.Assignment {assign_lhs= LValue lhs; assign_rhs; assign_op} ->
       trans_single_assignment smeta lhs assign_rhs assign_op

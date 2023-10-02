@@ -1015,13 +1015,10 @@ let warn_self_assignment loc lhs rhs =
 let check_assignment_operator loc assop lhs rhs =
   let rec type_of_lvalue = function
     | LValue {lmeta; _} -> lmeta.type_
-    | LTuplePack (lvs, _) -> UnsizedType.UTuple (List.map ~f:type_of_lvalue lvs)
-  in
+    | LTuplePack {lvals; _} ->
+        UnsizedType.UTuple (List.map ~f:type_of_lvalue lvals) in
   let err lhs op rhs =
-    let loc =
-      match lhs with
-      | LValue ({lmeta= {loc; _}; _} : typed_lval) | LTuplePack (_, loc) -> loc
-    in
+    let loc = Ast.get_loc_lvalue_pack lhs in
     Semantic_error.illtyped_assignment loc op (type_of_lvalue lhs) rhs |> error
   in
   match assop with
@@ -1034,9 +1031,9 @@ let check_assignment_operator loc assop lhs rhs =
             match SignatureMismatch.check_of_same_type_mod_conv type_ rhs with
             | Ok p -> (p, ad_level)
             | Error _ -> err lhs Equals rhs )
-        | LTuplePack (lvs, _), UnsizedType.UTuple tps ->
+        | LTuplePack {lvals; _}, UnsizedType.UTuple tps ->
             let proms, ad_levels =
-              match List.map2 ~f:typechk lvs tps with
+              match List.map2 ~f:typechk lvals tps with
               | Unequal_lengths -> err lhs Equals rhs
               | Ok l -> List.unzip l in
             if
@@ -1088,7 +1085,7 @@ let lvalues_written_to lv =
     | _ -> [lv] in
   let rec flatten_lvalue_pack lv =
     match lv with
-    | LTuplePack (lvs, _) -> List.concat_map ~f:flatten_lvalue_pack lvs
+    | LTuplePack {lvals; _} -> List.concat_map ~f:flatten_lvalue_pack lvals
     | LValue lv -> [lv] in
   flatten_lvalue_pack lv
   |> List.concat_map ~f:add_tuple_idxs
@@ -1115,8 +1112,8 @@ let variables_accessed_in lv =
         |> Set.union (extract_indices lv) in
   let rec extract_indices_pack lv =
     match lv with
-    | LTuplePack (lvs, _) ->
-        String.Set.union_list (List.map ~f:extract_indices_pack lvs)
+    | LTuplePack {lvals; _} ->
+        String.Set.union_list (List.map ~f:extract_indices_pack lvals)
     | LValue lv -> extract_indices lv in
   extract_indices_pack lv
 
@@ -1127,8 +1124,7 @@ let variables_accessed_in lv =
     For the same reasons, we also want to avoid reading the value of
     a variable which is being updated in this same lvalue. *)
 let verify_lvalue_unique (lv : Ast.typed_lval_pack) =
-  let loc =
-    match lv with LValue {lmeta= {loc; _}; _} | LTuplePack (_, loc) -> loc in
+  let loc = Ast.get_loc_lvalue_pack lv in
   let all_lvals = lvalues_written_to lv in
   let () =
     (* check that things being assigned to are all unique *)
@@ -1228,9 +1224,9 @@ let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
 
 let rec check_lvalues cf tenv = function
   | LValue l -> LValue (check_lvalue cf tenv l)
-  | LTuplePack (lvs, loc) ->
-      let inner_lvals = List.map lvs ~f:(check_lvalues cf tenv) in
-      LTuplePack (inner_lvals, loc)
+  | LTuplePack {lvals; loc} ->
+      let lvals = List.map lvals ~f:(check_lvalues cf tenv) in
+      LTuplePack {lvals; loc}
 
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
   let lhs = check_lvalues cf tenv assign_lhs in

@@ -80,7 +80,8 @@ let collect_removed_lval acc : typed_lval -> _ = function
 
 let rec collect_removed_lval_pack acc = function
   | LValue l -> collect_removed_lval acc l
-  | LTuplePack (lvs, _) -> List.fold ~init:acc ~f:collect_removed_lval_pack lvs
+  | LTuplePack {lvals; _} ->
+      List.fold ~init:acc ~f:collect_removed_lval_pack lvals
 
 let rec collect_removed_stmt (acc : (Location_span.t * string) list)
     ({stmt; _} : Ast.typed_statement) : (Location_span.t * string) list =
