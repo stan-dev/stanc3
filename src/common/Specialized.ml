@@ -8,7 +8,7 @@ the analysis and optimization code, we work with map's and sets of our IR types
 a lot and this approach makes the types much nicer to work with.
 *)
 
-open Core_kernel
+open Core
 
 (** Signature of all meta data used to annotate IRs *)
 module type Meta = sig
@@ -69,7 +69,7 @@ end
 module Make2 (X : Unspecialized2) (First : S) (Meta : Meta) :
   S
     with type t =
-          ((First.Meta.t[@compare.ignore]), (Meta.t[@compare.ignore])) X.t
+      ((First.Meta.t[@compare.ignore]), (Meta.t[@compare.ignore])) X.t
      and module Meta := Meta = struct
   module Basic = struct
     type t = ((First.Meta.t[@compare.ignore]), (Meta.t[@compare.ignore])) X.t

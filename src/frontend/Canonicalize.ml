@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Ast
 open Deprecation_analysis
 
@@ -35,11 +35,11 @@ let rec repair_syntax_stmt user_dists {stmt; smeta} =
       ; smeta }
   | _ ->
       { stmt=
-          map_statement ident (repair_syntax_stmt user_dists) ident ident stmt
+          map_statement Fn.id (repair_syntax_stmt user_dists) Fn.id Fn.id stmt
       ; smeta }
 
 let rec replace_deprecated_expr
-    (deprecated_userdefined : Middle.UnsizedType.t Core_kernel.String.Map.t)
+    (deprecated_userdefined : Middle.UnsizedType.t Core.String.Map.t)
     {expr; emeta} =
   let expr =
     match expr with
@@ -47,7 +47,7 @@ let rec replace_deprecated_expr
     | FunApp (StanLib FnPlain, {name= "if_else"; _}, [c; t; e]) ->
         Paren
           (replace_deprecated_expr deprecated_userdefined
-             {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta} )
+             {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta})
     | FunApp (StanLib suffix, {name; id_loc}, e) ->
         if is_deprecated_distribution name then
           CondDistApp
@@ -65,25 +65,26 @@ let rec replace_deprecated_expr
             , {name= rename_deprecated deprecated_functions name; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
     | FunApp (UserDefined suffix, {name; id_loc}, e) -> (
-      match String.Map.find deprecated_userdefined name with
-      | Some type_ ->
-          CondDistApp
-            ( UserDefined suffix
-            , {name= update_suffix name type_; id_loc}
-            , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
-      | None ->
-          if String.is_suffix name ~suffix:"_cdf" then
+        match Map.find deprecated_userdefined name with
+        | Some type_ ->
             CondDistApp
               ( UserDefined suffix
-              , {name; id_loc}
+              , {name= update_suffix name type_; id_loc}
               , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e
               )
-          else
-            FunApp
-              ( UserDefined suffix
-              , {name; id_loc}
-              , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e
-              ) )
+        | None ->
+            if String.is_suffix name ~suffix:"_cdf" then
+              CondDistApp
+                ( UserDefined suffix
+                , {name; id_loc}
+                , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e
+                )
+            else
+              FunApp
+                ( UserDefined suffix
+                , {name; id_loc}
+                , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e
+                ))
     | PrefixOp (PNot, e) ->
         PrefixOp
           (PNot, replace_boolean_real ~parens:true deprecated_userdefined e)
@@ -95,7 +96,7 @@ let rec replace_deprecated_expr
     | _ ->
         map_expression
           (replace_deprecated_expr deprecated_userdefined)
-          ident expr in
+          Fn.id expr in
   {expr; emeta}
 
 and replace_boolean_real ?(parens = false) deprecated_userdefined e =
@@ -137,7 +138,7 @@ let rec replace_deprecated_lval deprecated_userdefined {lval; lmeta} =
         | lval, inner when List.exists ~f:is_multiindex outer ->
             (lval, Some (unwrap inner @ outer, lmeta))
         | lval, None -> (LIndexed ({lval; lmeta}, outer), None)
-        | lval, Some (inner, _) -> (lval, Some (inner @ outer, lmeta)) ) in
+        | lval, Some (inner, _) -> (lval, Some (inner @ outer, lmeta))) in
   let lval =
     match flatten_multi lval with
     | lval, None -> lval
@@ -155,7 +156,7 @@ let rec replace_deprecated_lval_pack deprecated_userdefined = function
         ; loc }
 
 let rec replace_deprecated_stmt
-    (deprecated_userdefined : Middle.UnsizedType.t Core_kernel.String.Map.t)
+    (deprecated_userdefined : Middle.UnsizedType.t Core.String.Map.t)
     ({stmt; smeta} : typed_statement) =
   let stmt =
     match stmt with
@@ -168,7 +169,7 @@ let rec replace_deprecated_stmt
           ; assign_rhs= (replace_deprecated_expr deprecated_userdefined) e }
     | FunDef {returntype; funname= {name; id_loc}; arguments; body} ->
         let newname =
-          match String.Map.find deprecated_userdefined name with
+          match Map.find deprecated_userdefined name with
           | Some type_ -> update_suffix name type_
           | None -> name in
         FunDef
@@ -191,7 +192,7 @@ let rec replace_deprecated_stmt
           (replace_deprecated_expr deprecated_userdefined)
           (replace_deprecated_stmt deprecated_userdefined)
           (replace_deprecated_lval deprecated_userdefined)
-          ident stmt in
+          Fn.id stmt in
   {stmt; smeta}
 
 let rec no_parens {expr; emeta} =
@@ -205,7 +206,7 @@ let rec no_parens {expr; emeta} =
       { expr= BinOp ({e1 with expr= Paren (no_parens e1)}, op2, keep_parens e2)
       ; emeta }
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
-      {expr= map_expression keep_parens ident expr; emeta}
+      {expr= map_expression keep_parens Fn.id expr; emeta}
   | Indexed (e, l) ->
       { expr=
           Indexed
@@ -213,13 +214,13 @@ let rec no_parens {expr; emeta} =
             , List.map
                 ~f:(function
                   | Single e -> Single (no_parens e)
-                  | i -> map_index keep_parens i )
+                  | i -> map_index keep_parens i)
                 l )
       ; emeta }
   | TupleProjection (e, i) -> {expr= TupleProjection (keep_parens e, i); emeta}
   | ArrayExpr _ | RowVectorExpr _ | FunApp _ | CondDistApp _ | TupleExpr _
    |Promotion _ ->
-      {expr= map_expression no_parens ident expr; emeta}
+      {expr= map_expression no_parens Fn.id expr; emeta}
 
 and keep_parens {expr; emeta} =
   match expr with
@@ -232,7 +233,7 @@ and keep_parens {expr; emeta} =
       {expr= Paren (no_parens e); emeta}
   | _ -> no_parens {expr; emeta}
 
-let parens_lval = map_lval_with no_parens ident
+let parens_lval = map_lval_with no_parens Fn.id
 
 let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
   let stmt =
@@ -249,7 +250,7 @@ let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
           ; lower_bound= keep_parens lower_bound
           ; upper_bound= keep_parens upper_bound
           ; loop_body= parens_stmt loop_body }
-    | _ -> map_statement no_parens parens_stmt parens_lval ident stmt in
+    | _ -> map_statement no_parens parens_stmt parens_lval Fn.id stmt in
   {stmt; smeta}
 
 let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
@@ -273,7 +274,7 @@ let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
         IfThenElse (e, stmt_to_block s1, Option.map ~f:stmt_to_block s2)
     | For ({loop_body; _} as f) ->
         For {f with loop_body= stmt_to_block loop_body}
-    | _ -> map_statement ident blocks_stmt ident ident stmt in
+    | _ -> map_statement Fn.id blocks_stmt Fn.id Fn.id stmt in
   {stmt; smeta}
 
 let repair_syntax program settings =

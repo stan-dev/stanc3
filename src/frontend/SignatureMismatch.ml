@@ -1,16 +1,17 @@
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
-module TypeMap = Core_kernel.Map.Make_using_comparator (UnsizedType)
+module TypeMap = Core.Map.Make_using_comparator (UnsizedType)
 
-let set ctx key data = ctx := TypeMap.set !ctx ~key ~data
+let set ctx key data = ctx := Map.set !ctx ~key ~data
 
 let get ctx key =
-  match TypeMap.find !ctx key with
+  match Map.find !ctx key with
   | Some s -> s
   | None ->
-      let s = Fmt.str "F%d" (1 + TypeMap.length !ctx) in
-      set ctx key s ; s
+      let s = Fmt.str "F%d" (1 + Map.length !ctx) in
+      set ctx key s;
+      s
 
 (** Like UnsizedType.pp but with opaque names for function types. *)
 let pp_unsized_type ctx ppf =
@@ -51,15 +52,15 @@ let pp_with_where ctx f ppf x =
   in
   let rec pp_where ppf (old, new_) =
     let pp ppf (ty, id) = Fmt.pf ppf "%s = @[<hov>%a@]" id (pp_fundef ctx) ty in
-    Fmt.(list ~sep:cut) pp ppf new_ ;
+    Fmt.(list ~sep:cut) pp ppf new_;
     let old, new_ = get_new old in
     if not (List.is_empty new_) then Fmt.pf ppf "@,%a" pp_where (old, new_)
   in
   let old = !ctx in
-  Fmt.pf ppf "@[<v>%a" f x ;
+  Fmt.pf ppf "@[<v>%a" f x;
   let old, new_ = get_new old in
   if not (List.is_empty new_) then
-    Fmt.pf ppf "@,where @[<v>%a@]" pp_where (old, new_) ;
+    Fmt.pf ppf "@,where @[<v>%a@]" pp_where (old, new_);
   Fmt.pf ppf "@]"
 
 type type_mismatch =
@@ -107,7 +108,7 @@ let compare_types x t1 t2 =
       match (sx = st1, sx = st2) with
       | true, false -> -1
       | false, true -> 1
-      | true, true | false, false -> compare t1 t2 )
+      | true, true | false, false -> compare t1 t2)
 
 let rec compare_errors e1 e2 =
   match (e1, e2) with
@@ -116,22 +117,22 @@ let rec compare_errors e1 e2 =
   | ArgNumMismatch _, ArgError _ -> 1
   | ArgError (x, _), ArgError (y, _) when x <> y -> compare y x
   | ArgError (_, e1), ArgError (_, e2) -> (
-    match (e1, e2) with
-    | DataOnlyError, DataOnlyError -> 0
-    | DataOnlyError, TypeMismatch _ -> -1
-    | TypeMismatch _, DataOnlyError -> 1
-    | TypeMismatch (t1, x1, None), TypeMismatch (t2, x2, None) ->
-        let c = UnsizedType.compare x1 x2 in
-        if c <> 0 then c else compare_types x1 t1 t2
-    | TypeMismatch (_, _, Some _), TypeMismatch (_, _, None) -> 1
-    | TypeMismatch (_, _, None), TypeMismatch (_, _, Some _) -> -1
-    | TypeMismatch (_, _, Some e1), TypeMismatch (_, _, Some e2) -> (
       match (e1, e2) with
-      | SuffixMismatch _, SuffixMismatch _ -> 0
-      | ReturnTypeMismatch _, ReturnTypeMismatch _ -> 0
-      | InputMismatch e1, InputMismatch e2 -> compare_errors e1 e2
-      | SuffixMismatch _, _ | _, InputMismatch _ -> -1
-      | InputMismatch _, _ | _, SuffixMismatch _ -> 1 ) )
+      | DataOnlyError, DataOnlyError -> 0
+      | DataOnlyError, TypeMismatch _ -> -1
+      | TypeMismatch _, DataOnlyError -> 1
+      | TypeMismatch (t1, x1, None), TypeMismatch (t2, x2, None) ->
+          let c = UnsizedType.compare x1 x2 in
+          if c <> 0 then c else compare_types x1 t1 t2
+      | TypeMismatch (_, _, Some _), TypeMismatch (_, _, None) -> 1
+      | TypeMismatch (_, _, None), TypeMismatch (_, _, Some _) -> -1
+      | TypeMismatch (_, _, Some e1), TypeMismatch (_, _, Some e2) -> (
+          match (e1, e2) with
+          | SuffixMismatch _, SuffixMismatch _ -> 0
+          | ReturnTypeMismatch _, ReturnTypeMismatch _ -> 0
+          | InputMismatch e1, InputMismatch e2 -> compare_errors e1 e2
+          | SuffixMismatch _, _ | _, InputMismatch _ -> -1
+          | InputMismatch _, _ | _, SuffixMismatch _ -> 1))
 
 let compare_match_results e1 e2 =
   (* Sort more informative errors towards the front of lists *)
@@ -150,7 +151,7 @@ let%expect_test "compare_matches" =
     [ UniqueMatch (); AmbiguousMatch []; SignatureErrors ([], ()); UniqueMatch ()
     ; AmbiguousMatch []; SignatureErrors ([()], ()) ] in
   let matches = List.sort matches ~compare:compare_match_results in
-  print_s [%sexp (matches : (unit, unit list * unit) generic_match_result list)] ;
+  print_s [%sexp (matches : (unit, unit list * unit) generic_match_result list)];
   [%expect
     "\n\
     \    ((UniqueMatch ()) (UniqueMatch ()) (AmbiguousMatch ()) \
@@ -175,16 +176,16 @@ let rec check_same_type depth t1 t2 =
       check_same_type depth nt1 nt2
       |> Result.map_error ~f:(function
            | TypeMismatch _ -> TypeMismatch (t1, t2, None)
-           | e -> e )
+           | e -> e)
   | UTuple nts1, UTuple nts2 -> (
-    match List.map2 ~f:(check_same_type depth) nts1 nts2 with
-    | List.Or_unequal_lengths.Unequal_lengths ->
-        Error (TypeMismatch (t1, t2, None))
-    | Ok proms_res -> (
-      match Result.all proms_res with
-      | Ok proms -> Ok (TuplePromotion proms)
-      | Error (TypeMismatch _) -> Error (TypeMismatch (t1, t2, None))
-      | Error e -> Error e ) )
+      match List.map2 ~f:(check_same_type depth) nts1 nts2 with
+      | List.Or_unequal_lengths.Unequal_lengths ->
+          Error (TypeMismatch (t1, t2, None))
+      | Ok proms_res -> (
+          match Result.all proms_res with
+          | Ok proms -> Ok (TuplePromotion proms)
+          | Error (TypeMismatch _) -> Error (TypeMismatch (t1, t2, None))
+          | Error e -> Error e))
   | UFun (_, _, s1, _), UFun (_, _, s2, _)
     when Fun_kind.without_propto s1 <> Fun_kind.without_propto s2 ->
       Error
@@ -193,9 +194,9 @@ let rec check_same_type depth t1 t2 =
   | UFun (_, rt1, _, _), UFun (_, rt2, _, _) when rt1 <> rt2 ->
       Error (ReturnTypeMismatch (rt1, rt2)) |> wrap_func
   | UFun (l1, _, _, _), UFun (l2, _, _, _) -> (
-    match check_compatible_arguments (depth + 1) l2 l1 with
-    | Ok _ -> Ok NoPromotion
-    | Error e -> Error (InputMismatch e) |> wrap_func )
+      match check_compatible_arguments (depth + 1) l2 l1 with
+      | Ok _ -> Ok NoPromotion
+      | Error e -> Error (InputMismatch e) |> wrap_func)
   | t1, t2 -> Error (TypeMismatch (t1, t2, None))
 
 and check_compatible_arguments depth typs args2 :
@@ -211,7 +212,7 @@ and check_compatible_arguments depth typs args2 :
               if ad1 = ad2 then Ok p
               else if depth < 2 && UnsizedType.autodifftype_can_convert ad1 ad2
               then Ok p
-              else Error (ArgError (i + 1, DataOnlyError)) )
+              else Error (ArgError (i + 1, DataOnlyError)))
       |> Result.all
 
 let check_of_same_type_mod_conv = check_same_type 0
@@ -234,15 +235,15 @@ let unique_minimum_promotion promotion_options =
   let sizes_and_promotons = List.zip_exn sizes promotion_options in
   match min_promotion with
   | Some min_depth -> (
-    match
-      List.filter_map
-        ~f:(fun (depth, promotion) ->
-          if depth = min_depth then Some promotion else None )
-        sizes_and_promotons
-    with
-    | [ans] -> Ok ans
-    | _ :: _ as lst -> Error (Some (List.map ~f:fst lst))
-    | [] -> Error None )
+      match
+        List.filter_map
+          ~f:(fun (depth, promotion) ->
+            if depth = min_depth then Some promotion else None)
+          sizes_and_promotons
+      with
+      | [ans] -> Ok ans
+      | _ :: _ as lst -> Error (Some (List.map ~f:fst lst))
+      | [] -> Error None)
   | None -> Error None
 
 let find_compatible_rt function_types args =
@@ -252,7 +253,7 @@ let find_compatible_rt function_types args =
       ~f:(fun (rt, tys, funkind_constructor, _) ->
         match check_compatible_arguments 0 tys args with
         | Ok p -> Either.First (((rt, tys), funkind_constructor), p)
-        | Error e -> Second ((rt, tys), e) ) in
+        | Error e -> Second ((rt, tys), e)) in
   match unique_minimum_promotion matches with
   | Ok (((rt, _), funkind_constructor), p) ->
       UniqueMatch (rt, funkind_constructor, p)
@@ -272,7 +273,7 @@ let matching_function env name args =
     Environment.find env name
     |> List.filter_map ~f:extract_function_types
     |> List.sort ~compare:(fun (ret1, _, _, _) (ret2, _, _, _) ->
-           UnsizedType.compare_returntype ret1 ret2 ) in
+           UnsizedType.compare_returntype ret1 ret2) in
   find_compatible_rt function_types args
 
 let matching_stanlib_function =
@@ -288,8 +289,8 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   let wrap_err x = Error (minimal_args, ArgError (1, x)) in
   match args with
   | ( _
-    , ( UnsizedType.UFun (fun_args, ReturnType return_type, suffix, _) as
-      func_type ) )
+    , (UnsizedType.UFun (fun_args, ReturnType return_type, suffix, _) as
+       func_type) )
     :: _ ->
       let mandatory, variadic_arg_tys =
         List.split_n fun_args (List.length mandatory_fun_arg_tys) in
@@ -300,18 +301,18 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
         match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
         | Error x -> wrap_func_error (InputMismatch x)
         | Ok _ -> (
-          match check_same_type 1 return_type fun_return with
-          | Error _ ->
-              wrap_func_error
-                (ReturnTypeMismatch
-                   (ReturnType fun_return, ReturnType return_type) )
-          | Ok _ ->
-              let expected_args =
-                ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
-                @ variadic_arg_tys in
-              check_compatible_arguments 0 expected_args args
-              |> Result.map ~f:(fun x -> (func_type, x))
-              |> Result.map_error ~f:(fun x -> (expected_args, x)) )
+            match check_same_type 1 return_type fun_return with
+            | Error _ ->
+                wrap_func_error
+                  (ReturnTypeMismatch
+                     (ReturnType fun_return, ReturnType return_type))
+            | Ok _ ->
+                let expected_args =
+                  ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
+                  @ variadic_arg_tys in
+                check_compatible_arguments 0 expected_args args
+                |> Result.map ~f:(fun x -> (func_type, x))
+                |> Result.map_error ~f:(fun x -> (expected_args, x)))
       else wrap_func_error (SuffixMismatch (FnPlain, suffix))
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err
   | [] -> Error ([], ArgNumMismatch (List.length mandatory_arg_tys, 0))
@@ -398,7 +399,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   in
   let pp_args =
     pp_with_where ctx (fun ppf ->
-        pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx)) ) in
+        pf ppf "(@[<hov>%a@])" (list ~sep:comma (pp_unsized_type ctx))) in
   let pp_signature ppf ((rt, args), err) =
     let fun_ty = UnsizedType.UFun (args, rt, FnPlain, AoS) in
     Fmt.pf ppf "%a@ @[<hov 2>  %a@]"
@@ -420,7 +421,7 @@ let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
     let errors =
       List.filter
         ~f:(fun (_, args, _) ->
-          Result.is_ok (check_same_type 0 lt (snd (List.hd_exn args))) )
+          Result.is_ok (check_same_type 0 lt (snd (List.hd_exn args))))
         errors in
     match List.split_n errors max_n_errors with
     | [], _ -> None

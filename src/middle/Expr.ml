@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Common
 
 (** Pattern and fixed-point of MIR expressions *)
@@ -36,8 +36,8 @@ module Fixed = struct
           Fmt.pf ppf "(@[%a@ ?@ %a@ :@ %a@])" pp_e pred pp_e texpr pp_e fexpr
       | Indexed (expr, indices) ->
           Fmt.pf ppf "@[%a%a@]" pp_e expr
-            ( if List.is_empty indices then fun _ _ -> ()
-            else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
+            (if List.is_empty indices then fun _ _ -> ()
+             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets))
             indices
       | TupleProjection (expr, ix) -> Fmt.pf ppf "@[%a.%d@]" pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
@@ -183,7 +183,7 @@ module Helpers = struct
     internal_funapp FnReadData [] ()
     |> contains_fn_kind (function
          | CompilerInternal FnReadData -> true
-         | _ -> false )
+         | _ -> false)
 
   let rec infer_type_of_indexed ut indices =
     match (ut, indices) with
@@ -261,7 +261,7 @@ module Helpers = struct
       , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
     |> Fmt.(str "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
-    |> print_endline ;
+    |> print_endline;
     [%expect
       {|
       vector, array[] matrix, matrix, array[] vector, real, array[] real |}]

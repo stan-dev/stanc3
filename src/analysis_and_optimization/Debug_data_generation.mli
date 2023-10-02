@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 
 val json_to_mir :

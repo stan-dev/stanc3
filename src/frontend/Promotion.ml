@@ -1,5 +1,5 @@
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 module UnsizedType = Middle.UnsizedType
 
 (** Type to represent promotions in the typechecker.
@@ -123,7 +123,7 @@ let promote_inner (exp : Ast.typed_expression) prom =
             [%message
               "Tuple promotion on non-tuple"
                 (exp : Ast.typed_expression)
-                (prom : t)] )
+                (prom : t)])
   | _ -> exp
 
 let rec promote (exp : Ast.typed_expression) prom =
@@ -150,17 +150,18 @@ let rec promote (exp : Ast.typed_expression) prom =
         | _ -> URowVector in
       {expr= RowVectorExpr pes; emeta= {exp.emeta with type_; ad_level}}
   | TupleExpr es -> (
-    match prom with
-    | TuplePromotion sub_promotions ->
-        let promoted_exprs = List.map2_exn ~f:promote es sub_promotions in
-        let type_ =
-          UnsizedType.UTuple
-            (List.map ~f:(fun e -> e.emeta.type_) promoted_exprs) in
-        let ad_level =
-          UnsizedType.TupleAD
-            (List.map ~f:(fun e -> e.emeta.ad_level) promoted_exprs) in
-        {expr= TupleExpr promoted_exprs; emeta= {exp.emeta with type_; ad_level}}
-    | _ -> exp )
+      match prom with
+      | TuplePromotion sub_promotions ->
+          let promoted_exprs = List.map2_exn ~f:promote es sub_promotions in
+          let type_ =
+            UnsizedType.UTuple
+              (List.map ~f:(fun e -> e.emeta.type_) promoted_exprs) in
+          let ad_level =
+            UnsizedType.TupleAD
+              (List.map ~f:(fun e -> e.emeta.ad_level) promoted_exprs) in
+          { expr= TupleExpr promoted_exprs
+          ; emeta= {exp.emeta with type_; ad_level} }
+      | _ -> exp)
   | _ -> promote_inner exp prom
 
 let promote_list es promotions = List.map2_exn es promotions ~f:promote
@@ -199,8 +200,8 @@ let rec get_type_promotion_exn (ad_requested, ty_requested)
         TuplePromotion
           (List.map2_exn
              ~f:(fun t1 t2 ->
-               get_type_promotion_exn (ad_requested, t1) (ad_current, t2) )
-             ts1 ts2 )
+               get_type_promotion_exn (ad_requested, t1) (ad_current, t2))
+             ts1 ts2)
     | UInt, UInt -> NoPromotion
     | t1, t2 when t1 = t2 && ad_requested = ad_current -> NoPromotion
     | _, _ ->

@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Analysis_and_optimization
 
 let print_tdata Middle.Program.{prepare_data; _} =
@@ -13,7 +13,7 @@ transformed data {
   array[5] matrix[3,4] mat;
   print(mat[2, arr, 2]);
 } |}
-  |> Partial_evaluator.eval_prog |> print_tdata ;
+  |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
     data array[int, 3] arr;
@@ -29,7 +29,7 @@ transformed data {
   array[5] matrix[3,4] mat;
   print(mat[2][arr][2]);
 } |}
-  |> Partial_evaluator.eval_prog |> print_tdata ;
+  |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
     data array[int, 3] arr;
@@ -46,7 +46,7 @@ transformed data {
   array[5] matrix[3,4] mat;
   print(mat[2, arr, arr][2, 2]);
 } |}
-  |> Partial_evaluator.eval_prog |> print_tdata ;
+  |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
     data array[int, 3] arr;
@@ -63,7 +63,7 @@ transformed data {
   array[5] matrix[3,4] mat;
   print(mat[3:, 2:3][2, 1]);
 } |}
-  |> Partial_evaluator.eval_prog |> print_tdata ;
+  |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
     data array[int, 3] arr;
@@ -80,7 +80,7 @@ transformed data {
   array[5] matrix[3,4] mat;
   print(mat[:3, 1, :]);
 } |}
-  |> Partial_evaluator.eval_prog |> print_tdata ;
+  |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
     data array[int, 3] arr;
@@ -101,7 +101,7 @@ transformed data {
   print(mat[2, :, arr][2, 1]);
   print(mat[:, 2, arr][2, 1]);
 } |}
-  |> Partial_evaluator.eval_prog |> print_tdata ;
+  |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
     data array[int, 3] arr;
@@ -120,7 +120,7 @@ transformed data {
   vector[3] x;
   print(log(1-x[:])[:]);
 } |}
-  |> Partial_evaluator.eval_prog |> print_tdata ;
+  |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect {|
     data vector[3] x;
     FnPrint__(log1m(x)); |}]

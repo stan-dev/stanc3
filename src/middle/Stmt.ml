@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Common
 
 (** Fixed-point of statements *)
@@ -159,7 +159,7 @@ module Helpers = struct
     | _ ->
         let preamble, temp, reset = temp_vars [expr] in
         let body = bodyfn (List.hd_exn temp) meta in
-        reset () ;
+        reset ();
         {body with Fixed.pattern= Block (preamble @ [body])}
 
   let internal_nrfunapp fn args meta =
@@ -175,7 +175,7 @@ module Helpers = struct
         ; pattern= Var loopvar } in
     let lower = Expr.Helpers.loop_bottom in
     let body = Fixed.{meta; pattern= Pattern.Block [bodyfn loopvar_expr]} in
-    reset () ;
+    reset ();
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
     Fixed.{meta; pattern}
 
@@ -189,7 +189,7 @@ module Helpers = struct
           (fun loopvar ->
             mk_nested_for uppers'
               (fun loopvars -> bodyfn (loopvar :: loopvars))
-              Location_span.empty )
+              Location_span.empty)
           meta
 
   (** [mk_for_iteratee] returns a MIR For statement that iterates over the given expression
@@ -230,7 +230,7 @@ module Helpers = struct
       | stmt_pattern ->
           Fixed.Pattern.fold_left ~init:accu stmt_pattern
             ~f:(fun accu expr ->
-              Expr.Helpers.contains_fn_kind is_fn_kind ~init:accu expr )
+              Expr.Helpers.contains_fn_kind is_fn_kind ~init:accu expr)
             ~g:aux in
     aux init stmt
 
@@ -307,14 +307,14 @@ module Helpers = struct
       | Var s -> Some (Fixed.Pattern.LVariable s)
       | TupleProjection (l, i) ->
           Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-              Fixed.Pattern.LTupleProjection (lv, i) )
+              Fixed.Pattern.LTupleProjection (lv, i))
       | _ -> None in
     match expr.pattern with
     | Var s -> Some (lvariable s)
     | Indexed (l, i) -> Option.map (lbase_of_expr_opt l) ~f:(fun lv -> (lv, i))
     | TupleProjection (l, i) ->
         Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-            (Fixed.Pattern.LTupleProjection (lv, i), []) )
+            (Fixed.Pattern.LTupleProjection (lv, i), []))
     | _ -> None
 
   let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Fixed.Pattern.lvalue)
@@ -379,10 +379,10 @@ module Helpers = struct
             ((LTupleProjection (lvariable "x", 3), [Index.Single 4]), 5)
         , [] ) ] in
     let pp = Fmt.(list ~sep:comma (Fixed.Pattern.pp_lvalue int)) in
-    Fmt.(str "Before: @[<hov>%a@]" pp) lvals |> print_endline ;
+    Fmt.(str "Before: @[<hov>%a@]" pp) lvals |> print_endline;
     List.map ~f:lvalue_base_reference lvals
     |> Fmt.(str "After: @[<hov>%a@]" pp)
-    |> print_endline ;
+    |> print_endline;
     [%expect
       {|
       Before: x[1, 2, 3], x.1, x.2[3], x.3[4].5

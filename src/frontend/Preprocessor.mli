@@ -1,6 +1,6 @@
 (** Preprocessor for handling include directives *)
 
-open Core_kernel
+open Core
 
 val location_of_position : Lexing.position -> Middle.Location.t
 

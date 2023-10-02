@@ -8,7 +8,7 @@
   later be filled in with something like [type expr_with_meta = metadata expression]
 *)
 
-open Core_kernel
+open Core
 open Middle
 
 (** Our type for identifiers, on which we record a location *)
@@ -265,8 +265,8 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (*========================== Helper functions ===============================*)
 
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression ({expr; emeta} : typed_expression)
-    : untyped_expression =
+let rec untyped_expression_of_typed_expression
+    ({expr; emeta} : typed_expression) : untyped_expression =
   match expr with
   | Promotion (e, _, _) -> untyped_expression_of_typed_expression e
   | _ ->
@@ -305,10 +305,10 @@ let untyped_program_of_typed_program : typed_program -> untyped_program =
 
 let rec expr_of_lvalue {lval; lmeta} =
   { expr=
-      ( match lval with
+      (match lval with
       | LVariable s -> Variable s
       | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i)
-      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i) )
+      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i))
   ; emeta= lmeta }
 
 let rec extract_ids {expr; _} =
@@ -407,9 +407,9 @@ let get_first_loc (s : untyped_statement) =
    |ReturnVoid | Print _ | Reject _ | Skip ->
       s.smeta.loc.begin_loc
   | VarDecl {decl_type; transformation; variables; _} -> (
-    match get_loc_dt decl_type with
-    | Some loc -> loc
-    | None -> (
-      match get_loc_tf transformation with
+      match get_loc_dt decl_type with
       | Some loc -> loc
-      | None -> (List.hd_exn variables).identifier.id_loc.begin_loc ) )
+      | None -> (
+          match get_loc_tf transformation with
+          | Some loc -> loc
+          | None -> (List.hd_exn variables).identifier.id_loc.begin_loc))

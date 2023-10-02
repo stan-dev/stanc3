@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Ast
 open Middle
 open Yojson.Basic
@@ -35,8 +35,8 @@ let get_var_decl {stmts; _} : t =
                  ~f:(fun {identifier; _} -> (identifier.name, type_info))
                  decl.variables in
              decl_info @ acc
-         | _ -> acc )
-       stmts )
+         | _ -> acc)
+       stmts)
 
 let block_info_json name block : t =
   `Assoc [(name, Option.value_map block ~default:(`Assoc []) ~f:get_var_decl)]
@@ -97,8 +97,8 @@ let includes_json () =
   `Assoc
     [ ( "included_files"
       , `List
-          ( List.rev !Preprocessor.included_files
-          |> List.map ~f:(fun str -> `String str) ) ) ]
+          (List.rev !Preprocessor.included_files
+          |> List.map ~f:(fun str -> `String str)) ) ]
 
 let info_json ast =
   List.fold ~f:Util.combine ~init:(`Assoc [])

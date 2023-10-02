@@ -1,6 +1,6 @@
 (** Preprocessor for handling include directives *)
 
-open Core_kernel
+open Core
 open Lexing
 open Debugging
 module Str = Re.Str
@@ -32,7 +32,7 @@ let new_file_start_position filename included_from =
     {Lexing.pos_fname= filename; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
   else
     let key = "\u{0}" ^ string_of_int (Hashtbl.length locations_map) in
-    Hashtbl.add_exn locations_map ~key ~data:(filename, included_from) ;
+    Hashtbl.add_exn locations_map ~key ~data:(filename, included_from);
     {Lexing.pos_fname= key; pos_lnum= 1; pos_bol= 0; pos_cnum= 0}
 
 let location_of_position {Lexing.pos_fname; pos_lnum; pos_cnum; pos_bol} =
@@ -50,12 +50,12 @@ let location_span_of_positions (start_pos, end_pos) : Middle.Location_span.t =
   ; end_loc= location_of_position end_pos }
 
 let init buf filename =
-  Hashtbl.clear locations_map ;
-  Queue.clear comments ;
-  included_files := [] ;
-  Stack.clear include_stack ;
-  Stack.push include_stack buf ;
-  buf.lex_start_p <- new_file_start_position filename None ;
+  Hashtbl.clear locations_map;
+  Queue.clear comments;
+  included_files := [];
+  Stack.clear include_stack;
+  Stack.push include_stack buf;
+  buf.lex_start_p <- new_file_start_position filename None;
   buf.lex_curr_p <- buf.lex_start_p
 
 let current_buffer () =
@@ -76,10 +76,10 @@ let restore_prior_lexbuf () =
   let old_pos =
     {old_lexbuf.lex_curr_p with pos_lnum= old_lexbuf.lex_curr_p.pos_lnum + 1}
   in
-  lexer_logger "Switching to older lexbuf" ;
-  lexer_pos_logger old_lexbuf.lex_curr_p ;
-  lexbuf.lex_curr_p <- old_pos ;
-  lexbuf.lex_start_p <- old_pos ;
+  lexer_logger "Switching to older lexbuf";
+  lexer_pos_logger old_lexbuf.lex_curr_p;
+  lexbuf.lex_curr_p <- old_pos;
+  lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
 let try_open_in all_paths fname =
@@ -99,12 +99,12 @@ let try_open_in all_paths fname =
              (Include
                 ( message
                 , location_of_position
-                    (lexeme_start_p (Stack.top_exn include_stack)) ) ) )
+                    (lexeme_start_p (Stack.top_exn include_stack)) )))
     | path :: rest_of_paths -> (
-      try
-        let full_path = path ^ "/" ^ fname in
-        (In_channel.create full_path, full_path)
-      with _ -> loop rest_of_paths ) in
+        try
+          let full_path = path ^ "/" ^ fname in
+          (In_channel.create full_path, full_path)
+        with _ -> loop rest_of_paths) in
   loop all_paths
 
 let maybe_remove_quotes str =
@@ -116,12 +116,12 @@ let maybe_remove_quotes str =
 let try_get_new_lexbuf fname =
   let lexbuf = Stack.top_exn include_stack in
   let chan, file = try_open_in !include_paths (maybe_remove_quotes fname) in
-  lexer_logger ("opened " ^ file) ;
+  lexer_logger ("opened " ^ file);
   let new_lexbuf = from_channel chan in
   new_lexbuf.lex_start_p <-
     new_file_start_position file
-    @@ Some (location_of_position lexbuf.lex_start_p) ;
-  new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p ;
+    @@ Some (location_of_position lexbuf.lex_start_p);
+  new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
   let dup_exists {Middle.Location.filename; included_from; _} =
     let is_dup = String.equal filename in
     let rec go = function
@@ -134,8 +134,8 @@ let try_get_new_lexbuf fname =
       (Errors.SyntaxError
          (Include
             ( Printf.sprintf "File %s recursively included itself." fname
-            , location_of_position (lexeme_start_p lexbuf) ) ) ) ;
-  Stack.push include_stack new_lexbuf ;
-  update_start_positions new_lexbuf.lex_curr_p ;
-  included_files := file :: !included_files ;
+            , location_of_position (lexeme_start_p lexbuf) )));
+  Stack.push include_stack new_lexbuf;
+  update_start_positions new_lexbuf.lex_curr_p;
+  included_files := file :: !included_files;
   new_lexbuf
