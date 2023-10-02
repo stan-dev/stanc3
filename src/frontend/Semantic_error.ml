@@ -282,6 +282,7 @@ module IdentifierError = struct
     | InUse of string
     | NotInScope of string * string option
     | UnnormalizedSuffix of string
+    | UnderscoreNotInAssign
 
   let pp ppf = function
     | IsStanMathName name ->
@@ -304,6 +305,10 @@ module IdentifierError = struct
           "Identifier '%s' has a _lupdf/_lupmf suffix, which is only allowed \
            for functions."
           name
+    | UnderscoreNotInAssign ->
+        Fmt.pf ppf
+          "Identifier '_' is not permitted except in a destructuring \
+           assignment."
 end
 
 module ExpressionError = struct
@@ -664,6 +669,9 @@ let ident_not_in_scope loc name sug =
 
 let ident_has_unnormalized_suffix loc name =
   IdentifierError (loc, IdentifierError.UnnormalizedSuffix name)
+
+let ident_is_underscore loc =
+  IdentifierError (loc, IdentifierError.UnderscoreNotInAssign)
 
 let invalid_decl_rng_fn loc =
   ExpressionError (loc, ExpressionError.InvalidSizeDeclRng)

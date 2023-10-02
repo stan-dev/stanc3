@@ -640,14 +640,17 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
     Ast.{rhs with expr= Variable {name= sym; id_loc= Location_span.empty}} in
   let assigns =
     List.mapi lvals ~f:(fun i lval ->
-        trans_stmt
-          Ast.
-            { stmt=
-                Assignment
-                  { assign_lhs= lval
-                  ; assign_op
-                  ; assign_rhs= index_tuple temp_expr i }
-            ; smeta } )
+        match lval with
+        | LValue {lval= LVariable {name= "_"; _}; _} -> []
+        | _ ->
+            trans_stmt
+              Ast.
+                { stmt=
+                    Assignment
+                      { assign_lhs= lval
+                      ; assign_op
+                      ; assign_rhs= index_tuple temp_expr i }
+                ; smeta } )
     |> List.concat in
   reset () ;
   [Stmt.Fixed.{pattern= Block (temp :: assign :: assigns); meta= loc}]

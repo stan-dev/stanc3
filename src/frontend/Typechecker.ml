@@ -103,7 +103,8 @@ let reserved_keywords =
   ; "false"; "typedef"; "struct"; "var"; "export"; "extern"; "static"; "auto" ]
 
 let verify_identifier id : unit =
-  if id.name = !model_name then
+  if id.name = "_" then Semantic_error.ident_is_underscore id.id_loc |> error
+  else if id.name = !model_name then
     Semantic_error.ident_is_model_name id.id_loc id.name |> error
   else if
     String.is_suffix id.name ~suffix:"__"
@@ -1026,6 +1027,9 @@ let check_assignment_operator loc assop lhs rhs =
       warn_self_assignment loc lhs rhs ;
       let rec typechk lhs rhs =
         match (lhs, rhs) with
+        | LValue {lval= LVariable {name= "_"; _}; _}, rhs ->
+            ( Promotion.NoPromotion
+            , UnsizedType.fill_adtype_for_type DataOnly rhs )
         | LValue ({lmeta= {type_; ad_level; _}; _} as lval), rhs -> (
             verify_assignment_non_function loc (name_of_lval lval) rhs ;
             match SignatureMismatch.check_of_same_type_mod_conv type_ rhs with
@@ -1086,6 +1090,7 @@ let lvalues_written_to lv =
   let rec flatten_lvalue_pack lv =
     match lv with
     | LTuplePack {lvals; _} -> List.concat_map ~f:flatten_lvalue_pack lvals
+    | LValue {lval= LVariable {name; _}; _} when name = "_" -> []
     | LValue lv -> [lv] in
   flatten_lvalue_pack lv
   |> List.concat_map ~f:add_tuple_idxs
@@ -1159,8 +1164,11 @@ let verify_assignable_id loc cf tenv assign_id =
   verify_assignment_global loc cf block global assign_id ;
   verify_assignment_read_only loc readonly assign_id
 
-let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
+let rec check_lvalue ?(allow_underscore = false) cf tenv
+    {lval; lmeta= ({loc} : located_meta)} =
   match lval with
+  | LVariable {name; _} as l when name = "_" && allow_underscore ->
+      {lval= l; lmeta= {ad_level= DataOnly; type_= UnsizedType.UInt; loc}}
   | LVariable id ->
       verify_identifier id ;
       verify_assignable_id id.id_loc cf tenv id ;
@@ -1222,10 +1230,11 @@ let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
           Semantic_error.cannot_assign_to_multiindex loc |> error ) ;
       {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
 
-let rec check_lvalues cf tenv = function
-  | LValue l -> LValue (check_lvalue cf tenv l)
+let rec check_lvalues ?(allow_underscore = false) cf tenv = function
+  | LValue l -> LValue (check_lvalue ~allow_underscore cf tenv l)
   | LTuplePack {lvals; loc} ->
-      let lvals = List.map lvals ~f:(check_lvalues cf tenv) in
+      let lvals =
+        List.map lvals ~f:(check_lvalues ~allow_underscore:true cf tenv) in
       LTuplePack {lvals; loc}
 
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
