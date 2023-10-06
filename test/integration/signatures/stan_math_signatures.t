@@ -3141,6 +3141,14 @@ Display all Stan math signatures exposed in the language
   binomial_log(array[] int, array[] int, vector) => real
   binomial_log(array[] int, array[] int, row_vector) => real
   binomial_log(array[] int, array[] int, array[] real) => real
+  binomial_logit_glm_lpmf(int, int, matrix, real, vector) => real
+  binomial_logit_glm_lpmf(int, int, matrix, vector, vector) => real
+  binomial_logit_glm_lpmf(int, array[] int, matrix, real, vector) => real
+  binomial_logit_glm_lpmf(array[] int, int, matrix, real, vector) => real
+  binomial_logit_glm_lpmf(array[] int, array[] int, row_vector, real, vector) => real
+  binomial_logit_glm_lpmf(array[] int, array[] int, row_vector, vector, vector) => real
+  binomial_logit_glm_lpmf(array[] int, array[] int, matrix, real, vector) => real
+  binomial_logit_glm_lpmf(array[] int, array[] int, matrix, vector, vector) => real
   binomial_logit_log(int, int, real) => real
   binomial_logit_log(int, int, vector) => real
   binomial_logit_log(int, int, row_vector) => real

@@ -228,6 +228,7 @@ let distributions =
   ; ([Lpmf], "bernoulli_logit_glm", [DVInt; DMatrix; DReal; DVector], SoA)
   ; (full_lpmf_depr, "binomial", [DVInt; DVInt; DVReal], SoA)
   ; ([Lpmf; Log], "binomial_logit", [DVInt; DVInt; DVReal], SoA)
+  ; ([Lpmf], "binomial_logit_glm", [DVInt; DVInt; DMatrix; DReal; DVector], SoA)
   ; ([Lpmf; Log], "categorical", [DVInt; DVector], AoS)
   ; ([Lpmf; Log], "categorical_logit", [DVInt; DVector], AoS)
   ; ([Lpmf], "categorical_logit_glm", [DVInt; DMatrix; DVector; DMatrix], SoA)
@@ -887,6 +888,26 @@ let () =
     , ReturnType (UArray UInt)
     , [URowVector; UVector; UVector]
     , AoS ) ;
+  add_unqualified
+    ( "binomial_logit_glm_lpmf"
+    , ReturnType UReal
+    , [UArray UInt; UArray UInt; UMatrix; UVector; UVector]
+    , SoA ) ;
+  add_unqualified
+    ( "binomial_logit_glm_lpmf"
+    , ReturnType UReal
+    , [UInt; UInt; UMatrix; UVector; UVector]
+    , SoA ) ;
+  add_unqualified
+    ( "binomial_logit_glm_lpmf"
+    , ReturnType UReal
+    , [UArray UInt; UArray UInt; URowVector; UReal; UVector]
+    , SoA ) ;
+  add_unqualified
+    ( "binomial_logit_glm_lpmf"
+    , ReturnType UReal
+    , [UArray UInt; UArray UInt; URowVector; UVector; UVector]
+    , SoA ) ;
   add_binary_vec_int_real "bessel_first_kind" SoA ;
   add_binary_vec_int_real "bessel_second_kind" SoA ;
   add_binary_vec "beta" SoA ;
