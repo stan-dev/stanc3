@@ -30,8 +30,8 @@ transformed parameters {
   real transformed_param_real;
   transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, p_x_m, p_alpha, p_beta_v);
   transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, p_x_m, p_alpha_v, p_beta_v);
-  transformed_param_real = binomial_logit_glm_lpmf(d_n | d_N p_x_m, p_alpha, p_beta_v);
-  transformed_param_real = binomial_logit_glm_lpmf(d_n | d_N p_x_m, p_alpha_v, p_beta_v);
+  transformed_param_real = binomial_logit_glm_lpmf(d_n | d_N, p_x_m, p_alpha, p_beta_v);
+  transformed_param_real = binomial_logit_glm_lpmf(d_n | d_N, p_x_m, p_alpha_v, p_beta_v);
   transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, p_x_rv, p_alpha, p_beta_v);
   transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, p_x_rv, p_alpha_v, p_beta_v);
 }
