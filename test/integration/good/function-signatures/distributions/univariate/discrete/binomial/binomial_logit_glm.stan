@@ -11,12 +11,12 @@ transformed data {
   real d_alpha = 3;
   vector[N] d_alpha_v = [0.5, 0.6]';
   real transformed_data_real;
-  transformed_data_real = binomial_logit_glm_lpmf(d_n_a | d_N_a d_x_m, d_alpha, d_beta_v);
-  transformed_data_real = binomial_logit_glm_lpmf(d_n_a | d_N_a d_x_m, d_alpha_v, d_beta_v);
-  transformed_data_real = binomial_logit_glm_lpmf(d_n | d_N d_x_m, d_alpha, d_beta_v);
-  transformed_data_real = binomial_logit_glm_lpmf(d_n | d_N d_x_m, d_alpha_v, d_beta_v);
-  transformed_data_real = binomial_logit_glm_lpmf(d_n_a | d_N_a d_x_rv, d_alpha, d_beta_v);
-  transformed_data_real = binomial_logit_glm_lpmf(d_n_a | d_N_a d_x_rv, d_alpha_v, d_beta_v);
+  transformed_data_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, d_x_m, d_alpha, d_beta_v);
+  transformed_data_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, d_x_m, d_alpha_v, d_beta_v);
+  transformed_data_real = binomial_logit_glm_lpmf(d_n | d_N, d_x_m, d_alpha, d_beta_v);
+  transformed_data_real = binomial_logit_glm_lpmf(d_n | d_N, d_x_m, d_alpha_v, d_beta_v);
+  transformed_data_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, d_x_rv, d_alpha, d_beta_v);
+  transformed_data_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, d_x_rv, d_alpha_v, d_beta_v);
 }
 parameters {
   matrix[N, M] p_x_m;
@@ -28,12 +28,12 @@ parameters {
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a p_x_m, p_alpha, p_beta_v);
-  transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a p_x_m, p_alpha_v, p_beta_v);
+  transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, p_x_m, p_alpha, p_beta_v);
+  transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, p_x_m, p_alpha_v, p_beta_v);
   transformed_param_real = binomial_logit_glm_lpmf(d_n | d_N p_x_m, p_alpha, p_beta_v);
   transformed_param_real = binomial_logit_glm_lpmf(d_n | d_N p_x_m, p_alpha_v, p_beta_v);
-  transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a p_x_rv, p_alpha, p_beta_v);
-  transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a p_x_rv, p_alpha_v, p_beta_v);
+  transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, p_x_rv, p_alpha, p_beta_v);
+  transformed_param_real = binomial_logit_glm_lpmf(d_n_a | d_N_a, p_x_rv, p_alpha_v, p_beta_v);
 }
 model {
   y_p ~ normal(0, 1);
