@@ -8,6 +8,7 @@ Display all Stan math distributions exposed in the language
   bernoulli_logit_glm: lpmf
   binomial: lpmf, rng, ccdf, cdf, log (deprecated)
   binomial_logit: lpmf, log (deprecated)
+  binomial_logit_glm: lpmf
   categorical: lpmf, log (deprecated)
   categorical_logit: lpmf, log (deprecated)
   categorical_logit_glm: lpmf
