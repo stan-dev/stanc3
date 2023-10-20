@@ -673,34 +673,34 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
                 }
 
-                // stage("Build & test a static Linux mips64el binary") {
-                //     when {
-                //         beforeAgent true
-                //         allOf {
-                //             expression { !skipRebuildingBinaries }
-                //             anyOf { buildingTag(); branch 'master' }
-                //         }
-                //     }
-                //     agent {
-                //         docker {
-                //             image 'stanorg/stanc3:static-ocaml-4.14'
-                //             //Forces image to ignore entrypoint
-                //             args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
-                //             label 'linux'
-                //         }
-                //     }
-                //     steps {
-                //         dir("${env.WORKSPACE}/linux-mips64el"){
-                //             unstash "Stanc3Setup"
-                //             sh "bash -x scripts/build_multiarch_stanc3.sh mips64el"
+                stage("Build & test a static Linux mips64el binary") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
+                    agent {
+                        docker {
+                            image 'stanorg/stanc3:static-ocaml-4.14'
+                            //Forces image to ignore entrypoint
+                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            label 'linux'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/linux-mips64el"){
+                            unstash "Stanc3Setup"
+                            sh "bash -x scripts/build_multiarch_stanc3.sh mips64el"
 
-                //             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
+                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
 
-                //             stash name:'linux-mips64el-exe', includes:'bin/*'
-                //         }
-                //     }
-                //     post {always { runShell("rm -rf ${env.WORKSPACE}/linux-mips64el/*")}}
-                // }
+                            stash name:'linux-mips64el-exe', includes:'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-mips64el/*")}}
+                }
 
                 stage("Build & test a static Linux ppc64el binary") {
                     when {
@@ -891,7 +891,7 @@ pipeline {
                     unstash 'windows-exe'
                     unstash 'linux-exe'
                     unstash 'mac-exe'
-                    // unstash 'linux-mips64el-exe'
+                    unstash 'linux-mips64el-exe'
                     unstash 'linux-ppc64el-exe'
                     unstash 'linux-s390x-exe'
                     unstash 'linux-arm64-exe'
