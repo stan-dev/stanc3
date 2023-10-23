@@ -3,7 +3,7 @@
     functions for dealing with those signatures.
 *)
 
-open Core_kernel
+open Core
 
 (** Function arguments are represented by their type an autodiff
    type. This is [AutoDiffable] for everything except arguments

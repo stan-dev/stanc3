@@ -1,6 +1,6 @@
 (** Storing locations in the original source *)
 
-open Core_kernel
+open Core
 
 (**/**)
 
@@ -17,13 +17,13 @@ let pp_context_list ppf (lines, {line_num; col_num; _}) =
     let front = List.hd !l in
     match front with
     | Some _ ->
-        l := List.tl_exn !l ;
+        l := List.tl_exn !l;
         front
     | None -> None in
   let input = ref lines in
   for _ = 1 to line_num - 3 do
     ignore (advance input : string option)
-  done ;
+  done;
   let get_line num =
     if num > 0 then
       match advance input with
@@ -49,7 +49,7 @@ let pp_context_list ppf (lines, {line_num; col_num; _}) =
 let context_to_string (context_cb : unit -> string list) (loc : t) :
     string option =
   Option.try_with (fun () ->
-      Fmt.to_to_string pp_context_list (context_cb (), loc) )
+      Fmt.to_to_string pp_context_list (context_cb (), loc))
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 

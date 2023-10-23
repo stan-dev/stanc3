@@ -10,34 +10,48 @@ let escaped_b s =
       | '\"' | '\\' | '\n' | '\t' | '\r' | '\b' -> 2
       | ' ' .. '~' -> 1
       | _ -> 4
-  done ;
+  done;
   if !n = length s then copy s
   else
     let s' = create !n in
-    n := 0 ;
+    n := 0;
     for i = 0 to length s - 1 do
-      ( match unsafe_get s i with
+      (match unsafe_get s i with
       | ('\"' | '\\') as c ->
-          unsafe_set s' !n '\\' ; incr n ; unsafe_set s' !n c
-      | '\n' -> unsafe_set s' !n '\\' ; incr n ; unsafe_set s' !n 'n'
-      | '\t' -> unsafe_set s' !n '\\' ; incr n ; unsafe_set s' !n 't'
-      | '\r' -> unsafe_set s' !n '\\' ; incr n ; unsafe_set s' !n 'r'
-      | '\b' -> unsafe_set s' !n '\\' ; incr n ; unsafe_set s' !n 'b'
+          unsafe_set s' !n '\\';
+          incr n;
+          unsafe_set s' !n c
+      | '\n' ->
+          unsafe_set s' !n '\\';
+          incr n;
+          unsafe_set s' !n 'n'
+      | '\t' ->
+          unsafe_set s' !n '\\';
+          incr n;
+          unsafe_set s' !n 't'
+      | '\r' ->
+          unsafe_set s' !n '\\';
+          incr n;
+          unsafe_set s' !n 'r'
+      | '\b' ->
+          unsafe_set s' !n '\\';
+          incr n;
+          unsafe_set s' !n 'b'
       | ' ' .. '~' as c -> unsafe_set s' !n c
       | c ->
           let a = Char.code c in
-          unsafe_set s' !n '\\' ;
-          incr n ;
+          unsafe_set s' !n '\\';
+          incr n;
           (* changed *)
-          unsafe_set s' !n (Char.chr (48 + (a / 64))) ;
-          incr n ;
+          unsafe_set s' !n (Char.chr (48 + (a / 64)));
+          incr n;
           (* changed *)
-          unsafe_set s' !n (Char.chr (48 + (a / 8 mod 8))) ;
-          incr n ;
+          unsafe_set s' !n (Char.chr (48 + (a / 8 mod 8)));
+          incr n;
           (* changed *)
-          unsafe_set s' !n (Char.chr (48 + (a mod 8))) ) ;
+          unsafe_set s' !n (Char.chr (48 + (a mod 8))));
       incr n
-    done ;
+    done;
     s'
 
 open String

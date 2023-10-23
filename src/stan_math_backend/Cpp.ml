@@ -1,6 +1,6 @@
 (** A set of data types representing the C++ we generate *)
 
-open Core_kernel
+open Core
 
 type identifier = string [@@deriving sexp]
 
@@ -243,7 +243,7 @@ module Stmts = struct
                      , [ Var "e"
                        ; Index
                            (Var "locations_array__", Var "current_statement__")
-                       ] ) ) ] ) ]
+                       ] )) ] ) ]
 
   let fori loopvar lower upper body =
     let init =
@@ -266,14 +266,13 @@ module Decls = struct
   let current_statement =
     VariableDefn
       (make_variable_defn ~type_:Int ~name:"current_statement__"
-         ~init:(Assignment (Literal "0")) () )
+         ~init:(Assignment (Literal "0")) ())
     :: Stmts.unused "current_statement__"
 
   let dummy_var =
     VariableDefn
       (make_variable_defn ~type_:Types.local_scalar ~name:"DUMMY_VAR__"
-         ~init:(Construction [Exprs.quiet_NaN])
-         () )
+         ~init:(Construction [Exprs.quiet_NaN]) ())
     :: Stmts.unused "DUMMY_VAR__"
 
   let serializer_in =
@@ -282,21 +281,19 @@ module Decls = struct
          ~type_:(TypeTrait ("stan::io::deserializer", [Types.local_scalar]))
          ~name:"in__"
          ~init:(Construction [Var "params_r__"; Var "params_i__"])
-         () )
+         ())
 
   let serializer_out =
     VariableDefn
       (make_variable_defn
          ~type_:(TypeTrait ("stan::io::serializer", [Types.local_scalar]))
-         ~name:"out__"
-         ~init:(Construction [Var "vars__"])
-         () )
+         ~name:"out__" ~init:(Construction [Var "vars__"]) ())
 
   let lp_accum t =
     VariableDefn
       (make_variable_defn
          ~type_:(TypeTrait ("stan::math::accumulator", [t]))
-         ~name:"lp_accum__" () )
+         ~name:"lp_accum__" ())
 end
 
 type template_parameter =
@@ -401,11 +398,11 @@ module Printing = struct
         pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) subtypes
     | TypeLiteral id -> pp_identifier ppf id
     | Matrix (t, i, j, mem_pattern) -> (
-      match mem_pattern with
-      | Middle.Mem_pattern.AoS ->
-          pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
-      | Middle.Mem_pattern.SoA ->
-          pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j )
+        match mem_pattern with
+        | Middle.Mem_pattern.AoS ->
+            pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
+        | Middle.Mem_pattern.SoA ->
+            pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j)
     | Const t -> pf ppf "const %a" pp_type_ t
     | Ref t -> pf ppf "%a&" pp_type_ t
     | Pointer t -> pf ppf "%a*" pp_type_ t
@@ -444,7 +441,7 @@ module Printing = struct
           | RequireAllCondition (trait, name) -> Second (trait, name)
           | Typename name -> First (`Typename name)
           | Bool name -> First (`Bool name)
-          | Require (requirement, args) -> First (`Require (requirement, args)) )
+          | Require (requirement, args) -> First (`Require (requirement, args)))
       in
       pf ppf "template <@[%a%a@]>@ "
         (list ~sep:comma pp_basic_template)
@@ -685,7 +682,7 @@ module Tests = struct
            on one line"; Comment "A potentially \n multiline comment"
       ; Expression (Assign (Var "foo", Literal "3")) ] in
     let rethrow = Stmts.rethrow_located s in
-    Fmt.list Printing.pp_stmt Fmt.stdout rethrow ;
+    Fmt.list Printing.pp_stmt Fmt.stdout rethrow;
     [%expect
       {|
       try {
@@ -707,7 +704,7 @@ module Tests = struct
     let ifelse = IfElse (Literal "1", Block s, Some (Block s)) in
     let if_empty = IfElse (Literal "1", Block [], None) in
     let if_noelse = IfElse (Literal "1", Block s, None) in
-    Fmt.(vbox @@ list Printing.pp_stmt) Fmt.stdout [ifelse; if_empty; if_noelse] ;
+    Fmt.(vbox @@ list Printing.pp_stmt) Fmt.stdout [ifelse; if_empty; if_noelse];
     [%expect
       {|
         if (1) {
@@ -738,7 +735,7 @@ module Tests = struct
       [ matrix (complex local_scalar); const_char_array 43
       ; std_vector ~dims:2 Double; const_ref (TemplateType "T0__") ] in
     let open Fmt in
-    pf stdout "@[<v>%a@]" (list ~sep:comma Printing.pp_type_) ts ;
+    pf stdout "@[<v>%a@]" (list ~sep:comma Printing.pp_type_) ts;
     [%expect
       {|
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>,
@@ -754,9 +751,9 @@ module Tests = struct
     let vector = Constructor (row_vector Double, [Literal "3"]) in
     let values = [Literal "1"; Var "a"; Literal "3"] in
     let e = (vector << values).@!("finished") in
-    print_s [%sexp (e : expr)] ;
-    print_endline "" ;
-    Printing.pp_expr Fmt.stdout e ;
+    print_s [%sexp (e : expr)];
+    print_endline "";
+    Printing.pp_expr Fmt.stdout e;
     [%expect
       {|
           (MethodCall
@@ -786,10 +783,10 @@ module Tests = struct
                  ; RequireAllCondition
                      (`Exact "stan::is_foobar", TemplateType "T0__") ] ]
              , false )
-           ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow () ) ]
+           ~name:"foobar" ~return_type:Void ~inline:true ~body:rethrow ()) ]
     in
     let open Fmt in
-    pf stdout "@[<v>%a@]" (list ~sep:cut Printing.pp_fun_defn) funs ;
+    pf stdout "@[<v>%a@]" (list ~sep:cut Printing.pp_fun_defn) funs;
     [%expect
       {|
               template <typename T0__,

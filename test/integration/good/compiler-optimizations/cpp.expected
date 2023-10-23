@@ -34980,6 +34980,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             "assigning variable lcm_sym9__");
           double qT = std::numeric_limits<double>::quiet_NaN();
           lcm_sym16__ = stan::math::prod(lcm_sym9__);
+          lcm_sym19__ = 1;
           stan::model::assign(psi_con, ((lcm_sym14__ * lcm_sym16__) /
             stan::math::fma(lcm_sym14__, lcm_sym16__, (1 - lcm_sym14__))),
             "assigning variable psi_con", stan::model::index_uni(1));
@@ -34990,6 +34991,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                 stan::model::index_uni(1)), base_rng__),
             "assigning variable z", stan::model::index_uni(1));
         } else {
+          lcm_sym19__ = 1;
           stan::model::assign(psi_con, 1, "assigning variable psi_con",
             stan::model::index_uni(1));
           current_statement__ = 10;
@@ -35021,8 +35023,9 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             lcm_sym15__ = stan::math::prod(lcm_sym8__);
             current_statement__ = 20;
             stan::model::assign(psi_con, ((lcm_sym13__ * lcm_sym15__) /
-              stan::math::fma(lcm_sym13__, lcm_sym15__, (1 - lcm_sym13__))),
-              "assigning variable psi_con", stan::model::index_uni(i));
+              stan::math::fma(lcm_sym13__, lcm_sym15__, (lcm_sym19__ -
+                lcm_sym13__))), "assigning variable psi_con",
+              stan::model::index_uni(i));
             current_statement__ = 16;
             stan::model::assign(z,
               stan::math::bernoulli_rng(
@@ -35031,8 +35034,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
               "assigning variable z", stan::model::index_uni(i));
           } else {
             current_statement__ = 19;
-            stan::model::assign(psi_con, 1, "assigning variable psi_con",
-              stan::model::index_uni(i));
+            stan::model::assign(psi_con, lcm_sym19__,
+              "assigning variable psi_con", stan::model::index_uni(i));
             current_statement__ = 10;
             stan::model::assign(z, 1, "assigning variable z",
               stan::model::index_uni(i));

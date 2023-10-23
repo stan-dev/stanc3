@@ -5,8 +5,8 @@
    parser/typechecker/etc as appropriate.
 *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 open Ast
 open Deprecation_analysis
@@ -65,8 +65,8 @@ let collect_removed_lval acc : typed_lval -> _ = function
           (List.for_all
              ~f:(function
                | Single {emeta= {type_= UnsizedType.UInt; _}; _} -> true
-               | _ -> false )
-             (flatten l) )
+               | _ -> false)
+             (flatten l))
       then
         acc
         @ [ ( l.lmeta.loc
@@ -118,7 +118,7 @@ let collect_removals (program : typed_program) =
         ( loc
         , "Comments beginning with # were removed in Stan 2.33.0. Use // to \
            begin line comments; this can be done automatically using the \
-           auto-format flag to stanc" ) ) in
+           auto-format flag to stanc" )) in
   let arrs =
     List.map !old_array_usages ~f:(fun (loc, unsized) ->
         let placement = if unsized then "a type" else "a variable name" in
@@ -126,7 +126,7 @@ let collect_removals (program : typed_program) =
         , "Declaration of arrays by placing brackets after " ^ placement
           ^ " was removed in Stan 2.33.0. Instead use the array keyword before \
              the type. This can be changed automatically using the auto-format \
-             flag to stanc" ) ) in
+             flag to stanc" )) in
   fold_program collect_removed_stmt (pounds @ arrs) program
 
 let pp ?printed_filename ppf (span, message) =

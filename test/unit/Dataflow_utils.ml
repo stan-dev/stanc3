@@ -1,7 +1,7 @@
 open Middle
 open Analysis_and_optimization.Dataflow_utils
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Analysis_and_optimization.Dataflow_types
 
 (***********************************)
@@ -28,12 +28,12 @@ let%expect_test "Loop test" =
   let exits, preds = build_predecessor_graph statement_map in
   print_s
     [%sexp
-      ( statement_map
+      (statement_map
         : ( label
           , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
-          Map.Poly.t )] ;
-  print_s [%sexp (exits : label Set.Poly.t)] ;
-  print_s [%sexp (preds : (label, label Set.Poly.t) Map.Poly.t)] ;
+          Map.Poly.t)];
+  print_s [%sexp (exits : label Set.Poly.t)];
+  print_s [%sexp (preds : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1
@@ -119,7 +119,7 @@ let%expect_test "Loop passthrough" =
         (fun {meta; _} -> meta)
         {meta= Location_span.empty; pattern= block}) in
   let exits, _ = build_predecessor_graph statement_map in
-  print_s [%sexp (exits : label Set.Poly.t)] ;
+  print_s [%sexp (exits : label Set.Poly.t)];
   [%expect {|
       (1)
     |}]
@@ -173,8 +173,8 @@ let example1_statement_map =
 let%expect_test "Statement label map example" =
   print_s
     [%sexp
-      ( Map.Poly.map example1_statement_map ~f:fst
-        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t) Map.Poly.t )] ;
+      (Map.Poly.map example1_statement_map ~f:fst
+        : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t) Map.Poly.t)];
   [%expect
     {|
       ((1 (Block (2))) (2 (Block (3 4 5)))
@@ -278,7 +278,7 @@ let%expect_test "Predecessor graph example" =
   let exits, preds = build_predecessor_graph example1_statement_map in
   print_s
     [%sexp
-      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1)
@@ -290,7 +290,7 @@ let%expect_test "Predecessor graph example" =
 
 let%expect_test "Controlflow graph example" =
   let cf = build_cf_graph example1_statement_map in
-  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1 ()) (2 ()) (3 ()) (4 ()) (5 ()) (6 (5)) (7 (5)) (8 (5)) (9 (5 13))
@@ -332,10 +332,10 @@ let example3_statement_map =
 let%expect_test "Statement label map example 3" =
   print_s
     [%sexp
-      ( example3_statement_map
+      (example3_statement_map
         : ( label
           , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
-          Map.Poly.t )] ;
+          Map.Poly.t)];
   [%expect
     {|
       ((1
@@ -379,7 +379,7 @@ let%expect_test "Statement label map example 3" =
 
 let%expect_test "Controlflow graph example 3" =
   let cf = build_cf_graph example3_statement_map in
-  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect {|
       ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 ()))
     |}]
@@ -392,7 +392,7 @@ let%expect_test "Predecessor graph example 3" =
   let exits, preds = build_predecessor_graph example3_statement_map in
   print_s
     [%sexp
-      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((2) ((1 ()) (2 (3)) (3 (6)) (4 (1 5)) (5 (4)) (6 (4))))
@@ -426,10 +426,10 @@ let example4_statement_map =
 let%expect_test "Statement label map example 4" =
   print_s
     [%sexp
-      ( example4_statement_map
+      (example4_statement_map
         : ( label
           , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
-          Map.Poly.t )] ;
+          Map.Poly.t)];
   [%expect
     {|
       ((1
@@ -478,7 +478,7 @@ let%expect_test "Statement label map example 4" =
 
 let%expect_test "Controlflow graph example 4" =
   let cf = build_cf_graph example4_statement_map in
-  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 (4)) (7 (4 6)))
@@ -493,7 +493,7 @@ let%expect_test "Predecessor graph example 4" =
   *)
   print_s
     [%sexp
-      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((2) ((1 ()) (2 (3)) (3 (4)) (4 (1 5 6)) (5 (7)) (6 (4)) (7 (6))))
@@ -528,10 +528,10 @@ let example5_statement_map =
 let%expect_test "Statement label map example 5" =
   print_s
     [%sexp
-      ( example5_statement_map
+      (example5_statement_map
         : ( label
           , (Expr.Typed.t, label) Stmt.Fixed.Pattern.t * Location_span.t )
-          Map.Poly.t )] ;
+          Map.Poly.t)];
   [%expect
     {|
       ((1
@@ -585,7 +585,7 @@ let%expect_test "Statement label map example 5" =
 
 let%expect_test "Controlflow graph example 5" =
   let cf = build_cf_graph example5_statement_map in
-  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1 ()) (2 ()) (3 ()) (4 (6)) (5 (4)) (6 (4)) (7 (4)) (8 ()))
@@ -599,7 +599,7 @@ let%expect_test "Predecessor graph example 5" =
      ) *)
   print_s
     [%sexp
-      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)] ;
+      ((exits, preds) : label Set.Poly.t * (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((2) ((1 ()) (2 (3)) (3 (8)) (4 (1 5)) (5 (7)) (6 (4)) (7 (6)) (8 (4 6))))

@@ -1,7 +1,7 @@
 (** The parser for Stan. A Menhir file. *)
 
 %{
-open Core_kernel
+open Core
 open Middle
 open Ast
 open Debugging
@@ -287,7 +287,7 @@ return_type:
   | VOID
     { grammar_logger "return_type VOID" ; Void }
   | ut=unsized_type
-    {  grammar_logger "return_type unsized_type" ; ReturnType ut }
+    {  grammar_logger "return_type unsized_type" ; UnsizedType.ReturnType ut }
 
 arg_decl:
   | od=option(DATABLOCK) ut=unsized_type id=decl_identifier
@@ -447,7 +447,7 @@ tuple_type(type_rule):
   { grammar_logger "tuple_type" ;
     let ts = head::rest in
     let types, trans = List.unzip ts in
-    (SizedType.STuple types, TupleTransformation trans)
+    (SizedType.STuple types, Transformation.TupleTransformation trans)
   }
 
 var_decl:
@@ -492,7 +492,7 @@ sized_basic_type:
   | COMPLEXROWVECTOR LBRACK e=expression RBRACK
     { grammar_logger "COMPLEXROWVECTOR_var_type" ; (SizedType.SComplexRowVector e , Identity) }
   | COMPLEXMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "COMPLEXMATRIX_var_type" ; (SizedType.SComplexMatrix (e1, e2), Identity) }
+    { grammar_logger "COMPLEXMATRIX_var_type" ; (SizedType.SComplexMatrix (e1, e2), Transformation.Identity) }
 
 top_var_type:
   | INT r=range_constraint
@@ -539,7 +539,7 @@ top_var_type:
   | CORRMATRIX LBRACK e=expression RBRACK
     { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Covariance) }
+    { grammar_logger "COVMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e, e), Transformation.Covariance) }
 
 type_constraint:
   | r=range_constraint

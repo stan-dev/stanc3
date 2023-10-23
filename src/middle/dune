@@ -1,7 +1,7 @@
 (library
  (name middle)
  (public_name stanc.middle)
- (libraries core_kernel str fmt common re)
+ (libraries core str fmt common re)
  (instrumentation
   (backend bisect_ppx))
  (inline_tests)

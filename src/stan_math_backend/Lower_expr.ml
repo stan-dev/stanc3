@@ -1,7 +1,7 @@
 (** Lowering of Stan expressions to C++ *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 open Cpp
 
@@ -87,7 +87,7 @@ let promote_adtype =
     ~f:(fun accum expr ->
       match Expr.Typed.adlevel_of expr with
       | AutoDiffable -> AutoDiffable
-      | _ -> accum )
+      | _ -> accum)
     ~init:UnsizedType.DataOnly
 
 let suffix_args = function
@@ -177,7 +177,7 @@ let rec lower_possibly_var_decl adtype ut mem_pattern =
       Tuple
         (List.map2_exn
            ~f:(fun ad t -> lower_possibly_var_decl ad t mem_pattern)
-           ads t_lst )
+           ads t_lst)
   | x, ad ->
       Common.FatalError.fatal_error_msg
         [%message
@@ -213,7 +213,7 @@ and read_data ut es =
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in
   let open Expression_syntax in
   let data_context = Var "context__" in
-  data_context.@?((val_method, [lower_expr (List.hd_exn es)]))
+  data_context.@?(val_method, [lower_expr (List.hd_exn es)])
 
 and lower_binary_op op fn es =
   if is_scalar (first es) && is_scalar (second es) then
@@ -274,7 +274,7 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
   | "target" | "get_lp" ->
       Some
         (fun _ ->
-          Exprs.fun_call "stan::math::get_lp" [Var "lp__"; Var "lp_accum__"] )
+          Exprs.fun_call "stan::math::get_lp" [Var "lp__"; Var "lp_accum__"])
   | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row" | "append_col"
     when mem_pattern = Mem_pattern.SoA -> (
       let is_autodiffable Expr.Fixed.{meta= Expr.Typed.Meta.{adlevel; _}; _} =
@@ -291,9 +291,9 @@ and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
                         t mem_pattern ]
                     (lower_exprs es)
               | false ->
-                  Exprs.fun_call (stan_namespace_qualify f) (lower_exprs es) )
+                  Exprs.fun_call (stan_namespace_qualify f) (lower_exprs es))
       | Some Void -> None
-      | None -> None )
+      | None -> None)
   | _ -> None
 
 and lower_functionals fname suffix es mem_pattern =
@@ -368,7 +368,7 @@ and lower_functionals fname suffix es mem_pattern =
         | ( "map_rect"
           , {pattern= Lit (Int, id); _}
             :: {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
-               :: tl ) ->
+            :: tl ) ->
             (Fmt.str "%s<%s, %s>" fname id f, tl @ [msgs])
         | _, args -> (fname, args @ [msgs]) in
       let fname = stan_namespace_qualify fname in
@@ -411,10 +411,10 @@ and lower_compiler_internal ad ut f es =
           if
             UnsizedType.is_dataonlytype adlevel
             && not
-                 ( UnsizedType.is_scalar_type type_
-                 || UnsizedType.contains_tuple type_ )
+                 (UnsizedType.is_scalar_type type_
+                 || UnsizedType.contains_tuple type_)
           then Types.const_ref base_type
-          else base_type ) in
+          else base_type) in
     Constructor (Tuple types, lower_exprs es) in
   match f with
   | Internal_fun.FnMakeArray ->
@@ -430,27 +430,27 @@ and lower_compiler_internal ad ut f es =
         (lower_unsizedtype_local ad ut)
         (lower_exprs es)
   | FnMakeRowVec -> (
-    match ut with
-    | UnsizedType.URowVector ->
-        let st = local_scalar ut (promote_adtype es) in
-        vector_literal st es
-    | UMatrix ->
-        fun_call "stan::math::to_matrix"
-          [ std_vector_init_expr
-              (lower_unsizedtype_local ad URowVector)
-              (lower_exprs es) ]
-    | UComplexRowVector ->
-        let st = Types.complex (local_scalar ut (promote_adtype es)) in
-        vector_literal st es
-    | UComplexMatrix ->
-        fun_call "stan::math::to_matrix"
-          [ std_vector_init_expr
-              (lower_unsizedtype_local ad UComplexRowVector)
-              (lower_exprs es) ]
-    | _ ->
-        Common.FatalError.fatal_error_msg
-          [%message
-            "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
+      match ut with
+      | UnsizedType.URowVector ->
+          let st = local_scalar ut (promote_adtype es) in
+          vector_literal st es
+      | UMatrix ->
+          fun_call "stan::math::to_matrix"
+            [ std_vector_init_expr
+                (lower_unsizedtype_local ad URowVector)
+                (lower_exprs es) ]
+      | UComplexRowVector ->
+          let st = Types.complex (local_scalar ut (promote_adtype es)) in
+          vector_literal st es
+      | UComplexMatrix ->
+          fun_call "stan::math::to_matrix"
+            [ std_vector_init_expr
+                (lower_unsizedtype_local ad UComplexRowVector)
+                (lower_exprs es) ]
+      | _ ->
+          Common.FatalError.fatal_error_msg
+            [%message
+              "Unexpected type for row vector literal" (ut : UnsizedType.t)])
   | FnReadData -> read_data ut es
   | FnReadDeserializer ->
       deserializer.@<>(( "read"
@@ -472,7 +472,7 @@ and lower_compiler_internal ad ut f es =
           deserializer.@<>(( "template read_constrain_" ^ constraint_string
                            , [ lower_possibly_var_decl AutoDiffable ut
                                  mem_pattern; TemplateType "jacobian__" ]
-                           , lower_exprs args )) )
+                           , lower_exprs args )))
   | FnDeepCopy ->
       lower_fun_app Fun_kind.FnPlain "stan::model::deep_copy" es Mem_pattern.AoS
         (Some UnsizedType.Void)
@@ -492,8 +492,8 @@ and lower_index = function
 
 and lower_indexed e indices pretty =
   Exprs.fun_call "stan::model::rvalue"
-    ( [lower_expr e; Exprs.literal_string pretty]
-    @ List.map ~f:lower_index indices )
+    ([lower_expr e; Exprs.literal_string pretty]
+    @ List.map ~f:lower_index indices)
 
 and lower_indexed_simple (e : expr) idcs =
   let idx_minus_one = function
@@ -511,7 +511,7 @@ and lower_indexed_simple (e : expr) idcs =
               (e : expr)
               (idcs : Expr.Typed.t Index.t list)] in
   List.fold idcs ~init:e ~f:(fun e id ->
-      Index (e, idx_minus_one (Index.map lower_expr id)) )
+      Index (e, idx_minus_one (Index.map lower_expr id)))
 
 and lower_expr ?(promote_reals = false)
     (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =
@@ -565,15 +565,15 @@ and lower_expr ?(promote_reals = false)
   | FunApp (UserDefined (f, suffix), es) -> lower_user_defined_fun f suffix es
   | Indexed (e, []) -> lower_expr e
   | Indexed (e, idx) -> (
-    match e.pattern with
-    | FunApp (CompilerInternal FnReadData, _) ->
-        lower_indexed_simple (lower_expr e) idx
-    | _
-      when List.for_all ~f:dont_need_range_check idx
-           && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
-      ->
-        lower_indexed_simple (lower_expr e) idx
-    | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e) )
+      match e.pattern with
+      | FunApp (CompilerInternal FnReadData, _) ->
+          lower_indexed_simple (lower_expr e) idx
+      | _
+        when List.for_all ~f:dont_need_range_check idx
+             && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
+        ->
+          lower_indexed_simple (lower_expr e) idx
+      | _ -> lower_indexed e idx (Fmt.to_to_string Expr.Typed.pp e))
   | TupleProjection (t, ix) ->
       templated_fun_call "std::get"
         [TypeLiteral (string_of_int (ix - 1))]
@@ -596,31 +596,30 @@ module Testing = struct
     Fmt.str "%a" Cpp.Printing.pp_expr (lower_expr @@ dummy_locate e)
 
   let%expect_test "pp_expr1" =
-    printf "%s" (pp_unlocated (Var "a")) ;
+    printf "%s" (pp_unlocated (Var "a"));
     [%expect {| a |}]
 
   let%expect_test "pp_expr2" =
-    printf "%s" (pp_unlocated (Lit (Str, "b"))) ;
+    printf "%s" (pp_unlocated (Lit (Str, "b")));
     [%expect {| "b" |}]
 
   let%expect_test "pp_expr3" =
-    printf "%s" (pp_unlocated (Lit (Int, "112"))) ;
+    printf "%s" (pp_unlocated (Lit (Int, "112")));
     [%expect {| 112 |}]
 
   let%expect_test "pp_expr4" =
-    printf "%s" (pp_unlocated (Lit (Int, "112"))) ;
+    printf "%s" (pp_unlocated (Lit (Int, "112")));
     [%expect {| 112 |}]
 
   let%expect_test "pp_expr5" =
-    printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), []))) ;
+    printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), [])));
     [%expect {| stan::math::pi() |}]
 
   let%expect_test "pp_expr6" =
     printf "%s"
       (pp_unlocated
          (FunApp
-            (StanLib ("sqrt", FnPlain, AoS), [dummy_locate (Lit (Int, "123"))])
-         ) ) ;
+            (StanLib ("sqrt", FnPlain, AoS), [dummy_locate (Lit (Int, "123"))])));
     [%expect {| stan::math::sqrt(123) |}]
 
   let%expect_test "pp_expr7" =
@@ -629,7 +628,7 @@ module Testing = struct
          (FunApp
             ( StanLib ("atan", FnPlain, AoS)
             , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
-            ) ) ) ;
+            )));
     [%expect {| stan::math::atan(123, 1.2) |}]
 
   let%expect_test "pp_expr9" =
@@ -638,11 +637,11 @@ module Testing = struct
          (TernaryIf
             ( dummy_locate (Lit (Int, "1"))
             , dummy_locate (Lit (Real, "1.2"))
-            , dummy_locate (Lit (Real, "2.3")) ) ) ) ;
+            , dummy_locate (Lit (Real, "2.3")) )));
     [%expect {| (1 ? 1.2 : 2.3) |}]
 
   let%expect_test "pp_expr10" =
-    printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
+    printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All])));
     [%expect {| stan::model::rvalue(a, "a", stan::model::index_omni()) |}]
 
   let%expect_test "pp_expr11" =
@@ -650,15 +649,15 @@ module Testing = struct
       (pp_unlocated
          (FunApp
             ( UserDefined ("poisson_rng", FnRng)
-            , [dummy_locate (Lit (Int, "123"))] ) ) ) ;
+            , [dummy_locate (Lit (Int, "123"))] )));
     [%expect {| poisson_rng(123, base_rng__, pstream__) |}]
 
   let%expect_test "pp_expr12" =
     printf "%s\n"
-      (Fmt.str "%a" Cpp.Printing.pp_expr (vector_literal Cpp.Double [])) ;
+      (Fmt.str "%a" Cpp.Printing.pp_expr (vector_literal Cpp.Double []));
     printf "%s"
       (Fmt.str "%a" Cpp.Printing.pp_expr
-         (vector_literal ~column:true Cpp.Double []) ) ;
+         (vector_literal ~column:true Cpp.Double []));
     [%expect
       {|
       Eigen::Matrix<double,1,-1>(0)

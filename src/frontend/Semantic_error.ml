@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 
 (** Type errors that may arise during semantic check *)
@@ -32,8 +32,8 @@ module TypeError = struct
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
-        * ( UnsizedType.returntype
-          * (UnsizedType.autodifftype * UnsizedType.t) list )
+        * (UnsizedType.returntype
+          * (UnsizedType.autodifftype * UnsizedType.t) list)
           list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
@@ -163,7 +163,7 @@ module TypeError = struct
              (fun ppf tys ->
                Fmt.pf ppf "For args @[(%a)@], this"
                  (Fmt.list ~sep:Fmt.comma UnsizedType.pp)
-                 tys ) )
+                 tys))
           arg_tys
           (Fmt.list ~sep:Fmt.cut pp_sig)
           signatures
@@ -204,29 +204,30 @@ module TypeError = struct
            was supplied."
           fn_name
     | ReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
-      match sug with
-      | None ->
-          Fmt.pf ppf
-            "A returning function was expected but an undeclared identifier \
-             '%s' was supplied."
-            fn_name
-      | Some s ->
-          Fmt.pf ppf
-            "A returning function was expected but an undeclared identifier \
-             '%s' was supplied.@ A similar known identifier is '%s'"
-            fn_name s )
+        match sug with
+        | None ->
+            Fmt.pf ppf
+              "A returning function was expected but an undeclared identifier \
+               '%s' was supplied."
+              fn_name
+        | Some s ->
+            Fmt.pf ppf
+              "A returning function was expected but an undeclared identifier \
+               '%s' was supplied.@ A similar known identifier is '%s'"
+              fn_name s)
     | NonReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
-      match sug with
-      | None ->
-          Fmt.pf ppf
-            "A non-returning function was expected but an undeclared \
-             identifier '%s' was supplied."
-            fn_name
-      | Some s ->
-          Fmt.pf ppf
-            "A non-returning function was expected but an undeclared \
-             identifier '%s' was supplied.@ A nearby known identifier is '%s'"
-            fn_name s )
+        match sug with
+        | None ->
+            Fmt.pf ppf
+              "A non-returning function was expected but an undeclared \
+               identifier '%s' was supplied."
+              fn_name
+        | Some s ->
+            Fmt.pf ppf
+              "A non-returning function was expected but an undeclared \
+               identifier '%s' was supplied.@ A nearby known identifier is \
+               '%s'"
+              fn_name s)
     | ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix) ->
         Fmt.pf ppf "Function '%s_%s' is not implemented for distribution '%s'."
           prefix suffix prefix
@@ -252,8 +253,8 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied arguments of incompatible type: \
            %a, %a.@]"
           Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n")
           UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
@@ -261,16 +262,16 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied argument of incompatible type: \
            %a.@]"
           Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n")
           UnsizedType.pp ut
     | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
            signatures: %s\n\
            Instead supplied argument of incompatible type: %a." Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n")
           UnsizedType.pp ut
 end
 
@@ -295,10 +296,11 @@ module IdentifierError = struct
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
     | NotInScope (name, sug) -> (
-      match sug with
-      | None -> Fmt.pf ppf "Identifier '%s' not in scope." name
-      | Some s ->
-          Fmt.pf ppf "Identifier '%s' not in scope. Did you mean '%s'?" name s )
+        match sug with
+        | None -> Fmt.pf ppf "Identifier '%s' not in scope." name
+        | Some s ->
+            Fmt.pf ppf "Identifier '%s' not in scope. Did you mean '%s'?" name s
+        )
     | UnnormalizedSuffix name ->
         Fmt.pf ppf
           "Identifier '%s' has a _lupdf/_lupmf suffix, which is only allowed \
@@ -486,8 +488,8 @@ module StatementError = struct
           name UnsizedType.pp_returntype rt'
     | FuncDeclRedefined (name, ut, stan_math) ->
         Fmt.pf ppf "Function '%s' %s signature %a" name
-          ( if stan_math then "is already declared in the Stan Math library with"
-          else "has already been declared for" )
+          (if stan_math then "is already declared in the Stan Math library with"
+           else "has already been declared for")
           UnsizedType.pp ut
     | FunDeclExists name ->
         Fmt.pf ppf

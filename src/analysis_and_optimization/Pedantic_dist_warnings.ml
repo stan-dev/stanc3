@@ -1,5 +1,5 @@
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 open Mir_utils
 
@@ -208,7 +208,7 @@ let uniform_dist_warning (dist_info : dist_info) :
        |_, Number (uni, _), {upper= `Lit bound; _} ->
           (* the variate is bounded differently than the uniform dist *)
           if uni = bound then None else warning
-      | _ -> None )
+      | _ -> None)
   | _ -> None
 
 let lkj_corr_message : string =

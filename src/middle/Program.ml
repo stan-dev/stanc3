@@ -1,6 +1,6 @@
 (** Defines the core of the MIR *)
 
-open Core_kernel
+open Core
 
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 [@@deriving sexp, hash, map]
@@ -123,22 +123,22 @@ let pp pp_e pp_s ppf
     ; transform_inits
     ; output_vars
     ; _ } =
-  Format.open_vbox 0 ;
-  pp_functions_block (pp_fun_def pp_s) ppf functions_block ;
-  Fmt.cut ppf () ;
-  pp_input_vars pp_e ppf input_vars ;
-  Fmt.cut ppf () ;
-  pp_prepare_data pp_s ppf prepare_data ;
-  Fmt.cut ppf () ;
-  pp_log_prob pp_s ppf log_prob ;
-  Fmt.cut ppf () ;
-  pp_reverse_mode_log_prob pp_s ppf reverse_mode_log_prob ;
-  Fmt.cut ppf () ;
-  pp_generate_quantities pp_s ppf generate_quantities ;
-  Fmt.cut ppf () ;
-  pp_transform_inits pp_s ppf transform_inits ;
-  Fmt.cut ppf () ;
-  pp_output_vars pp_e ppf output_vars ;
+  Format.open_vbox 0;
+  pp_functions_block (pp_fun_def pp_s) ppf functions_block;
+  Fmt.cut ppf ();
+  pp_input_vars pp_e ppf input_vars;
+  Fmt.cut ppf ();
+  pp_prepare_data pp_s ppf prepare_data;
+  Fmt.cut ppf ();
+  pp_log_prob pp_s ppf log_prob;
+  Fmt.cut ppf ();
+  pp_reverse_mode_log_prob pp_s ppf reverse_mode_log_prob;
+  Fmt.cut ppf ();
+  pp_generate_quantities pp_s ppf generate_quantities;
+  Fmt.cut ppf ();
+  pp_transform_inits pp_s ppf transform_inits;
+  Fmt.cut ppf ();
+  pp_output_vars pp_e ppf output_vars;
   Format.close_box ()
 
 (** Programs with typed expressions and locations *)

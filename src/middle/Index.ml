@@ -1,6 +1,6 @@
 (** Types of indexing operations *)
 
-open Core_kernel
+open Core
 
 type 'a t =
   | All
@@ -18,8 +18,8 @@ let pp pp_e ppf = function
 
 let pp_indices pp_e ppf indices =
   Fmt.pf ppf {|@[%a@]|}
-    ( if List.is_empty indices then fun _ _ -> ()
-    else Fmt.(list (pp pp_e) ~sep:comma |> brackets) )
+    (if List.is_empty indices then fun _ _ -> ()
+     else Fmt.(list (pp pp_e) ~sep:comma |> brackets))
     indices
 
 let bounds = function
@@ -49,4 +49,4 @@ let folder (acc : string Set.Poly.t) op (ind : 'a t) : string Set.Poly.t =
   | Single ind_expr | Upfrom ind_expr | MultiIndex ind_expr -> op acc ind_expr
   | Between (expr_top, expr_bottom) ->
       let top_fold = op acc expr_top in
-      Set.Poly.union top_fold (op top_fold expr_bottom)
+      Set.Poly.union_list [top_fold; op top_fold expr_bottom]

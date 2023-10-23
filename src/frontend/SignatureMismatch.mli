@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 
 type type_mismatch = private
@@ -78,11 +78,11 @@ val pp_signature_mismatch :
      Format.formatter
   -> string
      * UnsizedType.t list
-     * ( ( ( UnsizedType.returntype
-           * (UnsizedType.autodifftype * UnsizedType.t) list )
-         * function_mismatch )
-         list
-       * bool )
+     * (((UnsizedType.returntype
+         * (UnsizedType.autodifftype * UnsizedType.t) list)
+        * function_mismatch)
+        list
+       * bool)
   -> unit
 
 val pp_math_lib_assignmentoperator_sigs :

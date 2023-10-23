@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 open Dataflow_types
 
@@ -45,27 +45,27 @@ val map_rec_expr :
 val map_rec_expr_state :
      (   's
       -> Expr.Typed.t Expr.Fixed.Pattern.t
-      -> Expr.Typed.t Expr.Fixed.Pattern.t * 's )
+      -> Expr.Typed.t Expr.Fixed.Pattern.t * 's)
   -> 's
   -> Expr.Typed.t
   -> Expr.Typed.t * 's
 
 val map_rec_stmt_loc :
      (   (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t )
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
   -> Stmt.Located.t
   -> Stmt.Located.t
 
 val top_down_map_rec_stmt_loc :
      (   (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t )
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
   -> Stmt.Located.t
   -> Stmt.Located.t
 
 val map_rec_state_stmt_loc :
      (   's
       -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's )
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's)
   -> 's
   -> Stmt.Located.t
   -> Stmt.Located.t * 's
@@ -74,7 +74,7 @@ val map_rec_stmt_loc_num :
      (int, Stmt.Located.Non_recursive.t) Map.Poly.t
   -> (   int
       -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t )
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
   -> Stmt.Located.Non_recursive.t
   -> Stmt.Located.t
 
@@ -124,7 +124,7 @@ val index_var_set :
    For use in RHS sets, not LHS assignment sets, except in a target term
 *)
 
-val expr_var_names_set : Expr.Typed.t -> string Core_kernel.Set.Poly.t
+val expr_var_names_set : Expr.Typed.t -> string Core.Set.Poly.t
 (**
    Return the names of the variables in an expression.
 *)
