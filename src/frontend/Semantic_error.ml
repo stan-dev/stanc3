@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 
 (** Type errors that may arise during semantic check *)
@@ -32,8 +32,8 @@ module TypeError = struct
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
-        * ( UnsizedType.returntype
-          * (UnsizedType.autodifftype * UnsizedType.t) list )
+        * (UnsizedType.returntype
+          * (UnsizedType.autodifftype * UnsizedType.t) list)
           list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
@@ -102,13 +102,15 @@ module TypeError = struct
           UnsizedType.pp ut
     | IllTypedAssignment (Operator.Equals, lt, rt) ->
         Fmt.pf ppf
-          "Ill-typed arguments supplied to assignment operator =: lhs has type \
-           %a and rhs has type %a"
+          "Ill-typed arguments supplied to assignment operator =:@ @[<v2>The \
+           left hand side has type@ @[%a@]@]@ @[<v2>and the right hand side \
+           has type@ @[%a@]@]"
           UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedAssignment (op, lt, rt) ->
         Fmt.pf ppf
-          "@[<v>Ill-typed arguments supplied to assignment operator %a=: lhs \
-           has type %a and rhs has type %a.@ Available signatures for given \
+          "@[<v>Ill-typed arguments supplied to assignment operator %a=:@ \
+           @[<v2>The left hand side has type@ @[%a@]@]@ @[<v2>and the right \
+           hand side has type@ @[%a@]@]@ Available signatures for given \
            lhs:@]@ %a"
           Operator.pp op UnsizedType.pp lt UnsizedType.pp rt
           SignatureMismatch.pp_math_lib_assignmentoperator_sigs (lt, op)
@@ -161,7 +163,7 @@ module TypeError = struct
              (fun ppf tys ->
                Fmt.pf ppf "For args @[(%a)@], this"
                  (Fmt.list ~sep:Fmt.comma UnsizedType.pp)
-                 tys ) )
+                 tys))
           arg_tys
           (Fmt.list ~sep:Fmt.cut pp_sig)
           signatures
@@ -202,29 +204,30 @@ module TypeError = struct
            was supplied."
           fn_name
     | ReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
-      match sug with
-      | None ->
-          Fmt.pf ppf
-            "A returning function was expected but an undeclared identifier \
-             '%s' was supplied."
-            fn_name
-      | Some s ->
-          Fmt.pf ppf
-            "A returning function was expected but an undeclared identifier \
-             '%s' was supplied.@ A similar known identifier is '%s'"
-            fn_name s )
+        match sug with
+        | None ->
+            Fmt.pf ppf
+              "A returning function was expected but an undeclared identifier \
+               '%s' was supplied."
+              fn_name
+        | Some s ->
+            Fmt.pf ppf
+              "A returning function was expected but an undeclared identifier \
+               '%s' was supplied.@ A similar known identifier is '%s'"
+              fn_name s)
     | NonReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
-      match sug with
-      | None ->
-          Fmt.pf ppf
-            "A non-returning function was expected but an undeclared \
-             identifier '%s' was supplied."
-            fn_name
-      | Some s ->
-          Fmt.pf ppf
-            "A non-returning function was expected but an undeclared \
-             identifier '%s' was supplied.@ A nearby known identifier is '%s'"
-            fn_name s )
+        match sug with
+        | None ->
+            Fmt.pf ppf
+              "A non-returning function was expected but an undeclared \
+               identifier '%s' was supplied."
+              fn_name
+        | Some s ->
+            Fmt.pf ppf
+              "A non-returning function was expected but an undeclared \
+               identifier '%s' was supplied.@ A nearby known identifier is \
+               '%s'"
+              fn_name s)
     | ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix) ->
         Fmt.pf ppf "Function '%s_%s' is not implemented for distribution '%s'."
           prefix suffix prefix
@@ -250,8 +253,8 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied arguments of incompatible type: \
            %a, %a.@]"
           Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n")
           UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
@@ -259,16 +262,16 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied argument of incompatible type: \
            %a.@]"
           Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n")
           UnsizedType.pp ut
     | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
            signatures: %s\n\
            Instead supplied argument of incompatible type: %a." Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n")
           UnsizedType.pp ut
 end
 
@@ -293,10 +296,11 @@ module IdentifierError = struct
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
     | NotInScope (name, sug) -> (
-      match sug with
-      | None -> Fmt.pf ppf "Identifier '%s' not in scope." name
-      | Some s ->
-          Fmt.pf ppf "Identifier '%s' not in scope. Did you mean '%s'?" name s )
+        match sug with
+        | None -> Fmt.pf ppf "Identifier '%s' not in scope." name
+        | Some s ->
+            Fmt.pf ppf "Identifier '%s' not in scope. Did you mean '%s'?" name s
+        )
     | UnnormalizedSuffix name ->
         Fmt.pf ppf
           "Identifier '%s' has a _lupdf/_lupmf suffix, which is only allowed \
@@ -361,8 +365,10 @@ module StatementError = struct
   type t =
     | CannotAssignToReadOnly of string
     | CannotAssignToGlobal of string
-    | CannotAssignFunction of UnsizedType.t * string
+    | CannotAssignFunction of string * UnsizedType.t
     | LValueMultiIndexing
+    | LValueTupleUnpackDuplicates of Ast.untyped_lval list
+    | LValueTupleReadAndWrite of string list
     | InvalidSamplingPDForPMF
     | InvalidSamplingCDForCCDF of string
     | InvalidSamplingNoSuchDistribution of string * bool
@@ -397,12 +403,30 @@ module StatementError = struct
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
           name
-    | CannotAssignFunction (ut, name) ->
+    | CannotAssignFunction (name, ut) ->
         Fmt.pf ppf "Cannot assign a function type '%a' to variable '%s'."
           UnsizedType.pp ut name
     | LValueMultiIndexing ->
         Fmt.pf ppf
           "Left hand side of an assignment cannot have nested multi-indexing."
+    | LValueTupleUnpackDuplicates lvs ->
+        let rec pp_lvalue ppf (l : Ast.untyped_lval) =
+          let open Fmt in
+          match l.lval with
+          | LVariable id -> string ppf id.name
+          | LIndexed (l, _) -> pf ppf "%a[...]" pp_lvalue l
+          | LTupleProjection (l, ix) -> pf ppf "%a.%n" pp_lvalue l ix in
+        Fmt.pf ppf
+          "@[<v2>The same value cannot be assigned to multiple times in one \
+           assignment:@ @[%a@]@]"
+          Fmt.(list ~sep:comma pp_lvalue)
+          lvs
+    | LValueTupleReadAndWrite ids ->
+        Fmt.pf ppf
+          "@[<v2>The same variable cannot be both assigned to and read from on \
+           the left hand side of an assignment:@ @[%a@]@]"
+          Fmt.(list ~sep:comma string)
+          ids
     | TargetPlusEqualsOutsideModelOrLogProb ->
         Fmt.pf ppf
           "Target can only be accessed in the model block or in definitions of \
@@ -464,8 +488,8 @@ module StatementError = struct
           name UnsizedType.pp_returntype rt'
     | FuncDeclRedefined (name, ut, stan_math) ->
         Fmt.pf ppf "Function '%s' %s signature %a" name
-          ( if stan_math then "is already declared in the Stan Math library with"
-          else "has already been declared for" )
+          (if stan_math then "is already declared in the Stan Math library with"
+           else "has already been declared for")
           UnsizedType.pp ut
     | FunDeclExists name ->
         Fmt.pf ppf
@@ -672,11 +696,17 @@ let cannot_assign_to_read_only loc name =
 let cannot_assign_to_global loc name =
   StatementError (loc, StatementError.CannotAssignToGlobal name)
 
-let cannot_assign_function loc ut name =
-  StatementError (loc, StatementError.CannotAssignFunction (ut, name))
+let cannot_assign_function loc name ut =
+  StatementError (loc, StatementError.CannotAssignFunction (name, ut))
 
 let cannot_assign_to_multiindex loc =
   StatementError (loc, StatementError.LValueMultiIndexing)
+
+let cannot_assign_duplicate_unpacking loc names =
+  StatementError (loc, StatementError.LValueTupleUnpackDuplicates names)
+
+let cannot_access_assigning_var loc names =
+  StatementError (loc, StatementError.LValueTupleReadAndWrite names)
 
 let invalid_sampling_pdf_or_pmf loc =
   StatementError (loc, StatementError.InvalidSamplingPDForPMF)

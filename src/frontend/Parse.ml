@@ -1,16 +1,16 @@
 (** Some complicated stuff to get the custom syntax errors out of Menhir's Incremental
     API *)
 
-open Core_kernel
+open Core
 
 let parse parse_fun lexbuf =
-  Input_warnings.init () ;
+  Input_warnings.init ();
   (* see the Menhir manual for the description of
      error messages support *)
   let module Interp = Parser.MenhirInterpreter in
   let input () =
     (Interp.lexer_lexbuf_to_supplier Lexer.token
-       (Preprocessor.current_buffer ()) )
+       (Preprocessor.current_buffer ()))
       () in
   let success prog =
     Result.Ok {prog with Ast.comments= Preprocessor.get_comments ()} in
@@ -26,19 +26,22 @@ let parse parse_fun lexbuf =
            \"parameters {\" or \"transformed parameters {\" or \"model {\" or \
            \"generated quantities {\".\n"
       | Some (Interp.Element (state, _, _, _)) -> (
-        try
-          Parsing_errors.message (Interp.number state)
-          ^
-          if !Debugging.grammar_logging then
-            "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
-          else ""
-        with
-        | Not_found_s _ ->
+          try
+            Parsing_errors.message (Interp.number state)
+            ^
             if !Debugging.grammar_logging then
               "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
             else ""
-        | _ -> "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
-        ) in
+          with
+          | Not_found_s _ ->
+              if !Debugging.grammar_logging then
+                "(Parse error state "
+                ^ string_of_int (Interp.number state)
+                ^ ")"
+              else ""
+          | _ ->
+              "(Parse error state " ^ string_of_int (Interp.number state) ^ ")")
+    in
     Errors.Parsing
       ( message
       , Preprocessor.location_span_of_positions
@@ -55,7 +58,7 @@ let parse parse_fun lexbuf =
 
 let parse_string parse_fun str =
   let lexbuf = Lexing.from_string str in
-  Preprocessor.init lexbuf "string" ;
+  Preprocessor.init lexbuf "string";
   parse parse_fun lexbuf
 
 let parse_file parse_fun path =
@@ -66,5 +69,5 @@ let parse_file parse_fun path =
   | Error err -> (Error err, [])
   | Ok chan ->
       let lexbuf = Lexing.from_channel chan in
-      Preprocessor.init lexbuf path ;
+      Preprocessor.init lexbuf path;
       parse parse_fun lexbuf

@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Ast
 open Middle
 
@@ -35,7 +35,7 @@ let deprecated_distributions =
               | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
               | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
               | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
-              | Rng | Log | UnaryVectorized _ -> None ) ) ) )
+              | Rng | Log | UnaryVectorized _ -> None))))
 
 let stan_lib_deprecations =
   Map.merge_skewed deprecated_distributions deprecated_functions
@@ -45,7 +45,7 @@ let stan_lib_deprecations =
           "Common key in deprecation map"
             (key : string)
             (x : string * (int * int))
-            (y : string * (int * int))] )
+            (y : string * (int * int))])
 
 let is_deprecated_distribution name =
   Option.is_some (Map.find deprecated_distributions name)
@@ -61,7 +61,7 @@ let userdef_functions program =
         | {stmt= FunDef {body= {stmt= Skip; _}; _}; _} -> None
         | {stmt= FunDef {funname; arguments; _}; _} ->
             Some (funname.name, Ast.type_of_arguments arguments)
-        | _ -> None )
+        | _ -> None)
       |> Hash_set.Poly.of_list
 
 let is_redundant_forwarddecl fundefs funname arguments =
@@ -79,7 +79,7 @@ let userdef_distributions stmts =
           else if is_suffix ~suffix:"_log_log" name then
             Some (drop_suffix name 4)
           else None
-      | _ -> None )
+      | _ -> None)
     (Ast.get_stmts stmts)
 
 let without_suffix user_dists name =
@@ -89,8 +89,8 @@ let without_suffix user_dists name =
   else if
     is_suffix ~suffix:"_log" name
     && not
-         ( is_deprecated_distribution (name ^ "_log")
-         || List.exists ~f:(( = ) name) user_dists )
+         (is_deprecated_distribution (name ^ "_log")
+         || List.exists ~f:(( = ) name) user_dists)
   then drop_suffix name 4
   else name
 
@@ -131,17 +131,17 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
                   ^ " instead. This can be automatically changed using the \
                      canonicalize flag for stanc" ) ]
         | _ -> (
-          match Map.find deprecated_odes name with
-          | Some (rename, (major, minor)) ->
-              let version = string_of_int major ^ "." ^ string_of_int minor in
-              [ ( emeta.loc
-                , name ^ " is deprecated and will be removed in Stan " ^ version
-                  ^ ". Use " ^ rename
-                  ^ " instead. \n\
-                     The new interface is slightly different, see: \
-                     https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
-                ) ]
-          | _ -> [] ) in
+            match Map.find deprecated_odes name with
+            | Some (rename, (major, minor)) ->
+                let version = string_of_int major ^ "." ^ string_of_int minor in
+                [ ( emeta.loc
+                  , name ^ " is deprecated and will be removed in Stan "
+                    ^ version ^ ". Use " ^ rename
+                    ^ " instead. \n\
+                       The new interface is slightly different, see: \
+                       https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
+                  ) ]
+            | _ -> []) in
       acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
   | PrefixOp (PNot, ({emeta= {type_= UReal; loc; _}; _} as e)) ->
       let acc =
@@ -228,4 +228,4 @@ let remove_unneeded_forward_decls program =
   { program with
     functionblock=
       Option.map program.functionblock ~f:(fun x ->
-          {x with stmts= List.filter ~f:drop_forwarddecl x.stmts} ) }
+          {x with stmts= List.filter ~f:drop_forwarddecl x.stmts}) }

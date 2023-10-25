@@ -1,6 +1,6 @@
 (** Setup of our compiler errors *)
 
-open Core_kernel
+open Core
 module Str = Re.Str
 
 (** Our type of syntax error information *)
@@ -50,13 +50,13 @@ let pp_syntax_error ?printed_filename ?code ppf = function
   | Lexing loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1} )
+           {loc with col_num= loc.col_num - 1})
         (pp_context_with_message ?code)
         ("Invalid character found.", loc)
   | UnexpectedEOF loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1} )
+           {loc with col_num= loc.col_num - 1})
         (pp_context_with_message ?code)
         ("Unexpected end of input", loc)
   | Include (message, loc) ->

@@ -14,9 +14,9 @@ opam update windows
 opam install -y conf-flambda-windows
 
 # Install the compiler
-opam install -y "ocaml-windows64=4.12.0"
+opam install -y "ocaml-windows64=4.14.1"
 
 # Install dependencies
-opam install -y core_kernel.v0.14.2 core_kernel-windows.v0.14.2 menhir.20210929 menhir-windows.20210929 ppx_deriving.5.2.1 ppx_deriving-windows.5.2.1 fmt.0.8.8 fmt-windows.0.8.8 yojson.1.7.0 yojson-windows.1.7.0
+opam install -y core.v0.16.1 core-windows.v0.16.1 menhir.20230608 menhir-windows.20230608 ppx_deriving.5.2.1 ppx_deriving-windows.5.2.1 fmt.0.9.0 fmt-windows.0.9.0 yojson.2.1.0 yojson-windows.2.1.0
 
 eval $(opam env)

@@ -1,7 +1,7 @@
 (** Lowering of Stan statements to C++ *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 open Cpp
 open Lower_expr
@@ -135,8 +135,8 @@ let lower_profile name body =
               [ Var name
               ; Exprs.templated_fun_call "const_cast"
                   [Ref (TypeLiteral "stan::math::profile_map")]
-                  [Var "profiles__"] ] )
-         () ) in
+                  [Var "profiles__"] ])
+         ()) in
   Stmts.block (profile :: body)
 
 let lower_bool_expr expr =
@@ -168,12 +168,11 @@ let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Fixed.Pattern.lvalue)
     (* Convert the expression to an lvalue to get rid of everything but variables and indices *)
     (Stmt.Helpers.lvalue_of_expr_opt expr)
     (* If we can't, this expression can't be deep copied *)
-    ~default:
-      false
+    ~default:false
       (* If we can, then find it's base reference and see if it overlaps with the LHS *)
     ~f:(fun expr_lv ->
       let expr_base_ref = Stmt.Helpers.lvalue_base_reference expr_lv in
-      expr_base_ref = lhs_base_ref )
+      expr_base_ref = lhs_base_ref)
 
 let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   let remove_promotions (e : 'a Expr.Fixed.t) =
@@ -200,9 +199,9 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | Assignment
       ( (((LVariable _ | LTupleProjection _) as lhs), [])
       , _
-      , ( ( {meta= {Expr.Typed.Meta.type_= UInt | UReal | UComplex; _}; _}
-          | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
-            ; _ } ) as rhs ) ) ->
+      , (( {meta= {Expr.Typed.Meta.type_= UInt | UReal | UComplex; _}; _}
+         | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
+           ; _ } ) as rhs) ) ->
       Assign (lower_nonrange_lbase lhs, lower_expr rhs) |> wrap_e
   | Assignment ((LVariable assignee, idcs), (UInt | UReal | UComplex), rhs)
     when List.for_all ~f:is_single_index idcs ->
@@ -234,14 +233,14 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       (* Split up the top-level lvalue to fit in the assign call *)
       let lhs_base, lhs_idcs = lhs in
       Exprs.fun_call "stan::model::assign"
-        ( [ lower_nonrange_lbase lhs_base; lower_expr rhs
-          ; Exprs.literal_string
-              ("assigning variable " ^ Stmt.Helpers.get_lhs_name lhs) ]
-        @ List.map ~f:lower_index lhs_idcs )
+        ([ lower_nonrange_lbase lhs_base; lower_expr rhs
+         ; Exprs.literal_string
+             ("assigning variable " ^ Stmt.Helpers.get_lhs_name lhs) ]
+        @ List.map ~f:lower_index lhs_idcs)
       |> wrap_e
   | TargetPE e ->
       let accum = Var "lp_accum__" in
-      accum.@?(("add", [lower_expr e])) |> wrap_e
+      accum.@?("add", [lower_expr e]) |> wrap_e
   | NRFunApp (CompilerInternal FnPrint, args) ->
       let open Expression_syntax in
       let pstream = Var "pstream__" in
@@ -258,7 +257,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       let stream_decl =
         VariableDefn
           (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
-             ~name:err_strm_name () ) in
+             ~name:err_strm_name ()) in
       let throw =
         Throw
           (Exprs.fun_call "std::domain_error" [(Var err_strm_name).@!("str")])
@@ -266,17 +265,17 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       let add_to_string e =
         Expression
           (fun_call "stan::math::stan_print"
-             [VarRef err_strm_name; lower_expr e] ) in
+             [VarRef err_strm_name; lower_expr e]) in
       (stream_decl :: List.map ~f:add_to_string args) @ [throw]
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
       Option.value_map (check_to_string trans) ~default:[] ~f:(fun check_name ->
           let function_arg = Expr.Helpers.variable "function__" in
           Exprs.fun_call
             ("stan::math::check_" ^ check_name)
-            ( [ lower_expr function_arg; Exprs.literal_string var_name
-              ; lower_expr var ]
-            @ List.map ~f:lower_expr args )
-          |> wrap_e )
+            ([ lower_expr function_arg; Exprs.literal_string var_name
+             ; lower_expr var ]
+            @ List.map ~f:lower_expr args)
+          |> wrap_e)
   | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
       let out = Var "out__" in
       match
@@ -284,12 +283,12 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       with
       (* When the current block or this transformation doesn't require unconstraining,
          use vanilla write *)
-      | None, _ | _, None -> out.@?(("write", [lower_expr var])) |> wrap_e
+      | None, _ | _, None -> out.@?("write", [lower_expr var]) |> wrap_e
       (* Otherwise, use stan::io::serializer's write_free functions *)
       | Some trans, Some unconstrain_string ->
           let unconstrain_args = transform_args trans in
           let write_fn = "write_free_" ^ unconstrain_string in
-          out.@?((write_fn, lower_exprs (unconstrain_args @ [var]))) |> wrap_e )
+          out.@?(write_fn, lower_exprs (unconstrain_args @ [var])) |> wrap_e)
   | NRFunApp (CompilerInternal f, args) ->
       let fname = trans_math_fn f in
       Exprs.fun_call fname (lower_exprs args) |> wrap_e
@@ -327,8 +326,8 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly false )
-    |> print_endline ;
+         DataOnly false)
+    |> print_endline;
     [%expect {| |}]
 
   let%expect_test "set size mat array" =
@@ -337,8 +336,8 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly true )
-    |> print_endline ;
+         DataOnly true)
+    |> print_endline;
     [%expect
       {|
     std::vector<std::vector<Eigen::Matrix<double,-1,-1>>>(5,

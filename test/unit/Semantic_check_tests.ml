@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Frontend
 open Test_utils
 
@@ -11,7 +11,7 @@ transformed data {
 }
 |}
   |> typed_ast_of_string_exn |> Pretty_printing.pretty_print_typed_program
-  |> print_endline ;
+  |> print_endline;
   [%expect
     {|
     transformed data {

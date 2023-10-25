@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Analysis_and_optimization.Dependence_analysis
 open Middle
 open Analysis_and_optimization.Dataflow_types
@@ -41,7 +41,7 @@ let example1_program =
 let%expect_test "Dependency graph example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = log_prob_dependency_graph example1_program in
-  print_s [%sexp (deps : (label, label Set.Poly.t) Map.Poly.t)] ;
+  print_s [%sexp (deps : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 (4 5)) (7 (4 5)) (8 (4 5))
@@ -58,9 +58,9 @@ let%expect_test "Reaching defns example" =
     Map.Poly.map (log_prob_build_dep_info_map example1_program)
       ~f:(fun (_, x) ->
         ( reaching_defn_lookup x.reaching_defn_entry (VVar "j")
-        , reaching_defn_lookup x.reaching_defn_exit (VVar "j") ) ) in
+        , reaching_defn_lookup x.reaching_defn_exit (VVar "j") )) in
   print_s
-    [%sexp (deps : (label, label Set.Poly.t * label Set.Poly.t) Map.Poly.t)] ;
+    [%sexp (deps : (label, label Set.Poly.t * label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
       ((1 (() ())) (2 ((9) (9))) (3 (() ())) (4 (() ())) (5 (() ())) (6 (() ()))
@@ -77,10 +77,10 @@ let%expect_test "Reaching defns example" =
       ~f:(fun (_, x) -> (x.reaching_defn_entry, x.reaching_defn_exit)) in
   print_s
     [%sexp
-      ( deps
+      (deps
         : ( label
           , reaching_defn Set.Poly.t * reaching_defn Set.Poly.t )
-          Map.Poly.t )] ;
+          Map.Poly.t)];
   [%expect
     {|
       ((1 (() ())) (2 ((((VVar i) 4) ((VVar j) 9)) (((VVar i) 4) ((VVar j) 9))))
@@ -111,7 +111,7 @@ let%expect_test "Variable dependency example" =
       (log_prob_build_dep_info_map example1_program)
       (Set.Poly.singleton (VVar "j"))
       17 in
-  print_s [%sexp (deps : label Set.Poly.t)] ;
+  print_s [%sexp (deps : label Set.Poly.t)];
   [%expect {|
       (4 5 9 11 13 14 16)
     |}]
@@ -166,7 +166,7 @@ let uninitialized_var_example =
 let%expect_test "Uninitialized variables example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps = mir_uninitialized_variables uninitialized_var_example in
-  print_s [%sexp (deps : (Location_span.t * string) Set.Poly.t)] ;
+  print_s [%sexp (deps : (Location_span.t * string) Set.Poly.t)];
   [%expect
     {|
       ((((begin_loc

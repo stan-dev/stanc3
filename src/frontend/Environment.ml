@@ -1,5 +1,5 @@
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 
 type originblock =
@@ -36,7 +36,7 @@ let stan_math_environment =
                  let type_ =
                    UnsizedType.UFun
                      (args, rt, Fun_kind.suffix_from_name key, mem) in
-                 {type_; kind= `StanMath} ) ) )
+                 {type_; kind= `StanMath}) ))
     |> String.Map.of_alist_exn in
   functions
 
@@ -59,7 +59,7 @@ module Distance = struct
     let previous_row = ref @@ Array.init (n + 1) ~f:Fn.id in
     let current_row = ref @@ Array.create ~len:(n + 1) 0 in
     for i = 0 to m - 1 do
-      !current_row.(0) <- i + 1 ;
+      !current_row.(0) <- i + 1;
       for j = 0 to n - 1 do
         let deletion_cost = !previous_row.(j + 1) + 1 in
         let insertion_cost = !current_row.(j) + 1 in
@@ -68,12 +68,12 @@ module Distance = struct
         in
         !current_row.(j + 1) <-
           Int.min deletion_cost (Int.min insertion_cost substitution_cost)
-      done ;
+      done;
       (* swap *)
       let temp = !current_row in
-      current_row := !previous_row ;
+      current_row := !previous_row;
       previous_row := temp
-    done ;
+    done;
     !previous_row.(n)
 
   (** Find the closest entry to [name] in [lst] with

@@ -20,9 +20,9 @@ elif [ $1 = "s390x" ]; then
 fi
 
 # Lookup the sha256 hash for the specified architecture and variant (e.g., v7 for armhf) and strip the enclosing quotations
-SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarch | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest' | tr -d '"')
+SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarch-ocaml-4.14 | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest' | tr -d '"')
 
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
-docker run --privileged -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static --root=. && chmod -R 777 _build  && chmod -R 777 src && chmod -R 777 test"
+docker run --privileged -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch-ocaml-4.14@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static --root=. && chmod -R 777 _build  && chmod -R 777 src && chmod -R 777 test"

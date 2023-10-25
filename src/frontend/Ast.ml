@@ -8,7 +8,7 @@
   later be filled in with something like [type expr_with_meta = metadata expression]
 *)
 
-open Core_kernel
+open Core
 open Middle
 
 (** Our type for identifiers, on which we record a location *)
@@ -118,14 +118,25 @@ type ('l, 'e) lvalue =
   | LTupleProjection of 'l * int
 [@@deriving sexp, hash, compare, map, fold]
 
+type 'l lvalue_pack =
+  | LValue of 'l
+  | LTuplePack of
+      { lvals: 'l lvalue_pack list
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore] }
+[@@deriving sexp, hash, compare, map, fold]
+
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
 [@@deriving sexp, hash, compare, map, fold]
 
 type untyped_lval = (untyped_expression, located_meta) lval_with
 [@@deriving sexp, hash, compare, map, fold]
 
+type untyped_lval_pack = untyped_lval lvalue_pack [@@deriving sexp, compare]
+
 type typed_lval = (typed_expression, typed_expr_meta) lval_with
 [@@deriving sexp, hash, compare, map, fold]
+
+type typed_lval_pack = typed_lval lvalue_pack [@@deriving sexp, compare]
 
 type 'e variable = {identifier: identifier; initial_value: 'e option}
 [@@deriving sexp, hash, compare, map, fold]
@@ -134,7 +145,8 @@ type 'e variable = {identifier: identifier; initial_value: 'e option}
     for 'e and 's respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
 type ('e, 's, 'l, 'f) statement =
-  | Assignment of {assign_lhs: 'l; assign_op: assignmentoperator; assign_rhs: 'e}
+  | Assignment of
+      {assign_lhs: 'l lvalue_pack; assign_op: assignmentoperator; assign_rhs: 'e}
   | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
   (* IncrementLogProb is deprecated *)
@@ -253,8 +265,8 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (*========================== Helper functions ===============================*)
 
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression ({expr; emeta} : typed_expression)
-    : untyped_expression =
+let rec untyped_expression_of_typed_expression
+    ({expr; emeta} : typed_expression) : untyped_expression =
   match expr with
   | Promotion (e, _, _) -> untyped_expression_of_typed_expression e
   | _ ->
@@ -271,6 +283,13 @@ let rec untyped_lvalue_of_typed_lvalue ({lval; lmeta} : typed_lval) :
         untyped_expression_of_typed_expression lval
   ; lmeta= {loc= lmeta.loc} }
 
+let rec untyped_lvalue_of_typed_lvalue_pack :
+    typed_lval lvalue_pack -> untyped_lval lvalue_pack = function
+  | LValue lv -> LValue (untyped_lvalue_of_typed_lvalue lv)
+  | LTuplePack {lvals; loc} ->
+      LTuplePack
+        {lvals= List.map ~f:untyped_lvalue_of_typed_lvalue_pack lvals; loc}
+
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement {stmt; smeta} =
   { stmt=
@@ -286,10 +305,10 @@ let untyped_program_of_typed_program : typed_program -> untyped_program =
 
 let rec expr_of_lvalue {lval; lmeta} =
   { expr=
-      ( match lval with
+      (match lval with
       | LVariable s -> Variable s
       | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i)
-      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i) )
+      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i))
   ; emeta= lmeta }
 
 let rec extract_ids {expr; _} =
@@ -313,32 +332,32 @@ let rec extract_ids {expr; _} =
       List.concat_map ~f:extract_ids es
   | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP | GetTarget -> []
 
-let rec lvalue_of_expr_opt {expr; emeta} =
-  let lval_opt =
-    match expr with
-    | Variable s -> Some (LVariable s)
-    | Indexed (l, i) ->
-        Option.map (lvalue_of_expr_opt l) ~f:(fun lv -> LIndexed (lv, i))
-    | TupleProjection (l, i) ->
-        Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-            LTupleProjection (lv, i) )
-    | _ -> None in
-  Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta})
-
-let lvalue_of_expr expr =
-  Option.value_exn ~message:"Trying to convert illegal expression to lval."
-    (lvalue_of_expr_opt expr)
-
-let rec id_of_lvalue {lval; _} =
-  match lval with
-  | LVariable s -> s
-  | LIndexed (l, _) -> id_of_lvalue l
-  | LTupleProjection (l, _) -> id_of_lvalue l
+let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
+  let rec base_lvalue {expr; emeta} =
+    let lval_opt =
+      match expr with
+      | Variable s -> Some (LVariable s)
+      | Indexed (l, i) ->
+          Option.map (base_lvalue l) ~f:(fun lv -> LIndexed (lv, i))
+      | TupleProjection (l, i) ->
+          Option.map (base_lvalue l) ~f:(fun lv -> LTupleProjection (lv, i))
+      | _ -> None in
+    Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta}) in
+  match expr with
+  | TupleExpr l ->
+      List.map ~f:lvalue_of_expr_opt l
+      |> Option.all
+      |> Option.map ~f:(fun lvals -> LTuplePack {lvals; loc= emeta.loc})
+  | _ -> base_lvalue {expr; emeta} |> Option.map ~f:(fun l -> LValue l)
 
 let type_of_arguments :
        (UnsizedType.autodifftype * UnsizedType.t * 'a) list
     -> UnsizedType.argumentlist =
   List.map ~f:(fun (a, t, _) -> (a, t))
+
+let get_loc_lvalue_pack lhs =
+  match lhs with
+  | LValue ({lmeta= {loc; _}; _} : typed_lval) | LTuplePack {loc; _} -> loc
 
 (* XXX: the parser produces inaccurate locations: smeta.loc.begin_loc is the last
         token before the current statement and all the whitespace between two statements
@@ -388,9 +407,9 @@ let get_first_loc (s : untyped_statement) =
    |ReturnVoid | Print _ | Reject _ | Skip ->
       s.smeta.loc.begin_loc
   | VarDecl {decl_type; transformation; variables; _} -> (
-    match get_loc_dt decl_type with
-    | Some loc -> loc
-    | None -> (
-      match get_loc_tf transformation with
+      match get_loc_dt decl_type with
       | Some loc -> loc
-      | None -> (List.hd_exn variables).identifier.id_loc.begin_loc ) )
+      | None -> (
+          match get_loc_tf transformation with
+          | Some loc -> loc
+          | None -> (List.hd_exn variables).identifier.id_loc.begin_loc))

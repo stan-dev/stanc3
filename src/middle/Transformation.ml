@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 
 (** Transformations (constraints) for global variable declarations *)
 

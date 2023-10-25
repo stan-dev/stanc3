@@ -20,12 +20,65 @@ parameters {
                  tuple(real, array[5] tuple(complex, matrix[6, 7]))) very_deep_p;
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format basic_unpacking.stan
+transformed data {
+  int x = 3;
+  int y = 4;
+  print(x, y);
+  (x, y) = (5, 6);
+  print(x, y);
+  (x, y) = (y, x);
+  print(x, y);
+  (/* comment 1*/ x /*comment 2*/, /*comment 3*/ y /* comment 4 */) = (y, x);
+  
+  /* ^^^:comment 5*/
+  (//comment 1
+   x //comment 2
+   , //comment 3
+   y //comment 4
+   ) = (y, x);
+  
+  // ^^^: comment 5
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format infer_tuple_ad.stan
 parameters {
   real x;
 }
 model {
   array[2] tuple(real, real) z = {(1, x), (x, 1)};
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format nested_unpacking.stan
+data {
+  tuple(array[3] real, tuple(real, vector[4], array[4] real), int) complicated;
+}
+model {
+  array[3] real x;
+  real y;
+  vector[4] z;
+  array[4] real w;
+  int i;
+  
+  (x, (y, z, w), i) = complicated;
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format qr_unpack.stan
+data {
+  int<lower=1> N;
+  int<lower=1> M;
+}
+parameters {
+  matrix[N, M] A;
+}
+model {
+  matrix[N, M] Q;
+  matrix[M, M] R;
+  
+  (Q, R) = qr_thin(A);
+  
+  // ... do something with Q and R ...
+  target += sum(Q) + dot_self(to_vector(R));
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format simple.stan
@@ -289,6 +342,18 @@ model {
   h((1, (x, y)));
 }
 
+  $ ../../../../../install/default/bin/stanc --auto-format tuple_exprs.stan
+generated quantities {
+  int x = 3;
+  int y = 4;
+  complex z;
+  matrix[2, 4] foo;
+  
+  print(((z, x), {1, 2}, 3));
+  print((x, (1, x)));
+  print((foo, 2, 3, x));
+}
+
   $ ../../../../../install/default/bin/stanc --auto-format tuple_hof.stan
 functions {
   real fun(array[] real y_slice, int start, int end,
@@ -339,5 +404,36 @@ functions {
 }
 model {
   (1, 3) ~ foo(0.5);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format unpack_promote.stan
+data {
+  int<lower=0> N;
+  vector[N] x;
+  array[N] int y;
+}
+transformed data {
+  tuple(array[N] int, vector[N]) td = (y, x);
+}
+parameters {
+  array[N] real alpha;
+  vector[N] theta;
+}
+model {
+  array[N] real r;
+  array[N] complex z;
+  complex_vector[N] v;
+  
+  (r, v) = td;
+  print(r, v);
+  (r, z[ : ], v) = (y, y, x);
+  print(r, z, v);
+  (r, z, v) = (alpha, alpha, theta);
+  print(r, z, v);
+  
+  tuple(complex_vector[N], int) tup;
+  
+  (tup.1, tup.2) = (theta, 1);
+  print(tup);
 }
 

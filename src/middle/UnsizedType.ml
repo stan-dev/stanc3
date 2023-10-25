@@ -1,7 +1,7 @@
 (** Types which have dimensionalities but not sizes, e.g. [array\[,,\]] *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 
 type t =
   | UInt
@@ -60,7 +60,7 @@ let rec contains_tuple t =
   match t with UTuple _ -> true | UArray t -> contains_tuple t | _ -> false
 
 let rec unwind_array_type = function
-  | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
+  | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1))
   | ut -> (ut, 0)
 
 let rec wind_array_type = function
@@ -82,9 +82,9 @@ let rec pp ppf = function
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp ut2
   | UTuple ts -> (
-    match ts with
-    | [t] -> Fmt.pf ppf "tuple(@[%a,@])" pp t
-    | _ -> Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma pp) ts )
+      match ts with
+      | [t] -> Fmt.pf ppf "tuple(@[%a,@])" pp t
+      | _ -> Fmt.pf ppf "tuple(@[%a@])" Fmt.(list ~sep:comma pp) ts)
   | UFun (argtypes, rt, _, _) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
@@ -105,9 +105,9 @@ let rec autodifftype_can_convert at1 at2 =
   match (at1, at2) with
   | DataOnly, AutoDiffable -> false
   | TupleAD ads1, TupleAD ads2 -> (
-    match List.for_all2 ads1 ads2 ~f:autodifftype_can_convert with
-    | Ok x -> x
-    | Unequal_lengths -> false )
+      match List.for_all2 ads1 ads2 ~f:autodifftype_can_convert with
+      | Ok x -> x
+      | Unequal_lengths -> false)
   | DataOnly, TupleAD ads ->
       List.for_all ads ~f:(autodifftype_can_convert DataOnly)
   | _, _ -> true
@@ -125,9 +125,9 @@ let lub_ad_type xs =
     | DataOnly, ad | ad, DataOnly -> Ok ad
     | AutoDiffable, AutoDiffable -> Ok AutoDiffable
     | TupleAD ads1, TupleAD ads2 -> (
-      match List.map2 ads1 ads2 ~f:common_ad with
-      | Ok ads -> ads |> Result.all |> Result.map ~f:(fun ads -> TupleAD ads)
-      | Unequal_lengths -> Error () )
+        match List.map2 ads1 ads2 ~f:common_ad with
+        | Ok ads -> ads |> Result.all |> Result.map ~f:(fun ads -> TupleAD ads)
+        | Unequal_lengths -> Error ())
     | TupleAD ads, AutoDiffable | AutoDiffable, TupleAD ads ->
         List.map ads ~f:(common_ad AutoDiffable)
         |> Result.all
@@ -137,19 +137,19 @@ let lub_ad_type xs =
 let%expect_test "lub_ad_type1" =
   let ads = [DataOnly; DataOnly; DataOnly; AutoDiffable] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)] ;
+  print_s [%sexp (lub : autodifftype option)];
   [%expect "(AutoDiffable)"]
 
 let%expect_test "lub_ad_type2" =
   let ads = [DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)] ;
+  print_s [%sexp (lub : autodifftype option)];
   [%expect "(DataOnly)"]
 
 let%expect_test "lub_ad_type3" =
   let ads = [AutoDiffable; DataOnly; DataOnly; DataOnly] in
   let lub = lub_ad_type ads in
-  print_s [%sexp (lub : autodifftype option)] ;
+  print_s [%sexp (lub : autodifftype option)];
   [%expect "(AutoDiffable)"]
 
 (** Given two types find the minimal type both can convert to *)
@@ -164,9 +164,9 @@ let rec common_type = function
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | UTuple ts1, UTuple ts2 ->
-      ( match List.zip ts1 ts2 with
+      (match List.zip ts1 ts2 with
       | Ok ts -> List.map ts ~f:common_type |> Option.all
-      | Unequal_lengths -> None )
+      | Unequal_lengths -> None)
       |> Option.map ~f:(fun ts -> UTuple ts)
   | t1, t2 when t1 = t2 -> Some t1
   | _, _ -> None
@@ -305,7 +305,7 @@ let enumerate_tuple_names_io name (ut : t) =
     match ut with
     | UTuple ts ->
         List.concat_mapi ts ~f:(fun i t ->
-            loop (base ^ "." ^ string_of_int (i + 1)) t )
+            loop (base ^ "." ^ string_of_int (i + 1)) t)
     | UArray _ when contains_tuple ut ->
         let scalar, _ = unwind_array_type ut in
         loop base scalar
@@ -315,7 +315,7 @@ let enumerate_tuple_names_io name (ut : t) =
 let%expect_test "tuple names" =
   let t = UArray (UTuple [UInt; UArray (UTuple [UReal; UComplex]); UVector]) in
   let res = enumerate_tuple_names_io "foo" t in
-  [%sexp (res : string list)] |> print_s ;
+  [%sexp (res : string list)] |> print_s;
   [%expect {|
       (foo.1 foo.2.1 foo.2.2 foo.3) |}]
 

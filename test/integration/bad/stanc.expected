@@ -7,7 +7,8 @@ Syntax error in 'array-expr-decl-bad1.stan', line 2, column 9 to column 10, pars
      3:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
+Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../install/default/bin/stanc array-expr-decl-bad2.stan
 Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 10, parsing error:
    -------------------------------------------------
@@ -47,7 +48,7 @@ Syntax error in 'array-multi-decl-bad.stan', line 2, column 11 to column 12, par
      3:  }
    -------------------------------------------------
 
-Expected  ";" or assignment.
+Expected ";" or assignment.
   $ ../../../../install/default/bin/stanc array-multi-decl-bad2.stan
 Syntax error in 'array-multi-decl-bad2.stan', line 2, column 21 to column 22, parsing error:
    -------------------------------------------------
@@ -59,6 +60,18 @@ Syntax error in 'array-multi-decl-bad2.stan', line 2, column 21 to column 22, pa
 
 Multiple declarations are not allowed when array dimensions are given in TYPE IDENTIFIER[DIMENSIONS] form.
 When all declarations share array dimensions, use 'array[DIMENSIONS] TYPE IDENTIFIER' form, otherwise use separate declarations.
+  $ ../../../../install/default/bin/stanc array-read-write-assign.stan
+Semantic error in 'array-read-write-assign.stan', line 3, column 0 to column 7:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:  array[2] int x = {1,2};
+     3:  x[x[1]] = 2;
+         ^
+     4:  }
+   -------------------------------------------------
+
+The same variable cannot be both assigned to and read from on the left hand side of an assignment:
+  x
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
 Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 38:
    -------------------------------------------------
@@ -69,7 +82,11 @@ Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 38:
      4:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type array[,] real and rhs has type array[] int
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  array[,] real
+and the right hand side has type
+  array[] int
   $ ../../../../install/default/bin/stanc array_expr_bad2.stan
 Semantic error in 'array_expr_bad2.stan', line 2, column 40 to column 41:
    -------------------------------------------------
@@ -93,8 +110,28 @@ Semantic error in 'assigment-to-function-stanmath.stan', line 8, column 5 to col
    -------------------------------------------------
 
 Cannot assign a function type '<Stan Math function>' to variable 'foo'.
+  $ ../../../../install/default/bin/stanc assign_invalid_lhs1.stan
+Syntax error in 'assign_invalid_lhs1.stan', line 2, column 2 to column 12, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    foo() = 1;
+           ^
+     3:  }
+   -------------------------------------------------
+
+Expected an assignable value but found a general expression.
+  $ ../../../../install/default/bin/stanc assign_invalid_lhs2.stan
+Syntax error in 'assign_invalid_lhs2.stan', line 2, column 3 to column 21, parsing error:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:     [x,y,z] = [1,2,3];
+            ^
+     3:  }
+   -------------------------------------------------
+
+Expected an assignable value but found a general expression.
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
-Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
+Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 3:
    -------------------------------------------------
      9:    real b;
     10:    b = 3.2;
@@ -103,7 +140,11 @@ Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
     12:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type real
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  int
+and the right hand side has type
+  real
   $ ../../../../install/default/bin/stanc assignment-to-function.stan
 Semantic error in 'assignment-to-function.stan', line 12, column 5 to column 15:
    -------------------------------------------------
@@ -227,7 +268,7 @@ Available signatures:
   The first argument must be array[,,] real but got array[] real
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc bad_var_assignment_type1.stan
-Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
+Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 3:
    -------------------------------------------------
      2:    vector[5] y;
      3:    array[5] real z;
@@ -237,9 +278,13 @@ Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
      6:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type array[] real and rhs has type vector
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  array[] real
+and the right hand side has type
+  vector
   $ ../../../../install/default/bin/stanc bad_var_assignment_type2.stan
-Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 8:
+Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 3:
    -------------------------------------------------
      4:  transformed data {
      5:    array[5] real z;
@@ -249,9 +294,13 @@ Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 8:
      8:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type array[] real and rhs has type array[,] real
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  array[] real
+and the right hand side has type
+  array[,] real
   $ ../../../../install/default/bin/stanc bad_var_assignment_vec_arr.stan
-Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column 35:
+Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column 4:
    -------------------------------------------------
      8:  
      9:    a1 = tail(v, K-1) - head(v, K-1);
@@ -261,7 +310,11 @@ Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column
     12:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type array[] real and rhs has type vector
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  array[] real
+and the right hand side has type
+  vector
   $ ../../../../install/default/bin/stanc bad_while.stan
 Syntax error in 'bad_while.stan', line 3, column 24 to column 25, parsing error:
    -------------------------------------------------
@@ -408,7 +461,11 @@ Semantic error in 'complex_mat_bad.stan', line 7, column 2 to column 18:
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type real and rhs has type complex
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  real
+and the right hand side has type
+  complex
   $ ../../../../install/default/bin/stanc conditional_condition_bad_1.stan
 Semantic error in 'conditional_condition_bad_1.stan', line 6, column 6 to column 7:
    -------------------------------------------------
@@ -535,7 +592,11 @@ Semantic error in 'declare-define-var-double-1.stan', line 5, column 2 to column
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type real and rhs has type array[] real
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  real
+and the right hand side has type
+  array[] real
   $ ../../../../install/default/bin/stanc declare-define-var-double-2.stan
 Semantic error in 'declare-define-var-double-2.stan', line 5, column 2 to column 23:
    -------------------------------------------------
@@ -547,7 +608,11 @@ Semantic error in 'declare-define-var-double-2.stan', line 5, column 2 to column
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type array[] real
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  vector
+and the right hand side has type
+  array[] real
   $ ../../../../install/default/bin/stanc declare-define-var-double-3.stan
 Syntax error in 'declare-define-var-double-3.stan', line 3, column 12 to column 15, parsing error:
    -------------------------------------------------
@@ -585,7 +650,11 @@ Semantic error in 'declare-define-var-int-1.stan', line 5, column 2 to column 17
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type real
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  int
+and the right hand side has type
+  real
   $ ../../../../install/default/bin/stanc declare-define-var-int-2.stan
 Semantic error in 'declare-define-var-int-2.stan', line 5, column 2 to column 18:
    -------------------------------------------------
@@ -597,7 +666,11 @@ Semantic error in 'declare-define-var-int-2.stan', line 5, column 2 to column 18
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type real
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  int
+and the right hand side has type
+  real
   $ ../../../../install/default/bin/stanc declare-define-var-int-3.stan
 Semantic error in 'declare-define-var-int-3.stan', line 2, column 2 to column 25:
    -------------------------------------------------
@@ -608,7 +681,11 @@ Semantic error in 'declare-define-var-int-3.stan', line 2, column 2 to column 25
      4:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type array[] int and rhs has type int
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  array[] int
+and the right hand side has type
+  int
   $ ../../../../install/default/bin/stanc declare-define-var-int-4.stan
 Semantic error in 'declare-define-var-int-4.stan', line 5, column 2 to column 17:
    -------------------------------------------------
@@ -620,7 +697,11 @@ Semantic error in 'declare-define-var-int-4.stan', line 5, column 2 to column 17
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type array[] int
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  int
+and the right hand side has type
+  array[] int
   $ ../../../../install/default/bin/stanc declare-define-var-matrix-1.stan
 Semantic error in 'declare-define-var-matrix-1.stan', line 5, column 2 to column 23:
    -------------------------------------------------
@@ -632,7 +713,11 @@ Semantic error in 'declare-define-var-matrix-1.stan', line 5, column 2 to column
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type matrix
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  vector
+and the right hand side has type
+  matrix
   $ ../../../../install/default/bin/stanc declare-define-var-vec-1.stan
 Semantic error in 'declare-define-var-vec-1.stan', line 6, column 2 to column 23:
    -------------------------------------------------
@@ -644,7 +729,11 @@ Semantic error in 'declare-define-var-vec-1.stan', line 6, column 2 to column 23
      8:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type row_vector
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  vector
+and the right hand side has type
+  row_vector
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
 Syntax error in 'err-bare-type-close-square.stan', line 2, column 8 to column 11, parsing error:
    -------------------------------------------------
@@ -689,7 +778,7 @@ Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, par
      6:  }
    -------------------------------------------------
 
-Ill-formed phrase. Found L-value. This can be completed in many ways.
+Ill-formed phrase. Found an expression where we expected a statement.
   $ ../../../../install/default/bin/stanc err-decl-double.stan
 Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
@@ -859,7 +948,8 @@ Syntax error in 'err-if-else.stan', line 3, column 8 to column 9, parsing error:
      5:  model {
    -------------------------------------------------
 
-Ill-formed expression. Found part of an expression, expected either an operator or the end of the expression.
+Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../install/default/bin/stanc err-integrate-ode-comma.stan
 Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, parsing error:
    -------------------------------------------------
@@ -871,7 +961,8 @@ Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, 
     11:  model {
    -------------------------------------------------
 
-Ill-formed expression. Found identifier. There are many ways to complete this to a well-formed expression.
+Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../install/default/bin/stanc err-minus-types.stan
 Semantic error in 'err-minus-types.stan', line 4, column 6 to column 11:
    -------------------------------------------------
@@ -916,7 +1007,7 @@ Syntax error in 'err-nested-parens-close.stan', line 3, column 12 to column 13, 
      4:  }
    -------------------------------------------------
 
-Expression or comma separated list of expressions followed by ")" expected after "(".
+Ill-formed phrase. Found "(" followed by expression. Expect a "[", "," or ")" or an infix or postfix operator.
   $ ../../../../install/default/bin/stanc err-nested-parens.stan
 Syntax error in 'err-nested-parens.stan', line 3, column 12 to column 13, parsing error:
    -------------------------------------------------
@@ -1151,7 +1242,7 @@ Semantic error in 'functions-bad12.stan', line 3, column 4 to column 33:
 
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc functions-bad13.stan
-Semantic error in 'functions-bad13.stan', line 3, column 4 to column 10:
+Semantic error in 'functions-bad13.stan', line 3, column 4 to column 5:
    -------------------------------------------------
      1:  functions {
      2:    real badassign(real x) {
@@ -1574,7 +1665,11 @@ Semantic error in 'matrix_expr_bad1.stan', line 2, column 2 to column 34:
      4:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type matrix and rhs has type row_vector
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  matrix
+and the right hand side has type
+  row_vector
   $ ../../../../install/default/bin/stanc matrix_expr_bad2.stan
 Semantic error in 'matrix_expr_bad2.stan', line 2, column 34 to column 35:
    -------------------------------------------------
@@ -1608,7 +1703,8 @@ Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing
      4:  model {
    -------------------------------------------------
 
-Ill-formed phrase. Found an expression. This can be followed by a ",", a "}", a ")", a "]", a "[" or an infix or postfix operator.
+Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../install/default/bin/stanc multiply_sample.stan
 Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
    -------------------------------------------------
@@ -2234,7 +2330,11 @@ Semantic error in 'row_vector_expr_bad1.stan', line 4, column 2 to column 29:
      6:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type row_vector and rhs has type matrix
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  row_vector
+and the right hand side has type
+  matrix
   $ ../../../../install/default/bin/stanc row_vector_expr_bad2.stan
 Semantic error in 'row_vector_expr_bad2.stan', line 5, column 25 to column 26:
    -------------------------------------------------
@@ -2558,7 +2658,7 @@ Semantic error in 'validate_allow_sample_bad3.stan', line 9, column 2 to column 
 
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
   $ ../../../../install/default/bin/stanc validate_array_expr_bad1.stan
-Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 41:
+Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 9:
    -------------------------------------------------
      4:  model {
      5:    array[5] int int_1_a;
@@ -2568,9 +2668,13 @@ Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 41
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type array[] int and rhs has type array[] real
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  array[] int
+and the right hand side has type
+  array[] real
   $ ../../../../install/default/bin/stanc validate_array_expr_bad2.stan
-Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 24:
+Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 9:
    -------------------------------------------------
      4:  model {
      5:    array[3] int int_1_a;
@@ -2580,7 +2684,11 @@ Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 24
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type array[] int and rhs has type array[,] int
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  array[] int
+and the right hand side has type
+  array[,] int
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3.stan
 Syntax error in 'validate_array_expr_bad3.stan', line 6, column 14 to column 15, parsing error:
    -------------------------------------------------
@@ -2630,7 +2738,7 @@ Semantic error in 'validate_conditional_op_bad-2.stan', line 5, column 7 to colu
 
 Type mismatch in ternary expression, expression when true is: real; expression when false is: array[,] row_vector
   $ ../../../../install/default/bin/stanc validate_exponentiation_bad.stan
-Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column 12:
+Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column 3:
    -------------------------------------------------
      5:  transformed data {
      6:    int z;
@@ -2640,7 +2748,11 @@ Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column
      9:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type real
+Ill-typed arguments supplied to assignment operator =:
+The left hand side has type
+  int
+and the right hand side has type
+  real
   $ ../../../../install/default/bin/stanc validate_int_expr2_bad1.stan
 Semantic error in 'validate_int_expr2_bad1.stan', line 5, column 12 to column 15:
    -------------------------------------------------

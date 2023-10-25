@@ -49,9 +49,7 @@ module Located : sig
     Specialized.S
       with module Meta := Meta
        and type t =
-            ( Expr.Typed.Meta.t
-            , (Meta.t[@sexp.opaque] [@compare.ignore]) )
-            Fixed.t
+        (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
 
   val loc_of : t -> Location_span.t
 

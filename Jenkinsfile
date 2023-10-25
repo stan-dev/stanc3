@@ -96,7 +96,7 @@ pipeline {
         stage('Verify changes') {
             agent {
                 docker {
-                    image 'stanorg/stanc3:debianfi'
+                    image 'stanorg/stanc3:debian-ocaml-4.14'
                     args "--entrypoint=\'\'"
                     label 'linux'
                 }
@@ -148,7 +148,7 @@ pipeline {
             }
             agent {
                 docker {
-                    image 'stanorg/stanc3:debianfi'
+                    image 'stanorg/stanc3:debian-ocaml-4.14'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"
                     label 'linux'
@@ -176,7 +176,7 @@ pipeline {
             }
             agent {
                 docker {
-                    image 'stanorg/stanc3:debianfi'
+                    image 'stanorg/stanc3:debian-ocaml-4.14'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"
                 }
@@ -209,7 +209,7 @@ pipeline {
                 stage("Dune tests") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debianfi'
+                            image 'stanorg/stanc3:debian-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                         }
@@ -243,7 +243,7 @@ pipeline {
                 stage("stancjs tests") {
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debianfi'
+                            image 'stanorg/stanc3:debian-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                         }
@@ -569,7 +569,7 @@ pipeline {
                             withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
                                 runShell("""
                                     export PATH=/Users/jenkins/brew/bin:\$PATH
-                                    eval \$(opam env --switch=/Users/jenkins/.opam/4.12.0-mac10.11 --set-switch)
+                                    eval \$(opam env --switch=stanc-4.14.1 --set-switch)
                                     opam update || true
                                     bash -x scripts/install_build_deps.sh
                                     dune build @install --root=.
@@ -591,7 +591,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debianfi'
+                            image 'stanorg/stanc3:debian-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                             label 'linux'
@@ -621,7 +621,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:staticfi'
+                            image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                             label 'linux'
@@ -651,7 +651,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:staticfi'
+                            image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
@@ -680,7 +680,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:staticfi'
+                            image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
@@ -707,7 +707,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:staticfi'
+                            image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
@@ -734,7 +734,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:staticfi'
+                            image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             label 'linux'
                             args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -761,7 +761,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:staticfi'
+                            image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             label 'linux'
                             args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -788,7 +788,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:staticfi'
+                            image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             label 'linux'
                             args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -815,7 +815,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:debian-windowsfi'
+                            image 'stanorg/stanc3:debian-windows-ocaml-4.14'
                             label 'linux'
                             //Forces image to ignore entrypoint
                             args "--group-add=987 --group-add=988 --entrypoint=\'\'"
@@ -889,7 +889,7 @@ pipeline {
             options { skipDefaultCheckout(true) }
             agent {
                 docker {
-                    image 'stanorg/stanc3:staticfi'
+                    image 'stanorg/stanc3:static-ocaml-4.14'
                     label 'linux'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"

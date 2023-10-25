@@ -1,5 +1,5 @@
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 
 (**
   * This type represents whether or not an autodiff type can be represented
