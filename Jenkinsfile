@@ -75,6 +75,7 @@ pipeline {
     options {
         parallelsAlwaysFailFast()
         skipDefaultCheckout()
+        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30'))
     }
     environment {
         CXX = 'clang++-6.0'
