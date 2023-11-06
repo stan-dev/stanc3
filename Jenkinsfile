@@ -686,7 +686,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
                         }
                     }
@@ -715,7 +715,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
                         }
                     }
@@ -742,7 +742,7 @@ pipeline {
                         docker {
                             image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
                         }
                     }
@@ -770,7 +770,7 @@ pipeline {
                             image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             label 'linux'
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
                     steps {
@@ -797,7 +797,7 @@ pipeline {
                             image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             label 'linux'
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
                     steps {
@@ -824,7 +824,7 @@ pipeline {
                             image 'stanorg/stanc3:static-ocaml-4.14'
                             //Forces image to ignore entrypoint
                             label 'linux'
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
                     steps {
@@ -851,7 +851,7 @@ pipeline {
                             image 'stanorg/stanc3:debian-windows-ocaml-4.14'
                             label 'linux'
                             //Forces image to ignore entrypoint
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\'"
+                            args "--group-add=980 --group-add=988 --entrypoint=\'\'"
                         }
                     }
                     steps {
