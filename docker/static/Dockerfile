@@ -20,7 +20,7 @@ RUN apk update && apk --no-cache add build-base bzip2 git tar curl ca-certificat
 # Add a recent version of the Skopeo package, which is used for looking up the correct multiarch docker image
 # http://dl-cdn.alpinelinux.org/alpine/v3.14/community/aarch64/containers-common-0.38.11-r0.apk
 RUN curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/containers-common-0.52.0-r0.apk -o cont.apk && \
-    curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.12.0-r3.apk -o skopeo.apk && \
+    curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.12.0-r4.apk -o skopeo.apk && \
     apk add cont.apk && \
     apk add skopeo.apk
 
