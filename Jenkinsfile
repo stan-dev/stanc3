@@ -128,8 +128,8 @@ pipeline {
                     def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
                     skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1, "master")
 
-                    def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
-                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
+                    // def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
+                    // skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
                 }
             }
             post { always { runShell("rm -rf ./*") }}
@@ -460,12 +460,6 @@ pipeline {
 
                             archiveArtifacts 'performance-tests-cmdstan/performance.xml'
 
-//                             perfReport modePerformancePerTestCase: true,
-//                                 sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-//                                 modeThroughput: false,
-//                                 excludeResponseTime: true,
-//                                 errorFailedThreshold: 100,
-//                                 errorUnstableThreshold: 100
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
@@ -529,13 +523,6 @@ pipeline {
                             ])
 
                             archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-
-//                             perfReport modePerformancePerTestCase: true,
-//                                 sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-//                                 modeThroughput: false,
-//                                 excludeResponseTime: true,
-//                                 errorFailedThreshold: 100,
-//                                 errorUnstableThreshold: 100
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}
@@ -691,7 +678,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -g) --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -721,7 +708,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -g) --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -749,7 +736,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -g) --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -777,7 +764,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -g) --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -805,7 +792,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -g) --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -833,7 +820,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -g) --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
