@@ -646,11 +646,11 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
-                            //Forces image to ignore entrypoint
-                            args "--group-add=980 --group-add=988 --entrypoint=\'\'"
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            dir '.'
                             label 'linux'
+                            args '--entrypoint=\'\''
                         }
                     }
                     steps {
@@ -676,11 +676,11 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
-                            //Forces image to ignore entrypoint
-                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            dir '.'
                             label 'linux'
+                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                         }
                     }
                     steps {
@@ -705,11 +705,11 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
-                            //Forces image to ignore entrypoint
-                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            dir '.'
                             label 'linux'
+                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                         }
                     }
                     steps {
@@ -732,11 +732,11 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
-                            //Forces image to ignore entrypoint
-                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            dir '.'
                             label 'linux'
+                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                         }
                     }
                     steps {
@@ -759,11 +759,11 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
-                            //Forces image to ignore entrypoint
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            dir '.'
                             label 'linux'
-                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                         }
                     }
                     steps {
@@ -786,11 +786,11 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
-                            //Forces image to ignore entrypoint
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            dir '.'
                             label 'linux'
-                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                         }
                     }
                     steps {
@@ -813,11 +813,11 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
-                            //Forces image to ignore entrypoint
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            dir '.'
                             label 'linux'
-                            args "--group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                         }
                     }
                     steps {
@@ -914,11 +914,11 @@ pipeline {
             }
             options { skipDefaultCheckout(true) }
             agent {
-                docker {
-                    image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
+                dockerfile {
+                    filename 'docker/static/Dockerfile'
+                    dir '.'
                     label 'linux'
-                    //Forces image to ignore entrypoint
-                    args "--group-add=980 --group-add=988 --entrypoint=\'\'"
+                    args '--entrypoint=\'\''
                 }
             }
             steps {
