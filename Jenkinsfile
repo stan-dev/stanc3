@@ -647,7 +647,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b3'
+                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\'"
                             label 'linux'
@@ -677,7 +677,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b3'
+                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
@@ -706,7 +706,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b3'
+                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
@@ -733,7 +733,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b3'
+                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
                             //Forces image to ignore entrypoint
                             args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                             label 'linux'
@@ -760,7 +760,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b3'
+                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
                             //Forces image to ignore entrypoint
                             label 'linux'
                             args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -787,7 +787,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b3'
+                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
                             //Forces image to ignore entrypoint
                             label 'linux'
                             args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -814,7 +814,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/stanc3:static-ocaml-4.14.0-b3'
+                            image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
                             //Forces image to ignore entrypoint
                             label 'linux'
                             args "--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
@@ -915,7 +915,7 @@ pipeline {
             options { skipDefaultCheckout(true) }
             agent {
                 docker {
-                    image 'stanorg/stanc3:static-ocaml-4.14.0-b3'
+                    image 'stanorg/stanc3:static-ocaml-4.14.0-b4'
                     label 'linux'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"
