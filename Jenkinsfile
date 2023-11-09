@@ -127,8 +127,8 @@ pipeline {
                     def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
                     skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1, "master")
 
-                    // def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
-                    // skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
+                    def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
+                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
                 }
             }
             post { always { runShell("rm -rf ./*") }}
@@ -669,7 +669,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            //anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -699,7 +699,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            //anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -727,7 +727,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            //anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -755,7 +755,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            //anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -783,7 +783,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            //anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -811,7 +811,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            //anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
