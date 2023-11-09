@@ -110,6 +110,7 @@ pipeline {
                     sh 'git clean -xffd'
 
                     runShell """
+                        eval \$(opam init)
                         eval \$(opam env)
                         dune subst
                     """
@@ -143,11 +144,12 @@ pipeline {
                 }
             }
             agent {
-                docker {
-                    image 'stanorg/stanc3:debian-ocaml-4.14'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    dir '.'
                     label 'linux'
+                    args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             steps {
@@ -171,10 +173,12 @@ pipeline {
                 }
             }
             agent {
-                docker {
-                    image 'stanorg/stanc3:debian-ocaml-4.14'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    dir '.'
+                    label 'linux'
+                    args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             steps {
@@ -204,10 +208,12 @@ pipeline {
             parallel {
                 stage("Dune tests") {
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:debian-ocaml-4.14'
-                            //Forces image to ignore entrypoint
-                            args "--entrypoint=\'\'"
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            dir '.'
+                            label 'linux'
+                            args '--entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -238,10 +244,12 @@ pipeline {
                 }
                 stage("stancjs tests") {
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:debian-ocaml-4.14'
-                            //Forces image to ignore entrypoint
-                            args "--entrypoint=\'\'"
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            dir '.'
+                            label 'linux'
+                            args '--entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -618,11 +626,12 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:debian-ocaml-4.14'
-                            //Forces image to ignore entrypoint
-                            args "--entrypoint=\'\'"
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            dir '.'
                             label 'linux'
+                            args '--entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -653,6 +662,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -683,6 +693,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -712,6 +723,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -739,6 +751,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -766,6 +779,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -793,6 +807,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -820,6 +835,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -842,11 +858,12 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:debian-windows-ocaml-4.14'
+                        dockerfile {
+                            filename 'docker/debian-windows/Dockerfile'
+                            dir '.'
                             label 'linux'
-                            //Forces image to ignore entrypoint
-                            args "--group-add=980 --group-add=988 --entrypoint=\'\'"
+                            args '--entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -921,6 +938,7 @@ pipeline {
                     dir '.'
                     label 'linux'
                     args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             steps {
