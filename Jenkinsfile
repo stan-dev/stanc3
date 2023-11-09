@@ -90,7 +90,7 @@ pipeline {
         stage('Verify changes') {
             agent {
                 dockerfile {
-                    filename 'docker/debian/Dockerfile'
+                    filename 'scripts/docker/debian/Dockerfile'
                     dir '.'
                     label 'linux'
                     args '--entrypoint=\'\''
@@ -144,7 +144,7 @@ pipeline {
             }
             agent {
                 dockerfile {
-                    filename 'docker/debian/Dockerfile'
+                    filename 'scripts/docker/debian/Dockerfile'
                     dir '.'
                     label 'linux'
                     args '--entrypoint=\'\''
@@ -173,7 +173,7 @@ pipeline {
             }
             agent {
                 dockerfile {
-                    filename 'docker/debian/Dockerfile'
+                    filename 'scripts/docker/debian/Dockerfile'
                     dir '.'
                     label 'linux'
                     args '--entrypoint=\'\''
@@ -208,7 +208,7 @@ pipeline {
                 stage("Dune tests") {
                     agent {
                         dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                            filename 'scripts/docker/debian/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
@@ -244,7 +244,7 @@ pipeline {
                 stage("stancjs tests") {
                     agent {
                         dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                            filename 'scripts/docker/debian/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
@@ -626,7 +626,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/debian/Dockerfile'
+                            filename 'scripts/docker/debian/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
@@ -657,7 +657,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/static/Dockerfile'
+                            filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
@@ -688,7 +688,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/static/Dockerfile'
+                            filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
@@ -718,7 +718,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/static/Dockerfile'
+                            filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
@@ -746,7 +746,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/static/Dockerfile'
+                            filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
@@ -774,7 +774,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/static/Dockerfile'
+                            filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
@@ -802,7 +802,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/static/Dockerfile'
+                            filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
@@ -830,7 +830,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/static/Dockerfile'
+                            filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
@@ -858,7 +858,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/debian-windows/Dockerfile'
+                            filename 'scripts/docker/debian-windows/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
@@ -933,7 +933,7 @@ pipeline {
             options { skipDefaultCheckout(true) }
             agent {
                 dockerfile {
-                    filename 'docker/static/Dockerfile'
+                    filename 'scripts/docker/static/Dockerfile'
                     dir '.'
                     label 'linux'
                     args '--entrypoint=\'\''
