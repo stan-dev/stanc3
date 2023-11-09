@@ -95,6 +95,15 @@ pipeline {
                     label 'linux'
                 }
             }
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    dir '.'
+                    label 'linux'
+                    args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
             steps {
                 script {
                     retry(3) {
