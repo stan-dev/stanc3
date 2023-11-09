@@ -89,13 +89,6 @@ pipeline {
     stages {
         stage('Verify changes') {
             agent {
-                docker {
-                    image 'stanorg/stanc3:debian-ocaml-4.14'
-                    args "--entrypoint=\'\'"
-                    label 'linux'
-                }
-            }
-            agent {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
                     dir '.'
