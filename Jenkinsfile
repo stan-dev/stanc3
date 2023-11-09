@@ -678,7 +678,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -708,7 +708,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -736,7 +736,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -764,7 +764,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -792,7 +792,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -820,7 +820,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
