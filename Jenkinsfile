@@ -110,7 +110,6 @@ pipeline {
                     sh 'git clean -xffd'
 
                     runShell """
-                        eval \$(opam init)
                         eval \$(opam env)
                         dune subst
                     """
