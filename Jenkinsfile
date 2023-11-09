@@ -127,8 +127,8 @@ pipeline {
                     def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
                     skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1, "master")
 
-                    def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
-                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
+                    // def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
+                    // skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
                 }
             }
             post { always { runShell("rm -rf ./*") }}
@@ -669,7 +669,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            //anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -677,7 +677,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=987 --group-add=980 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -G | cut -d \' \' -f1) --group-add=\$(id -G | cut -d \' \' -f2) --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -699,7 +699,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            //anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -707,7 +707,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=987 --group-add=980 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -G | cut -d \' \' -f1) --group-add=\$(id -G | cut -d \' \' -f2) --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -727,7 +727,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            //anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -735,7 +735,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=987 --group-add=980 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -G | cut -d \' \' -f1) --group-add=\$(id -G | cut -d \' \' -f2) --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -755,7 +755,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            //anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -763,7 +763,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=987 --group-add=980 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -G | cut -d \' \' -f1) --group-add=\$(id -G | cut -d \' \' -f2) --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -783,7 +783,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            //anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -791,7 +791,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=987 --group-add=980 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -G | cut -d \' \' -f1) --group-add=\$(id -G | cut -d \' \' -f2) --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -811,7 +811,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            //anyOf { buildingTag(); branch 'master' }
                         }
                     }
                     agent {
@@ -819,7 +819,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--group-add=987 --group-add=980 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            args '--group-add=\$(id -G | cut -d \' \' -f1) --group-add=\$(id -G | cut -d \' \' -f2) --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
