@@ -74,7 +74,7 @@ pipeline {
     }
     options {
         parallelsAlwaysFailFast()
-        skipDefaultCheckout()
+        //skipDefaultCheckout()
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30'))
         disableConcurrentBuilds(abortPrevious: true)
     }
