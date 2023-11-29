@@ -16,11 +16,15 @@ LABEL distro_style="apk"
 
 #Install os dependencies
 RUN apk update && apk --no-cache add build-base bzip2 git tar curl ca-certificates openssl m4 bash docker jq git-subtree
+# Upgrade to GNU Grep for -Po to work
+RUN apk add --no-cache --upgrade grep
 
 # Add a recent version of the Skopeo package, which is used for looking up the correct multiarch docker image
 # http://dl-cdn.alpinelinux.org/alpine/v3.14/community/aarch64/containers-common-0.38.11-r0.apk
-RUN curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/containers-common-0.52.0-r0.apk -o cont.apk && \
-    curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.12.0-r4.apk -o skopeo.apk && \
+RUN CONTAINERS_COMMON_VER=$(curl -s https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/ | grep -Po '(?<=containers-common-)[^apk]+' | head -n 1)apk && \
+    curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/containers-common-${CONTAINERS_COMMON_VER} -o cont.apk && \
+    SKOPEO_VER=$(curl -s https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/ | grep -Po '(?<=skopeo-)[^apk]+' | head -n 1)apk && \
+    curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-${SKOPEO_VER} -o skopeo.apk && \
     apk add cont.apk && \
     apk add skopeo.apk
 
