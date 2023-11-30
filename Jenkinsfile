@@ -916,7 +916,6 @@ pipeline {
                 beforeAgent true
                 branch 'master'
             }
-            options { skipDefaultCheckout(true) }
             agent {
                 dockerfile {
                     filename 'scripts/docker/static/Dockerfile'
