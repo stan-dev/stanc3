@@ -16340,10 +16340,7 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
       arr_vec = in__.template read<
                   std::vector<
                     stan::math::var_value<Eigen::Matrix<double,-1,1>>>>(3, 4);
-      stan::math::var_value<Eigen::Matrix<double,-1,1>> x =
-        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(3,
-                                                            std::numeric_limits<double>::quiet_NaN(
-                                                              )));
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> x;
       current_statement__ = 3;
       stan::model::assign(x,
         stan::model::rvalue(y, "y", stan::model::index_min_max(1, 3)),
