@@ -22111,6 +22111,178 @@
     (meta <opaque>))))
  (transform_inits ()) (unconstrain_array ()) (output_vars ())
  (prog_name tuple_lpmf_model) (prog_path tuple_lpmf.stan))
+  $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_temporary.stan
+((functions_block ()) (input_vars ())
+ (prepare_data
+  (((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str m)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str m)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str t.2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str t.2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))))
+ (log_prob ()) (reverse_mode_log_prob ())
+ (generate_quantities
+  (((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain AoS)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>))))) (meta <opaque>)) ()))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id m)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable m) ()) UMatrix
+      ((pattern
+        (FunApp (CompilerInternal FnMakeRowVec)
+         (((pattern
+            (FunApp (CompilerInternal FnMakeRowVec)
+             (((pattern (Lit Real 1.5))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id t)
+      (decl_type
+       (Sized
+        (STuple
+         (SReal
+          (SMatrix AoS
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable t) ()) (UTuple (UReal UMatrix))
+      ((pattern
+        (FunApp (CompilerInternal FnMakeTuple)
+         (((pattern (Lit Real 1.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (FunApp (StanLib Times__ FnPlain AoS)
+             (((pattern (Var m))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Lit Real 2.0))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta
+        ((type_ (UTuple (UReal UMatrix))) (loc <opaque>)
+         (adlevel (TupleAD (DataOnly DataOnly))))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt ())
+        (var
+         ((pattern (Var m)) (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt ())
+        (var
+         ((pattern
+           (TupleProjection
+            ((pattern (Var t))
+             (meta ((type_ (UTuple (UReal UMatrix))) (loc <opaque>) (adlevel DataOnly))))
+            1))
+          (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp
+      (CompilerInternal
+       (FnWriteParam (unconstrain_opt ())
+        (var
+         ((pattern
+           (TupleProjection
+            ((pattern (Var t))
+             (meta ((type_ (UTuple (UReal UMatrix))) (loc <opaque>) (adlevel DataOnly))))
+            2))
+          (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+      ()))
+    (meta <opaque>))))
+ (transform_inits ()) (unconstrain_array ())
+ (output_vars
+  ((m
+    ((begin_loc
+      ((filename tuple_temporary.stan) (line_num 2) (col_num 2) (included_from ())))
+     (end_loc
+      ((filename tuple_temporary.stan) (line_num 2) (col_num 26) (included_from ()))))
+    ((out_unconstrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SMatrix AoS
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
+   (t
+    ((begin_loc
+      ((filename tuple_temporary.stan) (line_num 3) (col_num 2) (included_from ())))
+     (end_loc
+      ((filename tuple_temporary.stan) (line_num 4) (col_num 21) (included_from ()))))
+    ((out_unconstrained_st
+      (STuple
+       (SReal
+        (SMatrix AoS
+         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+     (out_constrained_st
+      (STuple
+       (SReal
+        (SMatrix AoS
+         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+     (out_block GeneratedQuantities)
+     (out_trans (TupleTransformation (Identity Identity)))))))
+ (prog_name tuple_temporary_model) (prog_path tuple_temporary.stan))
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir unpack_promote.stan
 ((functions_block ())
  (input_vars
