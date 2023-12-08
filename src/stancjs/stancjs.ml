@@ -246,6 +246,8 @@ let dump_stan_math_distributions () =
   @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_distributions ()
 
 let () =
-  Js.export "dump_stan_math_signatures" dump_stan_math_signatures;
-  Js.export "dump_stan_math_distributions" dump_stan_math_distributions;
-  Js.export "stanc" stan2cpp_wrapped
+  Js.export "dump_stan_math_signatures"
+    (Js.Unsafe.callback dump_stan_math_signatures);
+  Js.export "dump_stan_math_distributions"
+    (Js.Unsafe.callback dump_stan_math_distributions);
+  Js.export "stanc" (Js.Unsafe.callback stan2cpp_wrapped)
