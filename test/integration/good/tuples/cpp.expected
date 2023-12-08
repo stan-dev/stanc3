@@ -4944,9 +4944,8 @@ class simple2_model final : public model_base_crtp<simple2_model> {
             std::numeric_limits<int>::min()};
       current_statement__ = 1;
       stan::model::assign(x,
-        std::tuple<const std::vector<double>&, int>(std::vector<double>{1.01,
-                                                      3.14}, 2),
-        "assigning variable x");
+        std::tuple<std::vector<double>, int>(std::vector<double>{1.01, 3.14},
+          2), "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__,
@@ -5274,19 +5273,19 @@ class simple3_model final : public model_base_crtp<simple3_model> {
             std::numeric_limits<int>::min()};
       current_statement__ = 1;
       stan::model::assign(x,
-        std::tuple<const std::vector<std::vector<double>>&, int>(std::vector<
-                                                                   std::vector<
-                                                                    double>>{
-                                                                   std::vector<
-                                                                    double>{1.01,
-                                                                    3.14},
-                                                                   std::vector<
-                                                                    double>{1.01,
-                                                                    3.14},
-                                                                   std::vector<
-                                                                    double>{1.01,
-                                                                    3.14}},
-          2), "assigning variable x");
+        std::tuple<std::vector<std::vector<double>>, int>(std::vector<
+                                                            std::vector<
+                                                              double>>{
+                                                            std::vector<
+                                                              double>{1.01,
+                                                              3.14},
+                                                            std::vector<
+                                                              double>{1.01,
+                                                              3.14},
+                                                            std::vector<
+                                                              double>{1.01,
+                                                              3.14}}, 2),
+        "assigning variable x");
       current_statement__ = 2;
       if (pstream__) {
         stan::math::stan_print(pstream__,
@@ -7327,8 +7326,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
                            double>>{std::tuple<
-                                      const std::vector<
-                                              Eigen::Matrix<double,-1,-1>>&,
+                                      std::vector<
+                                        Eigen::Matrix<double,-1,-1>>,
                                       double>(std::vector<
                                                 Eigen::Matrix<double,-1,-1>>{
                                                 stan::math::to_matrix(
@@ -7382,8 +7381,8 @@ class tuple_dataonly_model final : public model_base_crtp<tuple_dataonly_model> 
                        std::vector<
                          std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
                            double>>{std::tuple<
-                                      const std::vector<
-                                              Eigen::Matrix<double,-1,-1>>&,
+                                      std::vector<
+                                        Eigen::Matrix<double,-1,-1>>,
                                       double>(std::vector<
                                                 Eigen::Matrix<double,-1,-1>>{
                                                 stan::math::to_matrix(
@@ -7703,8 +7702,8 @@ class tuple_dataonly2_model final : public model_base_crtp<tuple_dataonly2_model
       if (pstream__) {
         stan::math::stan_print(pstream__,
           tuple_tester(
-            std::tuple<const std::vector<double>&, int>(std::vector<double>{1.0},
-              2), pstream__));
+            std::tuple<std::vector<double>, int>(std::vector<double>{1.0}, 2),
+            pstream__));
         *(pstream__) << std::endl;
       }
     } catch (const std::exception& e) {
@@ -7741,8 +7740,8 @@ class tuple_dataonly2_model final : public model_base_crtp<tuple_dataonly2_model
       if (pstream__) {
         stan::math::stan_print(pstream__,
           tuple_tester(
-            std::tuple<const std::vector<double>&, int>(std::vector<double>{1.0},
-              2), pstream__));
+            std::tuple<std::vector<double>, int>(std::vector<double>{1.0}, 2),
+            pstream__));
         *(pstream__) << std::endl;
       }
     } catch (const std::exception& e) {
@@ -11030,9 +11029,9 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
                   std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 15;
       stan::model::assign(basic,
-        std::tuple<const std::vector<double>&, const std::complex<double>&>(
-          std::vector<double>{1, 2}, stan::math::to_complex(3, 0)),
-        "assigning variable basic");
+        std::tuple<std::vector<double>, std::complex<double>>(std::vector<
+                                                                double>{1, 2},
+          stan::math::to_complex(3, 0)), "assigning variable basic");
       current_statement__ = 16;
       CV = std::tuple<Eigen::Matrix<std::complex<double>,-1,1>, double>{
              Eigen::Matrix<std::complex<double>,-1,1>::Constant(3,
@@ -11041,7 +11040,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
              std::numeric_limits<double>::quiet_NaN()};
       current_statement__ = 16;
       stan::model::assign(CV,
-        std::tuple<const Eigen::Matrix<std::complex<double>,-1,1>&, double>(
+        std::tuple<Eigen::Matrix<std::complex<double>,-1,1>, double>(
           stan::math::promote_scalar<std::complex<double>>(V), 2),
         "assigning variable CV");
       current_statement__ = 17;
@@ -12364,9 +12363,8 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       }
       current_statement__ = 2;
       foo(
-        std::tuple<const Eigen::Matrix<double,-1,-1>&, int>(stan::math::add(
-                                                              m1, m2), 1),
-        pstream__);
+        std::tuple<Eigen::Matrix<double,-1,-1>, int>(stan::math::add(m1, m2),
+          1), pstream__);
       double s = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
       s = tsum(
@@ -12375,7 +12373,7 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
       current_statement__ = 3;
       foo2(
         std::vector<std::tuple<Eigen::Matrix<double,-1,-1>, int>>{std::tuple<
-                                                                    const Eigen::Matrix<double,-1,-1>&,
+                                                                    Eigen::Matrix<double,-1,-1>,
                                                                     int>(
                                                                     stan::math::add(
                                                                     m1, m2),
@@ -12383,7 +12381,7 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
         pstream__);
       current_statement__ = 4;
       overly_complicated(
-        std::tuple<const std::vector<Eigen::Matrix<double,-1,-1>>&,
+        std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
           std::tuple<int, Eigen::Matrix<double,-1,-1>>, double>(std::vector<
                                                                   Eigen::Matrix<double,-1,-1>>{
                                                                   stan::math::add(
@@ -13516,10 +13514,9 @@ class tuple_exprs_model final : public model_base_crtp<tuple_exprs_model> {
       current_statement__ = 5;
       if (pstream__) {
         stan::math::stan_print(pstream__,
-          std::tuple<std::tuple<std::complex<double>, int>,
-            const std::vector<int>&, int>(std::tuple<
-                                            const std::complex<double>&, int>(z,
-                                            x), std::vector<int>{1, 2}, 3));
+          std::tuple<std::tuple<std::complex<double>, int>, std::vector<int>,
+            int>(std::tuple<const std::complex<double>&, int>(z, x),
+            std::vector<int>{1, 2}, 3));
         *(pstream__) << std::endl;
       }
       current_statement__ = 6;
@@ -15478,7 +15475,7 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
             std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 2;
       stan::model::assign(t,
-        std::tuple<double, const Eigen::Matrix<double,-1,-1>&>(1.2,
+        std::tuple<double, Eigen::Matrix<double,-1,-1>>(1.2,
           stan::math::multiply(m, 2.0)), "assigning variable t");
       out__.write(m);
       out__.write(std::get<0>(t));
@@ -15902,10 +15899,10 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             Eigen::Matrix<std::complex<double>,-1,1>> sym1__;
           current_statement__ = 12;
           stan::model::assign(sym1__,
-            std::tuple<const std::vector<double>&,
-              const std::vector<std::complex<double>>&,
-              const Eigen::Matrix<std::complex<double>,-1,1>&>(stan::math::promote_scalar<
-                                                                 double>(y),
+            std::tuple<std::vector<double>,
+              std::vector<std::complex<double>>,
+              Eigen::Matrix<std::complex<double>,-1,1>>(stan::math::promote_scalar<
+                                                          double>(y),
               stan::math::promote_scalar<std::complex<double>>(y),
               stan::math::promote_scalar<std::complex<double>>(x)),
             "assigning variable sym1__");
@@ -16057,10 +16054,10 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             Eigen::Matrix<std::complex<double>,-1,1>> sym1__;
           current_statement__ = 12;
           stan::model::assign(sym1__,
-            std::tuple<const std::vector<double>&,
-              const std::vector<std::complex<double>>&,
-              const Eigen::Matrix<std::complex<double>,-1,1>&>(stan::math::promote_scalar<
-                                                                 double>(y),
+            std::tuple<std::vector<double>,
+              std::vector<std::complex<double>>,
+              Eigen::Matrix<std::complex<double>,-1,1>>(stan::math::promote_scalar<
+                                                          double>(y),
               stan::math::promote_scalar<std::complex<double>>(y),
               stan::math::promote_scalar<std::complex<double>>(x)),
             "assigning variable sym1__");

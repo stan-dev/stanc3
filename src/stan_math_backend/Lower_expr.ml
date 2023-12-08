@@ -405,11 +405,17 @@ and lower_compiler_internal ad ut f es =
     (* we make full copies of tuples
        due to a lack of templating sophistication
        in function generation *)
+    let is_simple ({pattern; _} : Expr.Typed.t) =
+      (* clang complains about passing temporaries to a constructor expecting a const ref.
+         we believe this is a clang bug, since gcc accepts it and
+         the spec nominally allows it. But, we have to prevent it anyway *)
+      match pattern with Var _ -> true | _ -> false in
     let types =
-      List.map es ~f:(fun {meta= {adlevel; type_; _}; _} ->
+      List.map es ~f:(fun ({meta= {adlevel; type_; _}; _} as e) ->
           let base_type = lower_unsizedtype_local adlevel type_ in
           if
-            UnsizedType.is_dataonlytype adlevel
+            is_simple e
+            && UnsizedType.is_dataonlytype adlevel
             && not
                  (UnsizedType.is_scalar_type type_
                  || UnsizedType.contains_tuple type_)
