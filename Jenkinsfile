@@ -884,7 +884,7 @@ pipeline {
                     filename 'scripts/docker/publish/Dockerfile'
                     dir '.'
                     label 'linux'
-                    args '--entrypoint=\'\''
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                     additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
