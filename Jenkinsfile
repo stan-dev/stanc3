@@ -880,12 +880,6 @@ pipeline {
                 }
             }
             agent {
-                docker {
-                    image 'stanorg/ci:gpu'
-                    label 'linux'
-                }
-            }
-            agent {
                 dockerfile {
                     filename 'scripts/docker/publish/Dockerfile'
                     dir '.'
