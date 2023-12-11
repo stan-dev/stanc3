@@ -885,6 +885,15 @@ pipeline {
                     label 'linux'
                 }
             }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/publish/Dockerfile'
+                    dir '.'
+                    label 'linux'
+                    args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
                 retry(3) {
