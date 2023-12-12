@@ -180,7 +180,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           }
           stan::model::assign(arr_tuple,
             std::tuple<int, const std::vector<double>&,
-              const Eigen::Matrix<double,-1,1>&>(arr_tuple_dot_1_temp__,
+              Eigen::Matrix<double,-1,1>>(arr_tuple_dot_1_temp__,
               arr_tuple_dot_2_temp__, arr_tuple_dot_3_temp__),
             "assigning variable arr_tuple", stan::model::index_uni(sym1__));
         }
@@ -454,7 +454,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   + 5);
               }
               stan::model::assign(arr_tuple_arr_tuple_dot_2_temp__,
-                std::tuple<double, const Eigen::Matrix<double,-1,1>&>(arr_tuple_arr_tuple_dot_2_dot_1_temp__,
+                std::tuple<double, Eigen::Matrix<double,-1,1>>(arr_tuple_arr_tuple_dot_2_dot_1_temp__,
                   arr_tuple_arr_tuple_dot_2_dot_2_temp__),
                 "assigning variable arr_tuple_arr_tuple_dot_2_temp__",
                 stan::model::index_uni(sym2__));
@@ -626,7 +626,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   }
                   stan::model::assign(very_deep_dot_2_dot_2_temp__,
                     std::tuple<const std::complex<double>&,
-                      const Eigen::Matrix<double,-1,-1>&>(very_deep_dot_2_dot_2_dot_1_temp__,
+                      Eigen::Matrix<double,-1,-1>>(very_deep_dot_2_dot_2_dot_1_temp__,
                       very_deep_dot_2_dot_2_dot_2_temp__),
                     "assigning variable very_deep_dot_2_dot_2_temp__",
                     stan::model::index_uni(sym3__));
@@ -2011,7 +2011,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
           }
           stan::model::assign(arr_tuple_p,
             std::tuple<const std::complex<double>&,
-              const std::vector<double>&, const Eigen::Matrix<double,-1,1>&>(arr_tuple_p_dot_1_temp__,
+              const std::vector<double>&, Eigen::Matrix<double,-1,1>>(arr_tuple_p_dot_1_temp__,
               arr_tuple_p_dot_2_temp__, arr_tuple_p_dot_3_temp__),
             "assigning variable arr_tuple_p", stan::model::index_uni(sym1__));
         }
@@ -2299,7 +2299,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   + 5);
               }
               stan::model::assign(arr_tuple_arr_tuple_p_dot_2_temp__,
-                std::tuple<double, const Eigen::Matrix<double,-1,1>&>(arr_tuple_arr_tuple_p_dot_2_dot_1_temp__,
+                std::tuple<double, Eigen::Matrix<double,-1,1>>(arr_tuple_arr_tuple_p_dot_2_dot_1_temp__,
                   arr_tuple_arr_tuple_p_dot_2_dot_2_temp__),
                 "assigning variable arr_tuple_arr_tuple_p_dot_2_temp__",
                 stan::model::index_uni(sym2__));
@@ -2472,7 +2472,7 @@ class arrays_tuples_nested_model final : public model_base_crtp<arrays_tuples_ne
                   }
                   stan::model::assign(very_deep_p_dot_2_dot_2_temp__,
                     std::tuple<const std::complex<double>&,
-                      const Eigen::Matrix<double,-1,-1>&>(very_deep_p_dot_2_dot_2_dot_1_temp__,
+                      Eigen::Matrix<double,-1,-1>>(very_deep_p_dot_2_dot_2_dot_1_temp__,
                       very_deep_p_dot_2_dot_2_dot_2_temp__),
                     "assigning variable very_deep_p_dot_2_dot_2_temp__",
                     stan::model::index_uni(sym3__));
@@ -5709,7 +5709,7 @@ class tuple_constraints_data_model final : public model_base_crtp<tuple_constrai
               z_dot_2_flat__pos__ = (z_dot_2_flat__pos__ + 4);
             }
             stan::model::assign(z,
-              std::tuple<double, const Eigen::Matrix<double,-1,1>&>(z_dot_1_temp__,
+              std::tuple<double, Eigen::Matrix<double,-1,1>>(z_dot_1_temp__,
                 z_dot_2_temp__), "assigning variable z",
               stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
           }
@@ -6733,7 +6733,7 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
               ps2_dot_2_flat__pos__ = (ps2_dot_2_flat__pos__ + 4);
             }
             stan::model::assign(ps2,
-              std::tuple<double, const Eigen::Matrix<double,-1,1>&>(ps2_dot_1_temp__,
+              std::tuple<double, Eigen::Matrix<double,-1,1>>(ps2_dot_1_temp__,
                 ps2_dot_2_temp__), "assigning variable ps2",
               stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
           }
@@ -6881,8 +6881,8 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                   + (5 * 4));
               }
               stan::model::assign(complicated_dot_2_temp__,
-                std::tuple<double, const Eigen::Matrix<double,-1,1>&,
-                  const Eigen::Matrix<double,-1,-1>&>(complicated_dot_2_dot_1_temp__,
+                std::tuple<double, Eigen::Matrix<double,-1,1>,
+                  Eigen::Matrix<double,-1,-1>>(complicated_dot_2_dot_1_temp__,
                   complicated_dot_2_dot_2_temp__,
                   complicated_dot_2_dot_3_temp__),
                 "assigning variable complicated_dot_2_temp__",
@@ -11050,7 +11050,7 @@ class tuple_promotion_model final : public model_base_crtp<tuple_promotion_model
              std::numeric_limits<int>::min()};
       current_statement__ = 17;
       stan::model::assign(V2,
-        std::tuple<const Eigen::Matrix<double,-1,1>&, int>(V, 2),
+        std::tuple<Eigen::Matrix<double,-1,1>, int>(V, 2),
         "assigning variable V2");
       current_statement__ = 18;
       stan::model::assign(CV,
@@ -11921,12 +11921,13 @@ namespace tuple_templating_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 26> locations_array__ =
+static constexpr std::array<const char*, 27> locations_array__ =
   {" (found before start of program)",
   " (in 'tuple-templating.stan', line 34, column 2 to column 26)",
-  " (in 'tuple-templating.stan', line 32, column 2 to column 19)",
-  " (in 'tuple-templating.stan', line 36, column 2 to column 22)",
-  " (in 'tuple-templating.stan', line 39, column 2 to column 68)",
+  " (in 'tuple-templating.stan', line 32, column 2 to column 20)",
+  " (in 'tuple-templating.stan', line 36, column 2 to column 23)",
+  " (in 'tuple-templating.stan', line 39, column 2 to line 40, column 49)",
+  " (in 'tuple-templating.stan', line 41, column 2 to column 63)",
   " (in 'tuple-templating.stan', line 24, column 2 to column 8)",
   " (in 'tuple-templating.stan', line 25, column 9 to column 10)",
   " (in 'tuple-templating.stan', line 25, column 12 to column 13)",
@@ -11939,11 +11940,11 @@ static constexpr std::array<const char*, 26> locations_array__ =
   " (in 'tuple-templating.stan', line 28, column 8 to column 9)",
   " (in 'tuple-templating.stan', line 28, column 2 to column 19)",
   " (in 'tuple-templating.stan', line 3, column 4 to column 18)",
-  " (in 'tuple-templating.stan', line 2, column 35 to line 4, column 3)",
+  " (in 'tuple-templating.stan', line 2, column 36 to line 4, column 3)",
   " (in 'tuple-templating.stan', line 7, column 4 to column 20)",
   " (in 'tuple-templating.stan', line 6, column 48 to line 8, column 3)",
   " (in 'tuple-templating.stan', line 11, column 4 to column 21)",
-  " (in 'tuple-templating.stan', line 10, column 44 to line 12, column 3)",
+  " (in 'tuple-templating.stan', line 10, column 45 to line 12, column 3)",
   " (in 'tuple-templating.stan', line 15, column 4 to column 18)",
   " (in 'tuple-templating.stan', line 14, column 38 to line 16, column 3)",
   " (in 'tuple-templating.stan', line 20, column 4 to column 18)",
@@ -12011,7 +12012,7 @@ void foo(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 16;
+    current_statement__ = 17;
     if (pstream__) {
       stan::math::stan_print(pstream__, std::get<0>(test));
       *(pstream__) << std::endl;
@@ -12042,7 +12043,7 @@ tsum(const std::tuple<T0__0__, T0__1__>& s, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 18;
+    current_statement__ = 19;
     return stan::math::sum(std::get<1>(s));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -12067,7 +12068,7 @@ foo2(const std::vector<std::tuple<T0__0__, T0__1__>>& test, std::ostream*
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 20;
+    current_statement__ = 21;
     if (pstream__) {
       stan::math::stan_print(pstream__,
         std::get<0>(
@@ -12097,7 +12098,7 @@ void foo3(const std::tuple<T0__0__, T0__1__>& test, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 22;
+    current_statement__ = 23;
     if (pstream__) {
       stan::math::stan_print(pstream__, std::get<0>(test));
       *(pstream__) << std::endl;
@@ -12141,7 +12142,7 @@ overly_complicated(const std::tuple<T0__0__,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 24;
+    current_statement__ = 25;
     if (pstream__) {
       stan::math::stan_print(pstream__, std::get<1>(std::get<1>(t1)));
       *(pstream__) << std::endl;
@@ -12182,17 +12183,17 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 5;
+      current_statement__ = 6;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 5;
-      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 6;
-      stan::math::validate_non_negative_index("m1", "N", N);
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 7;
       stan::math::validate_non_negative_index("m1", "N", N);
       current_statement__ = 8;
+      stan::math::validate_non_negative_index("m1", "N", N);
+      current_statement__ = 9;
       context__.validate_dims("data initialization", "m1", "double",
         std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
       m1_data__ = Eigen::Matrix<double,-1,-1>::Constant(N, N,
@@ -12201,7 +12202,7 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
         N);
       {
         std::vector<local_scalar_t__> m1_flat__;
-        current_statement__ = 8;
+        current_statement__ = 9;
         m1_flat__ = context__.vals_r("m1");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -12213,11 +12214,11 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
           }
         }
       }
-      current_statement__ = 9;
-      stan::math::validate_non_negative_index("m2", "N", N);
       current_statement__ = 10;
       stan::math::validate_non_negative_index("m2", "N", N);
       current_statement__ = 11;
+      stan::math::validate_non_negative_index("m2", "N", N);
+      current_statement__ = 12;
       context__.validate_dims("data initialization", "m2", "double",
         std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(N)});
       m2_data__ = Eigen::Matrix<double,-1,-1>::Constant(N, N,
@@ -12226,7 +12227,7 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
         N);
       {
         std::vector<local_scalar_t__> m2_flat__;
-        current_statement__ = 11;
+        current_statement__ = 12;
         m2_flat__ = context__.vals_r("m2");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -12238,21 +12239,21 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
           }
         }
       }
-      current_statement__ = 12;
-      stan::math::validate_non_negative_index("a1", "N", N);
       current_statement__ = 13;
+      stan::math::validate_non_negative_index("a1", "N", N);
+      current_statement__ = 14;
       context__.validate_dims("data initialization", "a1", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       a1 = std::vector<int>(N, std::numeric_limits<int>::min());
-      current_statement__ = 13;
-      a1 = context__.vals_i("a1");
       current_statement__ = 14;
-      stan::math::validate_non_negative_index("a2", "N", N);
+      a1 = context__.vals_i("a1");
       current_statement__ = 15;
+      stan::math::validate_non_negative_index("a2", "N", N);
+      current_statement__ = 16;
       context__.validate_dims("data initialization", "a2", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       a2 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 15;
+      current_statement__ = 16;
       a2 = context__.vals_r("a2");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -12386,13 +12387,26 @@ class tuple_templating_model final : public model_base_crtp<tuple_templating_mod
                                                                   Eigen::Matrix<double,-1,-1>>{
                                                                   stan::math::add(
                                                                     m1, m2)},
-          std::tuple<int, const Eigen::Matrix<double,-1,-1>&>(1, m1), 3.5),
+          std::tuple<int, Eigen::Matrix<double,-1,-1>>(1,
+            stan::math::add(m1, m2)), 3.5),
         std::vector<std::tuple<int, Eigen::Matrix<double,-1,-1>>>{std::tuple<
                                                                     int,
-                                                                    const Eigen::Matrix<double,-1,-1>&>(1,
+                                                                    Eigen::Matrix<double,-1,-1>>(1,
+                                                                    stan::math::multiply(
+                                                                    m1, 2)),
+          std::tuple<int, Eigen::Matrix<double,-1,-1>>(2,
+            stan::math::multiply(m2, 3))}, pstream__);
+      current_statement__ = 5;
+      overly_complicated(
+        std::tuple<std::vector<Eigen::Matrix<double,-1,-1>>,
+          std::tuple<int, Eigen::Matrix<double,-1,-1>>, double>(std::vector<
+                                                                  Eigen::Matrix<double,-1,-1>>{m1},
+          std::tuple<int, Eigen::Matrix<double,-1,-1>>(1, m1), 3.5),
+        std::vector<std::tuple<int, Eigen::Matrix<double,-1,-1>>>{std::tuple<
+                                                                    int,
+                                                                    Eigen::Matrix<double,-1,-1>>(1,
                                                                     m1),
-          std::tuple<int, const Eigen::Matrix<double,-1,-1>&>(2, m2)},
-        pstream__);
+          std::tuple<int, Eigen::Matrix<double,-1,-1>>(2, m2)}, pstream__);
       out__.write(s);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -12874,14 +12888,14 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
               DUMMY_VAR__)};
         current_statement__ = 2;
         stan::model::assign(temp,
-          std::tuple<const Eigen::Matrix<double,-1,-1>&,
+          std::tuple<Eigen::Matrix<double,-1,-1>,
             Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
             stan::math::multiply(m1, m2)), "assigning variable temp");
         current_statement__ = 3;
         f(temp, pstream__);
         current_statement__ = 4;
         f(
-          std::tuple<const Eigen::Matrix<double,-1,-1>&,
+          std::tuple<Eigen::Matrix<double,-1,-1>,
             Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
             stan::math::multiply(m1, m2)), pstream__);
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
@@ -12929,7 +12943,7 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
         h(
           std::tuple<double,
             std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
-            std::tuple<const Eigen::Matrix<double,-1,-1>&,
+            std::tuple<Eigen::Matrix<double,-1,-1>,
               const std::vector<double>&>(x, y)), pstream__);
       }
     } catch (const std::exception& e) {
@@ -12980,14 +12994,14 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
               DUMMY_VAR__)};
         current_statement__ = 2;
         stan::model::assign(temp,
-          std::tuple<const Eigen::Matrix<double,-1,-1>&,
+          std::tuple<Eigen::Matrix<double,-1,-1>,
             Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
             stan::math::multiply(m1, m2)), "assigning variable temp");
         current_statement__ = 3;
         f(temp, pstream__);
         current_statement__ = 4;
         f(
-          std::tuple<const Eigen::Matrix<double,-1,-1>&,
+          std::tuple<Eigen::Matrix<double,-1,-1>,
             Eigen::Matrix<local_scalar_t__,-1,-1>>(x,
             stan::math::multiply(m1, m2)), pstream__);
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>, int,
@@ -13035,7 +13049,7 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
         h(
           std::tuple<double,
             std::tuple<Eigen::Matrix<double,-1,-1>, std::vector<double>>>(1,
-            std::tuple<const Eigen::Matrix<double,-1,-1>&,
+            std::tuple<Eigen::Matrix<double,-1,-1>,
               const std::vector<double>&>(x, y)), pstream__);
       }
     } catch (const std::exception& e) {
@@ -13529,8 +13543,8 @@ class tuple_exprs_model final : public model_base_crtp<tuple_exprs_model> {
       current_statement__ = 7;
       if (pstream__) {
         stan::math::stan_print(pstream__,
-          std::tuple<const Eigen::Matrix<double,-1,-1>&, int, int, int>(foo,
-            2, 3, x));
+          std::tuple<Eigen::Matrix<double,-1,-1>, int, int, int>(foo, 2, 3,
+            x));
         *(pstream__) << std::endl;
       }
       out__.write(x);
@@ -15312,14 +15326,17 @@ namespace tuple_temporary_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 7> locations_array__ =
+static constexpr std::array<const char*, 10> locations_array__ =
   {" (found before start of program)",
-  " (in 'tuple_temporary.stan', line 2, column 2 to column 26)",
-  " (in 'tuple_temporary.stan', line 3, column 2 to line 4, column 21)",
+  " (in 'tuple_temporary.stan', line 2, column 2 to column 27)",
+  " (in 'tuple_temporary.stan', line 4, column 2 to column 47)",
+  " (in 'tuple_temporary.stan', line 6, column 2 to column 41)",
   " (in 'tuple_temporary.stan', line 2, column 9 to column 10)",
-  " (in 'tuple_temporary.stan', line 2, column 11 to column 12)",
-  " (in 'tuple_temporary.stan', line 3, column 21 to column 22)",
-  " (in 'tuple_temporary.stan', line 3, column 23 to column 24)"};
+  " (in 'tuple_temporary.stan', line 2, column 12 to column 13)",
+  " (in 'tuple_temporary.stan', line 4, column 21 to column 22)",
+  " (in 'tuple_temporary.stan', line 4, column 24 to column 25)",
+  " (in 'tuple_temporary.stan', line 6, column 21 to column 22)",
+  " (in 'tuple_temporary.stan', line 6, column 24 to column 25)"};
 class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model> {
  private:
   
@@ -15344,14 +15361,18 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 3;
-      stan::math::validate_non_negative_index("m", "1", 1);
       current_statement__ = 4;
       stan::math::validate_non_negative_index("m", "1", 1);
       current_statement__ = 5;
-      stan::math::validate_non_negative_index("t.2", "1", 1);
+      stan::math::validate_non_negative_index("m", "1", 1);
       current_statement__ = 6;
       stan::math::validate_non_negative_index("t.2", "1", 1);
+      current_statement__ = 7;
+      stan::math::validate_non_negative_index("t.2", "1", 1);
+      current_statement__ = 8;
+      stan::math::validate_non_negative_index("s.2", "1", 1);
+      current_statement__ = 9;
+      stan::math::validate_non_negative_index("s.2", "1", 1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -15477,9 +15498,20 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
       stan::model::assign(t,
         std::tuple<double, Eigen::Matrix<double,-1,-1>>(1.2,
           stan::math::multiply(m, 2.0)), "assigning variable t");
+      std::tuple<double, Eigen::Matrix<double,-1,-1>> s =
+        std::tuple<double, Eigen::Matrix<double,-1,-1>>{std::numeric_limits<double>::quiet_NaN(
+                                                          ),
+          Eigen::Matrix<double,-1,-1>::Constant(1, 1,
+            std::numeric_limits<double>::quiet_NaN())};
+      current_statement__ = 3;
+      stan::model::assign(s,
+        std::tuple<double, Eigen::Matrix<double,-1,-1>>(std::get<0>(t), m),
+        "assigning variable s");
       out__.write(m);
       out__.write(std::get<0>(t));
       out__.write(std::get<1>(t));
+      out__.write(std::get<0>(s));
+      out__.write(std::get<1>(s));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -15520,7 +15552,7 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
     names__ = std::vector<std::string>{};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      std::vector<std::string> temp{"m", "t.1", "t.2"};
+      std::vector<std::string> temp{"m", "t.1", "t.2", "s.1", "s.2"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
@@ -15534,6 +15566,8 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
     if (emit_generated_quantities__) {
       std::vector<std::vector<size_t>>
         temp{std::vector<size_t>{static_cast<size_t>(1),
+               static_cast<size_t>(1)}, std::vector<size_t>{},
+             std::vector<size_t>{static_cast<size_t>(1),
                static_cast<size_t>(1)}, std::vector<size_t>{},
              std::vector<size_t>{static_cast<size_t>(1),
                static_cast<size_t>(1)}};
@@ -15562,6 +15596,15 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
             std::to_string(sym1__));
         }
       }
+      param_names__.emplace_back(std::string() + "s" + ':' +
+        std::to_string(1));
+      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+          param_names__.emplace_back(std::string() + "s" + ':' +
+            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
+            std::to_string(sym1__));
+        }
+      }
     }
   }
   inline void
@@ -15585,13 +15628,22 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
             std::to_string(sym1__));
         }
       }
+      param_names__.emplace_back(std::string() + "s" + ':' +
+        std::to_string(1));
+      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+          param_names__.emplace_back(std::string() + "s" + ':' +
+            std::to_string(2) + '.' + std::to_string(sym2__) + '.' +
+            std::to_string(sym1__));
+        }
+      }
     }
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "},\"block\":\"generated_quantities\"},{\"name\":\"t\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "},\"block\":\"generated_quantities\"},{\"name\":\"t\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"},{\"name\":\"s\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "},\"block\":\"generated_quantities\"},{\"name\":\"t\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"m\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "},\"block\":\"generated_quantities\"},{\"name\":\"t\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"},{\"name\":\"s\",\"type\":{\"name\":\"tuple\",\"num_elements\":\"2\",\"element_types\":[{\"name\":\"real\"},{\"name\":\"matrix\",\"rows\":" + std::to_string(1) + ",\"cols\":" + std::to_string(1) + "}]},\"block\":\"generated_quantities\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -15602,8 +15654,8 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((1 * 1) +
-      (1 + (1 * 1))));
+    const size_t num_gen_quantities = emit_generated_quantities * ((((1 * 1)
+      + (1 + (1 * 1))) + (1 + (1 * 1))));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -15620,8 +15672,8 @@ class tuple_temporary_model final : public model_base_crtp<tuple_temporary_model
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * (((1 * 1) +
-      (1 + (1 * 1))));
+    const size_t num_gen_quantities = emit_generated_quantities * ((((1 * 1)
+      + (1 + (1 * 1))) + (1 + (1 * 1))));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
@@ -15810,8 +15862,8 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
                std::numeric_limits<double>::quiet_NaN())};
       current_statement__ = 30;
       stan::model::assign(td,
-        std::tuple<const std::vector<int>&,
-          const Eigen::Matrix<double,-1,1>&>(y, x), "assigning variable td");
+        std::tuple<const std::vector<int>&, Eigen::Matrix<double,-1,1>>(y, x),
+        "assigning variable td");
       current_statement__ = 31;
       stan::math::validate_non_negative_index("alpha", "N", N);
       current_statement__ = 32;
@@ -15927,7 +15979,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> sym1__;
           current_statement__ = 15;
           stan::model::assign(sym1__,
-            std::tuple<std::vector<local_scalar_t__>,
+            std::tuple<const std::vector<local_scalar_t__>&,
               std::vector<std::complex<local_scalar_t__>>,
               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(alpha,
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(
@@ -16082,7 +16134,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
             Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> sym1__;
           current_statement__ = 15;
           stan::model::assign(sym1__,
-            std::tuple<std::vector<local_scalar_t__>,
+            std::tuple<const std::vector<local_scalar_t__>&,
               std::vector<std::complex<local_scalar_t__>>,
               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(alpha,
               stan::math::promote_scalar<std::complex<local_scalar_t__>>(

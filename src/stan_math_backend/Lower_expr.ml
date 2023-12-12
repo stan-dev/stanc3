@@ -405,20 +405,25 @@ and lower_compiler_internal ad ut f es =
     (* we make full copies of tuples
        due to a lack of templating sophistication
        in function generation *)
-    let is_simple ({pattern; _} : Expr.Typed.t) =
-      (* clang complains about passing temporaries to a constructor expecting a const ref.
-         we believe this is a clang bug, since gcc accepts it and
-         the spec nominally allows it. But, we have to prevent it anyway *)
+    let is_variable ({pattern; _} : Expr.Typed.t) =
       match pattern with Var _ -> true | _ -> false in
     let types =
       List.map es ~f:(fun ({meta= {adlevel; type_; _}; _} as e) ->
           let base_type = lower_unsizedtype_local adlevel type_ in
           if
-            is_simple e
-            && UnsizedType.is_dataonlytype adlevel
+            (* avoid trying to reference temporaries like the
+               result of adding two matrices *)
+            is_variable e
+            (* avoid nested tuples as references or passing a
+               reference to a pointer-sized type like double *)
+            && (not
+                  (UnsizedType.is_scalar_type type_
+                  || UnsizedType.contains_tuple type_))
+            (* Eigen types in the data block are stored as maps
+               (but normal Eigen matrices in GQ) *)
             && not
-                 (UnsizedType.is_scalar_type type_
-                 || UnsizedType.contains_tuple type_)
+                 (UnsizedType.is_dataonlytype adlevel
+                 && UnsizedType.is_eigen_type type_)
           then Types.const_ref base_type
           else base_type) in
     Constructor (Tuple types, lower_exprs es) in

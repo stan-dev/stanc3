@@ -49,11 +49,9 @@ let lower_data_decl (vident, ut) : defn =
 
 (** Create maps of Eigen types*)
 let lower_map_decl (vident, ut) : defn =
-  let eigen_map t ndims =
+  let eigen_map_def t ndims =
     GlobalVariableDefn
-      (make_variable_defn
-         ~type_:(TypeTrait ("Eigen::Map", [t]))
-         ~name:vident
+      (make_variable_defn ~type_:(Types.eigen_map t) ~name:vident
          ~init:
            (InitializerList
               (Literal "nullptr" :: List.init ndims ~f:(fun _ -> Literal "0")))
@@ -61,12 +59,12 @@ let lower_map_decl (vident, ut) : defn =
   let scalar = local_scalar ut DataOnly in
   let open Types in
   match ut with
-  | UMatrix -> eigen_map (matrix scalar) 2
-  | URowVector -> eigen_map (row_vector scalar) 1
-  | UVector -> eigen_map (vector scalar) 1
-  | UComplexMatrix -> eigen_map (matrix (complex scalar)) 2
-  | UComplexRowVector -> eigen_map (row_vector (complex scalar)) 1
-  | UComplexVector -> eigen_map (vector (complex scalar)) 1
+  | UMatrix -> eigen_map_def (matrix scalar) 2
+  | URowVector -> eigen_map_def (row_vector scalar) 1
+  | UVector -> eigen_map_def (vector scalar) 1
+  | UComplexMatrix -> eigen_map_def (matrix (complex scalar)) 2
+  | UComplexRowVector -> eigen_map_def (row_vector (complex scalar)) 1
+  | UComplexVector -> eigen_map_def (vector (complex scalar)) 1
   | x ->
       Common.FatalError.fatal_error_msg
         [%message
@@ -127,14 +125,14 @@ let gen_assign_data decl_id st =
         [ Expression
             (OperatorNew
                ( decl_id
-               , TypeTrait ("Eigen::Map", [lower_st st DataOnly])
+               , Types.eigen_map (lower_st st DataOnly)
                , [data.@!("data"); lower_expr d] )) ]
     | SMatrix (_, d1, d2) | SComplexMatrix (d1, d2) ->
         let data = Var (decl_id ^ "_data__") in
         [ Expression
             (OperatorNew
                ( decl_id
-               , TypeTrait ("Eigen::Map", [lower_st st DataOnly])
+               , Types.eigen_map (lower_st st DataOnly)
                , [data.@!("data"); lower_expr d1; lower_expr d2] )) ]
     | _ -> [] in
   let underlying_var decl_id st =
@@ -732,7 +730,7 @@ let gen_overloads {Program.output_vars; _} =
                  (Assign
                     ( Var "params_r"
                     , Constructor
-                        ( TypeTrait ("Eigen::Map", [Types.vector Double])
+                        ( Types.eigen_map (Types.vector Double)
                         , let params_r_vec = Var "params_r_vec" in
                           let open Expression_syntax in
                           [params_r_vec.@!("data"); params_r_vec.@!("size")] )
