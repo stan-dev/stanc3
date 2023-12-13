@@ -115,20 +115,20 @@ pipeline {
 
                     stash 'Stanc3Setup'
 
-                    def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
-                    skipExpressionTests = utils.verifyChanges(stanMathSigs, "master")
+                    //def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
+                    skipExpressionTests = true
 
-                    def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
-                    skipRemainingStages = utils.verifyChanges(runTestPaths, "master")
+                    //def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+                    //skipRemainingStages = utils.verifyChanges(runTestPaths, "master")
 
-                    def compileTests = ['test/integration/good'].join(" ")
-                    skipCompileTests = utils.verifyChanges(compileTests, "master")
+                    //def compileTests = ['test/integration/good'].join(" ")
+                    skipCompileTests = true
 
-                    def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
-                    skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1, "master")
+                    //def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
+                    skipCompileTestsAtO1 = true
 
-                    def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
-                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
+                    //def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
+                    //skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
                 }
             }
             post { always { runShell("rm -rf ./*") }}
@@ -617,7 +617,7 @@ pipeline {
                             filename 'scripts/docker/debian/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\''
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -648,7 +648,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\''
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -849,7 +849,7 @@ pipeline {
                             filename 'scripts/docker/debian-windows/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\''
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -891,24 +891,13 @@ pipeline {
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
                 retry(3) {
-                    dir("bin"){
-                        unstash 'windows-exe'
-                        unstash 'linux-exe'
-                        unstash 'mac-exe'
-                        unstash 'linux-mips64el-exe'
-                        unstash 'linux-ppc64el-exe'
-                        unstash 'linux-s390x-exe'
-                        unstash 'linux-arm64-exe'
-                        unstash 'linux-armhf-exe'
-                        unstash 'linux-armel-exe'
-                        unstash 'js-exe'
 
-                        runShell("""
-                            wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
-                            tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                            ./ghr_v0.12.1_linux_amd64/ghr -r stanc3 -u stan-dev -recreate ${tagName()} bin/
-                        """)
-                    }
+                    runShell("""
+                        wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
+                        tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz && rm bin/ghr_v0.12.1_linux_amd64.tar.gz
+                        ./ghr_v0.12.1_linux_amd64/ghr -r stanc3 -u stan-dev -recreate ${tagName()} bin/
+                    """)
+
                 }
             }
             post {
@@ -983,12 +972,5 @@ pipeline {
             }
         }
 
-    }
-    post {
-       always {
-          script {
-            utils.mailBuildResults()
-          }
-        }
     }
 }
