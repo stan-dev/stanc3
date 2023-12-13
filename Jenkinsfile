@@ -891,13 +891,11 @@ pipeline {
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
                 retry(3) {
-
                     runShell("""
                         wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                         tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz && rm bin/ghr_v0.12.1_linux_amd64.tar.gz
                         ./ghr_v0.12.1_linux_amd64/ghr -r stanc3 -u stan-dev -recreate ${tagName()} bin/
                     """)
-
                 }
             }
             post {

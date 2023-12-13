@@ -55,6 +55,13 @@ module Types = struct
   let size_t = TypeLiteral "size_t"
   let const_ref t = Const (Ref t)
   let const_char_array i = Array (Const (Pointer (TypeLiteral "char")), i)
+
+  let eigen_map t =
+    match t with
+    | Matrix _ -> TypeTrait ("Eigen::Map", [t])
+    | _ ->
+        Common.FatalError.fatal_error_msg
+          [%message "Tried to make an Eigen::Map of" (t : type_)]
 end
 
 type operator =

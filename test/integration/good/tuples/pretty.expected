@@ -292,7 +292,9 @@ generated quantities {
   foo2({(m1 + m2, 1)});
   
   // a whole bunch of painful
-  overly_complicated(({m1 + m2}, (1, m1), 3.5), {(1, m1), (2, m2)});
+  overly_complicated(({m1 + m2}, (1, m1 + m2), 3.5),
+                     {(1, m1 * 2), (2, m2 * 3)});
+  overly_complicated(({m1}, (1, m1), 3.5), {(1, m1), (2, m2)});
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format tuple_copying.stan
@@ -404,6 +406,15 @@ functions {
 }
 model {
   (1, 3) ~ foo(0.5);
+}
+
+  $ ../../../../../install/default/bin/stanc --auto-format tuple_temporary.stan
+generated quantities {
+  matrix[1, 1] m = [[1.5]];
+  // m * 2.0 is a temporary:
+  tuple(real, matrix[1, 1]) t = (1.2, m * 2.0);
+  // m is both data and an Eigen type, but not a map:
+  tuple(real, matrix[1, 1]) s = (t.1, m);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format unpack_promote.stan
