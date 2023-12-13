@@ -63,28 +63,6 @@ and replace_boolean_real ?(parens = false) e =
                   ; ad_level= DataOnly } } ) }
   | _ -> replace_deprecated_expr e
 
-let rec replace_deprecated_lval {lval; lmeta} =
-  let is_multiindex = function
-    | Single {emeta= {type_= Middle.UnsizedType.UInt; _}; _} -> false
-    | _ -> true in
-  let rec flatten_multi = function
-    | LVariable id -> (LVariable id, None)
-    | LTupleProjection (lval, idx) ->
-        (LTupleProjection (replace_deprecated_lval lval, idx), None)
-    | LIndexed ({lval; lmeta}, idcs) -> (
-        let outer = List.map idcs ~f:(map_index replace_deprecated_expr) in
-        let unwrap = Option.value_map ~default:[] ~f:fst in
-        match flatten_multi lval with
-        | lval, inner when List.exists ~f:is_multiindex outer ->
-            (lval, Some (unwrap inner @ outer, lmeta))
-        | lval, None -> (LIndexed ({lval; lmeta}, outer), None)
-        | lval, Some (inner, _) -> (lval, Some (inner @ outer, lmeta))) in
-  let lval =
-    match flatten_multi lval with
-    | lval, None -> lval
-    | lval, Some (idcs, lmeta) -> LIndexed ({lval; lmeta}, idcs) in
-  {lval; lmeta}
-
 let rec replace_deprecated_stmt ({stmt; smeta} : typed_statement) =
   let stmt =
     match stmt with
@@ -99,8 +77,8 @@ let rec replace_deprecated_stmt ({stmt; smeta} : typed_statement) =
     | While (({emeta= {type_= UReal; _}; _} as cond), body) ->
         While (replace_boolean_real cond, replace_deprecated_stmt body)
     | _ ->
-        map_statement replace_deprecated_expr replace_deprecated_stmt
-          replace_deprecated_lval Fn.id stmt in
+        map_statement replace_deprecated_expr replace_deprecated_stmt Fn.id
+          Fn.id stmt in
   {stmt; smeta}
 
 let rec no_parens {expr; emeta} =

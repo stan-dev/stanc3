@@ -68,17 +68,11 @@ model {
   y ~ normal(((((((((0)))))))), 1);
 }
 
-parameters {
-  real y;
-}
-model {
-  if (y) {
-    print("y is nonzero ");
-  }
-  
-  y ~ normal(0, 1);
-}
+Error in 'string', line 6, column 8: Condition of type real is deprecated and
+    will be disallowed in Stan 2.34. Use an explicit != 0 comparison instead.
+    This can be automatically changed using the canonicalize flag for stanc
 
+undefined
 $ node data-generation.js
 dim(x) = (3, 4)
 dim(y) = (5, 2, 4)
