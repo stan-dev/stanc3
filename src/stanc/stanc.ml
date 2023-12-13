@@ -283,8 +283,6 @@ let use_file filename =
     get_ast_or_exit ?printed_filename filename
       ~print_warnings:(not !canonicalize_settings.deprecations)
       ~bare_functions:!bare_functions in
-  (* must be before typecheck to fix up deprecated syntax which gets rejected *)
-  let ast = Canonicalize.repair_syntax ast !canonicalize_settings in
   Debugging.ast_logger ast;
   let typed_ast = type_ast_or_exit ?printed_filename ast in
   let canonical_ast =
@@ -301,11 +299,12 @@ let use_file filename =
   if not !canonicalize_settings.deprecations then
     Warnings.pp_warnings Fmt.stderr ?printed_filename
       (Deprecation_analysis.collect_warnings typed_ast);
-  (if not !canonicalize_settings.deprecations then
-     let removals = Deprecation_removals.collect_removals typed_ast in
-     if not (List.is_empty removals) then (
-       Deprecation_removals.pp_removals Fmt.stderr ?printed_filename removals;
-       exit 65 (* EX_DATAERR in sysexits.h*)));
+  (* Disabled until more deprecations would actually expire to save some cycles
+     (if not !canonicalize_settings.deprecations then
+      let removals = Deprecation_removals.collect_removals typed_ast in
+      if not (List.is_empty removals) then (
+        Deprecation_removals.pp_removals Fmt.stderr ?printed_filename removals;
+        exit 65 (* EX_DATAERR in sysexits.h*))); *)
   if !generate_data then (
     let decls = Ast_to_Mir.gather_declarations typed_ast.datablock in
     let context =

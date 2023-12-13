@@ -106,21 +106,21 @@ Syntax error in 'blocks-bad9.stan', line 1, column 19 to column 23, parsing erro
 
 Expect a statement or top-level variable declaration.
   $ ../../../../../install/default/bin/stanc compound-assign-decl-bad1.stan
-Syntax error in 'compound-assign-decl-bad1.stan', line 1, column 18 to column 20, parsing error:
+Syntax error in 'compound-assign-decl-bad1.stan', line 1, column 14 to column 15, parsing error:
    -------------------------------------------------
      1:  model { real T[1] <- {5.0};}
-                           ^
+                       ^
    -------------------------------------------------
 
-Expected ";" or assignment.
+";" or plain assignment expected after variable declaration.
   $ ../../../../../install/default/bin/stanc compound-assign-decl-bad2.stan
-Syntax error in 'compound-assign-decl-bad2.stan', line 1, column 29 to column 31, parsing error:
+Syntax error in 'compound-assign-decl-bad2.stan', line 1, column 25 to column 26, parsing error:
    -------------------------------------------------
      1:  transformed data { real T[1] <- {1.1};}
-                                      ^
+                                  ^
    -------------------------------------------------
 
-Expected ";" or assignment.
+";" or plain assignment expected after variable declaration.
   $ ../../../../../install/default/bin/stanc fun-app-bad1.stan
 Syntax error in 'fun-app-bad1.stan', line 1, column 30 to column 31, parsing error:
    -------------------------------------------------
@@ -195,13 +195,13 @@ Syntax error in 'fun-app-bad9.stan', line 1, column 22 to column 27, parsing err
 
 Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
   $ ../../../../../install/default/bin/stanc fundef-bad1.stan
-Syntax error in 'fundef-bad1.stan', line 1, column 20 to column 25, parsing error:
+Syntax error in 'fundef-bad1.stan', line 1, column 18 to column 19, parsing error:
    -------------------------------------------------
      1:  functions { vector[,while] foo(); }
-                             ^
+                           ^
    -------------------------------------------------
 
-List of commas expected.
+An identifier is expected as a function name.
   $ ../../../../../install/default/bin/stanc fundef-bad10.stan
 Syntax error in 'fundef-bad10.stan', line 2, column 12 to column 23, parsing error:
    -------------------------------------------------
@@ -431,13 +431,13 @@ Syntax error in 'ill-formed-expression25.stan', line 1, column 17 to column 22, 
 
 Ill-formed expression. Expression followed by ";" expected after "=".
   $ ../../../../../install/default/bin/stanc ill-formed-expression26.stan
-Syntax error in 'ill-formed-expression26.stan', line 1, column 17 to column 18, parsing error:
+Syntax error in 'ill-formed-expression26.stan', line 1, column 15 to column 16, parsing error:
    -------------------------------------------------
      1:  model { real T [T}
-                          ^
+                        ^
    -------------------------------------------------
 
-Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
+";" or plain assignment expected after variable declaration.
   $ ../../../../../install/default/bin/stanc ill-formed-expression27.stan
 Syntax error in 'ill-formed-expression27.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
@@ -1179,7 +1179,7 @@ Syntax error in 'ill-formed-statement21.stan', line 1, column 28 to column 33, p
                                      ^
    -------------------------------------------------
 
-Expected ")" after "get_lp(".
+Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement22.stan
 Syntax error in 'ill-formed-statement22.stan', line 1, column 26 to column 31, parsing error:
    -------------------------------------------------
@@ -1187,7 +1187,8 @@ Syntax error in 'ill-formed-statement22.stan', line 1, column 26 to column 31, p
                                    ^
    -------------------------------------------------
 
-Expected "()" after "get_lp".
+Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-statement23.stan
 Syntax error in 'ill-formed-statement23.stan', line 1, column 35 to column 39, parsing error:
    -------------------------------------------------
@@ -1244,7 +1245,7 @@ Syntax error in 'ill-formed-statement29.stan', line 1, column 43 to column 48, p
                                                     ^
    -------------------------------------------------
 
-Ill-formed statement. Expected ";" after ")".
+Ill-formed phrase. Found a well-formed function application. After this, there are many legal completions of the phrase.
   $ ../../../../../install/default/bin/stanc ill-formed-statement3.stan
 Syntax error in 'ill-formed-statement3.stan', line 1, column 36 to column 40, parsing error:
    -------------------------------------------------
@@ -1269,7 +1270,7 @@ Syntax error in 'ill-formed-statement31.stan', line 1, column 44 to column 49, p
                                                      ^
    -------------------------------------------------
 
-Ill-formed statement. Expected ";" after ")".
+Ill-formed phrase. Found a well-formed function application. After this, there are many legal completions of the phrase.
   $ ../../../../../install/default/bin/stanc ill-formed-statement32.stan
 Syntax error in 'ill-formed-statement32.stan', line 1, column 42 to column 43, parsing error:
    -------------------------------------------------
@@ -1277,7 +1278,7 @@ Syntax error in 'ill-formed-statement32.stan', line 1, column 42 to column 43, p
                                                    ^
    -------------------------------------------------
 
-Ill-formed statement. Expected expression followed by ");" after "(".
+Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement33.stan
 Syntax error in 'ill-formed-statement33.stan', line 1, column 40 to column 45, parsing error:
    -------------------------------------------------
@@ -1285,7 +1286,7 @@ Syntax error in 'ill-formed-statement33.stan', line 1, column 40 to column 45, p
                                                  ^
    -------------------------------------------------
 
-Ill-formed statement. Expected expression followed by ");" after "(".
+Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
   $ ../../../../../install/default/bin/stanc ill-formed-statement34.stan
 Syntax error in 'ill-formed-statement34.stan', line 1, column 39 to column 44, parsing error:
    -------------------------------------------------
@@ -1293,7 +1294,8 @@ Syntax error in 'ill-formed-statement34.stan', line 1, column 39 to column 44, p
                                                 ^
    -------------------------------------------------
 
-Ill-formed statement. Expected "(" followed by an expression and ");", after "increment_log_prob".
+Unexpected input after the conclusion of a valid expression.
+You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
   $ ../../../../../install/default/bin/stanc ill-formed-statement35.stan
 Syntax error in 'ill-formed-statement35.stan', line 1, column 24 to column 29, parsing error:
    -------------------------------------------------
@@ -3148,29 +3150,29 @@ Syntax error in 'type-size-bad30.stan', line 1, column 24 to column 25, parsing 
 
 Expected "[" expression "]" for size of positive_ordered.
   $ ../../../../../install/default/bin/stanc type-size-bad31.stan
-Syntax error in 'type-size-bad31.stan', line 1, column 14 to column 15, parsing error:
+Syntax error in 'type-size-bad31.stan', line 1, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  data { real T[] x;}
-                       ^
+                      ^
    -------------------------------------------------
 
-Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
+";" expected after variable declaration.
   $ ../../../../../install/default/bin/stanc type-size-bad32.stan
-Syntax error in 'type-size-bad32.stan', line 1, column 14 to column 15, parsing error:
+Syntax error in 'type-size-bad32.stan', line 1, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  data { real T[];}
-                       ^
+                      ^
    -------------------------------------------------
 
-Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
+";" expected after variable declaration.
   $ ../../../../../install/default/bin/stanc type-size-bad33.stan
-Syntax error in 'type-size-bad33.stan', line 1, column 14 to column 15, parsing error:
+Syntax error in 'type-size-bad33.stan', line 1, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  data { real T[] while}
-                       ^
+                      ^
    -------------------------------------------------
 
-Ill-formed array sizes. "[" (non-empty comma separated list of expressions) "]" expected to specify array sizes.
+";" expected after variable declaration.
   $ ../../../../../install/default/bin/stanc type-size-bad34.stan
 Syntax error in 'type-size-bad34.stan', line 1, column 22 to column 27, parsing error:
    -------------------------------------------------
@@ -3487,10 +3489,10 @@ Syntax error in 'variable-decl-bad2.stan', line 1, column 27 to column 28, parsi
 
 "[" expression "," expression "]" expected for matrix sizes.
   $ ../../../../../install/default/bin/stanc variable-decl-bad3.stan
-Syntax error in 'variable-decl-bad3.stan', line 1, column 17 to column 22, parsing error:
+Syntax error in 'variable-decl-bad3.stan', line 1, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  data { real T[x] while}
-                          ^
+                      ^
    -------------------------------------------------
 
 ";" expected after variable declaration.

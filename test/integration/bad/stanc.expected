@@ -40,26 +40,25 @@ Invalid type in declaration. Valid types:
   tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-multi-decl-bad.stan
-Syntax error in 'array-multi-decl-bad.stan', line 2, column 11 to column 12, parsing error:
+Syntax error in 'array-multi-decl-bad.stan', line 2, column 8 to column 9, parsing error:
    -------------------------------------------------
      1:  model {
      2:    real x[5], y;
-                    ^
+                 ^
      3:  }
    -------------------------------------------------
 
-Expected ";" or assignment.
+";" or plain assignment expected after variable declaration.
   $ ../../../../install/default/bin/stanc array-multi-decl-bad2.stan
-Syntax error in 'array-multi-decl-bad2.stan', line 2, column 21 to column 22, parsing error:
+Syntax error in 'array-multi-decl-bad2.stan', line 2, column 8 to column 9, parsing error:
    -------------------------------------------------
      1:  model {
      2:    real x[3] = {1,2,3}, y;
-                              ^
+                 ^
      3:  }
    -------------------------------------------------
 
-Multiple declarations are not allowed when array dimensions are given in TYPE IDENTIFIER[DIMENSIONS] form.
-When all declarations share array dimensions, use 'array[DIMENSIONS] TYPE IDENTIFIER' form, otherwise use separate declarations.
+";" or plain assignment expected after variable declaration.
   $ ../../../../install/default/bin/stanc array-read-write-assign.stan
 Semantic error in 'array-read-write-assign.stan', line 3, column 0 to column 7:
    -------------------------------------------------
@@ -735,16 +734,16 @@ The left hand side has type
 and the right hand side has type
   row_vector
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
-Syntax error in 'err-bare-type-close-square.stan', line 2, column 8 to column 11, parsing error:
+Syntax error in 'err-bare-type-close-square.stan', line 2, column 6 to column 7, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real[ foo(int n) { return n; }
-                 ^
+               ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-"[" (list of commas) "]" expected in unsized return type of function definition.
+An identifier is expected as a function name.
   $ ../../../../install/default/bin/stanc err-close-block.stan
 Syntax error in 'err-close-block.stan', line 3, column 0 to column 5, parsing error:
    -------------------------------------------------
@@ -2211,42 +2210,6 @@ Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
    -------------------------------------------------
 
 Index must be of type int or int[] or must be a range. Instead found type real.
-  $ ../../../../install/default/bin/stanc redefine-ccdf3.stan
-Semantic error in 'redefine-ccdf3.stan', line 5, column 2 to line 7, column 3:
-   -------------------------------------------------
-     3:      return -x^2;
-     4:    }
-     5:    real foo_ccdf_log(int n, real x) {
-           ^
-     6:      return -x^2;
-     7:    }
-   -------------------------------------------------
-
-Function 'foo_ccdf_log' has already been declared for signature (int, real) => real
-  $ ../../../../install/default/bin/stanc redefine-cdf3.stan
-Semantic error in 'redefine-cdf3.stan', line 5, column 2 to line 7, column 3:
-   -------------------------------------------------
-     3:      return -x^2;
-     4:    }
-     5:    real foo_cdf_log(int n, real x) {
-           ^
-     6:      return -x^2;
-     7:    }
-   -------------------------------------------------
-
-Function 'foo_cdf_log' has already been declared for signature (int, real) => real
-  $ ../../../../install/default/bin/stanc redefine-prob3.stan
-Semantic error in 'redefine-prob3.stan', line 5, column 2 to line 7, column 3:
-   -------------------------------------------------
-     3:      return -y^2;
-     4:    }
-     5:    real foo_lpmf(int y) {
-           ^
-     6:      return y^2 / 2;
-     7:    }
-   -------------------------------------------------
-
-Function 'foo_lpmf' has already been declared for signature (int) => real
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 Semantic error in 'rng_loc1.stan', line 3, column 11 to column 29:
    -------------------------------------------------

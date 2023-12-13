@@ -11,26 +11,10 @@ open Middle
 open Ast
 open Deprecation_analysis
 
-let pound_comment_usages : Location_span.t list ref = ref []
-let old_array_usages : (Location_span.t * bool) list ref = ref []
-
 let rec collect_removed_expr (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
   match expr with
-  | GetLP ->
-      acc
-      @ [ ( emeta.loc
-          , "The get_lp() function was removed in Stan 2.33.0. Use target() \
-             instead. This can be done automatically with the canonicalize \
-             flag for stanc" ) ]
-  | FunApp (StanLib FnPlain, {name= "if_else"; _}, l) ->
-      acc
-      @ [ ( emeta.loc
-          , "The if_else() function was removed in Stan 2.33.0. Use the \
-             conditional operator (x ? y : z) instead; this can be \
-             automatically changed using the canonicalize flag for stanc" ) ]
-      @ List.concat_map l ~f:(fun e -> collect_removed_expr [] e)
   | FunApp ((StanLib _ | UserDefined _), {name; _}, l) ->
       let w =
         match Map.find stan_lib_deprecations name with
@@ -42,40 +26,11 @@ let rec collect_removed_expr (acc : (Location_span.t * string) list)
                   ^ " instead. This can be automatically changed using the \
                      canonicalize flag for stanc" ) ]
             else []
-        | _ when String.is_suffix name ~suffix:"_cdf" ->
-            [ ( emeta.loc
-              , "Use of " ^ name
-                ^ " without a vertical bar (|) between the first two arguments \
-                   of a CDF was removed in Stan 2.33.0. This can be \
-                   automatically changed using the canonicalize flag for stanc"
-              ) ]
         | _ -> [] in
       acc @ w @ List.concat_map l ~f:(fun e -> collect_removed_expr [] e)
   | _ -> fold_expression collect_removed_expr (fun l _ -> l) acc expr
 
 let collect_removed_lval acc : typed_lval -> _ = function
-  | {lval= LIndexed (l, _); _} ->
-      let rec flatten = function
-        | {lval= LVariable _ | LTupleProjection _; _} -> []
-        | {lval= LIndexed (l, idxs); _} ->
-            let flat = flatten l in
-            flat @ idxs in
-      if
-        not
-          (List.for_all
-             ~f:(function
-               | Single {emeta= {type_= UnsizedType.UInt; _}; _} -> true
-               | _ -> false)
-             (flatten l))
-      then
-        acc
-        @ [ ( l.lmeta.loc
-            , "Nested multi-indexing on the left hand side of assignment does \
-               not behave the same as nested indexing in expressions. This is \
-               considered a bug and has been disallowed in Stan 2.33.0. The \
-               indexing can be automatically fixed using the canonicalize flag \
-               for stanc." ) ]
-      else fold_lval_with collect_removed_expr (fun x _ -> x) acc l
   | l -> fold_lval_with collect_removed_expr (fun x _ -> x) acc l
 
 let rec collect_removed_lval_pack acc = function
@@ -86,26 +41,6 @@ let rec collect_removed_lval_pack acc = function
 let rec collect_removed_stmt (acc : (Location_span.t * string) list)
     ({stmt; _} : Ast.typed_statement) : (Location_span.t * string) list =
   match stmt with
-  | Assignment
-      { assign_lhs= LValue {lmeta; _} as assign_lhs
-      ; assign_op= ArrowAssign
-      ; assign_rhs } ->
-      let acc =
-        acc
-        @ [ ( lmeta.loc
-            , "The arrow-style assignment operator '<-' was removed in Stan \
-               2.33, use '=' instead. This can be done automatically with the \
-               canonicalize flag for stanc" ) ] in
-      collect_removed_lval_pack [] assign_lhs
-      @ collect_removed_expr acc assign_rhs
-  | IncrementLogProb e ->
-      let acc =
-        acc
-        @ [ ( e.emeta.loc
-            , "The increment_log_prob(...); function was removed in Stan \
-               2.33.0. Use target += ...; instead. This can be done \
-               automatically with the canonicalize flag for stanc" ) ] in
-      collect_removed_expr acc e
   | _ ->
       fold_statement collect_removed_expr collect_removed_stmt
         collect_removed_lval
@@ -113,21 +48,7 @@ let rec collect_removed_stmt (acc : (Location_span.t * string) list)
         acc stmt
 
 let collect_removals (program : typed_program) =
-  let pounds =
-    List.map !pound_comment_usages ~f:(fun loc ->
-        ( loc
-        , "Comments beginning with # were removed in Stan 2.33.0. Use // to \
-           begin line comments; this can be done automatically using the \
-           auto-format flag to stanc" )) in
-  let arrs =
-    List.map !old_array_usages ~f:(fun (loc, unsized) ->
-        let placement = if unsized then "a type" else "a variable name" in
-        ( loc
-        , "Declaration of arrays by placing brackets after " ^ placement
-          ^ " was removed in Stan 2.33.0. Instead use the array keyword before \
-             the type. This can be changed automatically using the auto-format \
-             flag to stanc" )) in
-  fold_program collect_removed_stmt (pounds @ arrs) program
+  fold_program collect_removed_stmt [] program
 
 let pp ?printed_filename ppf (span, message) =
   let loc_str =

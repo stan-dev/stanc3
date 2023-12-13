@@ -2,40 +2,17 @@ open Core
 open Ast
 open Middle
 
-let current_removal_version = (2, 33)
+let current_removal_version = (2, 34)
 
 let expired (major, minor) =
   let removal_major, removal_minor = current_removal_version in
   removal_major > major || (removal_major = major && removal_minor >= minor)
 
-let deprecated_functions =
-  String.Map.of_alist_exn
-    [ ("multiply_log", ("lmultiply", (2, 33)))
-    ; ("binomial_coefficient_log", ("lchoose", (2, 33)))
-    ; ("cov_exp_quad", ("gp_exp_quad_cov", (2, 33))); ("fabs", ("abs", (2, 33)))
-    ]
+let deprecated_functions = String.Map.of_alist_exn []
 
 (* TODO need to mark lkj_cov as deprecated *)
 
-let deprecated_odes =
-  String.Map.of_alist_exn
-    [ ("integrate_ode", ("ode_rk45", (3, 0)))
-    ; ("integrate_ode_rk45", ("ode_rk45", (3, 0)))
-    ; ("integrate_ode_bdf", ("ode_bdf", (3, 0)))
-    ; ("integrate_ode_adams", ("ode_adams", (3, 0))) ]
-
-let deprecated_distributions =
-  String.Map.of_alist_exn
-    (List.map
-       ~f:(fun (x, y) -> (x, (y, (2, 33))))
-       (List.concat_map Middle.Stan_math_signatures.distributions
-          ~f:(fun (fnkinds, name, _, _) ->
-            List.filter_map fnkinds ~f:(function
-              | Lpdf -> Some (name ^ "_log", name ^ "_lpdf")
-              | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
-              | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
-              | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
-              | Rng | Log | UnaryVectorized _ -> None))))
+let deprecated_distributions = String.Map.of_alist_exn []
 
 let stan_lib_deprecations =
   Map.merge_skewed deprecated_distributions deprecated_functions
@@ -47,8 +24,12 @@ let stan_lib_deprecations =
             (x : string * (int * int))
             (y : string * (int * int))])
 
-let is_deprecated_distribution name =
-  Option.is_some (Map.find deprecated_distributions name)
+let deprecated_odes =
+  String.Map.of_alist_exn
+    [ ("integrate_ode", ("ode_rk45", (3, 0)))
+    ; ("integrate_ode_rk45", ("ode_rk45", (3, 0)))
+    ; ("integrate_ode_bdf", ("ode_bdf", (3, 0)))
+    ; ("integrate_ode_adams", ("ode_adams", (3, 0))) ]
 
 let rename_deprecated map name =
   Map.find map name |> Option.map ~f:fst |> Option.value ~default:name
@@ -66,52 +47,6 @@ let userdef_functions program =
 
 let is_redundant_forwarddecl fundefs funname arguments =
   Hash_set.mem fundefs (funname.name, Ast.type_of_arguments arguments)
-
-let userdef_distributions stmts =
-  let open String in
-  List.filter_map
-    ~f:(function
-      | {stmt= FunDef {funname= {name; _}; _}; _} ->
-          if
-            is_suffix ~suffix:"_log_lpdf" name
-            || is_suffix ~suffix:"_log_lpmf" name
-          then Some (drop_suffix name 5)
-          else if is_suffix ~suffix:"_log_log" name then
-            Some (drop_suffix name 4)
-          else None
-      | _ -> None)
-    (Ast.get_stmts stmts)
-
-let without_suffix user_dists name =
-  let open String in
-  if is_suffix ~suffix:"_lpdf" name || is_suffix ~suffix:"_lpmf" name then
-    drop_suffix name 5
-  else if
-    is_suffix ~suffix:"_log" name
-    && not
-         (is_deprecated_distribution (name ^ "_log")
-         || List.exists ~f:(( = ) name) user_dists)
-  then drop_suffix name 4
-  else name
-
-let update_suffix name type_ =
-  let open String in
-  if is_suffix ~suffix:"_cdf_log" name then drop_suffix name 8 ^ "_lcdf"
-  else if is_suffix ~suffix:"_ccdf_log" name then drop_suffix name 9 ^ "_lccdf"
-  else if Middle.UnsizedType.is_discrete_type type_ then
-    drop_suffix name 4 ^ "_lpmf"
-  else drop_suffix name 4 ^ "_lpdf"
-
-let find_udf_log_suffix = function
-  | { stmt=
-        FunDef
-          { funname= {name; _}
-          ; arguments= (_, ((UReal | UInt) as type_), _) :: _
-          ; _ }
-    ; smeta= _ }
-    when String.is_suffix ~suffix:"_log" name ->
-      Some (name, type_)
-  | _ -> None
 
 let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
@@ -207,12 +142,6 @@ let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
         collect_deprecated_lval
         (fun l _ -> l)
         acc stmt
-
-let collect_userdef_distributions program =
-  program.functionblock |> Ast.get_stmts
-  |> List.filter_map ~f:find_udf_log_suffix
-  |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
-  |> String.Map.of_alist_exn
 
 let collect_warnings (program : typed_program) =
   let fundefs = userdef_functions program in

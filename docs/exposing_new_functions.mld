@@ -16,7 +16,7 @@ To add a distribution, we have to find the line containing [let distributions =]
 used for reference. The first argument defines the kind of function we want to add.
 The second argument is the base function name without the [_...] suffixes. The third argument specifies
 the argument types of the function. The last argument describes the memory pattern supported by this function, either an
-Array of Structs (AoS) or a Struct of Arrays (SoA). The following line exposes a function [foo_lpdf]/[foo_log] which takes in
+Array of Structs (AoS) or a Struct of Arrays (SoA). The following line exposes a function [foo_lpdf] which takes in
 a (non-vectorizable) real number and a (non-vectorizable) integer :
 {[
   ; ([Lpdf], "foo", [DReal; DInt], SoA)
@@ -27,10 +27,8 @@ To see the exact signatures created, we can recompile stanc using [make all] and
 following output:
 {[
 $ stanc --dump-stan-math-signatures | grep foo
-foo_log(real, int) => real
 foo_lpdf(real, int) => real
 ]}
-The [[Lpdf]] type adds the suffixes [_log] and [_lpdf].
 
 If we want to allow the first parameter to be vectorizable, we can change the signature to
 {[
@@ -40,10 +38,6 @@ If we want to allow the first parameter to be vectorizable, we can change the si
 This produces the following signatures:
 {[
 $ stanc --dump-stan-math-signatures | grep foo
-foo_log(real, int) => real
-foo_log(vector, int) => real
-foo_log(row_vector, int) => real
-foo_log(array[] real, int) => real
 foo_lpdf(real, int) => real
 foo_lpdf(vector, int) => real
 foo_lpdf(row_vector, int) => real
@@ -66,13 +60,13 @@ The following parameter types are available:
 - ([DDeepVectorized]: all base types with up to 8 levels of nested containers)
 
 {2 Available types of distribution functions}
-As we have seen above, specifying our function as [[Lpdf]] added the suffixes [_lpdf] and [_log] to our base function name.
+As we have seen above, specifying our function as [[Lpdf]] added the suffix [_lpdf] to our base function name.
 There are several types available which specify the suffixes that will be added:
-- [Lpmf]: [_lpmf, _log]
-- [Lpdf]: [_lpdf, _log]
+- [Lpmf]: [_lpmf]
+- [Lpdf]: [_lpdf]
 - [Rng]: [_rng]
-- [Cdf]: [_cdf, _cdf_log, _lcdf]
-- [Ccdf]: [_ccdf_log, _lccdf]
+- [Cdf]: [_cdf, _lcdf]
+- [Ccdf]: [_lccdf]
 
 Additionally, [full_lpdf] combines all suffixes of [Lpdf], [Rng], [Ccdf] and [Cdf]. [full_lpmf] does the same, but
 using the suffixes of [Lpmf] instead of [Lpdf]. Note that these two have to be used without brackets. This means we would

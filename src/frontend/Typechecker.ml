@@ -111,17 +111,13 @@ let verify_identifier id : unit =
   then Semantic_error.ident_is_keyword id.id_loc id.name |> error
 
 let distribution_name_variants name =
-  if name = "multiply_log" || name = "binomial_coefficient_log" then [name]
-  else
-    (* this will have some duplicates, but preserves order better *)
-    match Utils.split_distribution_suffix name with
-    | Some (stem, "lpmf") | Some (stem, "lpdf") | Some (stem, "log") ->
-        [name; stem ^ "_lpmf"; stem ^ "_lpdf"; stem ^ "_log"]
-    | Some (stem, "lcdf") | Some (stem, "cdf_log") ->
-        [name; stem ^ "_lcdf"; stem ^ "_cdf_log"]
-    | Some (stem, "lccdf") | Some (stem, "ccdf_log") ->
-        [name; stem ^ "_lccdf"; stem ^ "_ccdf_log"]
-    | _ -> [name]
+  (* this will have some duplicates, but preserves order better *)
+  match Utils.split_distribution_suffix name with
+  | Some (stem, "lpmf") | Some (stem, "lpdf") ->
+      [name; stem ^ "_lpmf"; stem ^ "_lpdf"]
+  | Some (stem, "lcdf") -> [name; stem ^ "_lcdf"]
+  | Some (stem, "lccdf") -> [name; stem ^ "_lccdf"]
+  | _ -> [name]
 
 (** verify that the variable being declared is previous unused.
    allowed to shadow StanLib *)
@@ -437,7 +433,6 @@ let verify_fn_conditioning loc id =
     List.exists
       ~f:(fun suffix -> String.is_suffix id.name ~suffix)
       Utils.conditioning_suffices
-    && not (String.is_suffix id.name ~suffix:"_cdf")
   then Semantic_error.conditioning_required loc |> error
 
 (** `Target+=` can only be used in model and functions
@@ -823,18 +818,6 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
   | ImagNumeral s ->
       mk_typed_expression ~expr:(ImagNumeral s) ~ad_level:DataOnly
         ~type_:UComplex ~loc
-  | GetLP ->
-      (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
-      if
-        not
-          (in_lp_function cf || cf.current_block = Model
-         || cf.current_block = TParam)
-      then
-        Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
-      else
-        mk_typed_expression ~expr:GetLP
-          ~ad_level:(calculate_autodifftype cf cf.current_block UReal)
-          ~type_:UReal ~loc
   | GetTarget ->
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
       if
@@ -1023,7 +1006,7 @@ let check_assignment_operator loc assop lhs rhs =
     Semantic_error.illtyped_assignment loc op (type_of_lvalue lhs) rhs |> error
   in
   match assop with
-  | Assign | ArrowAssign ->
+  | Assign ->
       warn_self_assignment loc lhs rhs;
       let rec typechk lhs rhs =
         match (lhs, rhs) with
@@ -1189,39 +1172,25 @@ let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
   | LIndexed (lval, idcs) ->
       let rec check_inner = function
         | {lval= LIndexed (lval, idcs); lmeta= ({loc} : located_meta)} ->
-            let lval, var, flat = check_inner lval in
+            let lval, flat = check_inner lval in
             let idcs = List.map ~f:(check_index cf tenv) idcs in
             let type_ =
               inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
             let ad_level =
               inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
             ( {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
-            , var
             , flat @ idcs )
         | {lval= LVariable _ | LTupleProjection _; _} as lval ->
             (*  I think the right thing to do here is treat tuples like variables *)
             let tval = check_lvalue cf tenv lval in
-            (tval, tval, []) in
-      let lval, var, flat = check_inner lval in
+            (tval, []) in
+      let lval, flat = check_inner lval in
       let idcs = List.map ~f:(check_index cf tenv) idcs in
       let type_ = inferred_unsizedtype_of_indexed ~loc lval.lmeta.type_ idcs in
       let ad_level =
         inferred_ad_type_of_indexed lval.lmeta.ad_level type_ idcs in
-      (if List.exists ~f:is_multiindex flat then
-         (* TODO: prevent in 2.34 *)
-         let lvalue_rvalue_types_differ =
-           try
-             let flat_type =
-               inferred_unsizedtype_of_indexed ~loc var.lmeta.type_ (flat @ idcs)
-             in
-             let rec can_assign = function
-               | UnsizedType.(UArray t1, UArray t2) -> can_assign (t1, t2)
-               | UVector, URowVector | URowVector, UVector -> false
-               | t1, t2 -> UnsizedType.compare t1 t2 <> 0 in
-             can_assign (flat_type, type_)
-           with Errors.SemanticError _ -> true in
-         if lvalue_rvalue_types_differ then
-           Semantic_error.cannot_assign_to_multiindex loc |> error);
+      if List.exists ~f:is_multiindex flat then
+        Semantic_error.cannot_assign_to_multiindex loc |> error;
       {lval= LIndexed (lval, idcs); lmeta= {ad_level; type_; loc}}
 
 let rec check_lvalues cf tenv = function
@@ -1253,12 +1222,6 @@ let check_target_pe loc cf tenv e =
   verify_target_pe_usage loc cf;
   verify_target_pe_expr_type loc te;
   mk_typed_statement ~stmt:(TargetPE te) ~return_type:Incomplete ~loc
-
-let check_incr_logprob loc cf tenv e =
-  let te = check_expression cf tenv e in
-  verify_target_pe_usage loc cf;
-  verify_target_pe_expr_type loc te;
-  mk_typed_statement ~stmt:(IncrementLogProb te) ~return_type:Incomplete ~loc
 
 (* tilde/sampling notation*)
 let verify_sampling_pdf_pmf id =
@@ -1319,9 +1282,7 @@ let is_cumulative_density_defined tenv id arguments =
     with
     | UniqueMatch (ReturnType UReal, _, _) -> true
     | _ -> false in
-  (valid_arg_types_for_suffix "_lcdf" || valid_arg_types_for_suffix "_cdf_log")
-  && (valid_arg_types_for_suffix "_lccdf"
-     || valid_arg_types_for_suffix "_ccdf_log")
+  valid_arg_types_for_suffix "_lcdf" && valid_arg_types_for_suffix "_lccdf"
 
 let verify_sampling_cdf_defined loc tenv id truncation args =
   let check e =
@@ -1853,7 +1814,6 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | Assignment {assign_lhs; assign_op; assign_rhs} ->
       (tenv, check_assignment loc cf tenv assign_lhs assign_op assign_rhs)
   | TargetPE e -> (tenv, check_target_pe loc cf tenv e)
-  | IncrementLogProb e -> (tenv, check_incr_logprob loc cf tenv e)
   | Tilde {arg; distribution; args; truncation} ->
       (tenv, check_tilde loc cf tenv distribution truncation arg args)
   | Break -> (tenv, check_break loc cf)

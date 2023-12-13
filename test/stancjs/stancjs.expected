@@ -252,21 +252,31 @@ $ node pedantic.js
 ["Warning in 'string', line 4, column 9: The variable tt may not have been\n    assigned a value before its use."]
 []
 $ node removed.js
-Error in 'string', line 3, column 1: Declaration of arrays by placing
-    brackets after a variable name was removed in Stan 2.33.0. Instead use
-    the array keyword before the type. This can be changed automatically
-    using the auto-format flag to stanc
-Error in 'string', line 6, column 14: std_normal_log was removed in Stan
-    2.33. Use std_normal_lpdf instead. This can be automatically changed
-    using the canonicalize flag for stanc
+Syntax error in 'string', line 3, column 7 to column 8, parsing error:
+   -------------------------------------------------
+     1:  
+     2:  parameters {
+     3:  	real y[10];
+                ^
+     4:  }
+     5:  model {
+   -------------------------------------------------
 
-parameters {
-  array[10] real y;
-}
-model {
-  target += std_normal_lpdf(y);
-}
+";" expected after variable declaration.
 
+Syntax error in 'string', line 3, column 7 to column 8, parsing error:
+   -------------------------------------------------
+     1:  
+     2:  parameters {
+     3:  	real y[10];
+                ^
+     4:  }
+     5:  model {
+   -------------------------------------------------
+
+";" expected after variable declaration.
+
+undefined
 $ node standalone-functions.js
 
 $ node version.js

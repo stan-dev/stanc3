@@ -65,10 +65,6 @@ let try_convert_to_lvalue expr loc =
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 
-let note_deprecated_array ?(unsized = false) (pos1, pos2) =
-  let loc_span = location_span_of_positions (pos1, pos2) in
-  Deprecation_removals.old_array_usages :=
-    (loc_span, unsized) :: !Deprecation_removals.old_array_usages
 %}
 
 (* Token definitions. The quoted strings are aliases, used in the examples generated in
@@ -101,7 +97,6 @@ let note_deprecated_array ?(unsized = false) (pos1, pos2) =
        ELTDIVIDE "./" OR "||" AND "&&" EQUALS "==" NEQUALS "!=" LEQ "<=" GEQ ">=" TILDE "~"
 %token ASSIGN "=" PLUSASSIGN "+=" MINUSASSIGN "-=" TIMESASSIGN "*="
        DIVIDEASSIGN "/=" ELTDIVIDEASSIGN "./=" ELTTIMESASSIGN ".*="
-%token ARROWASSIGN "<-" INCREMENTLOGPROB "increment_log_prob" GETLP "get_lp" (* all of these are deprecated *)
 %token PRINT "print" REJECT "reject"
 %token TRUNCATE "T"
 %token EOF ""
@@ -263,7 +258,6 @@ reserved_word:
   | PRINT { "print", $loc, false }
   | REJECT { "reject", $loc, false }
   | TARGET { "target", $loc, false }
-  | GETLP { "get_lp", $loc, false }
   | PROFILE { "profile", $loc, false }
   | TUPLE { "tuple", $loc, true }
   | OFFSET { "offset", $loc, false }
@@ -300,11 +294,9 @@ unsized_type:
     {  grammar_logger "unsized_type";
         nest_unsized_array t n
     }
-  | bt=basic_type n_opt=option(unsized_dims)
+  | bt=basic_type
     {  grammar_logger "unsized_type";
-       if Option.is_some n_opt then
-         note_deprecated_array ~unsized:true $loc;
-       nest_unsized_array bt (Option.value n_opt ~default:0)
+       bt
     }
   | t=unsized_tuple_type
     { t }
@@ -373,38 +365,6 @@ remaining_declarations(rhs):
  * identifier.
  *)
 decl(type_rule, rhs):
-  (* This rule matches the old array syntax, e.g:
-       int x[1,2] = ..;
-
-     We need to match it separately because we won't support multiple inline
-     declarations using this form.
-
-     This form is deprecated.
-   *)
-  | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
-      SEMICOLON
-    { note_deprecated_array $loc;
-      (fun ~is_global ->
-      { stmt=
-          VarDecl {
-              decl_type= (reducearray (fst ty, dims))
-            ; transformation= snd ty
-            ; variables= [ { identifier= id
-                           ; initial_value= rhs_opt
-                           } ]
-            ; is_global
-            }
-      ; smeta= {
-          loc= location_span_of_positions $loc
-        }
-    })
-    }
-
-  (* This rule matches non-array declarations and also the new array syntax, e.g:
-       array[1,2] int x = ..;
-   *)
-  (* Note that the array dimensions option must be inlined with ioption, else
-     it will conflict with first rule. *)
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
@@ -575,10 +535,6 @@ offset_mult:
     | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
                  { grammar_logger "array dims" ; l  }
 
-dims:
-  | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
-    { grammar_logger "dims" ; l  }
-
 (* Expressions that can be used everywhere except constraint expressions *)
 expression:
   | e1=expression  QMARK e2=expression COLON e3=expression
@@ -646,9 +602,6 @@ common_expression:
   | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ;
       build_expr GetTarget $loc }
-  | GETLP LPAREN RPAREN
-    { grammar_logger "get_lp" ;
-      build_expr GetLP $loc } (* deprecated *)
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN
     { grammar_logger "conditional_dist_app" ;
@@ -772,9 +725,7 @@ atomic_statement:
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
     {  grammar_logger "funapp_statement" ; NRFunApp ((),id, args)  }
-  | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON
-    {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
-  | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
+ | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
     RPAREN ot=option(truncation) SEMICOLON
     {  grammar_logger "tilde_statement" ;
        let t = match ot with Some tt -> tt | None -> NoTruncate in
@@ -800,8 +751,6 @@ atomic_statement:
 %inline assignment_op:
   | ASSIGN
     {  grammar_logger "assign_plain" ; Assign }
-  | ARROWASSIGN
-    { grammar_logger "assign_arrow" ; ArrowAssign  } (* deprecated *)
   | PLUSASSIGN
     { grammar_logger "assign_plus" ; OperatorAssign Plus }
   | MINUSASSIGN

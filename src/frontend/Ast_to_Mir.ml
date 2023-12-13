@@ -64,7 +64,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
     ->
       FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
-  | GetLP | GetTarget -> FunApp (StanLib ("target", FnTarget, AoS), []) |> ewrap
+  | GetTarget -> FunApp (StanLib ("target", FnTarget, AoS), []) |> ewrap
   | ArrayExpr eles ->
       FunApp (CompilerInternal FnMakeArray, trans_exprs eles) |> ewrap
   | RowVectorExpr eles ->
@@ -104,19 +104,15 @@ let trans_arg (adtype, ut, ident) = (adtype, ident.Ast.name, ut)
 
 let truncate_dist ud_dists (id : Ast.identifier)
     (ast_obs : Ast.typed_expression) ast_args t =
-  let cdf_suffices = ["_lcdf"; "_cdf_log"] in
-  let ccdf_suffices = ["_lccdf"; "_ccdf_log"] in
+  let cdf_suffix = "_lcdf" in
+  let ccdf_suffix = "_lccdf" in
   let find_function_info sfx =
-    let possible_names = List.map ~f:(( ^ ) id.name) sfx in
-    match
-      List.find
-        ~f:(fun (n, _) -> List.mem ~equal:String.equal possible_names n)
-        ud_dists
-    with
+    let name = id.name ^ sfx in
+    match List.find ~f:(fun (n, _) -> String.equal name n) ud_dists with
     | Some (name, tp) -> (Ast.UserDefined FnPlain, name, tp)
     | None ->
         ( Ast.StanLib FnPlain
-        , List.hd_exn possible_names
+        , name
         , if Stan_math_signatures.is_stan_math_function_name (id.name ^ "_lpmf")
           then UnsizedType.UInt
           else UnsizedType.UReal (* close enough *) ) in
@@ -171,7 +167,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
   match t with
   | Ast.NoTruncate -> []
   | TruncateUpFrom lb ->
-      let fk, fn, tp = find_function_info ccdf_suffices in
+      let fk, fn, tp = find_function_info ccdf_suffix in
       let lb = trans_expr lb in
       [ trunc Less "min" lb
           (targetme lb.meta.loc
@@ -179,7 +175,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
                 (funapp lb.meta fk fn
                    (inclusive_bound tp lb :: trans_exprs ast_args)))) ]
   | TruncateDownFrom ub ->
-      let fk, fn, tp = find_function_info cdf_suffices in
+      let fk, fn, tp = find_function_info cdf_suffix in
       let ub = trans_expr ub in
       [ trunc Greater "max" ub
           (targetme ub.meta.loc
@@ -187,7 +183,7 @@ let truncate_dist ud_dists (id : Ast.identifier)
                 (funapp ub.meta fk fn
                    (maybe_promote_to_real tp ub :: trans_exprs ast_args)))) ]
   | TruncateBetween (lb, ub) ->
-      let fk, fn, tp = find_function_info cdf_suffices in
+      let fk, fn, tp = find_function_info cdf_suffix in
       let lb, ub = (trans_expr lb, trans_expr ub) in
       let expr args =
         funapp ub.meta (Ast.StanLib FnPlain) "log_diff_exp"
@@ -517,7 +513,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       trans_single_assignment smeta lhs assign_rhs assign_op
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       NRFunApp (trans_fn_kind fn_kind name, trans_exprs args) |> swrap
-  | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
+  | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix =
         Stan_math_signatures.dist_name_suffix ud_dists distribution.name in
@@ -688,7 +684,7 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
     | LIndexed (lv, _) -> lv.Ast.lmeta.type_ in
   let rhs =
     match assign_op with
-    | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
+    | Ast.Assign -> trans_expr assign_rhs
     | Ast.OperatorAssign op ->
         let assignee = Ast.expr_of_lvalue grouped_lhs in
         op_to_funapp op [assignee; assign_rhs] assignee.emeta.type_ in
