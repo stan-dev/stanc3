@@ -3,55 +3,22 @@ parameters {
   
 }
 model {
-  real z = 3.0;
-  real x = target();
-  array[5] real xyz;
-  
   if (1 < 2 < 3 < 4) {
     // multiple comparisons
   }
-  while (z) {
-    // real as boolean value
-    if (1.0) {
-      // same
-    }
-    if (x && !z || xyz[3]) {
-      // more boolean reals
-    }
-  }
 }
 
-Warning in 'deprecated_syntax.stan', line 9, column 6: Found 1 < 2 < 3. This
+Warning in 'deprecated_syntax.stan', line 5, column 6: Found 1 < 2 < 3. This
     is interpreted as (1 < 2) < 3. Consider if the intended meaning was 
     1 < 2 && 2 < 3 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 9, column 6: Found 1 < 2 < 3 < 4.
+Warning in 'deprecated_syntax.stan', line 5, column 6: Found 1 < 2 < 3 < 4.
     This is interpreted as (1 < 2 < 3) < 4. Consider if the intended meaning
     was 
     1 < 2 < 3 && 3 < 4 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 12, column 9: Condition of type
-    real is deprecated and will be disallowed in Stan 2.34. Use an explicit
-    != 0 comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 14, column 8: Condition of type
-    real is deprecated and will be disallowed in Stan 2.34. Use an explicit
-    != 0 comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 17, column 19: Using a real as a
-    boolean value is deprecated and will be disallowed in Stan 2.34. Use an
-    explicit != 0 comparison instead. This can be automatically changed using
-    the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 17, column 8: Using a real as a
-    boolean value is deprecated and will be disallowed in Stan 2.34. Use an
-    explicit != 0 comparison instead. This can be automatically changed using
-    the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 17, column 14: Using a real as a
-    boolean value is deprecated and will be disallowed in Stan 2.34. Use an
-    explicit != 0 comparison instead. This can be automatically changed using
-    the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format empty.stan
 
 Warning: Empty file 'empty.stan' detected; this is a valid stan model but

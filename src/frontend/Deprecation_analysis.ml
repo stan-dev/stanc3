@@ -78,27 +78,6 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
                   ) ]
             | _ -> []) in
       acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
-  | PrefixOp (PNot, ({emeta= {type_= UReal; loc; _}; _} as e)) ->
-      let acc =
-        acc
-        @ [ ( loc
-            , "Using a real as a boolean value is deprecated and will be \
-               disallowed in Stan 2.34. Use an explicit != 0 comparison \
-               instead. This can be automatically changed using the \
-               canonicalize flag for stanc" ) ] in
-      collect_deprecated_expr acc e
-  | BinOp (({emeta= {type_= UReal; loc; _}; _} as e1), (And | Or), e2)
-   |BinOp (e1, (And | Or), ({emeta= {type_= UReal; loc; _}; _} as e2)) ->
-      let acc =
-        acc
-        @ [ ( loc
-            , "Using a real as a boolean value is deprecated and will be \
-               disallowed in Stan 2.34. Use an explicit != 0 comparison \
-               instead. This can be automatically changed using the \
-               canonicalize flag for stanc" ) ] in
-      let acc = collect_deprecated_expr acc e1 in
-      let acc = collect_deprecated_expr acc e2 in
-      acc
   | _ -> fold_expression collect_deprecated_expr (fun l _ -> l) acc expr
 
 let collect_deprecated_lval acc l =
@@ -115,27 +94,6 @@ let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
              defined function names are always in scope regardless of \
              definition order." ) ]
   | FunDef {body; _} -> collect_deprecated_stmt fundefs acc body
-  | IfThenElse ({emeta= {type_= UReal; loc; _}; _}, ifb, elseb) ->
-      let acc =
-        acc
-        @ [ ( loc
-            , "Condition of type real is deprecated and will be disallowed in \
-               Stan 2.34. Use an explicit != 0 comparison instead. This can be \
-               automatically changed using the canonicalize flag for stanc" ) ]
-      in
-      let acc = collect_deprecated_stmt fundefs acc ifb in
-      Option.value_map ~default:acc
-        ~f:(collect_deprecated_stmt fundefs acc)
-        elseb
-  | While ({emeta= {type_= UReal; loc; _}; _}, body) ->
-      let acc =
-        acc
-        @ [ ( loc
-            , "Condition of type real is deprecated and will be disallowed in \
-               Stan 2.34. Use an explicit != 0 comparison instead. This can be \
-               automatically changed using the canonicalize flag for stanc" ) ]
-      in
-      collect_deprecated_stmt fundefs acc body
   | _ ->
       fold_statement collect_deprecated_expr
         (collect_deprecated_stmt fundefs)

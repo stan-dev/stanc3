@@ -207,26 +207,6 @@ Warning in 'deprecated.stan', line 24, column 2: Assignment of variable to
 Warning in 'deprecated.stan', line 2, column 15: Functions do not need to be
     declared before definition; all user defined function names are always in
     scope regardless of definition order.
-Warning in 'deprecated.stan', line 32, column 6: Condition of type real is
-    deprecated and will be disallowed in Stan 2.34. Use an explicit != 0
-    comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Warning in 'deprecated.stan', line 37, column 9: Condition of type real is
-    deprecated and will be disallowed in Stan 2.34. Use an explicit != 0
-    comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Warning in 'deprecated.stan', line 41, column 28: Using a real as a boolean
-    value is deprecated and will be disallowed in Stan 2.34. Use an explicit
-    != 0 comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Warning in 'deprecated.stan', line 41, column 23: Using a real as a boolean
-    value is deprecated and will be disallowed in Stan 2.34. Use an explicit
-    != 0 comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Warning in 'deprecated.stan', line 41, column 14: Using a real as a boolean
-    value is deprecated and will be disallowed in Stan 2.34. Use an explicit
-    != 0 comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
 Warning in 'deprecated.stan', line 47, column 26: integrate_ode is deprecated
     and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
@@ -243,6 +223,26 @@ Warning in 'deprecated.stan', line 50, column 32: integrate_ode_adams is
     deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+Error in 'deprecated.stan', line 32, column 6: Condition of type real is
+    deprecated and will be disallowed in Stan 2.34. Use an explicit != 0
+    comparison instead. This can be automatically changed using the
+    canonicalize flag for stanc
+Error in 'deprecated.stan', line 37, column 9: Condition of type real is
+    deprecated and will be disallowed in Stan 2.34. Use an explicit != 0
+    comparison instead. This can be automatically changed using the
+    canonicalize flag for stanc
+Error in 'deprecated.stan', line 41, column 28: Using a real as a boolean
+    value was disallowed in Stan 2.34. Use an explicit != 0 comparison
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
+Error in 'deprecated.stan', line 41, column 23: Using a real as a boolean
+    value was disallowed in Stan 2.34. Use an explicit != 0 comparison
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
+Error in 'deprecated.stan', line 41, column 14: Using a real as a boolean
+    value was disallowed in Stan 2.34. Use an explicit != 0 comparison
+    instead. This can be automatically changed using the canonicalize flag
+    for stanc
   $ ../../../../../install/default/bin/stanc --auto-format --canonicalize braces,parentheses funs.stanfunctions
 // comment test comment
 void test(int x, int y) {
