@@ -115,20 +115,20 @@ pipeline {
 
                     stash 'Stanc3Setup'
 
-                    //def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
-                    skipExpressionTests = true
+                    def stanMathSigs = ['test/integration/signatures/stan_math_signatures.t'].join(" ")
+                    skipExpressionTests = utils.verifyChanges(stanMathSigs, "master")
 
-                    //def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
-                    //skipRemainingStages = utils.verifyChanges(runTestPaths, "master")
+                    def runTestPaths = ['src', 'test/integration/good', 'test/stancjs'].join(" ")
+                    skipRemainingStages = utils.verifyChanges(runTestPaths, "master")
 
-                    //def compileTests = ['test/integration/good'].join(" ")
-                    skipCompileTests = true
+                    def compileTests = ['test/integration/good'].join(" ")
+                    skipCompileTests = utils.verifyChanges(compileTests, "master")
 
-                    //def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
-                    skipCompileTestsAtO1 = true
+                    def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
+                    skipCompileTestsAtO1 = skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1, "master")
 
-                    //def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
-                    //skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
+                    def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
+                    skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
                 }
             }
             post { always { runShell("rm -rf ./*") }}
@@ -970,5 +970,12 @@ pipeline {
             }
         }
 
+    }
+    post {
+       always {
+          script {
+            utils.mailBuildResults()
+          }
+        }
     }
 }
