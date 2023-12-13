@@ -125,7 +125,7 @@ pipeline {
                     skipCompileTests = utils.verifyChanges(compileTests, "master")
 
                     def compileTestsAtO1 = ['test/integration/good/compiler-optimizations'].join(" ")
-                    skipCompileTestsAtO1 = skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1, "master")
+                    skipCompileTestsAtO1 = utils.verifyChanges(compileTestsAtO1, "master")
 
                     def sourceCodePaths = ['src', 'Jenkinsfile'].join(" ")
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
