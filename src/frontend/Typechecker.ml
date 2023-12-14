@@ -111,12 +111,9 @@ let verify_identifier id : unit =
   then Semantic_error.ident_is_keyword id.id_loc id.name |> error
 
 let distribution_name_variants name =
-  (* this will have some duplicates, but preserves order better *)
   match Utils.split_distribution_suffix name with
-  | Some (stem, "lpmf") | Some (stem, "lpdf") ->
-      [name; stem ^ "_lpmf"; stem ^ "_lpdf"]
-  | Some (stem, "lcdf") -> [name; stem ^ "_lcdf"]
-  | Some (stem, "lccdf") -> [name; stem ^ "_lccdf"]
+  | Some (stem, "lpmf") -> [name; stem ^ "_lpdf"]
+  | Some (stem, "lpdf") -> [name; stem ^ "_lpmf"]
   | _ -> [name]
 
 (** verify that the variable being declared is previous unused.
