@@ -48,6 +48,11 @@ let userdef_functions program =
 let is_redundant_forwarddecl fundefs funname arguments =
   Hash_set.mem fundefs (funname.name, Ast.type_of_arguments arguments)
 
+let lkj_cov_message =
+  "lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with an \
+   independent lognormal distribution on the scales, see: \
+   https://mc-stan.org/docs/reference-manual/lkj_cov-distribution.html"
+
 let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
@@ -76,7 +81,10 @@ let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
                        The new interface is slightly different, see: \
                        https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
                   ) ]
-            | _ -> []) in
+            | _ ->
+                if String.equal name "lkj_cov_lpdf" then
+                  [(emeta.loc, lkj_cov_message)]
+                else []) in
       acc @ w @ List.concat_map l ~f:(fun e -> collect_deprecated_expr [] e)
   | _ -> fold_expression collect_deprecated_expr (fun l _ -> l) acc expr
 
@@ -93,7 +101,13 @@ let rec collect_deprecated_stmt fundefs (acc : (Location_span.t * string) list)
           , "Functions do not need to be declared before definition; all user \
              defined function names are always in scope regardless of \
              definition order." ) ]
-  | FunDef {body; _} -> collect_deprecated_stmt fundefs acc body
+  | Tilde {distribution; _} when String.equal distribution.name "lkj_cov" ->
+      let acc = (distribution.id_loc, lkj_cov_message) :: acc in
+      fold_statement collect_deprecated_expr
+        (fun s _ -> s)
+        collect_deprecated_lval
+        (fun l _ -> l)
+        acc stmt
   | _ ->
       fold_statement collect_deprecated_expr
         (collect_deprecated_stmt fundefs)
