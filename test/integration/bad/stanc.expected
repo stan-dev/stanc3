@@ -39,26 +39,6 @@ Invalid type in declaration. Valid types:
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
   tuple(...)
 optionally preceded by a single array[...]
-  $ ../../../../install/default/bin/stanc array-multi-decl-bad.stan
-Syntax error in 'array-multi-decl-bad.stan', line 2, column 8 to column 9, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    real x[5], y;
-                 ^
-     3:  }
-   -------------------------------------------------
-
-";" or plain assignment expected after variable declaration.
-  $ ../../../../install/default/bin/stanc array-multi-decl-bad2.stan
-Syntax error in 'array-multi-decl-bad2.stan', line 2, column 8 to column 9, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    real x[3] = {1,2,3}, y;
-                 ^
-     3:  }
-   -------------------------------------------------
-
-";" or plain assignment expected after variable declaration.
   $ ../../../../install/default/bin/stanc array-read-write-assign.stan
 Semantic error in 'array-read-write-assign.stan', line 3, column 0 to column 7:
    -------------------------------------------------
@@ -734,16 +714,16 @@ The left hand side has type
 and the right hand side has type
   row_vector
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
-Syntax error in 'err-bare-type-close-square.stan', line 2, column 6 to column 7, parsing error:
+Syntax error in 'err-bare-type-close-square.stan', line 2, column 9 to column 13, parsing error:
    -------------------------------------------------
      1:  functions {
-     2:    real[ foo(int n) { return n; }
-               ^
+     2:    array[ real foo(int n) { return n; }
+                  ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-An identifier is expected as a function name.
+"[" (list of commas) "]" expected in unsized return type of function definition.
   $ ../../../../install/default/bin/stanc err-close-block.stan
 Syntax error in 'err-close-block.stan', line 3, column 0 to column 5, parsing error:
    -------------------------------------------------
