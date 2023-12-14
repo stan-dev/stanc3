@@ -201,14 +201,12 @@ Syntax error in 'pound-comment-deprecated.stan', line 2, column 1, lexing error:
 
 Invalid character found.
   $ ../../../../../install/default/bin/stanc real-bools.stan
-Error in 'real-bools.stan', line 6, column 9: Condition of type real is
-    deprecated and will be disallowed in Stan 2.34. Use an explicit != 0
-    comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Error in 'real-bools.stan', line 8, column 8: Condition of type real is
-    deprecated and will be disallowed in Stan 2.34. Use an explicit != 0
-    comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
+Error in 'real-bools.stan', line 6, column 9: Condition of type real was
+    disallowed in Stan 2.34. Use an explicit != 0 comparison instead. This
+    can be automatically changed using the canonicalize flag for stanc
+Error in 'real-bools.stan', line 8, column 8: Condition of type real was
+    disallowed in Stan 2.34. Use an explicit != 0 comparison instead. This
+    can be automatically changed using the canonicalize flag for stanc
 Error in 'real-bools.stan', line 11, column 19: Using a real as a boolean
     value was disallowed in Stan 2.34. Use an explicit != 0 comparison
     instead. This can be automatically changed using the canonicalize flag

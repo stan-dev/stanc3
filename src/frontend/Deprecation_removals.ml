@@ -66,20 +66,18 @@ let rec collect_removed_stmt (acc : (Location_span.t * string) list)
       let acc =
         acc
         @ [ ( loc
-            , "Condition of type real is deprecated and will be disallowed in \
-               Stan 2.34. Use an explicit != 0 comparison instead. This can be \
-               automatically changed using the canonicalize flag for stanc" ) ]
-      in
+            , "Condition of type real was disallowed in Stan 2.34. Use an \
+               explicit != 0 comparison instead. This can be automatically \
+               changed using the canonicalize flag for stanc" ) ] in
       let acc = collect_removed_stmt acc ifb in
       Option.value_map ~default:acc ~f:(collect_removed_stmt acc) elseb
   | While ({emeta= {type_= UReal; loc; _}; _}, body) ->
       let acc =
         acc
         @ [ ( loc
-            , "Condition of type real is deprecated and will be disallowed in \
-               Stan 2.34. Use an explicit != 0 comparison instead. This can be \
-               automatically changed using the canonicalize flag for stanc" ) ]
-      in
+            , "Condition of type real was disallowed in Stan 2.34. Use an \
+               explicit != 0 comparison instead. This can be automatically \
+               changed using the canonicalize flag for stanc" ) ] in
       collect_removed_stmt acc body
   | _ ->
       fold_statement collect_removed_expr collect_removed_stmt

@@ -223,14 +223,12 @@ Warning in 'deprecated.stan', line 50, column 32: integrate_ode_adams is
     deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Error in 'deprecated.stan', line 32, column 6: Condition of type real is
-    deprecated and will be disallowed in Stan 2.34. Use an explicit != 0
-    comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Error in 'deprecated.stan', line 37, column 9: Condition of type real is
-    deprecated and will be disallowed in Stan 2.34. Use an explicit != 0
-    comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
+Error in 'deprecated.stan', line 32, column 6: Condition of type real was
+    disallowed in Stan 2.34. Use an explicit != 0 comparison instead. This
+    can be automatically changed using the canonicalize flag for stanc
+Error in 'deprecated.stan', line 37, column 9: Condition of type real was
+    disallowed in Stan 2.34. Use an explicit != 0 comparison instead. This
+    can be automatically changed using the canonicalize flag for stanc
 Error in 'deprecated.stan', line 41, column 28: Using a real as a boolean
     value was disallowed in Stan 2.34. Use an explicit != 0 comparison
     instead. This can be automatically changed using the canonicalize flag
