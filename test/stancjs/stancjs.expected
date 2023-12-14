@@ -68,9 +68,9 @@ model {
   y ~ normal(((((((((0)))))))), 1);
 }
 
-Error in 'string', line 6, column 8: Condition of type real is deprecated and
-    will be disallowed in Stan 2.34. Use an explicit != 0 comparison instead.
-    This can be automatically changed using the canonicalize flag for stanc
+Error in 'string', line 6, column 8: Condition of type real was disallowed in
+    Stan 2.34. Use an explicit != 0 comparison instead. This can be
+    automatically changed using the canonicalize flag for stanc
 
 undefined
 $ node data-generation.js
