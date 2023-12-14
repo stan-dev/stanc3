@@ -9,20 +9,7 @@ let expired (major, minor) =
   removal_major > major || (removal_major = major && removal_minor >= minor)
 
 let deprecated_functions = String.Map.of_alist_exn []
-
-(* TODO need to mark lkj_cov as deprecated *)
-
-let deprecated_distributions = String.Map.of_alist_exn []
-
-let stan_lib_deprecations =
-  Map.merge_skewed deprecated_distributions deprecated_functions
-    ~combine:(fun ~key x y ->
-      Common.FatalError.fatal_error_msg
-        [%message
-          "Common key in deprecation map"
-            (key : string)
-            (x : string * (int * int))
-            (y : string * (int * int))])
+let stan_lib_deprecations = deprecated_functions
 
 let deprecated_odes =
   String.Map.of_alist_exn
