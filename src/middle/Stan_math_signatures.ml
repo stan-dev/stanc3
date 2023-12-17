@@ -235,6 +235,7 @@ let distributions =
   ; (full_lpdf_depr, "cauchy", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf_depr, "chi_square", [DVReal; DVReal], SoA)
   ; ([Lpdf; Log], "dirichlet", [DVectors; DVectors], SoA)
+  ; ([Lpmf], "dirichlet_multinomial", [DIntArray; DVector], AoS)
   ; (full_lpmf_depr, "discrete_range", [DVInt; DVInt; DVInt], SoA)
   ; (full_lpdf_depr, "double_exponential", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf_depr, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal], SoA)
@@ -1150,6 +1151,8 @@ let () =
         bare_types)
     (List.range 0 8);
   add_unqualified ("dirichlet_rng", ReturnType UVector, [UVector], AoS);
+  add_unqualified
+    ("dirichlet_multinomial_rng", ReturnType (UArray UInt), [UVector; UInt], AoS);
   add_unqualified ("distance", ReturnType UReal, [UVector; UVector], SoA);
   add_unqualified ("distance", ReturnType UReal, [URowVector; URowVector], SoA);
   add_unqualified ("distance", ReturnType UReal, [UVector; URowVector], SoA);

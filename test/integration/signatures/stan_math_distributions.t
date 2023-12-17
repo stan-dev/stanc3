@@ -15,6 +15,7 @@ Display all Stan math distributions exposed in the language
   cauchy: lpdf, rng, ccdf, cdf, log (deprecated)
   chi_square: lpdf, rng, ccdf, cdf, log (deprecated)
   dirichlet: lpdf, log (deprecated)
+  dirichlet_multinomial: lpmf
   discrete_range: lpmf, rng, ccdf, cdf, log (deprecated)
   double_exponential: lpdf, rng, ccdf, cdf, log (deprecated)
   exp_mod_normal: lpdf, rng, ccdf, cdf, log (deprecated)
