@@ -4254,6 +4254,8 @@ Display all Stan math signatures exposed in the language
   dirichlet_lpdf(array[] row_vector, row_vector) => real
   dirichlet_lpdf(array[] row_vector, array[] vector) => real
   dirichlet_lpdf(array[] row_vector, array[] row_vector) => real
+  dirichlet_multinomial_lpmf(array[] int, vector) => real
+  dirichlet_multinomial_rng(vector, int) => array[] int
   dirichlet_rng(vector) => vector
   discrete_range_ccdf_log(int, int, int) => real
   discrete_range_ccdf_log(int, int, array[] int) => real
