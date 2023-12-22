@@ -41,6 +41,9 @@ jobs:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
           cache-prefix: v3
 
+      - if: matrix.os == 'macos'
+        run: opam pin -y dune.3.9.3 --no-action
+
       - run: bash -x scripts/install_build_deps.sh
 
       - name: Build
