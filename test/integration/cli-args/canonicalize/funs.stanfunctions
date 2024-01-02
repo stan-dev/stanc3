@@ -1,6 +1,6 @@
 // comment test comment
 void test(int x,      int y){ print(x , ((y))); }
 
-real deprecated_lp() {
-    return get_lp();
+real return_lp() {
+    return target();
 }

@@ -19,17 +19,6 @@ Semantic error in 'completely_undefined2.stan', line 5, column 12 to column 23:
    -------------------------------------------------
 
 Function 'foo_lpdf' is not implemented for distribution 'foo', use 'foo_lpmf' instead.
-  $ ../../../../../install/default/bin/stanc deprecated_suffix.stan
-Semantic error in 'deprecated_suffix.stan', line 4, column 14 to column 45:
-   -------------------------------------------------
-     2:  }
-     3:  model {
-     4:      target += binomial_logit_ccdf_log(1, 0,1);
-                       ^
-     5:  }
-   -------------------------------------------------
-
-Function 'binomial_logit_ccdf_log' is not implemented for distribution 'binomial_logit'.
   $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement1.stan
 Semantic error in 'lpmf_lpdf_replacement1.stan', line 5, column 14 to column 34:
    -------------------------------------------------
@@ -106,6 +95,17 @@ Semantic error in 'non_existing_distribution_suffix4.stan', line 4, column 14 to
    -------------------------------------------------
 
 A returning function was expected but an undeclared identifier 'von_mises_notasuffix' was supplied.
+  $ ../../../../../install/default/bin/stanc removed_suffix.stan
+Semantic error in 'removed_suffix.stan', line 4, column 14 to column 45:
+   -------------------------------------------------
+     2:  }
+     3:  model {
+     4:      target += binomial_logit_ccdf_log(1, 0,1);
+                       ^
+     5:  }
+   -------------------------------------------------
+
+A returning function was expected but an undeclared identifier 'binomial_logit_ccdf_log' was supplied.
   $ ../../../../../install/default/bin/stanc user_defined.stan
 Semantic error in 'user_defined.stan', line 7, column 13 to column 27:
    -------------------------------------------------

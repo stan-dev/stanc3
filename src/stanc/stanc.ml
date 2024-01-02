@@ -283,8 +283,6 @@ let use_file filename =
     get_ast_or_exit ?printed_filename filename
       ~print_warnings:(not !canonicalize_settings.deprecations)
       ~bare_functions:!bare_functions in
-  (* must be before typecheck to fix up deprecated syntax which gets rejected *)
-  let ast = Canonicalize.repair_syntax ast !canonicalize_settings in
   Debugging.ast_logger ast;
   let typed_ast = type_ast_or_exit ?printed_filename ast in
   let canonical_ast =

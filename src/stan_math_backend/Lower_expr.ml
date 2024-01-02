@@ -271,7 +271,7 @@ and lower_operator_app op es_in =
 and lower_misc_special_math_app (f : string) (mem_pattern : Mem_pattern.t)
     (ret_type : UnsizedType.returntype option) =
   match f with
-  | "target" | "get_lp" ->
+  | "target" ->
       Some
         (fun _ ->
           Exprs.fun_call "stan::math::get_lp" [Var "lp__"; Var "lp_accum__"])
