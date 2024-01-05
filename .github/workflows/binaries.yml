@@ -1,12 +1,7 @@
 name: Build binaries
 
 on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to use for building binaries'
-        required: true
-        default: 'master'
+  workflow_dispatch: {}
 
 jobs:
   build:
