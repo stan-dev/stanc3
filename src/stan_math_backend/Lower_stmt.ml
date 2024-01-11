@@ -268,6 +268,8 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       [Stmts.if_block pstream body]
   | NRFunApp (CompilerInternal FnReject, args) ->
       [throw_exn "std::domain_error" args]
+  | NRFunApp (CompilerInternal FnExit, args) ->
+      [throw_exn "std::runtime_error" args]
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
       Option.value_map (check_to_string trans) ~default:[] ~f:(fun check_name ->
           let function_arg = Expr.Helpers.variable "function__" in

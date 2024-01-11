@@ -98,7 +98,7 @@ let nest_unsized_array basic_type n =
        ELTDIVIDE "./" OR "||" AND "&&" EQUALS "==" NEQUALS "!=" LEQ "<=" GEQ ">=" TILDE "~"
 %token ASSIGN "=" PLUSASSIGN "+=" MINUSASSIGN "-=" TIMESASSIGN "*="
        DIVIDEASSIGN "/=" ELTDIVIDEASSIGN "./=" ELTTIMESASSIGN ".*="
-%token PRINT "print" REJECT "reject"
+%token PRINT "print" REJECT "reject" EXIT "exit"
 %token TRUNCATE "T"
 %token EOF ""
 
@@ -266,6 +266,7 @@ reserved_word:
   | COVMATRIX { "cov_matrix", $loc, true  }
   | PRINT { "print", $loc, false }
   | REJECT { "reject", $loc, false }
+  | EXIT { "exit", $loc, false }
   | TARGET { "target", $loc, false }
   | PROFILE { "profile", $loc, false }
   | TUPLE { "tuple", $loc, true }
@@ -750,6 +751,8 @@ atomic_statement:
     {  grammar_logger "print_statement" ; Print l }
   | REJECT LPAREN l=printables RPAREN SEMICOLON
     {  grammar_logger "reject_statement" ; Reject l  }
+  | EXIT LPAREN l=printables RPAREN SEMICOLON
+    {  grammar_logger "exit_statement" ; Exit l  }
   | RETURN e=expression SEMICOLON
     {  grammar_logger "return_statement" ; Return e }
   | RETURN SEMICOLON

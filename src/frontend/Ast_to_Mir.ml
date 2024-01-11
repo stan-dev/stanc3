@@ -541,6 +541,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       NRFunApp (CompilerInternal FnPrint, trans_printables smeta ps) |> swrap
   | Ast.Reject ps ->
       NRFunApp (CompilerInternal FnReject, trans_printables smeta ps) |> swrap
+  | Ast.Exit ps ->
+      NRFunApp (CompilerInternal FnExit, trans_printables smeta ps) |> swrap
   | Ast.IfThenElse (cond, ifb, elseb) ->
       IfElse
         ( trans_expr cond

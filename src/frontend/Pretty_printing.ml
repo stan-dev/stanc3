@@ -430,6 +430,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
   | ReturnVoid -> pf ppf "return;"
   | Print ps -> pf ppf "print(%a);" pp_list_of_printables ps
   | Reject ps -> pf ppf "reject(%a);" pp_list_of_printables ps
+  | Exit ps -> pf ppf "exit(%a);" pp_list_of_printables ps
   | Skip -> pf ppf ";"
   | IfThenElse (_, _, _) ->
       (vbox pp_recursive_ifthenelse) ppf (ss, ss.smeta.loc.begin_loc)

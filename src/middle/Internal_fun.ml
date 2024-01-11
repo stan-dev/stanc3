@@ -23,6 +23,7 @@ type 'expr t =
   | FnCheck of {trans: 'expr Transformation.t; var_name: string; var: 'expr}
   | FnPrint
   | FnReject
+  | FnExit
   | FnResizeToMatch
   | FnNaN
   | FnDeepCopy
@@ -57,7 +58,7 @@ let can_side_effect = function
    |FnReadWriteEventsOpenCL _ ->
       true
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
-   |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ | FnMakeTuple ->
+   |FnExit | FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ | FnMakeTuple ->
       false
 
 let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn
