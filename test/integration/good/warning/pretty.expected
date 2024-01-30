@@ -600,8 +600,8 @@ functions {
 }
 
 Warning in 'unreachable_statement.stan', line 5, column 5: Unreachable
-    statement (following a reject, break, continue, or return) found, is this
-    intended?
+    statement (following a reject, exit, break, continue, or return) found,
+    is this intended?
   $ ../../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
 transformed data {
   real u;
