@@ -159,8 +159,7 @@ let lower_constructor
     Decls.current_statement
     @ [ Using ("local_scalar_t__", Some Double)
       ; VariableDefn
-          (make_variable_defn ~type_:(TypeLiteral "boost::ecuyer1988")
-             ~name:"base_rng__"
+          (make_variable_defn ~type_:(TypeLiteral "auto") ~name:"base_rng__"
              ~init:
                (Assignment
                   (Exprs.fun_call "stan::services::util::create_rng"
