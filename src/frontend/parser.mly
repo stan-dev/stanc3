@@ -86,6 +86,7 @@ let nest_unsized_array basic_type n =
        CHOLESKYFACTORCORR "cholesky_factor_corr" CHOLESKYFACTORCOV "cholesky_factor_cov"
        CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix" COMPLEXMATRIX "complex_matrix"
 %token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
+%token JACOBIAN "jacobian"
 %token <string> INTNUMERAL "24"
 %token <string> REALNUMERAL "3.1415" DOTNUMERAL ".2"
 %token <string> IMAGNUMERAL "1i"
@@ -212,7 +213,15 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
+  | id_and_v = future_keyword
+    {
+      let id, v = id_and_v in
+      Input_warnings.future_keyword id.name v $loc;
+      id
+    }
 
+future_keyword:
+  | JACOBIAN { build_id "jacobian" $loc, "2.38.0" }
 
 decl_identifier:
   | id=identifier { id }
