@@ -389,7 +389,7 @@ let lower_standalone_fun_def namespace_fun
     match fdsuffix with
     | Fun_kind.FnTarget ->
         (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
-    | FnRng -> (["base_rng__"], ["boost::ecuyer1988"])
+    | FnRng -> (["base_rng__"], ["stan::rng_t"])
     | FnLpdf _ | FnPlain -> ([], []) in
   let args =
     List.map
