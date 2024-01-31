@@ -112,6 +112,8 @@ new error states to the [parser.messages] file. These will say
 
 See {{!page-parser_messages}adding or changing the syntax error messages} for more information.
 
+Note that python3 is required to run this command.
+
 {3 Building these docs}
 
 Docs can be built with [make doc]. This will generate a [_build/default/_doc/_html/index.html] file
