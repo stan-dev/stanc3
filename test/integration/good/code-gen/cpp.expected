@@ -3992,13 +3992,17 @@ class double_reject_model final : public model_base_crtp<double_reject_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      std::stringstream errmsg_stream__;
-      stan::math::stan_print(&errmsg_stream__, "hi there");
-      throw std::domain_error(errmsg_stream__.str());
+      {
+        std::stringstream errmsg_stream__;
+        stan::math::stan_print(&errmsg_stream__, "hi there");
+        throw std::domain_error(errmsg_stream__.str());
+      }
       current_statement__ = 2;
-      std::stringstream errmsg_stream__;
-      stan::math::stan_print(&errmsg_stream__, "bye there");
-      throw std::domain_error(errmsg_stream__.str());
+      {
+        std::stringstream errmsg_stream__;
+        stan::math::stan_print(&errmsg_stream__, "bye there");
+        throw std::domain_error(errmsg_stream__.str());
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -4030,13 +4034,17 @@ class double_reject_model final : public model_base_crtp<double_reject_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      std::stringstream errmsg_stream__;
-      stan::math::stan_print(&errmsg_stream__, "hi there");
-      throw std::domain_error(errmsg_stream__.str());
+      {
+        std::stringstream errmsg_stream__;
+        stan::math::stan_print(&errmsg_stream__, "hi there");
+        throw std::domain_error(errmsg_stream__.str());
+      }
       current_statement__ = 2;
-      std::stringstream errmsg_stream__;
-      stan::math::stan_print(&errmsg_stream__, "bye there");
-      throw std::domain_error(errmsg_stream__.str());
+      {
+        std::stringstream errmsg_stream__;
+        stan::math::stan_print(&errmsg_stream__, "bye there");
+        throw std::domain_error(errmsg_stream__.str());
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -8027,13 +8035,15 @@ void foo_4(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 711;
-    std::stringstream errmsg_stream__;
-    stan::math::stan_print(&errmsg_stream__, "user-specified rejection");
-    stan::math::stan_print(&errmsg_stream__,
-      stan::model::rvalue(x, "x", stan::model::index_uni(1)));
-    stan::math::stan_print(&errmsg_stream__, "; ");
-    stan::math::stan_print(&errmsg_stream__, x);
-    throw std::domain_error(errmsg_stream__.str());
+    {
+      std::stringstream errmsg_stream__;
+      stan::math::stan_print(&errmsg_stream__, "user-specified rejection");
+      stan::math::stan_print(&errmsg_stream__,
+        stan::model::rvalue(x, "x", stan::model::index_uni(1)));
+      stan::math::stan_print(&errmsg_stream__, "; ");
+      stan::math::stan_print(&errmsg_stream__, x);
+      throw std::domain_error(errmsg_stream__.str());
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -8071,28 +8081,32 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_, const T3__&
     current_statement__ = 718;
     if (stan::math::logical_gt((abs_diff / avg_scale), max_)) {
       current_statement__ = 717;
-      std::stringstream errmsg_stream__;
-      stan::math::stan_print(&errmsg_stream__,
-        "user-specified rejection, difference above ");
-      stan::math::stan_print(&errmsg_stream__, max_);
-      stan::math::stan_print(&errmsg_stream__, " x:");
-      stan::math::stan_print(&errmsg_stream__, x);
-      stan::math::stan_print(&errmsg_stream__, " y:");
-      stan::math::stan_print(&errmsg_stream__, y);
-      throw std::domain_error(errmsg_stream__.str());
+      {
+        std::stringstream errmsg_stream__;
+        stan::math::stan_print(&errmsg_stream__,
+          "user-specified rejection, difference above ");
+        stan::math::stan_print(&errmsg_stream__, max_);
+        stan::math::stan_print(&errmsg_stream__, " x:");
+        stan::math::stan_print(&errmsg_stream__, x);
+        stan::math::stan_print(&errmsg_stream__, " y:");
+        stan::math::stan_print(&errmsg_stream__, y);
+        throw std::domain_error(errmsg_stream__.str());
+      }
     }
     current_statement__ = 720;
     if (stan::math::logical_lt((abs_diff / avg_scale), min_)) {
       current_statement__ = 719;
-      std::stringstream errmsg_stream__;
-      stan::math::stan_print(&errmsg_stream__,
-        "user-specified rejection, difference below ");
-      stan::math::stan_print(&errmsg_stream__, min_);
-      stan::math::stan_print(&errmsg_stream__, " x:");
-      stan::math::stan_print(&errmsg_stream__, x);
-      stan::math::stan_print(&errmsg_stream__, " y:");
-      stan::math::stan_print(&errmsg_stream__, y);
-      throw std::domain_error(errmsg_stream__.str());
+      {
+        std::stringstream errmsg_stream__;
+        stan::math::stan_print(&errmsg_stream__,
+          "user-specified rejection, difference below ");
+        stan::math::stan_print(&errmsg_stream__, min_);
+        stan::math::stan_print(&errmsg_stream__, " x:");
+        stan::math::stan_print(&errmsg_stream__, x);
+        stan::math::stan_print(&errmsg_stream__, " y:");
+        stan::math::stan_print(&errmsg_stream__, y);
+        throw std::domain_error(errmsg_stream__.str());
+      }
     }
     current_statement__ = 721;
     return (abs_diff / avg_scale);
@@ -13705,9 +13719,11 @@ class mother_model final : public model_base_crtp<mother_model> {
               stan::model::index_uni(2), stan::model::index_uni(1),
               stan::model::index_uni(1)))) {
         current_statement__ = 137;
-        std::stringstream errmsg_stream__;
-        stan::math::stan_print(&errmsg_stream__, "indexing test 1 failed");
-        throw std::domain_error(errmsg_stream__.str());
+        {
+          std::stringstream errmsg_stream__;
+          stan::math::stan_print(&errmsg_stream__, "indexing test 1 failed");
+          throw std::domain_error(errmsg_stream__.str());
+        }
       }
       current_statement__ = 141;
       for (int i = 1; i <= 5; ++i) {
@@ -13740,9 +13756,11 @@ class mother_model final : public model_base_crtp<mother_model> {
               stan::model::index_uni(2), stan::model::index_uni(1),
               stan::model::index_uni(1)))) {
         current_statement__ = 143;
-        std::stringstream errmsg_stream__;
-        stan::math::stan_print(&errmsg_stream__, "indexing test 2 failed");
-        throw std::domain_error(errmsg_stream__.str());
+        {
+          std::stringstream errmsg_stream__;
+          stan::math::stan_print(&errmsg_stream__, "indexing test 2 failed");
+          throw std::domain_error(errmsg_stream__.str());
+        }
       }
       current_statement__ = 148;
       for (int i = 1; i <= stan::math::size(indices); ++i) {
@@ -13781,9 +13799,11 @@ class mother_model final : public model_base_crtp<mother_model> {
               stan::model::index_uni(2), stan::model::index_uni(1),
               stan::model::index_uni(1)))) {
         current_statement__ = 150;
-        std::stringstream errmsg_stream__;
-        stan::math::stan_print(&errmsg_stream__, "indexing test 3 failed");
-        throw std::domain_error(errmsg_stream__.str());
+        {
+          std::stringstream errmsg_stream__;
+          stan::math::stan_print(&errmsg_stream__, "indexing test 3 failed");
+          throw std::domain_error(errmsg_stream__.str());
+        }
       }
       current_statement__ = 152;
       stan::model::assign(idx_res4,

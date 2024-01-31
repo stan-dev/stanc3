@@ -15925,9 +15925,11 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
       std::vector<int> T =
         std::vector<int>(6, std::numeric_limits<int>::min());
       current_statement__ = 2;
-      std::stringstream errmsg_stream__;
-      stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
-      throw std::domain_error(errmsg_stream__.str());
+      {
+        std::stringstream errmsg_stream__;
+        stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
+        throw std::domain_error(errmsg_stream__.str());
+      }
       std::vector<local_scalar_t__> T2 =
         std::vector<local_scalar_t__>(4, DUMMY_VAR__);
       current_statement__ = 4;
@@ -15968,9 +15970,11 @@ class fuzz_div0_model final : public model_base_crtp<fuzz_div0_model> {
       std::vector<int> T =
         std::vector<int>(6, std::numeric_limits<int>::min());
       current_statement__ = 2;
-      std::stringstream errmsg_stream__;
-      stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
-      throw std::domain_error(errmsg_stream__.str());
+      {
+        std::stringstream errmsg_stream__;
+        stan::math::stan_print(&errmsg_stream__, "Integer division by zero");
+        throw std::domain_error(errmsg_stream__.str());
+      }
       std::vector<local_scalar_t__> T2 =
         std::vector<local_scalar_t__>(4, DUMMY_VAR__);
       current_statement__ = 4;
