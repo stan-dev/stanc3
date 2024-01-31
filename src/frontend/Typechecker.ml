@@ -1381,12 +1381,11 @@ let rec stmt_is_escape {stmt; _} =
 
 and list_until_escape xs =
   let rec aux accu = function
-    | [next; next'] when stmt_is_escape next' -> List.rev (next' :: next :: accu)
-    | next :: next' :: unreachable :: _ when stmt_is_escape next' ->
+    | next' :: unreachable :: _ when stmt_is_escape next' ->
         add_warning unreachable.smeta.loc
           "Unreachable statement (following a reject, break, continue, or \
            return) found, is this intended?";
-        List.rev (next' :: next :: accu)
+        List.rev (next' :: accu)
     | next :: rest -> aux (next :: accu) rest
     | [] -> List.rev accu in
   aux [] xs
@@ -1884,6 +1883,7 @@ let check_toplevel_block block tenv stmts_opt =
   | Some {stmts; xloc} ->
       let tenv', stmts =
         List.fold_map stmts ~init:tenv ~f:(check_statement cf) in
+      let _ = list_until_escape stmts in
       (tenv', Some {stmts; xloc})
   | None -> (tenv, None)
 
