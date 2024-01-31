@@ -14,3 +14,7 @@ val add_warning : Middle.Location_span.t -> string -> unit
 
 val empty : string -> unit
 (** Register that an empty file is being parsed *)
+
+val future_keyword :
+  string -> string -> Lexing.position * Lexing.position -> unit
+(** Warn on a keyword which will be reserved in the future*)

@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc --auto-format deprecated_syntax.stan
 parameters {
-  
+  real jacobian;
 }
 model {
   if (1 < 2 < 3 < 4) {
@@ -8,6 +8,9 @@ model {
   }
 }
 
+Warning in 'deprecated_syntax.stan', line 2, column 7: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38.0. Please rename
+    it!
 Warning in 'deprecated_syntax.stan', line 5, column 6: Found 1 < 2 < 3. This
     is interpreted as (1 < 2) < 3. Consider if the intended meaning was 
     1 < 2 && 2 < 3 instead.

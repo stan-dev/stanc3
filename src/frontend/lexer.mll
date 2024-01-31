@@ -144,6 +144,7 @@ rule token = parse
   | "upper"                   { lexer_logger "upper" ; Parser.UPPER }
   | "offset"                  { lexer_logger "offset" ; Parser.OFFSET }
   | "multiplier"              { lexer_logger "multiplier" ; Parser.MULTIPLIER }
+  | "jacobian"                { lexer_logger "jacobian" ; Parser.JACOBIAN }
 (* Operators *)
   | '?'                       { lexer_logger "?" ; add_separator lexbuf ; Parser.QMARK }
   | ':'                       { lexer_logger ":" ; Parser.COLON }
@@ -189,7 +190,7 @@ rule token = parse
                                 Parser.DOTNUMERAL (lexeme lexbuf) }
   | imag_constant as z        { lexer_logger ("imag_constant " ^ z) ;
                                 Parser.IMAGNUMERAL (lexeme lexbuf) }
-  | "target"                  { lexer_logger "target" ; Parser.TARGET } 
+  | "target"                  { lexer_logger "target" ; Parser.TARGET }
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
