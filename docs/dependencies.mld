@@ -40,6 +40,8 @@ and must use the same version.
 - utop
 - ocp-indent
 - patdiff
+- odoc
+- bisect_ppx
 
 {1:xcomp Cross Compilation for Windows}
 To support Windows binaries, we
