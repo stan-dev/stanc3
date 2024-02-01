@@ -50,10 +50,10 @@
    (with-stdout-to
     %{targets}
     (run
-     %{dep:strip_redundant_parser_state.py}
+     %{dep:parser_strip_redundant_state.py}
      %{dep:parser_updated.messages}))
    (run
-    %{dep:add_missing_messages.py}
+    %{dep:parser_add_missing_messages.py}
     %{dep:parser.mly}
     %{dep:parser_new.messages}
     parser_updated_trimmed.messages))))
