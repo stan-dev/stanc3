@@ -174,6 +174,20 @@ let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Fixed.Pattern.lvalue)
       let expr_base_ref = Stmt.Helpers.lvalue_base_reference expr_lv in
       expr_base_ref = lhs_base_ref)
 
+let throw_exn exn_type args =
+  let open Expression_syntax in
+  let err_strm_name = "errmsg_stream__" in
+  let stream_decl =
+    VariableDefn
+      (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
+         ~name:err_strm_name ()) in
+  let throw = Throw (Exprs.fun_call exn_type [(Var err_strm_name).@!("str")]) in
+  let add_to_string e =
+    Expression
+      (fun_call "stan::math::stan_print" [VarRef err_strm_name; lower_expr e])
+  in
+  Stmts.block ((stream_decl :: List.map ~f:add_to_string args) @ [throw])
+
 let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   let remove_promotions (e : 'a Expr.Fixed.t) =
     (* assignment handles one level of promotion internally, don't do it twice *)
@@ -253,20 +267,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
         @ [Expression (Deref pstream << [Cpp.Literal "std::endl"])] in
       [Stmts.if_block pstream body]
   | NRFunApp (CompilerInternal FnReject, args) ->
-      let err_strm_name = "errmsg_stream__" in
-      let stream_decl =
-        VariableDefn
-          (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
-             ~name:err_strm_name ()) in
-      let throw =
-        Throw
-          (Exprs.fun_call "std::domain_error" [(Var err_strm_name).@!("str")])
-      in
-      let add_to_string e =
-        Expression
-          (fun_call "stan::math::stan_print"
-             [VarRef err_strm_name; lower_expr e]) in
-      (stream_decl :: List.map ~f:add_to_string args) @ [throw]
+      [throw_exn "std::domain_error" args]
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
       Option.value_map (check_to_string trans) ~default:[] ~f:(fun check_name ->
           let function_arg = Expr.Helpers.variable "function__" in
