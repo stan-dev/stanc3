@@ -81,6 +81,12 @@ pipeline {
     parameters {
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
         booleanParam(name:"skip_compile_O1", defaultValue: false, description:"Skip compile tests that run with STANCFLAGS = --O1")
+        booleanParam(name:"skip_compile", defaultValue: false, description:"Skip compile tests")
+        booleanParam(name:"skip_math_func_expr", defaultValue: false, description:"Skip math functions expressions test")
+        booleanParam(name:"skip_ocaml_tests", defaultValue: false, description:"Skip ocaml tests")
+        booleanParam(name:"skip_code_formatting", defaultValue: false, description:"Skip code formatting")
+        booleanParam(name:"skip_build", defaultValue: false, description:"Skip code formatting")
+        booleanParam(name:"skip_verify_changes", defaultValue: false, description:"Skip verify changes")
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
@@ -105,6 +111,12 @@ pipeline {
     }
     stages {
         stage('Verify changes') {
+            when {
+                beforeAgent true
+                expression {
+                    !params.skip_verify_changes
+                }
+            }
             agent {
                 dockerfile {
                     filename 'scripts/docker/debian/Dockerfile'
@@ -116,20 +128,7 @@ pipeline {
             }
             steps {
                 script {
-                    retry(3) {
-                        checkout([
-                          $class: 'GitSCM',
-                          branches: scm.branches,
-                          extensions: [[$class: 'CloneOption', noTags: false]],
-                          userRemoteConfigs: scm.userRemoteConfigs,
-                        ])
-                    }
-                    sh 'git clean -xffd'
-
-                    runShell """
-                        eval \$(opam env)
-                        dune subst
-                    """
+                    cleanCheckout()
 
                     stash 'Stanc3Setup'
 
@@ -156,7 +155,7 @@ pipeline {
             when {
                 beforeAgent true
                 expression {
-                    !skipRemainingStages
+                    !params.skip_build
                 }
             }
             agent {
@@ -184,8 +183,13 @@ pipeline {
         stage("Code formatting") {
             when {
                 beforeAgent true
-                expression {
-                    !skipRemainingStages
+                allOf {
+                    expression {
+                        !skipRemainingStages
+                    }
+                    expression {
+                        !params.skip_code_formatting
+                    }
                 }
             }
             agent {
@@ -217,8 +221,13 @@ pipeline {
         stage("OCaml tests") {
             when {
                 beforeAgent true
-                expression {
-                    !skipRemainingStages
+                allOf {
+                    expression {
+                        !skipRemainingStages
+                    }
+                    expression {
+                        !params.skip_ocaml_tests
+                    }
                 }
             }
             parallel {
@@ -288,8 +297,13 @@ pipeline {
                 stage("Compile tests - good") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                          expression {
                             !skipCompileTests
+                          }
+                          expression {
+                            !params.skip_compile
+                          }
                         }
                     }
                     agent {
@@ -320,8 +334,13 @@ pipeline {
                 stage("Compile tests - example-models") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                          expression {
                             !skipCompileTests
+                          }
+                          expression {
+                            !params.skip_compile
+                          }
                         }
                     }
                     agent {
@@ -481,21 +500,16 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
                 }
+
                 stage("Model end-to-end tests at O=1") {
                     when {
                         beforeAgent true
                         allOf {
                          expression {
-                            !skipCompileTests
-                         }
-                         expression {
                             !params.skip_end_to_end
                          }
                          expression {
                             !skipCompileTestsAtO1
-                         }
-                         expression {
-                            !params.skip_compile_O1
                          }
                         }
                     }
@@ -546,6 +560,7 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}
                 }
+
                 stage('Math functions expressions test') {
                     when {
                         beforeAgent true
@@ -555,6 +570,9 @@ pipeline {
                             }
                             expression {
                                 !skipExpressionTests
+                            }
+                            expression {
+                                !params.skip_math_func_expr
                             }
                         }
                     }
