@@ -25,7 +25,7 @@ def tagName() {
     }
 }
 
-def runPerformanceTests(String testsPath, String stancFlags = ""){
+def checkCompilation(String testsPath, String stancFlags = ""){
     unstash 'ubuntu-exe'
 
     sh """
@@ -54,7 +54,7 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
         echo 'O=0' >> make/local
         echo 'CXXFLAGS+=-Wall' >> make/local
         make -j${env.PARALLEL} build; cd ..
-        ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+        python ./checkCompilation.py -j${env.PARALLEL} --syntax-only ${testsPath}
     """
 }
 
@@ -284,16 +284,8 @@ pipeline {
                         dir("${env.WORKSPACE}/compile-tests-good"){
                             unstash "Stanc3Setup"
                             script {
-                                runPerformanceTests("../test/integration/good", params.stanc_flags)
+                                checkCompilation("../test/integration/good", params.stanc_flags)
                             }
-
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-good/*") }}
@@ -316,16 +308,8 @@ pipeline {
                         dir("${env.WORKSPACE}/compile-tests-example"){
                             script {
                                 unstash "Stanc3Setup"
-                                runPerformanceTests("example-models", params.stanc_flags)
+                                checkCompilation("example-models", params.stanc_flags)
                             }
-
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-example/*") }}
@@ -353,16 +337,8 @@ pipeline {
                         dir("${env.WORKSPACE}/compile-good-O1"){
                             unstash "Stanc3Setup"
                             script {
-                                runPerformanceTests("../test/integration/good", "--O1")
+                                checkCompilation("../test/integration/good", "--O1")
                             }
-
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-good-O1/*") }}
@@ -390,16 +366,8 @@ pipeline {
                         dir("${env.WORKSPACE}/compile-example-O1"){
                             script {
                                 unstash "Stanc3Setup"
-                                runPerformanceTests("example-models", "--O1")
+                                checkCompilation("example-models", "--O1")
                             }
-
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-example-O1/*") }}
