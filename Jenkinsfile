@@ -79,9 +79,6 @@ pipeline {
         booleanParam(name:"skip_compile", defaultValue: false, description:"Skip compile tests")
         booleanParam(name:"skip_math_func_expr", defaultValue: false, description:"Skip math functions expressions test")
         booleanParam(name:"skip_ocaml_tests", defaultValue: false, description:"Skip ocaml tests")
-        booleanParam(name:"skip_code_formatting", defaultValue: false, description:"Skip code formatting")
-        booleanParam(name:"skip_build", defaultValue: false, description:"Skip code formatting")
-        booleanParam(name:"skip_verify_changes", defaultValue: false, description:"Skip verify changes")
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
@@ -106,12 +103,6 @@ pipeline {
     }
     stages {
         stage('Verify changes') {
-            when {
-                beforeAgent true
-                expression {
-                    !params.skip_verify_changes
-                }
-            }
             agent {
                 dockerfile {
                     filename 'scripts/docker/debian/Dockerfile'
@@ -147,12 +138,6 @@ pipeline {
         }
 
         stage("Build") {
-            when {
-                beforeAgent true
-                expression {
-                    !params.skip_build
-                }
-            }
             agent {
                 dockerfile {
                     filename 'scripts/docker/debian/Dockerfile'
@@ -178,13 +163,8 @@ pipeline {
         stage("Code formatting") {
             when {
                 beforeAgent true
-                allOf {
-                    expression {
-                        !skipRemainingStages
-                    }
-                    expression {
-                        !params.skip_code_formatting
-                    }
+                expression {
+                    !skipRemainingStages
                 }
             }
             agent {
