@@ -470,6 +470,8 @@ pipeline {
                                     cd performance-tests-cmdstan
                                     git show HEAD --stat
                                     echo "example-models/regression_tests/mother.stan" > all.tests
+                                    cat optimizer.tests >> all.tests
+                                    echo "" >> all.tests
                                     cat known_good_perf_all.tests >> all.tests
                                     echo "" >> all.tests
                                     cat shotgun_perf_all.tests >> all.tests
@@ -583,7 +585,7 @@ pipeline {
                             filename 'scripts/docker/debian/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\''
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -614,7 +616,7 @@ pipeline {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\''
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -815,7 +817,7 @@ pipeline {
                             filename 'scripts/docker/debian-windows/Dockerfile'
                             dir '.'
                             label 'linux'
-                            args '--entrypoint=\'\''
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
@@ -846,30 +848,37 @@ pipeline {
                 }
             }
             agent {
-                docker {
-                    image 'stanorg/ci:gpu'
+                dockerfile {
+                    filename 'scripts/docker/publish/Dockerfile'
+                    dir '.'
                     label 'linux'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
                 retry(3) {
-                    unstash 'windows-exe'
-                    unstash 'linux-exe'
-                    unstash 'mac-exe'
-                    unstash 'linux-mips64el-exe'
-                    unstash 'linux-ppc64el-exe'
-                    unstash 'linux-s390x-exe'
-                    unstash 'linux-arm64-exe'
-                    unstash 'linux-armhf-exe'
-                    unstash 'linux-armel-exe'
-                    unstash 'js-exe'
+                    sh "rm -r bin/ || true"
 
-                    runShell("""
-                        wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
-                        tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                        ./ghr_v0.12.1_linux_amd64/ghr -r stanc3 -u stan-dev -recreate ${tagName()} bin/
-                    """)
+                    dir("bin"){
+                        unstash 'windows-exe'
+                        unstash 'linux-exe'
+                        unstash 'mac-exe'
+                        unstash 'linux-mips64el-exe'
+                        unstash 'linux-ppc64el-exe'
+                        unstash 'linux-s390x-exe'
+                        unstash 'linux-arm64-exe'
+                        unstash 'linux-armhf-exe'
+                        unstash 'linux-armel-exe'
+                        unstash 'js-exe'
+
+                        runShell("""
+                            wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
+                            tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz && rm bin/ghr_v0.12.1_linux_amd64.tar.gz || true
+                            ./ghr_v0.12.1_linux_amd64/ghr -r stanc3 -u stan-dev -recreate ${tagName()} bin/
+                        """)
+                    }
                 }
             }
             post {
@@ -884,7 +893,6 @@ pipeline {
                 beforeAgent true
                 branch 'master'
             }
-            options { skipDefaultCheckout(true) }
             agent {
                 dockerfile {
                     filename 'scripts/docker/static/Dockerfile'
@@ -947,7 +955,7 @@ pipeline {
 
     }
     post {
-       always {
+      always {
           script {
             utils.mailBuildResults()
           }

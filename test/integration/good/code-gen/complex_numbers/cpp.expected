@@ -152,8 +152,7 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -2506,8 +2505,7 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -3692,8 +3690,7 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -6270,8 +6267,7 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -7622,8 +7618,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -9880,8 +9875,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -10573,9 +10567,11 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 17;
-    std::stringstream errmsg_stream__;
-    stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
-    throw std::domain_error(errmsg_stream__.str());
+    {
+      std::stringstream errmsg_stream__;
+      stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
+      throw std::domain_error(errmsg_stream__.str());
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -10623,9 +10619,11 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 21;
-    std::stringstream errmsg_stream__;
-    stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
-    throw std::domain_error(errmsg_stream__.str());
+    {
+      std::stringstream errmsg_stream__;
+      stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
+      throw std::domain_error(errmsg_stream__.str());
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -10673,9 +10671,11 @@ foo(const T0__& A_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 25;
-    std::stringstream errmsg_stream__;
-    stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
-    throw std::domain_error(errmsg_stream__.str());
+    {
+      std::stringstream errmsg_stream__;
+      stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
+      throw std::domain_error(errmsg_stream__.str());
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -10725,9 +10725,11 @@ foo(const T0__& A, std::ostream* pstream__) {
   (void) DUMMY_VAR__;
   try {
     current_statement__ = 29;
-    std::stringstream errmsg_stream__;
-    stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
-    throw std::domain_error(errmsg_stream__.str());
+    {
+      std::stringstream errmsg_stream__;
+      stan::math::stan_print(&errmsg_stream__, "called the wrong foo");
+      throw std::domain_error(errmsg_stream__.str());
+    }
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
@@ -10745,8 +10747,7 @@ class user_function_templating_model final : public model_base_crtp<user_functio
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =

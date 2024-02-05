@@ -1,5 +1,5 @@
 functions {
-  real[ foo(int n) { return n; }
+  array[ real foo(int n) { return n; }
 }
 model {
 }

@@ -1,6 +1,32 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.34.0 (16 January 2024)
+======================================================================
+
+- Added the `binomial_logit_glm` distribution (#1367)
+- Added the `dirichlet_multinomial` distribution. (#1389)
+- Added the ability to unpack a tuple during an assignment. For example, the following is now valid:
+    ```stan
+    parameters {
+    matrix[N, M] A;
+    }
+    model {
+    matrix[N, M] Q;
+    matrix[M, M] R;
+    (Q, R) = qr_thin(A); // qr_thin returns a tuple(matrix, matrix)
+    }
+    ```
+    (#1360)
+- Exposed vectorized signatures for the `atan2` function. (#1364)
+- The Stan compiler will now warn you when you reassign a variable to itself. (#1358)
+- Updated the OCaml-to-JS compiler used to create stanc.js (#1365, #1381)
+- Updated the compiler to use OCaml 4.14 and newer versions of its dependencies. (#1366)
+- Reverted a change to SoA initialization, as the Math library has implemented a better fix. (#1376)
+- Fixed an issue with clang compilers and constructing tuples. (#1382)
+- The compiler no longer recognizes language constructs removed in 2.33. (#1388)
+- The deprecated implicit conversion of reals to boolean conditions has been removed. (#1388)
+
 v2.33.1 (13 September 2023)
 ======================================================================
 

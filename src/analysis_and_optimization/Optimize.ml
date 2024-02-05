@@ -803,7 +803,6 @@ let partial_evaluation = Partial_evaluator.eval_prog
  * where that name is the assignee.
  *)
 let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
-  let is_index = function Expr.Fixed.Pattern.Indexed _ -> true | _ -> false in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment (lval, lhs_ut, (rhs : 'a Expr.Fixed.t)) ->
       let assign_name = Stmt.Helpers.lhs_variable lval in
@@ -814,7 +813,7 @@ let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
         && not
              (rhs.meta.adlevel = UnsizedType.DataOnly
              && UnsizedType.is_array lhs_ut)
-      then Some (idx_lst, is_index rhs.pattern)
+      then Some idx_lst
       else None
   | _ -> None
 
@@ -826,18 +825,11 @@ let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
 and unenforce_initialize (lst : Stmt.Located.t list) =
   let rec unenforce_initialize_patt (Stmt.Fixed.{pattern; _} as stmt) sub_lst =
     match pattern with
-    | Stmt.Fixed.Pattern.Decl ({decl_id; decl_type; _} as decl_pat) -> (
-        let is_soa =
-          match decl_type with
-          | Type.Sized s -> SizedType.get_mem_pattern s = Mem_pattern.SoA
-          | _ -> false in
+    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as decl_pat) -> (
         match List.hd sub_lst with
         | Some next_stmt -> (
             match find_assignment_idx decl_id next_stmt with
-            | Some
-                ( ([] | [Index.All] | [Index.All; Index.All])
-                , is_assigned_to_index )
-              when not (is_soa && is_assigned_to_index) ->
+            | Some ([] | [Index.All] | [Index.All; Index.All]) ->
                 { stmt with
                   pattern=
                     Stmt.Fixed.Pattern.Decl {decl_pat with initialize= false} }

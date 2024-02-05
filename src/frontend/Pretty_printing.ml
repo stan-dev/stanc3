@@ -271,8 +271,6 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
             begin_loc
             (pp_comments_spacing false get_comments)
             begin_loc pp_list_of_expression (es', loc))
-  (* GetLP is deprecated *)
-  | GetLP -> pf ppf "get_lp()"
   | GetTarget -> pf ppf "target()"
   | ArrayExpr es -> pf ppf "{@[%a}@]" pp_list_of_expression (es, loc)
   | RowVectorExpr es -> pf ppf "[@[%a]@]" pp_list_of_expression (es, loc)
@@ -298,8 +296,6 @@ let rec pp_lvalue ppf = function
 
 let pp_assignmentoperator ppf = function
   | Assign -> pf ppf "="
-  (* ArrowAssign is deprecated *)
-  | ArrowAssign -> pf ppf "<-"
   | OperatorAssign op -> pf ppf "%a=" pp_operator op
 
 let pp_truncation ppf = function
@@ -425,8 +421,6 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
   | NRFunApp (_, id, es) ->
       pf ppf "%a(@[%a);@]" pp_identifier id pp_list_of_expression (es, loc)
   | TargetPE e -> pf ppf "target += %a;" pp_expression e
-  | IncrementLogProb e ->
-      pf ppf "increment_log_prob(@[<hov>%a@]);" pp_expression e
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       pf ppf "%a ~ %a(@[%a)@]%a;" pp_expression e pp_identifier id
         pp_list_of_expression (es, loc) pp_truncation t

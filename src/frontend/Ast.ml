@@ -45,8 +45,6 @@ type ('e, 'f) expression =
   | FunApp of 'f * identifier * 'e list
   | CondDistApp of 'f * identifier * 'e list
   | Promotion of 'e * UnsizedType.t * UnsizedType.autodifftype
-  (* GetLP is deprecated *)
-  | GetLP
   | GetTarget
   | ArrayExpr of 'e list
   | RowVectorExpr of 'e list
@@ -93,11 +91,7 @@ let expr_ad_lub exprs =
   exprs |> List.map ~f:(fun x -> x.emeta.ad_level) |> UnsizedType.lub_ad_type
 
 (** Assignment operators *)
-type assignmentoperator =
-  | Assign
-  (* ArrowAssign is deprecated *)
-  | ArrowAssign
-  | OperatorAssign of Operator.t
+type assignmentoperator = Assign | OperatorAssign of Operator.t
 [@@deriving sexp, hash, compare]
 
 (** Truncations *)
@@ -149,8 +143,6 @@ type ('e, 's, 'l, 'f) statement =
       {assign_lhs: 'l lvalue_pack; assign_op: assignmentoperator; assign_rhs: 'e}
   | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
-  (* IncrementLogProb is deprecated *)
-  | IncrementLogProb of 'e
   | Tilde of
       { arg: 'e
       ; distribution: identifier
@@ -330,7 +322,7 @@ let rec extract_ids {expr; _} =
    |CondDistApp (_, _, es)
    |FunApp (_, _, es) ->
       List.concat_map ~f:extract_ids es
-  | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP | GetTarget -> []
+  | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetTarget -> []
 
 let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
   let rec base_lvalue {expr; emeta} =
@@ -397,11 +389,7 @@ let get_first_loc (s : untyped_statement) =
    |ForEach (id, _, _)
    |FunDef {funname= id; _} ->
       id.id_loc.begin_loc
-  | TargetPE e
-   |IncrementLogProb e
-   |Return e
-   |IfThenElse (e, _, _)
-   |While (e, _) ->
+  | TargetPE e | Return e | IfThenElse (e, _, _) | While (e, _) ->
       e.emeta.loc.begin_loc
   | Assignment _ | Profile _ | Block _ | Tilde _ | Break | Continue
    |ReturnVoid | Print _ | Reject _ | Skip ->

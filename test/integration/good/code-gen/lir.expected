@@ -3268,25 +3268,27 @@
         (Expression (Cast Void (Var DUMMY_VAR__)))
         (TryCatch
          ((Expression (Assign (Var current_statement__) (Literal 711)))
-          (VariableDefn
-           ((static false) (constexpr false) (type_ (TypeLiteral std::stringstream))
-            (name errmsg_stream__) (init Uninitialized)))
-          (Expression
-           (FunCall stan::math::stan_print ()
-            ((VarRef errmsg_stream__) (Literal "\"user-specified rejection\""))))
-          (Expression
-           (FunCall stan::math::stan_print ()
-            ((VarRef errmsg_stream__)
-             (FunCall stan::model::rvalue ()
-              ((Var x) (Literal "\"x\"")
-               (FunCall stan::model::index_uni () ((Literal 1))))))))
-          (Expression
-           (FunCall stan::math::stan_print ()
-            ((VarRef errmsg_stream__) (Literal "\"; \""))))
-          (Expression
-           (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var x))))
-          (Throw
-           (FunCall std::domain_error () ((MethodCall (Var errmsg_stream__) str () ())))))
+          (Block
+           ((VariableDefn
+             ((static false) (constexpr false) (type_ (TypeLiteral std::stringstream))
+              (name errmsg_stream__) (init Uninitialized)))
+            (Expression
+             (FunCall stan::math::stan_print ()
+              ((VarRef errmsg_stream__) (Literal "\"user-specified rejection\""))))
+            (Expression
+             (FunCall stan::math::stan_print ()
+              ((VarRef errmsg_stream__)
+               (FunCall stan::model::rvalue ()
+                ((Var x) (Literal "\"x\"")
+                 (FunCall stan::model::index_uni () ((Literal 1))))))))
+            (Expression
+             (FunCall stan::math::stan_print ()
+              ((VarRef errmsg_stream__) (Literal "\"; \""))))
+            (Expression
+             (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var x))))
+            (Throw
+             (FunCall std::domain_error ()
+              ((MethodCall (Var errmsg_stream__) str () ())))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
@@ -3360,28 +3362,29 @@
             ((Parens (BinOp (Var abs_diff) Divide (Var avg_scale))) (Var max_)))
            (Block
             ((Expression (Assign (Var current_statement__) (Literal 717)))
-             (VariableDefn
-              ((static false) (constexpr false) (type_ (TypeLiteral std::stringstream))
-               (name errmsg_stream__) (init Uninitialized)))
-             (Expression
-              (FunCall stan::math::stan_print ()
-               ((VarRef errmsg_stream__)
-                (Literal "\"user-specified rejection, difference above \""))))
-             (Expression
-              (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var max_))))
-             (Expression
-              (FunCall stan::math::stan_print ()
-               ((VarRef errmsg_stream__) (Literal "\" x:\""))))
-             (Expression
-              (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var x))))
-             (Expression
-              (FunCall stan::math::stan_print ()
-               ((VarRef errmsg_stream__) (Literal "\" y:\""))))
-             (Expression
-              (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var y))))
-             (Throw
-              (FunCall std::domain_error ()
-               ((MethodCall (Var errmsg_stream__) str () ()))))))
+             (Block
+              ((VariableDefn
+                ((static false) (constexpr false) (type_ (TypeLiteral std::stringstream))
+                 (name errmsg_stream__) (init Uninitialized)))
+               (Expression
+                (FunCall stan::math::stan_print ()
+                 ((VarRef errmsg_stream__)
+                  (Literal "\"user-specified rejection, difference above \""))))
+               (Expression
+                (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var max_))))
+               (Expression
+                (FunCall stan::math::stan_print ()
+                 ((VarRef errmsg_stream__) (Literal "\" x:\""))))
+               (Expression
+                (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var x))))
+               (Expression
+                (FunCall stan::math::stan_print ()
+                 ((VarRef errmsg_stream__) (Literal "\" y:\""))))
+               (Expression
+                (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var y))))
+               (Throw
+                (FunCall std::domain_error ()
+                 ((MethodCall (Var errmsg_stream__) str () ()))))))))
            ())
           (Expression (Assign (Var current_statement__) (Literal 720)))
           (IfElse
@@ -3389,28 +3392,29 @@
             ((Parens (BinOp (Var abs_diff) Divide (Var avg_scale))) (Var min_)))
            (Block
             ((Expression (Assign (Var current_statement__) (Literal 719)))
-             (VariableDefn
-              ((static false) (constexpr false) (type_ (TypeLiteral std::stringstream))
-               (name errmsg_stream__) (init Uninitialized)))
-             (Expression
-              (FunCall stan::math::stan_print ()
-               ((VarRef errmsg_stream__)
-                (Literal "\"user-specified rejection, difference below \""))))
-             (Expression
-              (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var min_))))
-             (Expression
-              (FunCall stan::math::stan_print ()
-               ((VarRef errmsg_stream__) (Literal "\" x:\""))))
-             (Expression
-              (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var x))))
-             (Expression
-              (FunCall stan::math::stan_print ()
-               ((VarRef errmsg_stream__) (Literal "\" y:\""))))
-             (Expression
-              (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var y))))
-             (Throw
-              (FunCall std::domain_error ()
-               ((MethodCall (Var errmsg_stream__) str () ()))))))
+             (Block
+              ((VariableDefn
+                ((static false) (constexpr false) (type_ (TypeLiteral std::stringstream))
+                 (name errmsg_stream__) (init Uninitialized)))
+               (Expression
+                (FunCall stan::math::stan_print ()
+                 ((VarRef errmsg_stream__)
+                  (Literal "\"user-specified rejection, difference below \""))))
+               (Expression
+                (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var min_))))
+               (Expression
+                (FunCall stan::math::stan_print ()
+                 ((VarRef errmsg_stream__) (Literal "\" x:\""))))
+               (Expression
+                (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var x))))
+               (Expression
+                (FunCall stan::math::stan_print ()
+                 ((VarRef errmsg_stream__) (Literal "\" y:\""))))
+               (Expression
+                (FunCall stan::math::stan_print () ((VarRef errmsg_stream__) (Var y))))
+               (Throw
+                (FunCall std::domain_error ()
+                 ((MethodCall (Var errmsg_stream__) str () ()))))))))
            ())
           (Expression (Assign (Var current_statement__) (Literal 721)))
           (Return ((Parens (BinOp (Var abs_diff) Divide (Var avg_scale))))))
@@ -10219,16 +10223,17 @@
                    (FunCall stan::model::index_uni () ((Literal 1)))))))
                (Block
                 ((Expression (Assign (Var current_statement__) (Literal 137)))
-                 (VariableDefn
-                  ((static false) (constexpr false)
-                   (type_ (TypeLiteral std::stringstream)) (name errmsg_stream__)
-                   (init Uninitialized)))
-                 (Expression
-                  (FunCall stan::math::stan_print ()
-                   ((VarRef errmsg_stream__) (Literal "\"indexing test 1 failed\""))))
-                 (Throw
-                  (FunCall std::domain_error ()
-                   ((MethodCall (Var errmsg_stream__) str () ()))))))
+                 (Block
+                  ((VariableDefn
+                    ((static false) (constexpr false)
+                     (type_ (TypeLiteral std::stringstream)) (name errmsg_stream__)
+                     (init Uninitialized)))
+                   (Expression
+                    (FunCall stan::math::stan_print ()
+                     ((VarRef errmsg_stream__) (Literal "\"indexing test 1 failed\""))))
+                   (Throw
+                    (FunCall std::domain_error ()
+                     ((MethodCall (Var errmsg_stream__) str () ()))))))))
                ())
               (Expression (Assign (Var current_statement__) (Literal 141)))
               (For
@@ -10285,16 +10290,17 @@
                    (FunCall stan::model::index_uni () ((Literal 1)))))))
                (Block
                 ((Expression (Assign (Var current_statement__) (Literal 143)))
-                 (VariableDefn
-                  ((static false) (constexpr false)
-                   (type_ (TypeLiteral std::stringstream)) (name errmsg_stream__)
-                   (init Uninitialized)))
-                 (Expression
-                  (FunCall stan::math::stan_print ()
-                   ((VarRef errmsg_stream__) (Literal "\"indexing test 2 failed\""))))
-                 (Throw
-                  (FunCall std::domain_error ()
-                   ((MethodCall (Var errmsg_stream__) str () ()))))))
+                 (Block
+                  ((VariableDefn
+                    ((static false) (constexpr false)
+                     (type_ (TypeLiteral std::stringstream)) (name errmsg_stream__)
+                     (init Uninitialized)))
+                   (Expression
+                    (FunCall stan::math::stan_print ()
+                     ((VarRef errmsg_stream__) (Literal "\"indexing test 2 failed\""))))
+                   (Throw
+                    (FunCall std::domain_error ()
+                     ((MethodCall (Var errmsg_stream__) str () ()))))))))
                ())
               (Expression (Assign (Var current_statement__) (Literal 148)))
               (For
@@ -10365,16 +10371,17 @@
                    (FunCall stan::model::index_uni () ((Literal 1)))))))
                (Block
                 ((Expression (Assign (Var current_statement__) (Literal 150)))
-                 (VariableDefn
-                  ((static false) (constexpr false)
-                   (type_ (TypeLiteral std::stringstream)) (name errmsg_stream__)
-                   (init Uninitialized)))
-                 (Expression
-                  (FunCall stan::math::stan_print ()
-                   ((VarRef errmsg_stream__) (Literal "\"indexing test 3 failed\""))))
-                 (Throw
-                  (FunCall std::domain_error ()
-                   ((MethodCall (Var errmsg_stream__) str () ()))))))
+                 (Block
+                  ((VariableDefn
+                    ((static false) (constexpr false)
+                     (type_ (TypeLiteral std::stringstream)) (name errmsg_stream__)
+                     (init Uninitialized)))
+                   (Expression
+                    (FunCall stan::math::stan_print ()
+                     ((VarRef errmsg_stream__) (Literal "\"indexing test 3 failed\""))))
+                   (Throw
+                    (FunCall std::domain_error ()
+                     ((MethodCall (Var errmsg_stream__) str () ()))))))))
                ())
               (Expression (Assign (Var current_statement__) (Literal 152)))
               (Expression
@@ -16795,7 +16802,7 @@
          (Expression (Cast Void (Var current_statement__)))
          (Using local_scalar_t__ (Double))
          (VariableDefn
-          ((static false) (constexpr false) (type_ (TypeLiteral boost::ecuyer1988))
+          ((static false) (constexpr false) (type_ (TypeLiteral auto)) 
            (name base_rng__)
            (init
             (Assignment

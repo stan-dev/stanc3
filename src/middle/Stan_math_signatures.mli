@@ -48,7 +48,6 @@ type return_behavior
 type fkind = private
   | Lpmf
   | Lpdf
-  | Log
   | Rng
   | Cdf
   | Ccdf

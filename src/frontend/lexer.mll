@@ -16,11 +16,6 @@
       pos_bol = pos.pos_cnum } ;
     update_start_positions lexbuf.lex_curr_p
 
-
-  let note_deprecated_comment pos =
-    let loc_span = location_span_of_positions (pos, pos) in
-    Deprecation_removals.pound_comment_usages := loc_span :: !Deprecation_removals.pound_comment_usages
-
   (* Store comments *)
   let add_line_comment (begin_pos, buffer) end_pos =
     add_comment
@@ -79,10 +74,6 @@ rule token = parse
                                 let new_lexbuf =
                                   try_get_new_lexbuf fname in
                                 token new_lexbuf }
-  | "#"                       { lexer_logger "#comment" ;
-                                note_deprecated_comment lexbuf.lex_curr_p ;
-                                singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf;
-                                token lexbuf } (* deprecated *)
 (* Program blocks *)
   | "functions"               { lexer_logger "functions" ;
                                 Parser.FUNCTIONBLOCK }
@@ -153,6 +144,7 @@ rule token = parse
   | "upper"                   { lexer_logger "upper" ; Parser.UPPER }
   | "offset"                  { lexer_logger "offset" ; Parser.OFFSET }
   | "multiplier"              { lexer_logger "multiplier" ; Parser.MULTIPLIER }
+  | "jacobian"                { lexer_logger "jacobian" ; Parser.JACOBIAN }
 (* Operators *)
   | '?'                       { lexer_logger "?" ; add_separator lexbuf ; Parser.QMARK }
   | ':'                       { lexer_logger ":" ; Parser.COLON }
@@ -184,10 +176,6 @@ rule token = parse
   | "/="                      { lexer_logger "/=" ; Parser.DIVIDEASSIGN }
   | ".*="                     { lexer_logger ".*=" ; Parser.ELTTIMESASSIGN }
   | "./="                     { lexer_logger "./=" ; Parser.ELTDIVIDEASSIGN }
-  | "<-"                      { lexer_logger "<-" ;
-                                Parser.ARROWASSIGN } (* deprecated *)
-  | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
-                                Parser.INCREMENTLOGPROB } (* deprecated *)
 (* Effects *)
   | "print"                   { lexer_logger "print" ; Parser.PRINT }
   | "reject"                  { lexer_logger "reject" ; Parser.REJECT }
@@ -202,9 +190,7 @@ rule token = parse
                                 Parser.DOTNUMERAL (lexeme lexbuf) }
   | imag_constant as z        { lexer_logger ("imag_constant " ^ z) ;
                                 Parser.IMAGNUMERAL (lexeme lexbuf) }
-  | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
-  | "get_lp"                  { lexer_logger "get_lp" ;
-                                Parser.GETLP } (* deprecated *)
+  | "target"                  { lexer_logger "target" ; Parser.TARGET }
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
