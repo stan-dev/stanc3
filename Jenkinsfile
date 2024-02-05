@@ -69,11 +69,6 @@ def cleanCheckout() {
     }
     
     sh 'git clean -xffd'
-
-    runShell """
-        eval \$(opam env)
-        dune subst
-    """
 }
 
 pipeline {
