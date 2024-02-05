@@ -58,11 +58,27 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
     """
 }
 
+def cleanCheckout() {
+    retry(3) {
+        checkout([
+            $class: 'GitSCM',
+            branches: scm.branches,
+            extensions: [[$class: 'CloneOption', noTags: false]],
+            userRemoteConfigs: scm.userRemoteConfigs,
+        ])
+    }
+    
+    sh 'git clean -xffd'
+}
+
 pipeline {
     agent none
     parameters {
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
         booleanParam(name:"skip_compile_O1", defaultValue: false, description:"Skip compile tests that run with STANCFLAGS = --O1")
+        booleanParam(name:"skip_compile", defaultValue: false, description:"Skip compile tests")
+        booleanParam(name:"skip_math_func_expr", defaultValue: false, description:"Skip math functions expressions test")
+        booleanParam(name:"skip_ocaml_tests", defaultValue: false, description:"Skip ocaml tests")
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
@@ -98,20 +114,7 @@ pipeline {
             }
             steps {
                 script {
-                    retry(3) {
-                        checkout([
-                          $class: 'GitSCM',
-                          branches: scm.branches,
-                          extensions: [[$class: 'CloneOption', noTags: false]],
-                          userRemoteConfigs: scm.userRemoteConfigs,
-                        ])
-                    }
-                    sh 'git clean -xffd'
-
-                    runShell """
-                        eval \$(opam env)
-                        dune subst
-                    """
+                    cleanCheckout()
 
                     stash 'Stanc3Setup'
 
@@ -135,12 +138,6 @@ pipeline {
         }
 
         stage("Build") {
-            when {
-                beforeAgent true
-                expression {
-                    !skipRemainingStages
-                }
-            }
             agent {
                 dockerfile {
                     filename 'scripts/docker/debian/Dockerfile'
@@ -199,8 +196,13 @@ pipeline {
         stage("OCaml tests") {
             when {
                 beforeAgent true
-                expression {
-                    !skipRemainingStages
+                allOf {
+                    expression {
+                        !skipRemainingStages
+                    }
+                    expression {
+                        !params.skip_ocaml_tests
+                    }
                 }
             }
             parallel {
@@ -270,8 +272,13 @@ pipeline {
                 stage("Compile tests - good") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                          expression {
                             !skipCompileTests
+                          }
+                          expression {
+                            !params.skip_compile
+                          }
                         }
                     }
                     agent {
@@ -302,8 +309,13 @@ pipeline {
                 stage("Compile tests - example-models") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                          expression {
                             !skipCompileTests
+                          }
+                          expression {
+                            !params.skip_compile
+                          }
                         }
                     }
                     agent {
@@ -463,21 +475,16 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
                 }
+
                 stage("Model end-to-end tests at O=1") {
                     when {
                         beforeAgent true
                         allOf {
                          expression {
-                            !skipCompileTests
-                         }
-                         expression {
                             !params.skip_end_to_end
                          }
                          expression {
                             !skipCompileTestsAtO1
-                         }
-                         expression {
-                            !params.skip_compile_O1
                          }
                         }
                     }
@@ -528,6 +535,7 @@ pipeline {
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}
                 }
+
                 stage('Math functions expressions test') {
                     when {
                         beforeAgent true
@@ -537,6 +545,9 @@ pipeline {
                             }
                             expression {
                                 !skipExpressionTests
+                            }
+                            expression {
+                                !params.skip_math_func_expr
                             }
                         }
                     }
@@ -588,11 +599,12 @@ pipeline {
                     agent { label 'osx && !m1' }
                     steps {
                         dir("${env.WORKSPACE}/osx"){
-                            unstash "Stanc3Setup"
+                            cleanCheckout()
                             withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
                                 runShell("""
                                     export PATH=/Users/jenkins/brew/bin:\$PATH
                                     eval \$(opam env --switch=stanc-4.14.1 --set-switch)
+                                    dune subst
                                     opam update || true
                                     bash -x scripts/install_build_deps.sh
                                     dune build @install --root=.
@@ -623,9 +635,10 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/stancjs"){
-                            unstash "Stanc3Setup"
+                            cleanCheckout()
                             runShell("""
                                 eval \$(opam env)
+                                dune subst
                                 dune build --root=. --profile release src/stancjs
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
@@ -654,9 +667,10 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux"){
-                            unstash "Stanc3Setup"
+                            cleanCheckout()
                             runShell("""
                                 eval \$(opam env)
+                                dune subst
                                 dune build @install --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
@@ -685,8 +699,11 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-mips64el"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh mips64el"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh mips64el
+                            """
 
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
 
@@ -715,8 +732,11 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-ppc64el"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh ppc64el"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh ppc64el
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
                         }
@@ -743,8 +763,11 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-s390x"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh s390x"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh s390x
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             stash name:'linux-s390x-exe', includes:'bin/*'
                         }
@@ -771,8 +794,11 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-arm64"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh arm64"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh arm64
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             stash name:'linux-arm64-exe', includes:'bin/*'
                         }
@@ -799,8 +825,11 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armhf"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh armhf"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh armhf
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             stash name:'linux-armhf-exe', includes:'bin/*'
                         }
@@ -827,8 +856,11 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armel"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh armel"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh armel
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             stash name:'linux-armel-exe', includes:'bin/*'
                         }
@@ -855,9 +887,10 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/windows"){
-                            unstash "Stanc3Setup"
+                            cleanCheckout()
                             runShell("""
                                 eval \$(opam env)
+                                dune subst
                                 dune build -x windows --root=.
                             """)
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
@@ -867,6 +900,30 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
                 }
 
+            }
+        }
+
+        stage('Check binary version'){
+            when {
+                beforeAgent true
+                expression { !skipRebuildingBinaries }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/publish/Dockerfile'
+                    dir '.'
+                    label 'linux'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                sh "rm -r bin/ || true"
+
+                dir("bin"){
+                    unstash 'linux-exe'
+                    sh "bin/linux-stanc --version"
+                }
             }
         }
 
