@@ -918,13 +918,13 @@ pipeline {
                 }
             }
             steps {
-                retry(3) {
-                    sh "rm -r bin/ || true"
+                sh "rm -r bin/ || true"
 
-                    dir("bin"){
-                        unstash 'linux-exe'
-                        sh "linux-stanc --version"
-                    }
+                dir("bin"){
+                    unstash 'linux-exe'
+                    sh "ls -lhart"
+                    sh "tree ."
+                    sh "linux-stanc --version"
                 }
             }
         }
