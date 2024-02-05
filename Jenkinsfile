@@ -624,6 +624,7 @@ pipeline {
                                 runShell("""
                                     export PATH=/Users/jenkins/brew/bin:\$PATH
                                     eval \$(opam env --switch=stanc-4.14.1 --set-switch)
+                                    dune subst
                                     opam update || true
                                     bash -x scripts/install_build_deps.sh
                                     dune build @install --root=.
@@ -657,6 +658,7 @@ pipeline {
                             cleanCheckout()
                             runShell("""
                                 eval \$(opam env)
+                                dune subst
                                 dune build --root=. --profile release src/stancjs
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
@@ -688,6 +690,7 @@ pipeline {
                             cleanCheckout()
                             runShell("""
                                 eval \$(opam env)
+                                dune subst
                                 dune build @install --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
@@ -717,7 +720,11 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-mips64el"){
                             cleanCheckout()
-                            sh "bash -x scripts/build_multiarch_stanc3.sh mips64el"
+                            sh """
+                                eval \$(opam env)
+                                dune subst
+                                bash -x scripts/build_multiarch_stanc3.sh mips64el
+                            """
 
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
 
@@ -747,7 +754,11 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-ppc64el"){
                             cleanCheckout()
-                            sh "bash -x scripts/build_multiarch_stanc3.sh ppc64el"
+                            sh """
+                                eval \$(opam env)
+                                dune subst
+                                bash -x scripts/build_multiarch_stanc3.sh ppc64el
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
                         }
@@ -775,7 +786,11 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-s390x"){
                             cleanCheckout()
-                            sh "bash -x scripts/build_multiarch_stanc3.sh s390x"
+                            sh """
+                                eval \$(opam env)
+                                dune subst
+                                bash -x scripts/build_multiarch_stanc3.sh s390x
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             stash name:'linux-s390x-exe', includes:'bin/*'
                         }
@@ -803,7 +818,11 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-arm64"){
                             cleanCheckout()
-                            sh "bash -x scripts/build_multiarch_stanc3.sh arm64"
+                            sh """
+                                eval \$(opam env)
+                                dune subst
+                                bash -x scripts/build_multiarch_stanc3.sh arm64
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             stash name:'linux-arm64-exe', includes:'bin/*'
                         }
@@ -831,7 +850,11 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-armhf"){
                             cleanCheckout()
-                            sh "bash -x scripts/build_multiarch_stanc3.sh armhf"
+                            sh """
+                                eval \$(opam env)
+                                dune subst
+                                bash -x scripts/build_multiarch_stanc3.sh armhf
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             stash name:'linux-armhf-exe', includes:'bin/*'
                         }
@@ -859,7 +882,11 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-armel"){
                             cleanCheckout()
-                            sh "bash -x scripts/build_multiarch_stanc3.sh armel"
+                            sh """
+                                eval \$(opam env)
+                                dune subst
+                                bash -x scripts/build_multiarch_stanc3.sh armel
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             stash name:'linux-armel-exe', includes:'bin/*'
                         }
@@ -889,6 +916,7 @@ pipeline {
                             cleanCheckout()
                             runShell("""
                                 eval \$(opam env)
+                                dune subst
                                 dune build -x windows --root=.
                             """)
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
