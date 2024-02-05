@@ -903,6 +903,32 @@ pipeline {
             }
         }
 
+        stage('Check binary version'){
+            when {
+                beforeAgent true
+                expression { !skipRebuildingBinaries }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/publish/Dockerfile'
+                    dir '.'
+                    label 'linux'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                retry(3) {
+                    sh "rm -r bin/ || true"
+
+                    dir("bin"){
+                        unstash 'linux-exe'
+                        sh "linux-stanc --version"
+                    }
+                }
+            }
+        }
+
         stage("Release tag and publish binaries") {
             when {
                 beforeAgent true
