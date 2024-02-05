@@ -922,7 +922,6 @@ pipeline {
 
                 dir("bin"){
                     unstash 'linux-exe'
-                    sh "ls -lhart"
                     sh "bin/linux-stanc --version"
                 }
             }
