@@ -722,7 +722,6 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                dune subst
                                 bash -x scripts/build_multiarch_stanc3.sh mips64el
                             """
 
@@ -756,7 +755,6 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                dune subst
                                 bash -x scripts/build_multiarch_stanc3.sh ppc64el
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
@@ -788,7 +786,6 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                dune subst
                                 bash -x scripts/build_multiarch_stanc3.sh s390x
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
@@ -820,7 +817,6 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                dune subst
                                 bash -x scripts/build_multiarch_stanc3.sh arm64
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
@@ -852,7 +848,6 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                dune subst
                                 bash -x scripts/build_multiarch_stanc3.sh armhf
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
@@ -884,7 +879,6 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                dune subst
                                 bash -x scripts/build_multiarch_stanc3.sh armel
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"

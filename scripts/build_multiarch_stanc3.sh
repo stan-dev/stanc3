@@ -25,4 +25,4 @@ SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarch-ocaml-4.14 | jq '.m
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
-docker run --privileged -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch-ocaml-4.14@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static --root=. && chmod -R 777 _build  && chmod -R 777 src && chmod -R 777 test"
+docker run --privileged -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch-ocaml-4.14@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune subst && dune build @install --profile static --root=. && chmod -R 777 _build  && chmod -R 777 src && chmod -R 777 test"
