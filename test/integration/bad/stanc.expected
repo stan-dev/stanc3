@@ -2202,6 +2202,18 @@ Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
    -------------------------------------------------
 
 Index must be of type int or int[] or must be a range. Instead found type real.
+  $ ../../../../install/default/bin/stanc rng-no-suffix.stan
+Semantic error in 'rng-no-suffix.stan', line 7, column 13 to column 31:
+   -------------------------------------------------
+     5:  }
+     6:  transformed data {
+     7:      real x = newdistribution(1);
+                      ^
+     8:  }
+   -------------------------------------------------
+
+A returning function was expected but an undeclared identifier 'newdistribution' was supplied.
+A similar known identifier is 'newdistribution_rng'
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 Semantic error in 'rng_loc1.stan', line 3, column 11 to column 29:
    -------------------------------------------------
