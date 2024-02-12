@@ -407,6 +407,18 @@ Semantic error in 'break8.stan', line 12, column 4 to column 10:
    -------------------------------------------------
 
 Break statements may only be used in loops.
+  $ ../../../../install/default/bin/stanc call_dist_no_suffix.stan
+Semantic error in 'call_dist_no_suffix.stan', line 5, column 12 to column 25:
+   -------------------------------------------------
+     3:  }
+     4:  model {
+     5:    target += std_normal(x);
+                     ^
+     6:  }
+   -------------------------------------------------
+
+A returning function was expected but an undeclared identifier 'std_normal' was supplied.
+A similar known identifier is 'std_normal_lpdf'
   $ ../../../../install/default/bin/stanc ccdf-sample.stan
 Semantic error in 'ccdf-sample.stan', line 5, column 2 to column 24:
    -------------------------------------------------
