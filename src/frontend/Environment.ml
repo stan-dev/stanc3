@@ -109,5 +109,12 @@ let max_distance = 3
 let nearest_ident env name =
   try
     (* catch any errors in distance and just ignore them, no big deal *)
-    Distance.find_min ~max:max_distance (Map.keys env) name
+    Option.first_some
+      (Distance.find_min ~max:max_distance (Map.keys env) name)
+      (Utils.(
+         distribution_suffices
+         @ List.map ~f:(fun n -> "_" ^ n) cumulative_distribution_suffices_w_rng)
+      |> List.map ~f:(fun suffix -> name ^ suffix)
+      |> List.filter ~f:(Map.mem env)
+      |> List.hd)
   with _ -> None
