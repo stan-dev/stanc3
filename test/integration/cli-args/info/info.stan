@@ -28,7 +28,7 @@ data {
   complex_vector[4] cplx_vec;
   complex_row_vector[a] cplx_row;
   complex_matrix[2,4] cplx_mat;
-  
+
   array[2] tuple(int, real, tuple(real, array[10] int)) tuples;
 }
 
@@ -65,7 +65,10 @@ model {
     y ~ goo();
     print("hello world");
     if (0) {
-      reject("goodbye");
+      if (y < 1)
+        reject("goodbye");
+      else
+        exit("really really goodbye");
     }
 }
 

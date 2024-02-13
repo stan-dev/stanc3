@@ -597,9 +597,17 @@ functions {
     reject("Cannot be 0");
     return;
   }
+  
+  real bar(real x) {
+    exit("don't call this function");
+    return x;
+  }
 }
 
 Warning in 'unreachable_statement.stan', line 5, column 5: Unreachable
+    statement (following a reject, exit, break, continue, or return) found,
+    is this intended?
+Warning in 'unreachable_statement.stan', line 10, column 4: Unreachable
     statement (following a reject, exit, break, continue, or return) found,
     is this intended?
   $ ../../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
