@@ -17,6 +17,7 @@ Flags not used elsewhere in the tests
   Lexer: space
   Lexer: identifier N
   {fname=basic.stan; line=2}
+  Lexer: ascii id: N
   Lexer: ;
   Lexer: newline
   {fname=basic.stan; line=2}
@@ -26,6 +27,7 @@ Flags not used elsewhere in the tests
   Lexer: [
   Lexer: identifier N
   {fname=basic.stan; line=3}
+  Lexer: ascii id: N
   Lexer: ]
   Lexer: space
   Lexer: int
@@ -42,6 +44,7 @@ Flags not used elsewhere in the tests
   Lexer: space
   Lexer: identifier y
   {fname=basic.stan; line=3}
+  Lexer: ascii id: y
   Lexer: ;
   Lexer: newline
   {fname=basic.stan; line=3}
@@ -69,6 +72,7 @@ Flags not used elsewhere in the tests
   Lexer: space
   Lexer: identifier theta
   {fname=basic.stan; line=6}
+  Lexer: ascii id: theta
   Lexer: ;
   Lexer: newline
   {fname=basic.stan; line=6}
@@ -84,11 +88,13 @@ Flags not used elsewhere in the tests
   Lexer: space
   Lexer: identifier theta
   {fname=basic.stan; line=9}
+  Lexer: ascii id: theta
   Lexer: space
   Lexer: ~
   Lexer: space
   Lexer: identifier beta
   {fname=basic.stan; line=9}
+  Lexer: ascii id: beta
   Lexer: (
   Lexer: int_constant 1
   Lexer: ,
@@ -103,14 +109,17 @@ Flags not used elsewhere in the tests
   Lexer: space
   Lexer: identifier y
   {fname=basic.stan; line=10}
+  Lexer: ascii id: y
   Lexer: space
   Lexer: ~
   Lexer: space
   Lexer: identifier bernoulli
   {fname=basic.stan; line=10}
+  Lexer: ascii id: bernoulli
   Lexer: (
   Lexer: identifier theta
   {fname=basic.stan; line=10}
+  Lexer: ascii id: theta
   Lexer: )
   Lexer: ;
   Lexer: newline
