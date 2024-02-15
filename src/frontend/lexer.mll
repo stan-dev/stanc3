@@ -37,9 +37,40 @@
          , location_span_of_positions (lexbuf.lex_start_p, lexbuf.lex_curr_p) )
 }
 
+(*
+  OCamllex does not know about unicode, it just operates over bytes.
+  So, we can define all 'valid' byte sequences for UTF-8 like so
+*)
+(* 110xxxxx *)
+let utf8_head_byte2 = ['\192'-'\223']
+(* 1110xxxx *)
+let utf8_head_byte3 = ['\224'-'\239']
+(* 11110xxx *)
+let utf8_head_byte4 = ['\240'-'\247']
+(* 10xxxxxx *)
+let utf8_tail_byte = ['\128'-'\191']
+
+(* utf8_1 is ascii *)
+let ascii_allowed = ['a'-'z' 'A'-'Z' '0'-'9' '_']
+(* 11 bits of payload *)
+let utf8_2 = utf8_head_byte2 utf8_tail_byte
+(* 16 bits of payload *)
+let utf8_3 = utf8_head_byte3 utf8_tail_byte utf8_tail_byte
+(* 21 bits of payload *)
+let utf8_4 = utf8_head_byte4 utf8_tail_byte utf8_tail_byte utf8_tail_byte
+
+(* Any UTF-8-encoded code point, outside the ASCII range.
+  This set includes more than it should for simplicity.
+*)
+let utf8_nonascii = utf8_2 | utf8_3 | utf8_4
+
+(* identifiers here are overly permissive, and are checked
+   in the semantic action of the rule that matches here.
+*)
+let identifier = (ascii_allowed | utf8_nonascii)+
+
 (* Some auxiliary definition for variables and constants *)
 let string_literal = '"' [^ '"' '\r' '\n']* '"'
-let identifier = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
 
 let integer_constant =  ['0'-'9']+ ('_' ['0'-'9']+)*
 
@@ -195,8 +226,10 @@ rule token = parse
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
-                                lexer_pos_logger (lexeme_start_p lexbuf);
-                                Parser.IDENTIFIER (lexeme lexbuf) }
+                                let loc = (lexeme_start_p lexbuf) in
+                                lexer_pos_logger loc;
+                                let canonical_id = Unicode.validate_identifier loc id in
+                                Parser.IDENTIFIER (canonical_id) }
 (* End of file *)
   | eof                       { lexer_logger "eof" ;
                                 if Preprocessor.size () = 1
@@ -207,7 +240,8 @@ rule token = parse
 
   | _                         { raise (Errors.SyntaxError
                                         (Errors.Lexing
-                                          (location_of_position
+                                          ("Invalid character found.",
+                                           location_of_position
                                             (lexeme_start_p
                                               (current_buffer ()))))) }
 

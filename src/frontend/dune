@@ -1,14 +1,20 @@
 (library
  (name frontend)
  (public_name stanc.frontend)
- (libraries core re menhirLib fmt middle common yojson)
+ (libraries core re menhirLib fmt middle common yojson uunf uucp)
  (instrumentation
   (backend bisect_ppx))
  (inline_tests)
  (preprocess
   (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))
 
-(ocamllex lexer)
+(rule
+ (target lexer.ml)
+ (deps lexer.mll)
+ (action
+  (chdir
+   %{workspace_root}
+   (run %{bin:ocamllex} -ml -o %{target} %{deps}))))
 
 (rule
  (targets parsing_errors.ml)
