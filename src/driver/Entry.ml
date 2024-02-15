@@ -31,7 +31,7 @@ let set_model_name model_name =
 
 let reset_mutable_states model_name (flags : Flags.t) =
   Common.Gensym.reset_danger_use_cautiously ();
-  Unicode.allow_unicode := flags.allow_unicode;
+  Identifiers.allow_unicode := flags.allow_unicode;
   Include_files.include_provider := flags.include_source;
   set_model_name model_name;
   Typechecker.check_that_all_functions_have_definition :=

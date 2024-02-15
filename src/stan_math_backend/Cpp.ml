@@ -389,7 +389,14 @@ module Printing = struct
   open Fmt
 
   let trailing_space (t : 'a Fmt.t) : 'a Fmt.t = fun ppf -> pf ppf "%a@ " t
-  let pp_identifier ppf = string ppf
+
+  let pp_identifier ppf s =
+    if Common.Unicode.is_ascii s then string ppf s
+    else
+      (* so called "Universal character names" - not required on newer compilers
+         but hopefully more backward-compatible *)
+      let f _ c = Fmt.pf ppf "\\u%04X" (Uchar.to_scalar c) in
+      Common.Unicode.iter_uchars s f
 
   let rec pp_type_ ppf t =
     match t with
@@ -473,8 +480,8 @@ module Printing = struct
         pf ppf "<@,%a>" (list ~sep:comma pp_type_) types in
     match e with
     | Literal s -> pf ppf "%s" s
-    | Var id -> string ppf id
-    | VarRef id -> pf ppf "&%s" id
+    | Var id -> pp_identifier ppf id
+    | VarRef id -> pf ppf "&%a" pp_identifier id
     | Parens e -> pf ppf "(%a)" pp_expr e
     | Cast (t, e) -> pf ppf "@[(%a)@ %a@]" pp_type_ t pp_expr e
     | Constructor (t, es) ->
@@ -491,7 +498,7 @@ module Printing = struct
     | StreamInsertion (e, es) ->
         pf ppf "%a <<@[@ %a@]" pp_expr e (list ~sep:comma pp_expr) es
     | FunCall (fn, tys, es) ->
-        pf ppf "@[<hov 2>%s%a(@,%a@])" fn maybe_templates tys
+        pf ppf "@[<hov 2>%a%a(@,%a@])" pp_identifier fn maybe_templates tys
           (list ~sep:comma pp_expr) es
     | MethodCall (e, fn, tys, es) ->
         pf ppf "@[<hov 2>%a.%s%a(%a)@]" pp_expr e fn maybe_templates tys
@@ -519,8 +526,8 @@ module Printing = struct
           pf ppf "{@[<hov>%a@]}" (list ~sep:comma pp_expr) es in
     let static = if static then "static " else "" in
     let constexpr = if constexpr then "constexpr " else "" in
-    pf ppf "@[<hov 2>%s%s%a@ %s%a@]" static constexpr pp_type_ type_ name
-      pp_init init
+    pf ppf "@[<hov 2>%s%s%a@ %a%a@]" static constexpr pp_type_ type_
+      pp_identifier name pp_init init
 
   let rec pp_stmt ppf s =
     match s with

@@ -1,7 +1,7 @@
 (library
  (name common)
  (public_name stanc.common)
- (libraries core fmt)
+ (libraries core fmt uunf)
  (instrumentation
   (backend bisect_ppx))
  (inline_tests)
