@@ -1450,7 +1450,7 @@ Syntax error in 'lexing_error.stan', line 1, column 6, lexing error:
                 ^
    -------------------------------------------------
 
-Invalid character: '1'
+Unicode identifiers are not supported without the (experimental) allow-unicode flag
 [exit 1]
   $ ../../../../../install/default/bin/stanc location-scale-bad1.stan
 Syntax error in 'location-scale-bad1.stan', line 1, column 27 to column 32, parsing error:

@@ -39,6 +39,12 @@ module Options = struct
        means the definition will be provided later as a C++ function." in
     Arg.(value & flag & info ["allow-undefined"] ~doc)
 
+  let allow_unicode =
+    let doc =
+      "$(i,(Experimental)) Allow unicode characters in the names of functions \
+       and variables" in
+    Arg.(value & flag & info ["allow-unicode"] ~doc)
+
   let auto_format =
     let doc =
       "Output a formatted version of the Stan program. The output can be \
@@ -359,6 +365,7 @@ module Conversion = struct
     let open Options in
     let+ optimization_level = optimization_level
     and+ allow_undefined = allow_undefined
+    and+ allow_unicode = allow_unicode
     and+ standalone_functions = standalone_functions
     and+ use_opencl = use_opencl
     and+ include_source = include_paths
@@ -374,6 +381,7 @@ module Conversion = struct
     Driver.Flags.
       { optimization_level
       ; allow_undefined
+      ; allow_unicode
       ; functions_only= false
       ; standalone_functions
       ; use_opencl

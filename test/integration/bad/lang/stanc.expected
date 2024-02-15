@@ -534,18 +534,6 @@ Semantic error in 'tparam_tuple_int.stan', line 2, column 2 to column 21:
 
 (Transformed) Parameters cannot be integers.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc unicode_normalization.stan
-Semantic error in 'unicode_normalization.stan', line 4, column 7 to column 13:
-   -------------------------------------------------
-     2:    real ñabc;
-     3:    // this is a different encoding than above, should be prevented still!
-     4:    real ñabc;
-                ^
-     5:  }
-   -------------------------------------------------
-
-Identifier 'ñabc' is already in use.
-[exit 1]
   $ ../../../../../install/default/bin/stanc unterminated_comment.stan
 Syntax error in 'unterminated_comment.stan', line 4, column -1, lexing error:
    -------------------------------------------------

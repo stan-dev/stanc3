@@ -1,3 +1,5 @@
+let allow_unicode = ref false
+
 let error ~loc msg =
   raise
     (Errors.SyntaxError
@@ -30,6 +32,10 @@ let validate_ascii_id ~loc id =
    https://www.unicode.org/reports/tr31 *)
 
 let validate_utf8_id ~loc id =
+  if not !allow_unicode then
+    error ~loc
+      "Unicode identifiers are not supported without the (experimental) \
+       allow-unicode flag";
   if not (String.is_valid_utf_8 id) then
     error ~loc "Identifier is not valid UTF-8 string";
   Debugging.lexer_logger ("unicode id: " ^ id);

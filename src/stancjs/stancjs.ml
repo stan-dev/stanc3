@@ -140,6 +140,7 @@ let process_flags (flags : 'a Js.opt) includes : (Driver.Flags.t, string) result
              else if is_flag_set "Oexperimental" then Optimize.Oexperimental
              else Optimize.O0)
         ; allow_undefined= is_flag_set "allow-undefined"
+        ; allow_unicode= is_flag_set "allow-unicode"
         ; functions_only= is_flag_set "functions-only"
         ; standalone_functions= is_flag_set "standalone-functions"
         ; use_opencl= is_flag_set "use-opencl"
