@@ -202,7 +202,7 @@ let options =
       , Arg.Clear Typechecker.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
     ; ( "--allow-unicode"
-      , Arg.Set Unicode.allow_unicode
+      , Arg.Set Identifiers.allow_unicode
       , " (Experimental) Allow unicode characters in the names of functions \
          and variables" )
     ; ( "--include-paths"

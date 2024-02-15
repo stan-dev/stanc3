@@ -228,7 +228,7 @@ rule token = parse
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
                                 let loc = (lexeme_start_p lexbuf) in
                                 lexer_pos_logger loc;
-                                let canonical_id = Unicode.validate_identifier loc id in
+                                let canonical_id = Identifiers.validate loc id in
                                 Parser.IDENTIFIER (canonical_id) }
 (* End of file *)
   | eof                       { lexer_logger "eof" ;
