@@ -459,6 +459,17 @@ Semantic error in 'reused_name.stan', line 4, column 14 to column 15:
    -------------------------------------------------
 
 Identifier 'e' is already in use.
+  $ ../../../../../install/default/bin/stanc unicode_normalization.stan
+Semantic error in 'unicode_normalization.stan', line 4, column 7 to column 13:
+   -------------------------------------------------
+     2:    real ñabc;
+     3:    // this is a different encoding than above, should be prevented still!
+     4:    real ñabc;
+                ^
+     5:  }
+   -------------------------------------------------
+
+Identifier 'ñabc' is already in use.
   $ ../../../../../install/default/bin/stanc unterminated_comment.stan
 Syntax error in 'unterminated_comment.stan', line 4, column -1, lexing error:
    -------------------------------------------------

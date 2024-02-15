@@ -1,19 +1,19 @@
   $ ../../../../../install/default/bin/stanc int-bad1.stan
-Syntax error in 'int-bad1.stan', line 2, column 17, lexing error:
+Syntax error in 'int-bad1.stan', line 2, column 11, lexing error:
    -------------------------------------------------
      1:  transformed data {
      2:      int n = 10_000_;
-                           ^
+                     ^
      3:  }
    -------------------------------------------------
 
 Invalid character found.
   $ ../../../../../install/default/bin/stanc int-bad2.stan
-Syntax error in 'int-bad2.stan', line 2, column 13, lexing error:
+Syntax error in 'int-bad2.stan', line 2, column 11, lexing error:
    -------------------------------------------------
      1:  transformed data {
      2:      int n = 10__000;
-                       ^
+                     ^
      3:  }
    -------------------------------------------------
 
@@ -59,11 +59,11 @@ Syntax error in 'real-bad1.stan', line 2, column 12, lexing error:
 
 Invalid character found.
   $ ../../../../../install/default/bin/stanc real-bad2.stan
-Syntax error in 'real-bad2.stan', line 2, column 14, lexing error:
+Syntax error in 'real-bad2.stan', line 2, column 12, lexing error:
    -------------------------------------------------
      1:  transformed data {
      2:      real x = 12_.345;
-                        ^
+                      ^
      3:  }
    -------------------------------------------------
 
