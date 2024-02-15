@@ -46,7 +46,7 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
     """
 
     if (stancFlags?.trim()) {
-        sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= $stancFlags' >> make/local"
+        sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= --allow-unicode $stancFlags' >> make/local"
     }
 
     sh """
@@ -67,7 +67,7 @@ def cleanCheckout() {
             userRemoteConfigs: scm.userRemoteConfigs,
         ])
     }
-    
+
     sh 'git clean -xffd'
 }
 
