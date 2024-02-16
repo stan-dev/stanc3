@@ -45,9 +45,9 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
         cd cmdstan; make clean-all;
     """
 
-    if (stancFlags?.trim()) {
+    // if (stancFlags?.trim()) {
         sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= --allow-unicode $stancFlags' >> make/local"
-    }
+    // }
 
     sh """
         cd performance-tests-cmdstan/cmdstan
