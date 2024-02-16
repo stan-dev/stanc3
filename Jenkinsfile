@@ -50,9 +50,9 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
         cd cmdstan; make clean-all;
     """
 
-    if (stancFlags?.trim()) {
-        sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= $stancFlags' >> make/local"
-    }
+    // if (stancFlags?.trim()) {
+        sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= --allow-unicode $stancFlags' >> make/local"
+    // }
 
     sh """
         cd performance-tests-cmdstan/cmdstan
@@ -803,7 +803,7 @@ pipeline {
                                 dir '.'
                                 label 'linux && emulation'
                                 args "${qemuArchFlag(ARCHITECTURE)} --group-add=987 --group-add=980 --group-add=988 --entrypoint='' -v /var/run/docker.sock:/var/run/docker.sock"
-                                additionalBuildArgs  "${qemuArchFlag(ARCHITECTURE)} --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)"
+                                additionalBuildArgs  "${qemuArchFlag(ARCHITECTURE)} --ulimit stack=67108864 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)"
                             }
                         }
                         steps {

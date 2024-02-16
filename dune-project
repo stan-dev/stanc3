@@ -26,6 +26,10 @@
    (= 2.1.0))
   (cmdliner
    (= 1.3.0))
+  (uucp
+   (= 16.0.0))
+  (uunf
+   (= 16.0.0))
   (ocamlformat
    (and
     :with-test
