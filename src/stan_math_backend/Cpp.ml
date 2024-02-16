@@ -395,7 +395,10 @@ module Printing = struct
     else
       (* so called "Universal character names" - not required on newer compilers
          but hopefully more backward-compatible *)
-      let f _ c = Fmt.pf ppf "\\u%04X" (Uchar.to_scalar c) in
+      let f _ c =
+        let uchar_int = Uchar.to_scalar c in
+        if uchar_int < 128 then Fmt.char ppf (Char.of_int_exn uchar_int)
+        else Fmt.pf ppf "\\u%04X" (Uchar.to_scalar c) in
       Common.Unicode.iter_uchars s f
 
   let rec pp_type_ ppf t =

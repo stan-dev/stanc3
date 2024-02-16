@@ -35,10 +35,6 @@ RUN printf "\n" | bash -x install_ocaml.sh "stanc"
 COPY ./scripts/install_build_deps_windows.sh ./
 RUN bash -x install_build_deps_windows.sh
 
-#Copy our script and install dev dependencies
-COPY ./scripts/install_dev_deps.sh ./
-RUN bash -x install_dev_deps.sh
-
 # Install Javascript dev environment
 COPY ./scripts/install_js_deps.sh ./
 RUN opam update; bash -x install_js_deps.sh
