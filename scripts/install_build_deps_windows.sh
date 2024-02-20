@@ -11,7 +11,7 @@ opam repository add windows http://github.com/ocaml-cross/opam-cross-windows.git
 opam update windows
 
 # Request the compiler to be built with flambda optimizers
-opam install -y conf-flambda-windows
+# opam install -y conf-flambda-windows
 
 # Install the compiler
 opam install -y "ocaml-windows64=4.14.1"
