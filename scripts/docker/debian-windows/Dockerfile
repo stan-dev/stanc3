@@ -23,17 +23,17 @@ WORKDIR /home/jenkins
 ENV DEBIAN_FRONTEND noninteractive
 ENV OPAMROOT /usr/local/opam
 
-#Copy our script and install ocaml + init
+# Copy our script and install ocaml + init
 COPY ./scripts/install_opam.sh ./
 RUN printf "\n" | bash -x install_opam.sh
 
-#Copy our script and install ocaml + init
+# Copy our script and install ocaml + init
 COPY ./scripts/install_ocaml.sh ./
 RUN printf "\n" | bash -x install_ocaml.sh "stanc"
 
-#Copy our script and install build dependencies
+# Copy our script and install build dependencies
 COPY ./scripts/install_build_deps_windows.sh ./
 RUN bash -x install_build_deps_windows.sh
 
-#Specify our entrypoint
+# Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
