@@ -1374,21 +1374,21 @@ let check_reject loc cf tenv ps =
 
 let check_exit loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
-  mk_typed_statement ~stmt:(Exit tps) ~return_type:Complete ~loc
+  mk_typed_statement ~stmt:(FatalError tps) ~return_type:Complete ~loc
 
 let check_skip loc = mk_typed_statement ~stmt:Skip ~return_type:Incomplete ~loc
 
 let rec stmt_is_escape {stmt; _} =
   match stmt with
-  | Break | Continue | Reject _ | Exit _ | Return _ | ReturnVoid -> true
+  | Break | Continue | Reject _ | FatalError _ | Return _ | ReturnVoid -> true
   | _ -> false
 
 and list_until_escape xs =
   let rec aux accu = function
     | next' :: unreachable :: _ when stmt_is_escape next' ->
         add_warning unreachable.smeta.loc
-          "Unreachable statement (following a reject, exit, break, continue, \
-           or return) found, is this intended?";
+          "Unreachable statement (following a reject, fatal_error, break, \
+           continue, or return) found, is this intended?";
         List.rev (next' :: accu)
     | next :: rest -> aux (next :: accu) rest
     | [] -> List.rev accu in
@@ -1822,7 +1822,7 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | ReturnVoid -> (tenv, check_returnvoid loc cf)
   | Print ps -> (tenv, check_print loc cf tenv ps)
   | Reject ps -> (tenv, check_reject loc cf tenv ps)
-  | Exit ps -> (tenv, check_exit loc cf tenv ps)
+  | FatalError ps -> (tenv, check_exit loc cf tenv ps)
   | Skip -> (tenv, check_skip loc)
   (* the following can contain further statements *)
   | IfThenElse (e, s1, os2) -> (tenv, check_if_then_else loc cf tenv e s1 os2)

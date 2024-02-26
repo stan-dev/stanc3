@@ -6,7 +6,7 @@ functions {
    }
 
   real bar(real x){
-    exit("don't call this function");
+    fatal_error("don't call this function");
     return x ;
   }
 }

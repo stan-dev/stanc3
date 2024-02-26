@@ -12,7 +12,7 @@ transformed parameters {
 }
 model {
   y ~ normal(0, 1);
-  exit("user requested termination");
+  fatal_error("user requested termination");
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format good_const.stan

@@ -11,6 +11,6 @@ transformed parameters {
 }
 model {
   y ~ normal(0, 1);
-  exit("user requested termination");
+  fatal_error("user requested termination");
 }
 

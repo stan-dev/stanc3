@@ -179,7 +179,7 @@ rule token = parse
 (* Effects *)
   | "print"                   { lexer_logger "print" ; Parser.PRINT }
   | "reject"                  { lexer_logger "reject" ; Parser.REJECT }
-  | "exit"                    { lexer_logger "exit" ; Parser.EXIT }
+  | "fatal_error"             { lexer_logger "fatal_error" ; Parser.FATAL_ERROR }
   | 'T'                       { lexer_logger "T" ; Parser.TRUNCATE } (* TODO: this is a hack; we should change to something like truncate and make it a reserved keyword *)
 (* Constants and identifiers *)
   | integer_constant as i     { lexer_logger ("int_constant " ^ i) ;

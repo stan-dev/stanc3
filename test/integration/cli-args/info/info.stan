@@ -68,7 +68,7 @@ model {
       if (y < 1)
         reject("goodbye");
       else
-        exit("really really goodbye");
+        fatal_error("really really goodbye");
     }
 }
 

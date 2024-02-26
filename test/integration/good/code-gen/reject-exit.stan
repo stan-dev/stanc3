@@ -6,8 +6,8 @@ parameters {
 }
 model {
   x ~ normal(0, 1);
-  if (x < 0) 
+  if (x < 0)
     reject("This is a test of the reject statement. Here is A:", A);
-  else 
-    exit("This is a test of the exit statement. Here is A:", A);
+  else
+    fatal_error("This is a test of the exit statement. Here is A:", A);
 }

@@ -154,7 +154,7 @@ type ('e, 's, 'l, 'f) statement =
   | ReturnVoid
   | Print of 'e printable list
   | Reject of 'e printable list
-  | Exit of 'e printable list
+  | FatalError of 'e printable list
   | Skip
   | IfThenElse of 'e * 's * 's option
   | While of 'e * 's
@@ -393,7 +393,7 @@ let get_first_loc (s : untyped_statement) =
   | TargetPE e | Return e | IfThenElse (e, _, _) | While (e, _) ->
       e.emeta.loc.begin_loc
   | Assignment _ | Profile _ | Block _ | Tilde _ | Break | Continue
-   |ReturnVoid | Print _ | Reject _ | Exit _ | Skip ->
+   |ReturnVoid | Print _ | Reject _ | FatalError _ | Skip ->
       s.smeta.loc.begin_loc
   | VarDecl {decl_type; transformation; variables; _} -> (
       match get_loc_dt decl_type with
