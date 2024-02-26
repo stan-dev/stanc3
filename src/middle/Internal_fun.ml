@@ -33,7 +33,7 @@ type 'expr t =
 let to_string
     ?(expr_to_string =
       fun _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "Should not be parsing expression from string in function renaming"])
     x =

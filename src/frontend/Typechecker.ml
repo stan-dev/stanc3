@@ -576,7 +576,7 @@ let make_function_variable cf loc id = function
         ~ad_level:(calculate_autodifftype cf Functions type_)
         ~type_ ~loc
   | type_ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Attempting to create function variable out of "
             (type_ : UnsizedType.t)]
@@ -848,12 +848,12 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 (List.length ts) i
               |> error
           | _ ->
-              Common.FatalError.fatal_error_msg
+              Common.ICE.internal_compiler_error
                 [%message
                   "Error in internal representation: tuple types don't match AD"]
           )
       | UTuple _, ad ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message
               "Error in internal representation: tuple doesn't have tupleAD"
                 (ad : UnsizedType.autodifftype)]
@@ -874,7 +874,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:true id
   | Promotion (e, _, _) ->
       (* Should never happen: promotions are produced during typechecking *)
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Promotion in untyped AST" (e : Ast.untyped_expression)]
 
 and check_expression_of_int_type cf tenv e name =
@@ -1160,7 +1160,7 @@ let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
                 idx
               |> error
           | _ ->
-              Common.FatalError.fatal_error_msg
+              Common.ICE.internal_compiler_error
                 [%message
                   "Error in internal representation: tuple types don't match AD"]
           )
@@ -1772,7 +1772,7 @@ and check_fundef loc cf tenv return_ty id args body =
         | UnsizedType.DataOnly, ut -> (Env.Data, ut)
         | AutoDiffable, ut -> (Param, ut)
         | TupleAD _, _ ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "TupleAD in function definition, this is unexpected!"])
       arg_types in
   let tenv_body =
@@ -1897,7 +1897,7 @@ let verify_correctness_invariant (ast : untyped_program)
   let detyped = untyped_program_of_typed_program decorated_ast in
   if compare_untyped_program ast detyped = 0 then ()
   else
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message
         "Type checked AST does not match original AST. "
           (detyped : untyped_program)

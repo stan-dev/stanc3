@@ -209,7 +209,8 @@ module Helpers = struct
      |UComplexRowVector, [_] ->
         UComplex
     | _ ->
-        FatalError.fatal_error_msg [%message "Can't index" (ut : UnsizedType.t)]
+        ICE.internal_compiler_error
+          [%message "Can't index" (ut : UnsizedType.t)]
 
   (** [add_index expression index] returns an expression that (additionally)
       indexes into the input [expression] by [index].*)
@@ -221,7 +222,7 @@ module Helpers = struct
       | Var _ | TupleProjection _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message "Expected Var or Indexed but found " (e : Typed.t)] in
     Fixed.{meta; pattern}
 
@@ -234,7 +235,7 @@ module Helpers = struct
       match Typed.(type_of e) with
       | UTuple ts -> List.nth_exn ts (i - 1)
       | t ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message
               "Internal error: Attempted to apply tuple index to a non-tuple \
                type:"

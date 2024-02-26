@@ -16,14 +16,14 @@ let dotproduct xs ys =
 let matprod x y =
   let y_T = transpose y in
   if List.length x <> List.length y_T then
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message "Matrix multiplication dim. mismatch"]
   else List.map ~f:(fun row -> List.map ~f:(dotproduct row) y_T) x
 
 let rec vect_to_mat l m =
   let len = List.length l in
   if len % m <> 0 then
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message "The length has to be a whole multiple of the partition size"]
   else if len = m then [l]
   else

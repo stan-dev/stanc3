@@ -376,7 +376,7 @@ let dist_name_suffix udf_names name =
   with
   | Some hd -> hd
   | None ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Couldn't find distribution " name]
 
 let operator_to_stan_math_fns op =

@@ -48,7 +48,7 @@ let requires ut t =
         [ RequireAllCondition
             (`OneOf ["stan::is_autodiff"; "std::is_floating_point"], t) ]
     | UTuple _ | UMathLibraryFunction | UFun _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "Cannot formulate require templates for type " (ut : UnsizedType.t)]
   in
@@ -73,7 +73,7 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
             let templates = List.concat temps in
             templates
         | _ ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message
                 "Impossible: type passes UnsizedType.contains_tuple but \
                  unwrapped scalar is not tuple"

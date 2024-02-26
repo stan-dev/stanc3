@@ -220,7 +220,7 @@ module Helpers = struct
         mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ | UTuple _ ->
-        FatalError.fatal_error_msg
+        ICE.internal_compiler_error
           [%message "Can't iterate over " (iteratee : Expr.Typed.t)]
 
   let contains_fn_kind is_fn_kind ?(init = false) stmt =

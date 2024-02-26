@@ -288,7 +288,7 @@ let rec fill_adtype_for_type ad ut =
       TupleAD (List.map2_exn ~f:fill_adtype_for_type ads ts)
   | _, UTuple ts -> TupleAD (List.map ~f:(fill_adtype_for_type ad) ts)
   | TupleAD _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Attempting to give a non-tuple a TupleAD type"
             (ut : t)

@@ -344,7 +344,7 @@ unsized_dims:
 no_assign:
   | UNREACHABLE
     { (* This code will never be reached *)
-       Common.FatalError.fatal_error_msg
+       Common.ICE.internal_compiler_error
           [%message "the UNREACHABLE token should never be produced"]
     }
 

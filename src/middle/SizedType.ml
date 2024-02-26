@@ -73,7 +73,7 @@ let rec get_dims_io st =
   | SComplexMatrix (dim1, dim2) -> [dim1; dim2; two]
   | SArray (t, dim) -> dim :: get_dims_io t
   | STuple _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Tried to get IO dims of a tuple, which is not rectangular"
             (st : Expr.Typed.t t)]

@@ -72,7 +72,7 @@ let%expect_test "all but last n" =
 let tuple_trans_exn = function
   | Transformation.TupleTransformation transforms -> transforms
   | t ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Expected TupleTransformation but got"
             (t : Expr.Typed.t Transformation.t)]
@@ -83,7 +83,7 @@ let zip_stuple_trans_exn pst tms =
     | SizedType.STuple subtypes -> subtypes
     | SArray (st, _) -> tuple_subtypes st
     | _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message "Internal error: expected Tuple with TupleTransformation"]
   in
   let psts = tuple_subtypes pst in
@@ -95,7 +95,7 @@ let zip_utuple_trans_exn pst tms =
     | UnsizedType.UTuple uts -> uts
     | UArray ut -> tuple_psts ut
     | _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message "Internal error: expected Tuple with TupleTransformation"]
   in
   let psts = tuple_psts pst in
