@@ -88,7 +88,7 @@ pipeline {
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
         booleanParam(defaultValue: false, name: 'build_multiarch_docker', description: 'Build docker image for multiarch builds')
-        string(defaultValue: '', name: 'multiarch_docker_tag', description: "Docker tag for the ")
+        string(defaultValue: '', name: 'build_multiarch_docker_tag', description: "Docker tag for the ")
     }
     options {
         parallelsAlwaysFailFast()
@@ -621,9 +621,7 @@ pipeline {
 
                         cd scripts/docker/multiarch
 
-                        echo $multiarch_docker_tag
-
-                        docker buildx build -t stanorg/stanc3:${multiarch_docker_tag} \
+                        docker buildx build -t stanorg/stanc3:$build_multiarch_docker_tag \
                         --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x \
                         --build-arg PUID=$(id -u) \
                         --build-arg PGID=$(id -g) \
