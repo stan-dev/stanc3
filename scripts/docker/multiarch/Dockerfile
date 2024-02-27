@@ -75,4 +75,4 @@ RUN eval $(opam env) && opam install -y yojson.2.1.0
 RUN eval $(opam env)
 
 # Cleanup
-RUN rm ./arch && rm ./qarch
+RUN rm /qemu-setup/arch && rm /qemu-setup/qarch
