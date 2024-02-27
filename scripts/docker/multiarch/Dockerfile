@@ -25,6 +25,8 @@ RUN usermod -a -G sudo jenkins
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN chown -R jenkins:sudo /usr/local
 
+USER jenkins
+
 WORKDIR /qemu-setup
 
 # Identify architecture being built for and cache
@@ -47,7 +49,6 @@ RUN if [ $(cat ./arch) = "arm64" ]; then \
 # Download needed QEMU binary and place in /usr/bin
 RUN curl -L https://github.com/multiarch/qemu-user-static/releases/download/v6.0.0-2/x86_64_qemu-$(cat ./qarch)-static.tar.gz | tar -xzf - -C /usr/bin
 
-USER jenkins
 WORKDIR /home/jenkins
 
 RUN opam init --disable-sandboxing --bare -y
@@ -62,7 +63,14 @@ RUN if [ "$(cat /qemu-setup/arch)" = "mips64el" ]; then \
 
 RUN eval $(opam env) && opam repo add internet https://opam.ocaml.org
 
-RUN curl https://raw.githubusercontent.com/${STANC3_ORG_ENV}/stanc3/${STANC3_BRANCH_ENV}/scripts/install_build_deps.sh | bash
+RUN eval $(opam env) && opam install -y dune
+RUN eval $(opam env) && opam update && opam upgrade
+RUN eval $(opam env) && opam install -y core.v0.16.0
+RUN eval $(opam env) && opam install -y menhir.20230608
+RUN eval $(opam env) && opam install -y ppx_deriving.5.2.1
+RUN eval $(opam env) && opam install -y fmt.0.9.0
+RUN eval $(opam env) && opam install -y yojson.2.1.0
+RUN eval $(opam env)
 
 # Cleanup
 RUN rm /qemu-setup/arch && rm /qemu-setup/qarch
