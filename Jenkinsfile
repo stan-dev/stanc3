@@ -611,7 +611,7 @@ pipeline {
             steps {
                 script {
                     retry(3) { checkout scm }
-                    sh """
+                    sh '''
                         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
                         docker buildx create --name stanc3_builder
@@ -621,13 +621,13 @@ pipeline {
 
                         cd scripts/docker/multiarch
 
-                        docker buildx build -t stanorg/stanc3:\${multiarch_docker_tag} \
+                        docker buildx build -t stanorg/stanc3:${params.multiarch_docker_tag} \
                         --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x \
                         --build-arg PUID=\$(id -u) \
                         --build-arg PGID=\$(id -g) \
-                        --build-arg STANC3_BRANCH="$(if [ -n "\${CHANGE_ID}" ]; then echo "\${CHANGE_BRANCH}"; else echo "\${BRANCH_NAME}"; fi)" \
+                        --build-arg STANC3_BRANCH="$(if [ -n "${CHANGE_ID}" ]; then echo "${CHANGE_BRANCH}"; else echo "${BRANCH_NAME}"; fi)" \
                         --progress=plain --push .
-                    """
+                    '''
                 }
             }
             post {
