@@ -690,7 +690,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'docker/builder/Dockerfile'
+                            filename 'scripts/docker/builder/Dockerfile'
                             dir '.'
                             label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
@@ -720,19 +720,6 @@ pipeline {
                         always {
                             deleteDir()
                         }
-                    }
-                }
-
-                stage("Build multiarch image") {
-                    docker.withRegistry('my.registry.com', 'my_creds') {
-                    def image = docker.image("my_image:my_tag")
-                    sh "docker buildx create --use --name multiarch"
-                    sh """
-                    docker buildx build \
-                        --platform linux/amd64,linux/arm64 \
-                        -t ${image.imageName()} \
-                        --push .
-                    """
                     }
                 }
 
