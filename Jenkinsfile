@@ -589,6 +589,48 @@ pipeline {
             }
         }
 
+        stage('Build and push multiarch docker image') {
+            when {
+                beforeAgent true
+                expression {
+                    params.buildMultiarchDocker
+                }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/builder/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            environment { DOCKER_TOKEN = credentials('aada4f7b-baa9-49cf-ac97-5490620fce8a') }
+            steps {
+                script {
+                    retry(3) { checkout scm }
+                    sh """
+                        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+                        docker buildx create --name stanc3_builder
+                        docker buildx use stanc3_builder
+
+                        docker login --username stanorg --password "${DOCKER_TOKEN}"
+
+                        cd scripts/docker/multiarch
+
+                        docker buildx build -t stanorg/stanc3:multiarch-latest --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g) --progress=plain --push .
+
+                    """
+                }
+            }
+            post {
+                always {
+                    deleteDir()
+                }
+            }
+        }
+
 
         stage('Build binaries') {
             parallel {
@@ -679,48 +721,6 @@ pipeline {
                         }
                     }
                     post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
-                }
-
-                stage('Build and push multiarch docker image') {
-                    when {
-                        beforeAgent true
-                        expression {
-                            params.buildMultiarchDocker
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/builder/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    environment { DOCKER_TOKEN = credentials('aada4f7b-baa9-49cf-ac97-5490620fce8a') }
-                    steps {
-                        script {
-                            retry(3) { checkout scm }
-                            sh """
-                                docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-
-                                docker buildx create --name stanc3_builder
-                                docker buildx use stanc3_builder
-
-                                docker login --username stanorg --password "${DOCKER_TOKEN}"
-
-                                cd scripts/docker/multiarch
-
-                                docker buildx build -t stanorg/stanc3:multiarch-latest --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g) --progress=plain --push .
-
-                            """
-                        }
-                    }
-                    post {
-                        always {
-                            deleteDir()
-                        }
-                    }
                 }
 
                 stage("Build & test a static Linux mips64el binary") {
