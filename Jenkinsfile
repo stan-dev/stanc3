@@ -88,7 +88,7 @@ pipeline {
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
         booleanParam(defaultValue: false, name: 'build_multiarch_docker', description: 'Build docker image for multiarch builds')
-        string(defaultValue: '', name: 'build_multiarch_docker_tag', description: "Docker tag for the ")
+        string(defaultValue: '', name: 'build_multiarch_docker_tag', description: "Docker tag for the multiarch image")
     }
     options {
         parallelsAlwaysFailFast()
