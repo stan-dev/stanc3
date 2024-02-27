@@ -623,8 +623,8 @@ pipeline {
 
                         docker buildx build -t stanorg/stanc3:${params.multiarch_docker_tag} \
                         --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x \
-                        --build-arg PUID=\$(id -u) \
-                        --build-arg PGID=\$(id -g) \
+                        --build-arg PUID=$(id -u) \
+                        --build-arg PGID=$(id -g) \
                         --build-arg STANC3_BRANCH="$(if [ -n "${CHANGE_ID}" ]; then echo "${CHANGE_BRANCH}"; else echo "${BRANCH_NAME}"; fi)" \
                         --progress=plain --push .
                     '''
