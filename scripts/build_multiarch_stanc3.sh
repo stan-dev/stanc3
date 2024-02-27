@@ -1,3 +1,4 @@
+
 # Architecture naming isn't consistent between QEMU and Docker, so lookup correct naming
 if [ $1 = "mips64el" ]; then
   export DOCK_ARCH="mips64le"
@@ -19,10 +20,12 @@ elif [ $1 = "s390x" ]; then
   export DOCK_VARIANT=""
 fi
 
+DOCKER_IMAGE_TAG="$2"
+
 # Lookup the sha256 hash for the specified architecture and variant (e.g., v7 for armhf) and strip the enclosing quotations
 SHA=$(skopeo inspect --raw docker://stanorg/stanc3:multiarch-latest | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest' | tr -d '"')
 
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
-docker run -v $(pwd):$(pwd):rw,z stanorg/stanc3:multiarch-latest@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune subst && dune build @install --profile static --root=."
+docker run -v $(pwd):$(pwd):rw,z stanorg/stanc3:${DOCKER_IMAGE_TAG}@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune subst && dune build @install --profile static --root=."

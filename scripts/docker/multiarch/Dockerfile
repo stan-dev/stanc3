@@ -1,7 +1,7 @@
 # Base image
 FROM debian:buster-20220622-slim
 
-ARG STANC3_BRANCH=master
+ARG STANC3_BRANCH
 ENV STANC3_BRANCH_ENV=${STANC3_BRANCH}
 
 ARG STANC3_ORG=stan-dev
@@ -18,6 +18,7 @@ RUN apt-get install opam curl bzip2 git tar curl ca-certificates openssl m4 bash
 
 RUN update-ca-certificates -f
 
+# Setup jenkins uid/gid
 RUN addgroup -gid ${PGID} jenkins
 RUN adduser --disabled-password --gecos '' --ingroup jenkins --uid ${PUID} jenkins
 RUN usermod -a -G sudo jenkins
@@ -63,16 +64,7 @@ RUN if [ "$(cat /qemu-setup/arch)" = "mips64el" ]; then \
 
 RUN eval $(opam env) && opam repo add internet https://opam.ocaml.org
 
-# RUN curl https://raw.githubusercontent.com/${STANC3_ORG_ENV}/stanc3/${STANC3_BRANCH_ENV}/scripts/install_build_deps.sh | bash
-
-RUN eval $(opam env) && opam install -y dune
-RUN eval $(opam env) && opam update && opam upgrade
-RUN eval $(opam env) && opam install -y core.v0.16.0
-RUN eval $(opam env) && opam install -y menhir.20230608
-RUN eval $(opam env) && opam install -y ppx_deriving.5.2.1
-RUN eval $(opam env) && opam install -y fmt.0.9.0
-RUN eval $(opam env) && opam install -y yojson.2.1.0
-RUN eval $(opam env)
+RUN curl https://raw.githubusercontent.com/${STANC3_ORG_ENV}/stanc3/${STANC3_BRANCH_ENV}/scripts/install_build_deps.sh | bash
 
 # Cleanup
 RUN rm /qemu-setup/arch && rm /qemu-setup/qarch

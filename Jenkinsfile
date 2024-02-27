@@ -87,7 +87,8 @@ pipeline {
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
-        booleanParam(defaultValue: false, name: 'buildMultiarchDocker', description: 'Build docker image for multiarch builds')
+        booleanParam(defaultValue: false, name: 'build_multiarch_docker', description: 'Build docker image for multiarch builds')
+        string(defaultValue: '', name: 'multiarch_docker_tag', description: "Docker tag for the ")
     }
     options {
         parallelsAlwaysFailFast()
@@ -101,6 +102,7 @@ pipeline {
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
         GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
+        MULTIARCH_DOCKER_TAG = 'ocaml-4.14'
     }
     stages {
         stage('Verify changes') {
@@ -593,7 +595,7 @@ pipeline {
             when {
                 beforeAgent true
                 expression {
-                    params.buildMultiarchDocker
+                    params.build_multiarch_docker
                 }
             }
             agent {
@@ -619,10 +621,12 @@ pipeline {
 
                         cd scripts/docker/multiarch
 
-                        docker buildx build -t stanorg/stanc3:multiarch-latest --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g) --progress=plain --push .
-
-                        docker buildx build -t stanorg/stanc3:multiarch-latest --platform linux/arm/v6 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g) --progress=plain --push .
-
+                        docker buildx build -t stanorg/stanc3:${params.multiarch_docker_tag} \
+                        --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x \
+                        --build-arg PUID=\$(id -u) \
+                        --build-arg PGID=\$(id -g) \
+                        --build-arg STANC3_BRANCH="$(if [ -n "\${CHANGE_ID}" ]; then echo "\${CHANGE_BRANCH}"; else echo "\${BRANCH_NAME}"; fi)" \
+                        --progress=plain --push .
                     """
                 }
             }
@@ -745,9 +749,10 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-mips64el"){
                             cleanCheckout()
+
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh mips64el
+                                bash -x scripts/build_multiarch_stanc3.sh mips64el ${MULTIARCH_DOCKER_TAG}
                             """
 
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
@@ -780,7 +785,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh ppc64el
+                                bash -x scripts/build_multiarch_stanc3.sh ppc64el ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
@@ -811,7 +816,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh s390x
+                                bash -x scripts/build_multiarch_stanc3.sh s390x ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             stash name:'linux-s390x-exe', includes:'bin/*'
@@ -842,7 +847,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh arm64
+                                bash -x scripts/build_multiarch_stanc3.sh arm64 ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             stash name:'linux-arm64-exe', includes:'bin/*'
@@ -873,7 +878,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh armhf
+                                bash -x scripts/build_multiarch_stanc3.sh armhf ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             stash name:'linux-armhf-exe', includes:'bin/*'
@@ -904,7 +909,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh armel
+                                bash -x scripts/build_multiarch_stanc3.sh armel ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             stash name:'linux-armel-exe', includes:'bin/*'
