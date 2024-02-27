@@ -55,7 +55,7 @@ RUN opam init --disable-sandboxing --bare -y
 RUN eval $(opam env) && opam update
 
 # Native-code compilation not available on MIPS, fall back to bytecode
-RUN if [ $(cat ./arch) = "mips64el" ]; then \
+RUN if [ "$(cat /qemu-setup/arch)" = "mips64el" ]; then \
     opam switch create 4.14.1 --packages=ocaml-variants.4.14.1+options,ocaml-option-bytecode-only && opam switch 4.14.1 && opam pin num https://github.com/ocaml/num.git -y; \
   else \
     opam switch create 4.14.1 && opam switch 4.14.1; \
@@ -63,15 +63,15 @@ RUN if [ $(cat ./arch) = "mips64el" ]; then \
 
 RUN eval $(opam env) && opam repo add internet https://opam.ocaml.org
 
-RUN curl https://raw.githubusercontent.com/${STANC3_ORG_ENV}/stanc3/${STANC3_BRANCH_ENV}/scripts/install_build_deps.sh | bash
+# RUN curl https://raw.githubusercontent.com/${STANC3_ORG_ENV}/stanc3/${STANC3_BRANCH_ENV}/scripts/install_build_deps.sh | bash
 
-# RUN eval $(opam env) && opam install -y dune
-# RUN eval $(opam env) && opam update && opam upgrade
-# RUN eval $(opam env) && opam install -y core.v0.16.0
-# RUN eval $(opam env) && opam install -y menhir.20230608
-# RUN eval $(opam env) && opam install -y ppx_deriving.5.2.1
-# RUN eval $(opam env) && opam install -y fmt.0.9.0
-# RUN eval $(opam env) && opam install -y yojson.2.1.0
+RUN eval $(opam env) && opam install -y dune
+RUN eval $(opam env) && opam update && opam upgrade
+RUN eval $(opam env) && opam install -y core.v0.16.0
+RUN eval $(opam env) && opam install -y menhir.20230608
+RUN eval $(opam env) && opam install -y ppx_deriving.5.2.1
+RUN eval $(opam env) && opam install -y fmt.0.9.0
+RUN eval $(opam env) && opam install -y yojson.2.1.0
 RUN eval $(opam env)
 
 # Cleanup
