@@ -621,6 +621,8 @@ pipeline {
 
                         docker buildx build -t stanorg/stanc3:multiarch-latest --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g) --progress=plain --push .
 
+                        docker buildx build -t stanorg/stanc3:multiarch-latest --platform linux/arm/v6 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g) --progress=plain --push .
+
                     """
                 }
             }

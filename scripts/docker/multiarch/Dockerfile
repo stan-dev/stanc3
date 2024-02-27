@@ -24,8 +24,7 @@ RUN usermod -a -G sudo jenkins
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN chown -R jenkins:sudo /usr/local
 
-USER jenkins
-WORKDIR /home/jenkins
+WORKDIR /qemu-setup
 
 # Identify architecture being built for and cache
 RUN echo $(dpkg --print-architecture) > ./arch
@@ -46,6 +45,11 @@ RUN if [ $(cat ./arch) = "arm64" ]; then \
 
 # Download needed QEMU binary and place in /usr/bin
 RUN curl -L https://github.com/multiarch/qemu-user-static/releases/download/v6.0.0-2/x86_64_qemu-$(cat ./qarch)-static.tar.gz | tar -xzf - -C /usr/bin
+
+RUN chown jenkins "/usr/bin/qemu-$(cat ./qarch)-static"
+
+USER jenkins
+WORKDIR /home/jenkins
 
 RUN opam init --disable-sandboxing --bare -y
 RUN eval $(opam env) && opam update
