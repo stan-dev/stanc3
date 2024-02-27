@@ -1,17 +1,31 @@
 # Base image
 FROM debian:buster-20220622-slim
 
-ARG STANC3_BRANCH=update/4.14
+ARG STANC3_BRANCH=master
 ENV STANC3_BRANCH_ENV=${STANC3_BRANCH}
 
 ARG STANC3_ORG=stan-dev
 ENV STANC3_ORG_ENV=${STANC3_ORG}
+
+USER root
+
+ARG PUID
+ARG PGID
 
 # Update repositories and install OS deps
 RUN apt-get update
 RUN apt-get install opam curl bzip2 git tar curl ca-certificates openssl m4 bash -y
 
 RUN update-ca-certificates -f
+
+RUN addgroup -gid ${PGID} jenkins
+RUN adduser --disabled-password --gecos '' --ingroup jenkins --uid ${PUID} jenkins
+RUN usermod -a -G sudo jenkins
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN chown -R jenkins:sudo /usr/local
+
+USER jenkins
+WORKDIR /home/jenkins
 
 # Identify architecture being built for and cache
 RUN echo $(dpkg --print-architecture) > ./arch
@@ -45,15 +59,15 @@ RUN if [ $(cat ./arch) = "mips64el" ]; then \
 
 RUN eval $(opam env) && opam repo add internet https://opam.ocaml.org
 
-# RUN curl https://raw.githubusercontent.com/${STANC3_ORG_ENV}/stanc3/${STANC3_BRANCH_ENV}/scripts/install_build_deps.sh | bash
+RUN curl https://raw.githubusercontent.com/${STANC3_ORG_ENV}/stanc3/${STANC3_BRANCH_ENV}/scripts/install_build_deps.sh | bash
 
-RUN eval $(opam env) && opam install -y dune
-RUN eval $(opam env) && opam update && opam upgrade
-RUN eval $(opam env) && opam install -y core.v0.16.0
-RUN eval $(opam env) && opam install -y menhir.20230608
-RUN eval $(opam env) && opam install -y ppx_deriving.5.2.1
-RUN eval $(opam env) && opam install -y fmt.0.9.0
-RUN eval $(opam env) && opam install -y yojson.2.1.0
+# RUN eval $(opam env) && opam install -y dune
+# RUN eval $(opam env) && opam update && opam upgrade
+# RUN eval $(opam env) && opam install -y core.v0.16.0
+# RUN eval $(opam env) && opam install -y menhir.20230608
+# RUN eval $(opam env) && opam install -y ppx_deriving.5.2.1
+# RUN eval $(opam env) && opam install -y fmt.0.9.0
+# RUN eval $(opam env) && opam install -y yojson.2.1.0
 RUN eval $(opam env)
 
 # Cleanup

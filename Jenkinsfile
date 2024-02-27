@@ -87,6 +87,7 @@ pipeline {
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
+        booleanParam(defaultValue: false, name: 'buildMultiarchDocker', description: 'Build docker image for multiarch builds')
     }
     options {
         parallelsAlwaysFailFast()
@@ -680,6 +681,61 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
                 }
 
+                stage('Build and push multiarch docker image') {
+                    when {
+                        beforeAgent true
+                        expression {
+                            params.buildMultiarchDocker
+                        }
+                    }
+                    agent {
+                        dockerfile {
+                            filename 'docker/builder/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    environment { DOCKER_TOKEN = credentials('aada4f7b-baa9-49cf-ac97-5490620fce8a') }
+                    steps {
+                        script {
+                            retry(3) { checkout scm }
+                            sh """
+                                docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+                                docker buildx create --name stanc3_builder
+                                docker buildx use stanc3_builder
+
+                                docker login --username stanorg --password "${DOCKER_TOKEN}"
+
+                                cd scripts/docker/multiarch
+
+                                docker buildx build -t stanorg/stanc3:multiarch-latest --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g) --progress=plain --push .
+
+                            """
+                        }
+                    }
+                    post {
+                        always {
+                            deleteDir()
+                        }
+                    }
+                }
+
+                stage("Build multiarch image") {
+                    docker.withRegistry('my.registry.com', 'my_creds') {
+                    def image = docker.image("my_image:my_tag")
+                    sh "docker buildx create --use --name multiarch"
+                    sh """
+                    docker buildx build \
+                        --platform linux/amd64,linux/arm64 \
+                        -t ${image.imageName()} \
+                        --push .
+                    """
+                    }
+                }
+
                 stage("Build & test a static Linux mips64el binary") {
                     when {
                         beforeAgent true
@@ -1043,11 +1099,11 @@ pipeline {
         }
 
     }
-    post {
-      always {
-          script {
-            utils.mailBuildResults()
-          }
-        }
-    }
+    // post {
+    //   always {
+    //       script {
+    //         utils.mailBuildResults()
+    //       }
+    //     }
+    // }
 }
