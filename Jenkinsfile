@@ -625,7 +625,6 @@ pipeline {
                         --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x \
                         --build-arg PUID=$(id -u) \
                         --build-arg PGID=$(id -g) \
-                        --build-arg STANC3_BRANCH="$(if [ -n "${CHANGE_ID}" ]; then echo "${CHANGE_BRANCH}"; else echo "${BRANCH_NAME}"; fi)" \
                         --progress=plain --push .
                     '''
                 }
@@ -730,13 +729,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux mips64el binary") {
-                    // when {
-                    //     beforeAgent true
-                    //     allOf {
-                    //         expression { !skipRebuildingBinaries }
-                    //         anyOf { buildingTag(); branch 'master' }
-                    //     }
-                    // }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
@@ -764,13 +763,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux ppc64el binary") {
-                    // when {
-                    //     beforeAgent true
-                    //     allOf {
-                    //         expression { !skipRebuildingBinaries }
-                    //         anyOf { buildingTag(); branch 'master' }
-                    //     }
-                    // }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
@@ -795,13 +794,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux s390x binary") {
-                    // when {
-                    //     beforeAgent true
-                    //     allOf {
-                    //         expression { !skipRebuildingBinaries }
-                    //         anyOf { buildingTag(); branch 'master' }
-                    //     }
-                    // }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
@@ -826,13 +825,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux arm64 binary") {
-                    // when {
-                    //     beforeAgent true
-                    //     allOf {
-                    //         expression { !skipRebuildingBinaries }
-                    //         anyOf { buildingTag(); branch 'master' }
-                    //     }
-                    // }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
@@ -857,13 +856,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armhf binary") {
-                    // when {
-                    //     beforeAgent true
-                    //     allOf {
-                    //         expression { !skipRebuildingBinaries }
-                    //         anyOf { buildingTag(); branch 'master' }
-                    //     }
-                    // }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
@@ -888,13 +887,13 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armel binary") {
-                    // when {
-                    //     beforeAgent true
-                    //     allOf {
-                    //         expression { !skipRebuildingBinaries }
-                    //         anyOf { buildingTag(); branch 'master' }
-                    //     }
-                    // }
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression { !skipRebuildingBinaries }
+                            anyOf { buildingTag(); branch 'master' }
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
@@ -1093,11 +1092,11 @@ pipeline {
         }
 
     }
-    // post {
-    //   always {
-    //       script {
-    //         utils.mailBuildResults()
-    //       }
-    //     }
-    // }
+    post {
+      always {
+          script {
+            utils.mailBuildResults()
+          }
+        }
+    }
 }
