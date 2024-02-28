@@ -222,7 +222,7 @@ module Helpers = struct
       | Var _ | TupleProjection _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
-          Common.ICE.internal_compiler_error
+          ICE.internal_compiler_error
             [%message "Expected Var or Indexed but found " (e : Typed.t)] in
     Fixed.{meta; pattern}
 
@@ -235,7 +235,7 @@ module Helpers = struct
       match Typed.(type_of e) with
       | UTuple ts -> List.nth_exn ts (i - 1)
       | t ->
-          Common.ICE.internal_compiler_error
+          ICE.internal_compiler_error
             [%message
               "Internal error: Attempted to apply tuple index to a non-tuple \
                type:"

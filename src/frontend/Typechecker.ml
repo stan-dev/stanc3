@@ -1372,7 +1372,7 @@ let check_reject loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
   mk_typed_statement ~stmt:(Reject tps) ~return_type:Complete ~loc
 
-let check_exit loc cf tenv ps =
+let check_fatal_error loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
   mk_typed_statement ~stmt:(FatalError tps) ~return_type:Complete ~loc
 
@@ -1822,7 +1822,7 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | ReturnVoid -> (tenv, check_returnvoid loc cf)
   | Print ps -> (tenv, check_print loc cf tenv ps)
   | Reject ps -> (tenv, check_reject loc cf tenv ps)
-  | FatalError ps -> (tenv, check_exit loc cf tenv ps)
+  | FatalError ps -> (tenv, check_fatal_error loc cf tenv ps)
   | Skip -> (tenv, check_skip loc)
   (* the following can contain further statements *)
   | IfThenElse (e, s1, os2) -> (tenv, check_if_then_else loc cf tenv e s1 os2)
