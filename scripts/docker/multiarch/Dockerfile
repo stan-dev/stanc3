@@ -72,6 +72,3 @@ RUN eval $(opam env) && opam install -y ppx_deriving.5.2.1
 RUN eval $(opam env) && opam install -y fmt.0.9.0
 RUN eval $(opam env) && opam install -y yojson.2.1.0
 RUN eval $(opam env)
-
-# Cleanup
-RUN rm /qemu-setup/arch && rm /qemu-setup/qarch
