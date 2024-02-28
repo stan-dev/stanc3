@@ -23,6 +23,7 @@ type 'expr t =
   | FnCheck of {trans: 'expr Transformation.t; var_name: string; var: 'expr}
   | FnPrint
   | FnReject
+  | FnFatalError
   | FnResizeToMatch
   | FnNaN
   | FnDeepCopy
@@ -32,7 +33,7 @@ type 'expr t =
 let to_string
     ?(expr_to_string =
       fun _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "Should not be parsing expression from string in function renaming"])
     x =
@@ -57,7 +58,8 @@ let can_side_effect = function
    |FnReadWriteEventsOpenCL _ ->
       true
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
-   |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ | FnMakeTuple ->
+   |FnFatalError | FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _
+   |FnMakeTuple ->
       false
 
 let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn

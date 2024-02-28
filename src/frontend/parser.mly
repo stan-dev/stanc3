@@ -98,7 +98,7 @@ let nest_unsized_array basic_type n =
        ELTDIVIDE "./" OR "||" AND "&&" EQUALS "==" NEQUALS "!=" LEQ "<=" GEQ ">=" TILDE "~"
 %token ASSIGN "=" PLUSASSIGN "+=" MINUSASSIGN "-=" TIMESASSIGN "*="
        DIVIDEASSIGN "/=" ELTDIVIDEASSIGN "./=" ELTTIMESASSIGN ".*="
-%token PRINT "print" REJECT "reject"
+%token PRINT "print" REJECT "reject" FATAL_ERROR "fatal_error"
 %token TRUNCATE "T"
 %token EOF ""
 
@@ -266,6 +266,7 @@ reserved_word:
   | COVMATRIX { "cov_matrix", $loc, true  }
   | PRINT { "print", $loc, false }
   | REJECT { "reject", $loc, false }
+  | FATAL_ERROR { "fatal_error", $loc, false }
   | TARGET { "target", $loc, false }
   | PROFILE { "profile", $loc, false }
   | TUPLE { "tuple", $loc, true }
@@ -343,7 +344,7 @@ unsized_dims:
 no_assign:
   | UNREACHABLE
     { (* This code will never be reached *)
-       Common.FatalError.fatal_error_msg
+       Common.ICE.internal_compiler_error
           [%message "the UNREACHABLE token should never be produced"]
     }
 
@@ -750,6 +751,8 @@ atomic_statement:
     {  grammar_logger "print_statement" ; Print l }
   | REJECT LPAREN l=printables RPAREN SEMICOLON
     {  grammar_logger "reject_statement" ; Reject l  }
+  | FATAL_ERROR LPAREN l=printables RPAREN SEMICOLON
+    {  grammar_logger "exit_statement" ; FatalError l  }
   | RETURN e=expression SEMICOLON
     {  grammar_logger "return_statement" ; Return e }
   | RETURN SEMICOLON

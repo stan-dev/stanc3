@@ -60,7 +60,7 @@ module Types = struct
     match t with
     | Matrix _ -> TypeTrait ("Eigen::Map", [t])
     | _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message "Tried to make an Eigen::Map of" (t : type_)]
 end
 

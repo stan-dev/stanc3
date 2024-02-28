@@ -239,7 +239,7 @@ module TypeError = struct
           | "lpmf" -> "lpdf"
           | "lupmf" -> "lupdf"
           | _ ->
-              Common.FatalError.fatal_error_msg
+              Common.ICE.internal_compiler_error
                 [%message "Bad suffix:" (suffix : string)] in
         Fmt.pf ppf
           "Function '%s_%s' is not implemented for distribution '%s', use \

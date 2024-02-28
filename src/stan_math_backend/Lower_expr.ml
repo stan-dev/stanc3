@@ -37,7 +37,7 @@ let constraint_to_string = function
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
   | Identity -> None
   | TupleTransformation _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Cannot generate tuple transformation directly; should not be called"]
 
@@ -115,7 +115,7 @@ let rec local_scalar ut ad =
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim ut
   | _, AutoDiffable -> Types.local_scalar
   | _, TupleAD _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Attempting to make a local scalar tuple"
             (ut : UnsizedType.t)
@@ -144,7 +144,7 @@ let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
   | UComplexRowVector -> Types.row_vector (Types.complex scalar)
   | UComplexMatrix -> Types.matrix (Types.complex scalar)
   | UMathLibraryFunction | UFun _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Function types not implemented"]
 
 let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
@@ -154,7 +154,7 @@ let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
   | UnsizedType.TupleAD _, UnsizedType.UArray t ->
       Types.std_vector (lower_unsizedtype_local ~mem_pattern adtype t)
   | _, UnsizedType.UTuple _ | TupleAD _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Tuple and Tuple AD type not matching!"
             (ut : UnsizedType.t)
@@ -179,7 +179,7 @@ let rec lower_possibly_var_decl adtype ut mem_pattern =
            ~f:(fun ad t -> lower_possibly_var_decl ad t mem_pattern)
            ads t_lst)
   | x, ad ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Cannot lower" (x : UnsizedType.t) (ad : UnsizedType.autodifftype)]
 
@@ -209,7 +209,7 @@ and read_data ut es =
     | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UTuple _
      |UComplexMatrix | UComplexRowVector | UComplexVector | UArray _ | UFun _
      |UMathLibraryFunction ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in
   let open Expression_syntax in
   let data_context = Var "context__" in
@@ -255,7 +255,7 @@ and lower_operator_app op es_in =
   | Modulo -> lower_binary_fun "stan::math::modulus" es
   | LDivide -> lower_binary_fun "stan::math::mdivide_left" es
   | And | Or ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "And/Or should have been converted to an expression"]
   | EltTimes -> lower_binary_op Multiply "stan::math::elt_multiply" es
   | EltDivide -> lower_binary_op Divide "stan::math::elt_divide" es
@@ -433,7 +433,7 @@ and lower_compiler_internal ad ut f es =
         match ut with
         | UnsizedType.UArray ut -> ut
         | _ ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message
                 "Array literal must have array type but found "
                   (ut : UnsizedType.t)] in
@@ -459,7 +459,7 @@ and lower_compiler_internal ad ut f es =
                 (lower_unsizedtype_local ad UComplexRowVector)
                 (lower_exprs es) ]
       | _ ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message
               "Unexpected type for row vector literal" (ut : UnsizedType.t)])
   | FnReadData -> read_data ut es
@@ -510,13 +510,13 @@ and lower_indexed_simple (e : expr) idcs =
   let idx_minus_one = function
     | Index.Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "No non-Single indices allowed"
               (e : expr)
               (idcs : Expr.Typed.t Index.t list)]
     | All ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "No non-Single indices allowed"
               (e : expr)

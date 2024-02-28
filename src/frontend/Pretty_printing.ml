@@ -79,7 +79,7 @@ let skip_comments loc =
             (* This prevents against bad behavior, but also really terrible but technically allowed things fail
                For example, an if statement where the 'else' is entirely inside the include.
                This makes the failure noisy rather than ever producing anything invalid for these. *)
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message
                 "Unable to format #include in this position!"
                   (l : string list)
@@ -255,7 +255,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | CondDistApp (_, id, es) -> (
       match es with
       | [] ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message "CondDistApp with no arguments: " id.name]
       | [e] ->
           pf ppf "@[<h>%a(%a%a)@]" pp_identifier id pp_expression e
@@ -430,6 +430,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
   | ReturnVoid -> pf ppf "return;"
   | Print ps -> pf ppf "print(%a);" pp_list_of_printables ps
   | Reject ps -> pf ppf "reject(%a);" pp_list_of_printables ps
+  | FatalError ps -> pf ppf "fatal_error(%a);" pp_list_of_printables ps
   | Skip -> pf ppf ";"
   | IfThenElse (_, _, _) ->
       (vbox pp_recursive_ifthenelse) ppf (ss, ss.smeta.loc.begin_loc)
@@ -536,13 +537,13 @@ let check_correctness ?(bare_functions = false) prog pretty =
     | Ok prog -> prog
     | Error e ->
         let error = Errors.to_string e in
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "Pretty-printed program failed to parse" error
               (prog : Ast.untyped_program)
               pretty] in
   if compare_untyped_program prog result_ast <> 0 then
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message
         "Pretty-printed program does match the original!"
           (prog : Ast.untyped_program)

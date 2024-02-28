@@ -4,7 +4,7 @@ open Core
 
 (** Equivalent to [raise_s] but prepends a stanc specific
   message asking users to report a bug *)
-let fatal_error_msg message =
+let internal_compiler_error message =
   let augmented =
     Sexplib0.Sexp.List
       [ [%message

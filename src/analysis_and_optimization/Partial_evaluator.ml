@@ -21,7 +21,7 @@ let apply_prefix_operator_int (op : string) i =
         | "PMinus__" -> -i
         | "PNot__" -> if i = 0 then 1 else 0
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not an int prefix operator: " s]) )
 
 let apply_prefix_operator_real (op : string) i =
@@ -32,7 +32,7 @@ let apply_prefix_operator_real (op : string) i =
         | "PPlus__" -> i
         | "PMinus__" -> -.i
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not a real prefix operator: " s]) )
 
 let apply_operator_int (op : string) i1 i2 =
@@ -52,7 +52,7 @@ let apply_operator_int (op : string) i1 i2 =
         | "Greater__" -> Bool.to_int (i1 > i2)
         | "Geq__" -> Bool.to_int (i1 >= i2)
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not an int operator: " s]) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
@@ -65,7 +65,7 @@ let apply_arithmetic_operator_real (op : string) r1 r2 =
         | "Times__" -> r1 *. r2
         | "Divide__" -> r1 /. r2
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not a real operator: " s]) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
@@ -80,7 +80,7 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Greater__" -> Bool.to_int (r1 > r2)
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "Not a logical operator: " s]) )
 
 let is_multi_index = function
@@ -1114,7 +1114,7 @@ let rec simplify_index_expr pattern =
                    ; meta }
                  , outer_tl ))
         | inner_singles, (([] | Single _ :: _) as multis) ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message
                 " There must be a multi-index."
                   (inner_singles : Expr.Typed.t Index.t list)

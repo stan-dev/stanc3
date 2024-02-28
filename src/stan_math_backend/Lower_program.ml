@@ -66,7 +66,7 @@ let lower_map_decl (vident, ut) : defn =
   | UComplexRowVector -> eigen_map_def (row_vector (complex scalar)) 1
   | UComplexVector -> eigen_map_def (vector (complex scalar)) 1
   | x ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Error during Map data construction for " vident " of type "
             (x : UnsizedType.t)]

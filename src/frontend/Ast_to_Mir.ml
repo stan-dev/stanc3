@@ -86,7 +86,7 @@ and trans_idx = function
       | UInt -> Single (trans_expr e)
       | UArray _ -> MultiIndex (trans_expr e)
       | _ ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message "Expecting int or array" (e.emeta.type_ : UnsizedType.t)])
 
 and trans_exprs exprs = List.map ~f:trans_expr exprs
@@ -305,7 +305,7 @@ let rec param_size transform sizedtype =
         SVector (mem_pattern, f d)
     | SInt | SReal | SComplex | SRowVector _ | STuple _ | SComplexRowVector _
      |SComplexVector _ | SComplexMatrix _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
@@ -315,7 +315,7 @@ let rec param_size transform sizedtype =
     | SMatrix (mem_pattern, d1, d2) -> SVector (mem_pattern, f d1 d2)
     | SInt | SReal | SComplex | SRowVector _ | SVector _ | STuple _
      |SComplexRowVector _ | SComplexVector _ | SComplexMatrix _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
   let k_choose_2 k =
@@ -478,7 +478,7 @@ let unwrap_block_or_skip = function
   | [({Stmt.Fixed.pattern= Block _; _} as b)] -> Some b
   | [{pattern= Skip; _}] -> None
   | x ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]
 
 let index_tuple (e : Ast.typed_expression) i =
@@ -490,7 +490,7 @@ let index_tuple (e : Ast.typed_expression) i =
           ; ad_level= List.nth_exn ads i
           ; loc= e.emeta.loc }
     | _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "Attempted to index into a non-tuple during lowering"
               (e : Ast.typed_expression)] in
@@ -541,6 +541,9 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       NRFunApp (CompilerInternal FnPrint, trans_printables smeta ps) |> swrap
   | Ast.Reject ps ->
       NRFunApp (CompilerInternal FnReject, trans_printables smeta ps) |> swrap
+  | Ast.FatalError ps ->
+      NRFunApp (CompilerInternal FnFatalError, trans_printables smeta ps)
+      |> swrap
   | Ast.IfThenElse (cond, ifb, elseb) ->
       IfElse
         ( trans_expr cond
@@ -591,7 +594,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           ; meta= smeta } in
       Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
   | Ast.FunDef _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Found function definition statement outside of function block"]
   | Ast.VarDecl {decl_type; transformation; variables; is_global= _} ->
@@ -705,7 +708,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
               |> unwrap_block_or_skip
           ; fdloc= ts.smeta.loc } ]
   | _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Found non-function definition statement in function block"]
 
 let get_block block prog =

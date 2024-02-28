@@ -14,7 +14,7 @@ let check_to_string = function
   | Upper _ -> Some "less_or_equal"
   | CholeskyCov -> Some "cholesky_factor"
   | LowerUpper _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "LowerUpper is really two other checks tied together"]
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
   | t -> constraint_to_string t
@@ -84,7 +84,7 @@ let rec initialize_value st adtype =
       let typ = lower_st st adtype in
       InitializerExpr (typ, List.map2_exn ~f:initialize_value subts ads)
   | _, STuple _ | TupleAD _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Mismatch between Tuple type and Tuple AD in code gen"
             (st : Expr.Typed.t SizedType.t)
@@ -150,7 +150,7 @@ let rec lower_nonrange_lvalue lvalue =
   | lv, idcs when List.for_all ~f:is_single_index idcs ->
       lower_indexed_simple (lower_nonrange_lbase lv) idcs
   | _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Multi-index must be the last (rightmost) index."]
 
 and lower_nonrange_lbase = function
@@ -268,6 +268,8 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       [Stmts.if_block pstream body]
   | NRFunApp (CompilerInternal FnReject, args) ->
       [throw_exn "std::domain_error" args]
+  | NRFunApp (CompilerInternal FnFatalError, args) ->
+      [throw_exn "std::runtime_error" args]
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
       Option.value_map (check_to_string trans) ~default:[] ~f:(fun check_name ->
           let function_arg = Expr.Helpers.variable "function__" in

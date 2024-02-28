@@ -42,7 +42,7 @@ let transform_program (mir : Program.Typed.t)
       ; reverse_mode_log_prob= reverse_mode_log_prob'
       ; generate_quantities= generate_quantities' }
   | _ ->
-      Common.FatalError.fatal_error_msg
+      ICE.internal_compiler_error
         [%message "Something went wrong with program transformation packing!"]
 
 (**
@@ -56,7 +56,7 @@ let transform_program_blockwise (mir : Program.Typed.t)
     match transform fd {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList l; _} -> l
     | _ ->
-        Common.FatalError.fatal_error_msg
+        ICE.internal_compiler_error
           [%message "Something went wrong with program transformation packing!"]
   in
   let transformed_functions =
@@ -164,13 +164,13 @@ let handle_early_returns (fname : string) opt_var stmt =
         | Some name, Some e ->
             Assignment (Stmt.Helpers.lvariable name, Expr.Typed.type_of e, e)
         | Some _, None ->
-            Common.FatalError.fatal_error_msg
+            ICE.internal_compiler_error
               [%message
                 ("Function should return a value but found an empty return \
                   statement."
                   : string)]
         | None, Some _ ->
-            Common.FatalError.fatal_error_msg
+            ICE.internal_compiler_error
               [%message
                 ("Expected a void function but found a non-empty return \
                   statement."
@@ -1235,7 +1235,7 @@ let optimize_soa (mir : Program.Typed.t) =
     match transform {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList (l : Stmt.Located.t list); _} -> l
     | _ ->
-        Common.FatalError.fatal_error_msg
+        ICE.internal_compiler_error
           [%message "Something went wrong with program transformation packing!"]
   in
   {mir with reverse_mode_log_prob= transform' mir.reverse_mode_log_prob}

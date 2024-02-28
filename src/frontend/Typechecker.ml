@@ -576,7 +576,7 @@ let make_function_variable cf loc id = function
         ~ad_level:(calculate_autodifftype cf Functions type_)
         ~type_ ~loc
   | type_ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Attempting to create function variable out of "
             (type_ : UnsizedType.t)]
@@ -848,12 +848,12 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
                 (List.length ts) i
               |> error
           | _ ->
-              Common.FatalError.fatal_error_msg
+              Common.ICE.internal_compiler_error
                 [%message
                   "Error in internal representation: tuple types don't match AD"]
           )
       | UTuple _, ad ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message
               "Error in internal representation: tuple doesn't have tupleAD"
                 (ad : UnsizedType.autodifftype)]
@@ -874,7 +874,7 @@ and check_expression cf tenv ({emeta; expr} : Ast.untyped_expression) :
       es |> List.map ~f:ce |> check_funapp loc cf tenv ~is_cond_dist:true id
   | Promotion (e, _, _) ->
       (* Should never happen: promotions are produced during typechecking *)
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Promotion in untyped AST" (e : Ast.untyped_expression)]
 
 and check_expression_of_int_type cf tenv e name =
@@ -1160,7 +1160,7 @@ let rec check_lvalue cf tenv {lval; lmeta= ({loc} : located_meta)} =
                 idx
               |> error
           | _ ->
-              Common.FatalError.fatal_error_msg
+              Common.ICE.internal_compiler_error
                 [%message
                   "Error in internal representation: tuple types don't match AD"]
           )
@@ -1372,19 +1372,23 @@ let check_reject loc cf tenv ps =
   let tps = List.map ~f:(check_printable cf tenv) ps in
   mk_typed_statement ~stmt:(Reject tps) ~return_type:Complete ~loc
 
+let check_fatal_error loc cf tenv ps =
+  let tps = List.map ~f:(check_printable cf tenv) ps in
+  mk_typed_statement ~stmt:(FatalError tps) ~return_type:Complete ~loc
+
 let check_skip loc = mk_typed_statement ~stmt:Skip ~return_type:Incomplete ~loc
 
 let rec stmt_is_escape {stmt; _} =
   match stmt with
-  | Break | Continue | Reject _ | Return _ | ReturnVoid -> true
+  | Break | Continue | Reject _ | FatalError _ | Return _ | ReturnVoid -> true
   | _ -> false
 
 and list_until_escape xs =
   let rec aux accu = function
     | next' :: unreachable :: _ when stmt_is_escape next' ->
         add_warning unreachable.smeta.loc
-          "Unreachable statement (following a reject, break, continue, or \
-           return) found, is this intended?";
+          "Unreachable statement (following a reject, fatal_error, break, \
+           continue, or return) found, is this intended?";
         List.rev (next' :: accu)
     | next :: rest -> aux (next :: accu) rest
     | [] -> List.rev accu in
@@ -1768,7 +1772,7 @@ and check_fundef loc cf tenv return_ty id args body =
         | UnsizedType.DataOnly, ut -> (Env.Data, ut)
         | AutoDiffable, ut -> (Param, ut)
         | TupleAD _, _ ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message "TupleAD in function definition, this is unexpected!"])
       arg_types in
   let tenv_body =
@@ -1818,6 +1822,7 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | ReturnVoid -> (tenv, check_returnvoid loc cf)
   | Print ps -> (tenv, check_print loc cf tenv ps)
   | Reject ps -> (tenv, check_reject loc cf tenv ps)
+  | FatalError ps -> (tenv, check_fatal_error loc cf tenv ps)
   | Skip -> (tenv, check_skip loc)
   (* the following can contain further statements *)
   | IfThenElse (e, s1, os2) -> (tenv, check_if_then_else loc cf tenv e s1 os2)
@@ -1892,7 +1897,7 @@ let verify_correctness_invariant (ast : untyped_program)
   let detyped = untyped_program_of_typed_program decorated_ast in
   if compare_untyped_program ast detyped = 0 then ()
   else
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message
         "Type checked AST does not match original AST. "
           (detyped : untyped_program)

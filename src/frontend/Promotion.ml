@@ -56,21 +56,21 @@ let rec promote_unsized_type (typ : UnsizedType.t)
       (UnsizedType.promote_container typ UComplex, AutoDiffable)
   | NoPromotion, _, _ -> (typ, ad)
   | (IntToReal | ToVar | ToComplexVar | IntToComplex), _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Failed to promote type, unexpected type:"
             (prom : t)
             (typ : UnsizedType.t)
             (ad : UnsizedType.autodifftype)]
   | TuplePromotion _, _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Found Tuple Promotion for a non-tuple type:"
             (prom : t)
             (typ : UnsizedType.t)
             (ad : UnsizedType.autodifftype)]
   | _, _, TupleAD _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Found Tuple Autodiff in promotion for a non-tuple type:"
             (prom : t)
@@ -119,7 +119,7 @@ let promote_inner (exp : Ast.typed_expression) prom =
           { expr= Promotion (exp, prom_type, ad_level)
           ; emeta= {emeta with type_; ad_level} }
       | _ ->
-          Common.FatalError.fatal_error_msg
+          Common.ICE.internal_compiler_error
             [%message
               "Tuple promotion on non-tuple"
                 (exp : Ast.typed_expression)
@@ -205,7 +205,7 @@ let rec get_type_promotion_exn (ad_requested, ty_requested)
     | UInt, UInt -> NoPromotion
     | t1, t2 when t1 = t2 && ad_requested = ad_current -> NoPromotion
     | _, _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "Tried to get promotion of mismatched types!"
               (ty_current : UnsizedType.t)
@@ -214,7 +214,7 @@ let rec get_type_promotion_exn (ad_requested, ty_requested)
               (ty_requested : UnsizedType.t)
               (ad_requested : UnsizedType.autodifftype)]
   else
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message
         "Tried to get promotion of incompatible autodifftypes!"
           (ad_current : UnsizedType.autodifftype)

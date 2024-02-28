@@ -44,7 +44,9 @@
   },
   "transformed parameters": { "t": { "type": "real", "dimensions": 2 } },
   "generated quantities": { "u": { "type": "real", "dimensions": 0 } },
-  "functions": [ "log", "print", "reduce_sum", "reject", "sin", "square" ],
+  "functions": [
+    "fatal_error", "log", "print", "reduce_sum", "reject", "sin", "square"
+  ],
   "distributions": [
     "dirichlet_lupdf", "normal_lccdf", "normal_lcdf", "normal_lpdf",
     "std_normal_lupdf"
