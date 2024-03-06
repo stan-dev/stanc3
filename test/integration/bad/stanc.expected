@@ -2970,6 +2970,19 @@ Semantic error in 'typo.stan', line 2, column 17 to column 34:
 A returning function was expected but an undeclared identifier 'to_vetor' was supplied.
 A similar known identifier is 'to_vector'
 [exit 1]
+  $ ../../../../install/default/bin/stanc unicode-without-flag.stan
+Syntax error in 'unicode-without-flag.stan', line 4, column 24, lexing error:
+   -------------------------------------------------
+     2:    int<lower=0> J; // number of schools
+     3:    array[J] real y; // estimated treatment effect (school j)
+     4:    array[J] real<lower=0> σ; // std err of effect estimate (school j)
+                                  ^
+     5:  }
+     6:  parameters {
+   -------------------------------------------------
+
+Unicode identifiers are not supported without the (experimental) allow-unicode flag
+[exit 1]
   $ ../../../../install/default/bin/stanc validate_add_expression_dimss_bad.stan
 Semantic error in 'validate_add_expression_dimss_bad.stan', line 4, column 6 to column 13:
    -------------------------------------------------

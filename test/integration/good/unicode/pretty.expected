@@ -15,3 +15,23 @@ model {
 }
 
 [exit 0]
+  $ ../../../../../install/default/bin/stanc --auto-format --allow-unicode unicode_special_funs.stan
+functions {
+  real β_lpdf(real θ, real α, real β) {
+    return beta_lpdf(θ | α, β);
+  }
+  
+  void mañana_lp(real μ) {
+    target += logit(μ);
+  }
+}
+parameters {
+  real u;
+}
+model {
+  mañana_lp(u);
+  u ~ β(2, 2);
+  target += β_lpdf(u | 2, 2);
+}
+
+[exit 0]
