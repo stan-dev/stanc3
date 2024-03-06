@@ -87,7 +87,6 @@ pipeline {
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
-        booleanParam(defaultValue: false, name: 'build_multiarch_docker', description: 'Build docker image for multiarch builds')
         string(defaultValue: '', name: 'build_multiarch_docker_tag', description: "Docker tag for the multiarch image")
     }
     options {
@@ -595,7 +594,7 @@ pipeline {
             when {
                 beforeAgent true
                 expression {
-                    params.build_multiarch_docker
+                    params.build_multiarch_docker_tag != ""
                 }
             }
             agent {
