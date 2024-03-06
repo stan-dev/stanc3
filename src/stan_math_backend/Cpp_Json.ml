@@ -66,10 +66,10 @@ let%expect_test "outvar to json pretty" =
   unslash the ones near a plus*)
 let replace_cpp_expr s =
   s
-  |> Str.global_replace (Str.regexp {|"|}) {|\"|}
+  |> Str.global_replace (Str.regexp {|\\n|}) {||}
+  |> Cpp_str.escaped
   |> Str.global_replace (Str.regexp {|\\"\+|}) {|" +|}
   |> Str.global_replace (Str.regexp {|\+\\"|}) {|+ "|}
-  |> Str.global_replace (Str.regexp {|\\n|}) {||}
 
 let wrap_in_quotes s = "\"" ^ s ^ "\""
 
@@ -80,9 +80,12 @@ let out_var_interpolated_json_str vars =
 let%expect_test "outvar to json" =
   let var x = {Expr.Fixed.pattern= Var x; meta= Expr.Typed.Meta.empty} in
   [ ( "var_one"
-    , SizedType.SArray (SVector (AoS, var "N"), var "K")
+    , SizedType.SArray
+        ( SVector
+            (AoS, Expr.Helpers.binop (var "N") Operator.Minus Expr.Helpers.one)
+        , var "K" )
     , Program.Parameters ) ]
   |> out_var_interpolated_json_str |> print_endline;
   [%expect
     {|
-    "[{\"name\":\"var_one\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"}]" |}]
+    "[{\"name\":\"var_one\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((N -1)) + "}},\"block\":\"parameters\"}]" |}]
