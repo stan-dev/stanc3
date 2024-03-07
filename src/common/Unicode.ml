@@ -13,7 +13,7 @@ let is_ascii s =
 
 let normalize = Uunf_string.normalize_utf_8 `NFKC
 
-let fold_uchars f acc str =
+let foldi_uchars ~f acc str =
   let len = String.length str in
   let rec loop pos acc =
     if pos == len then acc
@@ -25,19 +25,22 @@ let fold_uchars f acc str =
       loop (pos + char_length) acc in
   loop 0 acc
 
-let iter_uchars s f =
+let iteri_uchars ~f str =
   let f' buf pos c =
     f pos c;
     Buffer.add_utf_8_uchar buf c;
     buf in
   let s_after =
-    Buffer.contents @@ fold_uchars f' (Buffer.create (String.length s)) s in
+    Buffer.contents
+    @@ foldi_uchars ~f:f' (Buffer.create (String.length str)) str in
   (* another sanity check *)
-  if not (String.equal s s_after) then
+  if not (String.equal str s_after) then
     Core.(
       ICE.internal_compiler_error
         [%message
-          "Failed to round-trip unicode string!" (s : string) (s_after : string)])
+          "Failed to round-trip unicode string!"
+            (str : string)
+            (s_after : string)])
 
 (* WIP:
 
@@ -60,7 +63,7 @@ let confusable x y =
         (* TODO!! replace with prototype - need data? *)
         Buffer.add_utf_8_uchar acc c;
       acc in
-    let buf = fold_uchars f (Buffer.create (String.length x)) x in
+    let buf = foldi_uchars ~f (Buffer.create (String.length x)) x in
     let x = Buffer.contents buf in
     let x = Uunf_string.normalize_utf_8 `NFD x in
     x in
@@ -98,7 +101,7 @@ let restriction_level x =
     let scripts =
       Uucp.Script.script_extensions c |> ScriptSet.of_list |> extended in
     scripts :: acc in
-  let soss = fold_uchars f [] x in
+  let soss = foldi_uchars ~f [] x in
   let resolved = List.fold_right ScriptSet.inter soss all in
   if not @@ ScriptSet.is_empty resolved then `Single
   else `Unrestricted (* TODO implement levels 3-5 *)

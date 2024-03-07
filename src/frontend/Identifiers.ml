@@ -38,7 +38,7 @@ let validate_utf8_id ~loc id =
       error ~loc
         (Fmt.str "Invalid character in identifier at offset %d: '%a'" pos
            pp_uchar uchar) in
-  iter_uchars id f;
+  iteri_uchars ~f id;
   id
 
 let validate loc id =

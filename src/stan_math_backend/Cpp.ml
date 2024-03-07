@@ -399,7 +399,7 @@ module Printing = struct
         let uchar_int = Uchar.to_scalar c in
         if uchar_int < 128 then Fmt.char ppf (Char.of_int_exn uchar_int)
         else Fmt.pf ppf "\\u%04X" (Uchar.to_scalar c) in
-      Common.Unicode.iter_uchars s f
+      Common.Unicode.iteri_uchars ~f s
 
   let rec pp_type_ ppf t =
     match t with
