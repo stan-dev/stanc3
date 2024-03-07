@@ -13,21 +13,26 @@ let is_ascii s =
 
 let normalize = Uunf_string.normalize_utf_8 `NFKC
 
+let fold_uchars f acc str =
+  let len = String.length str in
+  let rec loop pos acc =
+    if pos == len then acc
+    else
+      let decode = String.get_utf_8_uchar str pos in
+      let char_length = Uchar.utf_decode_length decode in
+      let uchar = Uchar.utf_decode_uchar decode in
+      let acc = f acc pos uchar in
+      loop (pos + char_length) acc in
+  loop 0 acc
+
 let iter_uchars s f =
-  let len = String.length s in
-  let out = Buffer.create len in
-  let pos = ref 0 in
-  (* move through code point by code point *)
-  while !pos != len do
-    let decode = String.get_utf_8_uchar s !pos in
-    let char_length = Uchar.utf_decode_length decode in
-    let uchar = Uchar.utf_decode_uchar decode in
-    Buffer.add_utf_8_uchar out uchar;
-    f !pos uchar;
-    pos := !pos + char_length
-  done;
+  let f' buf pos c =
+    f pos c;
+    Buffer.add_utf_8_uchar buf c;
+    buf in
+  let s_after =
+    Buffer.contents @@ fold_uchars f' (Buffer.create (String.length s)) s in
   (* another sanity check *)
-  let s_after = Buffer.contents out in
   if not (String.equal s s_after) then
     Core.(
       ICE.internal_compiler_error
@@ -49,14 +54,14 @@ let iter_uchars s f =
 let confusable x y =
   let skeleton x =
     let x = Uunf_string.normalize_utf_8 `NFD x in
-    let out = Buffer.create (String.length x) in
-    let f _ c =
+    let f acc _ c =
       if Uucp.Gen.is_default_ignorable c then ()
       else
         (* TODO!! replace with prototype - need data? *)
-        Buffer.add_utf_8_uchar out c in
-    iter_uchars x f;
-    let x = Buffer.contents out in
+        Buffer.add_utf_8_uchar acc c;
+      acc in
+    let buf = fold_uchars f (Buffer.create (String.length x)) x in
+    let x = Buffer.contents buf in
     let x = Uunf_string.normalize_utf_8 `NFD x in
     x in
   String.compare (skeleton x) (skeleton y)
@@ -89,13 +94,11 @@ let extended s =
 
 (* Defined in https://www.unicode.org/reports/tr39/#Restriction_Level_Detection *)
 let restriction_level x =
-  let soss = ref [] in
-  let f _ c =
+  let f acc _ c =
     let scripts =
       Uucp.Script.script_extensions c |> ScriptSet.of_list |> extended in
-    soss := scripts :: !soss;
-    () in
-  iter_uchars x f;
-  let resolved = List.fold_right ScriptSet.inter !soss all in
+    scripts :: acc in
+  let soss = fold_uchars f [] x in
+  let resolved = List.fold_right ScriptSet.inter soss all in
   if not @@ ScriptSet.is_empty resolved then `Single
   else `Unrestricted (* TODO implement levels 3-5 *)
