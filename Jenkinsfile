@@ -115,7 +115,7 @@ pipeline {
     }
     environment {
         CXX = 'clang++-6.0'
-        MACOS_SWITCH = 'stanc3-4.14'
+        MACOS_SWITCH = 'stanc3-4.14-unicode'
         PARALLEL = 4
         GIT_AUTHOR_NAME = 'Stan Jenkins'
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'

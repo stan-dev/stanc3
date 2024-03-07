@@ -15,6 +15,16 @@ model {
 }
 
 [exit 0]
+  $ ../../../../../install/default/bin/stanc --auto-format --allow-unicode mixed-scripts.stan
+data {
+  // https://www.unicode.org/reports/tr39/#Confusable_Detection
+  // greek
+  real Γ;
+  // cyrillic
+  real Г;
+}
+
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format --allow-unicode unicode_special_funs.stan
 functions {
   real β_lpdf(real θ, real α, real β) {
