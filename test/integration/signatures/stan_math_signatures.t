@@ -20695,6 +20695,8 @@ Display all Stan math signatures exposed in the language
   weibull_rng(array[] real, array[] int) => array[] real
   weibull_rng(array[] real, array[] real) => array[] real
   wiener_lpdf(real, real, real, real, real) => real
+  wiener_lpdf(real, real, real, real, real, real) => real
+  wiener_lpdf(real, real, real, real, real, real, real, real) => real
   wiener_lpdf(real, real, real, real, vector) => real
   wiener_lpdf(real, real, real, real, row_vector) => real
   wiener_lpdf(real, real, real, real, array[] real) => real
