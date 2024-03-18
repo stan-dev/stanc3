@@ -59,7 +59,7 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
     if (params.run_slow_perf_tests) {
         sh """
             cd performance-tests-cmdstan
-            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 --no-ignore-models
+            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 --no-ignore-models ${testsPath}
         """
     } else {
         sh """
