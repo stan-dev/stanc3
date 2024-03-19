@@ -101,7 +101,7 @@ pipeline {
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
         GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
-        MULTIARCH_DOCKER_TAG = 'multiarch-ocaml-4.14-v2'
+        MULTIARCH_DOCKER_TAG = 'multiarch-unicode'
     }
     stages {
         stage('Verify changes') {
