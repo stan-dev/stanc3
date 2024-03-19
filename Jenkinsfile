@@ -101,7 +101,7 @@ pipeline {
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
         GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
-        MULTIARCH_DOCKER_TAG = 'multiarch-ocaml-4.14'
+        MULTIARCH_DOCKER_TAG = 'multiarch-ocaml-4.14-v2'
     }
     stages {
         stage('Verify changes') {
@@ -960,7 +960,7 @@ pipeline {
                 dockerfile {
                     filename 'scripts/docker/publish/Dockerfile'
                     dir '.'
-                    label 'linux && triqs'
+                    label 'linux'
                     args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                     additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
