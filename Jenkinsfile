@@ -675,7 +675,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/debian/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -707,7 +707,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -928,7 +928,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/debian-windows/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -960,7 +960,7 @@ pipeline {
                 dockerfile {
                     filename 'scripts/docker/publish/Dockerfile'
                     dir '.'
-                    label 'linux'
+                    label 'linux && triqs'
                     args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                     additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }

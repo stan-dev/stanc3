@@ -28,4 +28,4 @@ SHA=$(skopeo inspect --raw docker://stanorg/stanc3:${DOCKER_IMAGE_TAG} | jq '.ma
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
-docker run -v $(pwd):$(pwd):rw,z stanorg/stanc3:${DOCKER_IMAGE_TAG}@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune subst && dune build @install --profile static --root=."
+docker run --group-add=987 --group-add=980 --group-add=988 -v $(pwd):$(pwd):rw,z stanorg/stanc3:${DOCKER_IMAGE_TAG}@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune subst && dune build @install --profile static --root=."
