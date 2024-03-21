@@ -53,9 +53,20 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
         cd performance-tests-cmdstan/cmdstan
         echo 'O=0' >> make/local
         echo 'CXXFLAGS+=-Wall' >> make/local
-        make -j${env.PARALLEL} build; cd ..
-        ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+        make -j${env.PARALLEL} build
     """
+
+    if (params.run_slow_perf_tests) {
+        sh """
+            cd performance-tests-cmdstan
+            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 --no-ignore-models ${testsPath}
+        """
+    } else {
+        sh """
+            cd performance-tests-cmdstan
+            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+        """
+    }
 }
 
 def cleanCheckout() {
@@ -67,7 +78,7 @@ def cleanCheckout() {
             userRemoteConfigs: scm.userRemoteConfigs,
         ])
     }
-    
+
     sh 'git clean -xffd'
 }
 
@@ -87,6 +98,7 @@ pipeline {
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
+        booleanParam(name:"run_slow_perf_tests", defaultValue: false, description:"Run additional 'slow' performance tests")
         string(defaultValue: '', name: 'build_multiarch_docker_tag', description: "Docker tag for the multiarch image")
     }
     options {
