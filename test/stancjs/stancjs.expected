@@ -246,29 +246,35 @@ $ node pedantic.js
 ["Warning in 'string', line 4, column 9: The variable tt may not have been\n    assigned a value before its use."]
 []
 $ node removed.js
-Syntax error in 'string', line 3, column 7 to column 8, parsing error:
+Syntax error in 'string', line 3, column 8 to column 8, parsing error:
    -------------------------------------------------
      1:  
      2:  parameters {
      3:  	real y[10];
-                ^
+                 ^
      4:  }
      5:  model {
    -------------------------------------------------
 
 ";" expected after variable declaration.
+It looks like you are trying to use the old array syntax.
+Please use the new syntax:
+array[...] real y;
 
-Syntax error in 'string', line 3, column 7 to column 8, parsing error:
+Syntax error in 'string', line 3, column 8 to column 8, parsing error:
    -------------------------------------------------
      1:  
      2:  parameters {
      3:  	real y[10];
-                ^
+                 ^
      4:  }
      5:  model {
    -------------------------------------------------
 
 ";" expected after variable declaration.
+It looks like you are trying to use the old array syntax.
+Please use the new syntax:
+array[...] real y;
 
 undefined
 $ node standalone-functions.js
