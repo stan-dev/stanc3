@@ -251,7 +251,7 @@ Syntax error in 'string', line 3, column 8 to column 10, parsing error:
      1:  
      2:  parameters {
      3:  	real y[10];
-                 ^
+         	       ^
      4:  }
      5:  model {
    -------------------------------------------------
@@ -266,7 +266,7 @@ Syntax error in 'string', line 3, column 8 to column 10, parsing error:
      1:  
      2:  parameters {
      3:  	real y[10];
-                 ^
+         	       ^
      4:  }
      5:  model {
    -------------------------------------------------
