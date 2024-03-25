@@ -316,7 +316,7 @@ unsized_type:
                name.@ It looks like you are trying to use the old array \
                syntax.@ Please use the new syntax: @ @[<h>array[...] %a@]@\n"
               UnsizedType.pp bt
-          , location_span_of_positions $sloc )))
+          , location_span_of_positions ($endpos, $endpos) )))
   }
   | bt=basic_type
     {  grammar_logger "unsized_type";
@@ -399,7 +399,7 @@ decl(type_rule, rhs):
                are trying to use the old array syntax.@ Please use the new \
                syntax:@ @[<h>array[...] %a %s;@]@\n"
               Pretty_printing.pp_transformed_type ty id.name
-          , location_span_of_positions $sloc )))
+          , location_span_of_positions ($endpos, $endpos) )))
     }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
