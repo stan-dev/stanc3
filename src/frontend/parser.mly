@@ -307,7 +307,7 @@ unsized_type:
   (* This is just a helper for the fact that we don't support the old array syntax any more
     It can go away at some point if it starts causing conflicts.
   *)
-  | bt=basic_type n=unsized_dims {
+  | bt=basic_type dims=unsized_dims {
     raise
     (Errors.SyntaxError
        (Errors.Parsing
@@ -315,9 +315,9 @@ unsized_type:
               "An identifier is expected after the type as a function argument \
                name.@ It looks like you are trying to use the old array \
                syntax.@ Please use the new syntax: @ @[<h>array[%s] %a@]@\n"
-              (String.make (n-1) ',')
+              (String.make (dims-1) ',')
               UnsizedType.pp bt
-          , location_span_of_positions ($endpos, $endpos) )))
+          , location_span_of_positions $loc(dims) )))
   }
   | bt=basic_type
     {  grammar_logger "unsized_type";
@@ -403,7 +403,7 @@ decl(type_rule, rhs):
                are trying to use the old array syntax.@ Please use the new \
                syntax:@ @[<h>%a %s;@]@\n"
               Pretty_printing.pp_transformed_type ty id.name
-          , location_span_of_positions ($endpos, $endpos) )))
+          , location_span_of_positions $loc(dims) )))
     }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
