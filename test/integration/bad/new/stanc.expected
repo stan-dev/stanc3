@@ -212,7 +212,7 @@ Syntax error in 'fundef-bad4.stan', line 1, column 24 to column 29, parsing erro
                                  ^
    -------------------------------------------------
 
-An identifier is expected as a function argument name.
+An identifier is expected after the type as a function argument name.
   $ ../../../../../install/default/bin/stanc fundef-bad5.stan
 Syntax error in 'fundef-bad5.stan', line 1, column 22 to column 26, parsing error:
    -------------------------------------------------
