@@ -24,6 +24,10 @@
    (= 0.9.0))
   (yojson
    (= 2.1.0))
+  (uucp
+   (= 15.1.0))
+  (uunf
+   (= 15.1.0))
   (ocamlformat
    (and
     :with-test
