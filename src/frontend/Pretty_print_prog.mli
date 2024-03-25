@@ -9,14 +9,6 @@ produce nicer error messages, hence the split between [Pretty_printing]
 and this module.
 *)
 
-val pretty_print_program :
-     ?bare_functions:bool
-  -> ?line_length:int
-  -> ?inline_includes:bool
-  -> ?strip_comments:bool
-  -> Ast.untyped_program
-  -> string
-
 val pretty_print_typed_program :
      ?bare_functions:bool
   -> ?line_length:int
