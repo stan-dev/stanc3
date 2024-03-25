@@ -304,6 +304,20 @@ unsized_type:
     {  grammar_logger "unsized_type";
         nest_unsized_array t n
     }
+  (* This is just a helper for the fact that we don't support the old array syntax any more
+    It can go away at some point if it starts causing conflicts.
+  *)
+  | bt=basic_type LBRACK {
+    raise
+    (Errors.SyntaxError
+       (Errors.Parsing
+          ( Fmt.str
+              "An identifier is expected after the type as a function argument \
+               name.@ It looks like you are trying to use the old array \
+               syntax.@ Please use the new syntax: @ @[<h>array[...] %a@]@\n"
+              UnsizedType.pp bt
+          , location_span_of_positions $sloc )))
+  }
   | bt=basic_type
     {  grammar_logger "unsized_type";
        bt
@@ -375,6 +389,18 @@ remaining_declarations(rhs):
  * identifier.
  *)
 decl(type_rule, rhs):
+  (* This is just a helper for the fact that we don't support the old array syntax any more *)
+  | ty=type_rule id=decl_identifier LBRACK {
+    raise
+    (Errors.SyntaxError
+       (Errors.Parsing
+          ( Fmt.str
+              "\";\" expected after variable declaration.@ It looks like you \
+               are trying to use the old array syntax.@ Please use the new \
+               syntax:@ @[<h>array[...] %a %s;@]@\n"
+              Pretty_printing.pp_transformed_type ty id.name
+          , location_span_of_positions $sloc )))
+    }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON

@@ -73,7 +73,7 @@ let stan2cpp model_name model_string is_flag_set flag_val :
         if is_flag_set "auto-format" || is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
-                (Pretty_printing.pretty_print_typed_program
+                (Pretty_print_prog.pretty_print_typed_program
                    ~bare_functions:(is_flag_set "functions-only")
                    ~line_length
                    ~inline_includes:canonicalizer_settings.inline_includes

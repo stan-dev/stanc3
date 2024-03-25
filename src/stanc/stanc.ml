@@ -289,7 +289,7 @@ let use_file filename =
     Canonicalize.canonicalize_program typed_ast !canonicalize_settings in
   if !pretty_print_program then
     print_or_write
-      (Pretty_printing.pretty_print_typed_program
+      (Pretty_print_prog.pretty_print_typed_program
          ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
          ~inline_includes:!canonicalize_settings.inline_includes canonical_ast
          ~strip_comments:!canonicalize_settings.strip_comments);
