@@ -58,12 +58,12 @@ Syntax error in 'decl.stan', line 2, column 7 to column 12, parsing error:
 
 Expected a new identifier but found reserved keyword 'array'.
   $ ../../../../../install/default/bin/stanc declarations.stan
-Syntax error in 'declarations.stan', line 3, column 18 to column 18, parsing error:
+Syntax error in 'declarations.stan', line 3, column 20 to column 20, parsing error:
    -------------------------------------------------
      1:  data {
      2:    int a0;
      3:    int<lower=0> a1[1];
-                           ^
+                             ^
      4:    int a2[2,3];
      5:    array[1] int a3;
    -------------------------------------------------
@@ -71,7 +71,7 @@ Syntax error in 'declarations.stan', line 3, column 18 to column 18, parsing err
 ";" expected after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
-array[...] int<lower=0> a1;
+array[1] int<lower=0> a1;
   $ ../../../../../install/default/bin/stanc deprecated_tilde.stan
 Semantic error in 'deprecated_tilde.stan', line 12, column 6 to column 19:
    -------------------------------------------------
@@ -223,12 +223,12 @@ Error in 'real-bools.stan', line 11, column 14: Using a real as a boolean
     instead. This can be automatically changed using the canonicalize flag
     for stanc
   $ ../../../../../install/default/bin/stanc removed_deprecated_syntax.stan
-Syntax error in 'removed_deprecated_syntax.stan', line 10, column 9 to column 9, parsing error:
+Syntax error in 'removed_deprecated_syntax.stan', line 10, column 11 to column 11, parsing error:
    -------------------------------------------------
      8:    real a;
      9:    vector[3] b;
     10:    real c[7];
-                  ^
+                    ^
     11:    real d[8, 9];
     12:  }
    -------------------------------------------------
@@ -236,7 +236,7 @@ Syntax error in 'removed_deprecated_syntax.stan', line 10, column 9 to column 9,
 ";" expected after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
-array[...] real c;
+array[7] real c;
   $ ../../../../../install/default/bin/stanc unreserved-array-keyword.stan
 Syntax error in 'unreserved-array-keyword.stan', line 2, column 24 to column 29, parsing error:
    -------------------------------------------------
@@ -249,11 +249,11 @@ Syntax error in 'unreserved-array-keyword.stan', line 2, column 24 to column 29,
 
 Expected a new identifier but found reserved keyword 'array'.
   $ ../../../../../install/default/bin/stanc unsized-old-array.stan
-Syntax error in 'unsized-old-array.stan', line 2, column 18 to column 18, parsing error:
+Syntax error in 'unsized-old-array.stan', line 2, column 20 to column 20, parsing error:
    -------------------------------------------------
      1:  functions{
      2:    real foo(  real[,] v){
-                           ^
+                             ^
      3:      return sum(v);
      4:    }
    -------------------------------------------------
@@ -261,4 +261,4 @@ Syntax error in 'unsized-old-array.stan', line 2, column 18 to column 18, parsin
 An identifier is expected after the type as a function argument name.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax: 
-array[...] real
+array[,] real

@@ -307,14 +307,15 @@ unsized_type:
   (* This is just a helper for the fact that we don't support the old array syntax any more
     It can go away at some point if it starts causing conflicts.
   *)
-  | bt=basic_type LBRACK {
+  | bt=basic_type n=unsized_dims {
     raise
     (Errors.SyntaxError
        (Errors.Parsing
-          ( Fmt.str
+          (Fmt.str
               "An identifier is expected after the type as a function argument \
                name.@ It looks like you are trying to use the old array \
-               syntax.@ Please use the new syntax: @ @[<h>array[...] %a@]@\n"
+               syntax.@ Please use the new syntax: @ @[<h>array[%s] %a@]@\n"
+              (String.make (n-1) ',')
               UnsizedType.pp bt
           , location_span_of_positions ($endpos, $endpos) )))
   }
@@ -390,14 +391,17 @@ remaining_declarations(rhs):
  *)
 decl(type_rule, rhs):
   (* This is just a helper for the fact that we don't support the old array syntax any more *)
-  | ty=type_rule id=decl_identifier LBRACK {
+  | ty=type_rule id=decl_identifier LBRACK dims=separated_nonempty_list(COMMA, expression) RBRACK {
+    let (ty, trans) = ty in
+    let ty = List.fold_right ~f:(fun e ty -> SizedType.SArray (ty, e)) ~init:ty dims in
+    let ty = (ty, trans) in
     raise
     (Errors.SyntaxError
        (Errors.Parsing
           ( Fmt.str
               "\";\" expected after variable declaration.@ It looks like you \
                are trying to use the old array syntax.@ Please use the new \
-               syntax:@ @[<h>array[...] %a %s;@]@\n"
+               syntax:@ @[<h>%a %s;@]@\n"
               Pretty_printing.pp_transformed_type ty id.name
           , location_span_of_positions ($endpos, $endpos) )))
     }
