@@ -13,13 +13,15 @@ let internal_compiler_error = raise_s
 let with_exn_message f =
   try Ok (f ())
   with e ->
-    let bt = Printexc.get_backtrace () in
+    let bt =
+      if Printexc.backtrace_status () then Printexc.get_backtrace ()
+      else "Backtrace missing." in
     Error
       (Fmt.str
          "Fatal error:@ @[%a@]@\n\
           %s@\n\
           @\n\
-          This should never happen. Please file a bug on \
-          https://github.com/stan-dev/stanc3/issues/new and include this \
+          This should never happen. Please file a bug at \
+          https://github.com/stan-dev/stanc3/issues/new@ and include this \
           message and the model that caused this issue.@\n"
          Exn.pp e bt)
