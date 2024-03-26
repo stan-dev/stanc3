@@ -417,4 +417,10 @@ let main () =
   else Typechecker.model_name := mangle !Typechecker.model_name;
   use_file !model_file
 
-let () = main ()
+let () =
+  match Common.ICE.with_exn_message main with
+  | Ok () -> ()
+  | Error internal_error ->
+      Out_channel.output_string stderr internal_error;
+      Out_channel.flush stderr;
+      exit 2

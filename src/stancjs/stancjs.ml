@@ -174,30 +174,33 @@ let stan2cpp model_name model_string is_flag_set flag_val :
           (Result.Ok cpp, warnings, pedantic_mode_warnings)
       | Result.Error e -> (Result.Error (ProgramError e), parser_warnings, []))
 
+let wrap_warnings ~warnings =
+  ( "warnings"
+  , Js.Unsafe.inject (Js.array (List.to_array (List.map ~f:Js.string warnings)))
+  )
+
+let wrap_error ~warnings e =
+  Js.Unsafe.obj
+    [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [| e |]))
+     ; wrap_warnings ~warnings |]
+
 let wrap_result ?printed_filename ~code ~warnings res =
-  let js_warnings =
-    ( "warnings"
-    , Js.Unsafe.inject
-        (Js.array (List.to_array (List.map ~f:Js.string warnings))) ) in
   match res with
   | Result.Ok s ->
       Js.Unsafe.obj
-        [| ("result", Js.Unsafe.inject (Js.string s)); js_warnings |]
+        [| ("result", Js.Unsafe.inject (Js.string s)); wrap_warnings ~warnings
+        |]
   | Error (ProgramError e) ->
       let e =
         Fmt.str "%a"
           (Errors.pp ?printed_filename ?code:(Some (Js.to_string code)))
           e in
-      Js.Unsafe.obj
-        [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [| e |]))
-         ; js_warnings |]
+      wrap_error ~warnings e
   | Error (RemovedDeprecations ls) ->
-      let errors =
+      let e =
         Fmt.str "%a" (Deprecation_removals.pp_removals ?printed_filename) ls
       in
-      Js.Unsafe.obj
-        [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [| errors |]))
-         ; js_warnings |]
+      wrap_error ~warnings e
 
 let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
   let flags =
@@ -230,13 +233,17 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
     |> List.map ~f:(fun o -> "--" ^ o)
     |> String.concat ~sep:" " in
   Lower_program.stanc_args_to_print := stanc_args_to_print;
-  let result, warnings, pedantic_mode_warnings =
-    stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val in
-  let warnings =
-    List.map
-      ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))
-      (warnings @ pedantic_mode_warnings) in
-  wrap_result ?printed_filename ~code result ~warnings
+  match
+    Common.ICE.with_exn_message (fun () ->
+        stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val)
+  with
+  | Ok (result, warnings, pedantic_mode_warnings) ->
+      let warnings =
+        List.map
+          ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))
+          (warnings @ pedantic_mode_warnings) in
+      wrap_result ?printed_filename ~code result ~warnings
+  | Error internal_error -> wrap_error ~warnings:[] internal_error
 
 let dump_stan_math_signatures () =
   Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()
