@@ -1,5 +1,5 @@
 open Core
-open! Frontend
+open Frontend
 open Common
 
 let%expect_test "with_exn_message" =
@@ -9,7 +9,7 @@ let%expect_test "with_exn_message" =
   Printexc.record_backtrace true;
   [%expect
     {|
-    Fatal error:
+    Internal compiler error:
     (Failure oops!)
     Backtrace missing.
 
@@ -32,6 +32,11 @@ let%expect_test "ICE triggered" =
      This is impossible in the parser, so leads to an ICE
      during typechecking *)
   let ast : Ast.untyped_program =
+    let open Middle in
+    let xloc = Location_span.empty in
+    let id_loc = xloc in
+    let emeta = Ast.{loc= xloc} in
+    let smeta = emeta in
     Ast.
       { functionblock= None
       ; datablock= None
@@ -45,31 +50,22 @@ let%expect_test "ICE triggered" =
               { stmts=
                   [ { stmt=
                         VarDecl
-                          { decl_type= Middle.SizedType.SReal
-                          ; transformation= Middle.Transformation.Identity
+                          { decl_type= SizedType.SReal
+                          ; transformation= Transformation.Identity
                           ; is_global= false
                           ; variables=
                               [ Ast.
-                                  { identifier=
-                                      Ast.
-                                        { name= "foo"
-                                        ; id_loc= Middle.Location_span.empty }
+                                  { identifier= Ast.{name= "foo"; id_loc}
                                   ; initial_value=
                                       Some
                                         { expr=
                                             Promotion
-                                              ( { expr= IntNumeral "1"
-                                                ; emeta=
-                                                    { loc=
-                                                        Middle.Location_span
-                                                        .empty } }
-                                              , Middle.UnsizedType.UReal
-                                              , Middle.UnsizedType.DataOnly )
-                                        ; emeta=
-                                            {loc= Middle.Location_span.empty} }
-                                  } ] }
-                    ; smeta= {loc= Middle.Location_span.empty} } ]
-              ; xloc= Middle.Location_span.empty }
+                                              ( {expr= IntNumeral "1"; emeta}
+                                              , UnsizedType.UReal
+                                              , UnsizedType.DataOnly )
+                                        ; emeta } } ] }
+                    ; smeta } ]
+              ; xloc }
       ; comments= [] } in
   Printexc.record_backtrace false;
   ICE.with_exn_message (fun () -> Typechecker.check_program ast)
@@ -77,7 +73,7 @@ let%expect_test "ICE triggered" =
   Printexc.record_backtrace true;
   [%expect
     {|
-    Fatal error:
+    Internal compiler error:
     ("Promotion in untyped AST"
      (e ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
     Backtrace missing.

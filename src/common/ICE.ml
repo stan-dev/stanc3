@@ -18,7 +18,7 @@ let with_exn_message f =
       else "Backtrace missing." in
     Error
       (Fmt.str
-         "Fatal error:@ @[%a@]@\n\
+         "Internal compiler error:@ @[%a@]@\n\
           %s@\n\
           @\n\
           This should never happen. Please file a bug at \
