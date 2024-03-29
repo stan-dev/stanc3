@@ -60,7 +60,7 @@ pipeline {
     parameters {
         string(defaultValue: 'master', name: 'git_branch',
                description: "Please specify a git branch ( develop ), git hash ( aace72b6ccecbb750431c46f418879b325416c7d ), pull request ( PR-123 ), pull request from fork ( PR-123 )")
-        booleanParam(defaultValue: false, name: 'buildNonX86Binaries', description: "Build non-x86v")
+        booleanParam(defaultValue: false, name: 'buildNonX86Binaries', description: "Build non-x86 binaries")
         booleanParam(defaultValue: false, name: 'runDuneTests', description: "Run dune tests")
     }
     environment {
@@ -73,7 +73,7 @@ pipeline {
         stage("Dune tests") {
             when {
                 beforeAgent true
-                expression { return runDuneTests }
+                expression { return params.runDuneTests }
             }
             agent {
                 dockerfile {
@@ -199,7 +199,7 @@ pipeline {
                 stage("Build & test a static Linux mips64el binary") {
                     when {
                         beforeAgent true
-                        expression { return buildNonX86Binaries }
+                        expression { return params.buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -230,7 +230,7 @@ pipeline {
                 stage("Build & test a static Linux ppc64el binary") {
                     when {
                         beforeAgent true
-                        expression { return buildNonX86Binaries }
+                        expression { return params.buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -258,7 +258,7 @@ pipeline {
                 stage("Build & test a static Linux s390x binary") {
                     when {
                         beforeAgent true
-                        expression { return buildNonX86Binaries }
+                        expression { return params.buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -286,7 +286,7 @@ pipeline {
                 stage("Build & test a static Linux arm64 binary") {
                     when {
                         beforeAgent true
-                        expression { return buildNonX86Binaries }
+                        expression { return params.buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -314,7 +314,7 @@ pipeline {
                 stage("Build & test a static Linux armhf binary") {
                     when {
                         beforeAgent true
-                        expression { return buildNonX86Binaries }
+                        expression { return params.buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -342,7 +342,7 @@ pipeline {
                 stage("Build & test a static Linux armel binary") {
                     when {
                         beforeAgent true
-                        expression { return buildNonX86Binaries }
+                        expression { return params.buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
