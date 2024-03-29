@@ -647,7 +647,6 @@ pipeline {
             }
         }
 
-
         stage('Build binaries') {
             parallel {
                 stage("Build & test Mac OS X binary") {
