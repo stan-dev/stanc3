@@ -80,7 +80,7 @@ pipeline {
             }
             steps {
                 dir("${env.WORKSPACE}/dune-tests"){
-                    script { checkoutBranch("sh") }
+                    script { checkoutBranch() }
                     runShell("""
                         eval \$(opam env)
                         BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
@@ -98,7 +98,7 @@ pipeline {
                 }
             }
             steps {
-                script { checkoutBranch("sh") }
+                script { checkoutBranch() }
                 runShell("""
                     eval \$(opam env)
                     dune build @install
@@ -115,7 +115,7 @@ pipeline {
                     agent { label 'osx && !m1' }
                     steps {
                         dir("${env.WORKSPACE}/osx"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
                             withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
                                 runShell("""
                                     export PATH=/Users/jenkins/brew/bin:\$PATH
@@ -145,7 +145,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/stancjs"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
                             sh """
                                 pwd
                                 ls -al
@@ -177,7 +177,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
                             runShell("""
                                 eval \$(opam env)
                                 dune subst
@@ -206,7 +206,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-mips64el"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
 
                             sh """
                                 eval \$(opam env)
@@ -237,7 +237,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-ppc64el"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
                             sh """
                                 eval \$(opam env)
                                 bash -x scripts/build_multiarch_stanc3.sh ppc64el ${MULTIARCH_DOCKER_TAG}
@@ -265,7 +265,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-s390x"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
                             sh """
                                 eval \$(opam env)
                                 bash -x scripts/build_multiarch_stanc3.sh s390x ${MULTIARCH_DOCKER_TAG}
@@ -293,7 +293,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-arm64"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
                             sh """
                                 eval \$(opam env)
                                 bash -x scripts/build_multiarch_stanc3.sh arm64 ${MULTIARCH_DOCKER_TAG}
@@ -321,7 +321,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armhf"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
                             sh """
                                 eval \$(opam env)
                                 bash -x scripts/build_multiarch_stanc3.sh armhf ${MULTIARCH_DOCKER_TAG}
@@ -349,7 +349,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armel"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
                             sh """
                                 eval \$(opam env)
                                 bash -x scripts/build_multiarch_stanc3.sh armel ${MULTIARCH_DOCKER_TAG}
@@ -373,7 +373,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/windows"){
-                            script { checkoutBranch("sh") }
+                            script { checkoutBranch() }
                             runShell("""
                                 eval \$(opam env)
                                 dune subst
