@@ -1685,6 +1685,8 @@ let () =
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix], AoS);
   add_unqualified
     ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix], AoS);
+  add_unqualified
+    ("multiply_low_tri", ReturnType UMatrix, [UMatrix; UMatrix], AoS);
   add_unqualified ("matrix_power", ReturnType UMatrix, [UMatrix; UInt], SoA);
   add_unqualified ("max", ReturnType UInt, [UArray UInt], AoS);
   add_unqualified ("max", ReturnType UReal, [UArray UReal], AoS);
