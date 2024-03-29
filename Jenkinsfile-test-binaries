@@ -47,7 +47,7 @@ pipeline {
     parameters {
         string(defaultValue: 'master', name: 'git_branch',
                description: "Please specify a git branch ( develop ), git hash ( aace72b6ccecbb750431c46f418879b325416c7d ), pull request ( PR-123 ), pull request from fork ( PR-123 )")
-        booleanParam(defaultValue: false, name: 'buildNonX86Binaries', description: "Build non-x86 binaries")
+        booleanParam(defaultValue: false, name: 'buildNonX86Binaries', description: "Build non-x86v")
     }
     environment {
         GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681')
@@ -60,20 +60,24 @@ pipeline {
 
         stage("Dune tests") {
             agent {
-                docker {
-                    image 'stanorg/stanc3:debian-ocaml-4.14'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                dockerfile {
+                    filename 'scripts/docker/debian/Dockerfile'
+                    dir '.'
+                    label 'linux'
+                    args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             steps {
-                script { checkoutRepository("sh") }
-                runShell("""
-                    eval \$(opam env)
-                    dune runtest --verbose
-                """)
+                dir("${env.WORKSPACE}/dune-tests"){
+                    script { checkoutRepository("sh") }
+                    runShell("""
+                        eval \$(opam env)
+                        BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
+                    """)
+                }
             }
-            post { always { runShell("rm -rf ./*") }}
+            post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
         }
 
         stage("Build") {
