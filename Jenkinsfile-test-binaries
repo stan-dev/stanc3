@@ -19,7 +19,7 @@ def tagName() {
     }
 }
 
-def checkoutRepository(os_type) {
+def checkoutBranch(os_type) {
     if(params.git_branch.contains("PR-")){
         pr_number = params.git_branch.split("-")[1]
 
@@ -66,13 +66,11 @@ pipeline {
                 }
             }
             steps {
-                dir("${env.WORKSPACE}/dune-tests"){
-                    script { checkoutRepository("sh") }
-                    runShell("""
-                        eval \$(opam env)
-                        BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
-                    """)
-                }
+                script { checkoutBranch("sh") }
+                runShell("""
+                    eval \$(opam env)
+                    BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
+                """)
             }
             post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
         }
@@ -85,7 +83,7 @@ pipeline {
                 }
             }
             steps {
-                script { checkoutRepository("sh") }
+                script { checkoutBranch("sh") }
                 runShell("""
                     eval \$(opam env)
                     dune build @install
@@ -96,285 +94,259 @@ pipeline {
             post { always { runShell("rm -rf ./*") }}
         }
 
-        stage('Build binaries') {
-            parallel {
-                stage("Build & test Mac OS X binary") {
-                    agent { label 'osx && !m1' }
-                    steps {
-                        dir("${env.WORKSPACE}/osx"){
-                            script { checkoutRepository("sh") }
-                            withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
-                                runShell("""
-                                    export PATH=/Users/jenkins/brew/bin:\$PATH
-                                    eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                    dune subst
-                                    opam update || true
-                                    bash -x scripts/install_build_deps.sh
-                                    dune build @install --root=.
-                                """)
-                            }
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                            stash name:'mac-exe', includes:'bin/*'
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/osx/*") }}
+        stage("Build & test Mac OS X binary") {
+            agent { label 'osx && !m1' }
+            steps {
+                script { checkoutBranch("sh") }
+                withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
+                    runShell("""
+                        export PATH=/Users/jenkins/brew/bin:\$PATH
+                        eval \$(opam env --switch=stanc-4.14.1 --set-switch)
+                        dune subst
+                        opam update || true
+                        bash -x scripts/install_build_deps.sh
+                        dune build @install --root=.
+                    """)
                 }
-
-                stage("Build stanc.js") {
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/debian/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/stancjs"){
-                            script { checkoutRepository("sh") }
-                            sh """
-                                pwd
-                                ls -al
-                                ls -al ../
-                                ls -al ../../
-                            """
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                                dune build --root=. --profile release src/stancjs
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
-                            sh "mv `find _build -name index.html` bin/load_stanc.html"
-                            stash name:'js-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/stancjs/*")}}
-                }
-
-                stage("Build & test a static Linux binary") {
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux"){
-                            script { checkoutRepository("sh") }
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                                dune build @install --profile static --root=.
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                            stash name:'linux-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
-                }
-
-                stage("Build & test a static Linux mips64el binary") {
-                    when {
-                        beforeAgent true
-                        expression { buildNonX86Binaries }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-mips64el"){
-                            script { checkoutRepository("sh") }
-
-                            sh """
-                                eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh mips64el ${MULTIARCH_DOCKER_TAG}
-                            """
-
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
-
-                            stash name:'linux-mips64el-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-mips64el/*")}}
-                }
-
-                stage("Build & test a static Linux ppc64el binary") {
-                    when {
-                        beforeAgent true
-                        expression { buildNonX86Binaries }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-ppc64el"){
-                            script { checkoutRepository("sh") }
-                            sh """
-                                eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh ppc64el ${MULTIARCH_DOCKER_TAG}
-                            """
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
-                            stash name:'linux-ppc64el-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-ppc64el/*")}}
-                }
-
-                stage("Build & test a static Linux s390x binary") {
-                    when {
-                        beforeAgent true
-                        expression { buildNonX86Binaries }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-s390x"){
-                            script { checkoutRepository("sh") }
-                            sh """
-                                eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh s390x ${MULTIARCH_DOCKER_TAG}
-                            """
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
-                            stash name:'linux-s390x-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-s390x/*")}}
-                }
-
-                stage("Build & test a static Linux arm64 binary") {
-                    when {
-                        beforeAgent true
-                        expression { buildNonX86Binaries }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-arm64"){
-                            script { checkoutRepository("sh") }
-                            sh """
-                                eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh arm64 ${MULTIARCH_DOCKER_TAG}
-                            """
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
-                            stash name:'linux-arm64-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-arm64/*")}}
-                }
-
-                stage("Build & test a static Linux armhf binary") {
-                    when {
-                        beforeAgent true
-                        expression { buildNonX86Binaries }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-armhf"){
-                            script { checkoutRepository("sh") }
-                            sh """
-                                eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh armhf ${MULTIARCH_DOCKER_TAG}
-                            """
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
-                            stash name:'linux-armhf-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armhf/*")}}
-                }
-
-                stage("Build & test a static Linux armel binary") {
-                    when {
-                        beforeAgent true
-                        expression { buildNonX86Binaries }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-armel"){
-                            script { checkoutRepository("sh") }
-                            sh """
-                                eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh armel ${MULTIARCH_DOCKER_TAG}
-                            """
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
-                            stash name:'linux-armel-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armel/*")}}
-                }
-
-                // Cross compiling for windows on debian
-                stage("Build & test static Windows binary") {
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/debian-windows/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/windows"){
-                            script { checkoutRepository("sh") }
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                                dune build -x windows --root=.
-                            """)
-                            sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
-                            stash name:'windows-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
-                }
-
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
+                stash name:'mac-exe', includes:'bin/*'
             }
+            post { always { runShell("rm -rf ${env.WORKSPACE}/osx/*") }}
+        }
+
+        stage("Build stanc.js") {
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/debian/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                script { checkoutBranch("sh") }
+                sh """
+                    pwd
+                    ls -al
+                    ls -al ../
+                    ls -al ../../
+                """
+                runShell("""
+                    eval \$(opam env)
+                    dune subst
+                    dune build --root=. --profile release src/stancjs
+                """)
+                sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
+                sh "mv `find _build -name index.html` bin/load_stanc.html"
+                stash name:'js-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ${env.WORKSPACE}/stancjs/*")}}
+        }
+
+        stage("Build & test a static Linux binary") {
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/static/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                script { checkoutBranch("sh") }
+                runShell("""
+                    eval \$(opam env)
+                    dune subst
+                    dune build @install --profile static --root=.
+                """)
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                stash name:'linux-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
+        }
+
+        stage("Build & test a static Linux mips64el binary") {
+            when {
+                beforeAgent true
+                expression { buildNonX86Binaries }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/static/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                script { checkoutBranch("sh") }
+
+                sh """
+                    eval \$(opam env)
+                    bash -x scripts/build_multiarch_stanc3.sh mips64el ${MULTIARCH_DOCKER_TAG}
+                """
+
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
+
+                stash name:'linux-mips64el-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ${env.WORKSPACE}/linux-mips64el/*")}}
+        }
+
+        stage("Build & test a static Linux ppc64el binary") {
+            when {
+                beforeAgent true
+                expression { buildNonX86Binaries }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/static/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                script { checkoutBranch("sh") }
+                sh """
+                    eval \$(opam env)
+                    bash -x scripts/build_multiarch_stanc3.sh ppc64el ${MULTIARCH_DOCKER_TAG}
+                """
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
+                stash name:'linux-ppc64el-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ${env.WORKSPACE}/linux-ppc64el/*")}}
+        }
+
+        stage("Build & test a static Linux s390x binary") {
+            when {
+                beforeAgent true
+                expression { buildNonX86Binaries }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/static/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                script { checkoutBranch("sh") }
+                sh """
+                    eval \$(opam env)
+                    bash -x scripts/build_multiarch_stanc3.sh s390x ${MULTIARCH_DOCKER_TAG}
+                """
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
+                stash name:'linux-s390x-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ${env.WORKSPACE}/linux-s390x/*")}}
+        }
+
+        stage("Build & test a static Linux arm64 binary") {
+            when {
+                beforeAgent true
+                expression { buildNonX86Binaries }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/static/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                script { checkoutBranch("sh") }
+                sh """
+                    eval \$(opam env)
+                    bash -x scripts/build_multiarch_stanc3.sh arm64 ${MULTIARCH_DOCKER_TAG}
+                """
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
+                stash name:'linux-arm64-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ${env.WORKSPACE}/linux-arm64/*")}}
+        }
+
+        stage("Build & test a static Linux armhf binary") {
+            when {
+                beforeAgent true
+                expression { buildNonX86Binaries }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/static/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                script { checkoutBranch("sh") }
+                sh """
+                    eval \$(opam env)
+                    bash -x scripts/build_multiarch_stanc3.sh armhf ${MULTIARCH_DOCKER_TAG}
+                """
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
+                stash name:'linux-armhf-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armhf/*")}}
+        }
+
+        stage("Build & test a static Linux armel binary") {
+            when {
+                beforeAgent true
+                expression { buildNonX86Binaries }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/static/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                script { checkoutBranch("sh") }
+                sh """
+                    eval \$(opam env)
+                    bash -x scripts/build_multiarch_stanc3.sh armel ${MULTIARCH_DOCKER_TAG}
+                """
+                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
+                stash name:'linux-armel-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armel/*")}}
+        }
+
+        stage("Build & test static Windows binary") {
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/debian-windows/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                script { checkoutBranch("sh") }
+                runShell("""
+                    eval \$(opam env)
+                    dune subst
+                    dune build -x windows --root=.
+                """)
+                sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
+                stash name:'windows-exe', includes:'bin/*'
+            }
+            post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
         }
 
         stage('Check binary version'){
