@@ -133,10 +133,15 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/stancjs"){
                             script { checkoutRepository("sh") }
+                            sh """
+                                pwd
+                                ls -al
+                                ls -al ../
+                                ls -al ../../
+                            """
                             runShell("""
                                 eval \$(opam env)
                                 dune subst
-                                ls -lhart
                                 dune build --root=. --profile release src/stancjs
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
