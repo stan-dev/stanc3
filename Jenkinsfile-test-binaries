@@ -23,7 +23,7 @@ def checkoutBranch() {
     retry(3) {
         checkout([
             $class: 'GitSCM',
-            branches: params.git_branch,
+            branches: [params.git_branch],
             extensions: [[$class: 'CloneOption', noTags: false]],
             userRemoteConfigs: scm.userRemoteConfigs,
         ])
