@@ -52,7 +52,7 @@ pipeline {
     environment {
         GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681')
     }
-    options { parallelsAlwaysFailFast() }
+    // options { parallelsAlwaysFailFast() }
     stages {
 
         stage("Dune tests") {
@@ -136,6 +136,7 @@ pipeline {
                             runShell("""
                                 eval \$(opam env)
                                 dune subst
+                                ls -lhart
                                 dune build --root=. --profile release src/stancjs
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
