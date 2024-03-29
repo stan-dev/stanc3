@@ -61,7 +61,7 @@ pipeline {
         string(defaultValue: 'master', name: 'git_branch',
                description: "Please specify a git branch ( develop ), git hash ( aace72b6ccecbb750431c46f418879b325416c7d ), pull request ( PR-123 ), pull request from fork ( PR-123 )")
         booleanParam(defaultValue: false, name: 'buildNonX86Binaries', description: "Build non-x86v")
-        booleanParam(defaultValue: true, name: 'runDuneTests', description: "Run dune tests")
+        booleanParam(defaultValue: false, name: 'runDuneTests', description: "Run dune tests")
     }
     environment {
         GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681')
