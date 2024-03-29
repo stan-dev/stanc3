@@ -73,7 +73,7 @@ pipeline {
         stage("Dune tests") {
             when {
                 beforeAgent true
-                expression { runDuneTests }
+                expression { return runDuneTests }
             }
             agent {
                 dockerfile {
@@ -199,7 +199,7 @@ pipeline {
                 stage("Build & test a static Linux mips64el binary") {
                     when {
                         beforeAgent true
-                        expression { buildNonX86Binaries }
+                        expression { return buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -230,7 +230,7 @@ pipeline {
                 stage("Build & test a static Linux ppc64el binary") {
                     when {
                         beforeAgent true
-                        expression { buildNonX86Binaries }
+                        expression { return buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -258,7 +258,7 @@ pipeline {
                 stage("Build & test a static Linux s390x binary") {
                     when {
                         beforeAgent true
-                        expression { buildNonX86Binaries }
+                        expression { return buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -286,7 +286,7 @@ pipeline {
                 stage("Build & test a static Linux arm64 binary") {
                     when {
                         beforeAgent true
-                        expression { buildNonX86Binaries }
+                        expression { return buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -314,7 +314,7 @@ pipeline {
                 stage("Build & test a static Linux armhf binary") {
                     when {
                         beforeAgent true
-                        expression { buildNonX86Binaries }
+                        expression { return buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
@@ -342,7 +342,7 @@ pipeline {
                 stage("Build & test a static Linux armel binary") {
                     when {
                         beforeAgent true
-                        expression { buildNonX86Binaries }
+                        expression { return buildNonX86Binaries }
                     }
                     agent {
                         dockerfile {
