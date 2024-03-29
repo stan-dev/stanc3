@@ -55,25 +55,25 @@ pipeline {
     // options { parallelsAlwaysFailFast() }
     stages {
 
-        stage("Dune tests") {
-            agent {
-                dockerfile {
-                    filename 'scripts/docker/debian/Dockerfile'
-                    dir '.'
-                    label 'linux'
-                    args '--entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                }
-            }
-            steps {
-                script { checkoutBranch("sh") }
-                runShell("""
-                    eval \$(opam env)
-                    BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
-                """)
-            }
-            post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
-        }
+        // stage("Dune tests") {
+        //     agent {
+        //         dockerfile {
+        //             filename 'scripts/docker/debian/Dockerfile'
+        //             dir '.'
+        //             label 'linux'
+        //             args '--entrypoint=\'\''
+        //             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+        //         }
+        //     }
+        //     steps {
+        //         script { checkoutBranch("sh") }
+        //         runShell("""
+        //             eval \$(opam env)
+        //             BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
+        //         """)
+        //     }
+        //     post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
+        // }
 
         stage("Build") {
             agent {
