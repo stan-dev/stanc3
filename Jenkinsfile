@@ -1023,7 +1023,8 @@ pipeline {
                         unstash 'js-exe'
 
                         runShell("""
-                            gh release create ${tagName()} --latest --target master --generate-notes ./bin/*
+                            gh release delete ${tagName()} --cleanup-tag -y || true
+                            gh release create ${tagName()} --latest --target master --notes "$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
                         """)
                     }
                 }
