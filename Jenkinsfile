@@ -1024,7 +1024,7 @@ pipeline {
 
                         runShell("""
                             gh release delete ${tagName()} --cleanup-tag -y || true
-                            gh release create ${tagName()} --latest --target master --notes "$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
+                            gh release create ${tagName()} --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
                         """)
                     }
                 }
