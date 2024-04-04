@@ -1023,9 +1023,7 @@ pipeline {
                         unstash 'js-exe'
 
                         runShell("""
-                            wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
-                            tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz && rm bin/ghr_v0.12.1_linux_amd64.tar.gz || true
-                            ./ghr_v0.12.1_linux_amd64/ghr -r stanc3 -u stan-dev -recreate ${tagName()} bin/
+                            gh release create ${tagName()} --latest --target master --generate-notes ./bin/*
                         """)
                     }
                 }
