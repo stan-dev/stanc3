@@ -1415,14 +1415,13 @@ let compute_loop_statement_returntype = function
    with check_statement
 *)
 let rec check_if_then_else loc cf tenv pred_e s_true s_false_opt =
+  let te =
+    check_expression_of_int_type cf tenv pred_e "Condition in conditional" in
   (* we don't need these nested type environments *)
   let _, ts_true = check_statement cf tenv s_true in
   let ts_false_opt =
     s_false_opt |> Option.map ~f:(check_statement cf tenv) |> Option.map ~f:snd
   in
-  let te =
-    check_expression_of_int_or_real_type cf tenv pred_e
-      "Condition in conditional" in
   let stmt = IfThenElse (te, ts_true, ts_false_opt) in
   let srt1 = ts_true.smeta.return_type in
   let srt2 =
@@ -1438,11 +1437,10 @@ and check_while loc cf tenv cond_e loop_body =
     match e.expr with
     | Ast.IntNumeral s -> String.exists s ~f:(fun c -> c > '0' && c <= '9')
     | _ -> false in
+  let te =
+    check_expression_of_int_type cf tenv cond_e "Condition in while-loop" in
   let _, ts =
     check_statement {cf with loop_depth= cf.loop_depth + 1} tenv loop_body in
-  let te =
-    check_expression_of_int_or_real_type cf tenv cond_e
-      "Condition in while-loop" in
   let return_type =
     match ts.smeta.return_type with
     | Complete -> Complete

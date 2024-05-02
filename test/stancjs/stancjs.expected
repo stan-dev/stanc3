@@ -47,32 +47,44 @@ Semantic error in 'string', line 6, column 4 to column 5:
 Identifier 'z' not in scope.
 
 $ node canonical.js
+functions {
+  int foo(int x) {
+    return x;
+  }
+}
 parameters {
   real y;
 }
 model {
-  if (y != 0.0) {
-    print("y is nonzero ");
-  }
-  
   y ~ normal(0, 1);
 }
 
+functions {
+  int foo(int x) {
+    return x;
+  }
+}
 parameters {
   real y;
 }
 model {
-  if (y != 0.0) 
-    print("y is nonzero ");
-  
   y ~ normal(((((((((0)))))))), 1);
 }
 
-Error in 'string', line 6, column 8: Condition of type real was disallowed in
-    Stan 2.34. Use an explicit != 0 comparison instead. This can be
-    automatically changed using the canonicalize flag for stanc
+functions {
+  int foo(int x);
+  
+  int foo(int x) {
+    return x;
+  }
+}
+parameters {
+  real y;
+}
+model {
+  y ~ normal(0, 1);
+}
 
-undefined
 $ node data-generation.js
 dim(x) = (3, 4)
 dim(y) = (5, 2, 4)

@@ -2,7 +2,7 @@ open Core
 open Ast
 open Middle
 
-let current_removal_version = (2, 34)
+let current_removal_version = (2, 35)
 
 let expired (major, minor) =
   let removal_major, removal_minor = current_removal_version in

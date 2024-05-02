@@ -2092,8 +2092,8 @@ model {
     target += theta < phi;
     target += theta > phi;
     target += theta >= phi;
-    target += theta && phi;
-    target += theta || phi;
+    target += theta != 0 && phi != 0;
+    target += theta != 0 || phi != 0 ;
     target += bernoulli_lpmf(y_arr| inv_logit(theta + x_matrix * x_vector));
     target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector + theta));
     target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector));
