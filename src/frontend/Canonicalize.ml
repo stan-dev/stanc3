@@ -46,6 +46,7 @@ let rec replace_deprecated_stmt ({stmt; smeta} : typed_statement) =
         map_statement replace_deprecated_expr replace_deprecated_stmt Fn.id
           Fn.id stmt in
   {stmt; smeta}
+[@@warning "-32"]
 
 let rec no_parens {expr; emeta} =
   match expr with
@@ -130,9 +131,9 @@ let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
 
 let canonicalize_program program settings : typed_program =
   let program =
-    if settings.deprecations then
-      remove_unneeded_forward_decls program
-      |> map_program replace_deprecated_stmt
+    if settings.deprecations then remove_unneeded_forward_decls program
+      (* NB: currently no other deprecated syntax/functions, so no need to walk tree *)
+      (* |> map_program replace_deprecated_stmt *)
     else program in
   let program =
     if settings.parentheses then program |> map_program parens_stmt else program

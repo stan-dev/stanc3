@@ -1660,10 +1660,8 @@ let () =
   add_unqualified ("log_sum_exp", ReturnType UReal, [URowVector], SoA);
   add_unqualified ("log_sum_exp", ReturnType UReal, [UMatrix], SoA);
   add_binary_vec "log_sum_exp" AoS;
-  let logical_binops = ["logical_or"; "logical_and"] in
-  List.iter
-    ~f:(fun o -> add_unqualified (o, ReturnType UInt, [UInt; UInt], SoA))
-    logical_binops;
+  add_unqualified ("logical_and", ReturnType UInt, [UInt; UInt], SoA);
+  add_unqualified ("logical_or", ReturnType UInt, [UInt; UInt], SoA);
   add_unqualified ("logical_negation", ReturnType UInt, [UInt], SoA);
   let comparison_binops =
     [ "logical_eq"; "logical_neq"; "logical_lt"; "logical_lte"; "logical_gt"
