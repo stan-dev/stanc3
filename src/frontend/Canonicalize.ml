@@ -23,31 +23,6 @@ let none =
   ; braces= false
   ; strip_comments= false }
 
-let rec replace_deprecated_expr {expr; emeta} =
-  let expr =
-    match expr with
-    | FunApp (StanLib suffix, {name; id_loc}, e) ->
-        FunApp
-          ( StanLib suffix
-          , {name= rename_deprecated deprecated_functions name; id_loc}
-          , List.map ~f:replace_deprecated_expr e )
-    | FunApp (UserDefined suffix, {name; id_loc}, e) ->
-        FunApp
-          ( UserDefined suffix
-          , {name; id_loc}
-          , List.map ~f:replace_deprecated_expr e )
-    | _ -> map_expression replace_deprecated_expr Fn.id expr in
-  {expr; emeta}
-
-let rec replace_deprecated_stmt ({stmt; smeta} : typed_statement) =
-  let stmt =
-    match stmt with
-    | _ ->
-        map_statement replace_deprecated_expr replace_deprecated_stmt Fn.id
-          Fn.id stmt in
-  {stmt; smeta}
-[@@warning "-32"]
-
 let rec no_parens {expr; emeta} =
   match expr with
   | Paren e -> no_parens e
@@ -132,8 +107,6 @@ let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
 let canonicalize_program program settings : typed_program =
   let program =
     if settings.deprecations then remove_unneeded_forward_decls program
-      (* NB: currently no other deprecated syntax/functions, so no need to walk tree *)
-      (* |> map_program replace_deprecated_stmt *)
     else program in
   let program =
     if settings.parentheses then program |> map_program parens_stmt else program
