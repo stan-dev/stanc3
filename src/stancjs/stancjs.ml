@@ -7,9 +7,7 @@ open Js_of_ocaml
 
 let version = "%%NAME%% %%VERSION%%"
 
-type stanc_error =
-  | RemovedDeprecations of (Location_span.t * string) list
-  | ProgramError of Errors.t
+type stanc_error = ProgramError of Errors.t
 
 let stan2cpp model_name model_string is_flag_set flag_val :
     (string, stanc_error) result
@@ -61,15 +59,10 @@ let stan2cpp model_name model_string is_flag_set flag_val :
           flag_val "max-line-length"
           |> Option.map ~f:int_of_string
           |> Option.value ~default:78 in
-        let deprecation_warnings, deprecation_errors =
-          if canonicalizer_settings.deprecations then ([], [])
-          else
-            ( Deprecation_analysis.collect_warnings typed_ast
-            , Deprecation_removals.collect_removals typed_ast ) in
+        let deprecation_warnings =
+          if canonicalizer_settings.deprecations then []
+          else Deprecation_analysis.collect_warnings typed_ast in
         let warnings = warnings @ deprecation_warnings in
-        if not (List.is_empty deprecation_errors) then
-          r.return
-            (Result.Error (RemovedDeprecations deprecation_errors), warnings, []);
         if is_flag_set "auto-format" || is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
@@ -195,11 +188,6 @@ let wrap_result ?printed_filename ~code ~warnings res =
         Fmt.str "%a"
           (Errors.pp ?printed_filename ?code:(Some (Js.to_string code)))
           e in
-      wrap_error ~warnings e
-  | Error (RemovedDeprecations ls) ->
-      let e =
-        Fmt.str "%a" (Deprecation_removals.pp_removals ?printed_filename) ls
-      in
       wrap_error ~warnings e
 
 let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =

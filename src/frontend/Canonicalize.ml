@@ -23,64 +23,6 @@ let none =
   ; braces= false
   ; strip_comments= false }
 
-let rec replace_deprecated_expr {expr; emeta} =
-  let expr =
-    match expr with
-    | FunApp (StanLib suffix, {name; id_loc}, e) ->
-        FunApp
-          ( StanLib suffix
-          , {name= rename_deprecated deprecated_functions name; id_loc}
-          , List.map ~f:replace_deprecated_expr e )
-    | FunApp (UserDefined suffix, {name; id_loc}, e) ->
-        FunApp
-          ( UserDefined suffix
-          , {name; id_loc}
-          , List.map ~f:replace_deprecated_expr e )
-    | PrefixOp (PNot, e) -> PrefixOp (PNot, replace_boolean_real ~parens:true e)
-    | BinOp (e1, ((And | Or) as op), e2) ->
-        BinOp
-          ( replace_boolean_real ~parens:true e1
-          , op
-          , replace_boolean_real ~parens:true e2 )
-    | _ -> map_expression replace_deprecated_expr Fn.id expr in
-  {expr; emeta}
-
-and replace_boolean_real ?(parens = false) e =
-  match e with
-  | {emeta= {type_= UReal; _}; _} when parens ->
-      { emeta= {e.emeta with type_= UInt}
-      ; expr= Paren (replace_boolean_real ~parens:false e) }
-  | {emeta= {type_= UReal; _}; _} ->
-      { emeta= {e.emeta with type_= UInt}
-      ; expr=
-          BinOp
-            ( replace_deprecated_expr e
-            , NEquals
-            , { expr= RealNumeral "0.0"
-              ; emeta=
-                  { type_= UInt
-                  ; loc= Middle.Location_span.empty
-                  ; ad_level= DataOnly } } ) }
-  | _ -> replace_deprecated_expr e
-
-let rec replace_deprecated_stmt ({stmt; smeta} : typed_statement) =
-  let stmt =
-    match stmt with
-    | FunDef {returntype; funname; arguments; body} ->
-        FunDef
-          {returntype; funname; arguments; body= replace_deprecated_stmt body}
-    | IfThenElse (({emeta= {type_= UReal; _}; _} as cond), ifb, elseb) ->
-        IfThenElse
-          ( replace_boolean_real cond
-          , replace_deprecated_stmt ifb
-          , Option.map ~f:replace_deprecated_stmt elseb )
-    | While (({emeta= {type_= UReal; _}; _} as cond), body) ->
-        While (replace_boolean_real cond, replace_deprecated_stmt body)
-    | _ ->
-        map_statement replace_deprecated_expr replace_deprecated_stmt Fn.id
-          Fn.id stmt in
-  {stmt; smeta}
-
 let rec no_parens {expr; emeta} =
   match expr with
   | Paren e -> no_parens e
@@ -164,9 +106,7 @@ let rec blocks_stmt ({stmt; smeta} : typed_statement) : typed_statement =
 
 let canonicalize_program program settings : typed_program =
   let program =
-    if settings.deprecations then
-      remove_unneeded_forward_decls program
-      |> map_program replace_deprecated_stmt
+    if settings.deprecations then remove_unneeded_forward_decls program
     else program in
   let program =
     if settings.parentheses then program |> map_program parens_stmt else program

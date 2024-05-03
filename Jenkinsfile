@@ -169,7 +169,7 @@ pipeline {
                 """)
 
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+                stash name:'ubuntu-exe', includes:'bin/stanc'
             }
             post { always { runShell("rm -rf ./*") }}
         }

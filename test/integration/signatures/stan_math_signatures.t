@@ -10492,9 +10492,6 @@ Display all Stan math signatures exposed in the language
   log_sum_exp(array[,,,,,,,] real, real) => array[,,,,,,,] real
   log_sum_exp(array[,,,,,,,] real, array[,,,,,,,] real) => array[,,,,,,,] real
   logical_and(int, int) => int
-  logical_and(int, real) => int
-  logical_and(real, int) => int
-  logical_and(real, real) => int
   logical_eq(int, int) => int
   logical_eq(int, real) => int
   logical_eq(real, int) => int
@@ -10518,7 +10515,6 @@ Display all Stan math signatures exposed in the language
   logical_lte(real, int) => int
   logical_lte(real, real) => int
   logical_negation(int) => int
-  logical_negation(real) => int
   logical_neq(int, int) => int
   logical_neq(int, real) => int
   logical_neq(real, int) => int
@@ -10526,9 +10522,6 @@ Display all Stan math signatures exposed in the language
   logical_neq(complex, real) => int
   logical_neq(complex, complex) => int
   logical_or(int, int) => int
-  logical_or(int, real) => int
-  logical_or(real, int) => int
-  logical_or(real, real) => int
   logistic_cdf(real, real, real) => real
   logistic_cdf(real, real, vector) => real
   logistic_cdf(real, real, row_vector) => real
