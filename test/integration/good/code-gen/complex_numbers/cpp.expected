@@ -391,16 +391,16 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
         "assigning variable tp_c_matrix");
       current_statement__ = 40;
-      stan::model::assign(tp_c_matrix, stan::math::divide(cmat, cmat),
+      stan::model::assign(tp_c_matrix, stan::math::mdivide_right(cmat, cmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 41;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(cmat,
+        stan::math::mdivide_right(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
         "assigning variable tp_c_matrix");
       current_statement__ = 42;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
           cmat), "assigning variable tp_c_matrix");
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> tp_c_vector =
@@ -614,16 +614,17 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       stan::model::assign(tp_c_rowvector, stan::math::minus(rowvec),
         "assigning variable tp_c_rowvector");
       current_statement__ = 89;
-      stan::model::assign(tp_c_rowvector, stan::math::divide(crowvec, cmat),
+      stan::model::assign(tp_c_rowvector,
+        stan::math::mdivide_right(crowvec, cmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 90;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(crowvec,
+        stan::math::mdivide_right(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
         "assigning variable tp_c_rowvector");
       current_statement__ = 91;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
           cmat), "assigning variable tp_c_rowvector");
       std::complex<local_scalar_t__> tp_c =
@@ -931,16 +932,16 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
         "assigning variable tp_c_matrix");
       current_statement__ = 40;
-      stan::model::assign(tp_c_matrix, stan::math::divide(cmat, cmat),
+      stan::model::assign(tp_c_matrix, stan::math::mdivide_right(cmat, cmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 41;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(cmat,
+        stan::math::mdivide_right(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
         "assigning variable tp_c_matrix");
       current_statement__ = 42;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
           cmat), "assigning variable tp_c_matrix");
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> tp_c_vector =
@@ -1154,16 +1155,17 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       stan::model::assign(tp_c_rowvector, stan::math::minus(rowvec),
         "assigning variable tp_c_rowvector");
       current_statement__ = 89;
-      stan::model::assign(tp_c_rowvector, stan::math::divide(crowvec, cmat),
+      stan::model::assign(tp_c_rowvector,
+        stan::math::mdivide_right(crowvec, cmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 90;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(crowvec,
+        stan::math::mdivide_right(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
         "assigning variable tp_c_rowvector");
       current_statement__ = 91;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
           cmat), "assigning variable tp_c_rowvector");
       std::complex<local_scalar_t__> tp_c =
@@ -1519,16 +1521,16 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec)),
         "assigning variable tp_c_matrix");
       current_statement__ = 40;
-      stan::model::assign(tp_c_matrix, stan::math::divide(cmat, cmat),
+      stan::model::assign(tp_c_matrix, stan::math::mdivide_right(cmat, cmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 41;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(cmat,
+        stan::math::mdivide_right(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
         "assigning variable tp_c_matrix");
       current_statement__ = 42;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat),
           cmat), "assigning variable tp_c_matrix");
       current_statement__ = 10;
@@ -1736,16 +1738,17 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       stan::model::assign(tp_c_rowvector, stan::math::minus(rowvec),
         "assigning variable tp_c_rowvector");
       current_statement__ = 89;
-      stan::model::assign(tp_c_rowvector, stan::math::divide(crowvec, cmat),
+      stan::model::assign(tp_c_rowvector,
+        stan::math::mdivide_right(crowvec, cmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 90;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(crowvec,
+        stan::math::mdivide_right(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(mat)),
         "assigning variable tp_c_rowvector");
       current_statement__ = 91;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(rowvec),
           cmat), "assigning variable tp_c_rowvector");
       current_statement__ = 92;
@@ -2998,16 +3001,16 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
           stan::math::promote_scalar<std::complex<double>>(rowvec)),
         "assigning variable gq_c_matrix");
       current_statement__ = 32;
-      stan::model::assign(gq_c_matrix, stan::math::divide(cmat, cmat),
+      stan::model::assign(gq_c_matrix, stan::math::mdivide_right(cmat, cmat),
         "assigning variable gq_c_matrix");
       current_statement__ = 33;
       stan::model::assign(gq_c_matrix,
-        stan::math::divide(cmat,
+        stan::math::mdivide_right(cmat,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable gq_c_matrix");
       current_statement__ = 34;
       stan::model::assign(gq_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<double>>(mat), cmat),
         "assigning variable gq_c_matrix");
       Eigen::Matrix<std::complex<double>,-1,1> gq_c_vector =
@@ -3219,16 +3222,17 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       stan::model::assign(gq_c_rowvector, stan::math::minus(rowvec),
         "assigning variable gq_c_rowvector");
       current_statement__ = 81;
-      stan::model::assign(gq_c_rowvector, stan::math::divide(crowvec, cmat),
+      stan::model::assign(gq_c_rowvector,
+        stan::math::mdivide_right(crowvec, cmat),
         "assigning variable gq_c_rowvector");
       current_statement__ = 82;
       stan::model::assign(gq_c_rowvector,
-        stan::math::divide(crowvec,
+        stan::math::mdivide_right(crowvec,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable gq_c_rowvector");
       current_statement__ = 83;
       stan::model::assign(gq_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cmat),
         "assigning variable gq_c_rowvector");
       std::complex<double> gq_c =
@@ -4198,29 +4202,31 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
         "assigning variable tp_c_matrix");
       current_statement__ = 38;
-      stan::model::assign(tp_c_matrix, stan::math::divide(cvmat, cmat),
+      stan::model::assign(tp_c_matrix,
+        stan::math::mdivide_right(cvmat, cmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 39;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(cvmat,
+        stan::math::mdivide_right(cvmat,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable tp_c_matrix");
       current_statement__ = 40;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat),
           cmat), "assigning variable tp_c_matrix");
       current_statement__ = 41;
-      stan::model::assign(tp_c_matrix, stan::math::divide(cmat, cvmat),
+      stan::model::assign(tp_c_matrix,
+        stan::math::mdivide_right(cmat, cvmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 42;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(cmat,
+        stan::math::mdivide_right(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
         "assigning variable tp_c_matrix");
       current_statement__ = 43;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
         "assigning variable tp_c_matrix");
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> tp_c_vector =
@@ -4423,29 +4429,31 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
         "assigning variable tp_c_rowvector");
       current_statement__ = 87;
-      stan::model::assign(tp_c_rowvector, stan::math::divide(cvrowvec, cmat),
+      stan::model::assign(tp_c_rowvector,
+        stan::math::mdivide_right(cvrowvec, cmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 88;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(cvrowvec,
+        stan::math::mdivide_right(cvrowvec,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable tp_c_rowvector");
       current_statement__ = 89;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec),
           cmat), "assigning variable tp_c_rowvector");
       current_statement__ = 90;
-      stan::model::assign(tp_c_rowvector, stan::math::divide(crowvec, cvmat),
+      stan::model::assign(tp_c_rowvector,
+        stan::math::mdivide_right(crowvec, cvmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 91;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(crowvec,
+        stan::math::mdivide_right(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
         "assigning variable tp_c_rowvector");
       current_statement__ = 92;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvmat),
         "assigning variable tp_c_rowvector");
       std::complex<local_scalar_t__> tp_c =
@@ -4823,29 +4831,31 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
         "assigning variable tp_c_matrix");
       current_statement__ = 38;
-      stan::model::assign(tp_c_matrix, stan::math::divide(cvmat, cmat),
+      stan::model::assign(tp_c_matrix,
+        stan::math::mdivide_right(cvmat, cmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 39;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(cvmat,
+        stan::math::mdivide_right(cvmat,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable tp_c_matrix");
       current_statement__ = 40;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat),
           cmat), "assigning variable tp_c_matrix");
       current_statement__ = 41;
-      stan::model::assign(tp_c_matrix, stan::math::divide(cmat, cvmat),
+      stan::model::assign(tp_c_matrix,
+        stan::math::mdivide_right(cmat, cvmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 42;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(cmat,
+        stan::math::mdivide_right(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
         "assigning variable tp_c_matrix");
       current_statement__ = 43;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
         "assigning variable tp_c_matrix");
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> tp_c_vector =
@@ -5048,29 +5058,31 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
         "assigning variable tp_c_rowvector");
       current_statement__ = 87;
-      stan::model::assign(tp_c_rowvector, stan::math::divide(cvrowvec, cmat),
+      stan::model::assign(tp_c_rowvector,
+        stan::math::mdivide_right(cvrowvec, cmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 88;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(cvrowvec,
+        stan::math::mdivide_right(cvrowvec,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable tp_c_rowvector");
       current_statement__ = 89;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec),
           cmat), "assigning variable tp_c_rowvector");
       current_statement__ = 90;
-      stan::model::assign(tp_c_rowvector, stan::math::divide(crowvec, cvmat),
+      stan::model::assign(tp_c_rowvector,
+        stan::math::mdivide_right(crowvec, cvmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 91;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(crowvec,
+        stan::math::mdivide_right(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
         "assigning variable tp_c_rowvector");
       current_statement__ = 92;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvmat),
         "assigning variable tp_c_rowvector");
       std::complex<local_scalar_t__> tp_c =
@@ -5496,29 +5508,31 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec)),
         "assigning variable tp_c_matrix");
       current_statement__ = 38;
-      stan::model::assign(tp_c_matrix, stan::math::divide(cvmat, cmat),
+      stan::model::assign(tp_c_matrix,
+        stan::math::mdivide_right(cvmat, cmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 39;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(cvmat,
+        stan::math::mdivide_right(cvmat,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable tp_c_matrix");
       current_statement__ = 40;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat),
           cmat), "assigning variable tp_c_matrix");
       current_statement__ = 41;
-      stan::model::assign(tp_c_matrix, stan::math::divide(cmat, cvmat),
+      stan::model::assign(tp_c_matrix,
+        stan::math::mdivide_right(cmat, cvmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 42;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(cmat,
+        stan::math::mdivide_right(cmat,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
         "assigning variable tp_c_matrix");
       current_statement__ = 43;
       stan::model::assign(tp_c_matrix,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<double>>(mat), cvmat),
         "assigning variable tp_c_matrix");
       current_statement__ = 10;
@@ -5715,29 +5729,31 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvrowvec),
         "assigning variable tp_c_rowvector");
       current_statement__ = 87;
-      stan::model::assign(tp_c_rowvector, stan::math::divide(cvrowvec, cmat),
+      stan::model::assign(tp_c_rowvector,
+        stan::math::mdivide_right(cvrowvec, cmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 88;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(cvrowvec,
+        stan::math::mdivide_right(cvrowvec,
           stan::math::promote_scalar<std::complex<double>>(mat)),
         "assigning variable tp_c_rowvector");
       current_statement__ = 89;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vrowvec),
           cmat), "assigning variable tp_c_rowvector");
       current_statement__ = 90;
-      stan::model::assign(tp_c_rowvector, stan::math::divide(crowvec, cvmat),
+      stan::model::assign(tp_c_rowvector,
+        stan::math::mdivide_right(crowvec, cvmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 91;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(crowvec,
+        stan::math::mdivide_right(crowvec,
           stan::math::promote_scalar<std::complex<local_scalar_t__>>(vmat)),
         "assigning variable tp_c_rowvector");
       current_statement__ = 92;
       stan::model::assign(tp_c_rowvector,
-        stan::math::divide(
+        stan::math::mdivide_right(
           stan::math::promote_scalar<std::complex<double>>(rowvec), cvmat),
         "assigning variable tp_c_rowvector");
       current_statement__ = 93;
