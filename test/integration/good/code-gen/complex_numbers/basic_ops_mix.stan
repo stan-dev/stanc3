@@ -1,32 +1,29 @@
 data {
   int N;
-  complex_matrix[N,N] cmat;
+  complex_matrix[N, N] cmat;
   complex_vector[N] cvec;
   complex_row_vector[N] crowvec;
   complex z;
-
-  matrix[N,N] mat;
+  
+  matrix[N, N] mat;
   vector[N] vec;
   row_vector[N] rowvec;
   real r;
 }
-
 parameters {
-  complex_matrix[N,N] cvmat;
+  complex_matrix[N, N] cvmat;
   complex_vector[N] cvvec;
   complex_row_vector[N] cvrowvec;
   complex zv;
-
-  matrix[N,N] vmat;
+  
+  matrix[N, N] vmat;
   vector[N] vvec;
   row_vector[N] vrowvec;
   real v;
 }
-
-
 transformed parameters {
-  complex_matrix[N,N] tp_c_matrix;
-
+  complex_matrix[N, N] tp_c_matrix;
+  
   // matrix-matrix multiply and elt
   tp_c_matrix = cmat * cvmat;
   tp_c_matrix = cmat * vmat;
@@ -37,7 +34,7 @@ transformed parameters {
   tp_c_matrix = cmat ./ cvmat;
   tp_c_matrix = cmat ./ vmat;
   tp_c_matrix = mat ./ cvmat;
-
+  
   // matrix-scalar multiply
   tp_c_matrix = cmat * zv;
   tp_c_matrix = z * cvmat;
@@ -45,7 +42,7 @@ transformed parameters {
   tp_c_matrix = cmat * v;
   tp_c_matrix = mat * zv;
   tp_c_matrix = z * vmat;
-
+  
   // matrix-matrix addition and subtraction
   tp_c_matrix = cmat + cvmat;
   tp_c_matrix = cmat + vmat;
@@ -53,19 +50,27 @@ transformed parameters {
   tp_c_matrix = cmat - cvmat;
   tp_c_matrix = cmat - vmat;
   tp_c_matrix = mat - cvmat;
-
+  
   // vector-rowvector multiply
   tp_c_matrix = cvec * cvrowvec;
   tp_c_matrix = vec * cvrowvec;
   tp_c_matrix = cvec * vrowvec;
-
+  
+  // matrix-matrix division
+  tp_c_matrix = cvmat / cmat;
+  tp_c_matrix = cvmat / mat;
+  tp_c_matrix = vmat / cmat;
+  tp_c_matrix = cmat / cvmat;
+  tp_c_matrix = cmat / vmat;
+  tp_c_matrix = mat / cvmat;
+  
   complex_vector[N] tp_c_vector = cvrowvec';
   // matrix-vector products
   tp_c_vector = cmat * cvvec;
   tp_c_vector = cvmat * cvec;
   tp_c_vector = mat * cvvec;
   tp_c_vector = cmat * vvec;
-
+  
   // vector-scalar multiplication
   tp_c_vector = z * cvvec;
   tp_c_vector = cvec * zv;
@@ -73,7 +78,7 @@ transformed parameters {
   tp_c_vector = cvec * v;
   tp_c_vector = z * vvec;
   tp_c_vector = vec * zv;
-
+  
   // vector-vector elt mult and div
   tp_c_vector = cvec .* cvvec;
   tp_c_vector = vec .* cvvec;
@@ -81,7 +86,7 @@ transformed parameters {
   tp_c_vector = cvec ./ cvvec;
   tp_c_vector = vec ./ cvvec;
   tp_c_vector = cvec ./ vvec;
-
+  
   // vector-vector addition and subtraction
   tp_c_vector = cvec + cvvec;
   tp_c_vector = vec + cvvec;
@@ -89,13 +94,13 @@ transformed parameters {
   tp_c_vector = cvec - cvvec;
   tp_c_vector = vec - cvvec;
   tp_c_vector = cvec - vvec;
-
+  
   complex_row_vector[N] tp_c_rowvector = cvvec';
   // rowvector-matrix multiplication
   tp_c_rowvector = crowvec * cvmat;
   tp_c_rowvector = rowvec * cvmat;
   tp_c_rowvector = crowvec * vmat;
-
+  
   // rowvector-scalar multiplication
   tp_c_rowvector = z * cvrowvec;
   tp_c_rowvector = crowvec * zv;
@@ -103,7 +108,7 @@ transformed parameters {
   tp_c_rowvector = crowvec * v;
   tp_c_rowvector = z * vrowvec;
   tp_c_rowvector = rowvec * zv;
-
+  
   // rowvector-rowvector elt mult and div
   tp_c_rowvector = crowvec .* cvrowvec;
   tp_c_rowvector = crowvec .* vrowvec;
@@ -111,7 +116,7 @@ transformed parameters {
   tp_c_rowvector = crowvec ./ cvrowvec;
   tp_c_rowvector = crowvec ./ vrowvec;
   tp_c_rowvector = rowvec ./ cvrowvec;
-
+  
   // rowvector-rowvector addition and subtraction
   tp_c_rowvector = crowvec + cvrowvec;
   tp_c_rowvector = crowvec + vrowvec;
@@ -119,78 +124,84 @@ transformed parameters {
   tp_c_rowvector = crowvec - cvrowvec;
   tp_c_rowvector = crowvec - vrowvec;
   tp_c_rowvector = rowvec - cvrowvec;
-
+  
+  // rowvector-matrix division
+  tp_c_rowvector = cvrowvec / cmat;
+  tp_c_rowvector = cvrowvec / mat;
+  tp_c_rowvector = vrowvec / cmat;
+  tp_c_rowvector = crowvec / cvmat;
+  tp_c_rowvector = crowvec / vmat;
+  tp_c_rowvector = rowvec / cvmat;
+  
   complex tp_c;
   // rowvector-vector multiply
   tp_c = crowvec * cvvec;
   tp_c = cvrowvec * cvec;
   tp_c = crowvec * vvec;
   tp_c = rowvec * cvvec;
-
+  
   // broadcasting
   tp_c_matrix = z - cvmat;
   tp_c_matrix = r - cvmat;
   tp_c_matrix = cvmat - r;
   tp_c_matrix = cvmat - z;
-
+  
   tp_c_matrix = z + cvmat;
   tp_c_matrix = r + cvmat;
   tp_c_matrix = cvmat + r;
   tp_c_matrix = cvmat + z;
-
+  
   tp_c_matrix = zv - cmat;
   tp_c_matrix = v - cmat;
   tp_c_matrix = cmat - v;
   tp_c_matrix = cmat - zv;
-
+  
   tp_c_matrix = zv + cmat;
   tp_c_matrix = v + cmat;
   tp_c_matrix = cmat + v;
   tp_c_matrix = cmat + zv;
-
+  
   tp_c_matrix = z ./ cvmat;
   tp_c_matrix = r ./ cvmat;
   tp_c_matrix = cvmat ./ r;
   tp_c_matrix = cvmat ./ z;
-
+  
   tp_c_matrix = zv ./ cmat;
   tp_c_matrix = v ./ cmat;
   tp_c_matrix = cmat ./ v;
   tp_c_matrix = cmat ./ zv;
-
-
+  
   tp_c_matrix = z .* cvmat;
   tp_c_matrix = r .* cvmat;
   tp_c_matrix = cvmat .* r;
   tp_c_matrix = cvmat .* z;
-
+  
   tp_c_matrix = zv .* cmat;
   tp_c_matrix = v .* cmat;
   tp_c_matrix = cmat .* v;
   tp_c_matrix = cmat .* zv;
-
-    tp_c_matrix = z / cvmat;
+  
+  tp_c_matrix = z / cvmat;
   tp_c_matrix = r / cvmat;
   tp_c_matrix = cvmat / r;
   tp_c_matrix = cvmat / z;
-
+  
   tp_c_matrix = zv / cmat;
   tp_c_matrix = v / cmat;
   tp_c_matrix = cmat / v;
   tp_c_matrix = cmat / zv;
-
+  
   tp_c_matrix = z * cvmat;
   tp_c_matrix = r * cvmat;
   tp_c_matrix = cvmat * r;
   tp_c_matrix = cvmat * z;
-
+  
   tp_c_matrix = zv * cmat;
   tp_c_matrix = v * cmat;
   tp_c_matrix = cmat * v;
   tp_c_matrix = cmat * zv;
-
+  
   // transformations
-  array[N,N] complex carray;
+  array[N, N] complex carray;
   carray = to_array_2d(cvmat);
-
 }
