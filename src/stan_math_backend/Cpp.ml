@@ -261,10 +261,6 @@ module Stmts = struct
     For (init, stop, incr, body)
 
   let if_block cond stmts = IfElse (cond, block stmts, None)
-
-  (** Suppress warnings for a variable which may not be used. *)
-  let unused s =
-    [Comment "suppress unused var warning"; Expression (Cast (Void, Var s))]
 end
 
 module Decls = struct
@@ -274,13 +270,11 @@ module Decls = struct
     VariableDefn
       (make_variable_defn ~type_:Int ~name:"current_statement__"
          ~init:(Assignment (Literal "0")) ())
-    :: Stmts.unused "current_statement__"
 
   let dummy_var =
     VariableDefn
       (make_variable_defn ~type_:Types.local_scalar ~name:"DUMMY_VAR__"
          ~init:(Construction [Exprs.quiet_NaN]) ())
-    :: Stmts.unused "DUMMY_VAR__"
 
   let serializer_in =
     VariableDefn
@@ -341,6 +335,7 @@ type directive =
   | Include of string
   | IfNDef of string * defn list
   | MacroApply of string * string list
+  | Pragma of string
 
 (** The Stan model class always has a non-default constructor and
       destructor *)
@@ -367,18 +362,23 @@ and defn =
   | Preprocessor of directive
 [@@deriving sexp]
 
-(* can't be derivided since it is simultaneously declared with non-records *)
-let make_class_defn ~name ~public_base ?(final = true) ~private_members
-    ~public_members ~constructor ?(destructor_body = []) () =
-  { class_name= name
-  ; public_base
-  ; final
-  ; private_members
-  ; public_members
-  ; constructor
-  ; destructor_body }
+module Defn = struct
+  (* can't be derived since it is simultaneously declared with non-records *)
+  let make_class ~name ~public_base ?(final = true) ~private_members
+      ~public_members ~constructor ?(destructor_body = []) () =
+    { class_name= name
+    ; public_base
+    ; final
+    ; private_members
+    ; public_members
+    ; constructor
+    ; destructor_body }
 
-let make_struct_defn ~param ~name ~body () = {param; struct_name= name; body}
+  let make_struct ~param ~name ~body () = {param; struct_name= name; body}
+
+  (** Some code relies on specific compiler pragmas *)
+  let if_not_MSVC defns = Preprocessor (IfNDef ("_MSC_VER", defns))
+end
 
 (** Much like in C++, we define a translation unit as a list of definitions *)
 type program = defn list [@@deriving sexp]
@@ -631,6 +631,7 @@ module Printing = struct
         pf ppf "@[<v>#ifndef %s@,%a@,#endif" name (list ~sep:cut pp_defn) defns
     | MacroApply (name, args) ->
         pf ppf "@[<h>%s(%a)@]" name (list ~sep:comma string) args
+    | Pragma s -> pf ppf "@[<h>#pragma %s@]" s
 
   and pp_class_defn ppf
       { class_name
