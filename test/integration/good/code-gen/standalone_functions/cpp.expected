@@ -4,6 +4,7 @@
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
@@ -399,6 +400,7 @@ array_fun(const std::vector<std::vector<std::vector<std::complex<double>>>>&
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
@@ -701,6 +703,7 @@ test_lpdf(const double& a, const double& b, std::ostream* pstream__ = nullptr) {
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif

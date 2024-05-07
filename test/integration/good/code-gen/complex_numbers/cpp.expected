@@ -4,6 +4,7 @@
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
@@ -2400,6 +2401,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
@@ -3555,6 +3557,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
@@ -6420,6 +6423,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
@@ -6959,6 +6963,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
@@ -9934,6 +9939,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
@@ -10495,6 +10501,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 // Disable warnings for unused variables in our generated code.
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif

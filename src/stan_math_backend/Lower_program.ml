@@ -36,6 +36,8 @@ let prevent_unused =
         "Disable warnings for unused variables in our generated code."
     ; Preprocessor (Pragma "GCC diagnostic push")
     ; Preprocessor
+        (Pragma {|GCC diagnostic ignored "-Wunknown-warning-option"|})
+    ; Preprocessor
         (Pragma {|GCC diagnostic ignored "-Wunused-but-set-variable"|})
     ; Preprocessor (Pragma {|GCC diagnostic ignored "-Wunused-variable"|}) ]
 
