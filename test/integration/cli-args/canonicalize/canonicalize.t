@@ -37,6 +37,7 @@ Test that a nonsense argument is caught
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
+    --allow-unicode                 (Experimental) Allow unicode characters in the names of functions and variables
     --include-paths                 Takes a comma-separated list of directories that may contain a file in an #include directive (default = "")
     --use-opencl                    If set, try to use matrix_cl signatures.
     --standalone-functions          If set, the generated C++ will be the standalone functions C++ code.
@@ -84,6 +85,7 @@ Test capitalization - this should fail due to the lack of model_name, not the ca
     --o                             Take the path to an output file for generated C++ code (default = "$name.hpp") or auto-formatting output (default: no file/print to stdout)
     --print-cpp                     If set, output the generated C++ Stan model class to stdout.
     --allow-undefined               Do not fail if a function is declared but not defined
+    --allow-unicode                 (Experimental) Allow unicode characters in the names of functions and variables
     --include-paths                 Takes a comma-separated list of directories that may contain a file in an #include directive (default = "")
     --use-opencl                    If set, try to use matrix_cl signatures.
     --standalone-functions          If set, the generated C++ will be the standalone functions C++ code.

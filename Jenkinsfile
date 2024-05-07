@@ -45,9 +45,9 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
         cd cmdstan; make clean-all;
     """
 
-    if (stancFlags?.trim()) {
-        sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= $stancFlags' >> make/local"
-    }
+    // if (stancFlags?.trim()) {
+        sh "cd performance-tests-cmdstan/cmdstan && echo 'STANCFLAGS= --allow-unicode $stancFlags' >> make/local"
+    // }
 
     sh """
         cd performance-tests-cmdstan/cmdstan
@@ -113,7 +113,7 @@ pipeline {
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
         GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
-        MULTIARCH_DOCKER_TAG = 'multiarch-ocaml-4.14-v2'
+        MULTIARCH_DOCKER_TAG = 'multiarch-unicode'
     }
     stages {
         stage('Verify changes') {
