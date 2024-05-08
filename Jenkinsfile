@@ -455,7 +455,7 @@ pipeline {
                                 unstash "Stanc3Setup"
                                 unstash 'ubuntu-exe'
                                 sh """
-                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan -b more-samples-kidney-model
                                 """
                                 utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                                 utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
@@ -505,7 +505,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
-                            label 'linux && mesa'
+                            label 'linux'
                         }
                     }
                     steps {
@@ -514,7 +514,7 @@ pipeline {
                                 unstash "Stanc3Setup"
                                 unstash 'ubuntu-exe'
                                 sh """
-                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan -b more-samples-kidney-model
                                 """
                                 utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                                 utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
