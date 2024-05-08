@@ -505,7 +505,7 @@ pipeline {
                     agent {
                         docker {
                             image 'stanorg/ci:gpu'
-                            label 'linux'
+                            label 'linux && mesa'
                         }
                     }
                     steps {
