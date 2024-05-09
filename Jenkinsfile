@@ -522,9 +522,6 @@ pipeline {
                                 sh """
                                     cd performance-tests-cmdstan
                                     git show HEAD --stat
-                                    echo "example-models/regression_tests/mother.stan" > all.tests
-                                    cat optimizer.tests >> all.tests
-                                    echo "" >> all.tests
                                     cat known_good_perf_all.tests >> all.tests
                                     echo "" >> all.tests
                                     cat shotgun_perf_all.tests >> all.tests
