@@ -3,7 +3,9 @@
 # exit when any command fails
 set -e
 
-opam pin -y js_of_ocaml 5.5.2
+# JSOO versions higher than this break QuickJS (labelled break statements)
+# Please check compatibility before any updates!
+opam pin -y js_of_ocaml 5.4.0
 
 echo "You should also install node in order to run the tests."
 echo "Tests are run with dune build @runjstest"
