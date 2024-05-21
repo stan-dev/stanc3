@@ -439,13 +439,14 @@ module StatementError = struct
            normal(0, 1).\""
     | InvalidSamplingCDForCCDF name ->
         Fmt.pf ppf
-          "CDF and CCDF functions may not be used with sampling notation. Use \
-           target += %s_log(...) instead."
+          "CDF and CCDF functions may not be used with distribution notation \
+           (~). Use target += %s_log(...) instead."
           name
     | InvalidSamplingNoSuchDistribution (name, true) ->
         Fmt.pf ppf
-          "Ill-typed arguments to '~' statement. No function '%s_lpmf' or \
-           '%s_lpdf' was found when looking for distribution '%s'."
+          "Ill-typed arguments to distribution statement (~). No function \
+           '%s_lpmf' or '%s_lpdf' was found when looking for distribution \
+           '%s'."
           name name name
     | InvalidSamplingNoSuchDistribution (name, false) ->
         Fmt.pf ppf
