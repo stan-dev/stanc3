@@ -1220,43 +1220,43 @@ let check_target_pe loc cf tenv e =
   verify_target_pe_expr_type loc te;
   mk_typed_statement ~stmt:(TargetPE te) ~return_type:Incomplete ~loc
 
-(* tilde/sampling notation*)
-let verify_sampling_pdf_pmf id =
+(* tilde/distribution notation*)
+let verify_distribution_pdf_pmf id =
   if
     String.(
       is_suffix id.name ~suffix:"_lpdf"
       || is_suffix id.name ~suffix:"_lpmf"
       || is_suffix id.name ~suffix:"_lupdf"
       || is_suffix id.name ~suffix:"_lupmf")
-  then Semantic_error.invalid_sampling_pdf_or_pmf id.id_loc |> error
+  then Semantic_error.invalid_tilde_pdf_or_pmf id.id_loc |> error
 
-let verify_sampling_cdf_ccdf loc id =
+let verify_distribution_cdf_ccdf loc id =
   if
     String.(
       is_suffix id.name ~suffix:"_cdf" || is_suffix id.name ~suffix:"_ccdf")
-  then Semantic_error.invalid_sampling_cdf_or_ccdf loc id.name |> error
+  then Semantic_error.invalid_tilde_cdf_or_ccdf loc id.name |> error
 
 (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
-let verify_valid_sampling_pos loc cf =
+let verify_valid_distribution_pos loc cf =
   if in_lp_function cf || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
-let check_sampling_distribution loc tenv id arguments =
+let check_tilde_distribution loc tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
-  let name_w_suffix_sampling_dist suffix =
+  let name_w_suffix_dist suffix =
     SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
-  let sampling_dists =
-    List.map ~f:name_w_suffix_sampling_dist Utils.distribution_suffices in
+  let distributions =
+    List.map ~f:name_w_suffix_dist Utils.distribution_suffices in
   match
-    List.min_elt sampling_dists ~compare:SignatureMismatch.compare_match_results
+    List.min_elt distributions ~compare:SignatureMismatch.compare_match_results
   with
   | Some (UniqueMatch (_, _, p)) ->
       Promotion.promote_list arguments p
       (* real return type is enforced by [verify_fundef_dist_rt] *)
   | None | Some (SignatureErrors ([], _)) ->
       (* Function is non existent *)
-      Semantic_error.invalid_sampling_no_such_dist loc name
+      Semantic_error.invalid_tilde_no_such_dist loc name
         (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
       |> error
   | Some (AmbiguousMatch sigs) ->
@@ -1281,7 +1281,7 @@ let is_cumulative_density_defined tenv id arguments =
     | _ -> false in
   valid_arg_types_for_suffix "_lcdf" && valid_arg_types_for_suffix "_lccdf"
 
-let verify_sampling_cdf_defined loc tenv id truncation args =
+let verify_distribution_cdf_defined loc tenv id truncation args =
   let check e =
     if not (is_cumulative_density_defined tenv id (e :: args)) then
       Semantic_error.invalid_truncation_cdf_or_ccdf loc
@@ -1308,13 +1308,13 @@ let check_tilde loc cf tenv distribution truncation arg args =
   let tes = List.map ~f:(check_expression cf tenv) args in
   let ttrunc = check_truncation cf tenv truncation in
   verify_identifier distribution;
-  verify_sampling_pdf_pmf distribution;
-  verify_valid_sampling_pos loc cf;
-  verify_sampling_cdf_ccdf loc distribution;
+  verify_distribution_pdf_pmf distribution;
+  verify_valid_distribution_pos loc cf;
+  verify_distribution_cdf_ccdf loc distribution;
   let promoted_args =
-    check_sampling_distribution loc tenv distribution (te :: tes) in
+    check_tilde_distribution loc tenv distribution (te :: tes) in
   let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
-  verify_sampling_cdf_defined loc tenv distribution ttrunc tes;
+  verify_distribution_cdf_defined loc tenv distribution ttrunc tes;
   let stmt = Tilde {arg= te; distribution; args= tes; truncation= ttrunc} in
   mk_typed_statement ~stmt ~loc ~return_type:Incomplete
 

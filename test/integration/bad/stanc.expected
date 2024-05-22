@@ -429,7 +429,7 @@ Semantic error in 'ccdf-sample.stan', line 5, column 2 to column 24:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with sampling notation. Use target += weibull_ccdf_log(...) instead.
+CDF and CCDF functions may not be used with distribution notation (~). Use target += weibull_ccdf_log(...) instead.
   $ ../../../../install/default/bin/stanc cdf-sample.stan
 Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
    -------------------------------------------------
@@ -440,7 +440,7 @@ Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with sampling notation. Use target += normal_cdf_log(...) instead.
+CDF and CCDF functions may not be used with distribution notation (~). Use target += normal_cdf_log(...) instead.
   $ ../../../../install/default/bin/stanc complex_mat_bad.stan
 Semantic error in 'complex_mat_bad.stan', line 7, column 2 to column 18:
    -------------------------------------------------
