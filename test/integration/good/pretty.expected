@@ -3124,7 +3124,7 @@ model {
   
   psi3 = foo2_lpdf(psi1 | psi2);
   
-  // use _log as sampling statements
+  // use _log as distribution statements
   theta[1] ~ foo1();
   theta[2] ~ foo2(theta[1]);
 }
