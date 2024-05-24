@@ -297,7 +297,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:gpu-cpp17'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
@@ -334,7 +334,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:gpu-cpp17'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
@@ -371,7 +371,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:gpu-cpp17'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
@@ -408,7 +408,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:gpu-cpp17'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
@@ -445,7 +445,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:gpu-cpp17'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
@@ -455,7 +455,7 @@ pipeline {
                                 unstash "Stanc3Setup"
                                 unstash 'ubuntu-exe'
                                 sh """
-                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan -b more-samples-kidney-model
+                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                                 """
                                 utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                                 utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
@@ -504,7 +504,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:gpu-cpp17'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
@@ -514,7 +514,7 @@ pipeline {
                                 unstash "Stanc3Setup"
                                 unstash 'ubuntu-exe'
                                 sh """
-                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan -b more-samples-kidney-model
+                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                                 """
                                 utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                                 utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
@@ -522,6 +522,9 @@ pipeline {
                                 sh """
                                     cd performance-tests-cmdstan
                                     git show HEAD --stat
+                                    echo "example-models/regression_tests/mother.stan" > all.tests
+                                    cat optimizer.tests >> all.tests
+                                    echo "" >> all.tests
                                     cat known_good_perf_all.tests >> all.tests
                                     echo "" >> all.tests
                                     cat shotgun_perf_all.tests >> all.tests
@@ -529,7 +532,7 @@ pipeline {
                                     echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
                                     echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                     cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=30 -j${env.PARALLEL}" "--O1" "\$(readlink -f ../bin/stanc)"
+                                    CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "--O1" "\$(readlink -f ../bin/stanc)"
                                 """
                             }
 
@@ -564,7 +567,7 @@ pipeline {
                     }
                     agent {
                         docker {
-                            image 'stanorg/ci:gpu-cpp17'
+                            image 'stanorg/ci:gpu'
                             label 'linux'
                         }
                     }
