@@ -2045,86 +2045,97 @@ namespace cpp_reserved_words_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 79> locations_array__ =
+static constexpr std::array<const char*, 90> locations_array__ =
   {" (found before start of program)",
-  " (in 'cpp-reserved-words.stan', line 35, column 2 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 36, column 2 to column 13)",
-  " (in 'cpp-reserved-words.stan', line 37, column 2 to column 14)",
-  " (in 'cpp-reserved-words.stan', line 38, column 2 to column 12)",
-  " (in 'cpp-reserved-words.stan', line 39, column 2 to column 14)",
-  " (in 'cpp-reserved-words.stan', line 40, column 2 to column 12)",
-  " (in 'cpp-reserved-words.stan', line 41, column 2 to column 15)",
-  " (in 'cpp-reserved-words.stan', line 42, column 2 to column 17)",
-  " (in 'cpp-reserved-words.stan', line 43, column 2 to column 11)",
-  " (in 'cpp-reserved-words.stan', line 44, column 2 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 45, column 2 to column 11)",
-  " (in 'cpp-reserved-words.stan', line 46, column 2 to column 14)",
-  " (in 'cpp-reserved-words.stan', line 47, column 2 to column 15)",
-  " (in 'cpp-reserved-words.stan', line 48, column 2 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 49, column 2 to column 10)",
-  " (in 'cpp-reserved-words.stan', line 71, column 2 to column 13)",
-  " (in 'cpp-reserved-words.stan', line 72, column 2 to column 11)",
-  " (in 'cpp-reserved-words.stan', line 73, column 2 to column 14)",
-  " (in 'cpp-reserved-words.stan', line 74, column 2 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 75, column 2 to column 13)",
-  " (in 'cpp-reserved-words.stan', line 76, column 2 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 77, column 2 to column 13)",
-  " (in 'cpp-reserved-words.stan', line 78, column 2 to column 15)",
-  " (in 'cpp-reserved-words.stan', line 79, column 2 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 80, column 2 to column 15)",
-  " (in 'cpp-reserved-words.stan', line 81, column 2 to column 11)",
-  " (in 'cpp-reserved-words.stan', line 82, column 2 to column 14)",
-  " (in 'cpp-reserved-words.stan', line 83, column 2 to column 12)",
-  " (in 'cpp-reserved-words.stan', line 84, column 2 to column 23)",
-  " (in 'cpp-reserved-words.stan', line 85, column 2 to column 23)",
-  " (in 'cpp-reserved-words.stan', line 86, column 2 to column 23)",
-  " (in 'cpp-reserved-words.stan', line 89, column 4 to column 23)",
-  " (in 'cpp-reserved-words.stan', line 90, column 4 to column 32)",
-  " (in 'cpp-reserved-words.stan', line 91, column 4 to column 24)",
-  " (in 'cpp-reserved-words.stan', line 92, column 4 to column 31)",
-  " (in 'cpp-reserved-words.stan', line 88, column 24 to line 93, column 3)",
-  " (in 'cpp-reserved-words.stan', line 88, column 2 to line 93, column 3)",
-  " (in 'cpp-reserved-words.stan', line 53, column 2 to column 13)",
-  " (in 'cpp-reserved-words.stan', line 54, column 2 to column 15)",
-  " (in 'cpp-reserved-words.stan', line 55, column 2 to column 17)",
-  " (in 'cpp-reserved-words.stan', line 56, column 2 to column 14)",
   " (in 'cpp-reserved-words.stan', line 57, column 2 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 58, column 2 to column 24)",
-  " (in 'cpp-reserved-words.stan', line 59, column 2 to column 13)",
-  " (in 'cpp-reserved-words.stan', line 60, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 58, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 59, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 60, column 2 to column 12)",
   " (in 'cpp-reserved-words.stan', line 61, column 2 to column 14)",
-  " (in 'cpp-reserved-words.stan', line 62, column 2 to column 21)",
-  " (in 'cpp-reserved-words.stan', line 63, column 2 to column 19)",
-  " (in 'cpp-reserved-words.stan', line 64, column 2 to column 14)",
-  " (in 'cpp-reserved-words.stan', line 65, column 2 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 66, column 2 to column 12)",
-  " (in 'cpp-reserved-words.stan', line 67, column 2 to column 20)",
-  " (in 'cpp-reserved-words.stan', line 20, column 2 to column 13)",
-  " (in 'cpp-reserved-words.stan', line 21, column 2 to column 13)",
-  " (in 'cpp-reserved-words.stan', line 22, column 2 to column 13)",
-  " (in 'cpp-reserved-words.stan', line 23, column 2 to column 17)",
-  " (in 'cpp-reserved-words.stan', line 24, column 2 to column 18)",
-  " (in 'cpp-reserved-words.stan', line 25, column 2 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 26, column 2 to column 15)",
-  " (in 'cpp-reserved-words.stan', line 27, column 2 to column 14)",
-  " (in 'cpp-reserved-words.stan', line 28, column 2 to column 10)",
-  " (in 'cpp-reserved-words.stan', line 29, column 2 to column 14)",
-  " (in 'cpp-reserved-words.stan', line 30, column 2 to column 20)",
-  " (in 'cpp-reserved-words.stan', line 31, column 2 to column 12)",
-  " (in 'cpp-reserved-words.stan', line 2, column 23 to column 25)",
-  " (in 'cpp-reserved-words.stan', line 3, column 24 to column 26)",
-  " (in 'cpp-reserved-words.stan', line 5, column 4 to column 22)",
-  " (in 'cpp-reserved-words.stan', line 4, column 25 to line 6, column 3)",
-  " (in 'cpp-reserved-words.stan', line 7, column 30 to column 32)",
-  " (in 'cpp-reserved-words.stan', line 8, column 24 to column 26)",
-  " (in 'cpp-reserved-words.stan', line 9, column 28 to column 30)",
-  " (in 'cpp-reserved-words.stan', line 10, column 14 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 11, column 13 to column 15)",
-  " (in 'cpp-reserved-words.stan', line 12, column 13 to column 15)",
-  " (in 'cpp-reserved-words.stan', line 13, column 14 to column 16)",
-  " (in 'cpp-reserved-words.stan', line 14, column 13 to column 15)",
-  " (in 'cpp-reserved-words.stan', line 15, column 17 to column 19)",
-  " (in 'cpp-reserved-words.stan', line 16, column 17 to column 19)"};
+  " (in 'cpp-reserved-words.stan', line 62, column 2 to column 12)",
+  " (in 'cpp-reserved-words.stan', line 63, column 2 to column 15)",
+  " (in 'cpp-reserved-words.stan', line 64, column 2 to column 17)",
+  " (in 'cpp-reserved-words.stan', line 65, column 2 to column 11)",
+  " (in 'cpp-reserved-words.stan', line 66, column 2 to column 16)",
+  " (in 'cpp-reserved-words.stan', line 67, column 2 to column 11)",
+  " (in 'cpp-reserved-words.stan', line 68, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 69, column 2 to column 15)",
+  " (in 'cpp-reserved-words.stan', line 70, column 2 to column 16)",
+  " (in 'cpp-reserved-words.stan', line 71, column 2 to column 10)",
+  " (in 'cpp-reserved-words.stan', line 91, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 92, column 2 to column 11)",
+  " (in 'cpp-reserved-words.stan', line 93, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 94, column 2 to column 16)",
+  " (in 'cpp-reserved-words.stan', line 95, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 96, column 2 to column 16)",
+  " (in 'cpp-reserved-words.stan', line 97, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 98, column 2 to column 15)",
+  " (in 'cpp-reserved-words.stan', line 99, column 2 to column 16)",
+  " (in 'cpp-reserved-words.stan', line 100, column 2 to column 15)",
+  " (in 'cpp-reserved-words.stan', line 101, column 2 to column 11)",
+  " (in 'cpp-reserved-words.stan', line 102, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 103, column 2 to column 12)",
+  " (in 'cpp-reserved-words.stan', line 104, column 2 to column 23)",
+  " (in 'cpp-reserved-words.stan', line 105, column 2 to column 23)",
+  " (in 'cpp-reserved-words.stan', line 106, column 2 to column 23)",
+  " (in 'cpp-reserved-words.stan', line 115, column 2 to column 10)",
+  " (in 'cpp-reserved-words.stan', line 116, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 117, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 118, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 119, column 2 to column 17)",
+  " (in 'cpp-reserved-words.stan', line 120, column 2 to column 11)",
+  " (in 'cpp-reserved-words.stan', line 121, column 2 to column 10)",
+  " (in 'cpp-reserved-words.stan', line 122, column 2 to column 12)",
+  " (in 'cpp-reserved-words.stan', line 123, column 2 to column 10)",
+  " (in 'cpp-reserved-words.stan', line 124, column 2 to column 11)",
+  " (in 'cpp-reserved-words.stan', line 125, column 2 to column 11)",
+  " (in 'cpp-reserved-words.stan', line 109, column 4 to column 23)",
+  " (in 'cpp-reserved-words.stan', line 110, column 4 to column 32)",
+  " (in 'cpp-reserved-words.stan', line 111, column 4 to column 24)",
+  " (in 'cpp-reserved-words.stan', line 112, column 4 to column 33)",
+  " (in 'cpp-reserved-words.stan', line 108, column 28 to line 113, column 3)",
+  " (in 'cpp-reserved-words.stan', line 108, column 2 to line 113, column 3)",
+  " (in 'cpp-reserved-words.stan', line 74, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 75, column 2 to column 15)",
+  " (in 'cpp-reserved-words.stan', line 76, column 2 to column 17)",
+  " (in 'cpp-reserved-words.stan', line 77, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 78, column 2 to column 16)",
+  " (in 'cpp-reserved-words.stan', line 79, column 2 to column 24)",
+  " (in 'cpp-reserved-words.stan', line 80, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 81, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 82, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 83, column 2 to column 21)",
+  " (in 'cpp-reserved-words.stan', line 84, column 2 to column 19)",
+  " (in 'cpp-reserved-words.stan', line 85, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 86, column 2 to column 16)",
+  " (in 'cpp-reserved-words.stan', line 87, column 2 to column 12)",
+  " (in 'cpp-reserved-words.stan', line 88, column 2 to column 20)",
+  " (in 'cpp-reserved-words.stan', line 43, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 44, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 45, column 2 to column 13)",
+  " (in 'cpp-reserved-words.stan', line 46, column 2 to column 17)",
+  " (in 'cpp-reserved-words.stan', line 47, column 2 to column 18)",
+  " (in 'cpp-reserved-words.stan', line 48, column 2 to column 16)",
+  " (in 'cpp-reserved-words.stan', line 49, column 2 to column 15)",
+  " (in 'cpp-reserved-words.stan', line 50, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 51, column 2 to column 10)",
+  " (in 'cpp-reserved-words.stan', line 52, column 2 to column 14)",
+  " (in 'cpp-reserved-words.stan', line 53, column 2 to column 20)",
+  " (in 'cpp-reserved-words.stan', line 54, column 2 to column 12)",
+  " (in 'cpp-reserved-words.stan', line 2, column 24 to line 4, column 3)",
+  " (in 'cpp-reserved-words.stan', line 5, column 25 to line 7, column 3)",
+  " (in 'cpp-reserved-words.stan', line 9, column 4 to column 22)",
+  " (in 'cpp-reserved-words.stan', line 8, column 26 to line 10, column 3)",
+  " (in 'cpp-reserved-words.stan', line 11, column 31 to line 13, column 3)",
+  " (in 'cpp-reserved-words.stan', line 14, column 25 to line 16, column 3)",
+  " (in 'cpp-reserved-words.stan', line 17, column 29 to line 19, column 3)",
+  " (in 'cpp-reserved-words.stan', line 20, column 15 to line 22, column 3)",
+  " (in 'cpp-reserved-words.stan', line 23, column 14 to line 25, column 3)",
+  " (in 'cpp-reserved-words.stan', line 26, column 14 to line 28, column 3)",
+  " (in 'cpp-reserved-words.stan', line 29, column 15 to line 31, column 3)",
+  " (in 'cpp-reserved-words.stan', line 32, column 14 to line 34, column 3)",
+  " (in 'cpp-reserved-words.stan', line 35, column 18 to line 37, column 3)",
+  " (in 'cpp-reserved-words.stan', line 38, column 18 to line 40, column 3)"};
 template <typename T0__,
           stan::require_all_t<std::is_integral<T0__>>* = nullptr>
 void _stan_alignas(const T0__& _stan_asm, std::ostream* pstream__);
@@ -2194,7 +2205,7 @@ _stan_and(const T0__& _stan_STAN_MAJOR, std::ostream* pstream__) {
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 67;
+    current_statement__ = 78;
     return _stan_STAN_MAJOR;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2372,77 +2383,77 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 53;
+      current_statement__ = 64;
       context__.validate_dims("data initialization", "class", "double",
         std::vector<size_t>{});
       _stan_class = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 53;
+      current_statement__ = 64;
       _stan_class = context__.vals_r("class")[(1 - 1)];
-      current_statement__ = 54;
+      current_statement__ = 65;
       context__.validate_dims("data initialization", "compl", "double",
         std::vector<size_t>{});
       _stan_compl = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 54;
+      current_statement__ = 65;
       _stan_compl = context__.vals_r("compl")[(1 - 1)];
-      current_statement__ = 55;
+      current_statement__ = 66;
       context__.validate_dims("data initialization", "const", "double",
         std::vector<size_t>{});
       _stan_const = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 55;
+      current_statement__ = 66;
       _stan_const = context__.vals_r("const")[(1 - 1)];
-      current_statement__ = 56;
+      current_statement__ = 67;
       context__.validate_dims("data initialization", "constexpr", "double",
         std::vector<size_t>{});
       _stan_constexpr = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 56;
+      current_statement__ = 67;
       _stan_constexpr = context__.vals_r("constexpr")[(1 - 1)];
-      current_statement__ = 57;
+      current_statement__ = 68;
       context__.validate_dims("data initialization", "const_cast", "double",
         std::vector<size_t>{});
       _stan_const_cast = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 57;
+      current_statement__ = 68;
       _stan_const_cast = context__.vals_r("const_cast")[(1 - 1)];
-      current_statement__ = 58;
+      current_statement__ = 69;
       context__.validate_dims("data initialization", "decltype", "double",
         std::vector<size_t>{});
       _stan_decltype = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 58;
+      current_statement__ = 69;
       _stan_decltype = context__.vals_r("decltype")[(1 - 1)];
-      current_statement__ = 59;
+      current_statement__ = 70;
       context__.validate_dims("data initialization", "default", "double",
         std::vector<size_t>{});
       _stan_default = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 59;
+      current_statement__ = 70;
       _stan_default = context__.vals_r("default")[(1 - 1)];
-      current_statement__ = 60;
+      current_statement__ = 71;
       context__.validate_dims("data initialization", "delete", "double",
         std::vector<size_t>{});
       _stan_delete = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 60;
+      current_statement__ = 71;
       _stan_delete = context__.vals_r("delete")[(1 - 1)];
-      current_statement__ = 61;
+      current_statement__ = 72;
       context__.validate_dims("data initialization", "do", "double",
         std::vector<size_t>{});
       _stan_do = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 61;
+      current_statement__ = 72;
       _stan_do = context__.vals_r("do")[(1 - 1)];
-      current_statement__ = 62;
+      current_statement__ = 73;
       context__.validate_dims("data initialization", "double", "double",
         std::vector<size_t>{});
       _stan_double = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 62;
+      current_statement__ = 73;
       _stan_double = context__.vals_r("double")[(1 - 1)];
-      current_statement__ = 63;
+      current_statement__ = 74;
       context__.validate_dims("data initialization", "dynamic_cast",
         "double", std::vector<size_t>{});
       _stan_dynamic_cast = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 63;
+      current_statement__ = 74;
       _stan_dynamic_cast = context__.vals_r("dynamic_cast")[(1 - 1)];
-      current_statement__ = 64;
+      current_statement__ = 75;
       context__.validate_dims("data initialization", "enum", "double",
         std::vector<size_t>{});
       _stan_enum = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 64;
+      current_statement__ = 75;
       _stan_enum = context__.vals_r("enum")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2760,20 +2771,31 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       double _stan_STAN_MATH_MAJOR = std::numeric_limits<double>::quiet_NaN();
       double _stan_STAN_MATH_MINOR = std::numeric_limits<double>::quiet_NaN();
       double _stan_STAN_MATH_PATCH = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 37;
+      current_statement__ = 48;
       for (int _stan_STAN_MAJOR = 1; _stan_STAN_MAJOR <=
            2; ++_stan_STAN_MAJOR) {
         int _stan_STAN_MINOR = std::numeric_limits<int>::min();
-        current_statement__ = 32;
+        current_statement__ = 43;
         _stan_STAN_MINOR = 3;
         int _stan_STAN_PATCH = std::numeric_limits<int>::min();
-        current_statement__ = 33;
+        current_statement__ = 44;
         _stan_STAN_PATCH = _stan_STAN_MINOR;
-        current_statement__ = 34;
+        current_statement__ = 45;
         _stan_alignas(_stan_STAN_PATCH, pstream__);
-        current_statement__ = 35;
+        current_statement__ = 46;
         _stan_STAN_MINOR = _stan_and(_stan_STAN_PATCH, pstream__);
       }
+      int _stan_BSD = std::numeric_limits<int>::min();
+      int _stan_BSD4_2 = std::numeric_limits<int>::min();
+      int _stan_BSD4_3 = std::numeric_limits<int>::min();
+      int _stan_BSD4_4 = std::numeric_limits<int>::min();
+      int _stan_EMSCRIPTEN = std::numeric_limits<int>::min();
+      int _stan_hpux = std::numeric_limits<int>::min();
+      int _stan_sun = std::numeric_limits<int>::min();
+      int _stan_linux = std::numeric_limits<int>::min();
+      int _stan_VMS = std::numeric_limits<int>::min();
+      int _stan_i386 = std::numeric_limits<int>::min();
+      int _stan_mips = std::numeric_limits<int>::min();
       out__.write(_stan_throw);
       out__.write(_stan_try);
       out__.write(_stan_typeid);
@@ -2790,6 +2812,17 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       out__.write(_stan_STAN_MATH_MAJOR);
       out__.write(_stan_STAN_MATH_MINOR);
       out__.write(_stan_STAN_MATH_PATCH);
+      out__.write(_stan_BSD);
+      out__.write(_stan_BSD4_2);
+      out__.write(_stan_BSD4_3);
+      out__.write(_stan_BSD4_4);
+      out__.write(_stan_EMSCRIPTEN);
+      out__.write(_stan_hpux);
+      out__.write(_stan_sun);
+      out__.write(_stan_linux);
+      out__.write(_stan_VMS);
+      out__.write(_stan_i386);
+      out__.write(_stan_mips);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -3008,7 +3041,9 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       std::vector<std::string>
         temp{"throw", "try", "typeid", "typename", "union", "unsigned",
              "using", "virtual", "volatile", "wchar_t", "xor", "xor_eq",
-             "fvar", "STAN_MATH_MAJOR", "STAN_MATH_MINOR", "STAN_MATH_PATCH"};
+             "fvar", "STAN_MATH_MAJOR", "STAN_MATH_MINOR", "STAN_MATH_PATCH",
+             "BSD", "BSD4_2", "BSD4_3", "BSD4_4", "EMSCRIPTEN", "hpux",
+             "sun", "linux", "VMS", "i386", "mips"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
@@ -3035,7 +3070,13 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
              std::vector<size_t>{}, std::vector<size_t>{},
              std::vector<size_t>{}, std::vector<size_t>{},
              std::vector<size_t>{}, std::vector<size_t>{},
-             std::vector<size_t>{}, std::vector<size_t>{}};
+             std::vector<size_t>{}, std::vector<size_t>{},
+             std::vector<size_t>{}, std::vector<size_t>{},
+             std::vector<size_t>{}, std::vector<size_t>{},
+             std::vector<size_t>{}, std::vector<size_t>{},
+             std::vector<size_t>{}, std::vector<size_t>{},
+             std::vector<size_t>{}, std::vector<size_t>{},
+             std::vector<size_t>{}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
@@ -3077,6 +3118,17 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       param_names__.emplace_back(std::string() + "STAN_MATH_MAJOR");
       param_names__.emplace_back(std::string() + "STAN_MATH_MINOR");
       param_names__.emplace_back(std::string() + "STAN_MATH_PATCH");
+      param_names__.emplace_back(std::string() + "BSD");
+      param_names__.emplace_back(std::string() + "BSD4_2");
+      param_names__.emplace_back(std::string() + "BSD4_3");
+      param_names__.emplace_back(std::string() + "BSD4_4");
+      param_names__.emplace_back(std::string() + "EMSCRIPTEN");
+      param_names__.emplace_back(std::string() + "hpux");
+      param_names__.emplace_back(std::string() + "sun");
+      param_names__.emplace_back(std::string() + "linux");
+      param_names__.emplace_back(std::string() + "VMS");
+      param_names__.emplace_back(std::string() + "i386");
+      param_names__.emplace_back(std::string() + "mips");
     }
   }
   inline void
@@ -3116,13 +3168,24 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       param_names__.emplace_back(std::string() + "STAN_MATH_MAJOR");
       param_names__.emplace_back(std::string() + "STAN_MATH_MINOR");
       param_names__.emplace_back(std::string() + "STAN_MATH_PATCH");
+      param_names__.emplace_back(std::string() + "BSD");
+      param_names__.emplace_back(std::string() + "BSD4_2");
+      param_names__.emplace_back(std::string() + "BSD4_3");
+      param_names__.emplace_back(std::string() + "BSD4_4");
+      param_names__.emplace_back(std::string() + "EMSCRIPTEN");
+      param_names__.emplace_back(std::string() + "hpux");
+      param_names__.emplace_back(std::string() + "sun");
+      param_names__.emplace_back(std::string() + "linux");
+      param_names__.emplace_back(std::string() + "VMS");
+      param_names__.emplace_back(std::string() + "i386");
+      param_names__.emplace_back(std::string() + "mips");
     }
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD4_2\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD4_3\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD4_4\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"EMSCRIPTEN\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"hpux\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"sun\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"linux\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"VMS\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"i386\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"mips\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD4_2\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD4_3\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"BSD4_4\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"EMSCRIPTEN\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"hpux\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"sun\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"linux\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"VMS\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"i386\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"mips\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -3135,8 +3198,9 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1);
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities *
-      ((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
-      1) + 1) + 1) + 1) + 1));
+      (((((((((((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+      1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+      1) + 1) + 1) + 1));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -3155,8 +3219,9 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1);
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities *
-      ((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
-      1) + 1) + 1) + 1) + 1));
+      (((((((((((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+      1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
+      1) + 1) + 1) + 1));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,

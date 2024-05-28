@@ -40,8 +40,11 @@ let cpp_kwrds =
      ; "static_assert"; "static_cast"; "switch"; "template"; "this"
      ; "thread_local"; "throw"; "try"; "typeid"; "typename"; "union"; "unsigned"
      ; "using"; "virtual"; "volatile"; "wchar_t"; "xor"; "xor_eq" ]
-    @ (* stan implementation keywords *)
-    [ "fvar"; "STAN_MAJOR"; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"
-    ; "STAN_MATH_MINOR"; "STAN_MATH_PATCH" ])
+    (* stan implementation keywords *)
+    @ [ "fvar"; "STAN_MAJOR"; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"
+      ; "STAN_MATH_MINOR"; "STAN_MATH_PATCH" ]
+    @ (* system macros *)
+    [ "BSD"; "BSD4_2"; "BSD4_3"; "BSD4_4"; "EMSCRIPTEN"; "hpux"; "sun"; "linux"
+    ; "VMS"; "i386"; "mips" ])
 
 let add_prefix_to_kwrds s = if Set.mem cpp_kwrds s then prepend_kwrd s else s
