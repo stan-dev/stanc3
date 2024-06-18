@@ -229,13 +229,12 @@ let lower_fun_body fdargs fdsuffix fdbody =
     match fdsuffix with
     | Fun_kind.FnLpdf _ | FnTarget -> []
     | FnPlain | FnRng ->
-        VariableDefn
-          (make_variable_defn ~static:true ~constexpr:true ~type_:Types.bool
-             ~name:"propto__" ~init:(Assignment (Literal "true")) ())
-        :: Stmts.unused "propto__" in
+        [ VariableDefn
+            (make_variable_defn ~static:true ~constexpr:true ~type_:Types.bool
+               ~name:"propto__" ~init:(Assignment (Literal "true")) ()) ] in
   let body = lower_statement fdbody in
-  ((local_scalar :: Decls.current_statement) @ to_refs)
-  @ propto @ Decls.dummy_var @ Stmts.rethrow_located body
+  (local_scalar :: Decls.current_statement :: to_refs)
+  @ propto @ [Decls.dummy_var] @ Stmts.rethrow_located body
 
 let mk_extra_args templates args =
   List.map
@@ -325,7 +324,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
       make_fun_defn ~templates_init:([arg_templates], true) ~name:"operator()"
         ~return_type:(lower_returntype fdargs fdrt)
         ~args:cpp_args ~cv_qualifiers:[Const] ~body:defn_body () in
-    make_struct_defn ~param:struct_template ~name:functor_name
+    Defn.make_struct ~param:struct_template ~name:functor_name
       ~body:[FunDef functor_decl] () in
   (fd, functors |> List.map ~f:register_functor)
 
@@ -461,16 +460,10 @@ module Testing = struct
       using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
                                  stan::base_type_t<T1__>>;
       int current_statement__ = 0;
-      // suppress unused var warning
-      (void) current_statement__;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
       static constexpr bool propto__ = true;
-      // suppress unused var warning
-      (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-      // suppress unused var warning
-      (void) DUMMY_VAR__;
       try {
         return stan::math::add(x, 1);
       } catch (const std::exception& e) {
@@ -534,17 +527,11 @@ module Testing = struct
                                  stan::base_type_t<T2__>,
                                  stan::base_type_t<T3__>>;
       int current_statement__ = 0;
-      // suppress unused var warning
-      (void) current_statement__;
       const auto& x = stan::math::to_ref(x_arg__);
       const auto& y = stan::math::to_ref(y_arg__);
       const auto& z = stan::math::to_ref(z_arg__);
       static constexpr bool propto__ = true;
-      // suppress unused var warning
-      (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-      // suppress unused var warning
-      (void) DUMMY_VAR__;
       try {
         return stan::math::add(x, 1);
       } catch (const std::exception& e) {
