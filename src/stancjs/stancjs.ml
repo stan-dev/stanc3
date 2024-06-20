@@ -9,7 +9,24 @@ let version = "%%NAME%% %%VERSION%%"
 
 type stanc_error = ProgramError of Errors.t
 
-let stan2cpp model_name model_string is_flag_set flag_val :
+let make_include_finder includes path =
+  match Map.find includes path with
+  | None ->
+      let message =
+        let pp_list ppf l =
+          let keys = Map.keys l in
+          if List.is_empty keys then Fmt.string ppf "None"
+          else Fmt.(list ~sep:comma string) ppf keys in
+        Fmt.str
+          "Could not find include file '%s'. Stanc.js was given information \
+           about the following files:@ %a"
+          path pp_list includes in
+      raise
+        (Errors.SyntaxError
+           (Include (message, Preprocessor.current_location_t ())))
+  | Some s -> (Lexing.from_string s, path)
+
+let stan2cpp model_name model_string is_flag_set flag_val includes :
     (string, stanc_error) result
     * Warnings.t list
     * Pedantic_analysis.warning_span list =
@@ -23,6 +40,7 @@ let stan2cpp model_name model_string is_flag_set flag_val :
   With_return.with_return (fun r ->
       if is_flag_set "version" then
         r.return (Result.Ok (Fmt.str "%s" version), [], []);
+      Preprocessor.find_include := make_include_finder includes;
       let ast, parser_warnings =
         if is_flag_set "functions-only" then
           Parse.parse_string Parser.Incremental.functions_only model_string
@@ -50,7 +68,6 @@ let stan2cpp model_name model_string is_flag_set flag_val :
                   | "parentheses" -> {settings with parentheses= true}
                   | "braces" -> {settings with braces= true}
                   | "strip-comments" -> {settings with strip_comments= true}
-                  (* this probably never applies to stancjs, but for completion: *)
                   | "includes" -> {settings with inline_includes= true}
                   | _ -> settings in
                 List.fold ~f:parse ~init:Canonicalize.none
@@ -209,9 +226,6 @@ let to_file_map includes =
 
 let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) includes =
   let includes = to_file_map includes in
-  Map.iter_keys includes ~f:(fun k ->
-      print_endline k;
-      print_endline (Map.find_exn includes k));
   let flags =
     let to_ocaml_str_array a =
       Js.(str_array a |> to_array |> Array.map ~f:to_string) in
@@ -244,7 +258,8 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) includes =
   Lower_program.stanc_args_to_print := stanc_args_to_print;
   match
     Common.ICE.with_exn_message (fun () ->
-        stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val)
+        stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val
+          includes)
   with
   | Ok (result, warnings, pedantic_mode_warnings) ->
       let warnings =

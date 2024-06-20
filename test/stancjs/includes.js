@@ -8,6 +8,10 @@ data {
 }
 `
 
+// will fail
+var include_test_fails = stanc.stanc("include-testtest", include_model, [], {"bar.stan":"// nothing here"});
+utils.print_error(include_test_fails)
+
 var includes = {
     "foo.stan" : `
 functions {
@@ -16,6 +20,6 @@ functions {
     }
 }`};
 
-var include_test = stanc.stanc("include-testtest", include_model, [], includes);
+var include_test = stanc.stanc("include-testtest", include_model, ["auto-format", "canonicalize=includes"], includes);
 utils.print_error(include_test)
-
+utils.print_result(include_test)

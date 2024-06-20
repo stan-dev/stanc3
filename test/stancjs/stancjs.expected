@@ -205,6 +205,28 @@ Syntax error in 'string', line 8, column 0 to column 5, parsing error:
 
 Expected "generated quantities {" or end of file after end of model block.
 
+$ node includes.js
+Syntax error in 'string', line 2, column 0, include error:
+   -------------------------------------------------
+     1:  
+     2:  #include <foo.stan>
+         ^
+     3:  data {
+     4:      int a;
+   -------------------------------------------------
+
+Could not find include file 'foo.stan'. Currently available files are:
+bar.stan
+
+functions {
+  int foo(real a) {
+    return 1;
+  }
+}
+data {
+  int a;
+}
+
 $ node info.js
 {
   "inputs": {

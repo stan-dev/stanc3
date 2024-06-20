@@ -10,6 +10,9 @@ val location_span_of_positions :
 val current_buffer : unit -> Lexing.lexbuf
 (** Buffer at the top of the include stack *)
 
+val current_location_t : unit -> Middle.Location.t
+(** Location of the current buffer *)
+
 val size : unit -> int
 (** Size of the include stack *)
 
@@ -27,9 +30,7 @@ val pop_buffer : unit -> Lexing.lexbuf
 
 val add_comment : Ast.comment_type -> unit
 val get_comments : unit -> Ast.comment_type list
-
-val include_paths : string list ref
-(** List of paths to search for including files *)
+val find_include : (string -> Lexing.lexbuf * string) ref
 
 val included_files : string list ref
 (** List of files that have been included *)
