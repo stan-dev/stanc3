@@ -9,7 +9,7 @@ let version = "%%NAME%% %%VERSION%%"
 
 type stanc_error = ProgramError of Errors.t
 
-let make_include_finder includes path =
+let find_included_file ~includes path =
   match Map.find includes path with
   | None ->
       let message =
@@ -40,7 +40,7 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
   With_return.with_return (fun r ->
       if is_flag_set "version" then
         r.return (Result.Ok (Fmt.str "%s" version), [], []);
-      Preprocessor.find_include := make_include_finder includes;
+      Preprocessor.find_include := find_included_file ~includes;
       let ast, parser_warnings =
         if is_flag_set "functions-only" then
           Parse.parse_string Parser.Incremental.functions_only model_string

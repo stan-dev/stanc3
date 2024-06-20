@@ -237,7 +237,7 @@ let remove_dotstan s =
 (** filesystem-based way of opening new lexbufs for #include directive
   defined here because a separate function is used in stanc.js
 *)
-let try_open_in fname =
+let find_included_file fname =
   let open Lexing in
   let rec loop paths =
     match paths with
@@ -262,7 +262,7 @@ let try_open_in fname =
 
 let get_ast_or_exit ?printed_filename ?(print_warnings = true)
     ?(bare_functions = false) filename =
-  Preprocessor.find_include := try_open_in;
+  Preprocessor.find_include := find_included_file;
   let res, warnings =
     if bare_functions then
       Parse.parse_file Parser.Incremental.functions_only filename
