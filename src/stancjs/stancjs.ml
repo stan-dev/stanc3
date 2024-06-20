@@ -190,7 +190,28 @@ let wrap_result ?printed_filename ~code ~warnings res =
           e in
       wrap_error ~warnings e
 
-let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
+let to_file_map includes =
+  try
+    match Js.Optdef.to_option includes with
+    | None -> String.Map.empty
+    | Some includes -> (
+        let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
+        let value k = Js.Unsafe.get includes k in
+        match
+          String.Map.of_alist
+            (List.map keys ~f:(fun k ->
+                 (Js.to_string k, Js.to_string (Js.Unsafe.coerce (value k)))))
+        with
+        | `Duplicate_key s ->
+            failwith ("Duplicate string in include paths: " ^ s)
+        | `Ok m -> m)
+  with _ -> String.Map.empty
+
+let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) includes =
+  let includes = to_file_map includes in
+  Map.iter_keys includes ~f:(fun k ->
+      print_endline k;
+      print_endline (Map.find_exn includes k));
   let flags =
     let to_ocaml_str_array a =
       Js.(str_array a |> to_array |> Array.map ~f:to_string) in
