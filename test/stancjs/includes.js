@@ -8,9 +8,12 @@ data {
 }
 `
 
-var bar_includes = {"bar.stan":"// nothing here"};
 
 // will fail
+var include_test_missing = stanc.stanc("include-testtest", include_model, []);
+utils.print_error(include_test_missing)
+
+var bar_includes = {"bar.stan":"// nothing here"};
 var include_test_missing = stanc.stanc("include-testtest", include_model, [], bar_includes);
 utils.print_error(include_test_missing)
 

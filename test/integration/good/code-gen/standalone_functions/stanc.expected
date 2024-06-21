@@ -1,0 +1,124 @@
+  $ ../../../../../../install/default/bin/stanc --standalone-functions --allow-undefined --auto-format basic.stan
+functions {
+  real my_log1p_exp(real x) {
+    return log1p_exp(x);
+  }
+  
+  real array_fun(array[] real a) {
+    return sum(a);
+  }
+  
+  real int_array_fun(array[] int a) {
+    return sum(a);
+  }
+  
+  vector my_vector_mul_by_5(vector x) {
+    vector[num_elements(x)] result = x * 5.0;
+    return result;
+  }
+  
+  int int_only_multiplication(int a, int b) {
+    return a * b;
+  }
+  
+  real test_lgamma(real x) {
+    return lgamma(x);
+  }
+  
+  // test special functions
+  void test_lp(real a) {
+    a ~ normal(0, 1);
+  }
+  
+  real test_rng(real a) {
+    return normal_rng(a, 1);
+  }
+  
+  real test_lpdf(real a, real b) {
+    return normal_lpdf(a | b, 1);
+  }
+  
+  complex_matrix test_complex(complex_matrix a) {
+    return a + a;
+  }
+  
+  array[,,] complex array_fun(array[,,] complex a) {
+    return a;
+  }
+}
+
+  $ ../../../../../../install/default/bin/stanc --standalone-functions --allow-undefined --auto-format basic.stanfunctions
+real my_log1p_exp(real x) {
+  return log1p_exp(x);
+}
+
+real array_fun(array[] real a) {
+  return sum(a);
+}
+
+real int_array_fun(array[] int a) {
+  return sum(a);
+}
+
+vector my_vector_mul_by_5(vector x) {
+  vector[num_elements(x)] result = x * 5.0;
+  return result;
+}
+
+int int_only_multiplication(int a, int b) {
+  return a * b;
+}
+
+real test_lgamma(real x) {
+  return lgamma(x);
+}
+
+// test special functions
+void test_lp(real a) {
+  a ~ normal(0, 1);
+}
+
+real test_rng(real a) {
+  return normal_rng(a, 1);
+}
+
+real test_lpdf(real a, real b) {
+  return normal_lpdf(a | b, 1);
+}
+  $ ../../../../../../install/default/bin/stanc --standalone-functions --allow-undefined --auto-format integrate.stan
+functions {
+  vector integrand(vector x) {
+    return exp(-square(x));
+  }
+  
+  array[] real integrand_ode(real r, array[] real f, array[] real theta,
+                             array[] real x_r, array[] int x_i) {
+    array[1] real df_dx;
+    real x = logit(r);
+    df_dx[1] = exp(-square(x)) * 1 / (r * (1 - r));
+    return (df_dx);
+  }
+  
+  real ode_integrate() {
+    array[0] int x_i;
+    // ok:
+    //return(integrate_ode_rk45(integrand_ode, rep_array(0.0, 1),
+    //1E-5, rep_array(1.0-1E-5, 1), rep_array(0.0, 0), rep_array(0.0,
+    //0), x_i)[1,1]);
+    // not ok
+    return (integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,
+                              rep_array(1.0 - 1E-5, 1), rep_array(0.0, 0),
+                              rep_array(0.0, 0), x_i)[1, 1]);
+  }
+}
+data {
+  
+}
+model {
+  
+}
+
+Warning in 'integrate.stan', line 21, column 12: integrate_ode_bdf is
+    deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
+    The new interface is slightly different, see:
+    https://mc-stan.org/users/documentation/case-studies/convert_odes.html
