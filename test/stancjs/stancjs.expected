@@ -219,13 +219,6 @@ Could not find include file 'foo.stan'.
 stanc was given information about the following files:
 bar.stan
 
-Warning: stanc.js failed to parse included file mapping!
-Failed to read property 'foo.stan' of included files map!
-It had type 'object' instead of 'string'.
-Warning: stanc.js failed to parse included file mapping!
-Duplicate string in included files map: 'foo.stan'
-Warning: stanc.js failed to parse included file mapping!
-Included files map was provided but was not of type 'object'
 functions {
   int foo(real a) {
     return 1;
@@ -244,6 +237,24 @@ data {
   "distributions": [],
   "included_files": [ "foo.stan" ]
 }
+Warning: stanc.js failed to parse included file mapping!
+Failed to read property 'foo.stan' of included files map!
+It had type 'object' instead of 'string'.
+Warning: stanc.js failed to parse included file mapping!
+Duplicate string in included files map: 'foo.stan'
+Warning: stanc.js failed to parse included file mapping!
+Included files map was provided but was not of type 'object'
+Syntax error in 'include/a.stan', line 1, column 0, included from
+'include/b.stan', line 1, column 0, included from
+'include/a.stan', line 1, column 0, included from
+'string', line 1, column 0, include error:
+   -------------------------------------------------
+     1:  #include <include/a.stan>
+         ^
+   -------------------------------------------------
+
+File include/b.stan recursively included itself.
+
 $ node info.js
 {
   "inputs": {
