@@ -193,26 +193,53 @@ let wrap_result ?printed_filename ~code ~warnings res =
           e in
       wrap_error ~warnings e
 
+exception BadJsInput of string
+
+let () =
+  Stdlib.Printexc.register_printer (function
+    | BadJsInput s -> Some s
+    | _ -> None)
+
+let typecheck e typ = Js.equals (Js.typeof e) (Js.string typ)
+
+(** Converts from a [{ [s:string]:string }] JS object type
+to an OCaml map, with error messages on bad input. *)
 let to_file_map includes =
   try
     match Js.Optdef.to_option includes with
-    | None -> String.Map.empty
+    | None -> Result.Ok String.Map.empty (* normal use: argument not supplied *)
     | Some includes -> (
+        if not (typecheck includes "object") then
+          raise
+            (BadJsInput
+               "Included files map was provided but was not of type 'object'");
         let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
-        let value k = Js.Unsafe.get includes k in
+        let value k =
+          let value_js = Js.Unsafe.get includes k in
+          if typecheck value_js "string" then
+            value_js |> Js.Unsafe.coerce |> Js.to_string
+          else
+            raise
+              (BadJsInput
+                 (Fmt.str
+                    "Failed to read property '%s' of included files map!@ It \
+                     had type '%s' instead of 'string'."
+                    (Js.to_string k)
+                    (Js.typeof value_js |> Js.to_string))) in
         match
           String.Map.of_alist
             (List.map keys ~f:(fun k ->
-                 ( Js.to_string k |> In_memory_includes.no_leading_dotslash
-                 , Js.to_string (Js.Unsafe.coerce (value k)) )))
+                 let key_clean =
+                   k |> Js.to_string |> In_memory_includes.no_leading_dotslash
+                 in
+                 (key_clean, value k)))
         with
         | `Duplicate_key s ->
-            failwith ("Duplicate string in include paths: " ^ s)
-        | `Ok m -> m)
-  with _ -> String.Map.empty
+            Result.Error ("Duplicate string in included files map: '" ^ s ^ "'")
+        | `Ok m -> Result.Ok m)
+  with e -> Result.Error (Stdlib.Printexc.to_string e)
 
 let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) includes =
-  let includes = to_file_map includes in
   let flags =
     let to_ocaml_str_array a =
       Js.(str_array a |> to_array |> Array.map ~f:to_string) in
@@ -243,6 +270,15 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) includes =
     |> List.map ~f:(fun o -> "--" ^ o)
     |> String.concat ~sep:" " in
   Lower_program.stanc_args_to_print := stanc_args_to_print;
+  let maybe_includes = to_file_map includes in
+  let includes, include_reader_warnings =
+    match maybe_includes with
+    | Result.Ok map -> (map, [])
+    | Result.Error warn ->
+        ( String.Map.empty
+        , [ Fmt.str
+              "Warning: stanc.js failed to parse included file mapping!@ %s"
+              warn ] ) in
   match
     Common.ICE.with_exn_message (fun () ->
         stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val
@@ -250,11 +286,13 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) includes =
   with
   | Ok (result, warnings, pedantic_mode_warnings) ->
       let warnings =
-        List.map
-          ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))
-          (warnings @ pedantic_mode_warnings) in
+        include_reader_warnings
+        @ List.map
+            ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))
+            (warnings @ pedantic_mode_warnings) in
       wrap_result ?printed_filename ~code result ~warnings
-  | Error internal_error -> wrap_error ~warnings:[] internal_error
+  | Error internal_error ->
+      wrap_error ~warnings:include_reader_warnings internal_error
 
 let dump_stan_math_signatures () =
   Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()
