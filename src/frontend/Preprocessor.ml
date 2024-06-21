@@ -3,7 +3,6 @@
 open Core
 open Lexing
 open Debugging
-open Includes_intf
 module Str = Re.Str
 
 let comments = Queue.create ()
@@ -12,6 +11,12 @@ let get_comments () = Queue.to_list comments
 let include_stack = Stack.create ()
 let included_files : string list ref = ref []
 let size () = Stack.length include_stack
+
+type include_provider_t =
+  | FileSystemPaths of string list
+  | InMemory of string String.Map.t
+
+let include_provider : include_provider_t ref = ref (FileSystemPaths [])
 
 let locations_map : (string * Middle.Location.t option) String.Table.t =
   String.Table.create ()
@@ -91,30 +96,71 @@ let maybe_remove_quotes str =
     drop_suffix (drop_prefix str 1) 1
   else str
 
-module Make (Locator : LEXBUF_LOCATOR) : PREPROCESSOR_LOADER = struct
-  let try_get_new_lexbuf fname =
-    let lexbuf = Stack.top_exn include_stack in
-    let new_lexbuf, file = Locator.find_include (maybe_remove_quotes fname) in
-    lexer_logger ("opened " ^ file);
-    new_lexbuf.lex_start_p <-
-      new_file_start_position file
-      @@ Some (location_of_position lexbuf.lex_start_p);
-    new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
-    let dup_exists {Middle.Location.filename; included_from; _} =
-      let is_dup = String.equal filename in
-      let rec go = function
-        | None -> false
-        | Some {Middle.Location.filename; included_from; _} ->
-            if is_dup filename then true else go included_from in
-      go included_from in
-    if dup_exists (location_of_position lexbuf.lex_start_p) then
-      raise
-        (Errors.SyntaxError
-           (Include
-              ( Printf.sprintf "File %s recursively included itself." fname
-              , location_of_position (lexeme_start_p lexbuf) )));
-    Stack.push include_stack new_lexbuf;
-    update_start_positions new_lexbuf.lex_curr_p;
-    included_files := file :: !included_files;
-    new_lexbuf
-end
+let no_leading_dotslash = String.chop_prefix_if_exists ~prefix:"./"
+
+let find_include_fs lookup_paths fname =
+  let rec loop paths =
+    match paths with
+    | [] ->
+        let message =
+          let pp_list ppf l =
+            match l with
+            | [] -> Fmt.string ppf "None"
+            | _ -> Fmt.(list ~sep:comma string) ppf l in
+          Fmt.str
+            "Could not find include file '%s' in specified include paths.@\n\
+             @[Current include paths: %a@]" fname pp_list lookup_paths in
+        raise (Errors.SyntaxError (Include (message, current_location_t ())))
+    | path :: rest_of_paths -> (
+        try
+          let full_path = path ^ "/" ^ fname in
+          (In_channel.create full_path |> from_channel, full_path)
+        with _ -> loop rest_of_paths) in
+  loop lookup_paths
+
+let find_include_inmemory map fname =
+  let fname = no_leading_dotslash fname in
+  match Map.find map fname with
+  | None ->
+      let message =
+        let pp_list ppf l =
+          let keys = Map.keys l in
+          if List.is_empty keys then Fmt.string ppf "None"
+          else Fmt.(list ~sep:comma string) ppf keys in
+        Fmt.str
+          "Could not find include file '%s'.@ stanc was given information \
+           about the following files:@ %a"
+          fname pp_list map in
+      raise (Errors.SyntaxError (Include (message, current_location_t ())))
+  | Some s -> (Lexing.from_string s, fname)
+
+let find_include fname =
+  match !include_provider with
+  | FileSystemPaths lookup_paths -> find_include_fs lookup_paths fname
+  | InMemory map -> find_include_inmemory map fname
+
+let try_get_new_lexbuf fname =
+  let lexbuf = Stack.top_exn include_stack in
+  let new_lexbuf, file = find_include (maybe_remove_quotes fname) in
+  lexer_logger ("opened " ^ file);
+  new_lexbuf.lex_start_p <-
+    new_file_start_position file
+    @@ Some (location_of_position lexbuf.lex_start_p);
+  new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p;
+  let dup_exists {Middle.Location.filename; included_from; _} =
+    let is_dup = String.equal filename in
+    let rec go = function
+      | None -> false
+      | Some {Middle.Location.filename; included_from; _} ->
+          if is_dup filename then true else go included_from in
+    go included_from in
+  if dup_exists (location_of_position lexbuf.lex_start_p) then
+    raise
+      (Errors.SyntaxError
+         (Include
+            ( Printf.sprintf "File %s recursively included itself." fname
+            , location_of_position (lexeme_start_p lexbuf) )));
+  Stack.push include_stack new_lexbuf;
+  update_start_positions new_lexbuf.lex_curr_p;
+  included_files := file :: !included_files;
+  new_lexbuf

@@ -204,8 +204,8 @@ let options =
     ; ( "--include-paths"
       , Arg.String
           (fun str ->
-            Filesystem_includes.lookup_paths :=
-              String.split_on_chars ~on:[','] str)
+            Preprocessor.include_provider :=
+              Preprocessor.FileSystemPaths (String.split_on_chars ~on:[','] str))
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
     ; ( "--use-opencl"
@@ -288,17 +288,12 @@ let use_file filename =
   let typed_ast = type_ast_or_exit ?printed_filename ast in
   let canonical_ast =
     Canonicalize.canonicalize_program typed_ast !canonicalize_settings in
-  if !pretty_print_program then (
-    let formatted_program =
-      Pretty_print_prog.pretty_print_typed_program
-        ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
-        ~inline_includes:!canonicalize_settings.inline_includes
-        ~strip_comments:!canonicalize_settings.strip_comments canonical_ast
-    in
-    Pretty_print_prog.sanity_check_pretty_printed_program
-      (module Filesystem_includes)
-      ~bare_functions:!bare_functions canonical_ast formatted_program;
-    print_or_write formatted_program);
+  if !pretty_print_program then
+    print_or_write
+      (Pretty_print_prog.pretty_print_typed_program
+         ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
+         ~inline_includes:!canonicalize_settings.inline_includes canonical_ast
+         ~strip_comments:!canonicalize_settings.strip_comments);
   if !print_info_json then (
     print_endline (Info.info canonical_ast);
     exit 0);

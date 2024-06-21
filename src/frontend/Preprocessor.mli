@@ -1,6 +1,13 @@
-open Includes_intf
-
 (** Preprocessor for handling include directives *)
+
+open Core
+
+type include_provider_t =
+  | FileSystemPaths of string list
+  | InMemory of string String.Map.t
+
+val include_provider : include_provider_t ref
+(** Where and how to look for #include-d files *)
 
 val location_of_position : Lexing.position -> Middle.Location.t
 
@@ -9,9 +16,6 @@ val location_span_of_positions :
 
 val current_buffer : unit -> Lexing.lexbuf
 (** Buffer at the top of the include stack *)
-
-val current_location_t : unit -> Middle.Location.t
-(** Location of the current buffer *)
 
 val size : unit -> int
 (** Size of the include stack *)
@@ -24,6 +28,8 @@ val update_start_positions : Lexing.position -> unit
   This solves an issue where a parser which started with one lexbuf
   but is finishing with another can have the wrong information
 *)
+
+val no_leading_dotslash : string -> string
 
 val pop_buffer : unit -> Lexing.lexbuf
 (** Pop the buffer at the top of the include stack *)
@@ -38,11 +44,6 @@ val restore_prior_lexbuf : unit -> Lexing.lexbuf
 (** Restore to a previous lexing buffer (assumes that one exists) and
   updates positions accordingly. *)
 
-(** The part of the preprocessor that loads #include-d files is
-  made generic here to support cases where we have filesystem access
-  and cases where we do not.
-
-  See [In_memory_includes] and [Filesystem_includes] for
-  implementations of the [LEXBUF_LOCATOR] module.
-  *)
-module Make (Locator : LEXBUF_LOCATOR) : PREPROCESSOR_LOADER
+val try_get_new_lexbuf : string -> Lexing.lexbuf
+(** Search include paths for filename and try to create a new lexing buffer
+        with that filename, record that included from specified position *)

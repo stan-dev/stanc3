@@ -14,7 +14,7 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
     * Warnings.t list
     * Pedantic_analysis.warning_span list =
   Common.Gensym.reset_danger_use_cautiously ();
-  In_memory_includes.map := includes;
+  Preprocessor.include_provider := Preprocessor.InMemory includes;
   Typechecker.model_name := model_name;
   Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined");
@@ -27,8 +27,8 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
         r.return (Result.Ok (Fmt.str "%s" version), [], []);
       let ast, parser_warnings =
         if bare_functions then
-          Parse.parse_in_memory Parser.Incremental.functions_only model_string
-        else Parse.parse_in_memory Parser.Incremental.program model_string in
+          Parse.parse_string Parser.Incremental.functions_only model_string
+        else Parse.parse_string Parser.Incremental.program model_string in
       let open Result.Monad_infix in
       let result =
         ast >>= fun ast ->
@@ -64,20 +64,17 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
           if canonicalizer_settings.deprecations then []
           else Deprecation_analysis.collect_warnings typed_ast in
         let warnings = warnings @ deprecation_warnings in
-        if is_flag_set "auto-format" || is_flag_set "print-canonical" then (
-          let cannonical_ast =
-            Canonicalize.canonicalize_program typed_ast canonicalizer_settings
-          in
-          let formatted_program =
-            Pretty_print_prog.pretty_print_typed_program ~bare_functions
-              ~line_length
-              ~inline_includes:canonicalizer_settings.inline_includes
-              ~strip_comments:canonicalizer_settings.strip_comments
-              cannonical_ast in
-          Pretty_print_prog.sanity_check_pretty_printed_program
-            (module In_memory_includes)
-            ~bare_functions cannonical_ast formatted_program;
-          r.return (Result.Ok formatted_program, warnings, []));
+        if is_flag_set "auto-format" || is_flag_set "print-canonical" then
+          r.return
+            ( Result.Ok
+                (Pretty_print_prog.pretty_print_typed_program ~bare_functions
+                   ~line_length
+                   ~inline_includes:canonicalizer_settings.inline_includes
+                   ~strip_comments:canonicalizer_settings.strip_comments
+                   (Canonicalize.canonicalize_program typed_ast
+                      canonicalizer_settings))
+            , warnings
+            , [] );
         let mir = Ast_to_Mir.trans_prog model_name typed_ast in
         if is_flag_set "debug-mir" then
           r.return
@@ -230,8 +227,7 @@ let to_file_map includes =
           String.Map.of_alist
             (List.map keys ~f:(fun k ->
                  let key_clean =
-                   k |> Js.to_string |> In_memory_includes.no_leading_dotslash
-                 in
+                   k |> Js.to_string |> Preprocessor.no_leading_dotslash in
                  (key_clean, value k)))
         with
         | `Duplicate_key s ->

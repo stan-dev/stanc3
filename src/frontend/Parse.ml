@@ -2,24 +2,14 @@
     API *)
 
 open Core
-open Includes_intf
 
-module type TOKENIZER = sig
-  val token : Lexing.lexbuf -> Parser.token
-end
-
-module FilesystemBackedLexer =
-  Lexer.Make (Preprocessor.Make (Filesystem_includes))
-
-module InMemoryOnlyLexer = Lexer.Make (Preprocessor.Make (In_memory_includes))
-
-let parse (module Tokenizer : TOKENIZER) parse_fun lexbuf =
+let parse parse_fun lexbuf =
   Input_warnings.init ();
   (* see the Menhir manual for the description of
      error messages support *)
   let module Interp = Parser.MenhirInterpreter in
   let input () =
-    (Interp.lexer_lexbuf_to_supplier Tokenizer.token
+    (Interp.lexer_lexbuf_to_supplier Lexer.token
        (Preprocessor.current_buffer ()))
       () in
   let success prog =
@@ -66,20 +56,10 @@ let parse (module Tokenizer : TOKENIZER) parse_fun lexbuf =
     with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err) in
   (result, Input_warnings.collect ())
 
-let lexbuf_from_string str =
+let parse_string parse_fun str =
   let lexbuf = Lexing.from_string str in
   Preprocessor.init lexbuf "string";
-  lexbuf
-
-let parse_string (module BufferFinder : LEXBUF_LOCATOR) parse_fun str =
-  (* used both by stancjs and for testing/internal sanity checks, so
-     we leave it generic over how to find #include-d files *)
-  let module Loader = Preprocessor.Make (BufferFinder) in
-  let module Tokenizer = Lexer.Make (Loader) in
-  parse (module Tokenizer) parse_fun (lexbuf_from_string str)
-
-let parse_in_memory parse_fun str =
-  parse (module InMemoryOnlyLexer) parse_fun (lexbuf_from_string str)
+  parse parse_fun lexbuf
 
 let parse_file parse_fun path =
   let chan =
@@ -90,5 +70,4 @@ let parse_file parse_fun path =
   | Ok chan ->
       let lexbuf = Lexing.from_channel chan in
       Preprocessor.init lexbuf path;
-      (* we always have filesystem access in this function *)
-      parse (module FilesystemBackedLexer) parse_fun lexbuf
+      parse parse_fun lexbuf
