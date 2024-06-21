@@ -9,42 +9,26 @@ let version = "%%NAME%% %%VERSION%%"
 
 type stanc_error = ProgramError of Errors.t
 
-let find_included_file ~includes path =
-  match Map.find includes path with
-  | None ->
-      let message =
-        let pp_list ppf l =
-          let keys = Map.keys l in
-          if List.is_empty keys then Fmt.string ppf "None"
-          else Fmt.(list ~sep:comma string) ppf keys in
-        Fmt.str
-          "Could not find include file '%s'. Stanc.js was given information \
-           about the following files:@ %a"
-          path pp_list includes in
-      raise
-        (Errors.SyntaxError
-           (Include (message, Preprocessor.current_location_t ())))
-  | Some s -> (Lexing.from_string s, path)
-
 let stan2cpp model_name model_string is_flag_set flag_val includes :
     (string, stanc_error) result
     * Warnings.t list
     * Pedantic_analysis.warning_span list =
   Common.Gensym.reset_danger_use_cautiously ();
+  In_memory_includes.map := includes;
   Typechecker.model_name := model_name;
   Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined");
   Transform_Mir.use_opencl := is_flag_set "use-opencl";
+  let bare_functions = is_flag_set "functions-only" in
   Lower_program.standalone_functions :=
-    is_flag_set "standalone-functions" || is_flag_set "functions-only";
+    bare_functions || is_flag_set "standalone-functions";
   With_return.with_return (fun r ->
       if is_flag_set "version" then
         r.return (Result.Ok (Fmt.str "%s" version), [], []);
-      Preprocessor.find_include := find_included_file ~includes;
       let ast, parser_warnings =
-        if is_flag_set "functions-only" then
-          Parse.parse_string Parser.Incremental.functions_only model_string
-        else Parse.parse_string Parser.Incremental.program model_string in
+        if bare_functions then
+          Parse.parse_in_memory Parser.Incremental.functions_only model_string
+        else Parse.parse_in_memory Parser.Incremental.program model_string in
       let open Result.Monad_infix in
       let result =
         ast >>= fun ast ->
@@ -80,18 +64,20 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
           if canonicalizer_settings.deprecations then []
           else Deprecation_analysis.collect_warnings typed_ast in
         let warnings = warnings @ deprecation_warnings in
-        if is_flag_set "auto-format" || is_flag_set "print-canonical" then
-          r.return
-            ( Result.Ok
-                (Pretty_print_prog.pretty_print_typed_program
-                   ~bare_functions:(is_flag_set "functions-only")
-                   ~line_length
-                   ~inline_includes:canonicalizer_settings.inline_includes
-                   ~strip_comments:canonicalizer_settings.strip_comments
-                   (Canonicalize.canonicalize_program typed_ast
-                      canonicalizer_settings))
-            , warnings
-            , [] );
+        if is_flag_set "auto-format" || is_flag_set "print-canonical" then (
+          let cannonical_ast =
+            Canonicalize.canonicalize_program typed_ast canonicalizer_settings
+          in
+          let formatted_program =
+            Pretty_print_prog.pretty_print_typed_program ~bare_functions
+              ~line_length
+              ~inline_includes:canonicalizer_settings.inline_includes
+              ~strip_comments:canonicalizer_settings.strip_comments
+              cannonical_ast in
+          Pretty_print_prog.sanity_check_pretty_printed_program
+            (module In_memory_includes)
+            ~bare_functions cannonical_ast formatted_program;
+          r.return (Result.Ok formatted_program, warnings, []));
         let mir = Ast_to_Mir.trans_prog model_name typed_ast in
         if is_flag_set "debug-mir" then
           r.return
@@ -217,7 +203,8 @@ let to_file_map includes =
         match
           String.Map.of_alist
             (List.map keys ~f:(fun k ->
-                 (Js.to_string k, Js.to_string (Js.Unsafe.coerce (value k)))))
+                 ( Js.to_string k |> In_memory_includes.no_leading_dotslash
+                 , Js.to_string (Js.Unsafe.coerce (value k)) )))
         with
         | `Duplicate_key s ->
             failwith ("Duplicate string in include paths: " ^ s)

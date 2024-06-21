@@ -42,7 +42,6 @@ let data_file = ref None
 let warn_uninitialized = ref false
 let warn_pedantic = ref false
 let bare_functions = ref false
-let include_paths : string list ref = ref []
 
 let parse_canonical_options (settings : Canonicalize.canonicalizer_settings)
     string =
@@ -204,7 +203,9 @@ let options =
       , " Do not fail if a function is declared but not defined" )
     ; ( "--include-paths"
       , Arg.String
-          (fun str -> include_paths := String.split_on_chars ~on:[','] str)
+          (fun str ->
+            Filesystem_includes.lookup_paths :=
+              String.split_on_chars ~on:[','] str)
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
     ; ( "--use-opencl"
@@ -234,35 +235,8 @@ let remove_dotstan s =
   if String.is_suffix ~suffix:".stanfunctions" s then String.drop_suffix s 14
   else String.drop_suffix s 5
 
-(** filesystem-based way of opening new lexbufs for #include directive
-  defined here because a separate function is used in stanc.js
-*)
-let find_included_file fname =
-  let open Lexing in
-  let rec loop paths =
-    match paths with
-    | [] ->
-        let message =
-          let pp_list ppf l =
-            match l with
-            | [] -> Fmt.string ppf "None"
-            | _ -> Fmt.(list ~sep:comma string) ppf l in
-          Fmt.str
-            "Could not find include file '%s' in specified include paths.@\n\
-             @[Current include paths: %a@]" fname pp_list !include_paths in
-        raise
-          (Errors.SyntaxError
-             (Include (message, Preprocessor.current_location_t ())))
-    | path :: rest_of_paths -> (
-        try
-          let full_path = path ^ "/" ^ fname in
-          (In_channel.create full_path |> from_channel, full_path)
-        with _ -> loop rest_of_paths) in
-  loop !include_paths
-
 let get_ast_or_exit ?printed_filename ?(print_warnings = true)
     ?(bare_functions = false) filename =
-  Preprocessor.find_include := find_included_file;
   let res, warnings =
     if bare_functions then
       Parse.parse_file Parser.Incremental.functions_only filename
@@ -314,12 +288,17 @@ let use_file filename =
   let typed_ast = type_ast_or_exit ?printed_filename ast in
   let canonical_ast =
     Canonicalize.canonicalize_program typed_ast !canonicalize_settings in
-  if !pretty_print_program then
-    print_or_write
-      (Pretty_print_prog.pretty_print_typed_program
-         ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
-         ~inline_includes:!canonicalize_settings.inline_includes canonical_ast
-         ~strip_comments:!canonicalize_settings.strip_comments);
+  if !pretty_print_program then (
+    let formatted_program =
+      Pretty_print_prog.pretty_print_typed_program
+        ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
+        ~inline_includes:!canonicalize_settings.inline_includes
+        ~strip_comments:!canonicalize_settings.strip_comments canonical_ast
+    in
+    Pretty_print_prog.sanity_check_pretty_printed_program
+      (module Filesystem_includes)
+      ~bare_functions:!bare_functions canonical_ast formatted_program;
+    print_or_write formatted_program);
   if !print_info_json then (
     print_endline (Info.info canonical_ast);
     exit 0);

@@ -215,7 +215,8 @@ Syntax error in 'string', line 2, column 0, include error:
      4:      int a;
    -------------------------------------------------
 
-Could not find include file 'foo.stan'. Currently available files are:
+Could not find include file 'foo.stan'.
+stanc was given information about the following files:
 bar.stan
 
 functions {

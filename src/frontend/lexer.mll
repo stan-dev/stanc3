@@ -1,40 +1,40 @@
 (** The lexer that will feed into the parser. An OCamllex file. *)
 
 {
-  module Stack = Core.Stack
-  module Queue = Core.Queue
-  open Lexing
-  open Debugging
-  open Preprocessor
+module Stack = Core.Stack
+module Queue = Core.Queue
+open Lexing
+open Debugging
+open Preprocessor
 
 (* Boilerplate for getting line numbers for errors *)
-  let incr_linenum lexbuf =
-    lexer_pos_logger lexbuf.lex_curr_p;
-    let pos = lexbuf.lex_curr_p in
-    lexbuf.lex_curr_p <- { pos with
-      pos_lnum = pos.pos_lnum + 1;
-      pos_bol = pos.pos_cnum } ;
-    update_start_positions lexbuf.lex_curr_p
+let incr_linenum lexbuf =
+  lexer_pos_logger lexbuf.lex_curr_p;
+  let pos = lexbuf.lex_curr_p in
+  lexbuf.lex_curr_p <-
+    {pos with pos_lnum= pos.pos_lnum + 1; pos_bol= pos.pos_cnum};
+  update_start_positions lexbuf.lex_curr_p
 
-  (* Store comments *)
-  let add_line_comment (begin_pos, buffer) end_pos =
-    add_comment
-    @@ LineComment
-         ( Buffer.contents buffer
-         , location_span_of_positions (begin_pos, end_pos) )
+(* Store comments *)
+let add_line_comment (begin_pos, buffer) end_pos =
+  add_comment
+  @@ LineComment
+       (Buffer.contents buffer, location_span_of_positions (begin_pos, end_pos))
 
-  let add_multi_comment begin_pos lines end_pos =
-    add_comment
-    @@ Ast.BlockComment (lines, location_span_of_positions (begin_pos, end_pos))
+let add_multi_comment begin_pos lines end_pos =
+  add_comment
+  @@ Ast.BlockComment (lines, location_span_of_positions (begin_pos, end_pos))
 
-  let add_separator lexbuf =
-    add_comment @@ Separator (location_of_position lexbuf.lex_curr_p)
+let add_separator lexbuf =
+  add_comment @@ Separator (location_of_position lexbuf.lex_curr_p)
 
-  let add_include fname lexbuf =
-    add_comment
-    @@ Include
-         ( fname
-         , location_span_of_positions (lexbuf.lex_start_p, lexbuf.lex_curr_p) )
+let add_include fname lexbuf =
+  add_comment
+  @@ Include
+       ( fname
+       , location_span_of_positions (lexbuf.lex_start_p, lexbuf.lex_curr_p) )
+
+module Make (LexBufCreator : Includes_intf.PREPROCESSOR_LOADER) = struct (* begin functor *)
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -72,7 +72,7 @@ rule token = parse
     )                         { lexer_logger ("include " ^ fname) ;
                                 add_include fname lexbuf ;
                                 let new_lexbuf =
-                                  try_get_new_lexbuf fname in
+                                  LexBufCreator.try_get_new_lexbuf fname in
                                 token new_lexbuf }
 (* Program blocks *)
   | "functions"               { lexer_logger "functions" ;
@@ -234,4 +234,5 @@ and singleline_comment state = parse
   | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {
+end (* end functor *)
 }

@@ -45,12 +45,18 @@ let pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments ppf
         ; ("generated quantities", bgq) ] in
     pp_block_list ppf blocks
 
-let check_correctness ?(bare_functions = false) prog pretty =
+let sanity_check_pretty_printed_program
+    (module Locator : Includes_intf.LEXBUF_LOCATOR) ?(bare_functions = false)
+    typed_prog pretty =
+  let prog = untyped_program_of_typed_program typed_prog in
   let result_ast =
     let res, (_ : Warnings.t list) =
       if bare_functions then
-        Parse.parse_string Parser.Incremental.functions_only pretty
-      else Parse.parse_string Parser.Incremental.program pretty in
+        Parse.parse_string
+          (module Locator)
+          Parser.Incremental.functions_only pretty
+      else Parse.parse_string (module Locator) Parser.Incremental.program pretty
+    in
     match res with
     | Ok prog -> prog
     | Error e ->
@@ -69,12 +75,9 @@ let check_correctness ?(bare_functions = false) prog pretty =
 
 let pretty_print_program ?(bare_functions = false) ?(line_length = 78)
     ?(inline_includes = false) ?(strip_comments = false) p =
-  let result =
-    str "%a"
-      (pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments)
-      p in
-  check_correctness ~bare_functions p result;
-  result
+  str "%a"
+    (pp_program ~bare_functions ~line_length ~inline_includes ~strip_comments)
+    p
 
 let pretty_print_typed_program ?(bare_functions = false) ?(line_length = 78)
     ?(inline_includes = false) ?(strip_comments = false) p =

@@ -1,6 +1,6 @@
-(** Preprocessor for handling include directives *)
+open Includes_intf
 
-open Core
+(** Preprocessor for handling include directives *)
 
 val location_of_position : Lexing.position -> Middle.Location.t
 
@@ -21,8 +21,8 @@ val init : Lexing.lexbuf -> string -> unit
 
 val update_start_positions : Lexing.position -> unit
 (** Update the lex_start_p the lexing buffers on the stack.
-    This solves an issue where a parser which started with one lexbuf
-    but is finishing with another can have the wrong information
+  This solves an issue where a parser which started with one lexbuf
+  but is finishing with another can have the wrong information
 *)
 
 val pop_buffer : unit -> Lexing.lexbuf
@@ -30,15 +30,19 @@ val pop_buffer : unit -> Lexing.lexbuf
 
 val add_comment : Ast.comment_type -> unit
 val get_comments : unit -> Ast.comment_type list
-val find_include : (string -> Lexing.lexbuf * string) ref
 
 val included_files : string list ref
 (** List of files that have been included *)
 
 val restore_prior_lexbuf : unit -> Lexing.lexbuf
 (** Restore to a previous lexing buffer (assumes that one exists) and
-    updates positions accordingly. *)
+  updates positions accordingly. *)
 
-val try_get_new_lexbuf : string -> Lexing.lexbuf
-(** Search include paths for filename and try to create a new lexing buffer
-    with that filename, record that included from specified position *)
+(** The part of the preprocessor that loads #include-d files is
+  made generic here to support cases where we have filesystem access
+  and cases where we do not.
+
+  See [In_memory_includes] and [Filesystem_includes] for
+  implementations of the [LEXBUF_LOCATOR] module.
+  *)
+module Make (Locator : LEXBUF_LOCATOR) : PREPROCESSOR_LOADER

@@ -2,7 +2,7 @@ open Frontend
 open Core
 
 let untyped_ast_of_string s =
-  let res, warnings = Parse.parse_string Parser.Incremental.program s in
+  let res, warnings = Parse.parse_in_memory Parser.Incremental.program s in
   Fmt.epr "%a" (Fmt.list ~sep:Fmt.nop Warnings.pp) warnings;
   res
 
