@@ -200,7 +200,7 @@ let () =
     | BadJsInput s -> Some s
     | _ -> None)
 
-let typecheck e typ = Js.equals (Js.typeof e) (Js.string typ)
+let typecheck e typ = String.equal (Js.to_string (Js.typeof e)) typ
 
 (** Converts from a [{ [s:string]:string }] JS object type
 to an OCaml map, with error messages on bad input. *)
