@@ -3,7 +3,6 @@
 open Core
 open Lexing
 open Debugging
-module Str = Re.Str
 
 let comments = Queue.create ()
 let add_comment = Queue.enqueue comments

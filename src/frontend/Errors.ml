@@ -1,7 +1,6 @@
 (** Setup of our compiler errors *)
 
 open Core
-module Str = Re.Str
 
 (** Our type of syntax error information *)
 type syntax_error =
