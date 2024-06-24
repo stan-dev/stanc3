@@ -2,12 +2,6 @@
 
 open Core
 
-(**/**)
-
-module Str = Re.Str
-
-(**/**)
-
 (** Source code locations *)
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
