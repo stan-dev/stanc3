@@ -29,8 +29,6 @@ val update_start_positions : Lexing.position -> unit
     but is finishing with another can have the wrong information
 *)
 
-val no_leading_dotslash : string -> string
-
 val pop_buffer : unit -> Lexing.lexbuf
 (** Pop the buffer at the top of the include stack *)
 

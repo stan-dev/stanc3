@@ -232,6 +232,19 @@ Could not find include file 'foo.stan'.
 stanc was given information about the following files:
 bar.stan
 
+Syntax error in 'string', line 2, column 0, include error:
+   -------------------------------------------------
+     1:  
+     2:  #include <foo.stan>
+         ^
+     3:  data {
+     4:      int a;
+   -------------------------------------------------
+
+Could not find include file 'foo.stan'.
+stanc was given information about the following files:
+./foo.stan
+
 functions {
   int foo(real a) {
     return 1;
@@ -253,8 +266,6 @@ data {
 Warning: stanc.js failed to parse included file mapping!
 Failed to read property 'foo.stan' of included files map!
 It had type 'object' instead of 'string'.
-Warning: stanc.js failed to parse included file mapping!
-Duplicate string in included files map: 'foo.stan'
 Warning: stanc.js failed to parse included file mapping!
 Included files map was provided but was not of type 'object'
 Syntax error in 'include/b.stan', line 1, column 0, included from

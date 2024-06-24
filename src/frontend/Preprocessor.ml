@@ -96,8 +96,6 @@ let maybe_remove_quotes str =
     drop_suffix (drop_prefix str 1) 1
   else str
 
-let no_leading_dotslash = String.chop_prefix_if_exists ~prefix:"./"
-
 let find_include_fs lookup_paths fname =
   let rec loop paths =
     match paths with
@@ -119,7 +117,6 @@ let find_include_fs lookup_paths fname =
   loop lookup_paths
 
 let find_include_inmemory map fname =
-  let fname = no_leading_dotslash fname in
   match Map.find map fname with
   | None ->
       let message =

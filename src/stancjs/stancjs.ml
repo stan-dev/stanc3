@@ -205,7 +205,7 @@ let to_file_map includes =
   try
     match Js.Optdef.to_option includes with
     | None -> Result.Ok String.Map.empty (* normal use: argument not supplied *)
-    | Some includes -> (
+    | Some includes ->
         if not (typecheck includes "object") then
           raise
             (BadJsInput
@@ -223,17 +223,14 @@ let to_file_map includes =
                      had type '%s' instead of 'string'."
                     (Js.to_string k)
                     (Js.typeof value_js |> Js.to_string))) in
-        match
-          String.Map.of_alist
-            (List.map keys ~f:(fun k ->
-                 let key_clean =
-                   k |> Js.to_string |> Preprocessor.no_leading_dotslash in
-                 (key_clean, value k)))
-        with
-        | `Duplicate_key s ->
-            Result.Error ("Duplicate string in included files map: '" ^ s ^ "'")
-        | `Ok m -> Result.Ok m)
-  with e -> Result.Error (Stdlib.Printexc.to_string e)
+        Result.Ok
+          (String.Map.of_alist_exn (* JS objects cannot have duplicate keys *)
+             (List.map keys ~f:(fun k ->
+                  let key_clean = k |> Js.to_string in
+                  (key_clean, value k))))
+  with
+  | BadJsInput s -> Result.Error s
+  | e -> Result.Error (Exn.to_string e)
 
 let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) includes =
   let flags =
