@@ -6,7 +6,7 @@ let print_ast_or_error code =
     match Test_utils.untyped_ast_of_string code with
     | Result.Error e -> print_endline @@ Errors.to_string e
     | Result.Ok ast -> print_s [%sexp (ast : Ast.untyped_program)] in
-  (* reset *) Preprocessor.include_provider := FileSystemPaths []
+  (* reset *) Include_files.include_provider := FileSystemPaths []
 
 let include_model = {|
 #include <foo.stan>
@@ -17,7 +17,7 @@ data {
 
 (* TESTS *)
 let%expect_test "no includes" =
-  Preprocessor.include_provider := InMemory String.Map.empty;
+  Include_files.include_provider := InMemory String.Map.empty;
   print_ast_or_error include_model;
   [%expect
     {|
@@ -27,7 +27,7 @@ let%expect_test "no includes" =
     None |}]
 
 let%expect_test "wrong include" =
-  Preprocessor.include_provider :=
+  Include_files.include_provider :=
     InMemory (String.Map.of_alist_exn [("bar.stan", "functions { }")]);
   print_ast_or_error include_model;
   [%expect
@@ -37,20 +37,33 @@ let%expect_test "wrong include" =
     stanc was given information about the following files:
     bar.stan |}]
 
-let a = "#include <include/b.stan>"
-let b = "#include <include/a.stan>"
+let a = {|
+// comment here
+#include <include/b.stan>
+|}
+
+let b = {|
+#include <include/a.stan>
+// comment here
+|}
 
 let%expect_test "recursive include" =
-  Preprocessor.include_provider :=
+  Include_files.include_provider :=
     InMemory
       (String.Map.of_alist_exn [("include/a.stan", a); ("include/b.stan", b)]);
   print_ast_or_error a;
   [%expect
     {|
-    Syntax error in 'include/b.stan', line 1, column 0, included from
-    'include/a.stan', line 1, column 0, included from
-    'include/b.stan', line 1, column 0, included from
-    'string', line 1, column 0, include error:
+    Syntax error in 'include/b.stan', line 2, column 0, included from
+    'include/a.stan', line 3, column 0, included from
+    'include/b.stan', line 2, column 0, included from
+    'string', line 3, column 0, include error:
+       -------------------------------------------------
+         1:
+         2:  #include <include/a.stan>
+             ^
+         3:  // comment here
+       -------------------------------------------------
 
     File include/a.stan recursively included itself. |}]
 
@@ -63,7 +76,7 @@ functions {
 |}
 
 let%expect_test "good include" =
-  Preprocessor.include_provider :=
+  Include_files.include_provider :=
     InMemory (String.Map.of_alist_exn [("foo.stan", foo)]);
   print_ast_or_error include_model;
   [%expect

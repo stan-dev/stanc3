@@ -269,12 +269,13 @@ It had type 'object' instead of 'string'.
 Warning: stanc.js failed to parse included file mapping!
 Included files map was provided but was not of type 'object'
 Syntax error in 'include/b.stan', line 1, column 0, included from
-'include/a.stan', line 1, column 0, included from
+'include/a.stan', line 2, column 0, included from
 'include/b.stan', line 1, column 0, included from
-'include/a.stan', line 1, column 0, include error:
+'include/a.stan', line 2, column 0, include error:
    -------------------------------------------------
-     1:  #include <include/b.stan>
+     1:  #include <include/a.stan>
          ^
+     2:   // comment here
    -------------------------------------------------
 
 File include/a.stan recursively included itself.

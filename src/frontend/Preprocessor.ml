@@ -12,12 +12,6 @@ let include_stack = Stack.create ()
 let included_files : string list ref = ref []
 let size () = Stack.length include_stack
 
-type include_provider_t =
-  | FileSystemPaths of string list
-  | InMemory of string String.Map.t
-
-let include_provider : include_provider_t ref = ref (FileSystemPaths [])
-
 let locations_map : (string * Middle.Location.t option) String.Table.t =
   String.Table.create ()
 
@@ -132,7 +126,7 @@ let find_include_inmemory map fname =
   | Some s -> (Lexing.from_string s, fname)
 
 let find_include fname =
-  match !include_provider with
+  match !Include_files.include_provider with
   | FileSystemPaths lookup_paths -> find_include_fs lookup_paths fname
   | InMemory map -> find_include_inmemory map fname
 

@@ -14,7 +14,7 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
     * Warnings.t list
     * Pedantic_analysis.warning_span list =
   Common.Gensym.reset_danger_use_cautiously ();
-  Preprocessor.include_provider := Preprocessor.InMemory includes;
+  Include_files.include_provider := Include_files.InMemory includes;
   Typechecker.model_name := model_name;
   Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined");

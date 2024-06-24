@@ -1,14 +1,5 @@
 (** Preprocessor for handling include directives *)
 
-open Core
-
-type include_provider_t =
-  | FileSystemPaths of string list
-  | InMemory of string String.Map.t
-
-val include_provider : include_provider_t ref
-(** Where and how to look for #include-d files *)
-
 val location_of_position : Lexing.position -> Middle.Location.t
 
 val location_span_of_positions :

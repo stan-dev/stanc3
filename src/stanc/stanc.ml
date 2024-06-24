@@ -204,8 +204,9 @@ let options =
     ; ( "--include-paths"
       , Arg.String
           (fun str ->
-            Preprocessor.include_provider :=
-              Preprocessor.FileSystemPaths (String.split_on_chars ~on:[','] str))
+            Include_files.include_provider :=
+              Include_files.FileSystemPaths
+                (String.split_on_chars ~on:[','] str))
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
     ; ( "--use-opencl"
