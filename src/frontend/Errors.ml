@@ -22,21 +22,21 @@ type t =
   | Semantic_error of Semantic_error.t
   | DebugDataError of (Middle.Location_span.t * string)
 
-let get_context_callback ?code filename () =
+let get_context_callback ?code Middle.Location.{filename; included_from; _} () =
   (* By the time we are printing an error, all these files are already resolved. *)
   match !Include_files.include_provider with
   | FileSystemPaths _ ->
       (* So we can read directly from the filesystem *)
       In_channel.read_lines filename
   | InMemory m ->
-      (* Or it is either in the map, or, it is the original source file. *)
-      let included = Map.find m filename in
-      Option.first_some included code |> Option.value_exn |> String.split_lines
+      (* If the location is not included from anywhere, it's the orignal code,
+         otherwise we know we can find it in the map *)
+      (if Option.is_none included_from then code else Map.find m filename)
+      |> Option.value_exn |> String.split_lines
 
 let pp_context_with_message ?code ppf (msg, loc) =
-  let open Middle.Location in
   Fmt.pf ppf "%a@,%s" (Fmt.option Fmt.string)
-    (context_to_string (get_context_callback ?code loc.filename) loc)
+    (Middle.Location.context_to_string (get_context_callback ?code loc) loc)
     msg
 
 let pp_semantic_error ?printed_filename ?code ppf err =

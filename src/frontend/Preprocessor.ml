@@ -60,7 +60,7 @@ let current_buffer () =
   let buf = Stack.top_exn include_stack in
   buf
 
-let current_location_t () =
+let current_location () =
   location_of_position (lexeme_start_p (current_buffer ()))
 
 let pop_buffer () = Stack.pop_exn include_stack
@@ -101,11 +101,11 @@ let find_include_fs lookup_paths fname =
           Fmt.str
             "Could not find include file '%s' in specified include paths.@\n\
              @[Current include paths: %a@]" fname pp_list lookup_paths in
-        raise (Errors.SyntaxError (Include (message, current_location_t ())))
+        raise (Errors.SyntaxError (Include (message, current_location ())))
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
-          (In_channel.create full_path |> from_channel, full_path)
+          (In_channel.create full_path |> Lexing.from_channel, full_path)
         with _ -> loop rest_of_paths) in
   loop lookup_paths
 
@@ -121,7 +121,7 @@ let find_include_inmemory map fname =
           "Could not find include file '%s'.@ stanc was given information \
            about the following files:@ %a"
           fname pp_list map in
-      raise (Errors.SyntaxError (Include (message, current_location_t ())))
+      raise (Errors.SyntaxError (Include (message, current_location ())))
   | Some s -> (Lexing.from_string s, fname)
 
 let find_include fname =
