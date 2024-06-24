@@ -25,8 +25,8 @@ val init : Lexing.lexbuf -> string -> unit
 
 val update_start_positions : Lexing.position -> unit
 (** Update the lex_start_p the lexing buffers on the stack.
-  This solves an issue where a parser which started with one lexbuf
-  but is finishing with another can have the wrong information
+    This solves an issue where a parser which started with one lexbuf
+    but is finishing with another can have the wrong information
 *)
 
 val no_leading_dotslash : string -> string
@@ -42,8 +42,8 @@ val included_files : string list ref
 
 val restore_prior_lexbuf : unit -> Lexing.lexbuf
 (** Restore to a previous lexing buffer (assumes that one exists) and
-  updates positions accordingly. *)
+    updates positions accordingly. *)
 
 val try_get_new_lexbuf : string -> Lexing.lexbuf
 (** Search include paths for filename and try to create a new lexing buffer
-        with that filename, record that included from specified position *)
+    with that filename, record that included from specified position *)
