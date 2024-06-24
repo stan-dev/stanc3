@@ -54,6 +54,6 @@ utils.print_warnings(include_test_bad)
 var recursive_a = `#include <include/a.stan>`
 var recursive_b = `#include <include/b.stan>`
 
-var recursive_test = stanc.stanc("recursive", recursive_a, [], {"include/a.stan":recursive_b, "include/b.stan":recursive_a});
+var recursive_test = stanc.stanc("recursive", recursive_a, ["filename-in-msg=include/b.stan"], {"include/a.stan":recursive_b, "include/b.stan":recursive_a});
 utils.print_error(recursive_test)
 utils.print_warnings(recursive_test)

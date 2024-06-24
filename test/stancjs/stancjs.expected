@@ -260,7 +260,7 @@ Included files map was provided but was not of type 'object'
 Syntax error in 'include/a.stan', line 1, column 0, included from
 'include/b.stan', line 1, column 0, included from
 'include/a.stan', line 1, column 0, included from
-'string', line 1, column 0, include error:
+'include/b.stan', line 1, column 0, include error:
    -------------------------------------------------
      1:  #include <include/a.stan>
          ^
