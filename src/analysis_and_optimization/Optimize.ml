@@ -391,6 +391,9 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
         | TargetPE e ->
             let d, s, e = inline_function_expression propto adt fim e in
             slist_concat_no_loc (d @ s) (TargetPE e)
+        | JacobianPE e ->
+            let d, s, e = inline_function_expression propto adt fim e in
+            slist_concat_no_loc (d @ s) (JacobianPE e)
         | NRFunApp (kind, exprs) ->
             let d_list, s_list, es =
               inline_list (inline_function_expression propto adt fim) exprs
@@ -531,7 +534,7 @@ let rec contains_top_break_or_continue Stmt.Fixed.{pattern; _} =
   match pattern with
   | Break | Continue -> true
   | Assignment (_, _, _)
-   |TargetPE _
+   |TargetPE _ | JacobianPE _
    |NRFunApp (_, _)
    |Return _ | Decl _
    |While (_, _)
@@ -749,7 +752,7 @@ let dead_code_elimination (mir : Program.Typed.t) =
          remove an assignment to a variable
             due to side effects. *)
       (* TODO: maybe we should revisit that. *)
-      | Decl _ | TargetPE _
+      | Decl _ | TargetPE _ | JacobianPE _
        |NRFunApp (_, _)
        |Break | Continue | Return _ | Skip ->
           stmt
