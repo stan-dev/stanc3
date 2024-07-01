@@ -9,9 +9,3 @@ let empty file =
   add_warning Middle.Location_span.empty
     ("Empty file '" ^ file
    ^ "' detected; this is a valid stan model but likely unintended!")
-
-let future_keyword kwrd version positions =
-  add_warning
-    (Preprocessor.location_span_of_positions positions)
-    ("Variable name '" ^ kwrd ^ "' will be a reserved word starting in Stan "
-   ^ version ^ ". Please rename it!")

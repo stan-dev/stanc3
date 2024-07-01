@@ -213,15 +213,8 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
-  | id_and_v = future_keyword
-    {
-      let id, _ = id_and_v in
-      (* Input_warnings.future_keyword id.name v $loc; *)
-      id
-    }
-
-future_keyword:
-  | JACOBIAN { build_id "jacobian" $loc, "2.38.0" }
+(* TODO(2.38) remove *)
+  | JACOBIAN { build_id "jacobian" $loc }
 
 decl_identifier:
   | id=identifier { id }

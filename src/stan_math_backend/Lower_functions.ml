@@ -412,7 +412,8 @@ let lower_standalone_fun_def namespace_fun
   let internal_fname = namespace_fun ^ "::" ^ fdname in
   let template =
     match fdsuffix with
-    | FnLpdf _ | FnTarget | FnJacobian -> [TypeLiteral "false"]
+    | FnLpdf _ | FnTarget -> [TypeLiteral "false"]
+    | FnJacobian -> [TypeLiteral "true"]
     | FnRng | FnPlain -> [] in
   let call_args =
     List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
