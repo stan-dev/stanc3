@@ -20,7 +20,7 @@ type factor_graph =
 
 let extract_factors_statement stmt =
   match stmt with
-  | Stmt.Fixed.Pattern.TargetPE e ->
+  | Stmt.Fixed.Pattern.TargetPE e | JacobianPE e ->
       List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
   | NRFunApp (CompilerInternal (FnReject | FnFatalError), _) -> [Reject]
   | NRFunApp ((UserDefined (s, FnTarget) | StanLib (s, FnTarget, _)), args) ->

@@ -7,6 +7,7 @@ module Fixed : sig
     type ('a, 'b) t =
       | Assignment of 'a lvalue * UnsizedType.t * 'a
       | TargetPE of 'a
+      | JacobianPE of 'a
       | NRFunApp of 'a Fun_kind.t * 'a list
       | Break
       | Continue

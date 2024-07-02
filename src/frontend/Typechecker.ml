@@ -59,6 +59,11 @@ let in_lp_function cf =
   | NonReturning FnTarget | Returning (FnTarget, _) -> true
   | _ -> false
 
+let in_jacobian_function cf =
+  match cf.containing_function with
+  | NonReturning FnJacobian | Returning (FnJacobian, _) -> true
+  | _ -> false
+
 let in_udf_distribution cf =
   match cf.containing_function with
   | NonReturning (FnLpdf ()) | Returning (FnLpdf (), _) -> true
@@ -103,6 +108,10 @@ let reserved_keywords =
   ; "false"; "typedef"; "struct"; "var"; "export"; "extern"; "static"; "auto" ]
 
 let verify_identifier id : unit =
+  if id.name = "jacobian" then
+    add_warning id.id_loc
+      "Variable name 'jacobian' will be a reserved word starting in Stan 2.38. \
+       Please rename it!";
   if id.name = !model_name then
     Semantic_error.ident_is_model_name id.id_loc id.name |> error
   else if
@@ -436,12 +445,21 @@ let verify_fn_conditioning loc id =
     with right suffix (same for tilde etc)
 *)
 let verify_fn_target_plus_equals cf loc id =
+  if String.is_suffix id.name ~suffix:"_lp" then
+    if cf.current_block = TParam then
+      add_warning loc
+        "Using _lp functions in transformed parameters is deprecated and will \
+         be disallowed in Stan 2.39. Use an _jacobian function instead, as \
+         this allows change of variable adjustments which are conditionally \
+         enabled by the algorithms."
+    else if in_lp_function cf || cf.current_block = Model then ()
+    else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
+
+let verify_fn_jacobian_plus_equals cf loc id =
   if
-    String.is_suffix id.name ~suffix:"_lp"
-    && not
-         (in_lp_function cf || cf.current_block = Model
-        || cf.current_block = TParam)
-  then Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
+    String.is_suffix id.name ~suffix:"_jacobian"
+    && not (in_jacobian_function cf || cf.current_block = TParam)
+  then Semantic_error.jacobian_plusequals_not_allowed loc |> error
 
 (** Rng functions cannot be used in Tp or Model and only
     in function defs with the right suffix
@@ -693,6 +711,7 @@ and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   verify_identifier id;
   name_check loc id;
   verify_fn_target_plus_equals cf loc id;
+  verify_fn_jacobian_plus_equals cf loc id;
   verify_fn_rng cf loc id;
   verify_unnormalized cf loc id;
   res
@@ -948,6 +967,32 @@ let check_nr_fn_app loc cf tenv id es =
   verify_nrfn_target loc cf id;
   check_nrfn loc tenv id tes
 
+(* target plus-equals / jacobian plus-equals *)
+
+let verify_target_pe_expr_type loc e =
+  if UnsizedType.is_fun_type e.emeta.type_ then
+    Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
+
+let verify_target_pe_usage loc cf =
+  if in_lp_function cf || cf.current_block = Model then ()
+  else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
+
+let check_target_pe loc cf tenv e =
+  let te = check_expression cf tenv e in
+  verify_target_pe_usage loc cf;
+  verify_target_pe_expr_type loc te;
+  mk_typed_statement ~stmt:(TargetPE te) ~return_type:Incomplete ~loc
+
+let verify_jacobian_pe_usage loc cf =
+  if in_jacobian_function cf || cf.current_block = TParam then ()
+  else Semantic_error.jacobian_plusequals_not_allowed loc |> error
+
+let check_jacobian_pe loc cf tenv e =
+  let te = check_expression cf tenv e in
+  verify_jacobian_pe_usage loc cf;
+  verify_target_pe_expr_type loc te;
+  mk_typed_statement ~stmt:(JacobianPE te) ~return_type:Incomplete ~loc
+
 (* assignments *)
 let verify_assignment_read_only loc is_readonly id =
   if is_readonly then
@@ -1197,28 +1242,21 @@ let rec check_lvalues cf tenv = function
       LTuplePack {lvals; loc}
 
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
-  let lhs = check_lvalues cf tenv assign_lhs in
-  verify_lvalue_unique lhs;
-  let rhs = check_expression cf tenv assign_rhs in
-  let rhs' = check_assignment_operator loc assign_op lhs rhs in
-  mk_typed_statement ~return_type:Incomplete ~loc
-    ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
-
-(* target plus-equals / increment log-prob *)
-
-let verify_target_pe_expr_type loc e =
-  if UnsizedType.is_fun_type e.emeta.type_ then
-    Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
-
-let verify_target_pe_usage loc cf =
-  if in_lp_function cf || cf.current_block = Model then ()
-  else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
-
-let check_target_pe loc cf tenv e =
-  let te = check_expression cf tenv e in
-  verify_target_pe_usage loc cf;
-  verify_target_pe_expr_type loc te;
-  mk_typed_statement ~stmt:(TargetPE te) ~return_type:Incomplete ~loc
+  (* TODO(2.38): Remove this workaround *)
+  match (assign_lhs, assign_op, Env.find tenv "jacobian") with
+  | LValue {lval= LVariable {name= "jacobian"; _}; _}, OperatorAssign Plus, []
+    ->
+      (* if jacobian is not a user-defined variable, and we find a statement like "jacobian +=",
+         we can assume it is the new statement
+      *)
+      check_jacobian_pe loc cf tenv assign_rhs
+  | _ ->
+      let lhs = check_lvalues cf tenv assign_lhs in
+      verify_lvalue_unique lhs;
+      let rhs = check_expression cf tenv assign_rhs in
+      let rhs' = check_assignment_operator loc assign_op lhs rhs in
+      mk_typed_statement ~return_type:Incomplete ~loc
+        ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
 
 (* tilde/distribution notation*)
 let verify_distribution_pdf_pmf id =
@@ -1789,6 +1827,7 @@ and check_fundef loc cf tenv return_ty id args body =
       if is_udf_dist id.name then Fun_kind.FnLpdf ()
       else if String.is_suffix id.name ~suffix:"_rng" then FnRng
       else if String.is_suffix id.name ~suffix:"_lp" then FnTarget
+      else if String.is_suffix id.name ~suffix:"_jacobian" then FnJacobian
       else FnPlain in
     { cf with
       containing_function=
@@ -1812,6 +1851,7 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | Assignment {assign_lhs; assign_op; assign_rhs} ->
       (tenv, check_assignment loc cf tenv assign_lhs assign_op assign_rhs)
   | TargetPE e -> (tenv, check_target_pe loc cf tenv e)
+  | JacobianPE e -> (tenv, check_jacobian_pe loc cf tenv e)
   | Tilde {arg; distribution; args; truncation} ->
       (tenv, check_tilde loc cf tenv distribution truncation arg args)
   | Break -> (tenv, check_break loc cf)

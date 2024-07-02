@@ -59,7 +59,7 @@ let rec free_vars_lval ((lval, idxs) : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
 let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
     =
   match s with
-  | Return (Some e) | TargetPE e -> free_vars_expr e
+  | Return (Some e) | TargetPE e | JacobianPE e -> free_vars_expr e
   | Assignment (l, _, e) ->
       Set.Poly.union_list [free_vars_expr e; free_vars_lval l]
   | NRFunApp (kind, l) -> free_vars_fnapp kind l
@@ -81,8 +81,8 @@ let top_free_vars_stmt
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
   match s with
-  | Assignment _ | Return _ | TargetPE _ | NRFunApp _ | Decl _ | Break
-   |Continue | Skip ->
+  | Assignment _ | Return _ | TargetPE _ | JacobianPE _ | NRFunApp _ | Decl _
+   |Break | Continue | Skip ->
       free_vars_stmt
         (statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir s)
   | While (e, _) | IfElse (e, _, _) -> free_vars_expr e
@@ -349,7 +349,7 @@ let constant_propagation_transfer ?(preserve_stability = false)
             | Decl {decl_id= s; _} -> Map.remove m s
             | Assignment (lhs, _, _) ->
                 Map.remove m (Middle.Stmt.Helpers.lhs_variable lhs)
-            | TargetPE _
+            | TargetPE _ | JacobianPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
@@ -407,7 +407,7 @@ let expression_propagation_transfer ?(preserve_stability = false)
                   Set.Poly.union_list
                     (List.map ~f:(label_top_decls flowgraph_to_mir) b) in
                 Set.fold kills ~init:m ~f:kill_var
-            | TargetPE _
+            | TargetPE _ | JacobianPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
@@ -451,7 +451,7 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                     (List.map ~f:(label_top_decls flowgraph_to_mir) stmt_lst)
                 in
                 Set.fold kills ~init:expr_map ~f:kill_var
-            | TargetPE _
+            | TargetPE _ | JacobianPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip | SList _
              |IfElse (_, _, _)
@@ -472,8 +472,11 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
   match s with
   | Assignment (lhs, _, _) ->
       Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
-  | TargetPE _ -> Set.Poly.singleton "target"
-  | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) ->
+  | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
+  | NRFunApp
+      ( ( UserDefined (_, (FnTarget | FnJacobian))
+        | StanLib (_, (FnTarget | FnJacobian), _) )
+      , _ ) ->
       Set.Poly.singleton "target"
   | For {loopvar= x; _} -> Set.Poly.singleton x
   | Decl {decl_id= _; _}
@@ -514,9 +517,12 @@ let reaching_definitions_transfer
          |Assignment ((LVariable x, []), _, _)
          |For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
-        | TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _)
-          ->
+        | TargetPE _ | JacobianPE _ ->
+            Set.filter p ~f:(fun (y, _) -> y = "target")
+        | NRFunApp
+            ( ( UserDefined (_, (FnTarget | FnJacobian))
+              | StanLib (_, (FnTarget | FnJacobian), _) )
+            , _ ) ->
             Set.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
@@ -558,7 +564,7 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
         match mir_node with
         | Assignment ((LVariable x, []), _, _) | Decl {decl_id= x; _} ->
             Set.Poly.singleton x
-        | TargetPE _
+        | TargetPE _ | JacobianPE _
          |NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
@@ -616,7 +622,7 @@ let used_expressions_expr e = Expr.Typed.Set.singleton e
 let rec used_expressions_stmt_help f
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
   match s with
-  | TargetPE e | Return (Some e) -> f e
+  | TargetPE e | JacobianPE e | Return (Some e) -> f e
   | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | IfElse (e, b1, Some b2) ->
       Expr.Typed.Set.union_list
@@ -650,7 +656,7 @@ let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 let top_used_expressions_stmt_help f
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
   match s with
-  | TargetPE e | Return (Some e) -> f e
+  | TargetPE e | JacobianPE e | Return (Some e) -> f e
   | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | While (e, _) | IfElse (e, _, _) -> f e
   | NRFunApp (k, l) ->
@@ -882,7 +888,7 @@ let rec declared_variables_stmt
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | Assignment (_, _, _)
-   |TargetPE _
+   |TargetPE _ | JacobianPE _
    |NRFunApp (_, _)
    |Break | Continue | Return _ | Skip ->
       Set.Poly.empty

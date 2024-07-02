@@ -373,6 +373,7 @@ module StatementError = struct
     | InvalidTildeCDForCCDF of string
     | InvalidTildeNoSuchDistribution of string * bool
     | TargetPlusEqualsOutsideModelOrLogProb
+    | JacobianPlusEqualsNotAllowed
     | InvalidTruncationCDForCCDF of
         (UnsizedType.autodifftype * UnsizedType.t) list
     | BreakOutsideLoop
@@ -428,11 +429,15 @@ module StatementError = struct
           Fmt.(list ~sep:comma string)
           ids
     | TargetPlusEqualsOutsideModelOrLogProb ->
-        Fmt.pf ppf
+        Fmt.string ppf
           "Target can only be accessed in the model block or in definitions of \
            functions with the suffix _lp."
+    | JacobianPlusEqualsNotAllowed ->
+        Fmt.string ppf
+          "The jacobian adjustment can only be applied in the transformed \
+           parameters block or in functions ending with _jacobian"
     | InvalidTildePDForPMF ->
-        Fmt.pf ppf
+        Fmt.string ppf
           "~ statement should refer to a distribution without its \
            \"_lpdf/_lupdf\" or \"_lpmf/_lupmf\" suffix.\n\
            For example, \"target += normal_lpdf(y, 0, 1)\" should become \"y ~ \
@@ -721,6 +726,9 @@ let invalid_tilde_no_such_dist loc name is_int =
 
 let target_plusequals_outside_model_or_logprob loc =
   StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
+
+let jacobian_plusequals_not_allowed loc =
+  StatementError (loc, StatementError.JacobianPlusEqualsNotAllowed)
 
 let invalid_truncation_cdf_or_ccdf loc args =
   StatementError (loc, StatementError.InvalidTruncationCDForCCDF args)

@@ -324,7 +324,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     | Fun_kind.FnPlain -> "a pure function"
     | FnRng -> "an rng function"
     | FnLpdf () -> "a probability density or mass function"
-    | FnTarget -> "an _lp function" in
+    | FnTarget -> "an _lp function"
+    | FnJacobian -> "a _jacobian function" in
   let index_str = function
     | 1 -> "first"
     | 2 -> "second"

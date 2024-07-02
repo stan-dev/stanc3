@@ -255,6 +255,10 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | TargetPE e ->
       let accum = Var "lp_accum__" in
       accum.@?("add", [lower_expr e]) |> wrap_e
+  | JacobianPE e ->
+      let accum = Var "lp_accum__" in
+      [ Stmts.if_block (Var "jacobian__")
+          (accum.@?("add", [lower_expr e]) |> wrap_e) ]
   | NRFunApp (CompilerInternal FnPrint, args) ->
       let open Expression_syntax in
       let pstream = Var "pstream__" in

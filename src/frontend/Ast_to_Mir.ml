@@ -514,6 +514,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       NRFunApp (trans_fn_kind fn_kind name, trans_exprs args) |> swrap
   | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
+  | Ast.JacobianPE e -> JacobianPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix =
         Stan_math_signatures.dist_name_suffix ud_dists distribution.name in

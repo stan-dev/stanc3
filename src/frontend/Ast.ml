@@ -143,6 +143,7 @@ type ('e, 's, 'l, 'f) statement =
       {assign_lhs: 'l lvalue_pack; assign_op: assignmentoperator; assign_rhs: 'e}
   | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
+  | JacobianPE of 'e
   | Tilde of
       { arg: 'e
       ; distribution: identifier
@@ -285,12 +286,25 @@ let rec untyped_lvalue_of_typed_lvalue_pack :
 
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement {stmt; smeta} =
-  { stmt=
-      map_statement untyped_expression_of_typed_expression
-        untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
-        (fun _ -> ())
-        stmt
-  ; smeta= {loc= smeta.loc} }
+  match stmt with
+  (* TODO(2.38): Remove this workaround *)
+  | JacobianPE e ->
+      { stmt=
+          Assignment
+            { assign_lhs=
+                LValue
+                  { lval= LVariable {name= "jacobian"; id_loc= smeta.loc}
+                  ; lmeta= {loc= smeta.loc} }
+            ; assign_op= OperatorAssign Plus
+            ; assign_rhs= untyped_expression_of_typed_expression e }
+      ; smeta= {loc= smeta.loc} }
+  | _ ->
+      { stmt=
+          map_statement untyped_expression_of_typed_expression
+            untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
+            (fun _ -> ())
+            stmt
+      ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program : typed_program -> untyped_program =
@@ -390,7 +404,8 @@ let get_first_loc (s : untyped_statement) =
    |ForEach (id, _, _)
    |FunDef {funname= id; _} ->
       id.id_loc.begin_loc
-  | TargetPE e | Return e | IfThenElse (e, _, _) | While (e, _) ->
+  | TargetPE e | JacobianPE e | Return e | IfThenElse (e, _, _) | While (e, _)
+    ->
       e.emeta.loc.begin_loc
   | Assignment _ | Profile _ | Block _ | Tilde _ | Break | Continue
    |ReturnVoid | Print _ | Reject _ | FatalError _ | Skip ->
