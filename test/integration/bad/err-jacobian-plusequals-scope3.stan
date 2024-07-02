@@ -11,5 +11,5 @@ parameters {
 }
 
 model {
-  real b = upper_bound(b_raw, ub);
+  real b = upper_bound_jacobian(b_raw, ub);
 }

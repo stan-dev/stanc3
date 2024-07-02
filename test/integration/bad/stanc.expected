@@ -978,16 +978,16 @@ Semantic error in 'err-jacobian-plusequals-scope2.stan', line 3, column 4 to col
 
 The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
   $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope3.stan
-Semantic error in 'err-jacobian-plusequals-scope3.stan', line 14, column 11 to column 33:
+Semantic error in 'err-jacobian-plusequals-scope3.stan', line 14, column 11 to column 42:
    -------------------------------------------------
     12:  
     13:  model {
-    14:    real b = upper_bound(b_raw, ub);
+    14:    real b = upper_bound_jacobian(b_raw, ub);
                     ^
     15:  }
    -------------------------------------------------
 
-A returning function was expected but an undeclared identifier 'upper_bound' was supplied.
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
   $ ../../../../install/default/bin/stanc err-minus-types.stan
 Semantic error in 'err-minus-types.stan', line 4, column 6 to column 11:
    -------------------------------------------------
