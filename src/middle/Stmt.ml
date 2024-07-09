@@ -9,6 +9,7 @@ module Fixed = struct
     type ('a, 'b) t =
       | Assignment of 'a lvalue * UnsizedType.t * 'a
       | TargetPE of 'a
+      | JacobianPE of 'a
       | NRFunApp of 'a Fun_kind.t * 'a list
       | Break
       | Continue
@@ -45,6 +46,7 @@ module Fixed = struct
           Fmt.pf ppf "@[<hov>%a =@[<h>@ %a@];@]" (pp_lvalue pp_e) lvalue pp_e
             rhs
       | TargetPE expr -> Fmt.pf ppf "@[<h>target +=@ %a;@]" pp_e expr
+      | JacobianPE expr -> Fmt.pf ppf "@[<h>jacobian +=@ %a;@]" pp_e expr
       | NRFunApp (kind, args) ->
           Fmt.pf ppf "@[%a%a;@]" (Fun_kind.pp pp_e) kind
             Fmt.(list pp_e ~sep:comma |> parens)

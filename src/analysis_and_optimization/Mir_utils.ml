@@ -217,6 +217,7 @@ let fwd_traverse_statement stmt ~init ~f =
         (s', SList (List.rev ls))
     | Assignment _ as s -> (init, s)
     | TargetPE _ as s -> (init, s)
+    | JacobianPE _ as s -> (init, s)
     | NRFunApp _ as s -> (init, s)
     | Break as s -> (init, s)
     | Continue as s -> (init, s)
@@ -268,6 +269,7 @@ let stmt_rhs stmt =
    |While (rhs, _)
    |Assignment (_, _, rhs)
    |TargetPE rhs
+   |JacobianPE rhs
    |Return (Some rhs) ->
       Set.Poly.singleton rhs
   | Return None

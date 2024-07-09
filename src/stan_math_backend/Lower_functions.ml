@@ -227,7 +227,7 @@ let lower_fun_body fdargs fdsuffix fdbody =
   let to_refs = lower_eigen_args_to_ref fdargs in
   let propto =
     match fdsuffix with
-    | Fun_kind.FnLpdf _ | FnTarget -> []
+    | Fun_kind.FnLpdf _ | FnTarget | FnJacobian -> []
     | FnPlain | FnRng ->
         VariableDefn
           (make_variable_defn ~static:true ~constexpr:true ~type_:Types.bool
@@ -257,7 +257,8 @@ let lower_args extra_templates extra args variadic =
 
 let extra_suffix_args fdsuffix =
   match fdsuffix with
-  | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
+  | Fun_kind.FnTarget | FnJacobian ->
+      (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
   | FnRng -> (["base_rng__"], ["RNG"])
   | FnLpdf _ | FnPlain -> ([], [])
 
@@ -283,6 +284,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
     match (fdsuffix, variadic_fun_type) with
     | (FnLpdf _ | FnTarget), FixedArgs ->
         (Bool "propto__" :: template_params, args)
+    | FnJacobian, FixedArgs -> (Bool "jacobian__" :: template_params, args)
     | _ -> (template_params, args) in
   let template_params, templated_args =
     template_parameter_and_arg_names true FixedArgs in
@@ -309,6 +311,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
     let defn_template =
       match fdsuffix with
       | FnLpdf _ | FnTarget -> [TemplateType "propto__"]
+      | FnJacobian -> [TemplateType "jacobian__"]
       | _ -> [] in
     let defn_args =
       List.map ~f:Exprs.to_var
@@ -387,7 +390,7 @@ let lower_standalone_fun_def namespace_fun
     Program.{fdname; fdsuffix; fdargs; fdrt; _} =
   let extra, extra_templates =
     match fdsuffix with
-    | Fun_kind.FnTarget ->
+    | Fun_kind.FnTarget | FnJacobian ->
         (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
     | FnRng -> (["base_rng__"], ["stan::rng_t"])
     | FnLpdf _ | FnPlain -> ([], []) in
@@ -410,6 +413,7 @@ let lower_standalone_fun_def namespace_fun
   let template =
     match fdsuffix with
     | FnLpdf _ | FnTarget -> [TypeLiteral "false"]
+    | FnJacobian -> [TypeLiteral "true"]
     | FnRng | FnPlain -> [] in
   let call_args =
     List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]

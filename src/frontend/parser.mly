@@ -213,15 +213,8 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
-  | id_and_v = future_keyword
-    {
-      let id, v = id_and_v in
-      Input_warnings.future_keyword id.name v $loc;
-      id
-    }
-
-future_keyword:
-  | JACOBIAN { build_id "jacobian" $loc, "2.38.0" }
+(* TODO(2.38) remove *)
+  | JACOBIAN { build_id "jacobian" $loc }
 
 decl_identifier:
   | id=identifier { id }
@@ -773,6 +766,10 @@ atomic_statement:
     }
   | TARGET PLUSASSIGN e=expression SEMICOLON
     {   grammar_logger "targetpe_statement" ; TargetPE e }
+  (* TODO(2.38) use this instead of current workaround in typechecker.ml
+  | JACOBIAN PLUSASSIGN e=expression SEMICOLON
+    {   grammar_logger "jacobianpe_statement" ; JacobianPE e }
+  *)
   | BREAK SEMICOLON
     {  grammar_logger "break_statement" ; Break }
   | CONTINUE SEMICOLON

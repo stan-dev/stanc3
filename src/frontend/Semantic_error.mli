@@ -118,6 +118,7 @@ val invalid_tilde_pdf_or_pmf : Location_span.t -> t
 val invalid_tilde_cdf_or_ccdf : Location_span.t -> string -> t
 val invalid_tilde_no_such_dist : Location_span.t -> string -> bool -> t
 val target_plusequals_outside_model_or_logprob : Location_span.t -> t
+val jacobian_plusequals_not_allowed : Location_span.t -> t
 
 val invalid_truncation_cdf_or_ccdf :
   Location_span.t -> (UnsizedType.autodifftype * UnsizedType.t) list -> t
