@@ -139,6 +139,8 @@ rule token = parse
                                 Parser.CHOLESKYFACTORCOV }
   | "corr_matrix"             { lexer_logger "corr_matrix" ; Parser.CORRMATRIX }
   | "cov_matrix"              { lexer_logger "cov_matrix" ; Parser.COVMATRIX }
+  | "stochastic_column_matrix"              { lexer_logger "stochastic_column_matrix" ; Parser.STOCHASTICCOLUMNMATRIX }
+  | "stochastic_row_matrix"              { lexer_logger "stochastic_row_matrix" ; Parser.STOCHASTICROWMATRIX }
 (* Transformation keywords *)
   | "lower"                   { lexer_logger "lower" ; Parser.LOWER }
   | "upper"                   { lexer_logger "upper" ; Parser.UPPER }

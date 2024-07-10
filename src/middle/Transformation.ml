@@ -20,10 +20,14 @@ type 'e t =
   | CholeskyCov
   | Correlation
   | Covariance
+  | StochasticRow
+  | StochasticColumn
   | TupleTransformation of 'e t list
 [@@deriving sexp, compare, map, hash, fold]
 
 let rec has_check = function
-  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false
+  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | StochasticRow
+   |StochasticColumn ->
+      false
   | TupleTransformation transforms -> List.exists ~f:has_check transforms
   | _ -> true

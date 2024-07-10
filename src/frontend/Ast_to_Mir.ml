@@ -271,7 +271,8 @@ let check_transform_shape decl_id decl_var meta = function
       same_shape decl_id decl_var "lower" e1 meta
       @ same_shape decl_id decl_var "upper" e2 meta
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
+   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _
+   |StochasticRow | StochasticColumn ->
       []
 
 let copy_indices indexed (var : Expr.Typed.t) =
@@ -294,7 +295,8 @@ let extract_transform_args var = function
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) ->
       [copy_indices var a1; copy_indices var a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
+   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _
+   |StochasticRow | StochasticColumn ->
       []
 
 let rec param_size transform sizedtype =
@@ -339,6 +341,16 @@ let rec param_size transform sizedtype =
   | Simplex ->
       shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
+  | StochasticRow -> (
+      match sizedtype with
+      | SMatrix (mem_pattern, d1, d2) ->
+          SMatrix (mem_pattern, d1, Expr.Helpers.(binop d2 Minus (int 1)))
+      | _ -> sizedtype)
+  | StochasticColumn -> (
+      match sizedtype with
+      | SMatrix (mem_pattern, d1, d2) ->
+          SMatrix (mem_pattern, Expr.Helpers.(binop d1 Minus (int 1)), d2)
+      | _ -> sizedtype)
   | CholeskyCov ->
       (* (N * (N + 1)) / 2 + (M - N) * N *)
       shrink_eigen_mat

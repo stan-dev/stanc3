@@ -61,7 +61,7 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values =
        until we define a distribution which accepts a tuple,
        this doesn't matter.
     *)
-   |TupleTransformation _ ->
+   |TupleTransformation _ | StochasticColumn | StochasticRow ->
       {lower= `None; upper= `None}
 
 let chop_dist_name (fname : string) : string Option.t =

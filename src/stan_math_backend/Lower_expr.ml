@@ -35,6 +35,8 @@ let constraint_to_string = function
   | Upper _ -> Some "ub"
   | LowerUpper _ -> Some "lub"
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
+  | StochasticRow -> Some "stochastic_row"
+  | StochasticColumn -> Some "stochastic_column"
   | Identity -> None
   | TupleTransformation _ ->
       Common.ICE.internal_compiler_error
