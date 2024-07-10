@@ -1,0 +1,7 @@
+/* $ stanc ../unknown_annotation.stan : [exit 0] */
+warning: Unknown annotation 'not_a_real_annotation' will be ignored by the compiler.
+    ┌─ ../unknown_annotation.stan:2:4
+  1 │  parameters {
+  2 │     @not_a_real_annotation real unused;
+    │     ^^^^^^^^^^^^^^^^^^^^^^ Unknown annotation 'not_a_real_annotation' will be ignored by the compiler.
+  3 │  }

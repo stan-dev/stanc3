@@ -10,7 +10,7 @@ tuple(vector[N], real) res: AoS
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -63,7 +63,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id two)
@@ -71,11 +71,11 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id cond) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id three)
@@ -83,7 +83,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id four)
@@ -91,7 +91,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable four) ()) UVector
@@ -109,7 +109,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id six)
@@ -117,7 +117,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable six) ()) UVector
@@ -133,7 +133,7 @@ tuple(vector[N], real) res: AoS
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id dims) (decl_type (Sized SInt))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable dims) ()) UInt
@@ -182,7 +182,7 @@ tuple(vector[N], real) res: AoS
                ((pattern (Var N))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               SReal))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LTupleProjection ((LVariable res) ()) 1) ()) UVector
@@ -197,7 +197,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id two)
@@ -205,11 +205,11 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id cond) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id three)
@@ -217,7 +217,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id four)
@@ -225,7 +225,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable four) ()) UVector
@@ -243,7 +243,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id six)
@@ -251,7 +251,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable six) ()) UVector
@@ -267,7 +267,7 @@ tuple(vector[N], real) res: AoS
      (Block
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id dims) (decl_type (Sized SInt))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable dims) ()) UInt
@@ -316,7 +316,7 @@ tuple(vector[N], real) res: AoS
                ((pattern (Var N))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
               SReal))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LTupleProjection ((LVariable res) ()) 1) ()) UVector
@@ -331,7 +331,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id two)
@@ -339,11 +339,11 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id cond) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id three)
@@ -351,7 +351,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id four)
@@ -359,7 +359,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id five)
@@ -367,7 +367,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id six)
@@ -375,7 +375,7 @@ tuple(vector[N], real) res: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (IfElse
@@ -501,7 +501,7 @@ tuple(vector[N], real) res: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (two <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -509,10 +509,10 @@ tuple(vector[N], real) res: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (cond <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (three <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -520,7 +520,7 @@ tuple(vector[N], real) res: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (four <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -528,7 +528,7 @@ tuple(vector[N], real) res: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (five <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -536,7 +536,7 @@ tuple(vector[N], real) res: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (six <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -544,7 +544,7 @@ tuple(vector[N], real) res: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name other_fails_model) (prog_path ../other-fails.stan))
 /*
 ../other-fails.stan:11:3: warning: Optimization hazard (SoA): Used with unsupported operator .^: three

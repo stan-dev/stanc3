@@ -218,6 +218,7 @@ let lower_eigen_args_to_ref arg_types =
             { decl_adtype= AutoDiffable
             ; decl_type= Unsized ut
             ; decl_id= name
+            ; decl_annotations= []
             ; initialize=
                 Assign (Expr.Helpers.internal_funapp FnToRef [arg] arg.meta) }
       ; meta= Stmt.Numbered.Meta.empty } in
@@ -463,6 +464,7 @@ module Testing = struct
     ; fdname= "sars"
     ; fdsuffix= FnPlain
     ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
+    ; fdannotations= []
     ; fdbody=
         Stmt.Pattern.Return
           (Some
@@ -526,6 +528,7 @@ module Testing = struct
         [ (DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)
         ; (AutoDiffable, "z", URowVector); (AutoDiffable, "w", UArray UMatrix)
         ]
+    ; fdannotations= []
     ; fdbody=
         Stmt.Pattern.Return
           (Some

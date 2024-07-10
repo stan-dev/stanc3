@@ -30,7 +30,7 @@ vector[N] tp_aos_loop_vec_v_uni_idx: AoS
 vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
 ((functions_block
   (((fdrt (ReturnType UInt)) (fdname mask_fun) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable i UInt)))
+    (fdargs ((AutoDiffable i UInt))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -41,7 +41,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt (ReturnType UVector)) (fdname udf_fun) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable A UVector)))
+    (fdargs ((AutoDiffable A UVector))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -67,7 +67,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -75,7 +75,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -86,7 +86,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -116,7 +116,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -138,7 +138,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -160,7 +160,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SArray SInt
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -419,7 +419,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_vec_v)
@@ -438,7 +439,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_mat)
@@ -460,7 +462,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_arr_vec_v)
@@ -483,7 +486,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_mat_uni_col_idx)
@@ -505,7 +509,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_vec_uni_idx)
@@ -524,7 +529,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_loop_mat_uni_col_idx)
@@ -546,7 +552,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_lhs_loop_mul)
@@ -565,7 +572,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_rhs_loop_mul)
@@ -584,7 +592,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_used_with_aos_in_excluded_fun)
@@ -603,7 +612,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_loop_mat_multi_uni_uni_idx)
@@ -625,7 +635,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_vec_v_assign_to_aos)
@@ -644,7 +655,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_vec_v_tp_fails_func)
@@ -663,7 +675,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_loop_vec_v_uni_idx)
@@ -682,7 +695,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_fail_assign_from_top_idx)
@@ -701,7 +715,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_loop_mat_uni_uni_idx)
@@ -723,7 +738,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat)
@@ -745,7 +761,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat_pass_func_outer_single_indexed1)
@@ -767,7 +784,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat_pass_func_outer_single_indexed2)
@@ -789,7 +807,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat_fail_uni_uni_idx1)
@@ -811,7 +830,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat_fail_uni_uni_idx2)
@@ -833,11 +853,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_aos)
-      (decl_type (Sized SReal)) (initialize Default)))
+      (decl_type (Sized SReal)) (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_aos) ()) UReal
@@ -856,7 +877,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_aos_vec_v) ()) UVector
@@ -872,7 +893,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -908,7 +929,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_aos_fail_func_vec_v) ()) UVector
@@ -936,7 +957,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -969,7 +990,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable tp_soa_used_with_aos_in_excluded_fun) ()) UVector
@@ -1214,7 +1235,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment
@@ -1240,7 +1261,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment
@@ -1609,7 +1630,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
@@ -1625,7 +1646,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (For (loopvar i)
@@ -1795,7 +1816,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_vec_v)
@@ -1814,7 +1836,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_mat)
@@ -1836,7 +1859,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_arr_vec_v)
@@ -1859,7 +1883,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_mat_uni_col_idx)
@@ -1881,7 +1906,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_vec_uni_idx)
@@ -1900,7 +1926,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_loop_mat_uni_col_idx)
@@ -1922,7 +1949,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_lhs_loop_mul)
@@ -1941,7 +1969,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_rhs_loop_mul)
@@ -1960,7 +1989,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_used_with_aos_in_excluded_fun)
@@ -1979,7 +2009,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_loop_mat_multi_uni_uni_idx)
@@ -2001,7 +2032,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_vec_v_assign_to_aos)
@@ -2020,7 +2052,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_vec_v_tp_fails_func)
@@ -2039,7 +2072,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_loop_vec_v_uni_idx)
@@ -2058,7 +2092,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_fail_assign_from_top_idx)
@@ -2077,7 +2112,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_loop_mat_uni_uni_idx)
@@ -2099,7 +2135,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat)
@@ -2121,7 +2158,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat_pass_func_outer_single_indexed1)
@@ -2143,7 +2181,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat_pass_func_outer_single_indexed2)
@@ -2165,7 +2204,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat_fail_uni_uni_idx1)
@@ -2187,7 +2227,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id p_aos_mat_fail_uni_uni_idx2)
@@ -2209,11 +2250,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_aos)
-      (decl_type (Sized SReal)) (initialize Default)))
+      (decl_type (Sized SReal)) (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_aos) ()) UReal
@@ -2232,7 +2274,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_aos_vec_v) ()) UVector
@@ -2248,7 +2290,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector SoA
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -2284,7 +2326,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_aos_fail_func_vec_v) ()) UVector
@@ -2312,7 +2354,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -2345,7 +2387,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable tp_soa_used_with_aos_in_excluded_fun) ()) UVector
@@ -2590,7 +2632,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment
@@ -2616,7 +2658,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment
@@ -2985,7 +3027,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (NRFunApp (CompilerInternal FnValidateSize)
@@ -3001,7 +3043,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (For (loopvar i)
@@ -3171,7 +3213,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_vec_v)
@@ -3190,7 +3233,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_mat)
@@ -3212,7 +3256,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_arr_vec_v)
@@ -3235,7 +3280,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_mat_uni_col_idx)
@@ -3257,7 +3303,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_vec_uni_idx)
@@ -3276,7 +3323,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_loop_mat_uni_col_idx)
@@ -3298,7 +3346,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_lhs_loop_mul)
@@ -3317,7 +3366,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_rhs_loop_mul)
@@ -3336,7 +3386,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_used_with_aos_in_excluded_fun)
@@ -3355,7 +3406,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_soa_loop_mat_multi_uni_uni_idx)
@@ -3377,7 +3429,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_vec_v_assign_to_aos)
@@ -3396,7 +3449,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_vec_v_tp_fails_func)
@@ -3415,7 +3469,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_loop_vec_v_uni_idx)
@@ -3434,7 +3489,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_fail_assign_from_top_idx)
@@ -3453,7 +3509,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_loop_mat_uni_uni_idx)
@@ -3475,7 +3532,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_mat)
@@ -3497,7 +3555,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_mat_pass_func_outer_single_indexed1)
@@ -3519,7 +3578,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_mat_pass_func_outer_single_indexed2)
@@ -3541,7 +3601,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_mat_fail_uni_uni_idx1)
@@ -3563,7 +3624,8 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id p_aos_mat_fail_uni_uni_idx2)
@@ -3585,11 +3647,12 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_real_from_aos) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_aos_vec_v)
@@ -3597,7 +3660,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_soa_single_idx_uninit)
@@ -3605,7 +3668,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_aos_fail_func_vec_v)
@@ -3613,7 +3676,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_aos_fail_assign_from_top_idx)
@@ -3621,7 +3684,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -4007,7 +4070,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -4015,7 +4078,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4039,7 +4102,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4066,7 +4129,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4094,7 +4157,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4121,7 +4184,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4147,7 +4210,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4174,7 +4237,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4200,7 +4263,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SRowVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4226,7 +4289,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4252,7 +4315,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4279,7 +4342,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4305,7 +4368,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4331,7 +4394,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4357,7 +4420,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4383,7 +4446,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4410,7 +4473,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4437,7 +4500,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4464,7 +4527,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4491,7 +4554,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4518,7 +4581,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4545,7 +4608,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4568,7 +4631,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
  (unconstrain_array
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) UReal
@@ -4589,7 +4652,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_soa_vec_v) ()) UVector
@@ -4614,7 +4677,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_soa_mat) ()) UMatrix
@@ -4641,7 +4704,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
          (SVector AoS
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -4695,7 +4758,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_soa_mat_uni_col_idx) ()) UMatrix
@@ -4720,7 +4783,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_soa_vec_uni_idx) ()) UVector
@@ -4745,7 +4808,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_soa_loop_mat_uni_col_idx) ()) UMatrix
@@ -4770,7 +4833,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SRowVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_soa_lhs_loop_mul) ()) URowVector
@@ -4794,7 +4857,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_soa_rhs_loop_mul) ()) UVector
@@ -4818,7 +4881,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_soa_used_with_aos_in_excluded_fun) ()) UVector
@@ -4843,7 +4906,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_soa_loop_mat_multi_uni_uni_idx) ()) UMatrix
@@ -4868,7 +4931,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_vec_v_assign_to_aos) ()) UVector
@@ -4892,7 +4955,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_vec_v_tp_fails_func) ()) UVector
@@ -4916,7 +4979,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_loop_vec_v_uni_idx) ()) UVector
@@ -4940,7 +5003,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SVector AoS
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_fail_assign_from_top_idx) ()) UVector
@@ -4965,7 +5028,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_loop_mat_uni_uni_idx) ()) UMatrix
@@ -4991,7 +5054,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_mat) ()) UMatrix
@@ -5017,7 +5080,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_mat_pass_func_outer_single_indexed1) ()) UMatrix
@@ -5043,7 +5106,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_mat_pass_func_outer_single_indexed2) ()) UMatrix
@@ -5069,7 +5132,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_mat_fail_uni_uni_idx1) ()) UMatrix
@@ -5095,7 +5158,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable p_aos_mat_fail_uni_uni_idx2) ()) UMatrix
@@ -5117,7 +5180,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
  (output_vars
   ((alpha <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+     (out_trans Identity) (out_annotations ())))
    (p_soa_vec_v <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5125,7 +5188,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_soa_mat <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5135,7 +5198,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_soa_arr_vec_v <opaque>
     ((out_unconstrained_st
       (SArray
@@ -5147,7 +5210,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (SVector AoS
         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_soa_mat_uni_col_idx <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5157,7 +5220,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_soa_vec_uni_idx <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5165,7 +5228,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_soa_loop_mat_uni_col_idx <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5175,7 +5238,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_soa_lhs_loop_mul <opaque>
     ((out_unconstrained_st
       (SRowVector AoS
@@ -5183,7 +5246,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SRowVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_soa_rhs_loop_mul <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5191,7 +5254,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_soa_used_with_aos_in_excluded_fun <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5199,7 +5262,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_soa_loop_mat_multi_uni_uni_idx <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5209,7 +5272,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_vec_v_assign_to_aos <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5217,7 +5280,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_vec_v_tp_fails_func <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5225,7 +5288,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_loop_vec_v_uni_idx <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5233,7 +5296,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_fail_assign_from_top_idx <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5241,7 +5304,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_loop_mat_uni_uni_idx <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5251,7 +5314,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_mat <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5261,7 +5324,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_mat_pass_func_outer_single_indexed1 <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5271,7 +5334,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_mat_pass_func_outer_single_indexed2 <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5281,7 +5344,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_mat_fail_uni_uni_idx1 <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5291,7 +5354,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (p_aos_mat_fail_uni_uni_idx2 <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -5301,10 +5364,10 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (tp_real_from_aos <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (tp_aos_vec_v <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5312,7 +5375,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (tp_soa_single_idx_uninit <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5320,7 +5383,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (tp_aos_fail_func_vec_v <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5328,7 +5391,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (tp_aos_fail_assign_from_top_idx <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5336,7 +5399,7 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var M)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name indexing_model) (prog_path ../indexing.stan))
 /*
 ../indexing.stan:59:3: warning: Optimization hazard (SoA): Used in user defined function: p_aos_vec_v_assign_to_aos

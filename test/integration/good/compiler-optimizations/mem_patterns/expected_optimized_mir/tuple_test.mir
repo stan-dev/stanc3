@@ -27,7 +27,7 @@ matrix[1, 1] x: AoS
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable xx) ()) 1) ()) (UArray UMatrix)
@@ -83,7 +83,7 @@ matrix[1, 1] x: AoS
         (SMatrix AoS
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) UMatrix
@@ -127,7 +127,7 @@ matrix[1, 1] x: AoS
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable xx) ()) 1) ()) (UArray UMatrix)
@@ -183,7 +183,7 @@ matrix[1, 1] x: AoS
         (SMatrix AoS
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) UMatrix
@@ -226,7 +226,7 @@ matrix[1, 1] x: AoS
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable xx) ()) 1) ()) (UArray UMatrix)
@@ -282,7 +282,7 @@ matrix[1, 1] x: AoS
         (SMatrix AoS
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -448,7 +448,7 @@ matrix[1, 1] x: AoS
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -478,7 +478,7 @@ matrix[1, 1] x: AoS
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -563,7 +563,7 @@ matrix[1, 1] x: AoS
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 3))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -710,7 +710,7 @@ matrix[1, 1] x: AoS
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
      (out_block Parameters)
-     (out_trans (TupleTransformation (Identity Identity Identity)))))
+     (out_trans (TupleTransformation (Identity Identity Identity))) (out_annotations ())))
    (x <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -720,7 +720,7 @@ matrix[1, 1] x: AoS
       (SMatrix AoS
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name tuple_test_model) (prog_path ../tuple_test.stan))
 /*
 ../tuple_test.stan:6:5: warning: Optimization hazard (SoA): Right hand side of assignment to 'x' is all AoS: xx

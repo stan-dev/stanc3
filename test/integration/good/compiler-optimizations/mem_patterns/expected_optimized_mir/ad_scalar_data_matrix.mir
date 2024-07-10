@@ -23,7 +23,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -31,7 +31,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -61,7 +61,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -85,7 +85,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -112,7 +112,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
@@ -123,7 +124,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id beta)
@@ -142,7 +144,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Block
@@ -160,7 +163,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_simple) ()) UVector
@@ -196,7 +199,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_deep) ()) UVector
@@ -243,7 +246,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_dual_rep) ()) UVector
@@ -282,7 +285,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_data_rep) ()) UVector
@@ -322,7 +325,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mix) ()) UVector
@@ -356,7 +359,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_from_data) ()) UVector
@@ -418,7 +421,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
             (SMatrix AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mat_rep) ()) UMatrix
@@ -478,7 +481,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
             (SMatrix AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mat_rep_vec) ()) UMatrix
@@ -533,7 +536,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
             (SMatrix AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_mat_rep) ()) UMatrix
@@ -567,7 +570,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_mat_from_vecs) ()) UMatrix
@@ -686,7 +689,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
@@ -697,7 +701,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id beta)
@@ -716,7 +721,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Block
@@ -734,7 +740,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_simple) ()) UVector
@@ -770,7 +776,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_deep) ()) UVector
@@ -817,7 +823,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_dual_rep) ()) UVector
@@ -856,7 +862,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_data_rep) ()) UVector
@@ -896,7 +902,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mix) ()) UVector
@@ -930,7 +936,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_from_data) ()) UVector
@@ -992,7 +998,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
             (SMatrix SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mat_rep) ()) UMatrix
@@ -1052,7 +1058,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
             (SMatrix SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mat_rep_vec) ()) UMatrix
@@ -1107,7 +1113,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
             (SMatrix AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_mat_rep) ()) UMatrix
@@ -1141,7 +1147,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_mat_from_vecs) ()) UMatrix
@@ -1260,7 +1266,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
@@ -1271,7 +1278,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id beta)
@@ -1290,7 +1298,8 @@ matrix[2, 2] aos_mat_from_vecs: AoS
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -1343,7 +1352,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -1351,7 +1360,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1371,7 +1380,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1395,7 +1404,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1417,7 +1426,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
  (unconstrain_array
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) UReal
@@ -1434,7 +1443,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -1455,7 +1464,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable beta) ()) UVector
@@ -1476,10 +1485,10 @@ matrix[2, 2] aos_mat_from_vecs: AoS
  (output_vars
   ((alpha <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+     (out_trans Identity) (out_annotations ())))
    (sigma <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+     (out_trans Identity) (out_annotations ())))
    (beta <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -1487,7 +1496,7 @@ matrix[2, 2] aos_mat_from_vecs: AoS
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))))
  (prog_name ad_scalar_data_matrix_model) (prog_path ../ad_scalar_data_matrix.stan))
 /*
 ../ad_scalar_data_matrix.stan:13:3: warning: Optimization hazard (SoA): The right hand side of the assignment only contains data and scalar operations that are not promotable to SoA: aos_deep

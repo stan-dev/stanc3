@@ -1,7 +1,7 @@
 /* $ stanc -fsoa --debug-optimized-mir ../tuple-constraints-params.stan : [exit 0] */
 ((functions_block
   (((fdrt (ReturnType (UTuple (UReal UReal)))) (fdname foo) (fdsuffix FnPlain)
-    (fdargs ())
+    (fdargs ()) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -31,7 +31,7 @@
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id indicator) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -81,7 +81,8 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 0))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -104,7 +105,8 @@
  (log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -147,7 +149,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -250,7 +252,8 @@
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
              (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl
@@ -276,7 +279,7 @@
             ((pattern (Var complicated_brack_dot2_1dim__))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -398,7 +401,8 @@
  (reverse_mode_log_prob
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -441,7 +445,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -544,7 +548,8 @@
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
              (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl
@@ -570,7 +575,7 @@
             ((pattern (Var complicated_brack_dot2_1dim__))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -692,7 +697,8 @@
  (generate_quantities
   (((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -735,7 +741,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -838,7 +844,8 @@
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
              (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly (TupleAD (DataOnly DataOnly DataOnly)))))
@@ -862,7 +869,7 @@
             ((pattern (Var complicated_brack_dot2_1dim__))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -1333,7 +1340,7 @@
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -1341,7 +1348,8 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1407,7 +1415,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1504,7 +1512,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1563,7 +1571,7 @@
             ((pattern (Var complicated_brack_dot2_1dim__))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1795,7 +1803,8 @@
  (unconstrain_array
   (((pattern
      (Decl (decl_adtype (TupleAD (AutoDiffable AutoDiffable))) (decl_id ps)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LTupleProjection ((LVariable ps) ()) 1) ()) UReal
@@ -1858,7 +1867,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -2001,7 +2010,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable t) ()) UReal
@@ -2058,7 +2067,7 @@
             ((pattern (Var complicated_brack_dot2_1dim__))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (For (loopvar idx1__)
@@ -2380,7 +2389,8 @@
        ((Lower
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
         (Lower
-         ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))))
+         ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+     (out_annotations ())))
    (ps2 <opaque>
     ((out_unconstrained_st
       (SArray
@@ -2412,7 +2422,8 @@
       (TupleTransformation
        ((Lower
          ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        Simplex)))))
+        Simplex)))
+     (out_annotations ())))
    (t <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
      (out_trans
@@ -2432,7 +2443,8 @@
             ((type_ (UTuple (UReal UReal))) (loc <opaque>)
              (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
           2))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+     (out_annotations ())))
    (complicated <opaque>
     ((out_unconstrained_st
       (SArray
@@ -2511,5 +2523,6 @@
      (out_block Parameters)
      (out_trans
       (TupleTransformation
-       (Identity (TupleTransformation (Identity Simplex CholeskyCov)))))))))
+       (Identity (TupleTransformation (Identity Simplex CholeskyCov)))))
+     (out_annotations ())))))
  (prog_name tuple_constraints_params_model) (prog_path ../tuple-constraints-params.stan))

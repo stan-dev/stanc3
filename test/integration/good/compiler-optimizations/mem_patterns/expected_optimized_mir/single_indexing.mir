@@ -25,7 +25,8 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id soa_p)
@@ -47,11 +48,12 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_soa)
-      (decl_type (Sized SReal)) (initialize Default)))
+      (decl_type (Sized SReal)) (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_soa) ()) UReal
@@ -83,7 +85,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                 (SRowVector AoS
                  ((pattern (Lit Int 10))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              (initialize Default)))
+              (initialize Default) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable tp_row_vector_from_soa_loop) ()) URowVector
@@ -110,7 +112,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  ((pattern (Lit Int 10))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              (initialize Default)))
+              (initialize Default) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable tp_matrix_from_soa_loop) ()) UMatrix
@@ -154,7 +156,8 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id soa_p)
@@ -176,11 +179,12 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_soa)
-      (decl_type (Sized SReal)) (initialize Default)))
+      (decl_type (Sized SReal)) (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_soa) ()) UReal
@@ -212,7 +216,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                 (SRowVector SoA
                  ((pattern (Lit Int 10))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              (initialize Default)))
+              (initialize Default) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable tp_row_vector_from_soa_loop) ()) URowVector
@@ -239,7 +243,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  ((pattern (Lit Int 10))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              (initialize Default)))
+              (initialize Default) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable tp_matrix_from_soa_loop) ()) UMatrix
@@ -283,7 +287,8 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id soa_p)
@@ -305,11 +310,12 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_real_from_soa) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -373,7 +379,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                 (SRowVector AoS
                  ((pattern (Lit Int 10))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              (initialize Default)))
+              (initialize Default) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable tp_row_vector_from_soa_loop) ()) URowVector
@@ -400,7 +406,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  ((pattern (Lit Int 10))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-              (initialize Default)))
+              (initialize Default) (decl_annotations ())))
             (meta <opaque>))
            ((pattern
              (Assignment ((LVariable tp_matrix_from_soa_loop) ()) UMatrix
@@ -453,7 +459,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -466,7 +472,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -492,7 +498,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -519,7 +525,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable aos_p) ()) UMatrix
@@ -547,7 +553,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable soa_p) ()) UMatrix
@@ -578,7 +584,7 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
       (SMatrix AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (soa_p <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -588,10 +594,10 @@ matrix[10, 10] tp_matrix_from_soa_loop: SoA
       (SMatrix AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (tp_real_from_soa <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block TransformedParameters) (out_trans Identity)))))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name single_indexing_model) (prog_path ../single_indexing.stan))
 /*
 ../single_indexing.stan:16:8: warning: Optimization hazard (SoA): Accessed by element in a for loop: aos_p

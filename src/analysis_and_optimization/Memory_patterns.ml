@@ -493,7 +493,12 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       Set.Poly.union_list
         [ acc; query_expr acc predicate
         ; query_initial_demotable_stmt true acc body ]
-  | Decl {decl_type= Type.Sized st; decl_id; initialize; decl_adtype} ->
+  | Decl
+      { decl_type= Type.Sized st
+      ; decl_id
+      ; initialize
+      ; decl_adtype
+      ; decl_annotations= _ } ->
       if not (UnsizedType.is_autodifftype decl_adtype) then
         (* generated e.g. by inlining a `data` function argument *)
         Set.Poly.singleton decl_id
@@ -694,6 +699,7 @@ let rec modify_stmt_pattern
       { decl_id
       ; decl_adtype
       ; decl_type= Type.Sized sized_type
+      ; decl_annotations
       ; initialize=
           Assign
             ({ pattern= FunApp (CompilerInternal (FnReadParam read_param), args)
@@ -705,6 +711,7 @@ let rec modify_stmt_pattern
           ; decl_adtype
           ; decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type)
+          ; decl_annotations
           ; initialize=
               Assign
                 { assigner with
@@ -719,6 +726,7 @@ let rec modify_stmt_pattern
           ; decl_adtype
           ; decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type)
+          ; decl_annotations
           ; initialize=
               Assign
                 { assigner with

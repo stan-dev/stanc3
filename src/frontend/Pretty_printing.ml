@@ -407,6 +407,13 @@ let rec pp_transformed_type ppf (st, trans) =
         pp_possibly_transformed_type (ty, trans)
   | _ -> pf ppf "%a" pp_possibly_transformed_type (st, trans)
 
+let pp_annotations ppf ann =
+  (* TODO better comment handling? *)
+  if List.is_empty ann then ()
+  else
+    let pp ppf s = pf ppf "%@%s" s.name in
+    pf ppf "%a@ " (list ~sep:sp pp) ann
+
 let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
   match s.stmt with
   | Block _ -> pp_statement ppf s
@@ -472,15 +479,22 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       pf ppf "profile(%s) {@,%a@,}" name
         (indented_box pp_list_of_statements)
         (vdsl, loc)
-  | VarDecl {decl_type= pst; transformation= trans; variables; is_global= _} ->
+  | VarDecl
+      { decl_type= pst
+      ; transformation= trans
+      ; variables
+      ; annotations
+      ; is_global= _ } ->
       let pp_var ppf {identifier; initial_value} =
         pf ppf "%a%a" pp_identifier identifier
           (option (fun ppf e -> pf ppf " = %a" pp_expression e))
           initial_value in
-      pf ppf "@[<h>%a %a;@]" pp_transformed_type (pst, trans)
+      pf ppf "@[<hv>%a@[<h>%a %a;@]@]" pp_annotations annotations
+        pp_transformed_type (pst, trans)
         (pp_list_of pp_var (fun v -> v.identifier.id_loc))
         (variables, loc)
-  | FunDef {returntype= rt; funname= id; arguments= args; body= b} ->
+  | FunDef {returntype= rt; funname= id; arguments= args; body= b; annotations}
+    ->
       let pp_args ppf =
         let loc_of (_, _, id) = id.id_loc in
         let pp_arg ppf (at, ut, id) =
@@ -502,10 +516,11 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       let long = String.length id.name > max_line_length / 3 in
       let many_args = List.length args > max_line_length / 10 in
       if long then
-        pf ppf "@[%a@ @]@[@[<hv 2>%a(@,%t@]@,)@]%t" pp_returntype rt
-          pp_identifier id pp_args pp_body
+        pf ppf "@[<hv>%a@]@[%a@ @]@[@[<hv 2>%a(@,%t@]@,)@]%t" pp_annotations
+          annotations pp_returntype rt pp_identifier id pp_args pp_body
       else
-        pf ppf "@[%a@ @]%a(%a%t)@]%t" pp_returntype rt pp_identifier id
+        pf ppf "@[<hv>%a@]@[%a@ @]%a(%a%t)@]%t" pp_annotations annotations
+          pp_returntype rt pp_identifier id
           (if many_args then Format.pp_open_hvbox else Format.pp_open_box)
           0 pp_args pp_body
 
