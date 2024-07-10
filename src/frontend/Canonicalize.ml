@@ -65,11 +65,13 @@ let parens_lval = map_lval_with no_parens Fn.id
 let rec parens_stmt ({stmt; smeta} : typed_statement) : typed_statement =
   let stmt =
     match stmt with
-    | VarDecl {decl_type= d; transformation= t; variables; is_global} ->
+    | VarDecl
+        {decl_type= d; transformation= t; variables; annotations; is_global} ->
         VarDecl
           { decl_type= Middle.SizedType.map no_parens d
           ; transformation= Middle.Transformation.map keep_parens t
           ; variables= List.map ~f:(map_variable no_parens) variables
+          ; annotations
           ; is_global }
     | For {loop_variable; lower_bound; upper_bound; loop_body} ->
         For

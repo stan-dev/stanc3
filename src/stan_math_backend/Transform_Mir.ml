@@ -322,6 +322,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
+              ; decl_annotations= []
               ; initialize= true }
             |> swrap)
           tuple_component_names tuple_types in
@@ -369,6 +370,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
+            ; decl_annotations= []
             ; initialize= true }
           |> swrap
         , Assignment (Stmt.Helpers.lvariable decl_id_flat, flat_type, origin)
@@ -473,6 +475,7 @@ let rec var_context_read
                 { decl_adtype= AutoDiffable
                 ; decl_id= variable_name
                 ; decl_type= Unsized array_type
+                ; decl_annotations= []
                 ; initialize= true }
               |> swrap_noloc
             ; Assignment
@@ -484,6 +487,7 @@ let rec var_context_read
                 { decl_adtype= DataOnly
                 ; decl_id= variable_name ^ "pos__"
                 ; decl_type= Unsized UInt
+                ; decl_annotations= []
                 ; initialize= true }
               |> swrap_noloc
             ; Stmt.Fixed.Pattern.Assignment
@@ -512,6 +516,7 @@ let rec var_context_read
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
+              ; decl_annotations= []
               ; initialize= true }
             |> swrap_noloc)
           tuple_component_names tuple_types in
@@ -559,6 +564,7 @@ let rec var_context_read
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
+            ; decl_annotations= []
             ; initialize= false }
           |> swrap
         , Assignment
@@ -872,6 +878,8 @@ let var_context_unconstrain_transform (decl_id, smeta, outvar) =
                 (SizedType.to_unsized st)
           ; decl_id
           ; decl_type= Type.Sized st
+          ; decl_annotations=
+              outvar.out_annotations (* TODO annotations: correct? *)
           ; initialize= true }
     ; meta= smeta }
   :: var_context_read (Stmt.Helpers.lvariable decl_id, smeta, st)
@@ -888,6 +896,8 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
                   (SizedType.to_unsized outvar.Program.out_constrained_st)
             ; decl_id
             ; decl_type= Type.Sized outvar.Program.out_constrained_st
+            ; decl_annotations=
+                outvar.out_annotations (* TODO annotations: correct? *)
             ; initialize= true }
       ; meta= smeta } in
   let rec read (lval, st) =
@@ -1028,6 +1038,7 @@ let trans_prog (p : Program.Typed.t) =
         { decl_adtype= DataOnly
         ; decl_id= pos
         ; decl_type= Sized SInt
+        ; decl_annotations= []
         ; initialize= true }
     ; Assignment (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
@@ -1145,6 +1156,7 @@ let trans_prog (p : Program.Typed.t) =
                   { decl_adtype= DataOnly
                   ; decl_id= vident
                   ; decl_type= Type.Unsized type_of_input_var
+                  ; decl_annotations= [] (* TODO improve/rethink opencl pass *)
                   ; initialize= true }
             ; meta= Location_span.empty }
         ; { pattern=

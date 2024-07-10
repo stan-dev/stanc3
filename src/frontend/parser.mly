@@ -65,6 +65,8 @@ let try_convert_to_lvalue expr loc =
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 
+let ( != ) = Stdlib.( != )
+
 %}
 
 (* Token definitions. The quoted strings are aliases, used in the examples generated in
@@ -92,6 +94,7 @@ let nest_unsized_array basic_type n =
 %token <string> IMAGNUMERAL "1i"
 %token <string> STRINGLITERAL "\"hello world\""
 %token <string> IDENTIFIER "foo"
+%token <string> ANNOTATION "@baz"
 %token TARGET "target"
 %token QMARK "?" COLON ":" BANG "!" MINUS "-" PLUS "+" HAT "^" ELTPOW ".^" TRANSPOSE "'"
        TIMES "*" DIVIDE "/" MODULO "%" IDIVIDE "%/%" LDIVIDE "\\" ELTTIMES ".*"
@@ -270,12 +273,11 @@ reserved_word:
   | ARRAY { "array", $loc, true }
 
 function_def:
-  | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
-    RPAREN b=statement
+  | annotations=list(ANNOTATION) returntype=return_type funname=decl_identifier
+    LPAREN arguments=separated_list(COMMA, arg_decl) RPAREN body=statement
     {
       grammar_logger "function_def" ;
-      {stmt=FunDef {returntype = rt; funname = name;
-                           arguments = args; body=b;};
+      {stmt=FunDef {returntype; funname; arguments; annotations; body};
        smeta={loc=location_span_of_positions $loc}
       }
     }
@@ -384,7 +386,8 @@ remaining_declarations(rhs):
  *)
 decl(type_rule, rhs):
   (* This is just a helper for the fact that we don't support the old array syntax any more *)
-  | ty=type_rule id=decl_identifier LBRACK dims=separated_nonempty_list(COMMA, expression) RBRACK {
+  | a=list(ANNOTATION) ty=type_rule id=decl_identifier LBRACK dims=separated_nonempty_list(COMMA, expression) RBRACK {
+    ignore a;
     let (ty, trans) = ty in
     let ty = List.fold_right ~f:(fun e ty -> SizedType.SArray (ty, e)) ~init:ty dims in
     let ty = (ty, trans) in
@@ -398,7 +401,7 @@ decl(type_rule, rhs):
               Pretty_printing.pp_transformed_type ty id.name
           , location_span_of_positions $loc(dims) )))
     }
-  | ty=higher_type(type_rule)
+  | annotations=list(ANNOTATION) ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
     { (fun ~is_global ->
@@ -409,6 +412,7 @@ decl(type_rule, rhs):
               decl_type= fst ty
             ; transformation= snd ty
             ; variables=vs
+            ; annotations
             ; is_global
             }
       ; smeta= {
