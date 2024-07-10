@@ -1,3 +1,25 @@
+  $ ../../../../../../install/default/bin/stanc define_extern1.stan
+Semantic error in 'define_extern1.stan', line 2, column 33 to line 5, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    @extern real foo(int x, int y);
+                                          ^
+     3:    real foo(int x, int y){
+     4:      return 1.0;
+   -------------------------------------------------
+
+Function 'foo' has already been declared for signature (int, int) => real
+  $ ../../../../../../install/default/bin/stanc define_extern2.stan
+Semantic error in 'define_extern2.stan', line 2, column 33 to line 3, column 25:
+   -------------------------------------------------
+     1:  functions {
+     2:    @extern real foo(int x, int y);
+                                          ^
+     3:    real foo(int x, int y);
+     4:  }
+   -------------------------------------------------
+
+Function 'foo' has already been declared for signature (int, int) => real
   $ ../../../../../../install/default/bin/stanc no_minimum_dae.stan
 Semantic error in 'no_minimum_dae.stan', line 38, column 12 to column 59:
    -------------------------------------------------

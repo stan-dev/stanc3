@@ -292,14 +292,14 @@ let check_id cf loc tenv id =
       Semantic_error.invalid_unnormalized_fn loc |> error
   | {kind= `Variable {origin; _}; type_} :: _ ->
       (calculate_autodifftype cf origin type_, type_)
-  | { kind= `UserDefined | `UserDeclared _
+  | { kind= `UserDefined | `UserExtern _ | `UserDeclared _
     ; type_= UFun (args, rt, FnLpdf _, mem_pattern) }
     :: _ ->
       let type_ =
         UnsizedType.UFun
           (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
       (calculate_autodifftype cf Functions type_, type_)
-  | {kind= `UserDefined | `UserDeclared _; type_} :: _ ->
+  | {kind= `UserDefined | `UserExtern _ | `UserDeclared _; type_} :: _ ->
       (calculate_autodifftype cf Functions type_, type_)
 
 let check_variable cf loc tenv id =
@@ -1177,7 +1177,8 @@ let verify_assignable_id loc cf tenv assign_id =
     | {kind= `Variable {origin; global; readonly}; _} :: _ ->
         (origin, global, readonly)
     | {kind= `StanMath; _} :: _ -> (MathLibrary, true, false)
-    | {kind= `UserDefined | `UserDeclared _; _} :: _ -> (Functions, true, false)
+    | {kind= `UserDefined | `UserDeclared _ | `UserExtern _; _} :: _ ->
+        (Functions, true, false)
     | _ ->
         Semantic_error.ident_not_in_scope loc assign_id.name
           (Env.nearest_ident tenv assign_id.name)
@@ -1727,11 +1728,13 @@ and verify_fundef_overloaded loc tenv id arg_tys rt =
     verify_unique_signature tenv loc id arg_tys rt;
   verify_name_fresh tenv id ~is_udf:true
 
-and get_fn_decl_or_defn loc tenv id arg_tys rt body =
+and get_fn_decl_or_defn loc tenv id arg_tys rt body annotations =
   match body with
   | {stmt= Skip; _} ->
       if exists_matching_fn_declared tenv id arg_tys rt then
         Semantic_error.fn_decl_exists loc id.name |> error
+      else if List.mem annotations "extern" ~equal:String.equal then
+        `UserExtern id.id_loc
       else `UserDeclared id.id_loc
   | _ -> `UserDefined
 
@@ -1909,13 +1912,13 @@ let add_userdefined_functions tenv stmts_opt =
   | Some {stmts; _} ->
       let f tenv (s : Ast.untyped_statement) =
         match s with
-        | { stmt= FunDef {returntype; funname; arguments; body; annotations= _}
+        | { stmt= FunDef {returntype; funname; arguments; body; annotations}
           ; smeta= {loc} } ->
             let arg_types = Ast.type_of_arguments arguments in
             verify_fundef_overloaded loc tenv funname arg_types returntype;
             let defined =
               get_fn_decl_or_defn loc tenv funname arg_types returntype body
-            in
+                annotations in
             add_function tenv funname.name
               (UFun
                  ( arg_types
