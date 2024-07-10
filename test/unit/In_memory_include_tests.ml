@@ -87,6 +87,7 @@ let%expect_test "good include" =
             (FunDef (returntype (ReturnType UInt))
              (funname ((name foo) (id_loc <opaque>)))
              (arguments ((AutoDiffable UReal ((name a) (id_loc <opaque>)))))
+             (annotations ())
              (body
               ((stmt
                 (Block
@@ -108,6 +109,7 @@ let%expect_test "good include" =
       (((stmts
          (((stmt
             (VarDecl (decl_type SInt) (transformation Identity) (is_global true)
+             (annotations ())
              (variables
               (((identifier ((name a) (id_loc <opaque>))) (initial_value ()))))))
            (smeta ((loc <opaque>))))))

@@ -53,6 +53,7 @@ let%expect_test "ICE triggered" =
                           { decl_type= SizedType.SReal
                           ; transformation= Transformation.Identity
                           ; is_global= false
+                          ; annotations= []
                           ; variables=
                               [ Ast.
                                   { identifier= Ast.{name= "foo"; id_loc}

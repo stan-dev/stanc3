@@ -278,7 +278,7 @@ function_def:
     {
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype; funname; arguments; annotations; body};
-       smeta={loc=location_span_of_positions $loc}
+       smeta={loc=location_span_of_positions $sloc}
       }
     }
 
