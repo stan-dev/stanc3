@@ -993,11 +993,21 @@ let rec eval_stmt info Stmt.{pattern; meta} =
   let swrap pattern = Stmt.{pattern; meta} in
   try
     match pattern with
-    | Decl {decl_adtype; decl_id; decl_type= Type.Sized st; initialize} ->
+    | Decl
+        { decl_adtype
+        ; decl_id
+        ; decl_type= Type.Sized st
+        ; initialize
+        ; decl_annotations } ->
         let st = SizedType.map expr st in
         let initialize = Stmt.Pattern.map_decl_init expr initialize in
         ( add_known_size info decl_id (SizedType.get_dims st)
-        , Decl {decl_adtype; decl_id; decl_type= Type.Sized st; initialize}
+        , Decl
+            { decl_adtype
+            ; decl_id
+            ; decl_type= Type.Sized st
+            ; initialize
+            ; decl_annotations }
           |> swrap )
     | Assignment ((LVariable name, indices), type_, value) ->
         let indices =

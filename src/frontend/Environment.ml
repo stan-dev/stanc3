@@ -29,12 +29,14 @@ type info =
   ; kind:
       [ `Variable of varinfo
       | `UserDeclared of Location_span.t
+      | `UserExtern of Location_span.t
       | `StanMath
       | `UserDefined of Location_span.t ] }
 
 let location = function
   | {kind= `Variable {location; _}; _}
    |{kind= `UserDeclared location; _}
+   |{kind= `UserExtern location; _}
    |{kind= `UserDefined location; _} ->
       Some location
   | {kind= `StanMath; _} -> None

@@ -25,6 +25,7 @@ type info =
   ; kind:
       [ `Variable of varinfo
       | `UserDeclared of Location_span.t
+      | `UserExtern of Location_span.t
       | `StanMath
       | `UserDefined of Location_span.t ] }
 
@@ -43,6 +44,7 @@ val add :
   -> Middle.UnsizedType.t
   -> [ `Variable of varinfo
      | `UserDeclared of Location_span.t
+     | `UserExtern of Location_span.t
      | `StanMath
      | `UserDefined of Location_span.t ]
   -> t

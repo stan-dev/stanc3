@@ -1,7 +1,7 @@
 /* $ stanc -fsoa --debug-optimized-mir ../tuple-templating.stan : [exit 0] */
 ((functions_block
   (((fdrt Void) (fdname foo) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable test (UTuple (UMatrix UInt)))))
+    (fdargs ((AutoDiffable test (UTuple (UMatrix UInt))))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -20,6 +20,7 @@
     (fdloc <opaque>))
    ((fdrt (ReturnType UReal)) (fdname tsum) (fdsuffix FnPlain)
     (fdargs ((AutoDiffable s (UTuple ((UArray UInt) (UArray UReal))))))
+    (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -40,7 +41,7 @@
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt Void) (fdname foo2) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable test (UArray (UTuple (UMatrix UInt))))))
+    (fdargs ((AutoDiffable test (UArray (UTuple (UMatrix UInt)))))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -66,7 +67,7 @@
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt Void) (fdname foo3) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable test (UTuple (UReal UMatrix)))))
+    (fdargs ((AutoDiffable test (UTuple (UReal UMatrix))))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -87,6 +88,7 @@
     (fdargs
      ((AutoDiffable t1 (UTuple ((UArray UMatrix) (UTuple (UInt UMatrix)) UReal)))
       (AutoDiffable t2 (UArray (UTuple (UInt UMatrix))))))
+    (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -131,7 +133,7 @@
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -139,7 +141,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -167,7 +169,7 @@
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -196,7 +198,7 @@
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -218,7 +220,7 @@
        (Sized
         (SArray SInt
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -241,7 +243,7 @@
        (Sized
         (SArray SReal
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -296,7 +298,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id s) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable s) ()) UReal
@@ -471,5 +473,5 @@
  (output_vars
   ((s <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities) (out_trans Identity)))))
+     (out_block GeneratedQuantities) (out_trans Identity) (out_annotations ())))))
  (prog_name tuple_templating_model) (prog_path ../tuple-templating.stan))

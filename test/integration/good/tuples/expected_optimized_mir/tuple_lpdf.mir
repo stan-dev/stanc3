@@ -4,6 +4,7 @@
     (fdargs
      ((AutoDiffable x (UTuple (UReal UReal)))
       (AutoDiffable y (UTuple (UReal UReal UReal)))))
+    (fdannotations ())
     (fdbody
      (((pattern
         (Block

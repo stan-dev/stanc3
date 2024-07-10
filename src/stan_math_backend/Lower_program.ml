@@ -175,7 +175,7 @@ let lower_constructor
   let data_idents = List.map ~f:fst3 input_vars |> String.Set.of_list in
   let lower_data (Stmt.{pattern; meta} as s) =
     match pattern with
-    | Decl {decl_id; decl_type; initialize; decl_adtype= _}
+    | Decl {decl_id; decl_type; initialize; decl_annotations= _; decl_adtype= _}
       when decl_id <> "pos__" -> (
         match decl_type with
         | Sized st ->

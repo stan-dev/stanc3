@@ -1,7 +1,7 @@
 /* $ stanc -fsoa --debug-optimized-mir ../tuple-dataonly.stan : [exit 0] */
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname foo) (fdsuffix FnPlain)
-    (fdargs ((DataOnly x (UTuple (UReal UReal)))))
+    (fdargs ((DataOnly x (UTuple (UReal UReal))))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -23,7 +23,7 @@
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt (ReturnType UReal)) (fdname bar) (fdsuffix FnPlain)
-    (fdargs ((DataOnly x (UArray (UTuple (UReal UReal))))))
+    (fdargs ((DataOnly x (UArray (UTuple (UReal UReal)))))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -53,7 +53,8 @@
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt (ReturnType UReal)) (fdname baz) (fdsuffix FnPlain)
-    (fdargs ((DataOnly x (UArray (UTuple ((UArray UMatrix) UReal))))))
+    (fdargs ((DataOnly x (UArray (UTuple ((UArray UMatrix) UReal)))))) 
+    (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -102,7 +103,7 @@
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -110,7 +111,8 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype (TupleAD (DataOnly DataOnly))) (decl_id d)
-      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)))
+      (decl_type (Sized (STuple (SReal SReal)))) (initialize Default)
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -131,7 +133,7 @@
        (Sized
         (SArray (STuple (SReal SReal))
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable d2) ()) (UArray (UTuple (UReal UReal)))
@@ -168,7 +170,7 @@
         (SMatrix AoS
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable m) ()) UMatrix
@@ -194,7 +196,7 @@
           ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable m2) ()) (UArray UMatrix)
@@ -217,7 +219,7 @@
            ((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           SReal))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x) ()) (UTuple ((UArray UMatrix) UReal))
@@ -253,7 +255,7 @@
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            SReal))
          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable x2) ()) (UArray (UTuple ((UArray UMatrix) UReal)))

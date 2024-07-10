@@ -1,5 +1,6 @@
 module Location_span = Middle.Location_span
 module Location = Middle.Location
+module UnsizedType = Middle.UnsizedType
 
 type t =
   | StancJsInclude of string
@@ -19,6 +20,8 @@ type t =
   | FunctionDeprecation of Location_span.t * string * (int * int) * string
   | OdeDeprecation of Location_span.t * string * (int * int) * string
   | Pedantic of Location_span.t * string
+  | UnknownAnnotation of Location_span.t * string
+  | UnsupportedAnnotation of Location_span.t * string * UnsizedType.t
 
 let stancjs_bad_include msg = StancJsInclude msg
 let jacobian_dataonly loc alt = JacobianFunCallDataOnly (loc, alt)
@@ -38,6 +41,11 @@ let function_deprecation loc name version rename =
 
 let ode_deprecation loc name version rename =
   OdeDeprecation (loc, name, version, rename)
+
+let unknown_annotation (span, ann) = UnknownAnnotation (span, ann)
+
+let unsupported_annotation (span, ann, ty) =
+  UnsupportedAnnotation (span, ann, ty)
 
 let pedantic_warning (span, msg) = Pedantic (span, msg)
 
@@ -188,6 +196,14 @@ let to_grace ?printed_filename ?code warn =
           "%s is deprecated and will be removed in Stan %d.%d. Use %s instead."
           name major minor rename in
       make_warning ~notes ~summary loc "Use %s instead." rename
+  | UnknownAnnotation (loc, a) ->
+      make_warning loc
+        "Unknown annotation '%s' will be ignored by the compiler." a
+  | UnsupportedAnnotation (loc, a, ty) ->
+      make_warning loc
+        "Unsupported annotation '%s' for type %a. This will be ignored by the \
+         compiler."
+        a UnsizedType.pp ty
 
 let pp ?printed_filename ?code ppf warn =
   let diagnostic = to_grace ?printed_filename ?code warn in

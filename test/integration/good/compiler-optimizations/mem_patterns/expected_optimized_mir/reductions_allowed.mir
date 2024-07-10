@@ -14,7 +14,7 @@ Optimization hazard warning (Line 24): SoA warning: Right hand side of assignmen
 Optimization hazard warning (Line 24): SoA warning: Used in user defined function: aos_x, aos_y, tp_matrix_aos_from_mix
 ((functions_block
   (((fdrt (ReturnType UMatrix)) (fdname nono_func) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable x UMatrix)))
+    (fdargs ((AutoDiffable x UMatrix))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -26,7 +26,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt (ReturnType UMatrix)) (fdname okay_reduction) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable sum_x UReal) (AutoDiffable y UMatrix)))
+    (fdargs ((AutoDiffable sum_x UReal) (AutoDiffable y UMatrix))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -46,7 +46,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -77,7 +77,8 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id aos_x)
@@ -99,7 +100,8 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id aos_y)
@@ -121,11 +123,12 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_soa)
-      (decl_type (Sized SReal)) (initialize Default)))
+      (decl_type (Sized SReal)) (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_soa) ()) UReal
@@ -158,7 +161,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_matrix_aos_from_mix) ()) UMatrix
@@ -195,7 +198,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_matrix_from_udf_reduced_soa) ()) UMatrix
@@ -231,7 +234,8 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id aos_x)
@@ -253,7 +257,8 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id aos_y)
@@ -275,11 +280,12 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_from_soa)
-      (decl_type (Sized SReal)) (initialize Default)))
+      (decl_type (Sized SReal)) (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_real_from_soa) ()) UReal
@@ -312,7 +318,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_matrix_aos_from_mix) ()) UMatrix
@@ -349,7 +355,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable tp_matrix_from_udf_reduced_soa) ()) UMatrix
@@ -385,7 +391,8 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id aos_x)
@@ -407,7 +414,8 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id aos_y)
@@ -429,11 +437,12 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_real_from_soa) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_matrix_aos_from_mix)
@@ -442,7 +451,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_matrix_from_udf_reduced_soa)
@@ -451,7 +460,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -607,7 +616,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -620,7 +629,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -646,7 +655,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -672,7 +681,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -699,7 +708,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable soa_x) ()) UMatrix
@@ -726,7 +735,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable aos_x) ()) UMatrix
@@ -753,7 +762,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
         (SMatrix AoS
          ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable aos_y) ()) UMatrix
@@ -783,7 +792,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (aos_x <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -793,7 +802,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (aos_y <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -803,10 +812,10 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (tp_real_from_soa <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (tp_matrix_aos_from_mix <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -816,7 +825,7 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (tp_matrix_from_udf_reduced_soa <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -826,5 +835,5 @@ Optimization hazard warning (Line 24): SoA warning: Used in user defined functio
       (SMatrix AoS
        ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name reductions_allowed_model) (prog_path ../reductions_allowed.stan))

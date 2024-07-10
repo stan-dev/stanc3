@@ -22,7 +22,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side contains onl
 Optimization hazard warning (Line 29): SoA warning: Right hand side of assignment is all AoS: int_aos_mul_aos, mul_two_aos, user_func_aos
 ((functions_block
   (((fdrt (ReturnType UMatrix)) (fdname empty_user_func) (fdsuffix FnPlain) 
-    (fdargs ())
+    (fdargs ()) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -35,7 +35,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                 ((pattern (Lit Int 10))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-             (initialize Default)))
+             (initialize Default) (decl_annotations ())))
            (meta <opaque>))
           ((pattern
             (Return
@@ -45,7 +45,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
        (meta <opaque>))))
     (fdloc <opaque>))
    ((fdrt (ReturnType UMatrix)) (fdname mat_ret_user_func) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable A UMatrix)))
+    (fdargs ((AutoDiffable A UMatrix))) (fdannotations ())
     (fdbody
      (((pattern
         (Block
@@ -78,7 +78,8 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id udf_input_aos)
@@ -100,7 +101,8 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id user_func_aos)
@@ -109,7 +111,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable user_func_aos) ()) UMatrix
@@ -126,7 +128,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable empty_user_func_aos) ()) UMatrix
@@ -140,7 +142,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable inner_empty_user_func_aos) ()) UMatrix
@@ -159,7 +161,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable int_aos_mul_aos) ()) UMatrix
@@ -185,7 +187,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable mul_two_aos) ()) UMatrix
@@ -233,7 +235,8 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id udf_input_aos)
@@ -255,7 +258,8 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id user_func_aos)
@@ -264,7 +268,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable user_func_aos) ()) UMatrix
@@ -281,7 +285,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable empty_user_func_aos) ()) UMatrix
@@ -295,7 +299,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable inner_empty_user_func_aos) ()) UMatrix
@@ -314,7 +318,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable int_aos_mul_aos) ()) UMatrix
@@ -340,7 +344,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable mul_two_aos) ()) UMatrix
@@ -388,7 +392,8 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id udf_input_aos)
@@ -410,7 +415,8 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id user_func_aos)
@@ -419,7 +425,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id empty_user_func_aos)
@@ -428,7 +434,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id inner_empty_user_func_aos)
@@ -437,7 +443,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id int_aos_mul_aos)
@@ -446,7 +452,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id mul_two_aos)
@@ -455,7 +461,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -620,7 +626,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -633,7 +639,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -660,7 +666,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -688,7 +694,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable row_soa) ()) UMatrix
@@ -716,7 +722,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
         (SMatrix AoS
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable udf_input_aos) ()) UMatrix
@@ -747,7 +753,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
       (SMatrix AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (udf_input_aos <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -757,7 +763,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
       (SMatrix AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (user_func_aos <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -767,7 +773,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
       (SMatrix AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (empty_user_func_aos <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -777,7 +783,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
       (SMatrix AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (inner_empty_user_func_aos <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -787,7 +793,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
       (SMatrix AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (int_aos_mul_aos <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -797,7 +803,7 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
       (SMatrix AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (mul_two_aos <opaque>
     ((out_unconstrained_st
       (SMatrix AoS
@@ -807,6 +813,6 @@ Optimization hazard warning (Line 29): SoA warning: Right hand side of assignmen
       (SMatrix AoS
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 10)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name return_types_and_udfs_demotes_model)
  (prog_path ../return_types_and_udfs_demotes.stan))

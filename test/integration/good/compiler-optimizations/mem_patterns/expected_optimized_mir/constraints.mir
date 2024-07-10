@@ -47,7 +47,7 @@ vector[N] means_ordered: SoA
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -55,7 +55,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -77,7 +77,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id K) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -110,7 +110,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -134,7 +134,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -158,7 +158,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -190,7 +190,7 @@ vector[N] means_ordered: SoA
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -202,7 +202,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id phi_prior_a) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -228,7 +228,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id phi_prior_b) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -254,7 +254,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id mu_prior_mu) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -267,7 +267,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id mu_prior_sigma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -293,7 +293,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma_prior_shape) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -319,7 +319,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma_prior_rate) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -345,7 +345,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id Nr) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable Nr) ()) UInt
@@ -580,7 +580,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -625,7 +626,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id h)
@@ -644,7 +646,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id ar)
@@ -663,7 +666,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
@@ -674,7 +678,8 @@ vector[N] means_ordered: SoA
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
@@ -692,7 +697,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
@@ -708,7 +714,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
@@ -719,7 +726,8 @@ vector[N] means_ordered: SoA
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id mean_price)
@@ -738,7 +746,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma_price)
@@ -761,7 +770,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
@@ -772,7 +782,8 @@ vector[N] means_ordered: SoA
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id upper_test)
@@ -795,7 +806,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id lower_upper_test)
@@ -820,7 +832,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -877,7 +890,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -934,7 +948,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -979,7 +994,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id unit_vec_test)
@@ -998,7 +1014,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id pos_ordered_test)
@@ -1017,7 +1034,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id corr_matrix_test)
@@ -1037,7 +1055,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id cov_matrix_test)
@@ -1057,7 +1076,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
@@ -1079,7 +1099,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
@@ -1099,11 +1120,12 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable phi) ()) UReal
@@ -1122,7 +1144,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -1138,7 +1160,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable prices) ()) UVector
@@ -1156,7 +1178,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable prices_diff) ()) UVector
@@ -1195,7 +1217,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable mu) ()) UVector
@@ -1218,7 +1240,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable err) ()) UVector
@@ -1363,7 +1385,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id h_i_sigma)
@@ -1371,7 +1393,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -1491,7 +1513,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable h_sigma) ()) UVector
@@ -1532,7 +1554,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable means_ordered) ()) UVector
@@ -1791,7 +1813,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -1836,7 +1859,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id h)
@@ -1855,7 +1879,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id ar)
@@ -1874,7 +1899,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
@@ -1885,7 +1911,8 @@ vector[N] means_ordered: SoA
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
@@ -1903,7 +1930,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
@@ -1919,7 +1947,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
@@ -1930,7 +1959,8 @@ vector[N] means_ordered: SoA
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id mean_price)
@@ -1949,7 +1979,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma_price)
@@ -1972,7 +2003,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
@@ -1983,7 +2015,8 @@ vector[N] means_ordered: SoA
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id upper_test)
@@ -2006,7 +2039,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id lower_upper_test)
@@ -2031,7 +2065,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -2088,7 +2123,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -2145,7 +2181,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -2190,7 +2227,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id unit_vec_test)
@@ -2209,7 +2247,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id pos_ordered_test)
@@ -2228,7 +2267,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id corr_matrix_test)
@@ -2248,7 +2288,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id cov_matrix_test)
@@ -2268,7 +2309,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_cov_test)
@@ -2290,7 +2332,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id chol_fac_corr_test)
@@ -2310,11 +2353,12 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id phi) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable phi) ()) UReal
@@ -2333,7 +2377,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -2349,7 +2393,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector SoA
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable prices) ()) UVector
@@ -2367,7 +2411,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable prices_diff) ()) UVector
@@ -2406,7 +2450,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable mu) ()) UVector
@@ -2429,7 +2473,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable err) ()) UVector
@@ -2574,7 +2618,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id h_i_sigma)
@@ -2582,7 +2626,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment
@@ -2702,7 +2746,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector SoA
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable h_sigma) ()) UVector
@@ -2743,7 +2787,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector SoA
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable means_ordered) ()) UVector
@@ -3002,7 +3046,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -3047,7 +3092,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id h)
@@ -3066,7 +3112,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id ar)
@@ -3085,7 +3132,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id ma) (decl_type (Sized SReal))
@@ -3096,7 +3144,8 @@ vector[N] means_ordered: SoA
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id phi_beta) (decl_type (Sized SReal))
@@ -3114,7 +3163,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma2) (decl_type (Sized SReal))
@@ -3130,7 +3180,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id Intercept) (decl_type (Sized SReal))
@@ -3141,7 +3192,8 @@ vector[N] means_ordered: SoA
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id mean_price)
@@ -3160,7 +3212,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma_price)
@@ -3183,7 +3236,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id theta) (decl_type (Sized SReal))
@@ -3194,7 +3248,8 @@ vector[N] means_ordered: SoA
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id upper_test)
@@ -3217,7 +3272,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id lower_upper_test)
@@ -3242,7 +3298,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -3299,7 +3356,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -3356,7 +3414,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (StanLib check_matching_dims FnPlain)
@@ -3401,7 +3460,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id unit_vec_test)
@@ -3420,7 +3480,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos_ordered_test)
@@ -3439,7 +3500,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id corr_matrix_test)
@@ -3459,7 +3521,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id cov_matrix_test)
@@ -3479,7 +3542,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id chol_fac_cov_test)
@@ -3501,7 +3565,8 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id chol_fac_corr_test)
@@ -3521,15 +3586,16 @@ vector[N] means_ordered: SoA
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id phi) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id prices)
@@ -3537,7 +3603,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id prices_diff)
@@ -3545,7 +3611,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id mu)
@@ -3553,7 +3619,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id err)
@@ -3561,7 +3627,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id h_i_mean)
@@ -3569,7 +3635,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id h_i_sigma)
@@ -3577,7 +3643,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id h_sigma)
@@ -3585,7 +3651,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id means_ordered)
@@ -3593,7 +3659,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -4339,7 +4405,7 @@ vector[N] means_ordered: SoA
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -4351,7 +4417,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4383,7 +4449,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4406,7 +4472,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4429,7 +4495,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4449,7 +4515,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4468,7 +4534,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4496,7 +4562,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4521,7 +4587,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4547,7 +4613,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4573,7 +4639,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4599,7 +4665,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4623,7 +4689,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4653,7 +4719,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4685,7 +4751,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SRowVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4723,7 +4789,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4755,7 +4821,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4781,7 +4847,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4807,7 +4873,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4834,7 +4900,7 @@ vector[N] means_ordered: SoA
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4861,7 +4927,7 @@ vector[N] means_ordered: SoA
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4888,7 +4954,7 @@ vector[N] means_ordered: SoA
         (SMatrix AoS
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4915,7 +4981,7 @@ vector[N] means_ordered: SoA
         (SMatrix AoS
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -4942,7 +5008,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable high_low_est) ()) UVector
@@ -4972,7 +5038,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable b) ()) UVector
@@ -4995,7 +5061,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable h) ()) UVector
@@ -5018,7 +5084,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable ar) ()) UVector
@@ -5037,7 +5103,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id ma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable ma) ()) UReal
@@ -5054,7 +5120,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id phi_beta) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable phi_beta) ()) UReal
@@ -5078,7 +5144,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma2) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma2) ()) UReal
@@ -5100,7 +5166,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id Intercept) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable Intercept) ()) UReal
@@ -5122,7 +5188,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable mean_price) ()) UVector
@@ -5146,7 +5212,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma_price) ()) UVector
@@ -5170,7 +5236,7 @@ vector[N] means_ordered: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id theta) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable theta) ()) UReal
@@ -5191,7 +5257,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable upper_test) ()) UVector
@@ -5219,7 +5285,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable lower_upper_test) ()) UVector
@@ -5249,7 +5315,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SRowVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable row_vec_lower_upper_test) ()) URowVector
@@ -5285,7 +5351,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable offset_mult_test) ()) UVector
@@ -5315,7 +5381,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable ordered_test) ()) UVector
@@ -5339,7 +5405,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable unit_vec_test) ()) UVector
@@ -5363,7 +5429,7 @@ vector[N] means_ordered: SoA
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos_ordered_test) ()) UVector
@@ -5388,7 +5454,7 @@ vector[N] means_ordered: SoA
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable corr_matrix_test) ()) UMatrix
@@ -5414,7 +5480,7 @@ vector[N] means_ordered: SoA
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable cov_matrix_test) ()) UMatrix
@@ -5440,7 +5506,7 @@ vector[N] means_ordered: SoA
         (SMatrix AoS
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable chol_fac_cov_test) ()) UMatrix
@@ -5466,7 +5532,7 @@ vector[N] means_ordered: SoA
         (SMatrix AoS
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable chol_fac_corr_test) ()) UMatrix
@@ -5499,7 +5565,8 @@ vector[N] means_ordered: SoA
        ((pattern (Var diff_low_mid))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var diff_high_mid))
-        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))))
+        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
+     (out_annotations ())))
    (b <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5507,7 +5574,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (h <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5515,7 +5582,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (ar <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5523,24 +5590,26 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (ma <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+     (out_trans Identity) (out_annotations ())))
    (phi_beta <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
      (out_trans
       (LowerUpper
        ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_annotations ())))
    (sigma2 <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
      (out_trans
       (Lower
-       ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_annotations ())))
    (Intercept <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+     (out_trans Identity) (out_annotations ())))
    (mean_price <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5548,7 +5617,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))
    (sigma_price <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5560,10 +5629,11 @@ vector[N] means_ordered: SoA
      (out_trans
       (Lower
        ((pattern (Lit Real 0.0))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+     (out_annotations ())))
    (theta <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+     (out_trans Identity) (out_annotations ())))
    (upper_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5574,7 +5644,8 @@ vector[N] means_ordered: SoA
      (out_block Parameters)
      (out_trans
       (Upper
-       ((pattern (Var ma)) (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+       ((pattern (Var ma)) (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+     (out_annotations ())))
    (lower_upper_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5588,7 +5659,8 @@ vector[N] means_ordered: SoA
        ((pattern (Var sigma_price))
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
        ((pattern (Var upper_test))
-        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+     (out_annotations ())))
    (row_vec_lower_upper_test <opaque>
     ((out_unconstrained_st
       (SRowVector AoS
@@ -5608,7 +5680,8 @@ vector[N] means_ordered: SoA
          (FunApp (Operator Transpose)
           (((pattern (Var upper_test))
             (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
+     (out_annotations ())))
    (offset_mult_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5622,7 +5695,8 @@ vector[N] means_ordered: SoA
        ((pattern (Var mean_price))
         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
        ((pattern (Var sigma_price))
-        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+     (out_annotations ())))
    (ordered_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5630,7 +5704,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Ordered)))
+     (out_block Parameters) (out_trans Ordered) (out_annotations ())))
    (unit_vec_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5638,7 +5712,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans UnitVector)))
+     (out_block Parameters) (out_trans UnitVector) (out_annotations ())))
    (pos_ordered_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5646,7 +5720,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans PositiveOrdered)))
+     (out_block Parameters) (out_trans PositiveOrdered) (out_annotations ())))
    (corr_matrix_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5671,7 +5745,7 @@ vector[N] means_ordered: SoA
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Correlation)))
+     (out_block Parameters) (out_trans Correlation) (out_annotations ())))
    (cov_matrix_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5700,7 +5774,7 @@ vector[N] means_ordered: SoA
       (SMatrix AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Covariance)))
+     (out_block Parameters) (out_trans Covariance) (out_annotations ())))
    (chol_fac_cov_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5745,7 +5819,7 @@ vector[N] means_ordered: SoA
       (SMatrix AoS
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans CholeskyCov)))
+     (out_block Parameters) (out_trans CholeskyCov) (out_annotations ())))
    (chol_fac_corr_test <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5770,7 +5844,7 @@ vector[N] means_ordered: SoA
       (SMatrix AoS
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans CholeskyCorr)))
+     (out_block Parameters) (out_trans CholeskyCorr) (out_annotations ())))
    (phi <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters)
@@ -5781,13 +5855,15 @@ vector[N] means_ordered: SoA
           (((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_annotations ())))
    (sigma <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters)
      (out_trans
       (Lower
-       ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_annotations ())))
    (prices <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5795,7 +5871,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (prices_diff <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5803,7 +5879,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (mu <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5811,7 +5887,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (err <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5819,7 +5895,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (h_i_mean <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5827,7 +5903,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (h_i_sigma <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5838,7 +5914,8 @@ vector[N] means_ordered: SoA
      (out_block TransformedParameters)
      (out_trans
       (Lower
-       ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       ((pattern (Lit Int 0)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_annotations ())))
    (h_sigma <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5846,7 +5923,7 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))
    (means_ordered <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -5854,5 +5931,5 @@ vector[N] means_ordered: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans Identity)))))
+     (out_block TransformedParameters) (out_trans Identity) (out_annotations ())))))
  (prog_name constraints_model) (prog_path ../constraints.stan))

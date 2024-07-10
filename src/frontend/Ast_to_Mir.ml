@@ -457,6 +457,7 @@ let rec check_transformed_sizedtype transform_action tr name st =
               Decl
                 { decl_type= Sized SInt
                 ; decl_id
+                ; decl_annotations= []
                 ; decl_adtype= DataOnly
                 ; initialize= Assign te }
           ; meta= te.meta.loc } in
@@ -552,8 +553,8 @@ let var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
       @ check_decl decl_var st trans loc adlevel
   | _ -> []
 
-let create_decl_with_assign decl_id declc decl_type initial_value transform
-    smeta =
+let create_decl_with_assign decl_id declc decl_type initial_value
+    decl_annotations transform smeta =
   let rhs = Option.map ~f:trans_expr initial_value in
   let decl_adtype =
     UnsizedType.fill_adtype_for_type declc.dadlevel (Type.to_unsized decl_type)
@@ -565,9 +566,16 @@ let create_decl_with_assign decl_id declc decl_type initial_value transform
           Typed.Meta.create ~adlevel:decl_adtype ~loc:smeta
             ~type_:(Type.to_unsized decl_type)
             () } in
+  let decl_annotations = List.map ~f:(fun a -> a.Ast.name) decl_annotations in
   let decl =
     Stmt.
-      { pattern= Decl {decl_adtype; decl_id; decl_type; initialize= Default}
+      { pattern=
+          Decl
+            { decl_adtype
+            ; decl_id
+            ; decl_type
+            ; initialize= Default
+            ; decl_annotations }
       ; meta= smeta } in
   let rhs_assignment =
     Option.map
@@ -696,7 +704,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                 { decl_adtype= Expr.Typed.adlevel_of iteratee'
                 ; decl_id= loopvar.name
                 ; decl_type= Unsized decl_type
-                ; initialize= Default } } in
+                ; initialize= Default
+                ; decl_annotations= [] } } in
       let assignment var =
         Stmt.
           { pattern=
@@ -711,7 +720,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       Common.ICE.internal_error
         "Found function definition statement outside of function block"
       [@coverage off]
-  | Ast.VarDecl {decl_type; transformation; variables; is_global= _} ->
+  | Ast.VarDecl {decl_type; transformation; variables; annotations; is_global= _}
+    ->
       List.concat_map
         ~f:(fun Ast.{identifier; initial_value} ->
           let transform = Transformation.map trans_expr transformation in
@@ -719,7 +729,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           let size_checks, dt = check_sizedtype decl_id decl_type in
           size_checks
           @ create_decl_with_assign decl_id declc (Type.Sized dt) initial_value
-              transform smeta)
+              annotations transform smeta)
         variables
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
@@ -746,7 +756,8 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
           { decl_adtype= rhs.emeta.ad_level
           ; decl_id= sym
           ; decl_type= Unsized rhs_type
-          ; initialize= Uninit }
+          ; initialize= Uninit
+          ; decl_annotations= [] }
     ; meta= rhs.emeta.loc } in
   let assign =
     { temp with
@@ -810,12 +821,13 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
 
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
-  | Ast.FunDef {returntype; funname; arguments; body} ->
+  | Ast.FunDef {returntype; funname; arguments; annotations; body} ->
       [ Program.
           { fdrt= returntype
           ; fdname= funname.name
           ; fdsuffix= Fun_kind.(suffix_from_name funname.name)
           ; fdargs= List.map ~f:trans_arg arguments
+          ; fdannotations= List.map ~f:(fun a -> a.Ast.name) annotations
           ; fdbody=
               trans_stmt ud_dists
                 {transform_action= IgnoreTransform; dadlevel= AutoDiffable}
@@ -837,7 +849,12 @@ let trans_block ud_dists declc block prog =
   let f stmt (accum1, accum2, accum3) =
     match stmt with
     | { Ast.stmt=
-          VarDecl {decl_type= type_; variables; transformation; is_global= true}
+          VarDecl
+            { decl_type= type_
+            ; variables
+            ; transformation
+            ; annotations
+            ; is_global= true }
       ; smeta } ->
         let outvars, sizes, stmts =
           List.split3
@@ -856,10 +873,12 @@ let trans_block ud_dists declc block prog =
                        ; out_unconstrained_st=
                            transform_sizedtype transform type_
                        ; out_block= block
+                       ; out_annotations=
+                           List.map ~f:(fun a -> a.Ast.name) annotations
                        ; out_trans= transform } ) in
                  let stmts =
                    create_decl_with_assign decl_id declc (Sized type_)
-                     initial_value transform smeta.loc in
+                     initial_value annotations transform smeta.loc in
                  (outvar, size, stmts))
                variables in
         ( outvars @ accum1

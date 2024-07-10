@@ -1,7 +1,7 @@
 /* $ stanc -fsoa --debug-optimized-mir ../tuple-dataonly2.stan : [exit 0] */
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname tuple_tester) (fdsuffix FnPlain)
-    (fdargs ((DataOnly x (UTuple ((UArray UReal) UInt)))))
+    (fdargs ((DataOnly x (UTuple ((UArray UReal) UInt))))) (fdannotations ())
     (fdbody
      (((pattern
         (Block

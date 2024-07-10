@@ -1,7 +1,7 @@
 /* $ stanc -fsoa --debug-optimized-mir ../tuple_lpdf2.stan : [exit 0] */
 ((functions_block
   (((fdrt (ReturnType UReal)) (fdname foo_lpdf) (fdsuffix (FnDist Density Normalized))
-    (fdargs ((AutoDiffable x (UTuple (UReal UInt)))))
+    (fdargs ((AutoDiffable x (UTuple (UReal UInt))))) (fdannotations ())
     (fdbody
      (((pattern
         (Block

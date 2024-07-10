@@ -20,7 +20,8 @@ module Pattern : sig
         { decl_adtype: UnsizedType.autodifftype
         ; decl_id: string
         ; decl_type: 'a Type.t
-        ; initialize: 'a decl_init }
+        ; initialize: 'a decl_init
+        ; decl_annotations: string list }
   [@@deriving sexp_of, map, fold]
 
   and 'e lvalue = 'e lbase * 'e Index.t list [@@deriving sexp_of, map, fold]

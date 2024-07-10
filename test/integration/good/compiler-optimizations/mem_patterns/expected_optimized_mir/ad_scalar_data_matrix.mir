@@ -31,7 +31,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -39,7 +39,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -69,7 +69,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
         (SMatrix AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -93,7 +93,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -120,7 +120,8 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
@@ -131,7 +132,8 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id beta)
@@ -150,7 +152,8 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Block
@@ -168,7 +171,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_simple) ()) UVector
@@ -204,7 +207,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_deep) ()) UVector
@@ -251,7 +254,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_dual_rep) ()) UVector
@@ -290,7 +293,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_data_rep) ()) UVector
@@ -330,7 +333,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mix) ()) UVector
@@ -364,7 +367,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_from_data) ()) UVector
@@ -426,7 +429,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
             (SMatrix AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mat_rep) ()) UMatrix
@@ -486,7 +489,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
             (SMatrix AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mat_rep_vec) ()) UMatrix
@@ -541,7 +544,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
             (SMatrix AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_mat_rep) ()) UMatrix
@@ -575,7 +578,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_mat_from_vecs) ()) UMatrix
@@ -694,7 +697,8 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
@@ -705,7 +709,8 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id beta)
@@ -724,7 +729,8 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern SoA)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Block
@@ -742,7 +748,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_simple) ()) UVector
@@ -778,7 +784,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_deep) ()) UVector
@@ -825,7 +831,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_dual_rep) ()) UVector
@@ -864,7 +870,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_data_rep) ()) UVector
@@ -904,7 +910,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mix) ()) UVector
@@ -938,7 +944,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (Sized
             (SVector AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_from_data) ()) UVector
@@ -1000,7 +1006,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
             (SMatrix SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mat_rep) ()) UMatrix
@@ -1060,7 +1066,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
             (SMatrix SoA
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable soa_mat_rep_vec) ()) UMatrix
@@ -1115,7 +1121,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
             (SMatrix AoS
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_mat_rep) ()) UMatrix
@@ -1149,7 +1155,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (initialize Default)))
+          (initialize Default) (decl_annotations ())))
         (meta <opaque>))
        ((pattern
          (Assignment ((LVariable aos_mat_from_vecs) ()) UMatrix
@@ -1268,7 +1274,8 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma) (decl_type (Sized SReal))
@@ -1279,7 +1286,8 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
            (CompilerInternal
             (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
            ()))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id beta)
@@ -1298,7 +1306,8 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
              (mem_pattern AoS)))
            ()))
-         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))))
+         (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+      (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -1351,7 +1360,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
  (transform_inits
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable pos__) ()) UInt
@@ -1359,7 +1368,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1379,7 +1388,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1403,7 +1412,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnReadData)
@@ -1425,7 +1434,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
  (unconstrain_array
   (((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id alpha) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable alpha) ()) UReal
@@ -1442,7 +1451,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id sigma) (decl_type (Sized SReal))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable sigma) ()) UReal
@@ -1463,7 +1472,7 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
        (Sized
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize Default)))
+      (initialize Default) (decl_annotations ())))
     (meta <opaque>))
    ((pattern
      (Assignment ((LVariable beta) ()) UVector
@@ -1484,10 +1493,10 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
  (output_vars
   ((alpha <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+     (out_trans Identity) (out_annotations ())))
    (sigma <opaque>
     ((out_unconstrained_st SReal) (out_constrained_st SReal) (out_block Parameters)
-     (out_trans Identity)))
+     (out_trans Identity) (out_annotations ())))
    (beta <opaque>
     ((out_unconstrained_st
       (SVector AoS
@@ -1495,5 +1504,5 @@ Optimization hazard warning (Line 21): SoA warning: The right hand side of the a
      (out_constrained_st
       (SVector AoS
        ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans Identity)))))
+     (out_block Parameters) (out_trans Identity) (out_annotations ())))))
  (prog_name ad_scalar_data_matrix_model) (prog_path ../ad_scalar_data_matrix.stan))
