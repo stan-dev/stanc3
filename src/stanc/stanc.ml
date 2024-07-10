@@ -285,6 +285,9 @@ let use_file filename =
     get_ast_or_exit ?printed_filename filename
       ~print_warnings:(not !canonicalize_settings.deprecations)
       ~bare_functions:!bare_functions in
+  let unused_annotations =
+    Annotations.find_unrecognized Transform_Mir.recognized_annotation ast in
+  Warnings.pp_warnings ?printed_filename Fmt.stderr unused_annotations;
   Debugging.ast_logger ast;
   let typed_ast = type_ast_or_exit ?printed_filename ast in
   let canonical_ast =

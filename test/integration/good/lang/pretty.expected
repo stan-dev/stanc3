@@ -35,6 +35,20 @@ generated quantities {
   matrix[34, 10000] a_bit_too_long = rep_matrix(1, 34, 10000);
 }
 
+Warning in 'good_annotations.stan', line 2, column 17: Unknown annotation
+    'foo' will be ignored by the compiler
+Warning in 'good_annotations.stan', line 2, column 17: Unknown annotation
+    'biz' will be ignored by the compiler
+Warning in 'good_annotations.stan', line 7, column 19: Unknown annotation
+    'baz' will be ignored by the compiler
+Warning in 'good_annotations.stan', line 12, column 89: Unknown annotation
+    'bar' will be ignored by the compiler
+Warning in 'good_annotations.stan', line 12, column 89: Unknown annotation
+    'baz' will be ignored by the compiler
+Warning in 'good_annotations.stan', line 12, column 89: Unknown annotation
+    'flux' will be ignored by the compiler
+Warning in 'good_annotations.stan', line 12, column 89: Unknown annotation
+    'really_extra_long_now' will be ignored by the compiler
   $ ../../../../../install/default/bin/stanc --auto-format good_const.stan
 transformed data {
   real y;

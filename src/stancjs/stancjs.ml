@@ -32,11 +32,14 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
       let open Result.Monad_infix in
       let result =
         ast >>= fun ast ->
+        let unused_annotations =
+          Annotations.find_unrecognized Transform_Mir.recognized_annotation ast
+        in
         let typed_ast =
           Typechecker.check_program ast
           |> Result.map_error ~f:(fun e -> Errors.Semantic_error e) in
         typed_ast >>| fun (typed_ast, type_warnings) ->
-        let warnings = parser_warnings @ type_warnings in
+        let warnings = parser_warnings @ unused_annotations @ type_warnings in
         if is_flag_set "info" then
           r.return (Result.Ok (Info.info typed_ast), warnings, []);
         let canonicalizer_settings =
