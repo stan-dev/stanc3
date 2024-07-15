@@ -355,6 +355,7 @@ let gen_get_param_names {Program.output_vars; _} =
       ~f:(fun id -> Exprs.literal_string (Mangle.remove_prefix id))
       (UnsizedType.enumerate_tuple_names_io name (SizedType.to_unsized st))
   in
+  let output_vars = Annotations.get_noisy_outvars output_vars in
   let params, tparams, gqs =
     List.partition3_map output_vars ~f:(function
       | id, _, {Program.out_block= Parameters; out_constrained_st= st; _} ->
@@ -398,6 +399,7 @@ let gen_get_dims {Program.output_vars; _} =
       We should probably deprecate get_dims and replace it with a
       new function later on which returns a more structured type
   *)
+  let output_vars = Annotations.get_noisy_outvars output_vars in
   let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
   let pack inner_dims =
     List.map
@@ -528,6 +530,7 @@ let gen_param_names_fn name (paramvars, tparamvars, gqvars) =
        ~cv_qualifiers:[Const; Final] ())
 
 let gen_constrained_param_names {Program.output_vars; _} =
+  let output_vars = Annotations.get_noisy_outvars output_vars in
   gen_param_names_fn "constrained_param_names"
     (List.partition3_map
        ~f:(function
@@ -598,7 +601,8 @@ let gen_overloads {Program.output_vars; _} =
         Expr.Helpers.binop_list
           (List.map
              ~f:(fun outvar ->
-               SizedType.io_size outvar.Program.out_constrained_st)
+               if Annotations.outvar_is_silent outvar then Expr.Helpers.zero
+               else SizedType.io_size outvar.Program.out_constrained_st)
              outvars)
           Operator.Plus ~default:Expr.Helpers.zero
         |> lower_expr in

@@ -1012,8 +1012,6 @@ let map_prog_stmt_lists f (p : ('a, 'b, 'c) Program.t) =
   ; transform_inits= f p.transform_inits
   ; unconstrain_array= f p.unconstrain_array }
 
-let recognized_annotation a = a = "extern"
-
 let trans_prog (p : Program.Typed.t) =
   (* name mangling of c++ keywords*)
   let rec map_stmt {Stmt.Fixed.pattern; meta} =
@@ -1061,8 +1059,9 @@ let trans_prog (p : Program.Typed.t) =
     then init_pos @ stmts
     else stmts in
   let param_writes, tparam_writes, gq_writes =
-    List.map p.output_vars ~f:param_unconstrained_serializer_write
-    |> List.map2_exn p.output_vars ~f:(fun (_, meta, outvar) writes ->
+    let loud_output_vars = Annotations.get_noisy_outvars p.output_vars in
+    List.map loud_output_vars ~f:param_unconstrained_serializer_write
+    |> List.map2_exn loud_output_vars ~f:(fun (_, meta, outvar) writes ->
            (outvar.Program.out_block, Stmt.Fixed.{pattern= SList writes; meta}))
     |> List.partition3_map ~f:(fun (b, x) ->
            match b with
