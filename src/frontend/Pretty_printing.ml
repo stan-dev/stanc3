@@ -322,9 +322,7 @@ let pp_bracketed_transform ppf = function
       pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1 pp_expression e2
   | Identity | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
    |CholeskyCov | Correlation | Covariance | TupleTransformation _
-   |RowStochastic
-   |ColumnStochastic
-    (* tuple transformations are handled in pp_transformed_type *) ->
+  (* tuple transformations are handled in pp_transformed_type *) ->
       ()
 
 let rec pp_transformed_type ppf (st, trans) =
@@ -364,8 +362,6 @@ let rec pp_transformed_type ppf (st, trans) =
     | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
     | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
     | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
-    | RowStochastic -> pf ppf "row_stochastic%a" sizes_fmt ()
-    | ColumnStochastic -> pf ppf "column_stochastic%a" sizes_fmt ()
     | TupleTransformation transforms ->
         (* NB this calls the top-level function to handle internal arrays etc *)
         let transTypes = Middle.Utils.zip_stuple_trans_exn st transforms in
