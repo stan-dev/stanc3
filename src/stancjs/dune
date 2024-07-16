@@ -13,7 +13,14 @@
 (env
  (dev
   (js_of_ocaml
-   (flags "--pretty" "--no-inline" "--debug-info" "--disable" "staticeval" "--disable" "share"))))
+   (flags
+    "--pretty"
+    "--no-inline"
+    "--debug-info"
+    "--disable"
+    "staticeval"
+    "--disable"
+    "share"))))
 
 (alias
  (name default)
