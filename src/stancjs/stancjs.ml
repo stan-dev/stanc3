@@ -33,8 +33,8 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
       let result =
         ast >>= fun ast ->
         let unused_annotations =
-          Annotations.find_unrecognized Transform_Mir.recognized_annotation ast
-        in
+          Frontend.Annotations.find_unrecognized
+            Stan_math_backend.Annotations.recognized_annotation ast in
         let typed_ast =
           Typechecker.check_program ast
           |> Result.map_error ~f:(fun e -> Errors.Semantic_error e) in
