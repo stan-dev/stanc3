@@ -36,8 +36,6 @@ type var_constraint =
   | CholeskyCov
   | Correlation
   | Covariance
-  | RowStochastic
-  | ColumnStochastic
 
 (** Constraint paired with a name for user messages *)
 type var_constraint_named = {name: string; constr: var_constraint}
@@ -92,8 +90,6 @@ let transform_mismatch_constraint (constr : var_constraint)
   | CholeskyCov -> trans <> CholeskyCov && trans <> CholeskyCorr
   | Correlation -> trans <> Correlation
   | Covariance -> trans <> Covariance && trans <> Correlation
-  | RowStochastic -> trans <> RowStochastic
-  | ColumnStochastic -> trans <> ColumnStochastic
 
 (** Check for inconsistency between a distribution argument's range and
    a literal value *)

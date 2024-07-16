@@ -1657,8 +1657,6 @@ and check_transformation cf tenv ut trans =
         List.map typesTrans ~f:(fun (ut, tm) ->
             check_transformation cf tenv ut tm) in
       TupleTransformation tes
-  | RowStochastic -> RowStochastic
-  | ColumnStochastic -> ColumnStochastic
 
 and check_var_decl loc cf tenv sized_ty trans
     (variables : untyped_expression Ast.variable list) is_global =

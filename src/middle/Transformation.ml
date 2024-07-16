@@ -20,8 +20,6 @@ type 'e t =
   | CholeskyCov
   | Correlation
   | Covariance
-  | RowStochastic
-  | ColumnStochastic
   | TupleTransformation of 'e t list
 [@@deriving sexp, compare, map, hash, fold]
 

@@ -31,8 +31,6 @@ let constraint_to_string = function
   | CholeskyCov -> Some "cholesky_factor_cov"
   | Correlation -> Some "corr_matrix"
   | Covariance -> Some "cov_matrix"
-  | RowStochastic -> Some "stochastic_row"
-  | ColumnStochastic -> Some "stochastic_column"
   | Lower _ -> Some "lb"
   | Upper _ -> Some "ub"
   | LowerUpper _ -> Some "lub"
