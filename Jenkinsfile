@@ -704,8 +704,7 @@ pipeline {
                             sh "mv `find _build -name index.html` bin/load_stanc.html"
                             runShell("""
                                 eval \$(opam env)
-                                dune subst
-                                dune build --root=. src/stancjs
+                                dune build --force --profile=dev --root=. src/stancjs
                             """)
                             sh "mv `find _build -name stancjs.bc.js` bin/stanc-pretty.js"
                             stash name:'js-exe', includes:'bin/*'
