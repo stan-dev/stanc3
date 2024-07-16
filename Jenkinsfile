@@ -702,6 +702,7 @@ pipeline {
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
                             sh "mv `find _build -name index.html` bin/load_stanc.html"
+                            sh "dune build --root=. src/stancjs && mv `find _build -name stancjs.bc.js` bin/stanc-pretty.js"
                             stash name:'js-exe', includes:'bin/*'
                         }
                     }
