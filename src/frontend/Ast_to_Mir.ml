@@ -271,7 +271,8 @@ let check_transform_shape decl_id decl_var meta = function
       same_shape decl_id decl_var "lower" e1 meta
       @ same_shape decl_id decl_var "upper" e2 meta
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
+   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _
+   |RowStochastic | ColumnStochastic ->
       []
 
 let copy_indices indexed (var : Expr.Typed.t) =
@@ -294,7 +295,8 @@ let extract_transform_args var = function
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) ->
       [copy_indices var a1; copy_indices var a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
+   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _
+   |RowStochastic | ColumnStochastic ->
       []
 
 let rec param_size transform sizedtype =
@@ -326,7 +328,7 @@ let rec param_size transform sizedtype =
    |LowerUpper (_, _)
    |Offset _ | Multiplier _
    |OffsetMultiplier (_, _)
-   |Ordered | PositiveOrdered | UnitVector ->
+   |Ordered | PositiveOrdered | UnitVector | RowStochastic | ColumnStochastic ->
       sizedtype
   | TupleTransformation tms ->
       let _, dims = SizedType.get_array_dims sizedtype in
