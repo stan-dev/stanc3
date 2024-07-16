@@ -38,6 +38,14 @@ data {
   cov_matrix[10] k;
   array[3] cov_matrix[10] k1;
   array[5, 6] cov_matrix[10] k2;
+
+  row_stochastic[10, 10] d_rsm;
+  array[3] row_stochastic[10, 10] d_rsm_a;
+  array[5, 6] row_stochastic[10, 10] d_rms_aa;
+
+  column_stochastic[10, 10] d_csm;
+  array[3] column_stochastic[10, 10] d_csm_a;
+  array[5, 6] column_stochastic[10, 10] d_cms_aa;
 }
 transformed data {
   int td_a0;
@@ -79,6 +87,14 @@ transformed data {
   cov_matrix[10] td_k;
   array[3] cov_matrix[10] td_k1;
   array[5, 6] cov_matrix[10] td_k2;
+
+  row_stochastic[10, 10] td_rsm;
+  array[3] row_stochastic[10, 10] td_rsm_a;
+  array[5, 6] row_stochastic[10, 10] td_rms_aa;
+
+  column_stochastic[10, 10] td_csm;
+  array[3] column_stochastic[10, 10] td_csm_a;
+  array[5, 6] column_stochastic[10, 10] td_cms_aa;
 
   {
     int loc_td_a0;
@@ -138,6 +154,14 @@ parameters {
   cov_matrix[10] par_k;
   array[3] cov_matrix[10] par_k1;
   array[5, 6] cov_matrix[10] par_k2;
+
+  row_stochastic[10, 10] p_rsm;
+  array[3] row_stochastic[10, 10] p_rsm_a;
+  array[5, 6] row_stochastic[10, 10] p_rms_aa;
+
+  column_stochastic[10, 10] p_csm;
+  array[3] column_stochastic[10, 10] p_csm_a;
+  array[5, 6] column_stochastic[10, 10] p_cms_aa;
 }
 transformed parameters {
   real tpar_b0;
@@ -175,6 +199,14 @@ transformed parameters {
   cov_matrix[10] tpar_k;
   array[3] cov_matrix[10] tpar_k1;
   array[5, 6] cov_matrix[10] tpar_k2;
+
+  row_stochastic[10, 10] tp_rsm;
+  array[3] row_stochastic[10, 10] tp_rsm_a;
+  array[5, 6] row_stochastic[10, 10] tp_rms_aa;
+
+  column_stochastic[10, 10] tp_csm;
+  array[3] column_stochastic[10, 10] tp_csm_a;
+  array[5, 6] column_stochastic[10, 10] tp_cms_aa;
 
   {
     int loc_tpar_a0;
@@ -258,6 +290,13 @@ generated quantities {
   array[3] cov_matrix[10] gq_k1;
   array[5, 6] cov_matrix[10] gq_k2;
 
+  row_stochastic[10, 10] gq_rsm;
+  array[3] row_stochastic[10, 10] gq_rsm_a;
+  array[5, 6] row_stochastic[10, 10] gq_rms_aa;
+
+  column_stochastic[10, 10] gq_csm;
+  array[3] column_stochastic[10, 10] gq_csm_a;
+  array[5, 6] column_stochastic[10, 10] gq_cms_aa;
   {
     int loc_gq_a0;
     array[1] int loc_gq_a1;
