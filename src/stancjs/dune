@@ -10,6 +10,18 @@
   (pps ppx_jane))
  (modes js))
 
+(env
+ (dev
+  (js_of_ocaml
+   (flags
+    "--pretty"
+    "--no-inline"
+    "--debug-info"
+    "--disable"
+    "staticeval"
+    "--disable"
+    "share"))))
+
 (alias
  (name default)
  (deps stancjs.bc.js index.html))
