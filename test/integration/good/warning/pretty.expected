@@ -589,6 +589,13 @@ Warning in 'self-assign.stan', line 22, column 2: Assignment of variable to
     itself.
 Warning in 'self-assign.stan', line 24, column 2: Assignment of variable to
     itself during declaration. This is almost certainly a bug.
+  $ ../../../../../install/default/bin/stanc --auto-format unknown_annotation.stan
+parameters {
+  @not_a_real_annotation real unused;
+}
+
+Warning in 'unknown_annotation.stan', line 2, column 31: Unknown annotation
+    'not_a_real_annotation' will be ignored by the compiler
   $ ../../../../../install/default/bin/stanc --auto-format unreachable_statement.stan
 functions {
   void foo(real x) {

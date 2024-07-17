@@ -443,8 +443,8 @@ let var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans
       @ check_decl decl_var st trans loc adlevel
   | _ -> []
 
-let create_decl_with_assign decl_id declc decl_type initial_value transform
-    smeta =
+let create_decl_with_assign decl_id declc decl_type initial_value
+    decl_annotations transform smeta =
   let rhs = Option.map ~f:trans_expr initial_value in
   let decl_adtype =
     UnsizedType.fill_adtype_for_type declc.dadlevel (Type.to_unsized decl_type)
@@ -458,7 +458,9 @@ let create_decl_with_assign decl_id declc decl_type initial_value transform
             () } in
   let decl =
     Stmt.
-      { Fixed.pattern= Decl {decl_adtype; decl_id; decl_type; initialize= true}
+      { Fixed.pattern=
+          Decl
+            {decl_adtype; decl_id; decl_type; decl_annotations; initialize= true}
       ; meta= smeta } in
   let rhs_assignment =
     Option.map
@@ -583,6 +585,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                 { decl_adtype= Expr.Typed.adlevel_of iteratee'
                 ; decl_id= loopvar.name
                 ; decl_type= Unsized decl_type
+                ; decl_annotations= []
                 ; initialize= true } } in
       let assignment var =
         Stmt.Fixed.
@@ -598,15 +601,16 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       Common.ICE.internal_compiler_error
         [%message
           "Found function definition statement outside of function block"]
-  | Ast.VarDecl {decl_type; transformation; variables; is_global= _} ->
+  | Ast.VarDecl {decl_type; transformation; variables; annotations; is_global= _}
+    ->
       List.concat_map
         ~f:(fun {identifier; initial_value} ->
           let transform = Transformation.map trans_expr transformation in
           let decl_id = identifier.Ast.name in
           let size_checks, dt = check_sizedtype decl_id decl_type in
           size_checks
-          @ create_decl_with_assign decl_id declc dt initial_value transform
-              smeta)
+          @ create_decl_with_assign decl_id declc dt initial_value annotations
+              transform smeta)
         variables
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
@@ -629,6 +633,7 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
           { decl_adtype= rhs.emeta.ad_level
           ; decl_id= sym
           ; decl_type= Unsized rhs_type
+          ; decl_annotations= []
           ; initialize= false }
     ; meta= rhs.emeta.loc } in
   let assign =
@@ -696,12 +701,13 @@ and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
 
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
-  | Ast.FunDef {returntype; funname; arguments; body} ->
+  | Ast.FunDef {returntype; funname; arguments; annotations; body} ->
       [ Program.
           { fdrt= returntype
           ; fdname= funname.name
           ; fdsuffix= Fun_kind.(suffix_from_name funname.name |> without_propto)
           ; fdargs= List.map ~f:trans_arg arguments
+          ; fdannotations= annotations
           ; fdbody=
               trans_stmt ud_dists
                 {transform_action= IgnoreTransform; dadlevel= AutoDiffable}
@@ -743,6 +749,7 @@ let rec trans_sizedtype_decl declc tr name st =
                 { decl_type= Sized SInt
                 ; decl_id
                 ; decl_adtype= DataOnly
+                ; decl_annotations= []
                 ; initialize= true }
           ; meta= e.meta.loc } in
         let assign =
@@ -821,7 +828,12 @@ let trans_block ud_dists declc block prog =
   let f stmt (accum1, accum2, accum3) =
     match stmt with
     | { Ast.stmt=
-          VarDecl {decl_type= type_; variables; transformation; is_global= true}
+          VarDecl
+            { decl_type= type_
+            ; variables
+            ; transformation
+            ; annotations
+            ; is_global= true }
       ; smeta } ->
         let outvars, sizes, stmts =
           List.unzip3
@@ -839,10 +851,11 @@ let trans_block ud_dists declc block prog =
                        { out_constrained_st= type_
                        ; out_unconstrained_st= param_size transform type_
                        ; out_block= block
+                       ; out_annotations= annotations
                        ; out_trans= transform } ) in
                  let stmts =
                    create_decl_with_assign decl_id declc (Sized type_)
-                     initial_value transform smeta.loc in
+                     initial_value annotations transform smeta.loc in
                  (outvar, size, stmts))
                variables in
         ( outvars @ accum1

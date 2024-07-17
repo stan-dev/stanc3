@@ -10,6 +10,7 @@ type 'a fun_def =
   ; fdname: string
   ; fdsuffix: unit Fun_kind.suffix
   ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
+  ; fdannotations: string list
   ; fdbody: 'a option
         (* If fdbody is None, this is an external function declaration
            (forward decls are removed during AST lowering) *)
@@ -23,7 +24,8 @@ type 'e outvar =
   { out_unconstrained_st: 'e SizedType.t
   ; out_constrained_st: 'e SizedType.t
   ; out_block: io_block
-  ; out_trans: 'e Transformation.t }
+  ; out_trans: 'e Transformation.t
+  ; out_annotations: string list }
 [@@deriving sexp, map, hash, fold]
 
 type ('a, 'b, 'm) t =

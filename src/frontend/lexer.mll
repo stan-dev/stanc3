@@ -197,6 +197,12 @@ rule token = parse
   | identifier as id          { lexer_logger ("identifier " ^ id) ;
                                 lexer_pos_logger (lexeme_start_p lexbuf);
                                 Parser.IDENTIFIER (lexeme lexbuf) }
+  (* TODO annotation proper paren lexxing *)
+  | "@" (non_space_or_newline+ as ann)
+                              { lexer_logger ("annotation " ^ ann) ;
+                                lexer_pos_logger (lexeme_start_p lexbuf);
+                                add_separator lexbuf ;
+                                Parser.ANNOTATION (lexeme lexbuf |> Core.String.chop_prefix_exn ~prefix:"@") }
 (* End of file *)
   | eof                       { lexer_logger "eof" ;
                                 if Preprocessor.size () = 1
