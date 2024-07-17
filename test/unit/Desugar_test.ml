@@ -17,7 +17,6 @@ transformed data {
   [%expect
     {|
     data array[int, 3] arr;
-    arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[2, arr, 2]); |}]
 
@@ -33,7 +32,6 @@ transformed data {
   [%expect
     {|
     data array[int, 3] arr;
-    arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[2][arr[2]]);
  |}]
@@ -50,7 +48,6 @@ transformed data {
   [%expect
     {|
     data array[int, 3] arr;
-    arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[2, arr[2], arr[2]]);
  |}]
@@ -67,7 +64,6 @@ transformed data {
   [%expect
     {|
     data array[int, 3] arr;
-    arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[4, 2]);
  |}]
@@ -84,7 +80,6 @@ transformed data {
   [%expect
     {|
     data array[int, 3] arr;
-    arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[1:3, 1]);
  |}]
@@ -105,7 +100,6 @@ transformed data {
   [%expect
     {|
     data array[int, 3] arr;
-    arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[4:, 2:3, 1]);
     FnPrint__(mat[2, arr[1]][1]);

@@ -322,7 +322,8 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= true }
+              ; initialize= true
+              ; assignment= None }
             |> swrap)
           tuple_component_names tuple_types in
       let loop =
@@ -363,15 +364,14 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
       [Block (temps @ loop) |> swrap]
   | SVector _ | SRowVector _ | SMatrix _ | SComplexMatrix _
    |SComplexRowVector _ | SComplexVector _ | SArray _ ->
-      let decl, assign, flat_var =
+      let decl, flat_var =
         let decl_id_flat = flat_name decl_id in
         ( Stmt.Fixed.Pattern.Decl
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
-            ; initialize= true }
-          |> swrap
-        , Assignment (Stmt.Helpers.lvariable decl_id_flat, flat_type, origin)
+            ; initialize= true
+            ; assignment= Some origin }
           |> swrap
         , { Expr.Fixed.pattern= Var decl_id_flat
           ; meta=
@@ -397,9 +397,8 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
           (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom)
         |> swrap in
       [ Block
-          [ decl; assign; pos_reset
-          ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta; incr_tuple_pos
-          ]
+          [ decl; pos_reset; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta
+          ; incr_tuple_pos ]
         |> swrap ]
 
 let rec var_context_read
@@ -473,23 +472,15 @@ let rec var_context_read
                 { decl_adtype= AutoDiffable
                 ; decl_id= variable_name
                 ; decl_type= Unsized array_type
-                ; initialize= true }
+                ; initialize= true
+                ; assignment= Some (readfnapp io_name array_type) }
               |> swrap_noloc
-            ; Assignment
-                ( Stmt.Helpers.lvariable variable_name
-                , typ
-                , readfnapp io_name array_type )
-              |> swrap
             ; Stmt.Fixed.Pattern.Decl
                 { decl_adtype= DataOnly
                 ; decl_id= variable_name ^ "pos__"
                 ; decl_type= Unsized UInt
-                ; initialize= true }
-              |> swrap_noloc
-            ; Stmt.Fixed.Pattern.Assignment
-                ( Stmt.Helpers.lvariable (variable_name ^ "pos__")
-                , UInt
-                , Expr.Helpers.loop_bottom )
+                ; initialize= true
+                ; assignment= Some Expr.Helpers.loop_bottom }
               |> swrap_noloc ])
           flat_vars flat_io_names flat_types
         |> List.concat in
@@ -512,7 +503,8 @@ let rec var_context_read
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= true }
+              ; initialize= true
+              ; assignment= None }
             |> swrap_noloc)
           tuple_component_names tuple_types in
       let loop =
@@ -553,18 +545,14 @@ let rec var_context_read
       [Block (flat_decls @ temps @ loop) |> swrap]
   | SVector _ | SRowVector _ | SMatrix _ | SComplexMatrix _
    |SComplexRowVector _ | SComplexVector _ | SArray _ ->
-      let decl, assign, flat_var =
+      let decl, flat_var =
         let decl_id_flat = flat_name decl_id in
         ( Stmt.Fixed.Pattern.Decl
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
-            ; initialize= false }
-          |> swrap
-        , Assignment
-            ( Stmt.Helpers.lvariable decl_id_flat
-            , flat_type
-            , readfnapp decl_id flat_type )
+            ; initialize= false
+            ; assignment= Some (readfnapp decl_id flat_type) }
           |> swrap
         , { Expr.Fixed.pattern= Var decl_id_flat
           ; meta=
@@ -590,7 +578,7 @@ let rec var_context_read
           (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom)
         |> swrap_noloc in
       [ Block
-          [ decl; assign; pos_reset
+          [ decl; pos_reset
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var Location_span.empty
           ]
         |> swrap ]
@@ -872,7 +860,8 @@ let var_context_unconstrain_transform (decl_id, smeta, outvar) =
                 (SizedType.to_unsized st)
           ; decl_id
           ; decl_type= Type.Sized st
-          ; initialize= true }
+          ; initialize= true
+          ; assignment= None }
     ; meta= smeta }
   :: var_context_read (Stmt.Helpers.lvariable decl_id, smeta, st)
   @ param_serializer_write ~unconstrain:true (decl_id, outvar)
@@ -888,7 +877,8 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
                   (SizedType.to_unsized outvar.Program.out_constrained_st)
             ; decl_id
             ; decl_type= Type.Sized outvar.Program.out_constrained_st
-            ; initialize= true }
+            ; initialize= true
+            ; assignment= None }
       ; meta= smeta } in
   let rec read (lval, st) =
     match st with
@@ -1028,8 +1018,8 @@ let trans_prog (p : Program.Typed.t) =
         { decl_adtype= DataOnly
         ; decl_id= pos
         ; decl_type= Sized SInt
-        ; initialize= true }
-    ; Assignment (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom) ]
+        ; initialize= true
+        ; assignment= Some Expr.Helpers.loop_bottom } ]
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty}) in
   let maybe_add_pos stmts =
@@ -1145,16 +1135,13 @@ let trans_prog (p : Program.Typed.t) =
                   { decl_adtype= DataOnly
                   ; decl_id= vident
                   ; decl_type= Type.Unsized type_of_input_var
-                  ; initialize= true }
-            ; meta= Location_span.empty }
-        ; { pattern=
-              Assignment
-                ( Stmt.Helpers.lvariable vident
-                , type_of_input_var
-                , to_matrix_cl
-                    { pattern= Var vident_sans_opencl
-                    ; meta= Expr.Typed.Meta.empty } )
-          ; meta= Location_span.empty } ]) in
+                  ; initialize= true
+                  ; assignment=
+                      Some
+                        (to_matrix_cl
+                           { pattern= Var vident_sans_opencl
+                           ; meta= Expr.Typed.Meta.empty }) }
+            ; meta= Location_span.empty } ]) in
   let p =
     let params =
       List.filter

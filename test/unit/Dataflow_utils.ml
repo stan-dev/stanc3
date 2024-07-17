@@ -177,15 +177,14 @@ let%expect_test "Statement label map example" =
         : (label, (Expr.Typed.t, label) Stmt.Fixed.Pattern.t) Map.Poly.t)];
   [%expect
     {|
-      ((1 (Block (2))) (2 (Block (3 4 5)))
+      ((1 (Block (2))) (2 (Block (3 4)))
        (3
         (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))
-         (initialize true)))
+         (initialize true)
+         (assignment
+          (((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
        (4
-        (Assignment ((LVariable i) ()) UInt
-         ((pattern (Lit Int 0))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-       (5
         (IfElse
          ((pattern
            (FunApp (StanLib Less__ FnPlain AoS)
@@ -194,14 +193,14 @@ let%expect_test "Statement label map example" =
              ((pattern (Lit Int 0))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         6 (8)))
-       (6 (Block (7)))
-       (7
+         5 (7)))
+       (5 (Block (6)))
+       (6
         (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Var i))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (8 (Block (9)))
-       (9
+       (7 (Block (8)))
+       (8
         (For (loopvar j)
          (lower
           ((pattern (Lit Int 1))
@@ -209,9 +208,9 @@ let%expect_test "Statement label map example" =
          (upper
           ((pattern (Lit Int 10))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-         (body 10)))
-       (10 (Block (11 14 17 22)))
-       (11
+         (body 9)))
+       (9 (Block (10 13 16 21)))
+       (10
         (IfElse
          ((pattern
            (FunApp (StanLib Greater__ FnPlain AoS)
@@ -220,9 +219,9 @@ let%expect_test "Statement label map example" =
              ((pattern (Lit Int 9))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         12 ()))
-       (12 (Block (13))) (13 Break)
-       (14
+         11 ()))
+       (11 (Block (12))) (12 Break)
+       (13
         (IfElse
          ((pattern
            (EAnd
@@ -244,9 +243,9 @@ let%expect_test "Statement label map example" =
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         15 ()))
-       (15 (Block (16))) (16 Continue)
-       (17
+         14 ()))
+       (14 (Block (15))) (15 Continue)
+       (16
         (IfElse
          ((pattern
            (FunApp (StanLib Greater__ FnPlain AoS)
@@ -255,9 +254,9 @@ let%expect_test "Statement label map example" =
              ((pattern (Lit Int 5))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-         18 (20)))
-       (18 (Block (19))) (19 Continue) (20 (Block (21)))
-       (21
+         17 (19)))
+       (17 (Block (18))) (18 Continue) (19 (Block (20)))
+       (20
         (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Lit Str Badger))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
@@ -268,7 +267,7 @@ let%expect_test "Statement label map example" =
               ((pattern (Var j))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (22
+       (21
         (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Lit Str Fin))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
@@ -282,10 +281,9 @@ let%expect_test "Predecessor graph example" =
   [%expect
     {|
       ((1)
-       ((1 (2)) (2 (6 8)) (3 ()) (4 (3)) (5 (4)) (6 (7)) (7 (5)) (8 (9 13))
-        (9 (5 10 16 19)) (10 (22)) (11 (9)) (12 (13)) (13 (11)) (14 (11 12))
-        (15 (16)) (16 (14)) (17 (14 15)) (18 (19)) (19 (17)) (20 (21)) (21 (17))
-        (22 (18 20))))
+       ((1 (2)) (2 (5 7)) (3 ()) (4 (3)) (5 (6)) (6 (4)) (7 (8 12)) (8 (4 9 15 18))
+        (9 (21)) (10 (8)) (11 (12)) (12 (10)) (13 (10 11)) (14 (15)) (15 (13))
+        (16 (13 14)) (17 (18)) (18 (16)) (19 (20)) (20 (16)) (21 (17 19))))
     |}]
 
 let%expect_test "Controlflow graph example" =
@@ -293,10 +291,9 @@ let%expect_test "Controlflow graph example" =
   print_s [%sexp (cf : (label, label Set.Poly.t) Map.Poly.t)];
   [%expect
     {|
-      ((1 ()) (2 ()) (3 ()) (4 ()) (5 ()) (6 (5)) (7 (5)) (8 (5)) (9 (5 13))
-       (10 (9)) (11 (9)) (12 (11)) (13 (11)) (14 (9)) (15 (14)) (16 (14))
-       (17 (9 16)) (18 (16 17)) (19 (16 17)) (20 (16 17)) (21 (16 17))
-       (22 (9 16 19)))
+      ((1 ()) (2 ()) (3 ()) (4 ()) (5 (4)) (6 (4)) (7 (4)) (8 (4 12)) (9 (8))
+       (10 (8)) (11 (10)) (12 (10)) (13 (8)) (14 (13)) (15 (13)) (16 (8 15))
+       (17 (15 16)) (18 (15 16)) (19 (15 16)) (20 (15 16)) (21 (8 15 18)))
     |}]
 
 let%test "Reconstructed recursive statement" =

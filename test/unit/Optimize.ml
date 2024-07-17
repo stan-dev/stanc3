@@ -336,7 +336,7 @@ let%expect_test "list collapsing" =
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym2__)
-          (decl_type (Sized SReal)) (initialize false)))
+          (decl_type (Sized SReal)) (initialize false) (assignment ())))
         (meta <opaque>))
        ((pattern
          (Block
@@ -435,7 +435,6 @@ let%expect_test "recursive functions" =
         {
           int inline_fib_return_sym1__;
           data int inline_fib_early_ret_check_sym2__;
-          inline_fib_early_ret_check_sym2__ = 0;
           for(inline_fib_iterator_sym3__ in 1:1) {
             if((5 == 0)) ; else {
 
@@ -912,7 +911,6 @@ let%expect_test "inline function multiple returns " =
         {
           int inline_f_return_sym1__;
           data int inline_f_early_ret_check_sym2__;
-          inline_f_early_ret_check_sym2__ = 0;
           for(inline_f_iterator_sym3__ in 1:1) {
             if(2) {
               FnPrint__("f");
@@ -1967,7 +1965,6 @@ let%expect_test "partial evaluate reject" =
     {|
       log_prob {
         {
-          int x;
           FnReject__("Integer division by zero");
         }
       }
@@ -2222,61 +2219,56 @@ model {
         real phi_u;
         {
           real theta;
-          theta = 34.;
           real phi;
-          phi = 5.;
           real x;
           int i;
-          i = 23;
           int j;
-          j = 32;
           array[int, 3] y_arr;
-          y_arr = FnMakeArray__(32, 2, 35);
-          target += 23;
-          target += -23;
-          target += 0;
-          target += 34.;
-          target += -34.;
-          target += 55;
-          target += -9;
-          target += 736;
-          target += 0;
-          target += 0;
-          target += 1;
-          target += 1;
-          target += 1;
-          target += 0;
-          target += 0;
-          target += 1;
-          target += 1;
-          target += 39.;
-          target += 29.;
-          target += 170.;
-          target += 6.8;
-          target += 0;
-          target += 1;
-          target += 0;
-          target += 0;
-          target += 1;
-          target += 1;
-          target += 1;
-          target += 1;
-          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
-          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += PPlus__(i);
+          target += PMinus__(i);
+          target += PNot__(i);
+          target += PPlus__(theta);
+          target += PMinus__(theta);
+          target += (i + j);
+          target += (i - j);
+          target += (i * j);
+          target += (i %/% j);
+          target += (i == j);
+          target += (i != j);
+          target += (i < j);
+          target += (i <= j);
+          target += (i > j);
+          target += (i >= j);
+          target += i && j;
+          target += i || j;
+          target += (theta + phi);
+          target += (theta - phi);
+          target += (theta * phi);
+          target += (theta / phi);
+          target += (theta == phi);
+          target += (theta != phi);
+          target += (theta <= phi);
+          target += (theta < phi);
+          target += (theta > phi);
+          target += (theta >= phi);
+          target += (theta != 0) && (phi != 0);
+          target += (theta != 0) || (phi != 0);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, theta, x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, theta, x_vector);
           target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 0, x_vector);
-          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 34., x_vector);
-          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, theta, x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, theta, x_vector);
           target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 0, x_vector);
-          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
-          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, theta, x_vector);
+          target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, theta, x_vector);
           target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 0, x_vector);
-          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 34., x_vector);
-          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, theta, x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, theta, x_vector);
           target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 0, x_vector);
           target += bernoulli_logit_lpmf(y_arr, x_vector);
           target += bernoulli_logit_lupmf(y_arr, x_vector);
-          target += binomial_logit_lpmf(y_arr, 32, x_vector);
-          target += binomial_logit_lupmf(y_arr, 32, x_vector);
+          target += binomial_logit_lpmf(y_arr, j, x_vector);
+          target += binomial_logit_lupmf(y_arr, j, x_vector);
           target += categorical_logit_lpmf(y_arr, x_vector);
           target += categorical_logit_lupmf(y_arr, x_vector);
           target += columns_dot_self(x_matrix);
@@ -2292,55 +2284,63 @@ model {
           target += log1p_exp(x_vector);
           target += log1p(x_matrix);
           target += log_determinant(x_matrix);
-          target += log_diff_exp(34., 34.);
-          target += log_falling_factorial(5., 23);
-          target += log_rising_factorial(5., 23);
-          target += log_inv_logit(34.);
+          target += log_diff_exp(theta, theta);
+          target += log_falling_factorial(phi, i);
+          target += log_rising_factorial(phi, i);
+          target += log_inv_logit(theta);
           target += log_softmax(x_vector);
           target += log_sum_exp(x_vector);
           target += log_sum_exp(theta_u, phi_u);
           target += multi_normal_prec_lpdf(x_vector, x_vector, x_cov);
           target += multi_normal_prec_lupdf(x_vector, x_vector, x_cov);
-          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
-          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
-          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, 5.);
-          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 34., x_vector, 5.);
-          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 34., x_vector, 5.);
-          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 0, x_vector, 5.);
-          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
-          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
-          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, 5.);
-          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 34., x_vector, 5.);
-          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 34., x_vector, 5.);
-          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 0, x_vector, 5.);
-          target += neg_binomial_2_log_lpmf(y_arr, 34., 5.);
-          target += neg_binomial_2_log_lupmf(y_arr, 34., 5.);
-          target += normal_id_glm_lpdf(y_vector, x_matrix, 34., x_vector, 5.);
-          target += normal_id_glm_lpdf(y_vector, x_matrix, 34., x_vector, 5.);
-          target += normal_id_glm_lpdf(y_vector, x_matrix, 0, x_vector, 5.);
-          target += normal_id_glm_lupdf(y_vector, x_matrix, 34., x_vector, 5.);
-          target += normal_id_glm_lupdf(y_vector, x_matrix, 34., x_vector, 5.);
-          target += normal_id_glm_lupdf(y_vector, x_matrix, 0, x_vector, 5.);
-          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
-          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, theta, x_vector,
+                                                phi);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, theta, x_vector,
+                                                phi);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, phi);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, theta, x_vector,
+                                                 phi);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, theta, x_vector,
+                                                 phi);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 0, x_vector, phi);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, theta, x_vector,
+                                                phi);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, theta, x_vector,
+                                                phi);
+          target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, phi);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, theta, x_vector,
+                                                 phi);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, theta, x_vector,
+                                                 phi);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 0, x_vector, phi);
+          target += neg_binomial_2_log_lpmf(y_arr, theta, phi);
+          target += neg_binomial_2_log_lupmf(y_arr, theta, phi);
+          target += normal_id_glm_lpdf(y_vector, x_matrix, theta, x_vector, phi);
+          target += normal_id_glm_lpdf(y_vector, x_matrix, theta, x_vector, phi);
+          target += normal_id_glm_lpdf(y_vector, x_matrix, 0, x_vector, phi);
+          target += normal_id_glm_lupdf(y_vector, x_matrix, theta, x_vector, phi);
+          target += normal_id_glm_lupdf(y_vector, x_matrix, theta, x_vector, phi);
+          target += normal_id_glm_lupdf(y_vector, x_matrix, 0, x_vector, phi);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, theta, x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, theta, x_vector);
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 0, x_vector);
-          target += poisson_log_glm_lupmf(y_arr, x_matrix, 34., x_vector);
-          target += poisson_log_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, theta, x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, theta, x_vector);
           target += poisson_log_glm_lupmf(y_arr, x_matrix, 0, x_vector);
-          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
-          target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, theta, x_vector);
+          target += poisson_log_glm_lpmf(y_arr, x_matrix, theta, x_vector);
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 0, x_vector);
-          target += poisson_log_glm_lupmf(y_arr, x_matrix, 34., x_vector);
-          target += poisson_log_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, theta, x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, theta, x_vector);
           target += poisson_log_glm_lupmf(y_arr, x_matrix, 0, x_vector);
           target += poisson_log_lpmf(y_arr, x_vector);
           target += poisson_log_lupmf(y_arr, x_vector);
-          target += exp2(34.);
-          target += square(34.);
-          target += sqrt(34.);
-          target += sqrt(34.);
-          target += sqrt(34.);
-          target += sqrt(34.);
+          target += exp2(theta);
+          target += square(theta);
+          target += sqrt(theta);
+          target += sqrt(theta);
+          target += sqrt(theta);
+          target += sqrt(theta);
           target += variance(x_vector);
           target += sqrt2();
           target += squared_distance(x_vector, y_vector);
@@ -2353,15 +2353,15 @@ model {
           target += erf(x_vector);
           target += expm1(x_vector);
           target += expm1(x_vector);
-          target += gamma_q(34., 5.);
-          target += gamma_q(34., 5.);
-          target += gamma_p(34., 5.);
-          target += gamma_p(34., 5.);
-          target += scale_matrix_exp_multiply(34., x_matrix, y_matrix);
-          target += scale_matrix_exp_multiply(34., x_matrix, y_matrix);
+          target += gamma_q(theta, phi);
+          target += gamma_q(theta, phi);
+          target += gamma_p(theta, phi);
+          target += gamma_p(theta, phi);
+          target += scale_matrix_exp_multiply(theta, x_matrix, y_matrix);
+          target += scale_matrix_exp_multiply(theta, x_matrix, y_matrix);
           target += matrix_exp_multiply(x_matrix, y_matrix);
-          target += lmultiply(5., 34.);
-          target += lmultiply(5., 34.);
+          target += lmultiply(phi, theta);
+          target += lmultiply(phi, theta);
           target += quad_form_diag(x_cov, x_vector);
           target += quad_form_diag(x_cov, x_vector);
           target += quad_form(x_cov, x_vector);
@@ -3289,25 +3289,25 @@ let%expect_test "adlevel_optimization expressions" =
     {|
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))
-          (initialize true)))
+          (initialize true) (assignment ())))
         (meta <opaque>))
        ((pattern
          (Block
           (((pattern
              (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))
-              (initialize true)))
+              (initialize true) (assignment ())))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type (Sized SReal))
-              (initialize true)))
+              (initialize true) (assignment ())))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SReal))
-              (initialize true)))
+              (initialize true) (assignment ())))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype DataOnly) (decl_id z_data)
-              (decl_type (Sized SReal)) (initialize true)))
+              (decl_type (Sized SReal)) (initialize true) (assignment ())))
             (meta <opaque>))
            ((pattern
              (IfElse
@@ -3426,7 +3426,6 @@ let%expect_test "adlevel_optimization 2" =
       log_prob {
         real w;
         data real w_trans;
-        w_trans = promote(1, real, var);
         {
           data int x;
           array[real, 2] y;
@@ -3445,7 +3444,6 @@ let%expect_test "adlevel_optimization 2" =
         data real w;
         data real w_trans;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
-        w_trans = promote(1, real, var);
         {
           data int x;
           data array[real, 2] y;

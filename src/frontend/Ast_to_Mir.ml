@@ -458,21 +458,15 @@ let create_decl_with_assign decl_id declc decl_type initial_value transform
             () } in
   let decl =
     Stmt.
-      { Fixed.pattern= Decl {decl_adtype; decl_id; decl_type; initialize= true}
+      { Fixed.pattern=
+          Decl
+            {decl_adtype; decl_id; decl_type; initialize= true; assignment= rhs}
       ; meta= smeta } in
-  let rhs_assignment =
-    Option.map
-      ~f:(fun (e : Expr.Typed.t) ->
-        Stmt.Fixed.
-          { pattern= Assignment (Stmt.Helpers.lvariable decl_id, e.meta.type_, e)
-          ; meta= smeta })
-      rhs
-    |> Option.to_list in
   if Utils.is_user_ident decl_id then
-    (decl :: rhs_assignment)
+    [decl]
     @ var_constrain_check_stmts (Some declc.transform_action) smeta decl_adtype
         decl_id decl_var transform decl_type
-  else decl :: rhs_assignment
+  else [decl]
 
 let unwrap_block_or_skip = function
   | [({Stmt.Fixed.pattern= Block _; _} as b)] -> Some b
@@ -575,7 +569,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         | UMatrix -> UnsizedType.UReal
         | t -> Expr.Helpers.(infer_type_of_indexed t [Index.Single loop_bottom])
       in
-      let decl_loopvar =
+      let decl_loopvar var =
         Stmt.Fixed.
           { meta= smeta
           ; pattern=
@@ -583,16 +577,11 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                 { decl_adtype= Expr.Typed.adlevel_of iteratee'
                 ; decl_id= loopvar.name
                 ; decl_type= Unsized decl_type
-                ; initialize= true } } in
-      let assignment var =
-        Stmt.Fixed.
-          { pattern=
-              Assignment (Stmt.Helpers.lvariable loopvar.name, decl_type, var)
-          ; meta= smeta } in
+                ; initialize= true
+                ; assignment= Some var } } in
       let bodyfn var =
-        Stmt.Fixed.
-          { pattern= Block (decl_loopvar :: assignment var :: body_stmts)
-          ; meta= smeta } in
+        Stmt.Fixed.{pattern= Block (decl_loopvar var :: body_stmts); meta= smeta}
+      in
       Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
   | Ast.FunDef _ ->
       Common.ICE.internal_compiler_error
@@ -629,7 +618,8 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
           { decl_adtype= rhs.emeta.ad_level
           ; decl_id= sym
           ; decl_type= Unsized rhs_type
-          ; initialize= false }
+          ; initialize= false
+          ; assignment= None }
     ; meta= rhs.emeta.loc } in
   let assign =
     { temp with
@@ -743,11 +733,8 @@ let rec trans_sizedtype_decl declc tr name st =
                 { decl_type= Sized SInt
                 ; decl_id
                 ; decl_adtype= DataOnly
-                ; initialize= true }
-          ; meta= e.meta.loc } in
-        let assign =
-          { Stmt.Fixed.pattern=
-              Assignment (Stmt.Helpers.lvariable decl_id, UInt, e)
+                ; initialize= true
+                ; assignment= Some e }
           ; meta= e.meta.loc } in
         let var =
           Expr.
@@ -757,7 +744,7 @@ let rec trans_sizedtype_decl declc tr name st =
                   { type_= s.Ast.emeta.Ast.type_
                   ; adlevel= s.emeta.ad_level
                   ; loc= s.emeta.loc } } in
-        ([decl; assign; check fn s var], var) in
+        ([decl; check fn s var], var) in
   let rec go n = function
     | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->

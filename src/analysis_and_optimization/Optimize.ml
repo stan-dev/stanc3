@@ -84,13 +84,14 @@ let gen_inline_var (name : string) (id_var : string) =
 
 let replace_fresh_local_vars (fname : string) stmt =
   let f (m : (string, string) Core.Map.Poly.t) = function
-    | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
+    | Stmt.Fixed.Pattern.Decl
+        {decl_adtype; decl_type; decl_id; initialize; assignment} ->
         let new_name =
           match Map.Poly.find m decl_id with
           | Some existing -> existing
           | None -> gen_inline_var fname decl_id in
         ( Stmt.Fixed.Pattern.Decl
-            {decl_adtype; decl_id= new_name; decl_type; initialize}
+            {decl_adtype; decl_id= new_name; decl_type; initialize; assignment}
         , Map.Poly.set m ~key:decl_id ~data:new_name )
     | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} ->
         let new_name =
@@ -201,20 +202,16 @@ let handle_early_returns (fname : string) opt_var stmt =
                 { decl_adtype= DataOnly
                 ; decl_id= returned
                 ; decl_type= Sized SInt
-                ; initialize= true }
-          ; meta= Location_span.empty }
-      ; Stmt.Fixed.
-          { pattern=
-              Assignment
-                ( Stmt.Helpers.lvariable returned
-                , UInt
-                , Expr.Fixed.
-                    { pattern= Lit (Int, "0")
-                    ; meta=
-                        Expr.Typed.Meta.
-                          { type_= UInt
-                          ; adlevel= DataOnly
-                          ; loc= Location_span.empty } } )
+                ; initialize= true
+                ; assignment=
+                    Some
+                      Expr.Fixed.
+                        { pattern= Lit (Int, "0")
+                        ; meta=
+                            Expr.Typed.Meta.
+                              { type_= UInt
+                              ; adlevel= DataOnly
+                              ; loc= Location_span.empty } } }
           ; meta= Location_span.empty }
       ; Stmt.Fixed.
           { pattern=
@@ -294,7 +291,8 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                             (Type.to_unsized decl_type)
                       ; decl_id= inline_return_name
                       ; decl_type
-                      ; initialize= false } ]
+                      ; initialize= false
+                      ; assignment= None } ]
                   (* We should minimize the code that's having its variables
                      replaced to avoid conflict with the (two) new dummy
                      variables introduced by inlining *)
@@ -972,7 +970,8 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
                   { decl_adtype= Expr.Typed.adlevel_of key
                   ; decl_id= data
                   ; decl_type= Type.Unsized (Expr.Typed.type_of key)
-                  ; initialize= true }
+                  ; initialize= true
+                  ; assignment= None }
             ; meta= Location_span.empty }
           :: accum) in
     let lazy_code_motion_base i stmt =
