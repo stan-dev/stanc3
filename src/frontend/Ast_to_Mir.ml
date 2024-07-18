@@ -619,12 +619,8 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
           ; decl_id= sym
           ; decl_type= Unsized rhs_type
           ; initialize= false
-          ; assignment= None }
+          ; assignment= Some (trans_expr rhs) }
     ; meta= rhs.emeta.loc } in
-  let assign =
-    { temp with
-      pattern= Assignment ((LVariable sym, []), rhs_type, trans_expr rhs) }
-  in
   let temp_expr =
     Ast.{rhs with expr= Variable {name= sym; id_loc= Location_span.empty}} in
   let assigns =
@@ -639,7 +635,7 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
             ; smeta })
     |> List.concat in
   reset ();
-  [Stmt.Fixed.{pattern= Block (temp :: assign :: assigns); meta= loc}]
+  [Stmt.Fixed.{pattern= Block (temp :: assigns); meta= loc}]
 
 and trans_single_assignment smeta assign_lhs assign_rhs assign_op =
   let rec group_lvalue carry_idcs lv =

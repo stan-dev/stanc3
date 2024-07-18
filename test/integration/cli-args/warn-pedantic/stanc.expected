@@ -538,12 +538,12 @@ Warning: The parameter theta has no priors. This means either no prior is
     provided, or the prior(s) depend on data variables. In the later case,
     this may be a false positive.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  missing_priors.stan
-Warning: The parameter tau has no priors. This means either no prior is
-    provided, or the prior(s) depend on data variables. In the later case,
-    this may be a false positive.
-Warning: The parameter mu has no priors. This means either no prior is
-    provided, or the prior(s) depend on data variables. In the later case,
-    this may be a false positive.
+Warning in 'missing_priors.stan', line 16, column 28: The variable theta may
+    not have been assigned a value before its use.
+Warning: The parameter tau was declared but was not used in the density
+    calculation.
+Warning: The parameter mu was declared but was not used in the density
+    calculation.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  multi-tilde.stan
 Warning in 'multi-tilde.stan', line 6, column 2: The parameter x is on the
     left-hand side of more than one tilde statement.
@@ -576,11 +576,15 @@ Warning: The parameter a has 3 priors.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  param-depend-control.stan
 Warning in 'param-depend-control.stan', line 16, column 2: A control flow
     statement depends on parameter(s): a.
+Warning in 'param-depend-control.stan', line 14, column 8: The variable y may
+    not have been assigned a value before its use.
 Warning in 'param-depend-control.stan', line 13, column 2: A control flow
     statement depends on parameter(s): a.
 Warning in 'param-depend-control.stan', line 8, column 2: A control flow
     statement depends on parameter(s): a.
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unbounded-sigma.stan
+Warning in 'unbounded-sigma.stan', line 16, column 17: The variable z may not
+    have been assigned a value before its use.
 Warning in 'unbounded-sigma.stan', line 12, column 17: A normal distribution
     is given parameter sigma_c as a scale parameter (argument 2), but sigma_c
     was not constrained to be strictly positive.

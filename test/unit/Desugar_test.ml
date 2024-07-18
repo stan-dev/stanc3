@@ -16,7 +16,7 @@ transformed data {
   |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
-    data array[int, 3] arr;
+    data array[int, 3] arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[2, arr, 2]); |}]
 
@@ -31,7 +31,7 @@ transformed data {
   |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
-    data array[int, 3] arr;
+    data array[int, 3] arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[2][arr[2]]);
  |}]
@@ -47,7 +47,7 @@ transformed data {
   |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
-    data array[int, 3] arr;
+    data array[int, 3] arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[2, arr[2], arr[2]]);
  |}]
@@ -63,7 +63,7 @@ transformed data {
   |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
-    data array[int, 3] arr;
+    data array[int, 3] arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[4, 2]);
  |}]
@@ -79,7 +79,7 @@ transformed data {
   |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
-    data array[int, 3] arr;
+    data array[int, 3] arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[1:3, 1]);
  |}]
@@ -99,7 +99,7 @@ transformed data {
   |> Partial_evaluator.eval_prog |> print_tdata;
   [%expect
     {|
-    data array[int, 3] arr;
+    data array[int, 3] arr = FnMakeArray__(2, 3, 1);
     data array[matrix[3, 4], 5] mat;
     FnPrint__(mat[4:, 2:3, 1]);
     FnPrint__(mat[2, arr[1]][1]);

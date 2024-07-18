@@ -37,8 +37,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       p = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
       q = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 2;
-      q = (p + 5);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

@@ -434,7 +434,7 @@ let%expect_test "recursive functions" =
       log_prob {
         {
           int inline_fib_return_sym1__;
-          data int inline_fib_early_ret_check_sym2__;
+          data int inline_fib_early_ret_check_sym2__ = 0;
           for(inline_fib_iterator_sym3__ in 1:1) {
             if((5 == 0)) ; else {
 
@@ -910,7 +910,7 @@ let%expect_test "inline function multiple returns " =
       log_prob {
         {
           int inline_f_return_sym1__;
-          data int inline_f_early_ret_check_sym2__;
+          data int inline_f_early_ret_check_sym2__ = 0;
           for(inline_f_iterator_sym3__ in 1:1) {
             if(2) {
               FnPrint__("f");
@@ -2218,12 +2218,12 @@ model {
         real theta_u;
         real phi_u;
         {
-          real theta;
-          real phi;
+          real theta = 34.;
+          real phi = 5.;
           real x;
-          int i;
-          int j;
-          array[int, 3] y_arr;
+          int i = 23;
+          int j = 32;
+          array[int, 3] y_arr = FnMakeArray__(32, 2, 35);
           target += PPlus__(i);
           target += PMinus__(i);
           target += PNot__(i);
@@ -3425,7 +3425,7 @@ let%expect_test "adlevel_optimization 2" =
     {|
       log_prob {
         real w;
-        data real w_trans;
+        data real w_trans = promote(1, real, var);
         {
           data int x;
           array[real, 2] y;
@@ -3442,7 +3442,7 @@ let%expect_test "adlevel_optimization 2" =
 
       generate_quantities {
         data real w;
-        data real w_trans;
+        data real w_trans = promote(1, real, var);
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
         {
           data int x;

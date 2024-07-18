@@ -212,11 +212,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     stan::math::validate_non_negative_index("result", "num_elements(x)",
       stan::math::num_elements(x));
     Eigen::Matrix<local_scalar_t__,-1,1> result =
-      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::num_elements(
-                                                       x), DUMMY_VAR__);
-    current_statement__ = 8;
-    stan::model::assign(result, stan::math::multiply(x, 5.0),
-      "assigning variable result");
+      stan::math::multiply(x, 5.0);
     current_statement__ = 9;
     return result;
   } catch (const std::exception& e) {
@@ -668,11 +664,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     stan::math::validate_non_negative_index("result", "num_elements(x)",
       stan::math::num_elements(x));
     Eigen::Matrix<local_scalar_t__,-1,1> result =
-      Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::num_elements(
-                                                       x), DUMMY_VAR__);
-    current_statement__ = 8;
-    stan::model::assign(result, stan::math::multiply(x, 5.0),
-      "assigning variable result");
+      stan::math::multiply(x, 5.0);
     current_statement__ = 9;
     return result;
   } catch (const std::exception& e) {
@@ -989,9 +981,7 @@ integrand_ode(const T0__& r, const T1__& f, const T2__& theta, const T3__&
   try {
     std::vector<local_scalar_t__> df_dx =
       std::vector<local_scalar_t__>(1, DUMMY_VAR__);
-    local_scalar_t__ x = DUMMY_VAR__;
-    current_statement__ = 4;
-    x = stan::math::logit(r);
+    local_scalar_t__ x = stan::math::logit(r);
     current_statement__ = 5;
     stan::model::assign(df_dx, ((stan::math::exp(-(stan::math::square(x))) *
       1) / (r * (1 - r))), "assigning variable df_dx",

@@ -2849,12 +2849,6 @@
                ((VariableDefn
                  ((static false) (constexpr false) (type_ (StdVector Int)) 
                   (name v) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 648)))
-                (Expression
-                 (FunCall stan::model::assign ()
-                  ((Var v)
-                   (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
-                   (Literal "\"assigning variable v\""))))
                 (Expression (Assign (Var current_statement__) (Literal 649)))
                 (Expression (Assign (Var z) (Literal 0))) Break)))
              (Expression (Assign (Var current_statement__) (Literal 651)))
@@ -2867,12 +2861,6 @@
                ((VariableDefn
                  ((static false) (constexpr false) (type_ (StdVector Int)) 
                   (name v) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 651)))
-                (Expression
-                 (FunCall stan::model::assign ()
-                  ((Var v)
-                   (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
-                   (Literal "\"assigning variable v\""))))
                 (Expression (Assign (Var current_statement__) (Literal 652)))
                 (Expression (Assign (Var z) (Literal 0))) Continue)))
              (Expression (Assign (Var current_statement__) (Literal 654)))
@@ -2885,12 +2873,6 @@
                ((VariableDefn
                  ((static false) (constexpr false) (type_ (StdVector Int)) 
                   (name v) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 654)))
-                (Expression
-                 (FunCall stan::model::assign ()
-                  ((Var v)
-                   (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
-                   (Literal "\"assigning variable v\""))))
                 (Expression (Assign (Var current_statement__) (Literal 655)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -2901,10 +2883,6 @@
                   ((VariableDefn
                     ((static false) (constexpr false) (type_ Int) (name vv)
                      (init Uninitialized)))
-                   (Expression (Assign (Var current_statement__) (Literal 655)))
-                   (Expression
-                    (Assign (Var vv)
-                     (Index (Var v) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                    (Expression (Assign (Var current_statement__) (Literal 656)))
                    (Expression (Assign (Var z) (Literal 0))) Break)))
                 (Expression (Assign (Var current_statement__) (Literal 658)))
@@ -2945,13 +2923,6 @@
                     ((static false) (constexpr false)
                      (type_ (TypeLiteral local_scalar_t__)) (name v)
                      (init Uninitialized)))
-                   (Expression (Assign (Var current_statement__) (Literal 663)))
-                   (Expression
-                    (Assign (Var v)
-                     (FunCall stan::model::rvalue ()
-                      ((Var vs) (Literal "\"vs\"")
-                       (FunCall stan::model::index_uni () ((Var sym1__)))
-                       (FunCall stan::model::index_uni () ((Var sym2__)))))))
                    (Expression (Assign (Var current_statement__) (Literal 664)))
                    (Expression (Assign (Var z) (Literal 0))) Break))))))
              (Expression (Assign (Var current_statement__) (Literal 666)))
@@ -2976,13 +2947,6 @@
                     ((static false) (constexpr false)
                      (type_ (TypeLiteral local_scalar_t__)) (name v)
                      (init Uninitialized)))
-                   (Expression (Assign (Var current_statement__) (Literal 666)))
-                   (Expression
-                    (Assign (Var v)
-                     (FunCall stan::model::rvalue ()
-                      ((Var vs) (Literal "\"vs\"")
-                       (FunCall stan::model::index_uni () ((Var sym1__)))
-                       (FunCall stan::model::index_uni () ((Var sym2__)))))))
                    (Expression (Assign (Var current_statement__) (Literal 667)))
                    (Expression (Assign (Var z) (Literal 3.1))) Continue)))))))))
           (Expression (Assign (Var current_statement__) (Literal 680)))
@@ -3009,10 +2973,6 @@
                ((VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
                   (name v) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 673)))
-                (Expression
-                 (Assign (Var v)
-                  (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 674)))
                 (Expression (Assign (Var z) (Literal 0))) Break)))
              (Expression (Assign (Var current_statement__) (Literal 676)))
@@ -3025,10 +2985,6 @@
                ((VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
                   (name v) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 676)))
-                (Expression
-                 (Assign (Var v)
-                  (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 677)))
                 (Expression (Assign (Var z) (Literal 3.2))) Continue))))))
           (Expression (Assign (Var current_statement__) (Literal 690)))
@@ -3055,10 +3011,6 @@
                ((VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
                   (name v) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 683)))
-                (Expression
-                 (Assign (Var v)
-                  (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 684)))
                 (Expression (Assign (Var z) (Literal 0))) Break)))
              (Expression (Assign (Var current_statement__) (Literal 686)))
@@ -3071,10 +3023,6 @@
                ((VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
                   (name v) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 686)))
-                (Expression
-                 (Assign (Var v)
-                  (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 687)))
                 (Expression (Assign (Var z) (Literal 3.3))) Continue))))))
           (Expression (Assign (Var current_statement__) (Literal 698)))
@@ -3146,10 +3094,6 @@
             ((VariableDefn
               ((static false) (constexpr false) (type_ Int) (name v)
                (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 703)))
-             (Expression
-              (Assign (Var v)
-               (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
              (Expression (Assign (Var current_statement__) (Literal 704)))
              (Expression (Assign (Var y) (Var v))))))
           (Expression (Assign (Var current_statement__) (Literal 705)))
@@ -5530,15 +5474,8 @@
             (name l)
             (init
              (Assignment
-              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant
-               () ((Literal 10) (Var DUMMY_VAR__)))))))
-          (Expression (Assign (Var current_statement__) (Literal 773)))
-          (Expression
-           (FunCall stan::model::assign ()
-            ((Var l)
-             (FunCall stan::math::multiply ()
-              ((Var mu) (FunCall vecfoo () ((Var pstream__)))))
-             (Literal "\"assigning variable l\""))))
+              (FunCall stan::math::multiply ()
+               ((Var mu) (FunCall vecfoo () ((Var pstream__)))))))))
           (Expression (Assign (Var current_statement__) (Literal 774)))
           (Return ((Var l))))
          ((Const (Ref (TypeLiteral std::exception))) e)
@@ -5584,21 +5521,14 @@
             (name l)
             (init
              (Assignment
-              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant
-               () ((Literal 10) (Var DUMMY_VAR__)))))))
-          (Expression (Assign (Var current_statement__) (Literal 776)))
-          (Expression
-           (FunCall stan::model::assign ()
-            ((Var l)
-             (FunCall stan::math::multiply ()
-              ((Var mu)
-               (MethodCall
-                (Parens
-                 (StreamInsertion (Constructor (Matrix Double -1 1 AoS) ((Literal 10)))
-                  ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
-                   (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
-                finished () ())))
-             (Literal "\"assigning variable l\""))))
+              (FunCall stan::math::multiply ()
+               ((Var mu)
+                (MethodCall
+                 (Parens
+                  (StreamInsertion (Constructor (Matrix Double -1 1 AoS) ((Literal 10)))
+                   ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
+                    (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
+                 finished () ())))))))
           (Expression (Assign (Var current_statement__) (Literal 777)))
           (Return
            ((FunCall stan::model::rvalue ()
@@ -6166,85 +6096,62 @@
             (TryCatch
              ((VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_real) (init (Assignment (Var DUMMY_VAR__)))))
-              (Expression (Assign (Var current_statement__) (Literal 1)))
-              (Expression
-               (Assign (Var p_real)
-                (MethodCall (Var in__) "template read" ((TypeLiteral local_scalar_t__))
-                 ())))
+                (name p_real)
+                (init
+                 (Assignment
+                  (MethodCall (Var in__) "template read" ((TypeLiteral local_scalar_t__))
+                   ())))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_upper) (init (Assignment (Var DUMMY_VAR__)))))
-              (Expression (Assign (Var current_statement__) (Literal 2)))
-              (Expression
-               (Assign (Var p_upper)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
-                 ((Var p_real) (Var lp__)))))
+                (name p_upper)
+                (init
+                 (Assignment
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
+                   ((Var p_real) (Var lp__)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_lower) (init (Assignment (Var DUMMY_VAR__)))))
-              (Expression (Assign (Var current_statement__) (Literal 3)))
-              (Expression
-               (Assign (Var p_lower)
-                (MethodCall (Var in__) "template read_constrain_ub"
-                 ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
-                 ((Var p_upper) (Var lp__)))))
+                (name p_lower)
+                (init
+                 (Assignment
+                  (MethodCall (Var in__) "template read_constrain_ub"
+                   ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
+                   ((Var p_upper) (Var lp__)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__)))
                 (name offset_multiplier)
                 (init
                  (Assignment
-                  (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                   ((Literal 5) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 4)))
-              (Expression
-               (Assign (Var offset_multiplier)
-                (MethodCall (Var in__) "template read_constrain_offset_multiplier"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 1) (Literal 2) (Var lp__) (Literal 5)))))
+                  (MethodCall (Var in__) "template read_constrain_offset_multiplier"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 1) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__)))
                 (name no_offset_multiplier)
                 (init
                  (Assignment
-                  (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                   ((Literal 5) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 5)))
-              (Expression
-               (Assign (Var no_offset_multiplier)
-                (MethodCall (Var in__) "template read_constrain_offset_multiplier"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 0) (Literal 2) (Var lp__) (Literal 5)))))
+                  (MethodCall (Var in__) "template read_constrain_offset_multiplier"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 0) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__)))
                 (name offset_no_multiplier)
                 (init
                  (Assignment
-                  (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                   ((Literal 5) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 6)))
-              (Expression
-               (Assign (Var offset_no_multiplier)
-                (MethodCall (Var in__) "template read_constrain_offset_multiplier"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 3) (Literal 1) (Var lp__) (Literal 5)))))
+                  (MethodCall (Var in__) "template read_constrain_offset_multiplier"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 3) (Literal 1) (Var lp__) (Literal 5)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__))) (name p_real_1d_ar)
                 (init
                  (Assignment
-                  (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                   ((Var N) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 7)))
-              (Expression
-               (Assign (Var p_real_1d_ar)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 0) (Var lp__) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -6252,52 +6159,29 @@
                 (name p_real_3d_ar)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__))))
-                   ((Var N)
-                    (Constructor (StdVector (StdVector (TypeLiteral local_scalar_t__)))
-                     ((Var M)
-                      (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                       ((Var K) (Var DUMMY_VAR__)))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 8)))
-              (Expression
-               (Assign (Var p_real_3d_ar)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__))))
-                  (TemplateType jacobian__))
-                 ((Literal 0) (Var lp__) (Var N) (Var M) (Var K)))))
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__))))
+                    (TemplateType jacobian__))
+                   ((Literal 0) (Var lp__) (Var N) (Var M) (Var K)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                 (name p_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 9)))
-              (Expression
-               (Assign (Var p_vec)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                  (TemplateType jacobian__))
-                 ((Literal 0) (Var lp__) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (TemplateType jacobian__))
+                   ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
                 (name p_1d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                   ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                     Constant () ((Var N) (Var DUMMY_VAR__)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 10)))
-              (Expression
-               (Assign (Var p_1d_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                 ((Var N) (Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                   ((Var N) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -6307,59 +6191,29 @@
                 (name p_3d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
-                   ((Var N)
-                    (Constructor
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector
                      (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                     ((Var M)
-                      (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                       ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 11)))
-              (Expression
-               (Assign (Var p_3d_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
-                 ((Var N) (Var M) (Var K) (Var N)))))
+                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                   ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
                 (name p_row_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 12)))
-              (Expression
-               (Assign (Var p_row_vec)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) ((Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
+                   ((Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
                 (name p_1d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
-                   ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
-                     Constant () ((Var N) (Var DUMMY_VAR__)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 13)))
-              (Expression
-               (Assign (Var p_1d_row_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
-                 ((Var N) (Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                   ((Var N) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -6369,43 +6223,20 @@
                 (name p_3d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))))
-                   ((Var N)
-                    (Constructor
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector
                      (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
-                     ((Var M)
-                      (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
-                       ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 14)))
-              (Expression
-               (Assign (Var p_3d_row_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
-                 ((Var N) (Var M) (Var K) (Var N)))))
+                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                   ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
                 (name p_mat)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                   Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 15)))
-              (Expression
-               (Assign (Var p_mat)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                 ((Literal 5) (Literal 4)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                   ((Literal 5) (Literal 4)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -6414,57 +6245,32 @@
                 (name p_ar_mat)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
-                   ((Literal 4)
-                    (Constructor
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                     ((Literal 5)
-                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                       Constant () ((Literal 2) (Literal 3) (Var DUMMY_VAR__)))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 16)))
-              (Expression
-               (Assign (Var p_ar_mat)
-                (MethodCall (Var in__) "template read_constrain_lub"
-                 ((StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
-                  (TemplateType jacobian__))
-                 ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5) 
-                  (Literal 2) (Literal 3)))))
+                  (MethodCall (Var in__) "template read_constrain_lub"
+                   ((StdVector
+                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                    (TemplateType jacobian__))
+                   ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5)
+                    (Literal 2) (Literal 3)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                 (name p_simplex)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 17)))
-              (Expression
-               (Assign (Var p_simplex)
-                (MethodCall (Var in__) "template read_constrain_simplex"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_simplex"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
                 (name p_1d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                   ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                     Constant () ((Var N) (Var DUMMY_VAR__)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 18)))
-              (Expression
-               (Assign (Var p_1d_simplex)
-                (MethodCall (Var in__) "template read_constrain_simplex"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var N) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_simplex"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var N) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -6474,104 +6280,60 @@
                 (name p_3d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
-                   ((Var N)
-                    (Constructor
+                  (MethodCall (Var in__) "template read_constrain_simplex"
+                   ((StdVector
                      (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                     ((Var M)
-                      (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                       ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 19)))
-              (Expression
-               (Assign (Var p_3d_simplex)
-                (MethodCall (Var in__) "template read_constrain_simplex"
-                 ((StdVector
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))
+                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
                 (name p_cfcov_54)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                   Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 20)))
-              (Expression
-               (Assign (Var p_cfcov_54)
-                (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Literal 5) (Literal 4)))))
+                  (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Literal 5) (Literal 4)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
                 (name p_cfcov_33)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                   Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 21)))
-              (Expression
-               (Assign (Var p_cfcov_33)
-                (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Literal 3) (Literal 3)))))
+                  (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Literal 3) (Literal 3)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
                 (name p_cfcov_33_ar)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                   ((Var K)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                     Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 22)))
-              (Expression
-               (Assign (Var p_cfcov_33_ar)
-                (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var K) (Literal 3) (Literal 3)))))
+                  (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var K) (Literal 3) (Literal 3)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                 (name x_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 23)))
-              (Expression
-               (Assign (Var x_p)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) ((Literal 2)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                   ((Literal 2)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                 (name y_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 24)))
-              (Expression
-               (Assign (Var y_p)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) ((Literal 2)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                   ((Literal 2)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__))) (name tp_real_1d_ar)
@@ -7051,16 +6813,13 @@
                        Constant () ((Literal 0) (Var DUMMY_VAR__)))))))))
                 (VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                  (name r1) (init (Assignment (Var DUMMY_VAR__)))))
-                (Expression (Assign (Var current_statement__) (Literal 156)))
-                (Expression
-                 (Assign (Var r1) (FunCall foo_bar1 () ((Var p_real) (Var pstream__)))))
+                  (name r1)
+                  (init
+                   (Assignment (FunCall foo_bar1 () ((Var p_real) (Var pstream__)))))))
                 (VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                  (name r2) (init (Assignment (Var DUMMY_VAR__)))))
-                (Expression (Assign (Var current_statement__) (Literal 157)))
-                (Expression
-                 (Assign (Var r2) (FunCall foo_bar1 () ((Var J) (Var pstream__)))))
+                  (name r2)
+                  (init (Assignment (FunCall foo_bar1 () ((Var J) (Var pstream__)))))))
                 (Expression (Assign (Var current_statement__) (Literal 158)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
@@ -7323,85 +7082,62 @@
             (TryCatch
              ((VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_real) (init (Assignment (Var DUMMY_VAR__)))))
-              (Expression (Assign (Var current_statement__) (Literal 1)))
-              (Expression
-               (Assign (Var p_real)
-                (MethodCall (Var in__) "template read" ((TypeLiteral local_scalar_t__))
-                 ())))
+                (name p_real)
+                (init
+                 (Assignment
+                  (MethodCall (Var in__) "template read" ((TypeLiteral local_scalar_t__))
+                   ())))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_upper) (init (Assignment (Var DUMMY_VAR__)))))
-              (Expression (Assign (Var current_statement__) (Literal 2)))
-              (Expression
-               (Assign (Var p_upper)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
-                 ((Var p_real) (Var lp__)))))
+                (name p_upper)
+                (init
+                 (Assignment
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
+                   ((Var p_real) (Var lp__)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_lower) (init (Assignment (Var DUMMY_VAR__)))))
-              (Expression (Assign (Var current_statement__) (Literal 3)))
-              (Expression
-               (Assign (Var p_lower)
-                (MethodCall (Var in__) "template read_constrain_ub"
-                 ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
-                 ((Var p_upper) (Var lp__)))))
+                (name p_lower)
+                (init
+                 (Assignment
+                  (MethodCall (Var in__) "template read_constrain_ub"
+                   ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
+                   ((Var p_upper) (Var lp__)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__)))
                 (name offset_multiplier)
                 (init
                  (Assignment
-                  (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                   ((Literal 5) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 4)))
-              (Expression
-               (Assign (Var offset_multiplier)
-                (MethodCall (Var in__) "template read_constrain_offset_multiplier"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 1) (Literal 2) (Var lp__) (Literal 5)))))
+                  (MethodCall (Var in__) "template read_constrain_offset_multiplier"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 1) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__)))
                 (name no_offset_multiplier)
                 (init
                  (Assignment
-                  (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                   ((Literal 5) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 5)))
-              (Expression
-               (Assign (Var no_offset_multiplier)
-                (MethodCall (Var in__) "template read_constrain_offset_multiplier"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 0) (Literal 2) (Var lp__) (Literal 5)))))
+                  (MethodCall (Var in__) "template read_constrain_offset_multiplier"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 0) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__)))
                 (name offset_no_multiplier)
                 (init
                  (Assignment
-                  (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                   ((Literal 5) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 6)))
-              (Expression
-               (Assign (Var offset_no_multiplier)
-                (MethodCall (Var in__) "template read_constrain_offset_multiplier"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 3) (Literal 1) (Var lp__) (Literal 5)))))
+                  (MethodCall (Var in__) "template read_constrain_offset_multiplier"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 3) (Literal 1) (Var lp__) (Literal 5)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__))) (name p_real_1d_ar)
                 (init
                  (Assignment
-                  (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                   ((Var N) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 7)))
-              (Expression
-               (Assign (Var p_real_1d_ar)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 0) (Var lp__) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -7409,52 +7145,29 @@
                 (name p_real_3d_ar)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__))))
-                   ((Var N)
-                    (Constructor (StdVector (StdVector (TypeLiteral local_scalar_t__)))
-                     ((Var M)
-                      (Constructor (StdVector (TypeLiteral local_scalar_t__))
-                       ((Var K) (Var DUMMY_VAR__)))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 8)))
-              (Expression
-               (Assign (Var p_real_3d_ar)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__))))
-                  (TemplateType jacobian__))
-                 ((Literal 0) (Var lp__) (Var N) (Var M) (Var K)))))
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__))))
+                    (TemplateType jacobian__))
+                   ((Literal 0) (Var lp__) (Var N) (Var M) (Var K)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                 (name p_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 9)))
-              (Expression
-               (Assign (Var p_vec)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                  (TemplateType jacobian__))
-                 ((Literal 0) (Var lp__) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (TemplateType jacobian__))
+                   ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
                 (name p_1d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                   ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                     Constant () ((Var N) (Var DUMMY_VAR__)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 10)))
-              (Expression
-               (Assign (Var p_1d_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                 ((Var N) (Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                   ((Var N) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -7464,59 +7177,29 @@
                 (name p_3d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
-                   ((Var N)
-                    (Constructor
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector
                      (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                     ((Var M)
-                      (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                       ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 11)))
-              (Expression
-               (Assign (Var p_3d_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
-                 ((Var N) (Var M) (Var K) (Var N)))))
+                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                   ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
                 (name p_row_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 12)))
-              (Expression
-               (Assign (Var p_row_vec)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) ((Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
+                   ((Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
                 (name p_1d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
-                   ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
-                     Constant () ((Var N) (Var DUMMY_VAR__)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 13)))
-              (Expression
-               (Assign (Var p_1d_row_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
-                 ((Var N) (Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                   ((Var N) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -7526,43 +7209,20 @@
                 (name p_3d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))))
-                   ((Var N)
-                    (Constructor
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector
                      (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
-                     ((Var M)
-                      (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
-                       ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 14)))
-              (Expression
-               (Assign (Var p_3d_row_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
-                 ((Var N) (Var M) (Var K) (Var N)))))
+                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                   ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
                 (name p_mat)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                   Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 15)))
-              (Expression
-               (Assign (Var p_mat)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                 ((Literal 5) (Literal 4)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                   ((Literal 5) (Literal 4)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -7571,57 +7231,32 @@
                 (name p_ar_mat)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
-                   ((Literal 4)
-                    (Constructor
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                     ((Literal 5)
-                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                       Constant () ((Literal 2) (Literal 3) (Var DUMMY_VAR__)))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 16)))
-              (Expression
-               (Assign (Var p_ar_mat)
-                (MethodCall (Var in__) "template read_constrain_lub"
-                 ((StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
-                  (TemplateType jacobian__))
-                 ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5) 
-                  (Literal 2) (Literal 3)))))
+                  (MethodCall (Var in__) "template read_constrain_lub"
+                   ((StdVector
+                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                    (TemplateType jacobian__))
+                   ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5)
+                    (Literal 2) (Literal 3)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                 (name p_simplex)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 17)))
-              (Expression
-               (Assign (Var p_simplex)
-                (MethodCall (Var in__) "template read_constrain_simplex"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_simplex"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
                 (name p_1d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                   ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                     Constant () ((Var N) (Var DUMMY_VAR__)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 18)))
-              (Expression
-               (Assign (Var p_1d_simplex)
-                (MethodCall (Var in__) "template read_constrain_simplex"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var N) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_simplex"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var N) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
@@ -7631,104 +7266,60 @@
                 (name p_3d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
-                   ((Var N)
-                    (Constructor
+                  (MethodCall (Var in__) "template read_constrain_simplex"
+                   ((StdVector
                      (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                     ((Var M)
-                      (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                       ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 19)))
-              (Expression
-               (Assign (Var p_3d_simplex)
-                (MethodCall (Var in__) "template read_constrain_simplex"
-                 ((StdVector
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))
+                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
                 (name p_cfcov_54)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                   Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 20)))
-              (Expression
-               (Assign (Var p_cfcov_54)
-                (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Literal 5) (Literal 4)))))
+                  (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Literal 5) (Literal 4)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
                 (name p_cfcov_33)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                   Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 21)))
-              (Expression
-               (Assign (Var p_cfcov_33)
-                (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Literal 3) (Literal 3)))))
+                  (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Literal 3) (Literal 3)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
                 (name p_cfcov_33_ar)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                   ((Var K)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                     Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))))
-              (Expression (Assign (Var current_statement__) (Literal 22)))
-              (Expression
-               (Assign (Var p_cfcov_33_ar)
-                (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var K) (Literal 3) (Literal 3)))))
+                  (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var K) (Literal 3) (Literal 3)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                 (name x_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 23)))
-              (Expression
-               (Assign (Var x_p)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) ((Literal 2)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                   ((Literal 2)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                 (name y_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
-              (Expression (Assign (Var current_statement__) (Literal 24)))
-              (Expression
-               (Assign (Var y_p)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) ((Literal 2)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                   ((Literal 2)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__))) (name tp_real_1d_ar)
@@ -8208,16 +7799,13 @@
                        Constant () ((Literal 0) (Var DUMMY_VAR__)))))))))
                 (VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                  (name r1) (init (Assignment (Var DUMMY_VAR__)))))
-                (Expression (Assign (Var current_statement__) (Literal 156)))
-                (Expression
-                 (Assign (Var r1) (FunCall foo_bar1 () ((Var p_real) (Var pstream__)))))
+                  (name r1)
+                  (init
+                   (Assignment (FunCall foo_bar1 () ((Var p_real) (Var pstream__)))))))
                 (VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                  (name r2) (init (Assignment (Var DUMMY_VAR__)))))
-                (Expression (Assign (Var current_statement__) (Literal 157)))
-                (Expression
-                 (Assign (Var r2) (FunCall foo_bar1 () ((Var J) (Var pstream__)))))
+                  (name r2)
+                  (init (Assignment (FunCall foo_bar1 () ((Var J) (Var pstream__)))))))
                 (Expression (Assign (Var current_statement__) (Literal 158)))
                 (Expression
                  (MethodCall (Var lp_accum__) add ()
@@ -8495,365 +8083,212 @@
              ((VariableDefn
                ((static false) (constexpr false) (type_ Double) (name p_real)
                 (init
-                 (Assignment (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-              (Expression (Assign (Var current_statement__) (Literal 1)))
-              (Expression
-               (Assign (Var p_real)
-                (MethodCall (Var in__) "template read" ((TypeLiteral local_scalar_t__))
-                 ())))
+                 (Assignment
+                  (MethodCall (Var in__) "template read" ((TypeLiteral local_scalar_t__))
+                   ())))))
               (VariableDefn
                ((static false) (constexpr false) (type_ Double) (name p_upper)
                 (init
-                 (Assignment (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-              (Expression (Assign (Var current_statement__) (Literal 2)))
-              (Expression
-               (Assign (Var p_upper)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
-                 ((Var p_real) (Var lp__)))))
+                 (Assignment
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
+                   ((Var p_real) (Var lp__)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ Double) (name p_lower)
                 (init
-                 (Assignment (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-              (Expression (Assign (Var current_statement__) (Literal 3)))
-              (Expression
-               (Assign (Var p_lower)
-                (MethodCall (Var in__) "template read_constrain_ub"
-                 ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
-                 ((Var p_upper) (Var lp__)))))
+                 (Assignment
+                  (MethodCall (Var in__) "template read_constrain_ub"
+                   ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
+                   ((Var p_upper) (Var lp__)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (StdVector Double))
                 (name offset_multiplier)
                 (init
                  (Assignment
-                  (Constructor (StdVector Double)
-                   ((Literal 5) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 4)))
-              (Expression
-               (Assign (Var offset_multiplier)
-                (MethodCall (Var in__) "template read_constrain_offset_multiplier"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 1) (Literal 2) (Var lp__) (Literal 5)))))
+                  (MethodCall (Var in__) "template read_constrain_offset_multiplier"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 1) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (StdVector Double))
                 (name no_offset_multiplier)
                 (init
                  (Assignment
-                  (Constructor (StdVector Double)
-                   ((Literal 5) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 5)))
-              (Expression
-               (Assign (Var no_offset_multiplier)
-                (MethodCall (Var in__) "template read_constrain_offset_multiplier"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 0) (Literal 2) (Var lp__) (Literal 5)))))
+                  (MethodCall (Var in__) "template read_constrain_offset_multiplier"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 0) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (StdVector Double))
                 (name offset_no_multiplier)
                 (init
                  (Assignment
-                  (Constructor (StdVector Double)
-                   ((Literal 5) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 6)))
-              (Expression
-               (Assign (Var offset_no_multiplier)
-                (MethodCall (Var in__) "template read_constrain_offset_multiplier"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 3) (Literal 1) (Var lp__) (Literal 5)))))
+                  (MethodCall (Var in__) "template read_constrain_offset_multiplier"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 3) (Literal 1) (Var lp__) (Literal 5)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (StdVector Double))
                 (name p_real_1d_ar)
                 (init
                  (Assignment
-                  (Constructor (StdVector Double)
-                   ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 7)))
-              (Expression
-               (Assign (Var p_real_1d_ar)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
-                 ((Literal 0) (Var lp__) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
+                   ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (StdVector (StdVector Double)))) (name p_real_3d_ar)
                 (init
                  (Assignment
-                  (Constructor (StdVector (StdVector (StdVector Double)))
-                   ((Var N)
-                    (Constructor (StdVector (StdVector Double))
-                     ((Var M)
-                      (Constructor (StdVector Double)
-                       ((Var K) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 8)))
-              (Expression
-               (Assign (Var p_real_3d_ar)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__))))
-                  (TemplateType jacobian__))
-                 ((Literal 0) (Var lp__) (Var N) (Var M) (Var K)))))
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__))))
+                    (TemplateType jacobian__))
+                   ((Literal 0) (Var lp__) (Var N) (Var M) (Var K)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
                 (name p_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
-                   ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 9)))
-              (Expression
-               (Assign (Var p_vec)
-                (MethodCall (Var in__) "template read_constrain_lb"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                  (TemplateType jacobian__))
-                 ((Literal 0) (Var lp__) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_lb"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (TemplateType jacobian__))
+                   ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix Double -1 1 AoS))) (name p_1d_vec)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 1 AoS))
-                   ((Var N)
-                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
-                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-              (Expression (Assign (Var current_statement__) (Literal 10)))
-              (Expression
-               (Assign (Var p_1d_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                 ((Var N) (Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                   ((Var N) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
                 (name p_3d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
-                   ((Var N)
-                    (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
-                     ((Var M)
-                      (Constructor (StdVector (Matrix Double -1 1 AoS))
-                       ((Var K)
-                        (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
-                         ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 11)))
-              (Expression
-               (Assign (Var p_3d_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
-                 ((Var N) (Var M) (Var K) (Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector
+                     (StdVector
+                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                   ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (Matrix Double 1 -1 AoS))
                 (name p_row_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
-                   ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 12)))
-              (Expression
-               (Assign (Var p_row_vec)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) ((Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
+                   ((Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix Double 1 -1 AoS))) (name p_1d_row_vec)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double 1 -1 AoS))
-                   ((Var N)
-                    (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
-                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-              (Expression (Assign (Var current_statement__) (Literal 13)))
-              (Expression
-               (Assign (Var p_1d_row_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
-                 ((Var N) (Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                   ((Var N) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS)))))
                 (name p_3d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS))))
-                   ((Var N)
-                    (Constructor (StdVector (StdVector (Matrix Double 1 -1 AoS)))
-                     ((Var M)
-                      (Constructor (StdVector (Matrix Double 1 -1 AoS))
-                       ((Var K)
-                        (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
-                         ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 14)))
-              (Expression
-               (Assign (Var p_3d_row_vec)
-                (MethodCall (Var in__) "template read"
-                 ((StdVector
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
-                 ((Var N) (Var M) (Var K) (Var N)))))
+                  (MethodCall (Var in__) "template read"
+                   ((StdVector
+                     (StdVector
+                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                   ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
                 (name p_mat)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
-                   ((Literal 5) (Literal 4)
-                    (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 15)))
-              (Expression
-               (Assign (Var p_mat)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                 ((Literal 5) (Literal 4)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                   ((Literal 5) (Literal 4)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (StdVector (Matrix Double -1 -1 AoS)))) 
                 (name p_ar_mat)
                 (init
                  (Assignment
-                  (Constructor (StdVector (StdVector (Matrix Double -1 -1 AoS)))
-                   ((Literal 4)
-                    (Constructor (StdVector (Matrix Double -1 -1 AoS))
-                     ((Literal 5)
-                      (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
-                       ((Literal 2) (Literal 3)
-                        (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 16)))
-              (Expression
-               (Assign (Var p_ar_mat)
-                (MethodCall (Var in__) "template read_constrain_lub"
-                 ((StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
-                  (TemplateType jacobian__))
-                 ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5) 
-                  (Literal 2) (Literal 3)))))
+                  (MethodCall (Var in__) "template read_constrain_lub"
+                   ((StdVector
+                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                    (TemplateType jacobian__))
+                   ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5)
+                    (Literal 2) (Literal 3)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
                 (name p_simplex)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
-                   ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 17)))
-              (Expression
-               (Assign (Var p_simplex)
-                (MethodCall (Var in__) "template read_constrain_simplex"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_simplex"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix Double -1 1 AoS))) (name p_1d_simplex)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 1 AoS))
-                   ((Var N)
-                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
-                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-              (Expression (Assign (Var current_statement__) (Literal 18)))
-              (Expression
-               (Assign (Var p_1d_simplex)
-                (MethodCall (Var in__) "template read_constrain_simplex"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var N) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_simplex"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var N) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
                 (name p_3d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
-                   ((Var N)
-                    (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
-                     ((Var M)
-                      (Constructor (StdVector (Matrix Double -1 1 AoS))
-                       ((Var K)
-                        (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
-                         ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))))
-              (Expression (Assign (Var current_statement__) (Literal 19)))
-              (Expression
-               (Assign (Var p_3d_simplex)
-                (MethodCall (Var in__) "template read_constrain_simplex"
-                 ((StdVector
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))
+                  (MethodCall (Var in__) "template read_constrain_simplex"
+                   ((StdVector
+                     (StdVector
+                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
                 (name p_cfcov_54)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
-                   ((Literal 5) (Literal 4)
-                    (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 20)))
-              (Expression
-               (Assign (Var p_cfcov_54)
-                (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Literal 5) (Literal 4)))))
+                  (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Literal 5) (Literal 4)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
                 (name p_cfcov_33)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
-                   ((Literal 3) (Literal 3)
-                    (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 21)))
-              (Expression
-               (Assign (Var p_cfcov_33)
-                (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Literal 3) (Literal 3)))))
+                  (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Literal 3) (Literal 3)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix Double -1 -1 AoS))) (name p_cfcov_33_ar)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
-                   ((Var K)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
-                     ((Literal 3) (Literal 3)
-                      (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-              (Expression (Assign (Var current_statement__) (Literal 22)))
-              (Expression
-               (Assign (Var p_cfcov_33_ar)
-                (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                 ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                  (TemplateType jacobian__))
-                 ((Var lp__) (Var K) (Literal 3) (Literal 3)))))
+                  (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                    (TemplateType jacobian__))
+                   ((Var lp__) (Var K) (Literal 3) (Literal 3)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
                 (name x_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
-                   ((Literal 2) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 23)))
-              (Expression
-               (Assign (Var x_p)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) ((Literal 2)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                   ((Literal 2)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
                 (name y_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
-                   ((Literal 2) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 24)))
-              (Expression
-               (Assign (Var y_p)
-                (MethodCall (Var in__) "template read"
-                 ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) ((Literal 2)))))
+                  (MethodCall (Var in__) "template read"
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                   ((Literal 2)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (StdVector Double))
                 (name tp_real_1d_ar)
@@ -9750,18 +9185,10 @@
                (Block ((Return ()))) ())
               (VariableDefn
                ((static false) (constexpr false) (type_ Double) (name gq_r1)
-                (init
-                 (Assignment (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-              (Expression (Assign (Var current_statement__) (Literal 43)))
-              (Expression
-               (Assign (Var gq_r1) (FunCall foo_bar1 () ((Var p_real) (Var pstream__)))))
+                (init (Assignment (FunCall foo_bar1 () ((Var p_real) (Var pstream__)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ Double) (name gq_r2)
-                (init
-                 (Assignment (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-              (Expression (Assign (Var current_statement__) (Literal 44)))
-              (Expression
-               (Assign (Var gq_r2) (FunCall foo_bar1 () ((Var J) (Var pstream__)))))
+                (init (Assignment (FunCall foo_bar1 () ((Var J) (Var pstream__)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (StdVector Double))
                 (name gq_real_1d_ar)
@@ -9917,14 +9344,7 @@
                 (name indices)
                 (init
                  (Assignment
-                  (Constructor (StdVector Int)
-                   ((Literal 3) (FunCall std::numeric_limits<int>::min () ())))))))
-              (Expression (Assign (Var current_statement__) (Literal 60)))
-              (Expression
-               (FunCall stan::model::assign ()
-                ((Var indices)
-                 (InitializerExpr (StdVector Int) ((Literal 2) (Literal 3) (Literal 1)))
-                 (Literal "\"assigning variable indices\""))))
+                  (InitializerExpr (StdVector Int) ((Literal 2) (Literal 3) (Literal 1)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (Matrix Double -1 -1 AoS))) (name indexing_mat)
@@ -11771,8 +11191,7 @@
                   ((FunCall static_cast ((TypeLiteral size_t)) ((Literal 2))))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ Int) (name pos__)
-                (init (Assignment (FunCall std::numeric_limits<int>::min () ())))))
-              (Expression (Assign (Var pos__) (Literal 1)))
+                (init (Assignment (Literal 1)))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
                 (name p_real) (init (Assignment (Var DUMMY_VAR__)))))
@@ -11882,10 +11301,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_real_3d_ar_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 8)))
-                (Expression
-                 (Assign (Var p_real_3d_ar_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_real_3d_ar\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -11929,10 +11344,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__))) 
                   (name p_vec_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 9)))
-                (Expression
-                 (Assign (Var p_vec_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_vec\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -11966,10 +11377,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_1d_vec_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 10)))
-                (Expression
-                 (Assign (Var p_1d_vec_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_1d_vec\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12021,10 +11428,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_3d_vec_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 11)))
-                (Expression
-                 (Assign (Var p_3d_vec_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_3d_vec\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12073,10 +11476,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_row_vec_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 12)))
-                (Expression
-                 (Assign (Var p_row_vec_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_row_vec\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12109,10 +11508,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_1d_row_vec_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 13)))
-                (Expression
-                 (Assign (Var p_1d_row_vec_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_1d_row_vec\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12164,10 +11559,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_3d_row_vec_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 14)))
-                (Expression
-                 (Assign (Var p_3d_row_vec_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_3d_row_vec\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12216,10 +11607,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__))) 
                   (name p_mat_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 15)))
-                (Expression
-                 (Assign (Var p_mat_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_mat\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12264,10 +11651,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_ar_mat_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 16)))
-                (Expression
-                 (Assign (Var p_ar_mat_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_ar_mat\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12318,10 +11701,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_simplex_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 17)))
-                (Expression
-                 (Assign (Var p_simplex_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_simplex\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12355,10 +11734,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_1d_simplex_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 18)))
-                (Expression
-                 (Assign (Var p_1d_simplex_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_1d_simplex\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12411,10 +11786,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_3d_simplex_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 19)))
-                (Expression
-                 (Assign (Var p_3d_simplex_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_3d_simplex\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12464,10 +11835,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_cfcov_54_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 20)))
-                (Expression
-                 (Assign (Var p_cfcov_54_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_cfcov_54\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12505,10 +11872,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_cfcov_33_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 21)))
-                (Expression
-                 (Assign (Var p_cfcov_33_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_cfcov_33\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12549,10 +11912,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__)))
                   (name p_cfcov_33_ar_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 22)))
-                (Expression
-                 (Assign (Var p_cfcov_33_ar_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"p_cfcov_33_ar\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12597,10 +11956,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__))) 
                   (name x_p_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 23)))
-                (Expression
-                 (Assign (Var x_p_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"x_p\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -12630,10 +11985,6 @@
                  ((static false) (constexpr false)
                   (type_ (StdVector (TypeLiteral local_scalar_t__))) 
                   (name y_p_flat__) (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 24)))
-                (Expression
-                 (Assign (Var y_p_flat__)
-                  (MethodCall (Var context__) vals_r () ((Literal "\"y_p\"")))))
                 (Expression (Assign (Var pos__) (Literal 1)))
                 (For
                  ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -16825,19 +16176,13 @@
          (TryCatch
           ((VariableDefn
             ((static false) (constexpr false) (type_ Int) (name pos__)
-             (init (Assignment (FunCall std::numeric_limits<int>::min () ())))))
-           (Expression (Assign (Var pos__) (Literal 1)))
+             (init (Assignment (Literal 1)))))
            (Expression (Assign (Var current_statement__) (Literal 190)))
            (Expression
             (MethodCall (Var context__) validate_dims ()
              ((Literal "\"data initialization\"") (Literal "\"N\"") (Literal "\"int\"")
               (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
            (Expression (Assign (Var N) (FunCall std::numeric_limits<int>::min () ())))
-           (Expression (Assign (Var current_statement__) (Literal 190)))
-           (Expression
-            (Assign (Var N)
-             (Index (MethodCall (Var context__) vals_i () ((Literal "\"N\"")))
-              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 190)))
            (Expression
             (FunCall stan::math::check_greater_or_equal ()
@@ -16850,11 +16195,6 @@
            (Expression (Assign (Var M) (FunCall std::numeric_limits<int>::min () ())))
            (Expression (Assign (Var current_statement__) (Literal 191)))
            (Expression
-            (Assign (Var M)
-             (Index (MethodCall (Var context__) vals_i () ((Literal "\"M\"")))
-              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
-           (Expression (Assign (Var current_statement__) (Literal 191)))
-           (Expression
             (FunCall stan::math::check_greater_or_equal ()
              ((Var function__) (Literal "\"M\"") (Var M) (Literal 0))))
            (Expression (Assign (Var current_statement__) (Literal 192)))
@@ -16863,11 +16203,6 @@
              ((Literal "\"data initialization\"") (Literal "\"K\"") (Literal "\"int\"")
               (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
            (Expression (Assign (Var K) (FunCall std::numeric_limits<int>::min () ())))
-           (Expression (Assign (Var current_statement__) (Literal 192)))
-           (Expression
-            (Assign (Var K)
-             (Index (MethodCall (Var context__) vals_i () ((Literal "\"K\"")))
-              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 192)))
            (Expression
             (FunCall stan::math::check_greater_or_equal ()
@@ -16892,10 +16227,6 @@
             (Assign (Var d_int_1d_ar)
              (Constructor (StdVector Int)
               ((Var N) (FunCall std::numeric_limits<int>::min () ())))))
-           (Expression (Assign (Var current_statement__) (Literal 194)))
-           (Expression
-            (Assign (Var d_int_1d_ar)
-             (MethodCall (Var context__) vals_i () ((Literal "\"d_int_1d_ar\"")))))
            (Expression (Assign (Var current_statement__) (Literal 194)))
            (Expression
             (FunCall stan::math::check_less_or_equal ()
@@ -16929,41 +16260,6 @@
                 ((Var M)
                  (Constructor (StdVector Int)
                   ((Var K) (FunCall std::numeric_limits<int>::min () ())))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false) (type_ (StdVector Int))
-               (name d_int_3d_ar_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 198)))
-             (Expression
-              (Assign (Var d_int_3d_ar_flat__)
-               (MethodCall (Var context__) vals_i () ((Literal "\"d_int_3d_ar\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var K)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var M)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var N)) (Increment (Var sym3__))
-                    (Block
-                     ((Expression
-                       (FunCall stan::model::assign ()
-                        ((Var d_int_3d_ar)
-                         (Index (Var d_int_3d_ar_flat__)
-                          (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                         (Literal "\"assigning variable d_int_3d_ar\"")
-                         (FunCall stan::model::index_uni () ((Var sym3__)))
-                         (FunCall stan::model::index_uni () ((Var sym2__)))
-                         (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 198)))
            (Expression
             (FunCall stan::math::check_less_or_equal ()
@@ -16976,11 +16272,6 @@
               (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
            (Expression
             (Assign (Var J) (FunCall std::numeric_limits<double>::quiet_NaN () ())))
-           (Expression (Assign (Var current_statement__) (Literal 199)))
-           (Expression
-            (Assign (Var J)
-             (Index (MethodCall (Var context__) vals_r () ((Literal "\"J\"")))
-              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 199)))
            (Expression
             (FunCall stan::math::check_greater_or_equal ()
@@ -17004,10 +16295,6 @@
             (Assign (Var d_real_1d_ar)
              (Constructor (StdVector Double)
               ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-           (Expression (Assign (Var current_statement__) (Literal 201)))
-           (Expression
-            (Assign (Var d_real_1d_ar)
-             (MethodCall (Var context__) vals_r () ((Literal "\"d_real_1d_ar\"")))))
            (Expression (Assign (Var current_statement__) (Literal 202)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17037,42 +16324,6 @@
                 ((Var M)
                  (Constructor (StdVector Double)
                   ((Var K) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_real_3d_ar_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 205)))
-             (Expression
-              (Assign (Var d_real_3d_ar_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_real_3d_ar\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var K)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var M)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var N)) (Increment (Var sym3__))
-                    (Block
-                     ((Expression
-                       (FunCall stan::model::assign ()
-                        ((Var d_real_3d_ar)
-                         (Index (Var d_real_3d_ar_flat__)
-                          (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                         (Literal "\"assigning variable d_real_3d_ar\"")
-                         (FunCall stan::model::index_uni () ((Var sym3__)))
-                         (FunCall stan::model::index_uni () ((Var sym2__)))
-                         (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 206)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17091,30 +16342,6 @@
            (Expression
             (OperatorNew d_vec (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
              ((MethodCall (Var d_vec_data__) data () ()) (Var N))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__))) (name d_vec_flat__)
-               (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 207)))
-             (Expression
-              (Assign (Var d_vec_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_vec\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
-              (Block
-               ((Expression
-                 (FunCall stan::model::assign ()
-                  ((Var d_vec)
-                   (Index (Var d_vec_flat__)
-                    (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                   (Literal "\"assigning variable d_vec\"")
-                   (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression
-                 (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
            (Expression (Assign (Var current_statement__) (Literal 208)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17137,36 +16364,6 @@
               ((Var N)
                (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
                 ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__))) (name d_1d_vec_flat__)
-               (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 210)))
-             (Expression
-              (Assign (Var d_1d_vec_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_1d_vec\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_1d_vec)
-                      (Index (Var d_1d_vec_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_1d_vec\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 211)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17203,49 +16400,6 @@
                   ((Var K)
                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__))) (name d_3d_vec_flat__)
-               (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 215)))
-             (Expression
-              (Assign (Var d_3d_vec_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_3d_vec\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var M)) (Increment (Var sym3__))
-                    (Block
-                     ((For
-                       ((static false) (constexpr false) (type_ Int) 
-                        (name sym4__) (init (Assignment (Literal 1))))
-                       (BinOp (Var sym4__) LEq (Var N)) (Increment (Var sym4__))
-                       (Block
-                        ((Expression
-                          (FunCall stan::model::assign ()
-                           ((Var d_3d_vec)
-                            (Index (Var d_3d_vec_flat__)
-                             (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                            (Literal "\"assigning variable d_3d_vec\"")
-                            (FunCall stan::model::index_uni () ((Var sym4__)))
-                            (FunCall stan::model::index_uni () ((Var sym3__)))
-                            (FunCall stan::model::index_uni () ((Var sym2__)))
-                            (FunCall stan::model::index_uni () ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var pos__)
-                           (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 216)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17264,30 +16418,6 @@
            (Expression
             (OperatorNew d_row_vec (TypeTrait Eigen::Map ((Matrix Double 1 -1 AoS)))
              ((MethodCall (Var d_row_vec_data__) data () ()) (Var N))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__))) (name d_row_vec_flat__)
-               (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 217)))
-             (Expression
-              (Assign (Var d_row_vec_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_row_vec\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
-              (Block
-               ((Expression
-                 (FunCall stan::model::assign ()
-                  ((Var d_row_vec)
-                   (Index (Var d_row_vec_flat__)
-                    (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                   (Literal "\"assigning variable d_row_vec\"")
-                   (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression
-                 (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
            (Expression (Assign (Var current_statement__) (Literal 218)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17310,36 +16440,6 @@
               ((Var N)
                (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
                 ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_1d_row_vec_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 220)))
-             (Expression
-              (Assign (Var d_1d_row_vec_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_1d_row_vec\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_1d_row_vec)
-                      (Index (Var d_1d_row_vec_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_1d_row_vec\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 221)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17376,49 +16476,6 @@
                   ((Var K)
                    (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_3d_row_vec_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 225)))
-             (Expression
-              (Assign (Var d_3d_row_vec_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_3d_row_vec\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var M)) (Increment (Var sym3__))
-                    (Block
-                     ((For
-                       ((static false) (constexpr false) (type_ Int) 
-                        (name sym4__) (init (Assignment (Literal 1))))
-                       (BinOp (Var sym4__) LEq (Var N)) (Increment (Var sym4__))
-                       (Block
-                        ((Expression
-                          (FunCall stan::model::assign ()
-                           ((Var d_3d_row_vec)
-                            (Index (Var d_3d_row_vec_flat__)
-                             (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                            (Literal "\"assigning variable d_3d_row_vec\"")
-                            (FunCall stan::model::index_uni () ((Var sym4__)))
-                            (FunCall stan::model::index_uni () ((Var sym3__)))
-                            (FunCall stan::model::index_uni () ((Var sym2__)))
-                            (FunCall stan::model::index_uni () ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var pos__)
-                           (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 226)))
            (Expression
             (MethodCall (Var context__) validate_dims ()
@@ -17438,49 +16495,6 @@
                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
                   ((Literal 2) (Literal 3)
                    (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__))) (name d_ar_mat_flat__)
-               (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 226)))
-             (Expression
-              (Assign (Var d_ar_mat_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_ar_mat\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 2)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Literal 5)) (Increment (Var sym3__))
-                    (Block
-                     ((For
-                       ((static false) (constexpr false) (type_ Int) 
-                        (name sym4__) (init (Assignment (Literal 1))))
-                       (BinOp (Var sym4__) LEq (Literal 4)) (Increment (Var sym4__))
-                       (Block
-                        ((Expression
-                          (FunCall stan::model::assign ()
-                           ((Var d_ar_mat)
-                            (Index (Var d_ar_mat_flat__)
-                             (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                            (Literal "\"assigning variable d_ar_mat\"")
-                            (FunCall stan::model::index_uni () ((Var sym4__)))
-                            (FunCall stan::model::index_uni () ((Var sym3__)))
-                            (FunCall stan::model::index_uni () ((Var sym2__)))
-                            (FunCall stan::model::index_uni () ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var pos__)
-                           (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 226)))
            (Expression
             (FunCall stan::math::check_greater_or_equal ()
@@ -17507,30 +16521,6 @@
            (Expression
             (OperatorNew d_simplex (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
              ((MethodCall (Var d_simplex_data__) data () ()) (Var N))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__))) (name d_simplex_flat__)
-               (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 228)))
-             (Expression
-              (Assign (Var d_simplex_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_simplex\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
-              (Block
-               ((Expression
-                 (FunCall stan::model::assign ()
-                  ((Var d_simplex)
-                   (Index (Var d_simplex_flat__)
-                    (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                   (Literal "\"assigning variable d_simplex\"")
-                   (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression
-                 (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
            (Expression (Assign (Var current_statement__) (Literal 228)))
            (Expression
             (FunCall stan::math::check_simplex ()
@@ -17557,36 +16547,6 @@
               ((Var N)
                (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
                 ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_1d_simplex_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 231)))
-             (Expression
-              (Assign (Var d_1d_simplex_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_1d_simplex\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var N)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_1d_simplex)
-                      (Index (Var d_1d_simplex_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_1d_simplex\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 231)))
            (Expression
             (FunCall stan::math::check_simplex ()
@@ -17627,49 +16587,6 @@
                   ((Var K)
                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_3d_simplex_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 236)))
-             (Expression
-              (Assign (Var d_3d_simplex_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_3d_simplex\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var N)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var K)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var M)) (Increment (Var sym3__))
-                    (Block
-                     ((For
-                       ((static false) (constexpr false) (type_ Int) 
-                        (name sym4__) (init (Assignment (Literal 1))))
-                       (BinOp (Var sym4__) LEq (Var N)) (Increment (Var sym4__))
-                       (Block
-                        ((Expression
-                          (FunCall stan::model::assign ()
-                           ((Var d_3d_simplex)
-                            (Index (Var d_3d_simplex_flat__)
-                             (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                            (Literal "\"assigning variable d_3d_simplex\"")
-                            (FunCall stan::model::index_uni () ((Var sym4__)))
-                            (FunCall stan::model::index_uni () ((Var sym3__)))
-                            (FunCall stan::model::index_uni () ((Var sym2__)))
-                            (FunCall stan::model::index_uni () ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var pos__)
-                           (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 236)))
            (Expression
             (FunCall stan::math::check_simplex ()
@@ -17690,36 +16607,6 @@
            (Expression
             (OperatorNew d_cfcov_54 (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))
              ((MethodCall (Var d_cfcov_54_data__) data () ()) (Literal 5) (Literal 4))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_cfcov_54_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 237)))
-             (Expression
-              (Assign (Var d_cfcov_54_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_cfcov_54\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Literal 4)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 5)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_cfcov_54)
-                      (Index (Var d_cfcov_54_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_cfcov_54\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 237)))
            (Expression
             (FunCall stan::math::check_cholesky_factor ()
@@ -17740,36 +16627,6 @@
            (Expression
             (OperatorNew d_cfcov_33 (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))
              ((MethodCall (Var d_cfcov_33_data__) data () ()) (Literal 3) (Literal 3))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_cfcov_33_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 238)))
-             (Expression
-              (Assign (Var d_cfcov_33_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_cfcov_33\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 3)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_cfcov_33)
-                      (Index (Var d_cfcov_33_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_cfcov_33\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 238)))
            (Expression
             (FunCall stan::math::check_cholesky_factor ()
@@ -17794,42 +16651,6 @@
                (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
                 ((Literal 3) (Literal 3)
                  (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_cfcov_33_ar_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 240)))
-             (Expression
-              (Assign (Var d_cfcov_33_ar_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_cfcov_33_ar\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 3)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var K)) (Increment (Var sym3__))
-                    (Block
-                     ((Expression
-                       (FunCall stan::model::assign ()
-                        ((Var d_cfcov_33_ar)
-                         (Index (Var d_cfcov_33_ar_flat__)
-                          (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                         (Literal "\"assigning variable d_cfcov_33_ar\"")
-                         (FunCall stan::model::index_uni () ((Var sym3__)))
-                         (FunCall stan::model::index_uni () ((Var sym2__)))
-                         (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 240)))
            (Expression
             (FunCall stan::math::check_cholesky_factor ()
@@ -17841,11 +16662,6 @@
               (Literal "\"int\"") (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
            (Expression
             (Assign (Var d_int) (FunCall std::numeric_limits<int>::min () ())))
-           (Expression (Assign (Var current_statement__) (Literal 241)))
-           (Expression
-            (Assign (Var d_int)
-             (Index (MethodCall (Var context__) vals_i () ((Literal "\"d_int\"")))
-              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 242)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17861,10 +16677,6 @@
             (Assign (Var d_int_array)
              (Constructor (StdVector Int)
               ((Var d_int) (FunCall std::numeric_limits<int>::min () ())))))
-           (Expression (Assign (Var current_statement__) (Literal 243)))
-           (Expression
-            (Assign (Var d_int_array)
-             (MethodCall (Var context__) vals_i () ((Literal "\"d_int_array\"")))))
            (Expression (Assign (Var current_statement__) (Literal 244)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17883,35 +16695,6 @@
               ((Var d_int)
                (Constructor (StdVector Int)
                 ((Literal 2) (FunCall std::numeric_limits<int>::min () ())))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false) (type_ (StdVector Int))
-               (name d_int_array_2d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 245)))
-             (Expression
-              (Assign (Var d_int_array_2d_flat__)
-               (MethodCall (Var context__) vals_i () ((Literal "\"d_int_array_2d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Literal 2)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var d_int)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_int_array_2d)
-                      (Index (Var d_int_array_2d_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_int_array_2d\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 246)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17933,41 +16716,6 @@
                 ((Literal 2)
                  (Constructor (StdVector Int)
                   ((Literal 3) (FunCall std::numeric_limits<int>::min () ())))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false) (type_ (StdVector Int))
-               (name d_int_array_3d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 247)))
-             (Expression
-              (Assign (Var d_int_array_3d_flat__)
-               (MethodCall (Var context__) vals_i () ((Literal "\"d_int_array_3d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 2)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var d_int)) (Increment (Var sym3__))
-                    (Block
-                     ((Expression
-                       (FunCall stan::model::assign ()
-                        ((Var d_int_array_3d)
-                         (Index (Var d_int_array_3d_flat__)
-                          (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                         (Literal "\"assigning variable d_int_array_3d\"")
-                         (FunCall stan::model::index_uni () ((Var sym3__)))
-                         (FunCall stan::model::index_uni () ((Var sym2__)))
-                         (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 248)))
            (Expression
             (MethodCall (Var context__) validate_dims ()
@@ -17976,11 +16724,6 @@
               (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
            (Expression
             (Assign (Var d_real) (FunCall std::numeric_limits<double>::quiet_NaN () ())))
-           (Expression (Assign (Var current_statement__) (Literal 248)))
-           (Expression
-            (Assign (Var d_real)
-             (Index (MethodCall (Var context__) vals_r () ((Literal "\"d_real\"")))
-              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 249)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17996,10 +16739,6 @@
             (Assign (Var d_real_array)
              (Constructor (StdVector Double)
               ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-           (Expression (Assign (Var current_statement__) (Literal 250)))
-           (Expression
-            (Assign (Var d_real_array)
-             (MethodCall (Var context__) vals_r () ((Literal "\"d_real_array\"")))))
            (Expression (Assign (Var current_statement__) (Literal 251)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18018,36 +16757,6 @@
               ((Var d_int)
                (Constructor (StdVector Double)
                 ((Literal 2) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_real_array_2d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 252)))
-             (Expression
-              (Assign (Var d_real_array_2d_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_real_array_2d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Literal 2)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var d_int)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_real_array_2d)
-                      (Index (Var d_real_array_2d_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_real_array_2d\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 253)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18069,42 +16778,6 @@
                 ((Literal 2)
                  (Constructor (StdVector Double)
                   ((Literal 3) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_real_array_3d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 254)))
-             (Expression
-              (Assign (Var d_real_array_3d_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_real_array_3d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Literal 3)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 2)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var d_int)) (Increment (Var sym3__))
-                    (Block
-                     ((Expression
-                       (FunCall stan::model::assign ()
-                        ((Var d_real_array_3d)
-                         (Index (Var d_real_array_3d_flat__)
-                          (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                         (Literal "\"assigning variable d_real_array_3d\"")
-                         (FunCall stan::model::index_uni () ((Var sym3__)))
-                         (FunCall stan::model::index_uni () ((Var sym2__)))
-                         (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 255)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18129,36 +16802,6 @@
            (Expression
             (OperatorNew d_matrix (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))
              ((MethodCall (Var d_matrix_data__) data () ()) (Var d_int) (Var d_int))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__))) (name d_matrix_flat__)
-               (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 257)))
-             (Expression
-              (Assign (Var d_matrix_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_matrix\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var d_int)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_matrix)
-                      (Index (Var d_matrix_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_matrix\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 258)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18187,42 +16830,6 @@
                (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
                 ((Var d_int) (Var d_int)
                  (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_matrix_array_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 261)))
-             (Expression
-              (Assign (Var d_matrix_array_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_matrix_array\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var d_int)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var d_int)) (Increment (Var sym3__))
-                    (Block
-                     ((Expression
-                       (FunCall stan::model::assign ()
-                        ((Var d_matrix_array)
-                         (Index (Var d_matrix_array_flat__)
-                          (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                         (Literal "\"assigning variable d_matrix_array\"")
-                         (FunCall stan::model::index_uni () ((Var sym3__)))
-                         (FunCall stan::model::index_uni () ((Var sym2__)))
-                         (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 262)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18254,49 +16861,6 @@
                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
                   ((Var d_int) (Var d_int)
                    (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_matrix_array_2d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 265)))
-             (Expression
-              (Assign (Var d_matrix_array_2d_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_matrix_array_2d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var d_int)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Literal 2)) (Increment (Var sym3__))
-                    (Block
-                     ((For
-                       ((static false) (constexpr false) (type_ Int) 
-                        (name sym4__) (init (Assignment (Literal 1))))
-                       (BinOp (Var sym4__) LEq (Var d_int)) (Increment (Var sym4__))
-                       (Block
-                        ((Expression
-                          (FunCall stan::model::assign ()
-                           ((Var d_matrix_array_2d)
-                            (Index (Var d_matrix_array_2d_flat__)
-                             (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                            (Literal "\"assigning variable d_matrix_array_2d\"")
-                            (FunCall stan::model::index_uni () ((Var sym4__)))
-                            (FunCall stan::model::index_uni () ((Var sym3__)))
-                            (FunCall stan::model::index_uni () ((Var sym2__)))
-                            (FunCall stan::model::index_uni () ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var pos__)
-                           (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 266)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18331,55 +16895,6 @@
                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
                     ((Var d_int) (Var d_int)
                      (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_matrix_array_3d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 269)))
-             (Expression
-              (Assign (Var d_matrix_array_3d_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_matrix_array_3d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var d_int)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Literal 3)) (Increment (Var sym3__))
-                    (Block
-                     ((For
-                       ((static false) (constexpr false) (type_ Int) 
-                        (name sym4__) (init (Assignment (Literal 1))))
-                       (BinOp (Var sym4__) LEq (Literal 2)) (Increment (Var sym4__))
-                       (Block
-                        ((For
-                          ((static false) (constexpr false) (type_ Int) 
-                           (name sym5__) (init (Assignment (Literal 1))))
-                          (BinOp (Var sym5__) LEq (Var d_int)) (Increment (Var sym5__))
-                          (Block
-                           ((Expression
-                             (FunCall stan::model::assign ()
-                              ((Var d_matrix_array_3d)
-                               (Index (Var d_matrix_array_3d_flat__)
-                                (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                               (Literal "\"assigning variable d_matrix_array_3d\"")
-                               (FunCall stan::model::index_uni () ((Var sym5__)))
-                               (FunCall stan::model::index_uni () ((Var sym4__)))
-                               (FunCall stan::model::index_uni () ((Var sym3__)))
-                               (FunCall stan::model::index_uni () ((Var sym2__)))
-                               (FunCall stan::model::index_uni () ((Var sym1__))))))
-                            (Expression
-                             (Assign (Var pos__)
-                              (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 270)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18398,30 +16913,6 @@
            (Expression
             (OperatorNew d_vector (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
              ((MethodCall (Var d_vector_data__) data () ()) (Var d_int))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__))) (name d_vector_flat__)
-               (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 271)))
-             (Expression
-              (Assign (Var d_vector_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_vector\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((Expression
-                 (FunCall stan::model::assign ()
-                  ((Var d_vector)
-                   (Index (Var d_vector_flat__)
-                    (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                   (Literal "\"assigning variable d_vector\"")
-                   (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression
-                 (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
            (Expression (Assign (Var current_statement__) (Literal 272)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18444,36 +16935,6 @@
               ((Var d_int)
                (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
                 ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_vector_array_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 274)))
-             (Expression
-              (Assign (Var d_vector_array_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_vector_array\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var d_int)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_vector_array)
-                      (Index (Var d_vector_array_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_vector_array\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 275)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18499,42 +16960,6 @@
                 ((Literal 2)
                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
                   ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_vector_array_2d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 277)))
-             (Expression
-              (Assign (Var d_vector_array_2d_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_vector_array_2d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 2)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var d_int)) (Increment (Var sym3__))
-                    (Block
-                     ((Expression
-                       (FunCall stan::model::assign ()
-                        ((Var d_vector_array_2d)
-                         (Index (Var d_vector_array_2d_flat__)
-                          (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                         (Literal "\"assigning variable d_vector_array_2d\"")
-                         (FunCall stan::model::index_uni () ((Var sym3__)))
-                         (FunCall stan::model::index_uni () ((Var sym2__)))
-                         (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 278)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18563,49 +16988,6 @@
                   ((Literal 3)
                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
                     ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_vector_array_3d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 280)))
-             (Expression
-              (Assign (Var d_vector_array_3d_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_vector_array_3d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 3)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Literal 2)) (Increment (Var sym3__))
-                    (Block
-                     ((For
-                       ((static false) (constexpr false) (type_ Int) 
-                        (name sym4__) (init (Assignment (Literal 1))))
-                       (BinOp (Var sym4__) LEq (Var d_int)) (Increment (Var sym4__))
-                       (Block
-                        ((Expression
-                          (FunCall stan::model::assign ()
-                           ((Var d_vector_array_3d)
-                            (Index (Var d_vector_array_3d_flat__)
-                             (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                            (Literal "\"assigning variable d_vector_array_3d\"")
-                            (FunCall stan::model::index_uni () ((Var sym4__)))
-                            (FunCall stan::model::index_uni () ((Var sym3__)))
-                            (FunCall stan::model::index_uni () ((Var sym2__)))
-                            (FunCall stan::model::index_uni () ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var pos__)
-                           (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 281)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18624,30 +17006,6 @@
            (Expression
             (OperatorNew d_row_vector (TypeTrait Eigen::Map ((Matrix Double 1 -1 AoS)))
              ((MethodCall (Var d_row_vector_data__) data () ()) (Var d_int))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_row_vector_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 282)))
-             (Expression
-              (Assign (Var d_row_vector_flat__)
-               (MethodCall (Var context__) vals_r () ((Literal "\"d_row_vector\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((Expression
-                 (FunCall stan::model::assign ()
-                  ((Var d_row_vector)
-                   (Index (Var d_row_vector_flat__)
-                    (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                   (Literal "\"assigning variable d_row_vector\"")
-                   (FunCall stan::model::index_uni () ((Var sym1__))))))
-                (Expression
-                 (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))
            (Expression (Assign (Var current_statement__) (Literal 283)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18670,37 +17028,6 @@
               ((Var d_int)
                (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
                 ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_row_vector_array_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 285)))
-             (Expression
-              (Assign (Var d_row_vector_array_flat__)
-               (MethodCall (Var context__) vals_r ()
-                ((Literal "\"d_row_vector_array\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Var d_int)) (Increment (Var sym2__))
-                 (Block
-                  ((Expression
-                    (FunCall stan::model::assign ()
-                     ((Var d_row_vector_array)
-                      (Index (Var d_row_vector_array_flat__)
-                       (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                      (Literal "\"assigning variable d_row_vector_array\"")
-                      (FunCall stan::model::index_uni () ((Var sym2__)))
-                      (FunCall stan::model::index_uni () ((Var sym1__))))))
-                   (Expression
-                    (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 286)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18726,43 +17053,6 @@
                 ((Literal 2)
                  (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
                   ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_row_vector_array_2d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 288)))
-             (Expression
-              (Assign (Var d_row_vector_array_2d_flat__)
-               (MethodCall (Var context__) vals_r ()
-                ((Literal "\"d_row_vector_array_2d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 2)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Var d_int)) (Increment (Var sym3__))
-                    (Block
-                     ((Expression
-                       (FunCall stan::model::assign ()
-                        ((Var d_row_vector_array_2d)
-                         (Index (Var d_row_vector_array_2d_flat__)
-                          (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                         (Literal "\"assigning variable d_row_vector_array_2d\"")
-                         (FunCall stan::model::index_uni () ((Var sym3__)))
-                         (FunCall stan::model::index_uni () ((Var sym2__)))
-                         (FunCall stan::model::index_uni () ((Var sym1__))))))
-                      (Expression
-                       (Assign (Var pos__) (Parens (BinOp (Var pos__) Add (Literal 1))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 289)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -18791,50 +17081,6 @@
                   ((Literal 3)
                    (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
                     ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
-           (Block
-            ((VariableDefn
-              ((static false) (constexpr false)
-               (type_ (StdVector (TypeLiteral local_scalar_t__)))
-               (name d_row_vector_array_3d_flat__) (init Uninitialized)))
-             (Expression (Assign (Var current_statement__) (Literal 291)))
-             (Expression
-              (Assign (Var d_row_vector_array_3d_flat__)
-               (MethodCall (Var context__) vals_r ()
-                ((Literal "\"d_row_vector_array_3d\"")))))
-             (Expression (Assign (Var pos__) (Literal 1)))
-             (For
-              ((static false) (constexpr false) (type_ Int) (name sym1__)
-               (init (Assignment (Literal 1))))
-              (BinOp (Var sym1__) LEq (Var d_int)) (Increment (Var sym1__))
-              (Block
-               ((For
-                 ((static false) (constexpr false) (type_ Int) (name sym2__)
-                  (init (Assignment (Literal 1))))
-                 (BinOp (Var sym2__) LEq (Literal 3)) (Increment (Var sym2__))
-                 (Block
-                  ((For
-                    ((static false) (constexpr false) (type_ Int) (name sym3__)
-                     (init (Assignment (Literal 1))))
-                    (BinOp (Var sym3__) LEq (Literal 2)) (Increment (Var sym3__))
-                    (Block
-                     ((For
-                       ((static false) (constexpr false) (type_ Int) 
-                        (name sym4__) (init (Assignment (Literal 1))))
-                       (BinOp (Var sym4__) LEq (Var d_int)) (Increment (Var sym4__))
-                       (Block
-                        ((Expression
-                          (FunCall stan::model::assign ()
-                           ((Var d_row_vector_array_3d)
-                            (Index (Var d_row_vector_array_3d_flat__)
-                             (Parens (BinOp (Var pos__) Subtract (Literal 1))))
-                            (Literal "\"assigning variable d_row_vector_array_3d\"")
-                            (FunCall stan::model::index_uni () ((Var sym4__)))
-                            (FunCall stan::model::index_uni () ((Var sym3__)))
-                            (FunCall stan::model::index_uni () ((Var sym2__)))
-                            (FunCall stan::model::index_uni () ((Var sym1__))))))
-                         (Expression
-                          (Assign (Var pos__)
-                           (Parens (BinOp (Var pos__) Add (Literal 1)))))))))))))))))))
            (Expression (Assign (Var current_statement__) (Literal 292)))
            (Expression
             (Assign (Var td_int) (FunCall std::numeric_limits<int>::min () ())))
@@ -18856,26 +17102,14 @@
             (Assign (Var td_1dk)
              (Constructor (StdVector Int)
               ((Var M) (FunCall std::numeric_limits<int>::min () ())))))
-           (Expression (Assign (Var current_statement__) (Literal 296)))
-           (Expression
-            (FunCall stan::model::assign ()
-             ((Var td_1dk) (FunCall stan::math::rep_array () ((Literal 1) (Var M)))
-              (Literal "\"assigning variable td_1dk\""))))
            (Expression (Assign (Var current_statement__) (Literal 297)))
            (Expression (Assign (Var td_a) (FunCall std::numeric_limits<int>::min () ())))
-           (Expression (Assign (Var current_statement__) (Literal 297)))
-           (Expression (Assign (Var td_a) (Var N)))
            (Expression (Assign (Var current_statement__) (Literal 298)))
            (Expression
             (Assign (Var td_b) (FunCall std::numeric_limits<double>::quiet_NaN () ())))
-           (Expression (Assign (Var current_statement__) (Literal 298)))
-           (Expression (Assign (Var td_b) (Parens (BinOp (Var N) Multiply (Var J)))))
            (Expression (Assign (Var current_statement__) (Literal 299)))
            (Expression
             (Assign (Var td_c) (FunCall std::numeric_limits<double>::quiet_NaN () ())))
-           (Expression (Assign (Var current_statement__) (Literal 299)))
-           (Expression
-            (Assign (Var td_c) (FunCall foo_bar1 () ((Var td_b) (Var pstream__)))))
            (Expression (Assign (Var current_statement__) (Literal 300)))
            (Expression
             (Assign (Var td_ar_mat)
@@ -19107,18 +17341,10 @@
                    (name l_mat)
                    (init
                     (Assignment
-                     (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
-                      ((Literal 2) (Literal 3)
-                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
-                 (Expression (Assign (Var current_statement__) (Literal 341)))
-                 (Expression
-                  (FunCall stan::model::assign ()
-                   ((Var l_mat)
-                    (FunCall stan::model::rvalue ()
-                     ((Var d_ar_mat) (Literal "\"d_ar_mat\"")
-                      (FunCall stan::model::index_uni () ((Var i)))
-                      (FunCall stan::model::index_uni () ((Var j)))))
-                    (Literal "\"assigning variable l_mat\""))))
+                     (FunCall stan::model::rvalue ()
+                      ((Var d_ar_mat) (Literal "\"d_ar_mat\"")
+                       (FunCall stan::model::index_uni () ((Var i)))
+                       (FunCall stan::model::index_uni () ((Var j)))))))))
                  (Expression (Assign (Var current_statement__) (Literal 342)))
                  (IfElse (Var pstream__)
                   (Block
@@ -19178,11 +17404,6 @@
                ((VariableDefn
                  ((static false) (constexpr false) (type_ Double) (name v)
                   (init Uninitialized)))
-                (Expression (Assign (Var current_statement__) (Literal 351)))
-                (Expression
-                 (Assign (Var v)
-                  (Index (Var blocked_tdata_vs)
-                   (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 352)))
                 (Expression (Assign (Var z) (Literal 0))))))
              (VariableDefn
@@ -19190,27 +17411,12 @@
                (name indices)
                (init
                 (Assignment
-                 (Constructor (StdVector Int)
-                  ((Literal 4) (FunCall std::numeric_limits<int>::min () ())))))))
-             (Expression (Assign (Var current_statement__) (Literal 353)))
-             (Expression
-              (FunCall stan::model::assign ()
-               ((Var indices)
-                (InitializerExpr (StdVector Int)
-                 ((Literal 1) (Literal 2) (Literal 3) (Literal 4)))
-                (Literal "\"assigning variable indices\""))))
+                 (InitializerExpr (StdVector Int)
+                  ((Literal 1) (Literal 2) (Literal 3) (Literal 4)))))))
              (Block
               ((VariableDefn
                 ((static false) (constexpr false) (type_ (StdVector Int)) 
                  (name sym1__) (init Uninitialized)))
-               (Expression (Assign (Var current_statement__) (Literal 354)))
-               (Expression
-                (FunCall stan::model::assign ()
-                 ((Var sym1__)
-                  (FunCall stan::model::rvalue ()
-                   ((Var indices) (Literal "\"indices\"")
-                    (FunCall stan::model::index_min_max () ((Literal 1) (Literal 3)))))
-                  (Literal "\"assigning variable sym1__\""))))
                (Expression (Assign (Var current_statement__) (Literal 355)))
                (For
                 ((static false) (constexpr false) (type_ Int) (name sym3__)
@@ -19221,11 +17427,6 @@
                  ((VariableDefn
                    ((static false) (constexpr false) (type_ Int) (name i)
                     (init Uninitialized)))
-                  (Expression (Assign (Var current_statement__) (Literal 355)))
-                  (Expression
-                   (Assign (Var i)
-                    (Index (Var sym1__)
-                     (Parens (BinOp (Var sym3__) Subtract (Literal 1))))))
                   (Expression (Assign (Var current_statement__) (Literal 356)))
                   (Expression (Assign (Var z) (Var i))))))))))
            (Expression (Assign (Var current_statement__) (Literal 358)))
@@ -19284,12 +17485,6 @@
             (Assign (Var x_mul_ind)
              (Constructor (StdVector Double)
               ((Literal 2) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
-           (Expression (Assign (Var current_statement__) (Literal 364)))
-           (Expression
-            (FunCall stan::model::assign ()
-             ((Var x_mul_ind)
-              (InitializerExpr (StdVector Double) ((Literal 1) (Literal 2)))
-              (Literal "\"assigning variable x_mul_ind\""))))
            (Expression (Assign (Var current_statement__) (Literal 365)))
            (Expression
             (Assign (Var transformed_data_real)
