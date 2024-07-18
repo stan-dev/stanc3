@@ -173,8 +173,6 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 125;
-      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 126;
       stan::math::validate_non_negative_index("cmat", "N", N);
       current_statement__ = 127;
@@ -241,42 +239,23 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     (void) function__;
     try {
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 1;
-      cmat = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 2;
-      cvec = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> crowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 3;
-      crowvec = in__.template read<
-                  Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       std::complex<local_scalar_t__> z =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      current_statement__ = 4;
-      z = in__.template read<std::complex<local_scalar_t__>>();
+        in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__,-1,-1> mat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      current_statement__ = 5;
-      mat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       Eigen::Matrix<local_scalar_t__,-1,1> vec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 6;
-      vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       Eigen::Matrix<local_scalar_t__,1,-1> rowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 7;
-      rowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ r = DUMMY_VAR__;
-      current_statement__ = 8;
-      r = in__.template read<local_scalar_t__>();
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      local_scalar_t__ r = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -782,42 +761,23 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     (void) function__;
     try {
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 1;
-      cmat = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 2;
-      cvec = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> crowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 3;
-      crowvec = in__.template read<
-                  Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       std::complex<local_scalar_t__> z =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      current_statement__ = 4;
-      z = in__.template read<std::complex<local_scalar_t__>>();
+        in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__,-1,-1> mat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      current_statement__ = 5;
-      mat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       Eigen::Matrix<local_scalar_t__,-1,1> vec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 6;
-      vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       Eigen::Matrix<local_scalar_t__,1,-1> rowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 7;
-      rowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ r = DUMMY_VAR__;
-      current_statement__ = 8;
-      r = in__.template read<local_scalar_t__>();
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      local_scalar_t__ r = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -1334,49 +1294,23 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     (void) function__;
     try {
       Eigen::Matrix<std::complex<double>,-1,-1> cmat =
-        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 1;
-      cmat = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       Eigen::Matrix<std::complex<double>,-1,1> cvec =
-        Eigen::Matrix<std::complex<double>,-1,1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 2;
-      cvec = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       Eigen::Matrix<std::complex<double>,1,-1> crowvec =
-        Eigen::Matrix<std::complex<double>,1,-1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 3;
-      crowvec = in__.template read<
-                  Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       std::complex<double> z =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 4;
-      z = in__.template read<std::complex<local_scalar_t__>>();
+        in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<double,-1,-1> mat =
-        Eigen::Matrix<double,-1,-1>::Constant(N, N,
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 5;
-      mat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       Eigen::Matrix<double,-1,1> vec =
-        Eigen::Matrix<double,-1,1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 6;
-      vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       Eigen::Matrix<double,1,-1> rowvec =
-        Eigen::Matrix<double,1,-1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 7;
-      rowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      double r = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 8;
-      r = in__.template read<local_scalar_t__>();
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      double r = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<double>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
@@ -2615,8 +2549,6 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 116;
-      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 117;
       stan::math::validate_non_negative_index("cmat", "N", N);
       current_statement__ = 118;
@@ -2632,20 +2564,6 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       new (&cmat)
         Eigen::Map<Eigen::Matrix<std::complex<double>,-1,-1>>(cmat_data__.data(),
         N, N);
-      {
-        std::vector<std::complex<local_scalar_t__>> cmat_flat__;
-        current_statement__ = 119;
-        cmat_flat__ = context__.vals_c("cmat");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
-              "assigning variable cmat", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
       current_statement__ = 120;
       stan::math::validate_non_negative_index("cvec", "N", N);
       current_statement__ = 121;
@@ -2658,17 +2576,6 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       new (&cvec)
         Eigen::Map<Eigen::Matrix<std::complex<double>,-1,1>>(cvec_data__.data(),
         N);
-      {
-        std::vector<std::complex<local_scalar_t__>> cvec_flat__;
-        current_statement__ = 121;
-        cvec_flat__ = context__.vals_c("cvec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
-            "assigning variable cvec", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 122;
       stan::math::validate_non_negative_index("crowvec", "N", N);
       current_statement__ = 123;
@@ -2681,24 +2588,11 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       new (&crowvec)
         Eigen::Map<Eigen::Matrix<std::complex<double>,1,-1>>(crowvec_data__.data(),
         N);
-      {
-        std::vector<std::complex<local_scalar_t__>> crowvec_flat__;
-        current_statement__ = 123;
-        crowvec_flat__ = context__.vals_c("crowvec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
-            "assigning variable crowvec", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 124;
       context__.validate_dims("data initialization", "z", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
       z = std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 124;
-      z = context__.vals_c("z")[(1 - 1)];
       current_statement__ = 125;
       stan::math::validate_non_negative_index("mat", "N", N);
       current_statement__ = 126;
@@ -2710,20 +2604,6 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
                      std::numeric_limits<double>::quiet_NaN());
       new (&mat) Eigen::Map<Eigen::Matrix<double,-1,-1>>(mat_data__.data(),
         N, N);
-      {
-        std::vector<local_scalar_t__> mat_flat__;
-        current_statement__ = 127;
-        mat_flat__ = context__.vals_r("mat");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            stan::model::assign(mat, mat_flat__[(pos__ - 1)],
-              "assigning variable mat", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
       current_statement__ = 128;
       stan::math::validate_non_negative_index("vec", "N", N);
       current_statement__ = 129;
@@ -2732,17 +2612,6 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
       vec_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                      std::numeric_limits<double>::quiet_NaN());
       new (&vec) Eigen::Map<Eigen::Matrix<double,-1,1>>(vec_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> vec_flat__;
-        current_statement__ = 129;
-        vec_flat__ = context__.vals_r("vec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(vec, vec_flat__[(pos__ - 1)],
-            "assigning variable vec", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 130;
       stan::math::validate_non_negative_index("rowvec", "N", N);
       current_statement__ = 131;
@@ -2752,23 +2621,10 @@ class basic_operations_model final : public model_base_crtp<basic_operations_mod
                         std::numeric_limits<double>::quiet_NaN());
       new (&rowvec)
         Eigen::Map<Eigen::Matrix<double,1,-1>>(rowvec_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> rowvec_flat__;
-        current_statement__ = 131;
-        rowvec_flat__ = context__.vals_r("rowvec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
-            "assigning variable rowvec", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 132;
       context__.validate_dims("data initialization", "r", "double",
         std::vector<size_t>{});
       r = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 132;
-      r = context__.vals_r("r")[(1 - 1)];
       current_statement__ = 133;
       stan::math::validate_non_negative_index("gq_c_matrix", "N", N);
       current_statement__ = 134;
@@ -3839,8 +3695,6 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 146;
-      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 147;
       stan::math::validate_non_negative_index("cmat", "N", N);
       current_statement__ = 148;
@@ -3856,20 +3710,6 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       new (&cmat)
         Eigen::Map<Eigen::Matrix<std::complex<double>,-1,-1>>(cmat_data__.data(),
         N, N);
-      {
-        std::vector<std::complex<local_scalar_t__>> cmat_flat__;
-        current_statement__ = 149;
-        cmat_flat__ = context__.vals_c("cmat");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            stan::model::assign(cmat, cmat_flat__[(pos__ - 1)],
-              "assigning variable cmat", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
       current_statement__ = 150;
       stan::math::validate_non_negative_index("cvec", "N", N);
       current_statement__ = 151;
@@ -3882,17 +3722,6 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       new (&cvec)
         Eigen::Map<Eigen::Matrix<std::complex<double>,-1,1>>(cvec_data__.data(),
         N);
-      {
-        std::vector<std::complex<local_scalar_t__>> cvec_flat__;
-        current_statement__ = 151;
-        cvec_flat__ = context__.vals_c("cvec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(cvec, cvec_flat__[(pos__ - 1)],
-            "assigning variable cvec", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 152;
       stan::math::validate_non_negative_index("crowvec", "N", N);
       current_statement__ = 153;
@@ -3905,24 +3734,11 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       new (&crowvec)
         Eigen::Map<Eigen::Matrix<std::complex<double>,1,-1>>(crowvec_data__.data(),
         N);
-      {
-        std::vector<std::complex<local_scalar_t__>> crowvec_flat__;
-        current_statement__ = 153;
-        crowvec_flat__ = context__.vals_c("crowvec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(crowvec, crowvec_flat__[(pos__ - 1)],
-            "assigning variable crowvec", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 154;
       context__.validate_dims("data initialization", "z", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
       z = std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 154;
-      z = context__.vals_c("z")[(1 - 1)];
       current_statement__ = 155;
       stan::math::validate_non_negative_index("mat", "N", N);
       current_statement__ = 156;
@@ -3934,20 +3750,6 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
                      std::numeric_limits<double>::quiet_NaN());
       new (&mat) Eigen::Map<Eigen::Matrix<double,-1,-1>>(mat_data__.data(),
         N, N);
-      {
-        std::vector<local_scalar_t__> mat_flat__;
-        current_statement__ = 157;
-        mat_flat__ = context__.vals_r("mat");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            stan::model::assign(mat, mat_flat__[(pos__ - 1)],
-              "assigning variable mat", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
       current_statement__ = 158;
       stan::math::validate_non_negative_index("vec", "N", N);
       current_statement__ = 159;
@@ -3956,17 +3758,6 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
       vec_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                      std::numeric_limits<double>::quiet_NaN());
       new (&vec) Eigen::Map<Eigen::Matrix<double,-1,1>>(vec_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> vec_flat__;
-        current_statement__ = 159;
-        vec_flat__ = context__.vals_r("vec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(vec, vec_flat__[(pos__ - 1)],
-            "assigning variable vec", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 160;
       stan::math::validate_non_negative_index("rowvec", "N", N);
       current_statement__ = 161;
@@ -3976,23 +3767,10 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
                         std::numeric_limits<double>::quiet_NaN());
       new (&rowvec)
         Eigen::Map<Eigen::Matrix<double,1,-1>>(rowvec_data__.data(), N);
-      {
-        std::vector<local_scalar_t__> rowvec_flat__;
-        current_statement__ = 161;
-        rowvec_flat__ = context__.vals_r("rowvec");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(rowvec, rowvec_flat__[(pos__ - 1)],
-            "assigning variable rowvec", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 162;
       context__.validate_dims("data initialization", "r", "double",
         std::vector<size_t>{});
       r = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 162;
-      r = context__.vals_r("r")[(1 - 1)];
       current_statement__ = 163;
       stan::math::validate_non_negative_index("cvmat", "N", N);
       current_statement__ = 164;
@@ -4059,42 +3837,23 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     (void) function__;
     try {
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cvmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 1;
-      cvmat = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 2;
-      cvvec = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> cvrowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 3;
-      cvrowvec = in__.template read<
-                   Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       std::complex<local_scalar_t__> zv =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      current_statement__ = 4;
-      zv = in__.template read<std::complex<local_scalar_t__>>();
+        in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__,-1,-1> vmat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      current_statement__ = 5;
-      vmat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       Eigen::Matrix<local_scalar_t__,-1,1> vvec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 6;
-      vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       Eigen::Matrix<local_scalar_t__,1,-1> vrowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 7;
-      vrowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ v = DUMMY_VAR__;
-      current_statement__ = 8;
-      v = in__.template read<local_scalar_t__>();
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      local_scalar_t__ v = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -4688,42 +4447,23 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     (void) function__;
     try {
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cvmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 1;
-      cvmat = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 2;
-      cvvec = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> cvrowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 3;
-      cvrowvec = in__.template read<
-                   Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       std::complex<local_scalar_t__> zv =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      current_statement__ = 4;
-      zv = in__.template read<std::complex<local_scalar_t__>>();
+        in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__,-1,-1> vmat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
-      current_statement__ = 5;
-      vmat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       Eigen::Matrix<local_scalar_t__,-1,1> vvec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 6;
-      vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       Eigen::Matrix<local_scalar_t__,1,-1> vrowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
-      current_statement__ = 7;
-      vrowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ v = DUMMY_VAR__;
-      current_statement__ = 8;
-      v = in__.template read<local_scalar_t__>();
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      local_scalar_t__ v = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -5328,49 +5068,23 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     (void) function__;
     try {
       Eigen::Matrix<std::complex<double>,-1,-1> cvmat =
-        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 1;
-      cvmat = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       Eigen::Matrix<std::complex<double>,-1,1> cvvec =
-        Eigen::Matrix<std::complex<double>,-1,1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 2;
-      cvvec = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       Eigen::Matrix<std::complex<double>,1,-1> cvrowvec =
-        Eigen::Matrix<std::complex<double>,1,-1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 3;
-      cvrowvec = in__.template read<
-                   Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       std::complex<double> zv =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 4;
-      zv = in__.template read<std::complex<local_scalar_t__>>();
+        in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<double,-1,-1> vmat =
-        Eigen::Matrix<double,-1,-1>::Constant(N, N,
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 5;
-      vmat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       Eigen::Matrix<double,-1,1> vvec =
-        Eigen::Matrix<double,-1,1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 6;
-      vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       Eigen::Matrix<double,1,-1> vrowvec =
-        Eigen::Matrix<double,1,-1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 7;
-      vrowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      double v = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 8;
-      v = in__.template read<local_scalar_t__>();
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      double v = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<double>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
@@ -6584,15 +6298,11 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 1;
-      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 2;
       context__.validate_dims("data initialization", "z", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
       z = std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 2;
-      z = context__.vals_c("z")[(1 - 1)];
       current_statement__ = 3;
       stan::math::validate_non_negative_index("z1", "N", N);
       current_statement__ = 4;
@@ -6605,17 +6315,6 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       new (&z1)
         Eigen::Map<Eigen::Matrix<std::complex<double>,-1,1>>(z1_data__.data(),
         N);
-      {
-        std::vector<std::complex<local_scalar_t__>> z1_flat__;
-        current_statement__ = 4;
-        z1_flat__ = context__.vals_c("z1");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(z1, z1_flat__[(pos__ - 1)],
-            "assigning variable z1", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 5;
       stan::math::validate_non_negative_index("z2", "N", N);
       current_statement__ = 6;
@@ -6628,17 +6327,6 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       new (&z2)
         Eigen::Map<Eigen::Matrix<std::complex<double>,1,-1>>(z2_data__.data(),
         N);
-      {
-        std::vector<std::complex<local_scalar_t__>> z2_flat__;
-        current_statement__ = 6;
-        z2_flat__ = context__.vals_c("z2");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          stan::model::assign(z2, z2_flat__[(pos__ - 1)],
-            "assigning variable z2", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 7;
       stan::math::validate_non_negative_index("z3", "N", N);
       current_statement__ = 8;
@@ -6654,26 +6342,10 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       new (&z3)
         Eigen::Map<Eigen::Matrix<std::complex<double>,-1,-1>>(z3_data__.data(),
         N, N);
-      {
-        std::vector<std::complex<local_scalar_t__>> z3_flat__;
-        current_statement__ = 9;
-        z3_flat__ = context__.vals_c("z3");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            stan::model::assign(z3, z3_flat__[(pos__ - 1)],
-              "assigning variable z3", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
       current_statement__ = 10;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
-      current_statement__ = 10;
-      M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 11;
       stan::math::validate_non_negative_index("z4", "M", M);
       current_statement__ = 12;
@@ -6682,17 +6354,6 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       z4 = std::vector<std::complex<double>>(M,
              std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                std::numeric_limits<double>::quiet_NaN()));
-      {
-        std::vector<std::complex<local_scalar_t__>> z4_flat__;
-        current_statement__ = 12;
-        z4_flat__ = context__.vals_c("z4");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          stan::model::assign(z4, z4_flat__[(pos__ - 1)],
-            "assigning variable z4", stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 13;
       stan::math::validate_non_negative_index("z5", "M", M);
       current_statement__ = 14;
@@ -6705,20 +6366,6 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
              Eigen::Matrix<std::complex<double>,-1,1>::Constant(N,
                std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                  std::numeric_limits<double>::quiet_NaN())));
-      {
-        std::vector<std::complex<local_scalar_t__>> z5_flat__;
-        current_statement__ = 15;
-        z5_flat__ = context__.vals_c("z5");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            stan::model::assign(z5, z5_flat__[(pos__ - 1)],
-              "assigning variable z5", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
       current_statement__ = 16;
       stan::math::validate_non_negative_index("z6", "M", M);
       current_statement__ = 17;
@@ -6731,20 +6378,6 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
              Eigen::Matrix<std::complex<double>,1,-1>::Constant(N,
                std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                  std::numeric_limits<double>::quiet_NaN())));
-      {
-        std::vector<std::complex<local_scalar_t__>> z6_flat__;
-        current_statement__ = 18;
-        z6_flat__ = context__.vals_c("z6");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            stan::model::assign(z6, z6_flat__[(pos__ - 1)],
-              "assigning variable z6", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
       current_statement__ = 19;
       stan::math::validate_non_negative_index("z7", "M", M);
       current_statement__ = 20;
@@ -6759,23 +6392,6 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
              Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
                std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                  std::numeric_limits<double>::quiet_NaN())));
-      {
-        std::vector<std::complex<local_scalar_t__>> z7_flat__;
-        current_statement__ = 22;
-        z7_flat__ = context__.vals_c("z7");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              stan::model::assign(z7, z7_flat__[(pos__ - 1)],
-                "assigning variable z7", stan::model::index_uni(sym3__),
-                stan::model::index_uni(sym2__),
-                stan::model::index_uni(sym1__));
-              pos__ = (pos__ + 1);
-            }
-          }
-        }
-      }
       current_statement__ = 23;
       stan::math::validate_non_negative_index("z8", "N", N);
       current_statement__ = 24;
@@ -6791,20 +6407,6 @@ class complex_data_model final : public model_base_crtp<complex_data_model> {
       new (&z8)
         Eigen::Map<Eigen::Matrix<std::complex<double>,-1,-1>>(z8_data__.data(),
         N, M);
-      {
-        std::vector<std::complex<local_scalar_t__>> z8_flat__;
-        current_statement__ = 25;
-        z8_flat__ = context__.vals_c("z8");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            stan::model::assign(z8, z8_flat__[(pos__ - 1)],
-              "assigning variable z8", stan::model::index_uni(sym2__),
-              stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7935,21 +7537,15 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       context__.validate_dims("data initialization", "d_i", "int",
         std::vector<size_t>{});
       d_i = std::numeric_limits<int>::min();
-      current_statement__ = 345;
-      d_i = context__.vals_i("d_i")[(1 - 1)];
       current_statement__ = 346;
       context__.validate_dims("data initialization", "d_r", "double",
         std::vector<size_t>{});
       d_r = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 346;
-      d_r = context__.vals_r("d_r")[(1 - 1)];
       current_statement__ = 347;
       context__.validate_dims("data initialization", "d_complex", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
       d_complex = std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
                     std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 347;
-      d_complex = context__.vals_c("d_complex")[(1 - 1)];
       current_statement__ = 348;
       context__.validate_dims("data initialization", "d_complex_array",
         "double",
@@ -7958,18 +7554,6 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                           std::complex<double>(std::numeric_limits<double>::quiet_NaN(
                                                  ),
                             std::numeric_limits<double>::quiet_NaN()));
-      {
-        std::vector<std::complex<local_scalar_t__>> d_complex_array_flat__;
-        current_statement__ = 348;
-        d_complex_array_flat__ = context__.vals_c("d_complex_array");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          stan::model::assign(d_complex_array, d_complex_array_flat__[(pos__
-            - 1)], "assigning variable d_complex_array",
-            stan::model::index_uni(sym1__));
-          pos__ = (pos__ + 1);
-        }
-      }
       current_statement__ = 349;
       context__.validate_dims("data initialization", "d_complex_array_2d",
         "double",
@@ -7980,21 +7564,6 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                                std::complex<double>(std::numeric_limits<double>::quiet_NaN(
                                                       ),
                                  std::numeric_limits<double>::quiet_NaN())));
-      {
-        std::vector<std::complex<local_scalar_t__>> d_complex_array_2d_flat__;
-        current_statement__ = 349;
-        d_complex_array_2d_flat__ = context__.vals_c("d_complex_array_2d");
-        pos__ = 1;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            stan::model::assign(d_complex_array_2d,
-              d_complex_array_2d_flat__[(pos__ - 1)],
-              "assigning variable d_complex_array_2d",
-              stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
       current_statement__ = 350;
       td_i = std::numeric_limits<int>::min();
       current_statement__ = 350;
@@ -8208,29 +7777,15 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ p_r = DUMMY_VAR__;
-      current_statement__ = 1;
-      p_r = in__.template read<local_scalar_t__>();
+      local_scalar_t__ p_r = in__.template read<local_scalar_t__>();
       std::complex<local_scalar_t__> p_complex =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>();
+        in__.template read<std::complex<local_scalar_t__>>();
       std::vector<std::complex<local_scalar_t__>> p_complex_array =
-        std::vector<std::complex<local_scalar_t__>>(2,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 3;
-      p_complex_array = in__.template read<
-                          std::vector<std::complex<local_scalar_t__>>>(2);
+        in__.template read<std::vector<std::complex<local_scalar_t__>>>(2);
       std::vector<std::vector<std::complex<local_scalar_t__>>>
         p_complex_array_2d =
-        std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-          std::vector<std::complex<local_scalar_t__>>(3,
-            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
-      current_statement__ = 4;
-      p_complex_array_2d = in__.template read<
-                             std::vector<
-                               std::vector<std::complex<local_scalar_t__>>>>(2,
-                             3);
+        in__.template read<
+          std::vector<std::vector<std::complex<local_scalar_t__>>>>(2, 3);
       local_scalar_t__ tp_r = DUMMY_VAR__;
       current_statement__ = 5;
       tp_r = 1.1;
@@ -8469,29 +8024,15 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ p_r = DUMMY_VAR__;
-      current_statement__ = 1;
-      p_r = in__.template read<local_scalar_t__>();
+      local_scalar_t__ p_r = in__.template read<local_scalar_t__>();
       std::complex<local_scalar_t__> p_complex =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
-      current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>();
+        in__.template read<std::complex<local_scalar_t__>>();
       std::vector<std::complex<local_scalar_t__>> p_complex_array =
-        std::vector<std::complex<local_scalar_t__>>(2,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
-      current_statement__ = 3;
-      p_complex_array = in__.template read<
-                          std::vector<std::complex<local_scalar_t__>>>(2);
+        in__.template read<std::vector<std::complex<local_scalar_t__>>>(2);
       std::vector<std::vector<std::complex<local_scalar_t__>>>
         p_complex_array_2d =
-        std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-          std::vector<std::complex<local_scalar_t__>>(3,
-            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
-      current_statement__ = 4;
-      p_complex_array_2d = in__.template read<
-                             std::vector<
-                               std::vector<std::complex<local_scalar_t__>>>>(2,
-                             3);
+        in__.template read<
+          std::vector<std::vector<std::complex<local_scalar_t__>>>>(2, 3);
       local_scalar_t__ tp_r = DUMMY_VAR__;
       current_statement__ = 5;
       tp_r = 1.1;
@@ -8741,31 +8282,14 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      double p_r = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 1;
-      p_r = in__.template read<local_scalar_t__>();
+      double p_r = in__.template read<local_scalar_t__>();
       std::complex<double> p_complex =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>();
+        in__.template read<std::complex<local_scalar_t__>>();
       std::vector<std::complex<double>> p_complex_array =
-        std::vector<std::complex<double>>(2,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
-      current_statement__ = 3;
-      p_complex_array = in__.template read<
-                          std::vector<std::complex<local_scalar_t__>>>(2);
+        in__.template read<std::vector<std::complex<local_scalar_t__>>>(2);
       std::vector<std::vector<std::complex<double>>> p_complex_array_2d =
-        std::vector<std::vector<std::complex<double>>>(2,
-          std::vector<std::complex<double>>(3,
-            std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-              std::numeric_limits<double>::quiet_NaN())));
-      current_statement__ = 4;
-      p_complex_array_2d = in__.template read<
-                             std::vector<
-                               std::vector<std::complex<local_scalar_t__>>>>(2,
-                             3);
+        in__.template read<
+          std::vector<std::vector<std::complex<local_scalar_t__>>>>(2, 3);
       double tp_r = std::numeric_limits<double>::quiet_NaN();
       std::complex<double> tp_complex =
         std::complex<double>(std::numeric_limits<double>::quiet_NaN(),

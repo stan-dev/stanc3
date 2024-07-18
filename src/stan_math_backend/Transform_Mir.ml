@@ -770,9 +770,21 @@ let add_reads vars mkread stmts =
   let var_names = String.Map.of_alist_exn vars in
   let add_read_to_decl (Stmt.Fixed.{pattern; _} as stmt) =
     match pattern with
-    | Decl {decl_id; _} when Map.mem var_names decl_id ->
+    | Decl {decl_id; decl_adtype; decl_type; initialize; _}
+      when Map.mem var_names decl_id -> (
         let loc, out = Map.find_exn var_names decl_id in
-        stmt :: mkread (Stmt.Helpers.lvariable decl_id, loc, out)
+        let blah = mkread (Stmt.Helpers.lvariable decl_id, loc, out) in
+        match blah with
+        | [Stmt.Fixed.{pattern= Stmt.Fixed.Pattern.Assignment (_, _, e); _}] ->
+            [ { stmt with
+                pattern=
+                  Stmt.Fixed.Pattern.Decl
+                    { decl_id
+                    ; decl_adtype
+                    ; decl_type
+                    ; initialize
+                    ; assignment= Some e } } ]
+        | _ -> [stmt])
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
