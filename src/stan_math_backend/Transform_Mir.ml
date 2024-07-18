@@ -322,7 +322,8 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= true }
+              ; initialize= true
+              ; assignment= None }
             |> swrap)
           tuple_component_names tuple_types in
       let loop =
@@ -369,7 +370,8 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
-            ; initialize= true }
+            ; initialize= true
+            ; assignment= None }
           |> swrap
         , Assignment (Stmt.Helpers.lvariable decl_id_flat, flat_type, origin)
           |> swrap
@@ -473,7 +475,8 @@ let rec var_context_read
                 { decl_adtype= AutoDiffable
                 ; decl_id= variable_name
                 ; decl_type= Unsized array_type
-                ; initialize= true }
+                ; initialize= true
+                ; assignment= None }
               |> swrap_noloc
             ; Assignment
                 ( Stmt.Helpers.lvariable variable_name
@@ -484,7 +487,8 @@ let rec var_context_read
                 { decl_adtype= DataOnly
                 ; decl_id= variable_name ^ "pos__"
                 ; decl_type= Unsized UInt
-                ; initialize= true }
+                ; initialize= true
+                ; assignment= None }
               |> swrap_noloc
             ; Stmt.Fixed.Pattern.Assignment
                 ( Stmt.Helpers.lvariable (variable_name ^ "pos__")
@@ -512,7 +516,8 @@ let rec var_context_read
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= true }
+              ; initialize= true
+              ; assignment= None }
             |> swrap_noloc)
           tuple_component_names tuple_types in
       let loop =
@@ -559,7 +564,8 @@ let rec var_context_read
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
-            ; initialize= false }
+            ; initialize= false
+            ; assignment= None }
           |> swrap
         , Assignment
             ( Stmt.Helpers.lvariable decl_id_flat
@@ -872,7 +878,8 @@ let var_context_unconstrain_transform (decl_id, smeta, outvar) =
                 (SizedType.to_unsized st)
           ; decl_id
           ; decl_type= Type.Sized st
-          ; initialize= true }
+          ; initialize= true
+          ; assignment= None }
     ; meta= smeta }
   :: var_context_read (Stmt.Helpers.lvariable decl_id, smeta, st)
   @ param_serializer_write ~unconstrain:true (decl_id, outvar)
@@ -888,7 +895,8 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
                   (SizedType.to_unsized outvar.Program.out_constrained_st)
             ; decl_id
             ; decl_type= Type.Sized outvar.Program.out_constrained_st
-            ; initialize= true }
+            ; initialize= true
+            ; assignment= None }
       ; meta= smeta } in
   let rec read (lval, st) =
     match st with
@@ -1028,7 +1036,8 @@ let trans_prog (p : Program.Typed.t) =
         { decl_adtype= DataOnly
         ; decl_id= pos
         ; decl_type= Sized SInt
-        ; initialize= true }
+        ; initialize= true
+        ; assignment= None }
     ; Assignment (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty}) in
@@ -1145,7 +1154,8 @@ let trans_prog (p : Program.Typed.t) =
                   { decl_adtype= DataOnly
                   ; decl_id= vident
                   ; decl_type= Type.Unsized type_of_input_var
-                  ; initialize= true }
+                  ; initialize= true
+                  ; assignment= None }
             ; meta= Location_span.empty }
         ; { pattern=
               Assignment

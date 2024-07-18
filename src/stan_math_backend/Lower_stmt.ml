@@ -91,8 +91,10 @@ let rec initialize_value st adtype =
             (adtype : UnsizedType.autodifftype)]
 
 (*Initialize an object of a given size.*)
-let lower_assign_sized st adtype initialize =
-  if initialize then Some (initialize_value st adtype) else None
+let lower_assign_sized st adtype initialize assignment =
+  match assignment with
+  | Some e -> Some (lower_expr e)
+  | None -> if initialize then Some (initialize_value st adtype) else None
 
 let lower_unsized_decl name ut adtype =
   let type_ =
@@ -112,16 +114,17 @@ let lower_possibly_opencl_decl name st adtype =
   | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
   | true, _ -> TypeLiteral "matrix_cl<double>"
 
-let lower_sized_decl name st adtype initialize =
+let lower_sized_decl name st adtype initialize assignment =
   let type_ = lower_possibly_opencl_decl name st adtype in
   let init =
-    lower_assign_sized st adtype initialize
+    lower_assign_sized st adtype initialize assignment
     |> Option.value_map ~default:Uninitialized ~f:(fun i -> Assignment i) in
   make_variable_defn ~type_ ~name ~init ()
 
-let lower_decl vident pst adtype initialize =
+let lower_decl vident pst adtype initialize assignment =
   match pst with
-  | Type.Sized st -> VariableDefn (lower_sized_decl vident st adtype initialize)
+  | Type.Sized st ->
+      VariableDefn (lower_sized_decl vident st adtype initialize assignment)
   | Unsized ut -> VariableDefn (lower_unsized_decl vident ut adtype)
 
 let lower_profile name body =
@@ -320,8 +323,8 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | Return e -> [Return (Option.map ~f:lower_expr e)]
   | Block ls -> [Stmts.block (lower_statements ls)]
   | SList ls -> lower_statements ls
-  | Decl {decl_adtype; decl_id; decl_type; initialize; _} ->
-      [lower_decl decl_id decl_type decl_adtype initialize]
+  | Decl {decl_adtype; decl_id; decl_type; initialize; assignment} ->
+      [lower_decl decl_id decl_type decl_adtype initialize assignment]
   | Profile (name, ls) -> [lower_profile name (lower_statements ls)]
 
 and lower_statements = List.concat_map ~f:lower_statement
@@ -333,7 +336,7 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly false)
+         DataOnly false None)
     |> print_endline;
     [%expect {| |}]
 
@@ -343,7 +346,7 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly true)
+         DataOnly true None)
     |> print_endline;
     [%expect
       {|

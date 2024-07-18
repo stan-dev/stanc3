@@ -11734,8 +11734,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         for (int i = 1; i <= M; ++i) {
           int f = std::numeric_limits<int>::min();
           int inline_first_capture_return_sym10__;
-          int inline_first_capture_early_ret_check_sym12__;
-          inline_first_capture_early_ret_check_sym12__ = 0;
+          int inline_first_capture_early_ret_check_sym12__ = 0;
           for (int inline_first_capture_iterator_sym13__ = 1; inline_first_capture_iterator_sym13__
                <= 1; ++inline_first_capture_iterator_sym13__) {
             for (int inline_first_capture_k_sym11__ = 1; inline_first_capture_k_sym11__
@@ -15532,7 +15531,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
             inline_summer_inline_do_something_return_sym4___sym18__;
           int
             inline_summer_inline_do_something_early_ret_check_sym5___sym19__ =
-            std::numeric_limits<int>::min();
+            0;
           for (int
                  inline_summer_inline_do_something_iterator_sym6___sym20__ =
                  1; inline_summer_inline_do_something_iterator_sym6___sym20__
@@ -15602,7 +15601,7 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
             inline_summer_inline_do_something_return_sym4___sym10__;
           int
             inline_summer_inline_do_something_early_ret_check_sym5___sym11__ =
-            std::numeric_limits<int>::min();
+            0;
           for (int
                  inline_summer_inline_do_something_iterator_sym6___sym12__ =
                  1; inline_summer_inline_do_something_iterator_sym6___sym12__
@@ -16848,8 +16847,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,1>
         inline_multi_ret_fun_return_sym15__;
-      int inline_multi_ret_fun_early_ret_check_sym17__ =
-        std::numeric_limits<int>::min();
+      int inline_multi_ret_fun_early_ret_check_sym17__ = 0;
       for (int inline_multi_ret_fun_iterator_sym18__ = 1; inline_multi_ret_fun_iterator_sym18__
            <= 1; ++inline_multi_ret_fun_iterator_sym18__) {
         Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_B_sym16__ =
@@ -16924,8 +16922,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
                                                               )));
       stan::math::var_value<Eigen::Matrix<double,-1,1>>
         inline_multi_ret_fun_return_sym9__;
-      int inline_multi_ret_fun_early_ret_check_sym11__ =
-        std::numeric_limits<int>::min();
+      int inline_multi_ret_fun_early_ret_check_sym11__ = 0;
       for (int inline_multi_ret_fun_iterator_sym12__ = 1; inline_multi_ret_fun_iterator_sym12__
            <= 1; ++inline_multi_ret_fun_iterator_sym12__) {
         stan::math::var_value<Eigen::Matrix<double,-1,1>>
@@ -17017,8 +17014,7 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
       stan::model::assign(tp_single_ret_vec, p_single_ret_vec,
         "assigning variable tp_single_ret_vec");
       Eigen::Matrix<double,-1,1> inline_multi_ret_fun_return_sym3__;
-      int inline_multi_ret_fun_early_ret_check_sym5__ =
-        std::numeric_limits<int>::min();
+      int inline_multi_ret_fun_early_ret_check_sym5__ = 0;
       for (int inline_multi_ret_fun_iterator_sym6__ = 1; inline_multi_ret_fun_iterator_sym6__
            <= 1; ++inline_multi_ret_fun_iterator_sym6__) {
         Eigen::Matrix<local_scalar_t__,-1,1> inline_multi_ret_fun_B_sym4__ =
@@ -20104,8 +20100,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         for (int i = 1; i <= M; ++i) {
           int f = std::numeric_limits<int>::min();
           int inline_first_capture_return_sym16__;
-          int inline_first_capture_early_ret_check_sym18__;
-          inline_first_capture_early_ret_check_sym18__ = 0;
+          int inline_first_capture_early_ret_check_sym18__ = 0;
           for (int inline_first_capture_iterator_sym19__ = 1; inline_first_capture_iterator_sym19__
                <= 1; ++inline_first_capture_iterator_sym19__) {
             for (int inline_first_capture_k_sym17__ = 1; inline_first_capture_k_sym17__
@@ -25339,8 +25334,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           lp_accum__.add(3);
         }
         int inline_rfun_return_sym29__;
-        int inline_rfun_early_ret_check_sym30__ =
-          std::numeric_limits<int>::min();
+        int inline_rfun_early_ret_check_sym30__ = 0;
         for (int inline_rfun_iterator_sym31__ = 1; inline_rfun_iterator_sym31__
              <= 1; ++inline_rfun_iterator_sym31__) {
           {
@@ -25355,8 +25349,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           *(pstream__) << std::endl;
         }
         int inline_rfun_return_sym32__;
-        int inline_rfun_early_ret_check_sym33__ =
-          std::numeric_limits<int>::min();
+        int inline_rfun_early_ret_check_sym33__ = 0;
         for (int inline_rfun_iterator_sym34__ = 1; inline_rfun_iterator_sym34__
              <= 1; ++inline_rfun_iterator_sym34__) {
           {
@@ -25375,8 +25368,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         int inline_rfun_return_sym35__;
         int inline_rfun_return_sym38__;
-        int inline_rfun_early_ret_check_sym36__ =
-          std::numeric_limits<int>::min();
+        int inline_rfun_early_ret_check_sym36__ = 0;
         for (int inline_rfun_iterator_sym37__ = 1; inline_rfun_iterator_sym37__
              <= 1; ++inline_rfun_iterator_sym37__) {
           {
@@ -25386,8 +25378,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           inline_rfun_return_sym35__ = 9;
           break;
         }
-        int inline_rfun_early_ret_check_sym39__ =
-          std::numeric_limits<int>::min();
+        int inline_rfun_early_ret_check_sym39__ = 0;
         for (int inline_rfun_iterator_sym40__ = 1; inline_rfun_iterator_sym40__
              <= 1; ++inline_rfun_iterator_sym40__) {
           {
@@ -25401,8 +25392,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
              inline_rfun_return_sym38__; ++i) {
           {
             int inline_rfun_return_sym41__;
-            int inline_rfun_early_ret_check_sym42__ =
-              std::numeric_limits<int>::min();
+            int inline_rfun_early_ret_check_sym42__ = 0;
             for (int inline_rfun_iterator_sym43__ = 1; inline_rfun_iterator_sym43__
                  <= 1; ++inline_rfun_iterator_sym43__) {
               {
@@ -25418,8 +25408,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               lp_accum__.add(3);
             }
           }
-          int inline_rfun_early_ret_check_sym39__ =
-            std::numeric_limits<int>::min();
+          int inline_rfun_early_ret_check_sym39__ = 0;
           for (int inline_rfun_iterator_sym40__ = 1; inline_rfun_iterator_sym40__
                <= 1; ++inline_rfun_iterator_sym40__) {
             {
@@ -25672,8 +25661,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           lp_accum__.add(3);
         }
         int inline_rfun_return_sym2__;
-        int inline_rfun_early_ret_check_sym3__ =
-          std::numeric_limits<int>::min();
+        int inline_rfun_early_ret_check_sym3__ = 0;
         for (int inline_rfun_iterator_sym4__ = 1; inline_rfun_iterator_sym4__
              <= 1; ++inline_rfun_iterator_sym4__) {
           {
@@ -25688,8 +25676,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           *(pstream__) << std::endl;
         }
         int inline_rfun_return_sym5__;
-        int inline_rfun_early_ret_check_sym6__ =
-          std::numeric_limits<int>::min();
+        int inline_rfun_early_ret_check_sym6__ = 0;
         for (int inline_rfun_iterator_sym7__ = 1; inline_rfun_iterator_sym7__
              <= 1; ++inline_rfun_iterator_sym7__) {
           {
@@ -25708,8 +25695,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
         int inline_rfun_return_sym8__;
         int inline_rfun_return_sym11__;
-        int inline_rfun_early_ret_check_sym9__ =
-          std::numeric_limits<int>::min();
+        int inline_rfun_early_ret_check_sym9__ = 0;
         for (int inline_rfun_iterator_sym10__ = 1; inline_rfun_iterator_sym10__
              <= 1; ++inline_rfun_iterator_sym10__) {
           {
@@ -25719,8 +25705,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           inline_rfun_return_sym8__ = 9;
           break;
         }
-        int inline_rfun_early_ret_check_sym12__ =
-          std::numeric_limits<int>::min();
+        int inline_rfun_early_ret_check_sym12__ = 0;
         for (int inline_rfun_iterator_sym13__ = 1; inline_rfun_iterator_sym13__
              <= 1; ++inline_rfun_iterator_sym13__) {
           {
@@ -25734,8 +25719,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
              inline_rfun_return_sym11__; ++i) {
           {
             int inline_rfun_return_sym14__;
-            int inline_rfun_early_ret_check_sym15__ =
-              std::numeric_limits<int>::min();
+            int inline_rfun_early_ret_check_sym15__ = 0;
             for (int inline_rfun_iterator_sym16__ = 1; inline_rfun_iterator_sym16__
                  <= 1; ++inline_rfun_iterator_sym16__) {
               {
@@ -25751,8 +25735,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               lp_accum__.add(3);
             }
           }
-          int inline_rfun_early_ret_check_sym12__ =
-            std::numeric_limits<int>::min();
+          int inline_rfun_early_ret_check_sym12__ = 0;
           for (int inline_rfun_iterator_sym13__ = 1; inline_rfun_iterator_sym13__
                <= 1; ++inline_rfun_iterator_sym13__) {
             {

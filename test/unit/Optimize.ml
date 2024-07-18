@@ -336,7 +336,7 @@ let%expect_test "list collapsing" =
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id inline_g_return_sym2__)
-          (decl_type (Sized SReal)) (initialize false)))
+          (decl_type (Sized SReal)) (initialize false) (assignment ())))
         (meta <opaque>))
        ((pattern
          (Block
@@ -434,8 +434,7 @@ let%expect_test "recursive functions" =
       log_prob {
         {
           int inline_fib_return_sym1__;
-          data int inline_fib_early_ret_check_sym2__;
-          inline_fib_early_ret_check_sym2__ = 0;
+          data int inline_fib_early_ret_check_sym2__ = 0;
           for(inline_fib_iterator_sym3__ in 1:1) {
             if((5 == 0)) ; else {
 
@@ -911,8 +910,7 @@ let%expect_test "inline function multiple returns " =
       log_prob {
         {
           int inline_f_return_sym1__;
-          data int inline_f_early_ret_check_sym2__;
-          inline_f_early_ret_check_sym2__ = 0;
+          data int inline_f_early_ret_check_sym2__ = 0;
           for(inline_f_iterator_sym3__ in 1:1) {
             if(2) {
               FnPrint__("f");
@@ -3289,25 +3287,25 @@ let%expect_test "adlevel_optimization expressions" =
     {|
       (((pattern
          (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))
-          (initialize true)))
+          (initialize true) (assignment ())))
         (meta <opaque>))
        ((pattern
          (Block
           (((pattern
              (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))
-              (initialize true)))
+              (initialize true) (assignment ())))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type (Sized SReal))
-              (initialize true)))
+              (initialize true) (assignment ())))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SReal))
-              (initialize true)))
+              (initialize true) (assignment ())))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype DataOnly) (decl_id z_data)
-              (decl_type (Sized SReal)) (initialize true)))
+              (decl_type (Sized SReal)) (initialize true) (assignment ())))
             (meta <opaque>))
            ((pattern
              (IfElse

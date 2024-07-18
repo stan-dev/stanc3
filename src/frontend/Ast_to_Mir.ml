@@ -458,7 +458,9 @@ let create_decl_with_assign decl_id declc decl_type initial_value transform
             () } in
   let decl =
     Stmt.
-      { Fixed.pattern= Decl {decl_adtype; decl_id; decl_type; initialize= true}
+      { Fixed.pattern=
+          Decl
+            {decl_adtype; decl_id; decl_type; initialize= true; assignment= None}
       ; meta= smeta } in
   let rhs_assignment =
     Option.map
@@ -583,7 +585,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                 { decl_adtype= Expr.Typed.adlevel_of iteratee'
                 ; decl_id= loopvar.name
                 ; decl_type= Unsized decl_type
-                ; initialize= true } } in
+                ; initialize= true
+                ; assignment= None } } in
       let assignment var =
         Stmt.Fixed.
           { pattern=
@@ -629,7 +632,8 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
           { decl_adtype= rhs.emeta.ad_level
           ; decl_id= sym
           ; decl_type= Unsized rhs_type
-          ; initialize= false }
+          ; initialize= false
+          ; assignment= None }
     ; meta= rhs.emeta.loc } in
   let assign =
     { temp with
@@ -743,7 +747,8 @@ let rec trans_sizedtype_decl declc tr name st =
                 { decl_type= Sized SInt
                 ; decl_id
                 ; decl_adtype= DataOnly
-                ; initialize= true }
+                ; initialize= true
+                ; assignment= None }
           ; meta= e.meta.loc } in
         let assign =
           { Stmt.Fixed.pattern=

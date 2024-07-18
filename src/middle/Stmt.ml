@@ -25,7 +25,8 @@ module Fixed = struct
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
           ; decl_type: 'a Type.t
-          ; initialize: bool }
+          ; initialize: bool
+          ; assignment: 'a option }
     [@@deriving sexp, hash, map, fold, compare]
 
     and 'e lvalue = 'e lbase * 'e Index.t list
@@ -70,9 +71,15 @@ module Fixed = struct
       | Block stmts ->
           Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
       | SList stmts -> Fmt.(list pp_s ~sep:cut |> vbox) ppf stmts
-      | Decl {decl_adtype; decl_id; decl_type; _} ->
-          Fmt.pf ppf "@[<hov 2>%a%a@ %s;@]" UnsizedType.pp_autodifftype
-            decl_adtype (Type.pp pp_e) decl_type decl_id
+      (*TODO(Steve): Need a new one for decl with assign*)
+      | Decl {decl_adtype; decl_id; decl_type; assignment; _} -> (
+          match assignment with
+          | Some e ->
+              Fmt.pf ppf "@[<hov 2>%a%a@ %s = %a;@]" UnsizedType.pp_autodifftype
+                decl_adtype (Type.pp pp_e) decl_type decl_id pp_e e
+          | None ->
+              Fmt.pf ppf "@[<hov 2>%a%a@ %s;@]" UnsizedType.pp_autodifftype
+                decl_adtype (Type.pp pp_e) decl_type decl_id)
 
     include Foldable.Make2 (struct
       type nonrec ('a, 'b) t = ('a, 'b) t
@@ -143,14 +150,10 @@ module Helpers = struct
                   { decl_adtype= Expr.Typed.adlevel_of e
                   ; decl_id= sym
                   ; decl_type= Unsized (Expr.Typed.type_of e)
-                  ; initialize= true }
+                  ; initialize= true
+                  ; assignment= Some e }
             ; meta= e.meta.loc } in
-          let assign =
-            { decl with
-              Fixed.pattern=
-                Assignment ((LVariable sym, []), Expr.Typed.type_of e, e) }
-          in
-          loop es (Gensym.generate ()) (decl :: assign :: inits)
+          loop es (Gensym.generate ()) (decl :: inits)
             ({e with pattern= Var sym} :: vars) in
     let setups, exprs = loop (List.rev exprs) sym [] [] in
     (setups, exprs, reset)

@@ -41,7 +41,7 @@ let%expect_test "Prefix-Op-Example" =
          (Block
           (((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))
-              (initialize true)))
+              (initialize true) (assignment ())))
             (meta <opaque>))
            ((pattern
              (IfElse
@@ -81,7 +81,7 @@ let%expect_test "read data" =
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (initialize true)))
+        (initialize true) (assignment ())))
       (meta <opaque>))) |}]
 
 let%expect_test "read param" =
@@ -103,7 +103,7 @@ let%expect_test "read param" =
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (initialize true)))
+        (initialize true) (assignment ())))
       (meta <opaque>))) |}]
 
 let%expect_test "gen quant" =
@@ -148,7 +148,7 @@ let%expect_test "gen quant" =
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (initialize true)))
+        (initialize true) (assignment ())))
       (meta <opaque>))
      ((pattern
        (NRFunApp
@@ -178,7 +178,7 @@ let%expect_test "read data - constraint " =
         (SArray SReal
          ((pattern (Lit Int 5))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize true)))
+      (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -215,7 +215,7 @@ let%expect_test "read data - tuple" =
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            ((pattern (Lit Int 5))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (initialize true)))
+        (initialize true) (assignment ())))
       (meta <opaque>))
      ((pattern
        (For (loopvar sym1__)
