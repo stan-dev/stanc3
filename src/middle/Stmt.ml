@@ -151,9 +151,14 @@ module Helpers = struct
                   ; decl_id= sym
                   ; decl_type= Unsized (Expr.Typed.type_of e)
                   ; initialize= true
-                  ; assignment= Some e }
+                  ; assignment= None }
             ; meta= e.meta.loc } in
-          loop es (Gensym.generate ()) (decl :: inits)
+          let assign =
+            { decl with
+              Fixed.pattern=
+                Assignment ((LVariable sym, []), Expr.Typed.type_of e, e) }
+          in
+          loop es (Gensym.generate ()) (decl :: assign :: inits)
             ({e with pattern= Var sym} :: vars) in
     let setups, exprs = loop (List.rev exprs) sym [] [] in
     (setups, exprs, reset)

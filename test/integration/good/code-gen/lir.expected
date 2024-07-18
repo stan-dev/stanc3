@@ -17473,6 +17473,14 @@
               ((VariableDefn
                 ((static false) (constexpr false) (type_ (StdVector Int)) 
                  (name sym1__) (init Uninitialized)))
+               (Expression (Assign (Var current_statement__) (Literal 354)))
+               (Expression
+                (FunCall stan::model::assign ()
+                 ((Var sym1__)
+                  (FunCall stan::model::rvalue ()
+                   ((Var indices) (Literal "\"indices\"")
+                    (FunCall stan::model::index_min_max () ((Literal 1) (Literal 3)))))
+                  (Literal "\"assigning variable sym1__\""))))
                (Expression (Assign (Var current_statement__) (Literal 355)))
                (For
                 ((static false) (constexpr false) (type_ Int) (name sym3__)

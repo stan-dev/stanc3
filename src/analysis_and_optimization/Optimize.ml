@@ -203,15 +203,20 @@ let handle_early_returns (fname : string) opt_var stmt =
                 ; decl_id= returned
                 ; decl_type= Sized SInt
                 ; initialize= true
-                ; assignment=
-                    Some
-                      Expr.Fixed.
-                        { pattern= Lit (Int, "0")
-                        ; meta=
-                            Expr.Typed.Meta.
-                              { type_= UInt
-                              ; adlevel= DataOnly
-                              ; loc= Location_span.empty } } }
+                ; assignment= None }
+          ; meta= Location_span.empty }
+      ; Stmt.Fixed.
+          { pattern=
+              Assignment
+                ( Stmt.Helpers.lvariable returned
+                , UInt
+                , Expr.Fixed.
+                    { pattern= Lit (Int, "0")
+                    ; meta=
+                        Expr.Typed.Meta.
+                          { type_= UInt
+                          ; adlevel= DataOnly
+                          ; loc= Location_span.empty } } )
           ; meta= Location_span.empty }
       ; Stmt.Fixed.
           { pattern=

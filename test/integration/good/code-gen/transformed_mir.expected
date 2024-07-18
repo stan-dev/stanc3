@@ -4589,18 +4589,20 @@
          (Block
           (((pattern
              (Decl (decl_adtype DataOnly) (decl_id sym1__)
-              (decl_type (Unsized (UArray UInt))) (initialize true)
-              (assignment
-               (((pattern
-                  (Indexed
-                   ((pattern (Var indices))
-                    (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-                   ((Between
-                     ((pattern (Lit Int 1))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                     ((pattern (Lit Int 3))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                 (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))))
+              (decl_type (Unsized (UArray UInt))) (initialize true) (assignment ())))
+            (meta <opaque>))
+           ((pattern
+             (Assignment ((LVariable sym1__) ()) (UArray UInt)
+              ((pattern
+                (Indexed
+                 ((pattern (Var indices))
+                  (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+                 ((Between
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                   ((pattern (Lit Int 3))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+               (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
              (For (loopvar sym3__)

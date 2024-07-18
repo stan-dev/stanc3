@@ -11271,6 +11271,10 @@ class mother_model final : public model_base_crtp<mother_model> {
           "assigning variable indices");
         {
           std::vector<int> sym1__;
+          current_statement__ = 354;
+          stan::model::assign(sym1__,
+            stan::model::rvalue(indices, "indices",
+              stan::model::index_min_max(1, 3)), "assigning variable sym1__");
           current_statement__ = 355;
           for (int sym3__ = 1; sym3__ <= stan::math::size(sym1__); ++sym3__) {
             int i;
@@ -46998,7 +47002,13 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             Eigen::Matrix<local_scalar_t__,-1,1> sym2__;
+            current_statement__ = 78;
+            stan::model::assign(sym2__, stan::math::multiply(vector_mu, 4),
+              "assigning variable sym2__");
             Eigen::Matrix<local_scalar_t__,1,-1> sym1__;
+            current_statement__ = 79;
+            stan::model::assign(sym1__, stan::math::add(vector_sigma, 1),
+              "assigning variable sym1__");
             current_statement__ = 80;
             for (int sym4__ = 1; sym4__ <= stan::math::size(sym2__); ++sym4__) {
               current_statement__ = 80;
@@ -47507,7 +47517,13 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
             lp_accum__.add(stan::math::negative_infinity());
           } else {
             Eigen::Matrix<local_scalar_t__,-1,1> sym2__;
+            current_statement__ = 78;
+            stan::model::assign(sym2__, stan::math::multiply(vector_mu, 4),
+              "assigning variable sym2__");
             Eigen::Matrix<local_scalar_t__,1,-1> sym1__;
+            current_statement__ = 79;
+            stan::model::assign(sym1__, stan::math::add(vector_sigma, 1),
+              "assigning variable sym1__");
             current_statement__ = 80;
             for (int sym4__ = 1; sym4__ <= stan::math::size(sym2__); ++sym4__) {
               current_statement__ = 80;

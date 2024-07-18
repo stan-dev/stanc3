@@ -434,7 +434,8 @@ let%expect_test "recursive functions" =
       log_prob {
         {
           int inline_fib_return_sym1__;
-          data int inline_fib_early_ret_check_sym2__ = 0;
+          data int inline_fib_early_ret_check_sym2__;
+          inline_fib_early_ret_check_sym2__ = 0;
           for(inline_fib_iterator_sym3__ in 1:1) {
             if((5 == 0)) ; else {
 
@@ -910,7 +911,8 @@ let%expect_test "inline function multiple returns " =
       log_prob {
         {
           int inline_f_return_sym1__;
-          data int inline_f_early_ret_check_sym2__ = 0;
+          data int inline_f_early_ret_check_sym2__;
+          inline_f_early_ret_check_sym2__ = 0;
           for(inline_f_iterator_sym3__ in 1:1) {
             if(2) {
               FnPrint__("f");
