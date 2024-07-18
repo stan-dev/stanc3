@@ -844,6 +844,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<size_t>{});
       N_t = std::numeric_limits<int>::min();
       current_statement__ = 17;
+      N_t = context__.vals_i("N_t")[(1 - 1)];
+      current_statement__ = 17;
       stan::math::check_greater_or_equal(function__, "N_t", N_t, 0);
       current_statement__ = 18;
       stan::math::validate_non_negative_index("t", "N_t", N_t);
@@ -851,16 +853,22 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       context__.validate_dims("data initialization", "t", "double",
         std::vector<size_t>{static_cast<size_t>(N_t)});
       t = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 19;
+      t = context__.vals_r("t");
       current_statement__ = 20;
       context__.validate_dims("data initialization", "y0", "double",
         std::vector<size_t>{static_cast<size_t>(4)});
       y0 = std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 20;
+      y0 = context__.vals_r("y0");
       current_statement__ = 21;
       stan::math::validate_non_negative_index("stoi_hat", "N_t", N_t);
       current_statement__ = 22;
       context__.validate_dims("data initialization", "stoi_hat", "int",
         std::vector<size_t>{static_cast<size_t>(N_t)});
       stoi_hat = std::vector<int>(N_t, std::numeric_limits<int>::min());
+      current_statement__ = 22;
+      stoi_hat = context__.vals_i("stoi_hat");
       current_statement__ = 23;
       stan::math::validate_non_negative_index("B_hat", "N_t", N_t);
       current_statement__ = 24;
@@ -868,6 +876,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<size_t>{static_cast<size_t>(N_t)});
       B_hat = std::vector<double>(N_t,
                 std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 24;
+      B_hat = context__.vals_r("B_hat");
       current_statement__ = 25;
       t0 = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 25;
@@ -1959,6 +1969,8 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 16;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 16;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 17;
       stan::math::validate_non_negative_index("X", "N", N);
@@ -2640,11 +2652,15 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         std::vector<size_t>{});
       nind = std::numeric_limits<int>::min();
       current_statement__ = 37;
+      nind = context__.vals_i("nind")[(1 - 1)];
+      current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      current_statement__ = 38;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 2);
@@ -2680,6 +2696,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       context__.validate_dims("data initialization", "max_age", "int",
         std::vector<size_t>{});
       max_age = std::numeric_limits<int>::min();
+      current_statement__ = 42;
+      max_age = context__.vals_i("max_age")[(1 - 1)];
       current_statement__ = 42;
       stan::math::check_greater_or_equal(function__, "max_age", max_age, 1);
       current_statement__ = 43;
@@ -3708,11 +3726,15 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 39;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 39;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 40;
       context__.validate_dims("data initialization", "n_age", "int",
         std::vector<size_t>{});
       n_age = std::numeric_limits<int>::min();
+      current_statement__ = 40;
+      n_age = context__.vals_i("n_age")[(1 - 1)];
       current_statement__ = 40;
       stan::math::check_greater_or_equal(function__, "n_age", n_age, 0);
       current_statement__ = 41;
@@ -3720,17 +3742,23 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{});
       n_edu = std::numeric_limits<int>::min();
       current_statement__ = 41;
+      n_edu = context__.vals_i("n_edu")[(1 - 1)];
+      current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "n_edu", n_edu, 0);
       current_statement__ = 42;
       context__.validate_dims("data initialization", "n_region", "int",
         std::vector<size_t>{});
       n_region = std::numeric_limits<int>::min();
       current_statement__ = 42;
+      n_region = context__.vals_i("n_region")[(1 - 1)];
+      current_statement__ = 42;
       stan::math::check_greater_or_equal(function__, "n_region", n_region, 0);
       current_statement__ = 43;
       context__.validate_dims("data initialization", "n_state", "int",
         std::vector<size_t>{});
       n_state = std::numeric_limits<int>::min();
+      current_statement__ = 43;
+      n_state = context__.vals_i("n_state")[(1 - 1)];
       current_statement__ = 43;
       stan::math::check_greater_or_equal(function__, "n_state", n_state, 0);
       current_statement__ = 44;
@@ -3739,6 +3767,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       context__.validate_dims("data initialization", "female", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       female = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 45;
+      female = context__.vals_i("female");
       current_statement__ = 45;
       stan::math::check_greater_or_equal(function__, "female", female, 0);
       current_statement__ = 45;
@@ -3750,6 +3780,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       black = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 47;
+      black = context__.vals_i("black");
+      current_statement__ = 47;
       stan::math::check_greater_or_equal(function__, "black", black, 0);
       current_statement__ = 47;
       stan::math::check_less_or_equal(function__, "black", black, 1);
@@ -3759,6 +3791,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       context__.validate_dims("data initialization", "age", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       age = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 49;
+      age = context__.vals_i("age");
       current_statement__ = 49;
       stan::math::check_greater_or_equal(function__, "age", age, 0);
       current_statement__ = 49;
@@ -3770,6 +3804,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 51;
+      edu = context__.vals_i("edu");
+      current_statement__ = 51;
       stan::math::check_greater_or_equal(function__, "edu", edu, 0);
       current_statement__ = 51;
       stan::math::check_less_or_equal(function__, "edu", edu, n_edu);
@@ -3779,6 +3815,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       context__.validate_dims("data initialization", "region", "int",
         std::vector<size_t>{static_cast<size_t>(n_state)});
       region = std::vector<int>(n_state, std::numeric_limits<int>::min());
+      current_statement__ = 53;
+      region = context__.vals_i("region");
       current_statement__ = 53;
       stan::math::check_greater_or_equal(function__, "region", region, 0);
       current_statement__ = 53;
@@ -3790,6 +3828,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         std::vector<size_t>{static_cast<size_t>(N)});
       state = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 55;
+      state = context__.vals_i("state");
+      current_statement__ = 55;
       stan::math::check_greater_or_equal(function__, "state", state, 0);
       current_statement__ = 55;
       stan::math::check_less_or_equal(function__, "state", state, n_state);
@@ -3799,6 +3839,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 57;
+      y = context__.vals_i("y");
       current_statement__ = 57;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 57;
@@ -4814,6 +4856,8 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
       j = std::numeric_limits<int>::min();
+      current_statement__ = 1;
+      j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
@@ -5150,6 +5194,8 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
       j = std::numeric_limits<int>::min();
+      current_statement__ = 1;
+      j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
@@ -5490,6 +5536,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      current_statement__ = 9;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 9;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 10;
@@ -6003,6 +6051,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
         std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       current_statement__ = 6;
+      J = context__.vals_i("J")[(1 - 1)];
+      current_statement__ = 6;
       stan::math::check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 7;
       stan::math::validate_non_negative_index("y", "J", J);
@@ -6010,6 +6060,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       context__.validate_dims("data initialization", "y", "double",
         std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 8;
+      y = context__.vals_r("y");
       current_statement__ = 9;
       stan::math::validate_non_negative_index("sigma", "J", J);
       current_statement__ = 10;
@@ -6017,6 +6069,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
         std::vector<size_t>{static_cast<size_t>(J)});
       sigma = std::vector<double>(J,
                 std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 10;
+      sigma = context__.vals_r("sigma");
       current_statement__ = 10;
       stan::math::check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 11;
@@ -6495,17 +6549,23 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 22;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 22;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 23;
       context__.validate_dims("data initialization", "n_age", "int",
         std::vector<size_t>{});
       n_age = std::numeric_limits<int>::min();
       current_statement__ = 23;
+      n_age = context__.vals_i("n_age")[(1 - 1)];
+      current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "n_age", n_age, 0);
       current_statement__ = 24;
       context__.validate_dims("data initialization", "n_age_edu", "int",
         std::vector<size_t>{});
       n_age_edu = std::numeric_limits<int>::min();
+      current_statement__ = 24;
+      n_age_edu = context__.vals_i("n_age_edu")[(1 - 1)];
       current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "n_age_edu", n_age_edu,
         0);
@@ -6514,11 +6574,15 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{});
       n_edu = std::numeric_limits<int>::min();
       current_statement__ = 25;
+      n_edu = context__.vals_i("n_edu")[(1 - 1)];
+      current_statement__ = 25;
       stan::math::check_greater_or_equal(function__, "n_edu", n_edu, 0);
       current_statement__ = 26;
       context__.validate_dims("data initialization", "n_region_full", "int",
         std::vector<size_t>{});
       n_region_full = std::numeric_limits<int>::min();
+      current_statement__ = 26;
+      n_region_full = context__.vals_i("n_region_full")[(1 - 1)];
       current_statement__ = 26;
       stan::math::check_greater_or_equal(function__, "n_region_full",
         n_region_full, 0);
@@ -6527,6 +6591,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{});
       n_state = std::numeric_limits<int>::min();
       current_statement__ = 27;
+      n_state = context__.vals_i("n_state")[(1 - 1)];
+      current_statement__ = 27;
       stan::math::check_greater_or_equal(function__, "n_state", n_state, 0);
       current_statement__ = 28;
       stan::math::validate_non_negative_index("age", "N", N);
@@ -6534,6 +6600,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       context__.validate_dims("data initialization", "age", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       age = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 29;
+      age = context__.vals_i("age");
       current_statement__ = 29;
       stan::math::check_greater_or_equal(function__, "age", age, 0);
       current_statement__ = 29;
@@ -6544,6 +6612,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       context__.validate_dims("data initialization", "age_edu", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       age_edu = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 31;
+      age_edu = context__.vals_i("age_edu");
       current_statement__ = 31;
       stan::math::check_greater_or_equal(function__, "age_edu", age_edu, 0);
       current_statement__ = 31;
@@ -6580,6 +6650,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{static_cast<size_t>(N)});
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 35;
+      edu = context__.vals_i("edu");
+      current_statement__ = 35;
       stan::math::check_greater_or_equal(function__, "edu", edu, 0);
       current_statement__ = 35;
       stan::math::check_less_or_equal(function__, "edu", edu, n_edu);
@@ -6614,6 +6686,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         std::vector<size_t>{static_cast<size_t>(N)});
       region_full = std::vector<int>(N, std::numeric_limits<int>::min());
       current_statement__ = 39;
+      region_full = context__.vals_i("region_full");
+      current_statement__ = 39;
       stan::math::check_greater_or_equal(function__, "region_full",
         region_full, 0);
       current_statement__ = 39;
@@ -6625,6 +6699,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       context__.validate_dims("data initialization", "state", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       state = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 41;
+      state = context__.vals_i("state");
       current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "state", state, 0);
       current_statement__ = 41;
@@ -6655,6 +6731,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 45;
+      y = context__.vals_i("y");
       current_statement__ = 45;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 45;
@@ -7615,11 +7693,15 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 30;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 30;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 31;
       context__.validate_dims("data initialization", "N_edges", "int",
         std::vector<size_t>{});
       N_edges = std::numeric_limits<int>::min();
+      current_statement__ = 31;
+      N_edges = context__.vals_i("N_edges")[(1 - 1)];
       current_statement__ = 31;
       stan::math::check_greater_or_equal(function__, "N_edges", N_edges, 0);
       current_statement__ = 32;
@@ -7628,6 +7710,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       context__.validate_dims("data initialization", "node1", "int",
         std::vector<size_t>{static_cast<size_t>(N_edges)});
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
+      current_statement__ = 33;
+      node1 = context__.vals_i("node1");
       current_statement__ = 33;
       stan::math::check_greater_or_equal(function__, "node1", node1, 1);
       current_statement__ = 33;
@@ -7638,6 +7722,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       context__.validate_dims("data initialization", "node2", "int",
         std::vector<size_t>{static_cast<size_t>(N_edges)});
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
+      current_statement__ = 35;
+      node2 = context__.vals_i("node2");
       current_statement__ = 35;
       stan::math::check_greater_or_equal(function__, "node2", node2, 1);
       current_statement__ = 35;
@@ -8543,11 +8629,15 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         std::vector<size_t>{});
       nind = std::numeric_limits<int>::min();
       current_statement__ = 46;
+      nind = context__.vals_i("nind")[(1 - 1)];
+      current_statement__ = 46;
       stan::math::check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 47;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      current_statement__ = 47;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 47;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 2);
@@ -10159,11 +10249,15 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
       current_statement__ = 119;
+      M = context__.vals_i("M")[(1 - 1)];
+      current_statement__ = 119;
       stan::math::check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 120;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      current_statement__ = 120;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 120;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 0);
@@ -12025,17 +12119,23 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         std::vector<size_t>{});
       K = std::numeric_limits<int>::min();
       current_statement__ = 22;
+      K = context__.vals_i("K")[(1 - 1)];
+      current_statement__ = 22;
       stan::math::check_greater_or_equal(function__, "K", K, 2);
       current_statement__ = 23;
       context__.validate_dims("data initialization", "I", "int",
         std::vector<size_t>{});
       I = std::numeric_limits<int>::min();
       current_statement__ = 23;
+      I = context__.vals_i("I")[(1 - 1)];
+      current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "I", I, 1);
       current_statement__ = 24;
       context__.validate_dims("data initialization", "J", "int",
         std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
+      current_statement__ = 24;
+      J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "J", J, 1);
       current_statement__ = 25;
@@ -12755,11 +12855,15 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 12;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 12;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 13;
       context__.validate_dims("data initialization", "N_edges", "int",
         std::vector<size_t>{});
       N_edges = std::numeric_limits<int>::min();
+      current_statement__ = 13;
+      N_edges = context__.vals_i("N_edges")[(1 - 1)];
       current_statement__ = 13;
       stan::math::check_greater_or_equal(function__, "N_edges", N_edges, 0);
       current_statement__ = 14;
@@ -12768,6 +12872,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       context__.validate_dims("data initialization", "node1", "int",
         std::vector<size_t>{static_cast<size_t>(N_edges)});
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
+      current_statement__ = 15;
+      node1 = context__.vals_i("node1");
       current_statement__ = 15;
       stan::math::check_greater_or_equal(function__, "node1", node1, 1);
       current_statement__ = 15;
@@ -12779,6 +12885,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         std::vector<size_t>{static_cast<size_t>(N_edges)});
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       current_statement__ = 17;
+      node2 = context__.vals_i("node2");
+      current_statement__ = 17;
       stan::math::check_greater_or_equal(function__, "node2", node2, 1);
       current_statement__ = 17;
       stan::math::check_less_or_equal(function__, "node2", node2, N);
@@ -12788,6 +12896,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 19;
+      y = context__.vals_i("y");
       current_statement__ = 19;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 20;
@@ -13618,11 +13728,15 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         std::vector<size_t>{});
       nind = std::numeric_limits<int>::min();
       current_statement__ = 37;
+      nind = context__.vals_i("nind")[(1 - 1)];
+      current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      current_statement__ = 38;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 2);
@@ -13658,6 +13772,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       context__.validate_dims("data initialization", "max_age", "int",
         std::vector<size_t>{});
       max_age = std::numeric_limits<int>::min();
+      current_statement__ = 42;
+      max_age = context__.vals_i("max_age")[(1 - 1)];
       current_statement__ = 42;
       stan::math::check_greater_or_equal(function__, "max_age", max_age, 1);
       current_statement__ = 43;
@@ -15112,6 +15228,8 @@ class function_in_function_loops_model final : public model_base_crtp<function_i
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      current_statement__ = 12;
+      N = context__.vals_i("N")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -17423,6 +17541,8 @@ class inliner_same_names_model final : public model_base_crtp<inliner_same_names
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      current_statement__ = 6;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 7;
       stan::math::validate_non_negative_index("R", "N", N);
       current_statement__ = 8;
@@ -18471,11 +18591,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
       current_statement__ = 119;
+      M = context__.vals_i("M")[(1 - 1)];
+      current_statement__ = 119;
       stan::math::check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 120;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      current_statement__ = 120;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 120;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 0);
@@ -20215,6 +20339,8 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       context__.validate_dims("data initialization", "j", "int",
         std::vector<size_t>{});
       j = std::numeric_limits<int>::min();
+      current_statement__ = 1;
+      j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 2;
@@ -20922,6 +21048,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
         std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       current_statement__ = 3;
+      J = context__.vals_i("J")[(1 - 1)];
+      current_statement__ = 3;
       stan::math::check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 4;
       stan::math::validate_non_negative_index("y", "J", J);
@@ -20929,6 +21057,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       context__.validate_dims("data initialization", "y", "double",
         std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 5;
+      y = context__.vals_r("y");
       current_statement__ = 6;
       stan::math::validate_non_negative_index("theta", "J", J);
     } catch (const std::exception& e) {
@@ -21512,11 +21642,15 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
         std::vector<size_t>{});
       nind = std::numeric_limits<int>::min();
       current_statement__ = 37;
+      nind = context__.vals_i("nind")[(1 - 1)];
+      current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 38;
       context__.validate_dims("data initialization", "n_occasions", "int",
         std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      current_statement__ = 38;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "n_occasions",
         n_occasions, 2);
@@ -22517,6 +22651,8 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       context__.validate_dims("data initialization", "n", "int",
         std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
+      current_statement__ = 8;
+      n = context__.vals_i("n")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -23045,11 +23181,15 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         std::vector<size_t>{});
       R = std::numeric_limits<int>::min();
       current_statement__ = 34;
+      R = context__.vals_i("R")[(1 - 1)];
+      current_statement__ = 34;
       stan::math::check_greater_or_equal(function__, "R", R, 1);
       current_statement__ = 35;
       context__.validate_dims("data initialization", "T", "int",
         std::vector<size_t>{});
       T = std::numeric_limits<int>::min();
+      current_statement__ = 35;
+      T = context__.vals_i("T")[(1 - 1)];
       current_statement__ = 35;
       stan::math::check_greater_or_equal(function__, "T", T, 1);
       current_statement__ = 36;
@@ -23799,11 +23939,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       current_statement__ = 22;
+      J = context__.vals_i("J")[(1 - 1)];
+      current_statement__ = 22;
       stan::math::check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 23;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      current_statement__ = 23;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 24;
@@ -23812,6 +23956,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       context__.validate_dims("data initialization", "person", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       person = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 25;
+      person = context__.vals_i("person");
       current_statement__ = 25;
       stan::math::check_greater_or_equal(function__, "person", person, 1);
       current_statement__ = 25;
@@ -26999,11 +27145,15 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 17;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 17;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 18;
       context__.validate_dims("data initialization", "n_pair", "int",
         std::vector<size_t>{});
       n_pair = std::numeric_limits<int>::min();
+      current_statement__ = 18;
+      n_pair = context__.vals_i("n_pair")[(1 - 1)];
       current_statement__ = 18;
       stan::math::check_greater_or_equal(function__, "n_pair", n_pair, 0);
       current_statement__ = 19;
@@ -27012,6 +27162,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       context__.validate_dims("data initialization", "pair", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       pair = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 20;
+      pair = context__.vals_i("pair");
       current_statement__ = 20;
       stan::math::check_greater_or_equal(function__, "pair", pair, 1);
       current_statement__ = 20;
@@ -27737,10 +27889,14 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
       context__.validate_dims("data initialization", "idx", "int",
         std::vector<size_t>{static_cast<size_t>(10)});
       idx = std::vector<int>(10, std::numeric_limits<int>::min());
+      current_statement__ = 9;
+      idx = context__.vals_i("idx");
       current_statement__ = 10;
       context__.validate_dims("data initialization", "idy", "int",
         std::vector<size_t>{static_cast<size_t>(10)});
       idy = std::vector<int>(10, std::numeric_limits<int>::min());
+      current_statement__ = 10;
+      idy = context__.vals_i("idy");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -28587,6 +28743,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         std::vector<size_t>{});
       I = std::numeric_limits<int>::min();
       current_statement__ = 18;
+      I = context__.vals_i("I")[(1 - 1)];
+      current_statement__ = 18;
       stan::math::check_greater_or_equal(function__, "I", I, 0);
       current_statement__ = 19;
       stan::math::validate_non_negative_index("n", "I", I);
@@ -28595,6 +28753,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         std::vector<size_t>{static_cast<size_t>(I)});
       n = std::vector<int>(I, std::numeric_limits<int>::min());
       current_statement__ = 20;
+      n = context__.vals_i("n");
+      current_statement__ = 20;
       stan::math::check_greater_or_equal(function__, "n", n, 0);
       current_statement__ = 21;
       stan::math::validate_non_negative_index("N", "I", I);
@@ -28602,6 +28762,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{static_cast<size_t>(I)});
       N = std::vector<int>(I, std::numeric_limits<int>::min());
+      current_statement__ = 22;
+      N = context__.vals_i("N");
       current_statement__ = 22;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 23;

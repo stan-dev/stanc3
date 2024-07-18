@@ -52,6 +52,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
         std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       current_statement__ = 9;
+      J = context__.vals_i("J")[(1 - 1)];
+      current_statement__ = 9;
       stan::math::check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 10;
       stan::math::validate_non_negative_index("y", "J", J);
@@ -59,6 +61,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       context__.validate_dims("data initialization", "y", "double",
         std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 11;
+      y = context__.vals_r("y");
       current_statement__ = 12;
       stan::math::validate_non_negative_index("sigma", "J", J);
       current_statement__ = 13;
@@ -66,6 +70,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
         std::vector<size_t>{static_cast<size_t>(J)});
       sigma = std::vector<double>(J,
                 std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 13;
+      sigma = context__.vals_r("sigma");
       current_statement__ = 13;
       stan::math::check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 14;
@@ -542,6 +548,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       context__.validate_dims("data initialization", "good_model", "int",
         std::vector<size_t>{});
       good_model = std::numeric_limits<int>::min();
+      current_statement__ = 2;
+      good_model = context__.vals_i("good_model")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2348,50 +2356,74 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       context__.validate_dims("data initialization", "class", "double",
         std::vector<size_t>{});
       _stan_class = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 64;
+      _stan_class = context__.vals_r("class")[(1 - 1)];
       current_statement__ = 65;
       context__.validate_dims("data initialization", "compl", "double",
         std::vector<size_t>{});
       _stan_compl = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 65;
+      _stan_compl = context__.vals_r("compl")[(1 - 1)];
       current_statement__ = 66;
       context__.validate_dims("data initialization", "const", "double",
         std::vector<size_t>{});
       _stan_const = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 66;
+      _stan_const = context__.vals_r("const")[(1 - 1)];
       current_statement__ = 67;
       context__.validate_dims("data initialization", "constexpr", "double",
         std::vector<size_t>{});
       _stan_constexpr = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 67;
+      _stan_constexpr = context__.vals_r("constexpr")[(1 - 1)];
       current_statement__ = 68;
       context__.validate_dims("data initialization", "const_cast", "double",
         std::vector<size_t>{});
       _stan_const_cast = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 68;
+      _stan_const_cast = context__.vals_r("const_cast")[(1 - 1)];
       current_statement__ = 69;
       context__.validate_dims("data initialization", "decltype", "double",
         std::vector<size_t>{});
       _stan_decltype = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 69;
+      _stan_decltype = context__.vals_r("decltype")[(1 - 1)];
       current_statement__ = 70;
       context__.validate_dims("data initialization", "default", "double",
         std::vector<size_t>{});
       _stan_default = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 70;
+      _stan_default = context__.vals_r("default")[(1 - 1)];
       current_statement__ = 71;
       context__.validate_dims("data initialization", "delete", "double",
         std::vector<size_t>{});
       _stan_delete = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 71;
+      _stan_delete = context__.vals_r("delete")[(1 - 1)];
       current_statement__ = 72;
       context__.validate_dims("data initialization", "do", "double",
         std::vector<size_t>{});
       _stan_do = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 72;
+      _stan_do = context__.vals_r("do")[(1 - 1)];
       current_statement__ = 73;
       context__.validate_dims("data initialization", "double", "double",
         std::vector<size_t>{});
       _stan_double = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 73;
+      _stan_double = context__.vals_r("double")[(1 - 1)];
       current_statement__ = 74;
       context__.validate_dims("data initialization", "dynamic_cast",
         "double", std::vector<size_t>{});
       _stan_dynamic_cast = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 74;
+      _stan_dynamic_cast = context__.vals_r("dynamic_cast")[(1 - 1)];
       current_statement__ = 75;
       context__.validate_dims("data initialization", "enum", "double",
         std::vector<size_t>{});
       _stan_enum = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 75;
+      _stan_enum = context__.vals_r("enum")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -3401,6 +3433,8 @@ class data_only_functions_model final : public model_base_crtp<data_only_functio
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      current_statement__ = 8;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 9;
       stan::math::validate_non_negative_index("d", "N", N);
       current_statement__ = 10;
@@ -4609,6 +4643,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
         std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       current_statement__ = 9;
+      J = context__.vals_i("J")[(1 - 1)];
+      current_statement__ = 9;
       stan::math::check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 10;
       stan::math::validate_non_negative_index("y", "J", J);
@@ -4616,6 +4652,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       context__.validate_dims("data initialization", "y", "double",
         std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 11;
+      y = context__.vals_r("y");
       current_statement__ = 12;
       stan::math::validate_non_negative_index("sigma", "J", J);
       current_statement__ = 13;
@@ -4623,6 +4661,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
         std::vector<size_t>{static_cast<size_t>(J)});
       sigma = std::vector<double>(J,
                 std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 13;
+      sigma = context__.vals_r("sigma");
       current_statement__ = 13;
       stan::math::check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 14;
@@ -5612,10 +5652,14 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       context__.validate_dims("data initialization", "ub", "double",
         std::vector<size_t>{});
       ub = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 8;
+      ub = context__.vals_r("ub")[(1 - 1)];
       current_statement__ = 9;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      current_statement__ = 9;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 10;
       stan::math::validate_non_negative_index("b_vec_raw", "N", N);
       current_statement__ = 11;
@@ -10598,17 +10642,23 @@ class mother_model final : public model_base_crtp<mother_model> {
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 190;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 190;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 191;
       context__.validate_dims("data initialization", "M", "int",
         std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
       current_statement__ = 191;
+      M = context__.vals_i("M")[(1 - 1)];
+      current_statement__ = 191;
       stan::math::check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 192;
       context__.validate_dims("data initialization", "K", "int",
         std::vector<size_t>{});
       K = std::numeric_limits<int>::min();
+      current_statement__ = 192;
+      K = context__.vals_i("K")[(1 - 1)];
       current_statement__ = 192;
       stan::math::check_greater_or_equal(function__, "K", K, 0);
       current_statement__ = 192;
@@ -10619,6 +10669,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization", "d_int_1d_ar", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       d_int_1d_ar = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 194;
+      d_int_1d_ar = context__.vals_i("d_int_1d_ar");
       current_statement__ = 194;
       stan::math::check_less_or_equal(function__, "d_int_1d_ar", d_int_1d_ar,
         N);
@@ -10661,6 +10713,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         std::vector<size_t>{});
       J = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 199;
+      J = context__.vals_r("J")[(1 - 1)];
+      current_statement__ = 199;
       stan::math::check_greater_or_equal(function__, "J", J, -(2.0));
       current_statement__ = 199;
       stan::math::check_less_or_equal(function__, "J", J, 2.0);
@@ -10671,6 +10725,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         "double", std::vector<size_t>{static_cast<size_t>(N)});
       d_real_1d_ar = std::vector<double>(N,
                        std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 201;
+      d_real_1d_ar = context__.vals_r("d_real_1d_ar");
       current_statement__ = 202;
       stan::math::validate_non_negative_index("d_real_3d_ar", "N", N);
       current_statement__ = 203;
@@ -11079,12 +11135,16 @@ class mother_model final : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization", "d_int", "int",
         std::vector<size_t>{});
       d_int = std::numeric_limits<int>::min();
+      current_statement__ = 241;
+      d_int = context__.vals_i("d_int")[(1 - 1)];
       current_statement__ = 242;
       stan::math::validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 243;
       context__.validate_dims("data initialization", "d_int_array", "int",
         std::vector<size_t>{static_cast<size_t>(d_int)});
       d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
+      current_statement__ = 243;
+      d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 244;
       stan::math::validate_non_negative_index("d_int_array_2d", "d_int",
         d_int);
@@ -11142,6 +11202,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization", "d_real", "double",
         std::vector<size_t>{});
       d_real = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 248;
+      d_real = context__.vals_r("d_real")[(1 - 1)];
       current_statement__ = 249;
       stan::math::validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 250;
@@ -11149,6 +11211,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         "double", std::vector<size_t>{static_cast<size_t>(d_int)});
       d_real_array = std::vector<double>(d_int,
                        std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 250;
+      d_real_array = context__.vals_r("d_real_array");
       current_statement__ = 251;
       stan::math::validate_non_negative_index("d_real_array_2d", "d_int",
         d_int);
@@ -17225,43 +17289,61 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         std::vector<size_t>{});
       T = std::numeric_limits<int>::min();
       current_statement__ = 123;
+      T = context__.vals_i("T")[(1 - 1)];
+      current_statement__ = 123;
       stan::math::check_greater_or_equal(function__, "T", T, 1);
       current_statement__ = 124;
       context__.validate_dims("data initialization", "y0_d", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
       y0_d = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 124;
+      y0_d = context__.vals_r("y0_d");
       current_statement__ = 125;
       context__.validate_dims("data initialization", "t0", "double",
         std::vector<size_t>{});
       t0 = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 125;
+      t0 = context__.vals_r("t0")[(1 - 1)];
       current_statement__ = 126;
       stan::math::validate_non_negative_index("ts", "T", T);
       current_statement__ = 127;
       context__.validate_dims("data initialization", "ts", "double",
         std::vector<size_t>{static_cast<size_t>(T)});
       ts = std::vector<double>(T, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 127;
+      ts = context__.vals_r("ts");
       current_statement__ = 128;
       context__.validate_dims("data initialization", "theta_d", "double",
         std::vector<size_t>{static_cast<size_t>(1)});
       theta_d = std::vector<double>(1,
                   std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 128;
+      theta_d = context__.vals_r("theta_d");
       current_statement__ = 129;
       context__.validate_dims("data initialization", "x", "double",
         std::vector<size_t>{static_cast<size_t>(0)});
       x = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 129;
+      x = context__.vals_r("x");
       current_statement__ = 130;
       context__.validate_dims("data initialization", "x_int", "int",
         std::vector<size_t>{static_cast<size_t>(0)});
       x_int = std::vector<int>(0, std::numeric_limits<int>::min());
+      current_statement__ = 130;
+      x_int = context__.vals_i("x_int");
       current_statement__ = 131;
       context__.validate_dims("data initialization", "x_d_r", "double",
         std::vector<size_t>{static_cast<size_t>(0)});
       x_d_r = std::vector<double>(0,
                 std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 131;
+      x_d_r = context__.vals_r("x_d_r");
       current_statement__ = 132;
       context__.validate_dims("data initialization", "x_d_i", "int",
         std::vector<size_t>{static_cast<size_t>(0)});
       x_d_i = std::vector<int>(0, std::numeric_limits<int>::min());
+      current_statement__ = 132;
+      x_d_i = context__.vals_i("x_d_i");
       current_statement__ = 133;
       context__.validate_dims("data initialization", "shared_params_d",
         "double", std::vector<size_t>{static_cast<size_t>(3)});
@@ -19801,20 +19883,28 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      current_statement__ = 601;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 602;
       context__.validate_dims("data initialization", "id", "int",
         std::vector<size_t>{});
       id = std::numeric_limits<int>::min();
+      current_statement__ = 602;
+      id = context__.vals_i("id")[(1 - 1)];
       current_statement__ = 603;
       context__.validate_dims("data initialization", "rd", "double",
         std::vector<size_t>{});
       rd = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 603;
+      rd = context__.vals_r("rd")[(1 - 1)];
       current_statement__ = 604;
       stan::math::validate_non_negative_index("rad", "N", N);
       current_statement__ = 605;
       context__.validate_dims("data initialization", "rad", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       rad = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 605;
+      rad = context__.vals_r("rad");
       current_statement__ = 606;
       stan::math::validate_non_negative_index("vd", "N", N);
       current_statement__ = 607;
@@ -25370,6 +25460,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 18;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 18;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 19;
       stan::math::validate_non_negative_index("ts", "N", N);
@@ -25377,11 +25469,15 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       context__.validate_dims("data initialization", "ts", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       ts = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 20;
+      ts = context__.vals_r("ts");
       current_statement__ = 21;
       context__.validate_dims("data initialization", "y_init", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
       y_init = std::vector<double>(2,
                  std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 21;
+      y_init = context__.vals_r("y_init");
       current_statement__ = 22;
       stan::math::validate_non_negative_index("y", "N", N);
       current_statement__ = 23;
@@ -26278,11 +26374,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         std::vector<size_t>{});
       k = std::numeric_limits<int>::min();
       current_statement__ = 176;
+      k = context__.vals_i("k")[(1 - 1)];
+      current_statement__ = 176;
       stan::math::check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
       context__.validate_dims("data initialization", "n", "int",
         std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
+      current_statement__ = 177;
+      n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 177;
       stan::math::check_greater_or_equal(function__, "n", n, 0);
       current_statement__ = 178;
@@ -26384,20 +26484,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization", "y_vi_d", "int",
         std::vector<size_t>{static_cast<size_t>(n)});
       y_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
+      current_statement__ = 189;
+      y_vi_d = context__.vals_i("y_vi_d");
       current_statement__ = 190;
       stan::math::validate_non_negative_index("y2_vi_d", "n", n);
       current_statement__ = 191;
       context__.validate_dims("data initialization", "y2_vi_d", "int",
         std::vector<size_t>{static_cast<size_t>(n)});
       y2_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
+      current_statement__ = 191;
+      y2_vi_d = context__.vals_i("y2_vi_d");
       current_statement__ = 192;
       context__.validate_dims("data initialization", "y_s_d", "int",
         std::vector<size_t>{});
       y_s_d = std::numeric_limits<int>::min();
+      current_statement__ = 192;
+      y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
       current_statement__ = 193;
       context__.validate_dims("data initialization", "y_r_d", "double",
         std::vector<size_t>{});
       y_r_d = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 193;
+      y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
       current_statement__ = 194;
       k_td = std::numeric_limits<int>::min();
       current_statement__ = 195;
@@ -28951,10 +29059,14 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       context__.validate_dims("data initialization", "nt", "int",
         std::vector<size_t>{});
       nt = std::numeric_limits<int>::min();
+      current_statement__ = 3;
+      nt = context__.vals_i("nt")[(1 - 1)];
       current_statement__ = 4;
       context__.validate_dims("data initialization", "NS", "int",
         std::vector<size_t>{});
       NS = std::numeric_limits<int>::min();
+      current_statement__ = 4;
+      NS = context__.vals_i("NS")[(1 - 1)];
       current_statement__ = 5;
       stan::math::validate_non_negative_index("L_Omega", "nt", nt);
       current_statement__ = 6;
@@ -30579,10 +30691,14 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      current_statement__ = 4;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 5;
       context__.validate_dims("data initialization", "times", "int",
         std::vector<size_t>{});
       times = std::numeric_limits<int>::min();
+      current_statement__ = 5;
+      times = context__.vals_i("times")[(1 - 1)];
       current_statement__ = 6;
       stan::math::validate_non_negative_index("gamma", "times", times);
       current_statement__ = 7;
@@ -37190,12 +37306,16 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      current_statement__ = 67;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 68;
       stan::math::validate_non_negative_index("y1d", "N", N);
       current_statement__ = 69;
       context__.validate_dims("data initialization", "y1d", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       y1d = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 69;
+      y1d = context__.vals_r("y1d");
       current_statement__ = 70;
       stan::math::validate_non_negative_index("y2d", "N", N);
       current_statement__ = 71;
@@ -37400,6 +37520,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       context__.validate_dims("data initialization", "y9d", "double",
         std::vector<size_t>{});
       y9d = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 96;
+      y9d = context__.vals_r("y9d")[(1 - 1)];
       current_statement__ = 97;
       stan::math::validate_non_negative_index("y10d", "N", N);
       current_statement__ = 98;
@@ -37469,12 +37591,16 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       context__.validate_dims("data initialization", "y13d", "int",
         std::vector<size_t>{});
       y13d = std::numeric_limits<int>::min();
+      current_statement__ = 104;
+      y13d = context__.vals_i("y13d")[(1 - 1)];
       current_statement__ = 105;
       stan::math::validate_non_negative_index("y14d", "N", N);
       current_statement__ = 106;
       context__.validate_dims("data initialization", "y14d", "int",
         std::vector<size_t>{static_cast<size_t>(N)});
       y14d = std::vector<int>(N, std::numeric_limits<int>::min());
+      current_statement__ = 106;
+      y14d = context__.vals_i("y14d");
       current_statement__ = 107;
       stan::math::validate_non_negative_index("y15d", "N", N);
       current_statement__ = 108;
@@ -42226,6 +42352,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       context__.validate_dims("data initialization", "t", "int",
         std::vector<size_t>{});
       t = std::numeric_limits<int>::min();
+      current_statement__ = 7;
+      t = context__.vals_i("t")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -42749,17 +42877,23 @@ class transform_model final : public model_base_crtp<transform_model> {
         std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
       current_statement__ = 37;
+      n = context__.vals_i("n")[(1 - 1)];
+      current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "n", n, 1);
       current_statement__ = 38;
       context__.validate_dims("data initialization", "m", "int",
         std::vector<size_t>{});
       m = std::numeric_limits<int>::min();
       current_statement__ = 38;
+      m = context__.vals_i("m")[(1 - 1)];
+      current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "m", m, 1);
       current_statement__ = 39;
       context__.validate_dims("data initialization", "k", "int",
         std::vector<size_t>{});
       k = std::numeric_limits<int>::min();
+      current_statement__ = 39;
+      k = context__.vals_i("k")[(1 - 1)];
       current_statement__ = 39;
       stan::math::check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 40;
@@ -45693,10 +45827,14 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       context__.validate_dims("data initialization", "n", "int",
         std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
+      current_statement__ = 19;
+      n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 20;
       context__.validate_dims("data initialization", "x", "double",
         std::vector<size_t>{});
       x = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 20;
+      x = context__.vals_r("x")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -46991,6 +47129,8 @@ class variable_named_context_model final : public model_base_crtp<variable_named
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 4;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 4;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 5;
       stan::math::validate_non_negative_index("context", "N", N);
@@ -47482,15 +47622,21 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       current_statement__ = 87;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 87;
       stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 88;
       context__.validate_dims("data initialization", "L", "double",
         std::vector<size_t>{});
       L = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 88;
+      L = context__.vals_r("L")[(1 - 1)];
       current_statement__ = 89;
       context__.validate_dims("data initialization", "U", "double",
         std::vector<size_t>{});
       U = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 89;
+      U = context__.vals_r("U")[(1 - 1)];
       current_statement__ = 89;
       stan::math::check_greater_or_equal(function__, "U", U, L);
       current_statement__ = 90;
@@ -47499,6 +47645,8 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
       context__.validate_dims("data initialization", "y", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 91;
+      y = context__.vals_r("y");
       current_statement__ = 91;
       stan::math::check_greater_or_equal(function__, "y", y, L);
       current_statement__ = 91;

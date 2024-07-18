@@ -16209,6 +16209,11 @@
            (Expression (Assign (Var N) (FunCall std::numeric_limits<int>::min () ())))
            (Expression (Assign (Var current_statement__) (Literal 190)))
            (Expression
+            (Assign (Var N)
+             (Index (MethodCall (Var context__) vals_i () ((Literal "\"N\"")))
+              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
+           (Expression (Assign (Var current_statement__) (Literal 190)))
+           (Expression
             (FunCall stan::math::check_greater_or_equal ()
              ((Var function__) (Literal "\"N\"") (Var N) (Literal 0))))
            (Expression (Assign (Var current_statement__) (Literal 191)))
@@ -16219,6 +16224,11 @@
            (Expression (Assign (Var M) (FunCall std::numeric_limits<int>::min () ())))
            (Expression (Assign (Var current_statement__) (Literal 191)))
            (Expression
+            (Assign (Var M)
+             (Index (MethodCall (Var context__) vals_i () ((Literal "\"M\"")))
+              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
+           (Expression (Assign (Var current_statement__) (Literal 191)))
+           (Expression
             (FunCall stan::math::check_greater_or_equal ()
              ((Var function__) (Literal "\"M\"") (Var M) (Literal 0))))
            (Expression (Assign (Var current_statement__) (Literal 192)))
@@ -16227,6 +16237,11 @@
              ((Literal "\"data initialization\"") (Literal "\"K\"") (Literal "\"int\"")
               (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
            (Expression (Assign (Var K) (FunCall std::numeric_limits<int>::min () ())))
+           (Expression (Assign (Var current_statement__) (Literal 192)))
+           (Expression
+            (Assign (Var K)
+             (Index (MethodCall (Var context__) vals_i () ((Literal "\"K\"")))
+              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 192)))
            (Expression
             (FunCall stan::math::check_greater_or_equal ()
@@ -16251,6 +16266,10 @@
             (Assign (Var d_int_1d_ar)
              (Constructor (StdVector Int)
               ((Var N) (FunCall std::numeric_limits<int>::min () ())))))
+           (Expression (Assign (Var current_statement__) (Literal 194)))
+           (Expression
+            (Assign (Var d_int_1d_ar)
+             (MethodCall (Var context__) vals_i () ((Literal "\"d_int_1d_ar\"")))))
            (Expression (Assign (Var current_statement__) (Literal 194)))
            (Expression
             (FunCall stan::math::check_less_or_equal ()
@@ -16333,6 +16352,11 @@
             (Assign (Var J) (FunCall std::numeric_limits<double>::quiet_NaN () ())))
            (Expression (Assign (Var current_statement__) (Literal 199)))
            (Expression
+            (Assign (Var J)
+             (Index (MethodCall (Var context__) vals_r () ((Literal "\"J\"")))
+              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
+           (Expression (Assign (Var current_statement__) (Literal 199)))
+           (Expression
             (FunCall stan::math::check_greater_or_equal ()
              ((Var function__) (Literal "\"J\"") (Var J) (PMinus (Literal 2.0)))))
            (Expression (Assign (Var current_statement__) (Literal 199)))
@@ -16354,6 +16378,10 @@
             (Assign (Var d_real_1d_ar)
              (Constructor (StdVector Double)
               ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
+           (Expression (Assign (Var current_statement__) (Literal 201)))
+           (Expression
+            (Assign (Var d_real_1d_ar)
+             (MethodCall (Var context__) vals_r () ((Literal "\"d_real_1d_ar\"")))))
            (Expression (Assign (Var current_statement__) (Literal 202)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17187,6 +17215,11 @@
               (Literal "\"int\"") (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
            (Expression
             (Assign (Var d_int) (FunCall std::numeric_limits<int>::min () ())))
+           (Expression (Assign (Var current_statement__) (Literal 241)))
+           (Expression
+            (Assign (Var d_int)
+             (Index (MethodCall (Var context__) vals_i () ((Literal "\"d_int\"")))
+              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 242)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17202,6 +17235,10 @@
             (Assign (Var d_int_array)
              (Constructor (StdVector Int)
               ((Var d_int) (FunCall std::numeric_limits<int>::min () ())))))
+           (Expression (Assign (Var current_statement__) (Literal 243)))
+           (Expression
+            (Assign (Var d_int_array)
+             (MethodCall (Var context__) vals_i () ((Literal "\"d_int_array\"")))))
            (Expression (Assign (Var current_statement__) (Literal 244)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17313,6 +17350,11 @@
               (InitializerExpr (StdVector (TypeLiteral size_t)) ()))))
            (Expression
             (Assign (Var d_real) (FunCall std::numeric_limits<double>::quiet_NaN () ())))
+           (Expression (Assign (Var current_statement__) (Literal 248)))
+           (Expression
+            (Assign (Var d_real)
+             (Index (MethodCall (Var context__) vals_r () ((Literal "\"d_real\"")))
+              (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 249)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()
@@ -17328,6 +17370,10 @@
             (Assign (Var d_real_array)
              (Constructor (StdVector Double)
               ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
+           (Expression (Assign (Var current_statement__) (Literal 250)))
+           (Expression
+            (Assign (Var d_real_array)
+             (MethodCall (Var context__) vals_r () ((Literal "\"d_real_array\"")))))
            (Expression (Assign (Var current_statement__) (Literal 251)))
            (Expression
             (FunCall stan::math::validate_non_negative_index ()

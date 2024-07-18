@@ -46,19 +46,21 @@ matrix[2, 2] aos_mat_from_vecs: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) 
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str N))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable N) ()) UInt
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -2140,19 +2142,21 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) 
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str N))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable N) ()) UInt
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2167,19 +2171,21 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id K) (decl_type (Sized SInt)) 
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str K))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable K) ()) UInt
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str K))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2507,19 +2513,21 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id phi_prior_a) (decl_type (Sized SReal))
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str phi_prior_a))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable phi_prior_a) ()) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str phi_prior_a))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2536,19 +2544,21 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id phi_prior_b) (decl_type (Sized SReal))
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str phi_prior_b))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable phi_prior_b) ()) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str phi_prior_b))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2565,35 +2575,39 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id mu_prior_mu) (decl_type (Sized SReal))
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str mu_prior_mu))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable mu_prior_mu) ()) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str mu_prior_mu))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id mu_prior_sigma) (decl_type (Sized SReal))
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str mu_prior_sigma))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable mu_prior_sigma) ()) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str mu_prior_sigma))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2610,19 +2624,21 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma_prior_shape) (decl_type (Sized SReal))
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str sigma_prior_shape))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable sigma_prior_shape) ()) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str sigma_prior_shape))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -2639,19 +2655,21 @@ vector[Nr] h_sigma: SoA
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id sigma_prior_rate) (decl_type (Sized SReal))
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str sigma_prior_rate))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable sigma_prior_rate) ()) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str sigma_prior_rate))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -10173,35 +10191,39 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) 
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str N))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable N) ()) UInt
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized SInt)) 
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str M))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable M) ()) UInt
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str M))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -10384,13 +10406,15 @@ vector[N] tp_aos_loop_vec_v_multi_uni_idx: AoS
        (Sized
         (SArray SInt
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize true)
-      (assignment
-       (((pattern
-          (FunApp (CompilerInternal FnReadData)
-           (((pattern (Lit Str idx_tester))
-             (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
-         (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable idx_tester) ()) (UArray UInt)
+      ((pattern
+        (FunApp (CompilerInternal FnReadData)
+         (((pattern (Lit Str idx_tester))
+           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -16804,35 +16828,39 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id N) (decl_type (Sized SInt)) 
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str N))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable N) ()) UInt
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str N))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id M) (decl_type (Sized SInt)) 
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str M))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable M) ()) UInt
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str M))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -16846,13 +16874,15 @@ vector[N] tp_soa_single_idx_in_upfrom_idx: SoA
        (Sized
         (SArray SInt
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize true)
-      (assignment
-       (((pattern
-          (FunApp (CompilerInternal FnReadData)
-           (((pattern (Lit Str Idx))
-             (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
-         (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable Idx) ()) (UArray UInt)
+      ((pattern
+        (FunApp (CompilerInternal FnReadData)
+         (((pattern (Lit Str Idx))
+           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (log_prob
   (((pattern
@@ -17411,19 +17441,21 @@ matrix[5, 10] tp_matrix_from_udf_reduced_soa: AoS
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized SReal))
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str data_r))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable data_r) ()) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str data_r))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (log_prob
   (((pattern
@@ -20177,19 +20209,21 @@ matrix[5, 10] tp_matrix_aos: AoS
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id data_r) (decl_type (Sized SReal))
-      (initialize true)
-      (assignment
-       (((pattern
-          (Indexed
-           ((pattern
-             (FunApp (CompilerInternal FnReadData)
-              (((pattern (Lit Str data_r))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-           ((Single
-             ((pattern (Lit Int 1))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+      (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable data_r) ()) UReal
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str data_r))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))))
  (log_prob
   (((pattern
