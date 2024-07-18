@@ -140,25 +140,28 @@ let plus_one e =
   let open Expression_syntax in
   Parens (e + Literal "1")
 
-let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
-    (scalar : type_) : type_ =
-  match t with
-  | UInt -> Int
-  | UReal -> scalar
-  | UComplex -> Types.complex scalar
-  | UArray t -> StdVector (lower_type t scalar)
-  | UTuple ts -> Tuple (List.map ~f:(fun t -> lower_type t scalar) ts)
-  | UVector -> Types.vector ~mem_pattern scalar
-  | URowVector -> Types.row_vector ~mem_pattern scalar
-  | UMatrix -> Types.matrix ~mem_pattern scalar
-  | UComplexVector -> Types.vector (Types.complex scalar)
-  | UComplexRowVector -> Types.row_vector (Types.complex scalar)
-  | UComplexMatrix -> Types.matrix (Types.complex scalar)
-  | UMathLibraryFunction | UFun _ ->
-      Common.ICE.internal_compiler_error
-        [%message "Function types not implemented"]
+let rec lower_type ?(mem_pattern = Mem_pattern.AoS) ?(assignment : 'a option)
+    (t : UnsizedType.t) (scalar : type_) : type_ =
+  if Option.is_some assignment then lower_type ~mem_pattern t scalar
+  else
+    match t with
+    | UInt -> Int
+    | UReal -> scalar
+    | UComplex -> Types.complex scalar
+    | UArray t -> StdVector (lower_type t scalar)
+    | UTuple ts -> Tuple (List.map ~f:(fun t -> lower_type t scalar) ts)
+    | UVector -> Types.vector ~mem_pattern scalar
+    | URowVector -> Types.row_vector ~mem_pattern scalar
+    | UMatrix -> Types.matrix ~mem_pattern scalar
+    | UComplexVector -> Types.vector (Types.complex scalar)
+    | UComplexRowVector -> Types.row_vector (Types.complex scalar)
+    | UComplexMatrix -> Types.matrix (Types.complex scalar)
+    | UMathLibraryFunction | UFun _ ->
+        Common.ICE.internal_compiler_error
+          [%message "Function types not implemented"]
 
-let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
+let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) ?assignment
+    adtype ut =
   match (adtype, ut) with
   | UnsizedType.TupleAD ads, UnsizedType.UTuple ts ->
       Tuple (List.map2_exn ~f:(lower_unsizedtype_local ~mem_pattern) ads ts)
@@ -172,10 +175,12 @@ let rec lower_unsizedtype_local ?(mem_pattern = Mem_pattern.AoS) adtype ut =
             (adtype : UnsizedType.autodifftype)]
   | _, _ ->
       let s = local_scalar ut adtype in
-      lower_type ~mem_pattern ut s
+      lower_type ~mem_pattern ~assignment ut s
 
-let rec lower_possibly_var_decl adtype ut mem_pattern =
-  let var_decl p_ut = lower_unsizedtype_local ~mem_pattern adtype p_ut in
+let rec lower_possibly_var_decl ?(assignment : 'a option) adtype ut mem_pattern
+    =
+  let var_decl p_ut =
+    lower_unsizedtype_local ~mem_pattern ~assignment adtype p_ut in
   match (ut, adtype) with
   | UnsizedType.UArray t, _ ->
       Types.std_vector (lower_possibly_var_decl adtype t mem_pattern)

@@ -773,8 +773,8 @@ let add_reads vars mkread stmts =
     | Decl {decl_id; decl_adtype; decl_type; initialize; _}
       when Map.mem var_names decl_id -> (
         let loc, out = Map.find_exn var_names decl_id in
-        let blah = mkread (Stmt.Helpers.lvariable decl_id, loc, out) in
-        match blah with
+        let param_reader = mkread (Stmt.Helpers.lvariable decl_id, loc, out) in
+        match param_reader with
         | [Stmt.Fixed.{pattern= Stmt.Fixed.Pattern.Assignment (_, _, e); _}] ->
             [ { stmt with
                 pattern=

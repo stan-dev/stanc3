@@ -105,17 +105,23 @@ let lower_unsized_decl name ut adtype =
     | true, _ -> TypeLiteral "matrix_cl<double>" in
   make_variable_defn ~type_ ~name ()
 
-let lower_possibly_opencl_decl name st adtype =
+let lower_possibly_opencl_decl name st adtype assignment =
   let ut = SizedType.to_unsized st in
   let mem_pattern = SizedType.get_mem_pattern st in
   match (Transform_Mir.is_opencl_var name, ut) with
-  | _, UnsizedType.(UInt | UReal) | false, _ ->
-      lower_possibly_var_decl adtype ut mem_pattern
+  | _, UnsizedType.(UInt | UReal) | false, _ -> (
+      match assignment with
+      | Some
+          Expr.Fixed.
+            { pattern= FunApp (CompilerInternal (Internal_fun.FnReadParam _), _)
+            ; _ } ->
+          Auto
+      | _ -> lower_possibly_var_decl ~assignment adtype ut mem_pattern)
   | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
   | true, _ -> TypeLiteral "matrix_cl<double>"
 
 let lower_sized_decl name st adtype initialize assignment =
-  let type_ = lower_possibly_opencl_decl name st adtype in
+  let type_ = lower_possibly_opencl_decl name st adtype assignment in
   let init =
     lower_assign_sized st adtype initialize assignment
     |> Option.value_map ~default:Uninitialized ~f:(fun i -> Assignment i) in
