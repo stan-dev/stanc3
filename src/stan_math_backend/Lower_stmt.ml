@@ -116,7 +116,7 @@ let lower_possibly_opencl_decl name st adtype assignment =
             { pattern= FunApp (CompilerInternal (Internal_fun.FnReadParam _), _)
             ; _ } ->
           Auto
-      | _ -> lower_possibly_var_decl ~assignment adtype ut mem_pattern)
+      | _ -> lower_possibly_var_decl adtype ut mem_pattern)
   | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
   | true, _ -> TypeLiteral "matrix_cl<double>"
 

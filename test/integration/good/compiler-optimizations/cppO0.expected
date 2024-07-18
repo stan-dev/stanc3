@@ -87,7 +87,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
+      auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
@@ -155,7 +155,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
+      auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
@@ -234,7 +234,7 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> X_p =
+      auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       Eigen::Matrix<double,-1,-1> X_tp1 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
@@ -921,16 +921,16 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ beta =
+      auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ gamma =
+      auto gamma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ xi =
+      auto xi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ delta =
+      auto delta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       std::vector<std::vector<local_scalar_t__>> y =
@@ -1017,16 +1017,16 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ beta =
+      auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ gamma =
+      auto gamma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ xi =
+      auto xi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ delta =
+      auto delta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       std::vector<std::vector<local_scalar_t__>> y =
@@ -1124,16 +1124,16 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     // suppress unused var warning
     (void) function__;
     try {
-      double beta =
+      auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double gamma =
+      auto gamma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double xi =
+      auto xi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double delta =
+      auto delta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       std::vector<std::vector<double>> y =
@@ -1511,7 +1511,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
+      auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
@@ -1555,7 +1555,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
+      auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       Eigen::Matrix<local_scalar_t__,-1,-1> X_tp1 =
         Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(10, 10, DUMMY_VAR__);
@@ -1610,7 +1610,7 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> X_p =
+      auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       Eigen::Matrix<double,-1,-1> X_tp1 =
         Eigen::Matrix<double,-1,-1>::Constant(10, 10,
@@ -1992,7 +1992,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> X =
+      auto X =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       {
         current_statement__ = 2;
@@ -2063,7 +2063,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> X =
+      auto X =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       {
         current_statement__ = 2;
@@ -2145,7 +2145,7 @@ class copy_prop_profile_model final : public model_base_crtp<copy_prop_profile_m
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> X =
+      auto X =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       out__.write(X);
       if (stan::math::logical_negation(
@@ -2771,10 +2771,10 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
+      auto beta =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(0, 1, lp__,
           max_age);
@@ -2898,10 +2898,10 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
+      auto beta =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(0, 1, lp__,
           max_age);
@@ -3036,10 +3036,10 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<double,-1,1> beta =
+      auto beta =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(0, 1, lp__,
           max_age);
@@ -3658,40 +3658,39 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ sigma =
+      auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_age =
+      auto sigma_age =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_edu =
+      auto sigma_edu =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_state =
+      auto sigma_state =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_region =
+      auto sigma_region =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_age_edu =
+      auto sigma_age_edu =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ b_0 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ b_female = in__.template read<local_scalar_t__>();
-      local_scalar_t__ b_black = in__.template read<local_scalar_t__>();
-      local_scalar_t__ b_female_black =
-        in__.template read<local_scalar_t__>();
-      local_scalar_t__ b_v_prev = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,1> b_age =
+      auto b_0 = in__.template read<local_scalar_t__>();
+      auto b_female = in__.template read<local_scalar_t__>();
+      auto b_black = in__.template read<local_scalar_t__>();
+      auto b_female_black = in__.template read<local_scalar_t__>();
+      auto b_v_prev = in__.template read<local_scalar_t__>();
+      auto b_age =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age);
-      Eigen::Matrix<local_scalar_t__,-1,1> b_edu =
+      auto b_edu =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu);
-      Eigen::Matrix<local_scalar_t__,-1,1> b_region =
+      auto b_region =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_region);
-      Eigen::Matrix<local_scalar_t__,-1,-1> b_age_edu =
+      auto b_age_edu =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n_age,
           n_edu);
-      Eigen::Matrix<local_scalar_t__,-1,1> b_hat =
+      auto b_hat =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state);
       {
         current_statement__ = 17;
@@ -3816,40 +3815,39 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ sigma =
+      auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_age =
+      auto sigma_age =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_edu =
+      auto sigma_edu =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_state =
+      auto sigma_state =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_region =
+      auto sigma_region =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ sigma_age_edu =
+      auto sigma_age_edu =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ b_0 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ b_female = in__.template read<local_scalar_t__>();
-      local_scalar_t__ b_black = in__.template read<local_scalar_t__>();
-      local_scalar_t__ b_female_black =
-        in__.template read<local_scalar_t__>();
-      local_scalar_t__ b_v_prev = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,1> b_age =
+      auto b_0 = in__.template read<local_scalar_t__>();
+      auto b_female = in__.template read<local_scalar_t__>();
+      auto b_black = in__.template read<local_scalar_t__>();
+      auto b_female_black = in__.template read<local_scalar_t__>();
+      auto b_v_prev = in__.template read<local_scalar_t__>();
+      auto b_age =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age);
-      Eigen::Matrix<local_scalar_t__,-1,1> b_edu =
+      auto b_edu =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu);
-      Eigen::Matrix<local_scalar_t__,-1,1> b_region =
+      auto b_region =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_region);
-      Eigen::Matrix<local_scalar_t__,-1,-1> b_age_edu =
+      auto b_age_edu =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n_age,
           n_edu);
-      Eigen::Matrix<local_scalar_t__,-1,1> b_hat =
+      auto b_hat =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state);
       {
         current_statement__ = 17;
@@ -3985,39 +3983,39 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double sigma =
+      auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double sigma_age =
+      auto sigma_age =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double sigma_edu =
+      auto sigma_edu =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double sigma_state =
+      auto sigma_state =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double sigma_region =
+      auto sigma_region =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double sigma_age_edu =
+      auto sigma_age_edu =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double b_0 = in__.template read<local_scalar_t__>();
-      double b_female = in__.template read<local_scalar_t__>();
-      double b_black = in__.template read<local_scalar_t__>();
-      double b_female_black = in__.template read<local_scalar_t__>();
-      double b_v_prev = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double,-1,1> b_age =
+      auto b_0 = in__.template read<local_scalar_t__>();
+      auto b_female = in__.template read<local_scalar_t__>();
+      auto b_black = in__.template read<local_scalar_t__>();
+      auto b_female_black = in__.template read<local_scalar_t__>();
+      auto b_v_prev = in__.template read<local_scalar_t__>();
+      auto b_age =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age);
-      Eigen::Matrix<double,-1,1> b_edu =
+      auto b_edu =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu);
-      Eigen::Matrix<double,-1,1> b_region =
+      auto b_region =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_region);
-      Eigen::Matrix<double,-1,-1> b_age_edu =
+      auto b_age_edu =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n_age,
           n_edu);
-      Eigen::Matrix<double,-1,1> b_hat =
+      auto b_hat =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state);
       out__.write(sigma);
       out__.write(sigma_age);
@@ -5321,13 +5319,13 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> mu =
+      auto mu =
         in__.template read_constrain_ordered<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 2);
-      std::vector<local_scalar_t__> sigma =
+      auto sigma =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, 2);
-      local_scalar_t__ theta =
+      auto theta =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
       {
@@ -5387,13 +5385,13 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> mu =
+      auto mu =
         in__.template read_constrain_ordered<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 2);
-      std::vector<local_scalar_t__> sigma =
+      auto sigma =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, 2);
-      local_scalar_t__ theta =
+      auto theta =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
       {
@@ -5464,13 +5462,13 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> mu =
+      auto mu =
         in__.template read_constrain_ordered<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 2);
-      std::vector<double> sigma =
+      auto sigma =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, 2);
-      double theta =
+      auto theta =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
       out__.write(mu);
@@ -5833,10 +5831,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mu = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> theta =
-        in__.template read<std::vector<local_scalar_t__>>(J);
-      local_scalar_t__ tau =
+      auto mu = in__.template read<local_scalar_t__>();
+      auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
+      auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       {
@@ -5875,10 +5872,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mu = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> theta =
-        in__.template read<std::vector<local_scalar_t__>>(J);
-      local_scalar_t__ tau =
+      auto mu = in__.template read<local_scalar_t__>();
+      auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
+      auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       {
@@ -5928,10 +5924,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double mu = in__.template read<local_scalar_t__>();
-      std::vector<double> theta =
-        in__.template read<std::vector<local_scalar_t__>>(J);
-      double tau =
+      auto mu = in__.template read<local_scalar_t__>();
+      auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
+      auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       out__.write(mu);
@@ -6456,32 +6451,31 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> a =
+      auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age);
-      Eigen::Matrix<local_scalar_t__,-1,1> b =
+      auto b =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu);
-      Eigen::Matrix<local_scalar_t__,-1,1> c =
+      auto c =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age_edu);
-      Eigen::Matrix<local_scalar_t__,-1,1> d =
+      auto d =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state);
-      Eigen::Matrix<local_scalar_t__,-1,1> e =
+      auto e =
         in__.template read<
           Eigen::Matrix<local_scalar_t__,-1,1>>(n_region_full);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
-      local_scalar_t__ sigma_a =
+      auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
+      auto sigma_a =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_b =
+      auto sigma_b =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_c =
+      auto sigma_c =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_d =
+      auto sigma_d =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_e =
+      auto sigma_e =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
       Eigen::Matrix<local_scalar_t__,-1,1> y_hat =
@@ -6568,32 +6562,31 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> a =
+      auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age);
-      Eigen::Matrix<local_scalar_t__,-1,1> b =
+      auto b =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu);
-      Eigen::Matrix<local_scalar_t__,-1,1> c =
+      auto c =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age_edu);
-      Eigen::Matrix<local_scalar_t__,-1,1> d =
+      auto d =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state);
-      Eigen::Matrix<local_scalar_t__,-1,1> e =
+      auto e =
         in__.template read<
           Eigen::Matrix<local_scalar_t__,-1,1>>(n_region_full);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
-      local_scalar_t__ sigma_a =
+      auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
+      auto sigma_a =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_b =
+      auto sigma_b =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_c =
+      auto sigma_c =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_d =
+      auto sigma_d =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_e =
+      auto sigma_e =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
       Eigen::Matrix<local_scalar_t__,-1,1> y_hat =
@@ -6691,32 +6684,31 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> a =
+      auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age);
-      Eigen::Matrix<double,-1,1> b =
+      auto b =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_edu);
-      Eigen::Matrix<double,-1,1> c =
+      auto c =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_age_edu);
-      Eigen::Matrix<double,-1,1> d =
+      auto d =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_state);
-      Eigen::Matrix<double,-1,1> e =
+      auto e =
         in__.template read<
           Eigen::Matrix<local_scalar_t__,-1,1>>(n_region_full);
-      Eigen::Matrix<double,-1,1> beta =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
-      double sigma_a =
+      auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
+      auto sigma_a =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      double sigma_b =
+      auto sigma_b =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      double sigma_c =
+      auto sigma_c =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      double sigma_d =
+      auto sigma_d =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      double sigma_e =
+      auto sigma_e =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
       Eigen::Matrix<double,-1,1> y_hat =
@@ -7440,10 +7432,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ tau_phi =
+      auto tau_phi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
+      auto phi_std_raw =
         in__.template read<
           Eigen::Matrix<local_scalar_t__,-1,1>>(phi_std_raw_1dim__);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
@@ -7504,10 +7496,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ tau_phi =
+      auto tau_phi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
+      auto phi_std_raw =
         in__.template read<
           Eigen::Matrix<local_scalar_t__,-1,1>>(phi_std_raw_1dim__);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
@@ -7579,10 +7571,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     // suppress unused var warning
     (void) function__;
     try {
-      double tau_phi =
+      auto tau_phi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      Eigen::Matrix<double,-1,1> phi_std_raw =
+      auto phi_std_raw =
         in__.template read<
           Eigen::Matrix<local_scalar_t__,-1,1>>(phi_std_raw_1dim__);
       double sigma_phi = std::numeric_limits<double>::quiet_NaN();
@@ -8371,15 +8363,15 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
+      auto epsilon =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(nind);
-      local_scalar_t__ sigma =
+      auto sigma =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 5,
           lp__);
       Eigen::Matrix<local_scalar_t__,-1,-1> phi =
@@ -8506,15 +8498,15 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
+      auto epsilon =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(nind);
-      local_scalar_t__ sigma =
+      auto sigma =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 5,
           lp__);
       Eigen::Matrix<local_scalar_t__,-1,-1> phi =
@@ -8652,15 +8644,15 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     // suppress unused var warning
     (void) function__;
     try {
-      double mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      double mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<double,-1,1> epsilon =
+      auto epsilon =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(nind);
-      double sigma =
+      auto sigma =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 5,
           lp__);
       Eigen::Matrix<double,-1,-1> phi =
@@ -9812,21 +9804,21 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ psi =
+      auto psi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
+      auto beta =
         in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__,-1,1>,
           jacobian__>(0, lp__, n_occasions);
-      Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
+      auto epsilon =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(M);
-      local_scalar_t__ sigma =
+      auto sigma =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 5,
           lp__);
       Eigen::Matrix<local_scalar_t__,-1,-1> phi =
@@ -9942,21 +9934,21 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ psi =
+      auto psi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
+      auto beta =
         in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__,-1,1>,
           jacobian__>(0, lp__, n_occasions);
-      Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
+      auto epsilon =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(M);
-      local_scalar_t__ sigma =
+      auto sigma =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 5,
           lp__);
       Eigen::Matrix<local_scalar_t__,-1,-1> phi =
@@ -10083,21 +10075,21 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     // suppress unused var warning
     (void) function__;
     try {
-      double mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      double mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      double psi =
+      auto psi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<double,-1,1> beta =
+      auto beta =
         in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__,-1,1>,
           jacobian__>(0, lp__, n_occasions);
-      Eigen::Matrix<double,-1,1> epsilon =
+      auto epsilon =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(M);
-      double sigma =
+      auto sigma =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 5,
           lp__);
       Eigen::Matrix<double,-1,-1> phi =
@@ -10932,10 +10924,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> pi =
+      auto pi =
         in__.template read_constrain_simplex<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, K);
-      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>> theta =
+      auto theta =
         in__.template read_constrain_simplex<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>,
           jacobian__>(lp__, J, K, K);
@@ -11013,10 +11005,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> pi =
+      auto pi =
         in__.template read_constrain_simplex<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, K);
-      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>> theta =
+      auto theta =
         in__.template read_constrain_simplex<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>,
           jacobian__>(lp__, J, K, K);
@@ -11105,10 +11097,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> pi =
+      auto pi =
         in__.template read_constrain_simplex<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, K);
-      std::vector<std::vector<Eigen::Matrix<double,-1,1>>> theta =
+      auto theta =
         in__.template read_constrain_simplex<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>,
           jacobian__>(lp__, J, K, K);
@@ -11616,17 +11608,17 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ beta0 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ beta1 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ tau_theta =
+      auto beta0 = in__.template read<local_scalar_t__>();
+      auto beta1 = in__.template read<local_scalar_t__>();
+      auto tau_theta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ tau_phi =
+      auto tau_phi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> theta_std =
+      auto theta_std =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
+      auto phi_std_raw =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
       current_statement__ = 7;
@@ -11679,17 +11671,17 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ beta0 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ beta1 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ tau_theta =
+      auto beta0 = in__.template read<local_scalar_t__>();
+      auto beta1 = in__.template read<local_scalar_t__>();
+      auto tau_theta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ tau_phi =
+      auto tau_phi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> theta_std =
+      auto theta_std =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,-1,1> phi_std_raw =
+      auto phi_std_raw =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
       current_statement__ = 7;
@@ -11753,17 +11745,17 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     // suppress unused var warning
     (void) function__;
     try {
-      double beta0 = in__.template read<local_scalar_t__>();
-      double beta1 = in__.template read<local_scalar_t__>();
-      double tau_theta =
+      auto beta0 = in__.template read<local_scalar_t__>();
+      auto beta1 = in__.template read<local_scalar_t__>();
+      auto tau_theta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double tau_phi =
+      auto tau_phi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      Eigen::Matrix<double,-1,1> theta_std =
+      auto theta_std =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<double,-1,1> phi_std_raw =
+      auto phi_std_raw =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       double sigma_phi = std::numeric_limits<double>::quiet_NaN();
       Eigen::Matrix<double,-1,1> phi =
@@ -12516,10 +12508,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
+      auto beta =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(0, 1, lp__,
           max_age);
@@ -12643,10 +12635,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
+      auto beta =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(0, 1, lp__,
           max_age);
@@ -12781,10 +12773,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<double,-1,1> beta =
+      auto beta =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(0, 1, lp__,
           max_age);
@@ -14387,9 +14379,8 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> y =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
-      std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> arr_vec =
+      auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+      auto arr_vec =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(3, 4);
       Eigen::Matrix<local_scalar_t__,-1,1> x =
@@ -14439,9 +14430,8 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> y =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
-      std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> arr_vec =
+      auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+      auto arr_vec =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(3, 4);
       Eigen::Matrix<local_scalar_t__,-1,1> x =
@@ -14502,9 +14492,8 @@ class initialize_SoA_model final : public model_base_crtp<initialize_SoA_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> y =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
-      std::vector<Eigen::Matrix<double,-1,1>> arr_vec =
+      auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+      auto arr_vec =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(3, 4);
       Eigen::Matrix<double,-1,1> x =
@@ -14952,9 +14941,9 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec =
+      auto p_single_ret_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
-      Eigen::Matrix<local_scalar_t__,-1,1> p_multi_ret_vec =
+      auto p_multi_ret_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
       Eigen::Matrix<local_scalar_t__,-1,1> tp_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
@@ -14998,9 +14987,9 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> p_single_ret_vec =
+      auto p_single_ret_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
-      Eigen::Matrix<local_scalar_t__,-1,1> p_multi_ret_vec =
+      auto p_multi_ret_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
       Eigen::Matrix<local_scalar_t__,-1,1> tp_single_ret_vec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__);
@@ -15055,9 +15044,9 @@ class inline_functions_varmat_model final : public model_base_crtp<inline_functi
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> p_single_ret_vec =
+      auto p_single_ret_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
-      Eigen::Matrix<double,-1,1> p_multi_ret_vec =
+      auto p_multi_ret_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(5);
       Eigen::Matrix<double,-1,1> tp_single_ret_vec =
         Eigen::Matrix<double,-1,1>::Constant(5,
@@ -15487,7 +15476,7 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ alpha = in__.template read<local_scalar_t__>();
+      auto alpha = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
@@ -15523,7 +15512,7 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ alpha = in__.template read<local_scalar_t__>();
+      auto alpha = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(
@@ -15570,7 +15559,7 @@ class inline_tdata_model final : public model_base_crtp<inline_tdata_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double alpha = in__.template read<local_scalar_t__>();
+      auto alpha = in__.template read<local_scalar_t__>();
       out__.write(alpha);
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
@@ -16991,20 +16980,20 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> gamma =
+      auto gamma =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(0, 1, lp__,
           n_occasions);
-      Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
+      auto epsilon =
         in__.template read<
           Eigen::Matrix<local_scalar_t__,-1,1>>(epsilon_1dim__);
-      local_scalar_t__ sigma =
+      auto sigma =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 5,
           lp__);
       Eigen::Matrix<local_scalar_t__,-1,-1> phi =
@@ -17083,20 +17072,20 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<local_scalar_t__,-1,1> gamma =
+      auto gamma =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(0, 1, lp__,
           n_occasions);
-      Eigen::Matrix<local_scalar_t__,-1,1> epsilon =
+      auto epsilon =
         in__.template read<
           Eigen::Matrix<local_scalar_t__,-1,1>>(epsilon_1dim__);
-      local_scalar_t__ sigma =
+      auto sigma =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 5,
           lp__);
       Eigen::Matrix<local_scalar_t__,-1,-1> phi =
@@ -17186,20 +17175,20 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      double mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      double mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      Eigen::Matrix<double,-1,1> gamma =
+      auto gamma =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(0, 1, lp__,
           n_occasions);
-      Eigen::Matrix<double,-1,1> epsilon =
+      auto epsilon =
         in__.template read<
           Eigen::Matrix<local_scalar_t__,-1,1>>(epsilon_1dim__);
-      double sigma =
+      auto sigma =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 5,
           lp__);
       Eigen::Matrix<double,-1,-1> phi =
@@ -18213,7 +18202,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ x = in__.template read<local_scalar_t__>();
+      auto x = in__.template read<local_scalar_t__>();
       {
         local_scalar_t__ y = DUMMY_VAR__;
         current_statement__ = 2;
@@ -18261,7 +18250,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ x = in__.template read<local_scalar_t__>();
+      auto x = in__.template read<local_scalar_t__>();
       {
         local_scalar_t__ y = DUMMY_VAR__;
         current_statement__ = 2;
@@ -18320,7 +18309,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     // suppress unused var warning
     (void) function__;
     try {
-      double x = in__.template read<local_scalar_t__>();
+      auto x = in__.template read<local_scalar_t__>();
       out__.write(x);
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
@@ -18605,8 +18594,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<local_scalar_t__> theta =
-        in__.template read<std::vector<local_scalar_t__>>(J);
+      auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
         current_statement__ = 2;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, 1));
@@ -18641,8 +18629,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<local_scalar_t__> theta =
-        in__.template read<std::vector<local_scalar_t__>>(J);
+      auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
         current_statement__ = 2;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(y, theta, 1));
@@ -18688,8 +18675,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<double> theta =
-        in__.template read<std::vector<local_scalar_t__>>(J);
+      auto theta = in__.template read<std::vector<local_scalar_t__>>(J);
       out__.write(theta);
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
@@ -19263,10 +19249,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
       Eigen::Matrix<local_scalar_t__,-1,-1> phi =
@@ -19385,10 +19371,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      local_scalar_t__ mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
       Eigen::Matrix<local_scalar_t__,-1,-1> phi =
@@ -19518,10 +19504,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double mean_phi =
+      auto mean_phi =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
-      double mean_p =
+      auto mean_p =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0, 1,
           lp__);
       Eigen::Matrix<double,-1,-1> phi =
@@ -20007,7 +19993,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mu = in__.template read<local_scalar_t__>();
+      auto mu = in__.template read<local_scalar_t__>();
       local_scalar_t__ tp = DUMMY_VAR__;
       current_statement__ = 2;
       tp = foo_lpdf<false>(mu, 1.0, pstream__);
@@ -20047,7 +20033,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ mu = in__.template read<local_scalar_t__>();
+      auto mu = in__.template read<local_scalar_t__>();
       local_scalar_t__ tp = DUMMY_VAR__;
       current_statement__ = 2;
       tp = foo_lpdf<false>(mu, 1.0, pstream__);
@@ -20098,7 +20084,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      double mu = in__.template read<local_scalar_t__>();
+      auto mu = in__.template read<local_scalar_t__>();
       double tp = std::numeric_limits<double>::quiet_NaN();
       out__.write(mu);
       if (stan::math::logical_negation(
@@ -20537,10 +20523,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ alpha_occ = in__.template read<local_scalar_t__>();
-      local_scalar_t__ beta_occ = in__.template read<local_scalar_t__>();
-      local_scalar_t__ alpha_p = in__.template read<local_scalar_t__>();
-      local_scalar_t__ beta_p = in__.template read<local_scalar_t__>();
+      auto alpha_occ = in__.template read<local_scalar_t__>();
+      auto beta_occ = in__.template read<local_scalar_t__>();
+      auto alpha_p = in__.template read<local_scalar_t__>();
+      auto beta_p = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> logit_psi =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(R, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,-1> logit_p =
@@ -20614,10 +20600,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ alpha_occ = in__.template read<local_scalar_t__>();
-      local_scalar_t__ beta_occ = in__.template read<local_scalar_t__>();
-      local_scalar_t__ alpha_p = in__.template read<local_scalar_t__>();
-      local_scalar_t__ beta_p = in__.template read<local_scalar_t__>();
+      auto alpha_occ = in__.template read<local_scalar_t__>();
+      auto beta_occ = in__.template read<local_scalar_t__>();
+      auto alpha_p = in__.template read<local_scalar_t__>();
+      auto beta_p = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> logit_psi =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(R, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,-1> logit_p =
@@ -20702,10 +20688,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double alpha_occ = in__.template read<local_scalar_t__>();
-      double beta_occ = in__.template read<local_scalar_t__>();
-      double alpha_p = in__.template read<local_scalar_t__>();
-      double beta_p = in__.template read<local_scalar_t__>();
+      auto alpha_occ = in__.template read<local_scalar_t__>();
+      auto beta_occ = in__.template read<local_scalar_t__>();
+      auto alpha_p = in__.template read<local_scalar_t__>();
+      auto beta_p = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double,-1,1> logit_psi =
         Eigen::Matrix<double,-1,1>::Constant(R,
           std::numeric_limits<double>::quiet_NaN());
@@ -21260,20 +21246,18 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ beta = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,1> eta1 =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
-      Eigen::Matrix<local_scalar_t__,-1,1> eta2 =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
-      local_scalar_t__ mu_a1 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ mu_a2 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ sigma_a1 =
+      auto beta = in__.template read<local_scalar_t__>();
+      auto eta1 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
+      auto eta2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
+      auto mu_a1 = in__.template read<local_scalar_t__>();
+      auto mu_a2 = in__.template read<local_scalar_t__>();
+      auto sigma_a1 =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_a2 =
+      auto sigma_a2 =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_y =
+      auto sigma_y =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
       Eigen::Matrix<local_scalar_t__,-1,1> a1 =
@@ -21352,20 +21336,18 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ beta = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,1> eta1 =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
-      Eigen::Matrix<local_scalar_t__,-1,1> eta2 =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
-      local_scalar_t__ mu_a1 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ mu_a2 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ sigma_a1 =
+      auto beta = in__.template read<local_scalar_t__>();
+      auto eta1 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
+      auto eta2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
+      auto mu_a1 = in__.template read<local_scalar_t__>();
+      auto mu_a2 = in__.template read<local_scalar_t__>();
+      auto sigma_a1 =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_a2 =
+      auto sigma_a2 =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_y =
+      auto sigma_y =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
       Eigen::Matrix<local_scalar_t__,-1,1> a1 =
@@ -21455,20 +21437,18 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double beta = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double,-1,1> eta1 =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
-      Eigen::Matrix<double,-1,1> eta2 =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
-      double mu_a1 = in__.template read<local_scalar_t__>();
-      double mu_a2 = in__.template read<local_scalar_t__>();
-      double sigma_a1 =
+      auto beta = in__.template read<local_scalar_t__>();
+      auto eta1 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
+      auto eta2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
+      auto mu_a1 = in__.template read<local_scalar_t__>();
+      auto mu_a2 = in__.template read<local_scalar_t__>();
+      auto sigma_a1 =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      double sigma_a2 =
+      auto sigma_a2 =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      double sigma_y =
+      auto sigma_y =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
       Eigen::Matrix<double,-1,1> a1 =
@@ -22183,13 +22163,13 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ theta = in__.template read<local_scalar_t__>();
-      local_scalar_t__ phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> x_matrix =
+      auto theta = in__.template read<local_scalar_t__>();
+      auto phi = in__.template read<local_scalar_t__>();
+      auto x_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 2);
-      Eigen::Matrix<local_scalar_t__,-1,1> x_vector =
+      auto x_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      Eigen::Matrix<local_scalar_t__,-1,-1> x_cov =
+      auto x_cov =
         in__.template read_constrain_cov_matrix<
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 2);
       {
@@ -22468,13 +22448,13 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ theta = in__.template read<local_scalar_t__>();
-      local_scalar_t__ phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> x_matrix =
+      auto theta = in__.template read<local_scalar_t__>();
+      auto phi = in__.template read<local_scalar_t__>();
+      auto x_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 2);
-      Eigen::Matrix<local_scalar_t__,-1,1> x_vector =
+      auto x_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      Eigen::Matrix<local_scalar_t__,-1,-1> x_cov =
+      auto x_cov =
         in__.template read_constrain_cov_matrix<
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 2);
       {
@@ -22764,13 +22744,13 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double theta = in__.template read<local_scalar_t__>();
-      double phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double,-1,-1> x_matrix =
+      auto theta = in__.template read<local_scalar_t__>();
+      auto phi = in__.template read<local_scalar_t__>();
+      auto x_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 2);
-      Eigen::Matrix<double,-1,1> x_vector =
+      auto x_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      Eigen::Matrix<double,-1,-1> x_cov =
+      auto x_cov =
         in__.template read_constrain_cov_matrix<
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 2);
       out__.write(theta);
@@ -24408,15 +24388,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> a =
+      auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_pair);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      local_scalar_t__ mu_a = in__.template read<local_scalar_t__>();
-      local_scalar_t__ sigma_a =
+      auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      auto mu_a = in__.template read<local_scalar_t__>();
+      auto sigma_a =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_y =
+      auto sigma_y =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
       Eigen::Matrix<local_scalar_t__,-1,1> y_hat =
@@ -24489,15 +24468,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> a =
+      auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_pair);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      local_scalar_t__ mu_a = in__.template read<local_scalar_t__>();
-      local_scalar_t__ sigma_a =
+      auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      auto mu_a = in__.template read<local_scalar_t__>();
+      auto sigma_a =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      local_scalar_t__ sigma_y =
+      auto sigma_y =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
       Eigen::Matrix<local_scalar_t__,-1,1> y_hat =
@@ -24581,15 +24559,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> a =
+      auto a =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(n_pair);
-      Eigen::Matrix<double,-1,1> beta =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
-      double mu_a = in__.template read<local_scalar_t__>();
-      double sigma_a =
+      auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      auto mu_a = in__.template read<local_scalar_t__>();
+      auto sigma_a =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
-      double sigma_y =
+      auto sigma_y =
         in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
           100, lp__);
       Eigen::Matrix<double,-1,1> y_hat =
@@ -25035,9 +25012,9 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
+      auto m2 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
-      Eigen::Matrix<local_scalar_t__,-1,-1> m3 =
+      auto m3 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
         Eigen::Matrix<local_scalar_t__,-1,-1> m5 =
@@ -25099,9 +25076,9 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
+      auto m2 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
-      Eigen::Matrix<local_scalar_t__,-1,-1> m3 =
+      auto m3 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       {
         Eigen::Matrix<local_scalar_t__,-1,-1> m5 =
@@ -25174,9 +25151,9 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> m2 =
+      auto m2 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
-      Eigen::Matrix<double,-1,-1> m3 =
+      auto m3 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(10, 10);
       out__.write(m2);
       out__.write(m3);
@@ -25950,14 +25927,14 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ alpha0 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ alpha1 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ alpha2 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ alpha12 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ tau =
+      auto alpha0 = in__.template read<local_scalar_t__>();
+      auto alpha1 = in__.template read<local_scalar_t__>();
+      auto alpha2 = in__.template read<local_scalar_t__>();
+      auto alpha12 = in__.template read<local_scalar_t__>();
+      auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> b =
+      auto b =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(I, K);
       local_scalar_t__ sigma = DUMMY_VAR__;
@@ -26027,14 +26004,14 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ alpha0 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ alpha1 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ alpha2 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ alpha12 = in__.template read<local_scalar_t__>();
-      local_scalar_t__ tau =
+      auto alpha0 = in__.template read<local_scalar_t__>();
+      auto alpha1 = in__.template read<local_scalar_t__>();
+      auto alpha2 = in__.template read<local_scalar_t__>();
+      auto alpha12 = in__.template read<local_scalar_t__>();
+      auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> b =
+      auto b =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(I, K);
       local_scalar_t__ sigma = DUMMY_VAR__;
@@ -26115,14 +26092,14 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     // suppress unused var warning
     (void) function__;
     try {
-      double alpha0 = in__.template read<local_scalar_t__>();
-      double alpha1 = in__.template read<local_scalar_t__>();
-      double alpha2 = in__.template read<local_scalar_t__>();
-      double alpha12 = in__.template read<local_scalar_t__>();
-      double tau =
+      auto alpha0 = in__.template read<local_scalar_t__>();
+      auto alpha1 = in__.template read<local_scalar_t__>();
+      auto alpha2 = in__.template read<local_scalar_t__>();
+      auto alpha12 = in__.template read<local_scalar_t__>();
+      auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      std::vector<Eigen::Matrix<double,-1,1>> b =
+      auto b =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(I, K);
       double sigma = std::numeric_limits<double>::quiet_NaN();
@@ -26541,7 +26518,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ param = in__.template read<local_scalar_t__>();
+      auto param = in__.template read<local_scalar_t__>();
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> local =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(2,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__));
@@ -26592,7 +26569,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ param = in__.template read<local_scalar_t__>();
+      auto param = in__.template read<local_scalar_t__>();
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> local =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(2,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(5, DUMMY_VAR__));
@@ -26654,7 +26631,7 @@ class unenforce_initialize_should_fail_model final : public model_base_crtp<unen
     // suppress unused var warning
     (void) function__;
     try {
-      double param = in__.template read<local_scalar_t__>();
+      auto param = in__.template read<local_scalar_t__>();
       std::vector<Eigen::Matrix<double,-1,1>> local =
         std::vector<Eigen::Matrix<double,-1,1>>(2,
           Eigen::Matrix<double,-1,1>::Constant(5,
@@ -26976,7 +26953,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ y = in__.template read<local_scalar_t__>();
+      auto y = in__.template read<local_scalar_t__>();
       local_scalar_t__ no_init = DUMMY_VAR__;
       local_scalar_t__ init_from_param = DUMMY_VAR__;
       current_statement__ = 3;
@@ -27029,7 +27006,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ y = in__.template read<local_scalar_t__>();
+      auto y = in__.template read<local_scalar_t__>();
       local_scalar_t__ no_init = DUMMY_VAR__;
       local_scalar_t__ init_from_param = DUMMY_VAR__;
       current_statement__ = 3;
@@ -27093,7 +27070,7 @@ class unenforce_initialize_model final : public model_base_crtp<unenforce_initia
     // suppress unused var warning
     (void) function__;
     try {
-      double y = in__.template read<local_scalar_t__>();
+      auto y = in__.template read<local_scalar_t__>();
       double no_init = std::numeric_limits<double>::quiet_NaN();
       double init_from_param = std::numeric_limits<double>::quiet_NaN();
       double dependent_no_init = std::numeric_limits<double>::quiet_NaN();

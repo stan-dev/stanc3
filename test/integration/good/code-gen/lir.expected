@@ -6165,68 +6165,55 @@
             (Expression (Cast Void (Var function__)))
             (TryCatch
              ((VariableDefn
-               ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_real)
+               ((static false) (constexpr false) (type_ Auto) (name p_real)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read" ((TypeLiteral local_scalar_t__))
                    ())))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_upper)
+               ((static false) (constexpr false) (type_ Auto) (name p_upper)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
                    ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
                    ((Var p_real) (Var lp__)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_lower)
+               ((static false) (constexpr false) (type_ Auto) (name p_lower)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_ub"
                    ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
                    ((Var p_upper) (Var lp__)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (TypeLiteral local_scalar_t__)))
-                (name offset_multiplier)
+               ((static false) (constexpr false) (type_ Auto) (name offset_multiplier)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_offset_multiplier"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 1) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (TypeLiteral local_scalar_t__)))
-                (name no_offset_multiplier)
+               ((static false) (constexpr false) (type_ Auto) (name no_offset_multiplier)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_offset_multiplier"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 0) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (TypeLiteral local_scalar_t__)))
-                (name offset_no_multiplier)
+               ((static false) (constexpr false) (type_ Auto) (name offset_no_multiplier)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_offset_multiplier"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 3) (Literal 1) (Var lp__) (Literal 5)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (TypeLiteral local_scalar_t__))) (name p_real_1d_ar)
+               ((static false) (constexpr false) (type_ Auto) (name p_real_1d_ar)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__)))))
-                (name p_real_3d_ar)
+               ((static false) (constexpr false) (type_ Auto) (name p_real_3d_ar)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
@@ -6234,9 +6221,7 @@
                     (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N) (Var M) (Var K)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                (name p_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
@@ -6244,21 +6229,14 @@
                     (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                (name p_1d_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_1d_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
                    ((Var N) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
-                (name p_3d_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_3d_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
@@ -6267,30 +6245,21 @@
                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
-                (name p_row_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
                    ((Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
-                (name p_1d_row_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_1d_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
                    ((Var N) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
-                (name p_3d_row_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_3d_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
@@ -6299,20 +6268,14 @@
                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
-                (name p_mat)
+               ((static false) (constexpr false) (type_ Auto) (name p_mat)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
                    ((Literal 5) (Literal 4)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector
-                  (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))))
-                (name p_ar_mat)
+               ((static false) (constexpr false) (type_ Auto) (name p_ar_mat)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lub"
@@ -6322,9 +6285,7 @@
                    ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5)
                     (Literal 2) (Literal 3)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                (name p_simplex)
+               ((static false) (constexpr false) (type_ Auto) (name p_simplex)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
@@ -6332,9 +6293,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                (name p_1d_simplex)
+               ((static false) (constexpr false) (type_ Auto) (name p_1d_simplex)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
@@ -6342,12 +6301,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
-                (name p_3d_simplex)
+               ((static false) (constexpr false) (type_ Auto) (name p_3d_simplex)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
@@ -6357,9 +6311,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                (name p_cfcov_54)
+               ((static false) (constexpr false) (type_ Auto) (name p_cfcov_54)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
@@ -6367,9 +6319,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 5) (Literal 4)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                (name p_cfcov_33)
+               ((static false) (constexpr false) (type_ Auto) (name p_cfcov_33)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
@@ -6377,9 +6327,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 3) (Literal 3)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
-                (name p_cfcov_33_ar)
+               ((static false) (constexpr false) (type_ Auto) (name p_cfcov_33_ar)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
@@ -6387,18 +6335,14 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var K) (Literal 3) (Literal 3)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                (name x_p)
+               ((static false) (constexpr false) (type_ Auto) (name x_p)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                    ((Literal 2)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                (name y_p)
+               ((static false) (constexpr false) (type_ Auto) (name y_p)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
@@ -7154,68 +7098,55 @@
             (Expression (Cast Void (Var function__)))
             (TryCatch
              ((VariableDefn
-               ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_real)
+               ((static false) (constexpr false) (type_ Auto) (name p_real)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read" ((TypeLiteral local_scalar_t__))
                    ())))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_upper)
+               ((static false) (constexpr false) (type_ Auto) (name p_upper)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
                    ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
                    ((Var p_real) (Var lp__)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
-                (name p_lower)
+               ((static false) (constexpr false) (type_ Auto) (name p_lower)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_ub"
                    ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
                    ((Var p_upper) (Var lp__)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (TypeLiteral local_scalar_t__)))
-                (name offset_multiplier)
+               ((static false) (constexpr false) (type_ Auto) (name offset_multiplier)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_offset_multiplier"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 1) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (TypeLiteral local_scalar_t__)))
-                (name no_offset_multiplier)
+               ((static false) (constexpr false) (type_ Auto) (name no_offset_multiplier)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_offset_multiplier"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 0) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (TypeLiteral local_scalar_t__)))
-                (name offset_no_multiplier)
+               ((static false) (constexpr false) (type_ Auto) (name offset_no_multiplier)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_offset_multiplier"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 3) (Literal 1) (Var lp__) (Literal 5)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (TypeLiteral local_scalar_t__))) (name p_real_1d_ar)
+               ((static false) (constexpr false) (type_ Auto) (name p_real_1d_ar)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector (StdVector (StdVector (TypeLiteral local_scalar_t__)))))
-                (name p_real_3d_ar)
+               ((static false) (constexpr false) (type_ Auto) (name p_real_3d_ar)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
@@ -7223,9 +7154,7 @@
                     (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N) (Var M) (Var K)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                (name p_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
@@ -7233,21 +7162,14 @@
                     (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                (name p_1d_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_1d_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
                    ((Var N) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
-                (name p_3d_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_3d_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
@@ -7256,30 +7178,21 @@
                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
-                (name p_row_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
                    ((Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
-                (name p_1d_row_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_1d_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
                    ((Var N) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
-                (name p_3d_row_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_3d_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
@@ -7288,20 +7201,14 @@
                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
-                (name p_mat)
+               ((static false) (constexpr false) (type_ Auto) (name p_mat)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
                    ((Literal 5) (Literal 4)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector
-                  (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))))
-                (name p_ar_mat)
+               ((static false) (constexpr false) (type_ Auto) (name p_ar_mat)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lub"
@@ -7311,9 +7218,7 @@
                    ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5)
                     (Literal 2) (Literal 3)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                (name p_simplex)
+               ((static false) (constexpr false) (type_ Auto) (name p_simplex)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
@@ -7321,9 +7226,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
-                (name p_1d_simplex)
+               ((static false) (constexpr false) (type_ Auto) (name p_1d_simplex)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
@@ -7331,12 +7234,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_
-                 (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
-                (name p_3d_simplex)
+               ((static false) (constexpr false) (type_ Auto) (name p_3d_simplex)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
@@ -7346,9 +7244,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                (name p_cfcov_54)
+               ((static false) (constexpr false) (type_ Auto) (name p_cfcov_54)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
@@ -7356,9 +7252,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 5) (Literal 4)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
-                (name p_cfcov_33)
+               ((static false) (constexpr false) (type_ Auto) (name p_cfcov_33)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
@@ -7366,9 +7260,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 3) (Literal 3)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
-                (name p_cfcov_33_ar)
+               ((static false) (constexpr false) (type_ Auto) (name p_cfcov_33_ar)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
@@ -7376,18 +7268,14 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var K) (Literal 3) (Literal 3)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                (name x_p)
+               ((static false) (constexpr false) (type_ Auto) (name x_p)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                    ((Literal 2)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                (name y_p)
+               ((static false) (constexpr false) (type_ Auto) (name y_p)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
@@ -8157,60 +8045,55 @@
             (Expression (Cast Void (Var function__)))
             (TryCatch
              ((VariableDefn
-               ((static false) (constexpr false) (type_ Double) (name p_real)
+               ((static false) (constexpr false) (type_ Auto) (name p_real)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read" ((TypeLiteral local_scalar_t__))
                    ())))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ Double) (name p_upper)
+               ((static false) (constexpr false) (type_ Auto) (name p_upper)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
                    ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
                    ((Var p_real) (Var lp__)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ Double) (name p_lower)
+               ((static false) (constexpr false) (type_ Auto) (name p_lower)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_ub"
                    ((TypeLiteral local_scalar_t__) (TemplateType jacobian__))
                    ((Var p_upper) (Var lp__)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (StdVector Double))
-                (name offset_multiplier)
+               ((static false) (constexpr false) (type_ Auto) (name offset_multiplier)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_offset_multiplier"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 1) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (StdVector Double))
-                (name no_offset_multiplier)
+               ((static false) (constexpr false) (type_ Auto) (name no_offset_multiplier)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_offset_multiplier"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 0) (Literal 2) (Var lp__) (Literal 5)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (StdVector Double))
-                (name offset_no_multiplier)
+               ((static false) (constexpr false) (type_ Auto) (name offset_no_multiplier)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_offset_multiplier"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 3) (Literal 1) (Var lp__) (Literal 5)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (StdVector Double))
-                (name p_real_1d_ar)
+               ((static false) (constexpr false) (type_ Auto) (name p_real_1d_ar)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
                    ((StdVector (TypeLiteral local_scalar_t__)) (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector Double)))) (name p_real_3d_ar)
+               ((static false) (constexpr false) (type_ Auto) (name p_real_3d_ar)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
@@ -8218,8 +8101,7 @@
                     (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N) (Var M) (Var K)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
-                (name p_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
@@ -8227,17 +8109,14 @@
                     (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 1 AoS))) (name p_1d_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_1d_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
                    ((Var N) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
-                (name p_3d_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_3d_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
@@ -8246,25 +8125,21 @@
                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double 1 -1 AoS))
-                (name p_row_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
                    ((Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double 1 -1 AoS))) (name p_1d_row_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_1d_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
                    ((Var N) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS)))))
-                (name p_3d_row_vec)
+               ((static false) (constexpr false) (type_ Auto) (name p_3d_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
@@ -8273,17 +8148,14 @@
                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
-                (name p_mat)
+               ((static false) (constexpr false) (type_ Auto) (name p_mat)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
                    ((Literal 5) (Literal 4)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (Matrix Double -1 -1 AoS)))) 
-                (name p_ar_mat)
+               ((static false) (constexpr false) (type_ Auto) (name p_ar_mat)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lub"
@@ -8293,8 +8165,7 @@
                    ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5)
                     (Literal 2) (Literal 3)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
-                (name p_simplex)
+               ((static false) (constexpr false) (type_ Auto) (name p_simplex)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
@@ -8302,8 +8173,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 1 AoS))) (name p_1d_simplex)
+               ((static false) (constexpr false) (type_ Auto) (name p_1d_simplex)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
@@ -8311,9 +8181,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
-                (name p_3d_simplex)
+               ((static false) (constexpr false) (type_ Auto) (name p_3d_simplex)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
@@ -8323,8 +8191,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
-                (name p_cfcov_54)
+               ((static false) (constexpr false) (type_ Auto) (name p_cfcov_54)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
@@ -8332,8 +8199,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 5) (Literal 4)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
-                (name p_cfcov_33)
+               ((static false) (constexpr false) (type_ Auto) (name p_cfcov_33)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
@@ -8341,8 +8207,7 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 3) (Literal 3)))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name p_cfcov_33_ar)
+               ((static false) (constexpr false) (type_ Auto) (name p_cfcov_33_ar)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
@@ -8350,16 +8215,14 @@
                     (TemplateType jacobian__))
                    ((Var lp__) (Var K) (Literal 3) (Literal 3)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
-                (name x_p)
+               ((static false) (constexpr false) (type_ Auto) (name x_p)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
                    ((Literal 2)))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
-                (name y_p)
+               ((static false) (constexpr false) (type_ Auto) (name y_p)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"

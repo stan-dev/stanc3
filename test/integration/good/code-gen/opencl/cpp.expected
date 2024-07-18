@@ -903,17 +903,17 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ p_real = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> p_real_array =
+      auto p_real = in__.template read<local_scalar_t__>();
+      auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<local_scalar_t__,-1,-1> p_matrix =
+      auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
-      Eigen::Matrix<local_scalar_t__,-1,1> p_vector =
+      auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
-      Eigen::Matrix<local_scalar_t__,1,-1> p_row_vector =
+      auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
-      local_scalar_t__ y_p = in__.template read<local_scalar_t__>();
+      auto y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real = DUMMY_VAR__;
       current_statement__ = 8;
       transformed_param_real = stan::math::bernoulli_logit_lpmf<false>(d_int,
@@ -3944,17 +3944,17 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ p_real = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> p_real_array =
+      auto p_real = in__.template read<local_scalar_t__>();
+      auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<local_scalar_t__,-1,-1> p_matrix =
+      auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
-      Eigen::Matrix<local_scalar_t__,-1,1> p_vector =
+      auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
-      Eigen::Matrix<local_scalar_t__,1,-1> p_row_vector =
+      auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
-      local_scalar_t__ y_p = in__.template read<local_scalar_t__>();
+      auto y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real = DUMMY_VAR__;
       current_statement__ = 8;
       transformed_param_real = stan::math::bernoulli_logit_lpmf<false>(d_int,
@@ -6996,17 +6996,17 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double p_real = in__.template read<local_scalar_t__>();
-      std::vector<double> p_real_array =
+      auto p_real = in__.template read<local_scalar_t__>();
+      auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<double,-1,-1> p_matrix =
+      auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
-      Eigen::Matrix<double,-1,1> p_vector =
+      auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
-      Eigen::Matrix<double,1,-1> p_row_vector =
+      auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
-      double y_p = in__.template read<local_scalar_t__>();
+      auto y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real =
         std::numeric_limits<double>::quiet_NaN();
       out__.write(p_real);
@@ -10537,17 +10537,17 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ p_real = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> p_real_array =
+      auto p_real = in__.template read<local_scalar_t__>();
+      auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<local_scalar_t__,-1,-1> p_matrix =
+      auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
-      Eigen::Matrix<local_scalar_t__,-1,1> p_vector =
+      auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
-      Eigen::Matrix<local_scalar_t__,1,-1> p_row_vector =
+      auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
-      local_scalar_t__ y_p = in__.template read<local_scalar_t__>();
+      auto y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real = DUMMY_VAR__;
       current_statement__ = 8;
       transformed_param_real = stan::math::bernoulli_lpmf<false>(d_int_array,
@@ -10631,17 +10631,17 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ p_real = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> p_real_array =
+      auto p_real = in__.template read<local_scalar_t__>();
+      auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<local_scalar_t__,-1,-1> p_matrix =
+      auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
-      Eigen::Matrix<local_scalar_t__,-1,1> p_vector =
+      auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
-      Eigen::Matrix<local_scalar_t__,1,-1> p_row_vector =
+      auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
-      local_scalar_t__ y_p = in__.template read<local_scalar_t__>();
+      auto y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real = DUMMY_VAR__;
       current_statement__ = 8;
       transformed_param_real = stan::math::bernoulli_lpmf<false>(d_int_array,
@@ -10736,17 +10736,17 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      double p_real = in__.template read<local_scalar_t__>();
-      std::vector<double> p_real_array =
+      auto p_real = in__.template read<local_scalar_t__>();
+      auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<double,-1,-1> p_matrix =
+      auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
-      Eigen::Matrix<double,-1,1> p_vector =
+      auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
-      Eigen::Matrix<double,1,-1> p_row_vector =
+      auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
-      double y_p = in__.template read<local_scalar_t__>();
+      auto y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real =
         std::numeric_limits<double>::quiet_NaN();
       out__.write(p_real);

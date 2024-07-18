@@ -326,12 +326,10 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ y = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,1> y0 =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      local_scalar_t__ t0 = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> times =
-        in__.template read<std::vector<local_scalar_t__>>(N);
+      auto y = in__.template read<local_scalar_t__>();
+      auto y0 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      auto t0 = in__.template read<local_scalar_t__>();
+      auto times = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> z =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(M,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
@@ -390,12 +388,10 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ y = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,1> y0 =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      local_scalar_t__ t0 = in__.template read<local_scalar_t__>();
-      std::vector<local_scalar_t__> times =
-        in__.template read<std::vector<local_scalar_t__>>(N);
+      auto y = in__.template read<local_scalar_t__>();
+      auto y0 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      auto t0 = in__.template read<local_scalar_t__>();
+      auto times = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> z =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(M,
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__));
@@ -465,12 +461,10 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     // suppress unused var warning
     (void) function__;
     try {
-      double y = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double,-1,1> y0 =
-        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      double t0 = in__.template read<local_scalar_t__>();
-      std::vector<double> times =
-        in__.template read<std::vector<local_scalar_t__>>(N);
+      auto y = in__.template read<local_scalar_t__>();
+      auto y0 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      auto t0 = in__.template read<local_scalar_t__>();
+      auto times = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<double,-1,1>> z =
         std::vector<Eigen::Matrix<double,-1,1>>(M,
           Eigen::Matrix<double,-1,1>::Constant(N,
@@ -1208,16 +1202,16 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ beta =
+      auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ gamma =
+      auto gamma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ xi =
+      auto xi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ delta =
+      auto delta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> y =
@@ -1336,16 +1330,16 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ beta =
+      auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ gamma =
+      auto gamma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ xi =
+      auto xi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      local_scalar_t__ delta =
+      auto delta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> y =
@@ -1475,16 +1469,16 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      double beta =
+      auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double gamma =
+      auto gamma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double xi =
+      auto xi =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
-      double delta =
+      auto delta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       std::vector<Eigen::Matrix<double,-1,1>> y =
