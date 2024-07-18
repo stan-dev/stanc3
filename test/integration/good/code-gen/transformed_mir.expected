@@ -2935,6 +2935,107 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_int_3d_ar_flat__)
+          (decl_type (Unsized (UArray UInt))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_int_3d_ar_flat__) ()) (UArray UInt)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_int_3d_ar))
+               (meta
+                ((type_ (UArray (UArray (UArray UInt)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var M))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var N))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (Assignment
+                                  ((LVariable d_int_3d_ar)
+                                   ((Single
+                                     ((pattern (Var sym3__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym2__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym1__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                  (UArray (UArray (UArray UInt)))
+                                  ((pattern
+                                    (Indexed
+                                     ((pattern (Var d_int_3d_ar_flat__))
+                                      (meta
+                                       ((type_ (UArray UInt)) (loc <opaque>)
+                                        (adlevel DataOnly))))
+                                     ((Single
+                                       ((pattern (Var pos__))
+                                        (meta
+                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>))
+                               ((pattern
+                                 (Assignment ((LVariable pos__) ()) UInt
+                                  ((pattern
+                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                     (((pattern (Var pos__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                      ((pattern (Lit Int 1))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnCheck
@@ -3053,6 +3154,107 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_real_3d_ar_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_real_3d_ar_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_real_3d_ar))
+               (meta
+                ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var M))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var N))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (Assignment
+                                  ((LVariable d_real_3d_ar)
+                                   ((Single
+                                     ((pattern (Var sym3__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym2__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym1__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                  (UArray (UArray (UArray UReal)))
+                                  ((pattern
+                                    (Indexed
+                                     ((pattern (Var d_real_3d_ar_flat__))
+                                      (meta
+                                       ((type_ (UArray UReal)) (loc <opaque>)
+                                        (adlevel DataOnly))))
+                                     ((Single
+                                       ((pattern (Var pos__))
+                                        (meta
+                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                   (meta
+                                    ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>))
+                               ((pattern
+                                 (Assignment ((LVariable pos__) ()) UInt
+                                  ((pattern
+                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                     (((pattern (Var pos__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                      ((pattern (Lit Int 1))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
       (((pattern (Lit Str d_vec))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3066,6 +3268,63 @@
         (SVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_vec_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_vec_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_vec))
+               (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (Assignment
+                  ((LVariable d_vec)
+                   ((Single
+                     ((pattern (Var sym1__))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
+                  ((pattern
+                    (Indexed
+                     ((pattern (Var d_vec_flat__))
+                      (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                     ((Single
+                       ((pattern (Var pos__))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment ((LVariable pos__) ()) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var pos__))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3090,6 +3349,80 @@
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_1d_vec_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_1d_vec_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_1d_vec))
+               (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var N))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_1d_vec)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          (UArray UVector)
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_1d_vec_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3134,6 +3467,135 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_3d_vec_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_3d_vec_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_3d_vec))
+               (meta
+                ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var K))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var M))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (For (loopvar sym4__)
+                                  (lower
+                                   ((pattern (Lit Int 1))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (upper
+                                   ((pattern (Var N))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (body
+                                   ((pattern
+                                     (Block
+                                      (((pattern
+                                         (Assignment
+                                          ((LVariable d_3d_vec)
+                                           ((Single
+                                             ((pattern (Var sym4__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym3__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym2__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym1__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))))
+                                          (UArray (UArray (UArray UVector)))
+                                          ((pattern
+                                            (Indexed
+                                             ((pattern (Var d_3d_vec_flat__))
+                                              (meta
+                                               ((type_ (UArray UReal)) 
+                                                (loc <opaque>) (adlevel DataOnly))))
+                                             ((Single
+                                               ((pattern (Var pos__))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))))))
+                                           (meta
+                                            ((type_ UReal) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>))
+                                       ((pattern
+                                         (Assignment ((LVariable pos__) ()) UInt
+                                          ((pattern
+                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (((pattern (Var pos__))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly))))
+                                              ((pattern (Lit Int 1))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly)))))))
+                                           (meta
+                                            ((type_ UInt) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>)))))
+                                    (meta <opaque>)))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
       (((pattern (Lit Str d_row_vec))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3147,6 +3609,63 @@
         (SRowVector AoS
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_row_vec_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_row_vec_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_row_vec))
+               (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (Assignment
+                  ((LVariable d_row_vec)
+                   ((Single
+                     ((pattern (Var sym1__))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  URowVector
+                  ((pattern
+                    (Indexed
+                     ((pattern (Var d_row_vec_flat__))
+                      (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                     ((Single
+                       ((pattern (Var pos__))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment ((LVariable pos__) ()) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var pos__))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3171,6 +3690,80 @@
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_1d_row_vec_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_1d_row_vec_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_1d_row_vec))
+               (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var N))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_1d_row_vec)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          (UArray URowVector)
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_1d_row_vec_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3215,6 +3808,135 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_3d_row_vec_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_3d_row_vec_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_3d_row_vec))
+               (meta
+                ((type_ (UArray (UArray (UArray URowVector)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var K))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var M))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (For (loopvar sym4__)
+                                  (lower
+                                   ((pattern (Lit Int 1))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (upper
+                                   ((pattern (Var N))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (body
+                                   ((pattern
+                                     (Block
+                                      (((pattern
+                                         (Assignment
+                                          ((LVariable d_3d_row_vec)
+                                           ((Single
+                                             ((pattern (Var sym4__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym3__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym2__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym1__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))))
+                                          (UArray (UArray (UArray URowVector)))
+                                          ((pattern
+                                            (Indexed
+                                             ((pattern (Var d_3d_row_vec_flat__))
+                                              (meta
+                                               ((type_ (UArray UReal)) 
+                                                (loc <opaque>) (adlevel DataOnly))))
+                                             ((Single
+                                               ((pattern (Var pos__))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))))))
+                                           (meta
+                                            ((type_ UReal) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>))
+                                       ((pattern
+                                         (Assignment ((LVariable pos__) ()) UInt
+                                          ((pattern
+                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (((pattern (Var pos__))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly))))
+                                              ((pattern (Lit Int 1))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly)))))))
+                                           (meta
+                                            ((type_ UInt) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>)))))
+                                    (meta <opaque>)))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (Decl (decl_adtype DataOnly) (decl_id d_ar_mat)
       (decl_type
        (Sized
@@ -3228,6 +3950,135 @@
           ((pattern (Lit Int 5)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 4)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_ar_mat_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_ar_mat_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_ar_mat))
+               (meta
+                ((type_ (UArray (UArray UMatrix))) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 2))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Lit Int 5))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (For (loopvar sym4__)
+                                  (lower
+                                   ((pattern (Lit Int 1))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (upper
+                                   ((pattern (Lit Int 4))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (body
+                                   ((pattern
+                                     (Block
+                                      (((pattern
+                                         (Assignment
+                                          ((LVariable d_ar_mat)
+                                           ((Single
+                                             ((pattern (Var sym4__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym3__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym2__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym1__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))))
+                                          (UArray (UArray UMatrix))
+                                          ((pattern
+                                            (Indexed
+                                             ((pattern (Var d_ar_mat_flat__))
+                                              (meta
+                                               ((type_ (UArray UReal)) 
+                                                (loc <opaque>) (adlevel DataOnly))))
+                                             ((Single
+                                               ((pattern (Var pos__))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))))))
+                                           (meta
+                                            ((type_ UReal) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>))
+                                       ((pattern
+                                         (Assignment ((LVariable pos__) ()) UInt
+                                          ((pattern
+                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (((pattern (Var pos__))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly))))
+                                              ((pattern (Lit Int 1))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly)))))))
+                                           (meta
+                                            ((type_ UInt) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>)))))
+                                    (meta <opaque>)))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -3271,6 +4122,63 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_simplex_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_simplex_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_simplex))
+               (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (Assignment
+                  ((LVariable d_simplex)
+                   ((Single
+                     ((pattern (Var sym1__))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
+                  ((pattern
+                    (Indexed
+                     ((pattern (Var d_simplex_flat__))
+                      (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                     ((Single
+                       ((pattern (Var pos__))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment ((LVariable pos__) ()) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var pos__))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnCheck (trans Simplex) (var_name d_simplex)
@@ -3302,6 +4210,80 @@
           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_1d_simplex_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_1d_simplex_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_1d_simplex))
+               (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var N))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_1d_simplex)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          (UArray UVector)
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_1d_simplex_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -3355,6 +4337,135 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_3d_simplex_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_3d_simplex_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_3d_simplex))
+               (meta
+                ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var K))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var M))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (For (loopvar sym4__)
+                                  (lower
+                                   ((pattern (Lit Int 1))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (upper
+                                   ((pattern (Var N))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (body
+                                   ((pattern
+                                     (Block
+                                      (((pattern
+                                         (Assignment
+                                          ((LVariable d_3d_simplex)
+                                           ((Single
+                                             ((pattern (Var sym4__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym3__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym2__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym1__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))))
+                                          (UArray (UArray (UArray UVector)))
+                                          ((pattern
+                                            (Indexed
+                                             ((pattern (Var d_3d_simplex_flat__))
+                                              (meta
+                                               ((type_ (UArray UReal)) 
+                                                (loc <opaque>) (adlevel DataOnly))))
+                                             ((Single
+                                               ((pattern (Var pos__))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))))))
+                                           (meta
+                                            ((type_ UReal) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>))
+                                       ((pattern
+                                         (Assignment ((LVariable pos__) ()) UInt
+                                          ((pattern
+                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (((pattern (Var pos__))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly))))
+                                              ((pattern (Lit Int 1))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly)))))))
+                                           (meta
+                                            ((type_ UInt) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>)))))
+                                    (meta <opaque>)))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnCheck (trans Simplex) (var_name d_3d_simplex)
@@ -3374,6 +4485,81 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_cfcov_54_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_cfcov_54_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_cfcov_54))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 4))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 5))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_cfcov_54)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          UMatrix
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_cfcov_54_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnCheck (trans CholeskyCov) (var_name d_cfcov_54)
@@ -3390,6 +4576,81 @@
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_cfcov_33_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_cfcov_33_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_cfcov_33))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 3))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_cfcov_33)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          UMatrix
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_cfcov_33_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -3417,6 +4678,106 @@
           ((pattern (Lit Int 3)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_cfcov_33_ar_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_cfcov_33_ar_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_cfcov_33_ar))
+               (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 3))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var K))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (Assignment
+                                  ((LVariable d_cfcov_33_ar)
+                                   ((Single
+                                     ((pattern (Var sym3__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym2__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym1__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                  (UArray UMatrix)
+                                  ((pattern
+                                    (Indexed
+                                     ((pattern (Var d_cfcov_33_ar_flat__))
+                                      (meta
+                                       ((type_ (UArray UReal)) (loc <opaque>)
+                                        (adlevel DataOnly))))
+                                     ((Single
+                                       ((pattern (Var pos__))
+                                        (meta
+                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                   (meta
+                                    ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>))
+                               ((pattern
+                                 (Assignment ((LVariable pos__) ()) UInt
+                                  ((pattern
+                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                     (((pattern (Var pos__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                      ((pattern (Lit Int 1))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp
@@ -3484,6 +4845,81 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_int_array_2d_flat__)
+          (decl_type (Unsized (UArray UInt))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_int_array_2d_flat__) ()) (UArray UInt)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_int_array_2d))
+               (meta ((type_ (UArray (UArray UInt))) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var d_int))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_int_array_2d)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          (UArray (UArray UInt))
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_int_array_2d_flat__))
+                              (meta
+                               ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
       (((pattern (Lit Str d_int_array_3d))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3503,6 +4939,108 @@
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_int_array_3d_flat__)
+          (decl_type (Unsized (UArray UInt))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_int_array_3d_flat__) ()) (UArray UInt)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_int_array_3d))
+               (meta
+                ((type_ (UArray (UArray (UArray UInt)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 2))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var d_int))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (Assignment
+                                  ((LVariable d_int_array_3d)
+                                   ((Single
+                                     ((pattern (Var sym3__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym2__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym1__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                  (UArray (UArray (UArray UInt)))
+                                  ((pattern
+                                    (Indexed
+                                     ((pattern (Var d_int_array_3d_flat__))
+                                      (meta
+                                       ((type_ (UArray UInt)) (loc <opaque>)
+                                        (adlevel DataOnly))))
+                                     ((Single
+                                       ((pattern (Var pos__))
+                                        (meta
+                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>))
+                               ((pattern
+                                 (Assignment ((LVariable pos__) ()) UInt
+                                  ((pattern
+                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                     (((pattern (Var pos__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                      ((pattern (Lit Int 1))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id d_real) (decl_type (Sized SReal))
@@ -3561,6 +5099,81 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_real_array_2d_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_real_array_2d_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_real_array_2d))
+               (meta ((type_ (UArray (UArray UReal))) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var d_int))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_real_array_2d)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          (UArray (UArray UReal))
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_real_array_2d_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
       (((pattern (Lit Str d_real_array_3d))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3580,6 +5193,108 @@
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_real_array_3d_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_real_array_3d_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_real_array_3d))
+               (meta
+                ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 2))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var d_int))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (Assignment
+                                  ((LVariable d_real_array_3d)
+                                   ((Single
+                                     ((pattern (Var sym3__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym2__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym1__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                  (UArray (UArray (UArray UReal)))
+                                  ((pattern
+                                    (Indexed
+                                     ((pattern (Var d_real_array_3d_flat__))
+                                      (meta
+                                       ((type_ (UArray UReal)) (loc <opaque>)
+                                        (adlevel DataOnly))))
+                                     ((Single
+                                       ((pattern (Var pos__))
+                                        (meta
+                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                   (meta
+                                    ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>))
+                               ((pattern
+                                 (Assignment ((LVariable pos__) ()) UInt
+                                  ((pattern
+                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                     (((pattern (Var pos__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                      ((pattern (Lit Int 1))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3605,6 +5320,81 @@
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_matrix_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_matrix_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_matrix))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var d_int))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_matrix)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          UMatrix
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_matrix_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3640,6 +5430,106 @@
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_matrix_array_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_matrix_array_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_matrix_array))
+               (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var d_int))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var d_int))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (Assignment
+                                  ((LVariable d_matrix_array)
+                                   ((Single
+                                     ((pattern (Var sym3__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym2__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym1__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                  (UArray UMatrix)
+                                  ((pattern
+                                    (Indexed
+                                     ((pattern (Var d_matrix_array_flat__))
+                                      (meta
+                                       ((type_ (UArray UReal)) (loc <opaque>)
+                                        (adlevel DataOnly))))
+                                     ((Single
+                                       ((pattern (Var pos__))
+                                        (meta
+                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                   (meta
+                                    ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>))
+                               ((pattern
+                                 (Assignment ((LVariable pos__) ()) UInt
+                                  ((pattern
+                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                     (((pattern (Var pos__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                      ((pattern (Lit Int 1))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3679,6 +5569,135 @@
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_matrix_array_2d_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_matrix_array_2d_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_matrix_array_2d))
+               (meta
+                ((type_ (UArray (UArray UMatrix))) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var d_int))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Lit Int 2))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (For (loopvar sym4__)
+                                  (lower
+                                   ((pattern (Lit Int 1))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (upper
+                                   ((pattern (Var d_int))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (body
+                                   ((pattern
+                                     (Block
+                                      (((pattern
+                                         (Assignment
+                                          ((LVariable d_matrix_array_2d)
+                                           ((Single
+                                             ((pattern (Var sym4__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym3__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym2__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym1__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))))
+                                          (UArray (UArray UMatrix))
+                                          ((pattern
+                                            (Indexed
+                                             ((pattern (Var d_matrix_array_2d_flat__))
+                                              (meta
+                                               ((type_ (UArray UReal)) 
+                                                (loc <opaque>) (adlevel DataOnly))))
+                                             ((Single
+                                               ((pattern (Var pos__))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))))))
+                                           (meta
+                                            ((type_ UReal) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>))
+                                       ((pattern
+                                         (Assignment ((LVariable pos__) ()) UInt
+                                          ((pattern
+                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (((pattern (Var pos__))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly))))
+                                              ((pattern (Lit Int 1))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly)))))))
+                                           (meta
+                                            ((type_ UInt) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>)))))
+                                    (meta <opaque>)))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3723,6 +5742,168 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_matrix_array_3d_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_matrix_array_3d_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_matrix_array_3d))
+               (meta
+                ((type_ (UArray (UArray (UArray UMatrix)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var d_int))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Lit Int 3))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (For (loopvar sym4__)
+                                  (lower
+                                   ((pattern (Lit Int 1))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (upper
+                                   ((pattern (Lit Int 2))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (body
+                                   ((pattern
+                                     (Block
+                                      (((pattern
+                                         (For (loopvar sym5__)
+                                          (lower
+                                           ((pattern (Lit Int 1))
+                                            (meta
+                                             ((type_ UInt) (loc <opaque>)
+                                              (adlevel DataOnly)))))
+                                          (upper
+                                           ((pattern (Var d_int))
+                                            (meta
+                                             ((type_ UInt) (loc <opaque>)
+                                              (adlevel DataOnly)))))
+                                          (body
+                                           ((pattern
+                                             (Block
+                                              (((pattern
+                                                 (Assignment
+                                                  ((LVariable d_matrix_array_3d)
+                                                   ((Single
+                                                     ((pattern (Var sym5__))
+                                                      (meta
+                                                       ((type_ UInt) 
+                                                        (loc <opaque>)
+                                                        (adlevel DataOnly)))))
+                                                    (Single
+                                                     ((pattern (Var sym4__))
+                                                      (meta
+                                                       ((type_ UInt) 
+                                                        (loc <opaque>)
+                                                        (adlevel DataOnly)))))
+                                                    (Single
+                                                     ((pattern (Var sym3__))
+                                                      (meta
+                                                       ((type_ UInt) 
+                                                        (loc <opaque>)
+                                                        (adlevel DataOnly)))))
+                                                    (Single
+                                                     ((pattern (Var sym2__))
+                                                      (meta
+                                                       ((type_ UInt) 
+                                                        (loc <opaque>)
+                                                        (adlevel DataOnly)))))
+                                                    (Single
+                                                     ((pattern (Var sym1__))
+                                                      (meta
+                                                       ((type_ UInt) 
+                                                        (loc <opaque>)
+                                                        (adlevel DataOnly)))))))
+                                                  (UArray (UArray (UArray UMatrix)))
+                                                  ((pattern
+                                                    (Indexed
+                                                     ((pattern
+                                                       (Var d_matrix_array_3d_flat__))
+                                                      (meta
+                                                       ((type_ (UArray UReal))
+                                                        (loc <opaque>)
+                                                        (adlevel DataOnly))))
+                                                     ((Single
+                                                       ((pattern (Var pos__))
+                                                        (meta
+                                                         ((type_ UInt) 
+                                                          (loc <opaque>)
+                                                          (adlevel DataOnly))))))))
+                                                   (meta
+                                                    ((type_ UReal) (loc <opaque>)
+                                                     (adlevel DataOnly))))))
+                                                (meta <opaque>))
+                                               ((pattern
+                                                 (Assignment ((LVariable pos__) ()) UInt
+                                                  ((pattern
+                                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                                     (((pattern (Var pos__))
+                                                       (meta
+                                                        ((type_ UInt) 
+                                                         (loc <opaque>)
+                                                         (adlevel DataOnly))))
+                                                      ((pattern (Lit Int 1))
+                                                       (meta
+                                                        ((type_ UInt) 
+                                                         (loc <opaque>)
+                                                         (adlevel DataOnly)))))))
+                                                   (meta
+                                                    ((type_ UInt) (loc <opaque>)
+                                                     (adlevel DataOnly))))))
+                                                (meta <opaque>)))))
+                                            (meta <opaque>)))))
+                                        (meta <opaque>)))))
+                                    (meta <opaque>)))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
       (((pattern (Lit Str d_vector))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3737,6 +5918,64 @@
         (SVector AoS
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_vector_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_vector_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_vector))
+               (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (Assignment
+                  ((LVariable d_vector)
+                   ((Single
+                     ((pattern (Var sym1__))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  UVector
+                  ((pattern
+                    (Indexed
+                     ((pattern (Var d_vector_flat__))
+                      (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                     ((Single
+                       ((pattern (Var pos__))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment ((LVariable pos__) ()) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var pos__))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3763,6 +6002,81 @@
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_vector_array_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_vector_array_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_vector_array))
+               (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var d_int))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_vector_array)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          (UArray UVector)
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_vector_array_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3792,6 +6106,107 @@
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_vector_array_2d_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_vector_array_2d_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_vector_array_2d))
+               (meta
+                ((type_ (UArray (UArray UVector))) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 2))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var d_int))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (Assignment
+                                  ((LVariable d_vector_array_2d)
+                                   ((Single
+                                     ((pattern (Var sym3__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym2__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym1__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                  (UArray (UArray UVector))
+                                  ((pattern
+                                    (Indexed
+                                     ((pattern (Var d_vector_array_2d_flat__))
+                                      (meta
+                                       ((type_ (UArray UReal)) (loc <opaque>)
+                                        (adlevel DataOnly))))
+                                     ((Single
+                                       ((pattern (Var pos__))
+                                        (meta
+                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                   (meta
+                                    ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>))
+                               ((pattern
+                                 (Assignment ((LVariable pos__) ()) UInt
+                                  ((pattern
+                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                     (((pattern (Var pos__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                      ((pattern (Lit Int 1))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3826,6 +6241,136 @@
       (initialize true) (assignment ())))
     (meta <opaque>))
    ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_vector_array_3d_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_vector_array_3d_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_vector_array_3d))
+               (meta
+                ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 3))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Lit Int 2))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (For (loopvar sym4__)
+                                  (lower
+                                   ((pattern (Lit Int 1))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (upper
+                                   ((pattern (Var d_int))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (body
+                                   ((pattern
+                                     (Block
+                                      (((pattern
+                                         (Assignment
+                                          ((LVariable d_vector_array_3d)
+                                           ((Single
+                                             ((pattern (Var sym4__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym3__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym2__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym1__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))))
+                                          (UArray (UArray (UArray UVector)))
+                                          ((pattern
+                                            (Indexed
+                                             ((pattern (Var d_vector_array_3d_flat__))
+                                              (meta
+                                               ((type_ (UArray UReal)) 
+                                                (loc <opaque>) (adlevel DataOnly))))
+                                             ((Single
+                                               ((pattern (Var pos__))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))))))
+                                           (meta
+                                            ((type_ UReal) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>))
+                                       ((pattern
+                                         (Assignment ((LVariable pos__) ()) UInt
+                                          ((pattern
+                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (((pattern (Var pos__))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly))))
+                                              ((pattern (Lit Int 1))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly)))))))
+                                           (meta
+                                            ((type_ UInt) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>)))))
+                                    (meta <opaque>)))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
       (((pattern (Lit Str d_row_vector))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3840,6 +6385,64 @@
         (SRowVector AoS
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_row_vector_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_row_vector_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_row_vector))
+               (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (Assignment
+                  ((LVariable d_row_vector)
+                   ((Single
+                     ((pattern (Var sym1__))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  URowVector
+                  ((pattern
+                    (Indexed
+                     ((pattern (Var d_row_vector_flat__))
+                      (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                     ((Single
+                       ((pattern (Var pos__))
+                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment ((LVariable pos__) ()) UInt
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain AoS)
+                     (((pattern (Var pos__))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3866,6 +6469,81 @@
           ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_row_vector_array_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_row_vector_array_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_row_vector_array))
+               (meta ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var d_int))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          ((LVariable d_row_vector_array)
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                          (UArray URowVector)
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_row_vector_array_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment ((LVariable pos__) ()) UInt
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain AoS)
+                             (((pattern (Var pos__))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3895,6 +6573,107 @@
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_row_vector_array_2d_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_row_vector_array_2d_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_row_vector_array_2d))
+               (meta
+                ((type_ (UArray (UArray URowVector))) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 2))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Var d_int))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (Assignment
+                                  ((LVariable d_row_vector_array_2d)
+                                   ((Single
+                                     ((pattern (Var sym3__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym2__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                    (Single
+                                     ((pattern (Var sym1__))
+                                      (meta
+                                       ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                  (UArray (UArray URowVector))
+                                  ((pattern
+                                    (Indexed
+                                     ((pattern (Var d_row_vector_array_2d_flat__))
+                                      (meta
+                                       ((type_ (UArray UReal)) (loc <opaque>)
+                                        (adlevel DataOnly))))
+                                     ((Single
+                                       ((pattern (Var pos__))
+                                        (meta
+                                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                                   (meta
+                                    ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>))
+                               ((pattern
+                                 (Assignment ((LVariable pos__) ()) UInt
+                                  ((pattern
+                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                     (((pattern (Var pos__))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                      ((pattern (Lit Int 1))
+                                       (meta
+                                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                   (meta
+                                    ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -3927,6 +6706,137 @@
           ((pattern (Lit Int 2)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize true) (assignment ())))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_row_vector_array_3d_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false) (assignment ())))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable d_row_vector_array_3d_flat__) ()) (UArray UReal)
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_row_vector_array_3d))
+               (meta
+                ((type_ (UArray (UArray (UArray URowVector)))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment ((LVariable pos__) ()) UInt
+          ((pattern (Lit Int 1)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var d_int))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 3))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (For (loopvar sym3__)
+                          (lower
+                           ((pattern (Lit Int 1))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (upper
+                           ((pattern (Lit Int 2))
+                            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (body
+                           ((pattern
+                             (Block
+                              (((pattern
+                                 (For (loopvar sym4__)
+                                  (lower
+                                   ((pattern (Lit Int 1))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (upper
+                                   ((pattern (Var d_int))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                                  (body
+                                   ((pattern
+                                     (Block
+                                      (((pattern
+                                         (Assignment
+                                          ((LVariable d_row_vector_array_3d)
+                                           ((Single
+                                             ((pattern (Var sym4__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym3__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym2__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))
+                                            (Single
+                                             ((pattern (Var sym1__))
+                                              (meta
+                                               ((type_ UInt) (loc <opaque>)
+                                                (adlevel DataOnly)))))))
+                                          (UArray (UArray (UArray URowVector)))
+                                          ((pattern
+                                            (Indexed
+                                             ((pattern
+                                               (Var d_row_vector_array_3d_flat__))
+                                              (meta
+                                               ((type_ (UArray UReal)) 
+                                                (loc <opaque>) (adlevel DataOnly))))
+                                             ((Single
+                                               ((pattern (Var pos__))
+                                                (meta
+                                                 ((type_ UInt) (loc <opaque>)
+                                                  (adlevel DataOnly))))))))
+                                           (meta
+                                            ((type_ UReal) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>))
+                                       ((pattern
+                                         (Assignment ((LVariable pos__) ()) UInt
+                                          ((pattern
+                                            (FunApp (StanLib Plus__ FnPlain AoS)
+                                             (((pattern (Var pos__))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly))))
+                                              ((pattern (Lit Int 1))
+                                               (meta
+                                                ((type_ UInt) (loc <opaque>)
+                                                 (adlevel DataOnly)))))))
+                                           (meta
+                                            ((type_ UInt) (loc <opaque>)
+                                             (adlevel DataOnly))))))
+                                        (meta <opaque>)))))
+                                    (meta <opaque>)))))
+                                (meta <opaque>)))))
+                            (meta <opaque>)))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id td_int) (decl_type (Sized SInt))

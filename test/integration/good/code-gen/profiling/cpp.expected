@@ -84,6 +84,17 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> y_flat__;
+        current_statement__ = 25;
+        y_flat__ = context__.vals_r("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(y, y_flat__[(pos__ - 1)],
+            "assigning variable y", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 26;
       sum_y = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 28;

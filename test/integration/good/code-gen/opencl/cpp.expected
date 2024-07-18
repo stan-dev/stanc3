@@ -843,6 +843,17 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                           std::numeric_limits<double>::quiet_NaN());
       new (&d_vector)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(d_vector_data__.data(), d_int);
+      {
+        std::vector<local_scalar_t__> d_vector_flat__;
+        current_statement__ = 763;
+        d_vector_flat__ = context__.vals_r("d_vector");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          stan::model::assign(d_vector, d_vector_flat__[(pos__ - 1)],
+            "assigning variable d_vector", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 764;
       stan::math::validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 765;
@@ -853,6 +864,17 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       new (&d_row_vector)
         Eigen::Map<Eigen::Matrix<double,1,-1>>(d_row_vector_data__.data(),
         d_int);
+      {
+        std::vector<local_scalar_t__> d_row_vector_flat__;
+        current_statement__ = 765;
+        d_row_vector_flat__ = context__.vals_r("d_row_vector");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          stan::model::assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
+            "assigning variable d_row_vector", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 766;
       stan::math::validate_non_negative_index("p_real_array", "d_int", d_int);
       current_statement__ = 767;
@@ -10480,6 +10502,17 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                           std::numeric_limits<double>::quiet_NaN());
       new (&d_vector)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(d_vector_data__.data(), d_int);
+      {
+        std::vector<local_scalar_t__> d_vector_flat__;
+        current_statement__ = 32;
+        d_vector_flat__ = context__.vals_r("d_vector");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          stan::model::assign(d_vector, d_vector_flat__[(pos__ - 1)],
+            "assigning variable d_vector", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 33;
       stan::math::validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 34;
@@ -10490,6 +10523,17 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       new (&d_row_vector)
         Eigen::Map<Eigen::Matrix<double,1,-1>>(d_row_vector_data__.data(),
         d_int);
+      {
+        std::vector<local_scalar_t__> d_row_vector_flat__;
+        current_statement__ = 34;
+        d_row_vector_flat__ = context__.vals_r("d_row_vector");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          stan::model::assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
+            "assigning variable d_row_vector", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 35;
       stan::math::validate_non_negative_index("p_real_array", "d_int", d_int);
       current_statement__ = 36;

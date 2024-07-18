@@ -799,6 +799,20 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       m_data__ = Eigen::Matrix<double,-1,-1>::Constant(N, N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&m) Eigen::Map<Eigen::Matrix<double,-1,-1>>(m_data__.data(), N, N);
+      {
+        std::vector<local_scalar_t__> m_flat__;
+        current_statement__ = 4;
+        m_flat__ = context__.vals_r("m");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            stan::model::assign(m, m_flat__[(pos__ - 1)],
+              "assigning variable m", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }

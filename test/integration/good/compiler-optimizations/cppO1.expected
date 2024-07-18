@@ -51,6 +51,20 @@ class ad_level_deep_dependence_model final : public model_base_crtp<ad_level_dee
                      std::numeric_limits<double>::quiet_NaN());
       new (&X_d) Eigen::Map<Eigen::Matrix<double,-1,-1>>(X_d_data__.data(),
         10, 10);
+      {
+        std::vector<local_scalar_t__> X_d_flat__;
+        current_statement__ = 10;
+        X_d_flat__ = context__.vals_r("X_d");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            stan::model::assign(X_d, X_d_flat__[(pos__ - 1)],
+              "assigning variable X_d", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1460,6 +1474,20 @@ class ad_levels_deep_model final : public model_base_crtp<ad_levels_deep_model> 
                         std::numeric_limits<double>::quiet_NaN());
       new (&X_data)
         Eigen::Map<Eigen::Matrix<double,-1,-1>>(X_data_data__.data(), 10, 10);
+      {
+        std::vector<local_scalar_t__> X_data_flat__;
+        current_statement__ = 5;
+        X_data_flat__ = context__.vals_r("X_data");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            stan::model::assign(X_data, X_data_flat__[(pos__ - 1)],
+              "assigning variable X_data", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -2630,6 +2658,20 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(nind,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 41;
+        y_flat__ = context__.vals_i("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+            stan::model::assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 41;
@@ -2652,6 +2694,20 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       x = std::vector<std::vector<int>>(nind,
             std::vector<int>((n_occasions - 1),
               std::numeric_limits<int>::min()));
+      {
+        std::vector<int> x_flat__;
+        current_statement__ = 45;
+        x_flat__ = context__.vals_i("x");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= (n_occasions - 1); ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+            stan::model::assign(x, x_flat__[(pos__ - 1)],
+              "assigning variable x", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 45;
       stan::math::check_greater_or_equal(function__, "x", x, 0);
       current_statement__ = 45;
@@ -3756,6 +3812,17 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
                         std::numeric_limits<double>::quiet_NaN());
       new (&v_prev)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(v_prev_data__.data(), n_state);
+      {
+        std::vector<local_scalar_t__> v_prev_flat__;
+        current_statement__ = 59;
+        v_prev_flat__ = context__.vals_r("v_prev");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= n_state; ++sym1__) {
+          stan::model::assign(v_prev, v_prev_flat__[(pos__ - 1)],
+            "assigning variable v_prev", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 60;
       stan::math::validate_non_negative_index("b_age", "n_age", n_age);
       current_statement__ = 61;
@@ -5433,6 +5500,17 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> y_flat__;
+        current_statement__ = 11;
+        y_flat__ = context__.vals_r("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(y, y_flat__[(pos__ - 1)],
+            "assigning variable y", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6480,6 +6558,17 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                        std::numeric_limits<double>::quiet_NaN());
       new (&black)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(black_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> black_flat__;
+        current_statement__ = 33;
+        black_flat__ = context__.vals_r("black");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(black, black_flat__[(pos__ - 1)],
+            "assigning variable black", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 33;
       stan::math::check_greater_or_equal(function__, "black", black, 0);
       current_statement__ = 33;
@@ -6503,6 +6592,17 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                         std::numeric_limits<double>::quiet_NaN());
       new (&female)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(female_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> female_flat__;
+        current_statement__ = 37;
+        female_flat__ = context__.vals_r("female");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(female, female_flat__[(pos__ - 1)],
+            "assigning variable female", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "female", female, 0);
       current_statement__ = 37;
@@ -6538,6 +6638,17 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                              std::numeric_limits<double>::quiet_NaN());
       new (&v_prev_full)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(v_prev_full_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> v_prev_full_flat__;
+        current_statement__ = 43;
+        v_prev_full_flat__ = context__.vals_r("v_prev_full");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(v_prev_full, v_prev_full_flat__[(pos__ - 1)],
+            "assigning variable v_prev_full", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 44;
       stan::math::validate_non_negative_index("y", "N", N);
       current_statement__ = 45;
@@ -7539,6 +7650,17 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       E_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&E) Eigen::Map<Eigen::Matrix<double,-1,1>>(E_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> E_flat__;
+        current_statement__ = 37;
+        E_flat__ = context__.vals_r("E");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(E, E_flat__[(pos__ - 1)],
+            "assigning variable E", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 37;
       stan::math::check_greater_or_equal(function__, "E", E, 0);
       current_statement__ = 38;
@@ -8439,6 +8561,20 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(nind,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 50;
+        y_flat__ = context__.vals_i("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+            stan::model::assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 50;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 50;
@@ -10041,6 +10177,20 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(M,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 123;
+        y_flat__ = context__.vals_i("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            stan::model::assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 123;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 123;
@@ -11897,6 +12047,20 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(J)});
       y = std::vector<std::vector<int>>(I,
             std::vector<int>(J, std::numeric_limits<int>::min()));
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 27;
+        y_flat__ = context__.vals_i("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= I; ++sym2__) {
+            stan::model::assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 27;
       stan::math::check_greater_or_equal(function__, "y", y, 1);
       current_statement__ = 27;
@@ -11910,6 +12074,17 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                        std::numeric_limits<double>::quiet_NaN());
       new (&alpha)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(alpha_data__.data(), K);
+      {
+        std::vector<local_scalar_t__> alpha_flat__;
+        current_statement__ = 29;
+        alpha_flat__ = context__.vals_r("alpha");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          stan::model::assign(alpha, alpha_flat__[(pos__ - 1)],
+            "assigning variable alpha", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 29;
       stan::math::check_greater_or_equal(function__, "alpha", alpha, 0);
       current_statement__ = 30;
@@ -11922,6 +12097,20 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       beta = std::vector<Eigen::Matrix<double,-1,1>>(K,
                Eigen::Matrix<double,-1,1>::Constant(K,
                  std::numeric_limits<double>::quiet_NaN()));
+      {
+        std::vector<local_scalar_t__> beta_flat__;
+        current_statement__ = 32;
+        beta_flat__ = context__.vals_r("beta");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            stan::model::assign(beta, beta_flat__[(pos__ - 1)],
+              "assigning variable beta", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 32;
       stan::math::check_greater_or_equal(function__, "beta", beta, 0);
       current_statement__ = 33;
@@ -12609,6 +12798,17 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       x_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&x) Eigen::Map<Eigen::Matrix<double,-1,1>>(x_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> x_flat__;
+        current_statement__ = 21;
+        x_flat__ = context__.vals_r("x");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(x, x_flat__[(pos__ - 1)],
+            "assigning variable x", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 22;
       stan::math::validate_non_negative_index("theta_std", "N", N);
       current_statement__ = 23;
@@ -13436,6 +13636,20 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(nind,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 41;
+        y_flat__ = context__.vals_i("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+            stan::model::assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 41;
@@ -13458,6 +13672,20 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       x = std::vector<std::vector<int>>(nind,
             std::vector<int>((n_occasions - 1),
               std::numeric_limits<int>::min()));
+      {
+        std::vector<int> x_flat__;
+        current_statement__ = 45;
+        x_flat__ = context__.vals_i("x");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= (n_occasions - 1); ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+            stan::model::assign(x, x_flat__[(pos__ - 1)],
+              "assigning variable x", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 45;
       stan::math::check_greater_or_equal(function__, "x", x, 0);
       current_statement__ = 45;
@@ -14443,6 +14671,17 @@ class function_in_function_inline_model final : public model_base_crtp<function_
                      std::numeric_limits<double>::quiet_NaN());
       new (&phi) Eigen::Map<Eigen::Matrix<double,-1,1>>(phi_data__.data(),
         10);
+      {
+        std::vector<local_scalar_t__> phi_flat__;
+        current_statement__ = 4;
+        phi_flat__ = context__.vals_r("phi");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          stan::model::assign(phi, phi_flat__[(pos__ - 1)],
+            "assigning variable phi", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -18250,6 +18489,20 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(M,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 123;
+        y_flat__ = context__.vals_i("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            stan::model::assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 123;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 123;
@@ -21277,6 +21530,20 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
           static_cast<size_t>(n_occasions)});
       y = std::vector<std::vector<int>>(nind,
             std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 41;
+        y_flat__ = context__.vals_i("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= n_occasions; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= nind; ++sym2__) {
+            stan::model::assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 41;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 41;
@@ -22794,6 +23061,20 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         std::vector<size_t>{static_cast<size_t>(R), static_cast<size_t>(T)});
       y = std::vector<std::vector<int>>(R,
             std::vector<int>(T, std::numeric_limits<int>::min()));
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 38;
+        y_flat__ = context__.vals_i("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= T; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= R; ++sym2__) {
+            stan::model::assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 38;
       stan::math::check_greater_or_equal(function__, "y", y, 0);
       current_statement__ = 38;
@@ -22806,6 +23087,17 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       X_data__ = Eigen::Matrix<double,-1,1>::Constant(R,
                    std::numeric_limits<double>::quiet_NaN());
       new (&X) Eigen::Map<Eigen::Matrix<double,-1,1>>(X_data__.data(), R);
+      {
+        std::vector<local_scalar_t__> X_flat__;
+        current_statement__ = 40;
+        X_flat__ = context__.vals_r("X");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
+          stan::model::assign(X, X_flat__[(pos__ - 1)],
+            "assigning variable X", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 41;
       stan::math::validate_non_negative_index("sum_y", "R", R);
       current_statement__ = 42;
@@ -23533,6 +23825,17 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                       std::numeric_limits<double>::quiet_NaN());
       new (&time) Eigen::Map<Eigen::Matrix<double,-1,1>>(time_data__.data(),
         N);
+      {
+        std::vector<local_scalar_t__> time_flat__;
+        current_statement__ = 27;
+        time_flat__ = context__.vals_r("time");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(time, time_flat__[(pos__ - 1)],
+            "assigning variable time", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 28;
       stan::math::validate_non_negative_index("treatment", "N", N);
       current_statement__ = 29;
@@ -23542,6 +23845,17 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                            std::numeric_limits<double>::quiet_NaN());
       new (&treatment)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(treatment_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> treatment_flat__;
+        current_statement__ = 29;
+        treatment_flat__ = context__.vals_r("treatment");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(treatment, treatment_flat__[(pos__ - 1)],
+            "assigning variable treatment", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 30;
       stan::math::validate_non_negative_index("y", "N", N);
       current_statement__ = 31;
@@ -23550,6 +23864,17 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> y_flat__;
+        current_statement__ = 31;
+        y_flat__ = context__.vals_r("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(y, y_flat__[(pos__ - 1)],
+            "assigning variable y", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 32;
       stan::math::validate_non_negative_index("eta1", "J", J);
       current_statement__ = 33;
@@ -26700,6 +27025,17 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                           std::numeric_limits<double>::quiet_NaN());
       new (&pre_test)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(pre_test_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> pre_test_flat__;
+        current_statement__ = 22;
+        pre_test_flat__ = context__.vals_r("pre_test");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(pre_test, pre_test_flat__[(pos__ - 1)],
+            "assigning variable pre_test", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 23;
       stan::math::validate_non_negative_index("treatment", "N", N);
       current_statement__ = 24;
@@ -26709,6 +27045,17 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                            std::numeric_limits<double>::quiet_NaN());
       new (&treatment)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(treatment_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> treatment_flat__;
+        current_statement__ = 24;
+        treatment_flat__ = context__.vals_r("treatment");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(treatment, treatment_flat__[(pos__ - 1)],
+            "assigning variable treatment", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 24;
       stan::math::check_greater_or_equal(function__, "treatment", treatment,
         0);
@@ -26722,6 +27069,17 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       y_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
                    std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double,-1,1>>(y_data__.data(), N);
+      {
+        std::vector<local_scalar_t__> y_flat__;
+        current_statement__ = 26;
+        y_flat__ = context__.vals_r("y");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          stan::model::assign(y, y_flat__[(pos__ - 1)],
+            "assigning variable y", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 27;
       stan::math::validate_non_negative_index("a", "n_pair", n_pair);
       current_statement__ = 28;
@@ -27340,6 +27698,20 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                     std::numeric_limits<double>::quiet_NaN());
       new (&m1) Eigen::Map<Eigen::Matrix<double,-1,-1>>(m1_data__.data(), 10,
         10);
+      {
+        std::vector<local_scalar_t__> m1_flat__;
+        current_statement__ = 7;
+        m1_flat__ = context__.vals_r("m1");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            stan::model::assign(m1, m1_flat__[(pos__ - 1)],
+              "assigning variable m1", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 8;
       context__.validate_dims("data initialization", "m4", "double",
         std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(10)});
@@ -27347,6 +27719,20 @@ class partial_eval_multiply_model final : public model_base_crtp<partial_eval_mu
                     std::numeric_limits<double>::quiet_NaN());
       new (&m4) Eigen::Map<Eigen::Matrix<double,-1,-1>>(m4_data__.data(), 10,
         10);
+      {
+        std::vector<local_scalar_t__> m4_flat__;
+        current_statement__ = 8;
+        m4_flat__ = context__.vals_r("m4");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+            stan::model::assign(m4, m4_flat__[(pos__ - 1)],
+              "assigning variable m4", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       current_statement__ = 9;
       context__.validate_dims("data initialization", "idx", "int",
         std::vector<size_t>{static_cast<size_t>(10)});
@@ -28226,6 +28612,17 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       x1_data__ = Eigen::Matrix<double,-1,1>::Constant(I,
                     std::numeric_limits<double>::quiet_NaN());
       new (&x1) Eigen::Map<Eigen::Matrix<double,-1,1>>(x1_data__.data(), I);
+      {
+        std::vector<local_scalar_t__> x1_flat__;
+        current_statement__ = 24;
+        x1_flat__ = context__.vals_r("x1");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= I; ++sym1__) {
+          stan::model::assign(x1, x1_flat__[(pos__ - 1)],
+            "assigning variable x1", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 25;
       stan::math::validate_non_negative_index("x2", "I", I);
       current_statement__ = 26;
@@ -28234,6 +28631,17 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       x2_data__ = Eigen::Matrix<double,-1,1>::Constant(I,
                     std::numeric_limits<double>::quiet_NaN());
       new (&x2) Eigen::Map<Eigen::Matrix<double,-1,1>>(x2_data__.data(), I);
+      {
+        std::vector<local_scalar_t__> x2_flat__;
+        current_statement__ = 26;
+        x2_flat__ = context__.vals_r("x2");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= I; ++sym1__) {
+          stan::model::assign(x2, x2_flat__[(pos__ - 1)],
+            "assigning variable x2", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 27;
       K = std::numeric_limits<int>::min();
       current_statement__ = 28;

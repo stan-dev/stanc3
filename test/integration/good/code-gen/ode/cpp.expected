@@ -1136,6 +1136,17 @@ class overloaded_ode_model final : public model_base_crtp<overloaded_ode_model> 
       y0_data__ = Eigen::Matrix<double,-1,1>::Constant(4,
                     std::numeric_limits<double>::quiet_NaN());
       new (&y0) Eigen::Map<Eigen::Matrix<double,-1,1>>(y0_data__.data(), 4);
+      {
+        std::vector<local_scalar_t__> y0_flat__;
+        current_statement__ = 30;
+        y0_flat__ = context__.vals_r("y0");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+          stan::model::assign(y0, y0_flat__[(pos__ - 1)],
+            "assigning variable y0", stan::model::index_uni(sym1__));
+          pos__ = (pos__ + 1);
+        }
+      }
       current_statement__ = 31;
       stan::math::validate_non_negative_index("stoi", "N_t", N_t);
       current_statement__ = 32;

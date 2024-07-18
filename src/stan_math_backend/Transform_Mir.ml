@@ -784,7 +784,7 @@ let add_reads vars mkread stmts =
                     ; decl_type
                     ; initialize
                     ; assignment= Some e } } ]
-        | _ -> [stmt])
+        | _ -> stmt :: param_reader)
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
