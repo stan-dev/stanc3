@@ -25,8 +25,7 @@ module Fixed = struct
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
           ; decl_type: 'a Type.t
-          ; initialize: bool
-          ; assignment: 'a option }
+          ; initialize: 'a decl_init }
     [@@deriving sexp, hash, map, fold, compare]
 
     and 'e lvalue = 'e lbase * 'e Index.t list
@@ -34,6 +33,9 @@ module Fixed = struct
 
     and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
+
+    and 'a decl_init = Uninit | Default | Assign of 'a
+    [@@deriving sexp, hash, map, fold, compare]
 
     let rec pp_lvalue pp_e ppf (lbase, idcs) =
       match lbase with
@@ -71,13 +73,12 @@ module Fixed = struct
       | Block stmts ->
           Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
       | SList stmts -> Fmt.(list pp_s ~sep:cut |> vbox) ppf stmts
-      (*TODO(Steve): Need a new one for decl with assign*)
-      | Decl {decl_adtype; decl_id; decl_type; assignment; _} -> (
-          match assignment with
-          | Some e ->
+      | Decl {decl_adtype; decl_id; decl_type; initialize} -> (
+          match initialize with
+          | Assign e ->
               Fmt.pf ppf "@[<hov 2>%a%a@ %s = %a;@]" UnsizedType.pp_autodifftype
                 decl_adtype (Type.pp pp_e) decl_type decl_id pp_e e
-          | None ->
+          | Uninit | Default ->
               Fmt.pf ppf "@[<hov 2>%a%a@ %s;@]" UnsizedType.pp_autodifftype
                 decl_adtype (Type.pp pp_e) decl_type decl_id)
 
@@ -150,8 +151,7 @@ module Helpers = struct
                   { decl_adtype= Expr.Typed.adlevel_of e
                   ; decl_id= sym
                   ; decl_type= Unsized (Expr.Typed.type_of e)
-                  ; initialize= true
-                  ; assignment= None }
+                  ; initialize= Default }
             ; meta= e.meta.loc } in
           let assign =
             { decl with
