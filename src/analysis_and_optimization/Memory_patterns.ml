@@ -389,9 +389,16 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
       Set.Poly.union_list
         [ acc; query_expr acc predicate
         ; query_initial_demotable_stmt true acc body ]
-  | Decl {decl_type= Type.Sized st; decl_id; _}
-    when SizedType.is_complex_type st ->
-      Set.add acc decl_id
+  | Decl {decl_type= Type.Sized st; decl_id; initialize; _} ->
+      let complex_name =
+        match SizedType.is_complex_type st with
+        | true -> Set.Poly.singleton decl_id
+        | false -> Set.Poly.empty in
+      let init_names =
+        match initialize with
+        | Assign e -> query_expr acc e
+        | _ -> Set.Poly.empty in
+      Set.union acc (Set.union complex_name init_names)
   | Skip | Break | Continue | Decl _ -> acc
 
 (** Look through a statement to see whether the objects used in it need to be
@@ -418,6 +425,13 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
       else
         match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
         | true -> Set.add all_rhs_eigen_names assign_name
+        | false -> Set.Poly.empty)
+  | Decl {decl_id; initialize= Assign e; _} -> (
+      let all_rhs_eigen_names = query_var_eigen_names e in
+      if Set.mem aos_exits decl_id then Set.add all_rhs_eigen_names decl_id
+      else
+        match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
+        | true -> Set.add all_rhs_eigen_names decl_id
         | false -> Set.Poly.empty)
   (* All other statements do not need logic here*)
   | _ -> Set.Poly.empty
@@ -543,12 +557,19 @@ let rec modify_stmt_pattern
   let mod_stmt stmt = modify_stmt stmt modifiable_set in
   match pattern with
   | Stmt.Fixed.Pattern.Decl
-      ({decl_id; decl_type= Type.Sized sized_type; _} as decl) ->
+      ({decl_id; decl_type= Type.Sized sized_type; initialize; _} as decl) ->
       if Set.mem modifiable_set decl_id then
+        let init_expr =
+          match initialize with
+          | Stmt.Fixed.Pattern.Assign e ->
+              Stmt.Fixed.Pattern.Assign (mod_expr false e)
+          | Default -> Default
+          | Uninit -> Uninit in
         Stmt.Fixed.Pattern.Decl
           { decl with
             decl_type=
-              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type) }
+              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type)
+          ; initialize= init_expr }
       else
         Decl
           { decl with

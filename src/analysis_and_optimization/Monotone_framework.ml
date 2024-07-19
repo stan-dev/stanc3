@@ -73,6 +73,7 @@ let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
         [free_vars_expr e1; free_vars_expr e2; free_vars_stmt b.pattern]
   | Profile (_, l) | Block l | SList l ->
       Set.Poly.union_list (List.map ~f:(fun s -> free_vars_stmt s.pattern) l)
+  | Decl {initialize= Assign e; _} -> free_vars_expr e
   | Decl _ | Break | Continue | Return None | Skip -> Set.Poly.empty
 
 (** A variation on free_vars_stmt, where we do not recursively count free
@@ -81,6 +82,7 @@ let top_free_vars_stmt
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
   match s with
+  | Decl {initialize= Assign e; _} -> free_vars_expr e
   | Assignment _ | Return _ | TargetPE _ | JacobianPE _ | NRFunApp _ | Decl _
    |Break | Continue | Skip ->
       free_vars_stmt

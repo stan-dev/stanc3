@@ -464,6 +464,10 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
             Block (List.map l ~f:(inline_function_statement propto adt fim))
         | SList l ->
             SList (List.map l ~f:(inline_function_statement propto adt fim))
+        | Decl {decl_adtype; decl_id; decl_type; initialize= Assign expr} ->
+            let d, s, e = inline_function_expression propto adt fim expr in
+            slist_concat_no_loc (d @ s)
+              (Decl {decl_adtype; decl_id; decl_type; initialize= Assign e})
         | Decl r -> Decl r
         | Skip -> Skip
         | Break -> Break
@@ -748,6 +752,9 @@ let dead_code_elimination (mir : Program.Typed.t) =
                  (Middle.Stmt.Helpers.lhs_indices lhs)
           then stmt
           else Skip
+      | Decl {decl_id; initialize= Assign e; _} ->
+          if Set.mem live_variables_s decl_id || cannot_remove_expr e then stmt
+          else Skip
       (* NOTE: we never get rid of declarations as we might not be able to
          remove an assignment to a variable
             due to side effects. *)
@@ -1004,6 +1011,7 @@ let lazy_code_motion ?(preserve_stability = false) (mir : Program.Typed.t) =
         let f stmt =
           match stmt with
           | Stmt.Fixed.Pattern.Assignment ((LVariable x, []), _, e')
+           |Decl {decl_id= x; initialize= Assign e'; _}
             when Map.mem m e'
                  && Expr.Typed.equal {e' with pattern= Var x}
                       (Map.find_exn m e') ->
