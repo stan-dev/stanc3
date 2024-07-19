@@ -467,7 +467,7 @@ let rec modify_kind ?force_demotion:(force = false)
         (Fun_kind.StanLib (name, sfx, Mem_pattern.AoS), exprs')
       else
         ( Fun_kind.StanLib (name, sfx, SoA)
-        , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs
+        , List.map ~f:(modify_expr ~force_demotion:false modifiable_set) exprs
         )
   | UserDefined _ as udf ->
       (udf, List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs)
@@ -556,6 +556,43 @@ let rec modify_stmt_pattern
   let mod_expr force = modify_expr ~force_demotion:force modifiable_set in
   let mod_stmt stmt = modify_stmt stmt modifiable_set in
   match pattern with
+  | Stmt.Fixed.Pattern.Decl
+      { decl_id
+      ; decl_adtype
+      ; decl_type= Type.Sized sized_type
+      ; initialize=
+          Assign
+            ({ pattern= FunApp (CompilerInternal (FnReadParam read_param), args)
+             ; _ } as assigner) } ->
+      let name = decl_id in
+      if Set.mem modifiable_set name then
+        Stmt.Fixed.Pattern.Decl
+          { decl_id
+          ; decl_adtype
+          ; decl_type=
+              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type)
+          ; initialize=
+              Assign
+                { assigner with
+                  pattern=
+                    FunApp
+                      ( CompilerInternal
+                          (FnReadParam {read_param with mem_pattern= AoS})
+                      , List.map ~f:(mod_expr true) args ) } }
+      else
+        Stmt.Fixed.Pattern.Decl
+          { decl_id
+          ; decl_adtype
+          ; decl_type=
+              Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type)
+          ; initialize=
+              Assign
+                { assigner with
+                  pattern=
+                    FunApp
+                      ( CompilerInternal
+                          (FnReadParam {read_param with mem_pattern= SoA})
+                      , List.map ~f:(mod_expr false) args ) } }
   | Stmt.Fixed.Pattern.Decl
       ({decl_id; decl_type= Type.Sized sized_type; initialize; _} as decl) ->
       if Set.mem modifiable_set decl_id then

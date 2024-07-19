@@ -10052,7 +10052,7 @@
         ((pattern
           (FunApp
            (CompilerInternal
-            (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+            (FnReadParam (constrain Identity) (dims ()) (mem_pattern SoA)))
            ()))
          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
@@ -12778,7 +12778,7 @@
                      (adlevel (TupleAD (AutoDiffable AutoDiffable))))))
                   2))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-             (dims ()) (mem_pattern AoS)))
+             (dims ()) (mem_pattern SoA)))
            ()))
          (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
@@ -21661,7 +21661,7 @@
              (dims
               (((pattern (Var N))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (mem_pattern AoS)))
+             (mem_pattern SoA)))
            ()))
          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
@@ -23013,7 +23013,7 @@
              (dims
               (((pattern (Var N))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (mem_pattern AoS)))
+             (mem_pattern SoA)))
            ()))
          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))))
     (meta <opaque>))
