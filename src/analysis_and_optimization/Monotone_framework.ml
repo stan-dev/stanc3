@@ -624,7 +624,9 @@ let used_expressions_expr e = Expr.Typed.Set.singleton e
 let rec used_expressions_stmt_help f
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
   match s with
-  | TargetPE e | JacobianPE e | Return (Some e) -> f e
+  | TargetPE e | JacobianPE e | Return (Some e) | Decl {initialize= Assign e; _}
+    ->
+      f e
   | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | IfElse (e, b1, Some b2) ->
       Expr.Typed.Set.union_list
@@ -658,7 +660,9 @@ let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 let top_used_expressions_stmt_help f
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
   match s with
-  | TargetPE e | JacobianPE e | Return (Some e) -> f e
+  | TargetPE e | JacobianPE e | Return (Some e) | Decl {initialize= Assign e; _}
+    ->
+      f e
   | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | While (e, _) | IfElse (e, _, _) -> f e
   | NRFunApp (k, l) ->
