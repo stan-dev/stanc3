@@ -344,14 +344,9 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly Stmt.Fixed.Pattern.Default)
+         DataOnly Stmt.Fixed.Pattern.Uninit)
     |> print_endline;
-    [%expect
-      {|
-      std::vector<std::vector<Eigen::Matrix<double,-1,-1>>>(5,
-        std::vector<Eigen::Matrix<double,-1,-1>>(4,
-          Eigen::Matrix<double,-1,-1>::Constant(2, 3,
-            std::numeric_limits<double>::quiet_NaN()))) |}]
+    [%expect {| |}]
 
   let%expect_test "set size mat array" =
     let int = Expr.Helpers.int in
