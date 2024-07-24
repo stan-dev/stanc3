@@ -516,19 +516,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto alpha_v =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 2;
       auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 3;
       auto cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 4;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 5;
       auto alpha = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto phi = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 8;
       auto beta_m =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 9;
       auto X_rv_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       {
@@ -1213,19 +1222,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto alpha_v =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 2;
       auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 3;
       auto cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 4;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 5;
       auto alpha = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto phi = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 8;
       auto beta_m =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 9;
       auto X_rv_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       {
@@ -1921,19 +1939,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto alpha_v =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 2;
       auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 3;
       auto cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 4;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 5;
       auto alpha = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto phi = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 8;
       auto beta_m =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 9;
       auto X_rv_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       out__.write(alpha_v);

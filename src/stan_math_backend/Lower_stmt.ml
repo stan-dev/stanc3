@@ -118,6 +118,7 @@ let lower_possibly_opencl_decl name st adtype
           Expr.Fixed.
             { pattern= FunApp (CompilerInternal (Internal_fun.FnReadParam _), _)
             ; _ } ->
+          (* Peephole optimization for param reads, avoids copying *)
           Auto
       | _ -> lower_possibly_var_decl adtype ut mem_pattern)
   | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
@@ -208,7 +209,10 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
     | _ -> e in
   let location =
     match pattern with
-    | Block _ | SList _ | Decl _ | Skip | Break | Continue -> []
+    | Block _ | SList _
+     |Decl {initialize= Default | Uninit; _}
+     |Skip | Break | Continue ->
+        []
     | _ -> Numbering.assign_loc meta in
   let wrap_e e = [Expression e] in
   let open Expression_syntax in

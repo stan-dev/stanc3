@@ -114,10 +114,13 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto theta_tilde =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
       Eigen::Matrix<local_scalar_t__,-1,1> theta =
@@ -166,10 +169,13 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto theta_tilde =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
       Eigen::Matrix<local_scalar_t__,-1,1> theta =
@@ -229,10 +235,13 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto theta_tilde =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
       Eigen::Matrix<double,-1,1> theta =
@@ -586,6 +595,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto bar = in__.template read<local_scalar_t__>();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -617,6 +627,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto bar = in__.template read<local_scalar_t__>();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -659,6 +670,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto bar = in__.template read<local_scalar_t__>();
       out__.write(bar);
       if (stan::math::logical_negation(
@@ -1388,6 +1400,7 @@ class container_promotion_model final : public model_base_crtp<container_promoti
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> V =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
@@ -1488,6 +1501,7 @@ class container_promotion_model final : public model_base_crtp<container_promoti
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__,-1,1> V =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
@@ -1599,6 +1613,7 @@ class container_promotion_model final : public model_base_crtp<container_promoti
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double,-1,1> V =
         Eigen::Matrix<double,-1,1>::Constant(2,
@@ -2461,20 +2476,35 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto _stan_explicit = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto _stan_float = in__.template read<local_scalar_t__>();
+      current_statement__ = 3;
       auto _stan_friend = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
       auto _stan_goto = in__.template read<local_scalar_t__>();
+      current_statement__ = 5;
       auto _stan_inline = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto _stan_long = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto _stan_mutable = in__.template read<local_scalar_t__>();
+      current_statement__ = 8;
       auto _stan_namespace = in__.template read<local_scalar_t__>();
+      current_statement__ = 9;
       auto _stan_new = in__.template read<local_scalar_t__>();
+      current_statement__ = 10;
       auto _stan_noexcept = in__.template read<local_scalar_t__>();
+      current_statement__ = 11;
       auto _stan_not = in__.template read<local_scalar_t__>();
+      current_statement__ = 12;
       auto _stan_not_eq = in__.template read<local_scalar_t__>();
+      current_statement__ = 13;
       auto _stan_nullptr = in__.template read<local_scalar_t__>();
+      current_statement__ = 14;
       auto _stan_operator = in__.template read<local_scalar_t__>();
+      current_statement__ = 15;
       auto _stan_or = in__.template read<local_scalar_t__>();
       {
         local_scalar_t__ _stan_or_eq = DUMMY_VAR__;
@@ -2523,20 +2553,35 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto _stan_explicit = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto _stan_float = in__.template read<local_scalar_t__>();
+      current_statement__ = 3;
       auto _stan_friend = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
       auto _stan_goto = in__.template read<local_scalar_t__>();
+      current_statement__ = 5;
       auto _stan_inline = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto _stan_long = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto _stan_mutable = in__.template read<local_scalar_t__>();
+      current_statement__ = 8;
       auto _stan_namespace = in__.template read<local_scalar_t__>();
+      current_statement__ = 9;
       auto _stan_new = in__.template read<local_scalar_t__>();
+      current_statement__ = 10;
       auto _stan_noexcept = in__.template read<local_scalar_t__>();
+      current_statement__ = 11;
       auto _stan_not = in__.template read<local_scalar_t__>();
+      current_statement__ = 12;
       auto _stan_not_eq = in__.template read<local_scalar_t__>();
+      current_statement__ = 13;
       auto _stan_nullptr = in__.template read<local_scalar_t__>();
+      current_statement__ = 14;
       auto _stan_operator = in__.template read<local_scalar_t__>();
+      current_statement__ = 15;
       auto _stan_or = in__.template read<local_scalar_t__>();
       {
         local_scalar_t__ _stan_or_eq = DUMMY_VAR__;
@@ -2596,20 +2641,35 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto _stan_explicit = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto _stan_float = in__.template read<local_scalar_t__>();
+      current_statement__ = 3;
       auto _stan_friend = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
       auto _stan_goto = in__.template read<local_scalar_t__>();
+      current_statement__ = 5;
       auto _stan_inline = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto _stan_long = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto _stan_mutable = in__.template read<local_scalar_t__>();
+      current_statement__ = 8;
       auto _stan_namespace = in__.template read<local_scalar_t__>();
+      current_statement__ = 9;
       auto _stan_new = in__.template read<local_scalar_t__>();
+      current_statement__ = 10;
       auto _stan_noexcept = in__.template read<local_scalar_t__>();
+      current_statement__ = 11;
       auto _stan_not = in__.template read<local_scalar_t__>();
+      current_statement__ = 12;
       auto _stan_not_eq = in__.template read<local_scalar_t__>();
+      current_statement__ = 13;
       auto _stan_nullptr = in__.template read<local_scalar_t__>();
+      current_statement__ = 14;
       auto _stan_operator = in__.template read<local_scalar_t__>();
+      current_statement__ = 15;
       auto _stan_or = in__.template read<local_scalar_t__>();
       out__.write(_stan_explicit);
       out__.write(_stan_float);
@@ -3499,6 +3559,7 @@ class data_only_functions_model final : public model_base_crtp<data_only_functio
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       {
@@ -3558,6 +3619,7 @@ class data_only_functions_model final : public model_base_crtp<data_only_functio
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       {
@@ -3628,6 +3690,7 @@ class data_only_functions_model final : public model_base_crtp<data_only_functio
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       out__.write(p);
@@ -4705,10 +4768,13 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto theta_tilde =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
       Eigen::Matrix<local_scalar_t__,-1,1> theta =
@@ -4757,10 +4823,13 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto theta_tilde =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
       Eigen::Matrix<local_scalar_t__,-1,1> theta =
@@ -4820,10 +4889,13 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto tau =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto theta_tilde =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(J);
       Eigen::Matrix<double,-1,1> theta =
@@ -5700,9 +5772,12 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto b_raw = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto b_vec_raw =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 3;
       auto b_direct_raw = in__.template read<local_scalar_t__>();
       local_scalar_t__ b = DUMMY_VAR__;
       current_statement__ = 4;
@@ -5751,9 +5826,12 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto b_raw = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto b_vec_raw =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 3;
       auto b_direct_raw = in__.template read<local_scalar_t__>();
       local_scalar_t__ b = DUMMY_VAR__;
       current_statement__ = 4;
@@ -5813,9 +5891,12 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto b_raw = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto b_vec_raw =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 3;
       auto b_direct_raw = in__.template read<local_scalar_t__>();
       double b = std::numeric_limits<double>::quiet_NaN();
       Eigen::Matrix<double,-1,1> bvec =
@@ -6188,6 +6269,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto xx = in__.template read<std::vector<local_scalar_t__>>(3);
       std::vector<std::vector<local_scalar_t__>> y =
         std::vector<std::vector<local_scalar_t__>>(3,
@@ -6244,6 +6326,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto xx = in__.template read<std::vector<local_scalar_t__>>(3);
       std::vector<std::vector<local_scalar_t__>> y =
         std::vector<std::vector<local_scalar_t__>>(3,
@@ -6311,6 +6394,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto xx = in__.template read<std::vector<local_scalar_t__>>(3);
       std::vector<std::vector<double>> y =
         std::vector<std::vector<double>>(3,
@@ -12749,79 +12833,103 @@ class mother_model final : public model_base_crtp<mother_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_real = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto p_upper =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(p_real,
           lp__);
+      current_statement__ = 3;
       auto p_lower =
         in__.template read_constrain_ub<local_scalar_t__,
           jacobian__>(p_upper, lp__);
+      current_statement__ = 4;
       auto offset_multiplier =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(1, 2, lp__, 5);
+      current_statement__ = 5;
       auto no_offset_multiplier =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(0, 2, lp__, 5);
+      current_statement__ = 6;
       auto offset_no_multiplier =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(3, 1, lp__, 5);
+      current_statement__ = 7;
       auto p_real_1d_ar =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, N);
+      current_statement__ = 8;
       auto p_real_3d_ar =
         in__.template read_constrain_lb<
           std::vector<std::vector<std::vector<local_scalar_t__>>>,
           jacobian__>(0, lp__, N, M, K);
+      current_statement__ = 9;
       auto p_vec =
         in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__,-1,1>,
           jacobian__>(0, lp__, N);
+      current_statement__ = 10;
       auto p_1d_vec =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 11;
       auto p_3d_vec =
         in__.template read<
           std::vector<
             std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>>(N,
           M, K, N);
+      current_statement__ = 12;
       auto p_row_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      current_statement__ = 13;
       auto p_1d_row_vec =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 14;
       auto p_3d_row_vec =
         in__.template read<
           std::vector<
             std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>>(N,
           M, K, N);
+      current_statement__ = 15;
       auto p_mat =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(5, 4);
+      current_statement__ = 16;
       auto p_ar_mat =
         in__.template read_constrain_lub<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>,
           jacobian__>(0, 1, lp__, 4, 5, 2, 3);
+      current_statement__ = 17;
       auto p_simplex =
         in__.template read_constrain_simplex<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, N);
+      current_statement__ = 18;
       auto p_1d_simplex =
         in__.template read_constrain_simplex<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>,
           jacobian__>(lp__, N, N);
+      current_statement__ = 19;
       auto p_3d_simplex =
         in__.template read_constrain_simplex<
           std::vector<
             std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>,
           jacobian__>(lp__, N, M, K, N);
+      current_statement__ = 20;
       auto p_cfcov_54 =
         in__.template read_constrain_cholesky_factor_cov<
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 5, 4);
+      current_statement__ = 21;
       auto p_cfcov_33 =
         in__.template read_constrain_cholesky_factor_cov<
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 3, 3);
+      current_statement__ = 22;
       auto p_cfcov_33_ar =
         in__.template read_constrain_cholesky_factor_cov<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>,
           jacobian__>(lp__, K, 3, 3);
+      current_statement__ = 23;
       auto x_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 24;
       auto y_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       std::vector<local_scalar_t__> tp_real_1d_ar =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
@@ -13184,79 +13292,103 @@ class mother_model final : public model_base_crtp<mother_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_real = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto p_upper =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(p_real,
           lp__);
+      current_statement__ = 3;
       auto p_lower =
         in__.template read_constrain_ub<local_scalar_t__,
           jacobian__>(p_upper, lp__);
+      current_statement__ = 4;
       auto offset_multiplier =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(1, 2, lp__, 5);
+      current_statement__ = 5;
       auto no_offset_multiplier =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(0, 2, lp__, 5);
+      current_statement__ = 6;
       auto offset_no_multiplier =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(3, 1, lp__, 5);
+      current_statement__ = 7;
       auto p_real_1d_ar =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, N);
+      current_statement__ = 8;
       auto p_real_3d_ar =
         in__.template read_constrain_lb<
           std::vector<std::vector<std::vector<local_scalar_t__>>>,
           jacobian__>(0, lp__, N, M, K);
+      current_statement__ = 9;
       auto p_vec =
         in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__,-1,1>,
           jacobian__>(0, lp__, N);
+      current_statement__ = 10;
       auto p_1d_vec =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 11;
       auto p_3d_vec =
         in__.template read<
           std::vector<
             std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>>(N,
           M, K, N);
+      current_statement__ = 12;
       auto p_row_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      current_statement__ = 13;
       auto p_1d_row_vec =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 14;
       auto p_3d_row_vec =
         in__.template read<
           std::vector<
             std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>>(N,
           M, K, N);
+      current_statement__ = 15;
       auto p_mat =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(5, 4);
+      current_statement__ = 16;
       auto p_ar_mat =
         in__.template read_constrain_lub<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>,
           jacobian__>(0, 1, lp__, 4, 5, 2, 3);
+      current_statement__ = 17;
       auto p_simplex =
         in__.template read_constrain_simplex<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, N);
+      current_statement__ = 18;
       auto p_1d_simplex =
         in__.template read_constrain_simplex<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>,
           jacobian__>(lp__, N, N);
+      current_statement__ = 19;
       auto p_3d_simplex =
         in__.template read_constrain_simplex<
           std::vector<
             std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>,
           jacobian__>(lp__, N, M, K, N);
+      current_statement__ = 20;
       auto p_cfcov_54 =
         in__.template read_constrain_cholesky_factor_cov<
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 5, 4);
+      current_statement__ = 21;
       auto p_cfcov_33 =
         in__.template read_constrain_cholesky_factor_cov<
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 3, 3);
+      current_statement__ = 22;
       auto p_cfcov_33_ar =
         in__.template read_constrain_cholesky_factor_cov<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>,
           jacobian__>(lp__, K, 3, 3);
+      current_statement__ = 23;
       auto x_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 24;
       auto y_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       std::vector<local_scalar_t__> tp_real_1d_ar =
         std::vector<local_scalar_t__>(N, DUMMY_VAR__);
@@ -13630,79 +13762,103 @@ class mother_model final : public model_base_crtp<mother_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_real = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto p_upper =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(p_real,
           lp__);
+      current_statement__ = 3;
       auto p_lower =
         in__.template read_constrain_ub<local_scalar_t__,
           jacobian__>(p_upper, lp__);
+      current_statement__ = 4;
       auto offset_multiplier =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(1, 2, lp__, 5);
+      current_statement__ = 5;
       auto no_offset_multiplier =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(0, 2, lp__, 5);
+      current_statement__ = 6;
       auto offset_no_multiplier =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(3, 1, lp__, 5);
+      current_statement__ = 7;
       auto p_real_1d_ar =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, N);
+      current_statement__ = 8;
       auto p_real_3d_ar =
         in__.template read_constrain_lb<
           std::vector<std::vector<std::vector<local_scalar_t__>>>,
           jacobian__>(0, lp__, N, M, K);
+      current_statement__ = 9;
       auto p_vec =
         in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__,-1,1>,
           jacobian__>(0, lp__, N);
+      current_statement__ = 10;
       auto p_1d_vec =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 11;
       auto p_3d_vec =
         in__.template read<
           std::vector<
             std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>>(N,
           M, K, N);
+      current_statement__ = 12;
       auto p_row_vec =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      current_statement__ = 13;
       auto p_1d_row_vec =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 14;
       auto p_3d_row_vec =
         in__.template read<
           std::vector<
             std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>>(N,
           M, K, N);
+      current_statement__ = 15;
       auto p_mat =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(5, 4);
+      current_statement__ = 16;
       auto p_ar_mat =
         in__.template read_constrain_lub<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>,
           jacobian__>(0, 1, lp__, 4, 5, 2, 3);
+      current_statement__ = 17;
       auto p_simplex =
         in__.template read_constrain_simplex<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, N);
+      current_statement__ = 18;
       auto p_1d_simplex =
         in__.template read_constrain_simplex<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>,
           jacobian__>(lp__, N, N);
+      current_statement__ = 19;
       auto p_3d_simplex =
         in__.template read_constrain_simplex<
           std::vector<
             std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>,
           jacobian__>(lp__, N, M, K, N);
+      current_statement__ = 20;
       auto p_cfcov_54 =
         in__.template read_constrain_cholesky_factor_cov<
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 5, 4);
+      current_statement__ = 21;
       auto p_cfcov_33 =
         in__.template read_constrain_cholesky_factor_cov<
           Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 3, 3);
+      current_statement__ = 22;
       auto p_cfcov_33_ar =
         in__.template read_constrain_cholesky_factor_cov<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>,
           jacobian__>(lp__, K, 3, 3);
+      current_statement__ = 23;
       auto x_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 24;
       auto y_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
       std::vector<double> tp_real_1d_ar =
         std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
@@ -17466,16 +17622,23 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y0_p = in__.template read<std::vector<local_scalar_t__>>(2);
+      current_statement__ = 2;
       auto theta_p = in__.template read<std::vector<local_scalar_t__>>(1);
+      current_statement__ = 3;
       auto x_p = in__.template read<std::vector<local_scalar_t__>>(1);
+      current_statement__ = 4;
       auto x_p_v =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 5;
       auto shared_params_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+      current_statement__ = 6;
       auto job_params_p =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(3, 3);
+      current_statement__ = 7;
       auto x_r = in__.template read<local_scalar_t__>();
       local_scalar_t__ abc1_p = DUMMY_VAR__;
       current_statement__ = 8;
@@ -17773,16 +17936,23 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y0_p = in__.template read<std::vector<local_scalar_t__>>(2);
+      current_statement__ = 2;
       auto theta_p = in__.template read<std::vector<local_scalar_t__>>(1);
+      current_statement__ = 3;
       auto x_p = in__.template read<std::vector<local_scalar_t__>>(1);
+      current_statement__ = 4;
       auto x_p_v =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 5;
       auto shared_params_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+      current_statement__ = 6;
       auto job_params_p =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(3, 3);
+      current_statement__ = 7;
       auto x_r = in__.template read<local_scalar_t__>();
       local_scalar_t__ abc1_p = DUMMY_VAR__;
       current_statement__ = 8;
@@ -18088,16 +18258,23 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y0_p = in__.template read<std::vector<local_scalar_t__>>(2);
+      current_statement__ = 2;
       auto theta_p = in__.template read<std::vector<local_scalar_t__>>(1);
+      current_statement__ = 3;
       auto x_p = in__.template read<std::vector<local_scalar_t__>>(1);
+      current_statement__ = 4;
       auto x_p_v =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 5;
       auto shared_params_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(3);
+      current_statement__ = 6;
       auto job_params_p =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(3, 3);
+      current_statement__ = 7;
       auto x_r = in__.template read<local_scalar_t__>();
       double abc1_p = std::numeric_limits<double>::quiet_NaN();
       double abc2_p = std::numeric_limits<double>::quiet_NaN();
@@ -20034,8 +20211,11 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto r = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto ra = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 3;
       auto v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> z =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N,
@@ -21677,8 +21857,11 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto r = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto ra = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 3;
       auto v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       std::vector<Eigen::Matrix<local_scalar_t__,-1,1>> z =
         std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(N,
@@ -23331,8 +23514,11 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto r = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto ra = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 3;
       auto v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       std::vector<Eigen::Matrix<double,-1,1>> z =
         std::vector<Eigen::Matrix<double,-1,1>>(N,
@@ -25539,21 +25725,27 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto alpha =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 2;
       auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto gamma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 4;
       auto delta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 5;
       auto z_init =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, 2);
+      current_statement__ = 6;
       auto sigma =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, 2);
@@ -25635,21 +25827,27 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto alpha =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 2;
       auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto gamma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 4;
       auto delta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 5;
       auto z_init =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, 2);
+      current_statement__ = 6;
       auto sigma =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, 2);
@@ -25742,21 +25940,27 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto alpha =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 2;
       auto beta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto gamma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 4;
       auto delta =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 5;
       auto z_init =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, 2);
+      current_statement__ = 6;
       auto sigma =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(0, lp__, 2);
@@ -26601,19 +26805,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto alpha_v =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 2;
       auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 3;
       auto cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 4;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 5;
       auto alpha = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto phi = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 8;
       auto beta_m =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 9;
       auto X_rv_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       {
@@ -27148,19 +27361,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto alpha_v =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 2;
       auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 3;
       auto cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 4;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 5;
       auto alpha = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto phi = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 8;
       auto beta_m =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 9;
       auto X_rv_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       {
@@ -27706,19 +27928,28 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto alpha_v =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 2;
       auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 3;
       auto cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
+      current_statement__ = 4;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 5;
       auto alpha = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto phi = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto X_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 8;
       auto beta_m =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
+      current_statement__ = 9;
       auto X_rv_p =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       out__.write(alpha_v);
@@ -28635,7 +28866,9 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto z = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 3;
@@ -28714,7 +28947,9 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto z = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 3;
@@ -28804,7 +29039,9 @@ class overloading_templating_model final : public model_base_crtp<overloading_te
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto z = in__.template read<local_scalar_t__>();
       out__.write(y);
       out__.write(z);
@@ -29107,10 +29344,12 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto L_Omega =
         in__.template read_constrain_cholesky_factor_corr<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>,
           jacobian__>(lp__, nt, 2);
+      current_statement__ = 2;
       auto z1 =
         in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__,-1,1>,
           jacobian__>(stan::model::rvalue(L_Omega, "L_Omega",
@@ -29146,10 +29385,12 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto L_Omega =
         in__.template read_constrain_cholesky_factor_corr<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>,
           jacobian__>(lp__, nt, 2);
+      current_statement__ = 2;
       auto z1 =
         in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__,-1,1>,
           jacobian__>(stan::model::rvalue(L_Omega, "L_Omega",
@@ -29196,10 +29437,12 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto L_Omega =
         in__.template read_constrain_cholesky_factor_corr<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>,
           jacobian__>(lp__, nt, 2);
+      current_statement__ = 2;
       auto z1 =
         in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__,-1,1>,
           jacobian__>(stan::model::rvalue(L_Omega, "L_Omega",
@@ -30739,6 +30982,7 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto gamma =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(times);
       Eigen::Matrix<local_scalar_t__,-1,1> z_hat =
@@ -30782,6 +31026,7 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto gamma =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(times);
       Eigen::Matrix<local_scalar_t__,-1,1> z_hat =
@@ -30836,6 +31081,7 @@ class recursive_slicing_model final : public model_base_crtp<recursive_slicing_m
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto gamma =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(times);
       Eigen::Matrix<double,-1,1> z_hat =
@@ -31391,8 +31637,11 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 2;
       auto y2 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 3;
       auto y3 = in__.template read<std::vector<local_scalar_t__>>(N);
       {
         current_statement__ = 4;
@@ -31437,8 +31686,11 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 2;
       auto y2 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 3;
       auto y3 = in__.template read<std::vector<local_scalar_t__>>(N);
       {
         current_statement__ = 4;
@@ -31494,8 +31746,11 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 2;
       auto y2 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 3;
       auto y3 = in__.template read<std::vector<local_scalar_t__>>(N);
       out__.write(y1);
       out__.write(y2);
@@ -33270,53 +33525,69 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto a8 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(N,
           N, N, N);
+      current_statement__ = 2;
       auto a7 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>(N,
           N, N);
+      current_statement__ = 3;
       auto a6 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>(N,
           N, N);
+      current_statement__ = 4;
       auto a5 =
         in__.template read<std::vector<std::vector<local_scalar_t__>>>(N, N);
+      current_statement__ = 5;
       auto a4 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N, N, N);
+      current_statement__ = 6;
       auto a3 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 7;
       auto a2 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 8;
       auto a1 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 9;
       auto y8 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(N,
           N, N, N);
+      current_statement__ = 10;
       auto y7 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>(N,
           N, N);
+      current_statement__ = 11;
       auto y6 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>(N,
           N, N);
+      current_statement__ = 12;
       auto y5 =
         in__.template read<std::vector<std::vector<local_scalar_t__>>>(N, N);
+      current_statement__ = 13;
       auto y4 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N, N, N);
+      current_statement__ = 14;
       auto y3 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 15;
       auto y2 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 16;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       {
         current_statement__ = 17;
@@ -33398,53 +33669,69 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto a8 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(N,
           N, N, N);
+      current_statement__ = 2;
       auto a7 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>(N,
           N, N);
+      current_statement__ = 3;
       auto a6 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>(N,
           N, N);
+      current_statement__ = 4;
       auto a5 =
         in__.template read<std::vector<std::vector<local_scalar_t__>>>(N, N);
+      current_statement__ = 5;
       auto a4 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N, N, N);
+      current_statement__ = 6;
       auto a3 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 7;
       auto a2 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 8;
       auto a1 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 9;
       auto y8 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(N,
           N, N, N);
+      current_statement__ = 10;
       auto y7 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>(N,
           N, N);
+      current_statement__ = 11;
       auto y6 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>(N,
           N, N);
+      current_statement__ = 12;
       auto y5 =
         in__.template read<std::vector<std::vector<local_scalar_t__>>>(N, N);
+      current_statement__ = 13;
       auto y4 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N, N, N);
+      current_statement__ = 14;
       auto y3 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 15;
       auto y2 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 16;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       {
         current_statement__ = 17;
@@ -33537,53 +33824,69 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto a8 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(N,
           N, N, N);
+      current_statement__ = 2;
       auto a7 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>(N,
           N, N);
+      current_statement__ = 3;
       auto a6 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>(N,
           N, N);
+      current_statement__ = 4;
       auto a5 =
         in__.template read<std::vector<std::vector<local_scalar_t__>>>(N, N);
+      current_statement__ = 5;
       auto a4 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N, N, N);
+      current_statement__ = 6;
       auto a3 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 7;
       auto a2 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 8;
       auto a1 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 9;
       auto y8 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(N,
           N, N, N);
+      current_statement__ = 10;
       auto y7 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>(N,
           N, N);
+      current_statement__ = 11;
       auto y6 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>(N,
           N, N);
+      current_statement__ = 12;
       auto y5 =
         in__.template read<std::vector<std::vector<local_scalar_t__>>>(N, N);
+      current_statement__ = 13;
       auto y4 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N, N, N);
+      current_statement__ = 14;
       auto y3 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 15;
       auto y2 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 16;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -37884,35 +38187,48 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 2;
       auto y2 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 3;
       auto y3 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 4;
       auto y4 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N, N, N);
+      current_statement__ = 5;
       auto y5 =
         in__.template read<std::vector<std::vector<local_scalar_t__>>>(N, N);
+      current_statement__ = 6;
       auto y6 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>(N,
           N, N);
+      current_statement__ = 7;
       auto y7 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>(N,
           N, N);
+      current_statement__ = 8;
       auto y8 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(N,
           N, N, N);
+      current_statement__ = 9;
       auto y9 = in__.template read<local_scalar_t__>();
+      current_statement__ = 10;
       auto y10 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 11;
       auto y11 = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      current_statement__ = 12;
       auto y12 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+      current_statement__ = 13;
       auto y17 =
         in__.template read<
           std::vector<std::vector<std::vector<local_scalar_t__>>>>(N, N, N);
@@ -38032,35 +38348,48 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 2;
       auto y2 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 3;
       auto y3 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 4;
       auto y4 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N, N, N);
+      current_statement__ = 5;
       auto y5 =
         in__.template read<std::vector<std::vector<local_scalar_t__>>>(N, N);
+      current_statement__ = 6;
       auto y6 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>(N,
           N, N);
+      current_statement__ = 7;
       auto y7 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>(N,
           N, N);
+      current_statement__ = 8;
       auto y8 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(N,
           N, N, N);
+      current_statement__ = 9;
       auto y9 = in__.template read<local_scalar_t__>();
+      current_statement__ = 10;
       auto y10 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 11;
       auto y11 = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      current_statement__ = 12;
       auto y12 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+      current_statement__ = 13;
       auto y17 =
         in__.template read<
           std::vector<std::vector<std::vector<local_scalar_t__>>>>(N, N, N);
@@ -38191,35 +38520,48 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto y1 = in__.template read<std::vector<local_scalar_t__>>(N);
+      current_statement__ = 2;
       auto y2 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(N, N);
+      current_statement__ = 3;
       auto y3 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>(N, N);
+      current_statement__ = 4;
       auto y4 =
         in__.template read<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(N, N, N);
+      current_statement__ = 5;
       auto y5 =
         in__.template read<std::vector<std::vector<local_scalar_t__>>>(N, N);
+      current_statement__ = 6;
       auto y6 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>>(N,
           N, N);
+      current_statement__ = 7;
       auto y7 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>>(N,
           N, N);
+      current_statement__ = 8;
       auto y8 =
         in__.template read<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>>(N,
           N, N, N);
+      current_statement__ = 9;
       auto y9 = in__.template read<local_scalar_t__>();
+      current_statement__ = 10;
       auto y10 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 11;
       auto y11 = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      current_statement__ = 12;
       auto y12 =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
+      current_statement__ = 13;
       auto y17 =
         in__.template read<
           std::vector<std::vector<std::vector<local_scalar_t__>>>>(N, N, N);
@@ -39377,6 +39719,7 @@ class reject_exit_model final : public model_base_crtp<reject_exit_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
@@ -39432,6 +39775,7 @@ class reject_exit_model final : public model_base_crtp<reject_exit_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
@@ -39498,6 +39842,7 @@ class reject_exit_model final : public model_base_crtp<reject_exit_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       out__.write(x);
       if (stan::math::logical_negation(
@@ -39859,6 +40204,7 @@ class return_position_types_model final : public model_base_crtp<return_position
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto a = in__.template read<local_scalar_t__>();
       {
         std::vector<local_scalar_t__> z =
@@ -39906,6 +40252,7 @@ class return_position_types_model final : public model_base_crtp<return_position
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto a = in__.template read<local_scalar_t__>();
       {
         std::vector<local_scalar_t__> z =
@@ -39964,6 +40311,7 @@ class return_position_types_model final : public model_base_crtp<return_position
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto a = in__.template read<local_scalar_t__>();
       out__.write(a);
       if (stan::math::logical_negation(
@@ -40747,45 +41095,79 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto e = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto pi = in__.template read<local_scalar_t__>();
+      current_statement__ = 3;
       auto log2 = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
       auto log10 = in__.template read<local_scalar_t__>();
+      current_statement__ = 5;
       auto sqrt2 = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto not_a_number = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto positive_infinity = in__.template read<local_scalar_t__>();
+      current_statement__ = 8;
       auto negative_infinity = in__.template read<local_scalar_t__>();
+      current_statement__ = 9;
       auto machine_precision = in__.template read<local_scalar_t__>();
+      current_statement__ = 10;
       auto inv_logit = in__.template read<local_scalar_t__>();
+      current_statement__ = 11;
       auto logit = in__.template read<local_scalar_t__>();
+      current_statement__ = 12;
       auto num_elements = in__.template read<local_scalar_t__>();
+      current_statement__ = 13;
       auto pow = in__.template read<local_scalar_t__>();
+      current_statement__ = 14;
       auto add = in__.template read<local_scalar_t__>();
+      current_statement__ = 15;
       auto sub = in__.template read<local_scalar_t__>();
+      current_statement__ = 16;
       auto multiply = in__.template read<local_scalar_t__>();
+      current_statement__ = 17;
       auto lchoose = in__.template read<local_scalar_t__>();
+      current_statement__ = 18;
       auto binomial_coefficient_log = in__.template read<local_scalar_t__>();
+      current_statement__ = 19;
       auto read_constrain_lb =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 20;
       auto read = in__.template read<local_scalar_t__>();
+      current_statement__ = 21;
       auto validate_non_negative_index =
         in__.template read<local_scalar_t__>();
+      current_statement__ = 22;
       auto length = in__.template read<local_scalar_t__>();
+      current_statement__ = 23;
       auto validate_positive_index =
         in__.template read_constrain_simplex<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 5);
+      current_statement__ = 24;
       auto profile_map = in__.template read<local_scalar_t__>();
+      current_statement__ = 25;
       auto assign = in__.template read<local_scalar_t__>();
+      current_statement__ = 26;
       auto rvalue = in__.template read<local_scalar_t__>();
+      current_statement__ = 27;
       auto stan_print = in__.template read<local_scalar_t__>();
+      current_statement__ = 28;
       auto model_base_crtp = in__.template read<local_scalar_t__>();
+      current_statement__ = 29;
       auto index_uni = in__.template read<local_scalar_t__>();
+      current_statement__ = 30;
       auto bernoulli_logit_glm_lpmf = in__.template read<local_scalar_t__>();
+      current_statement__ = 31;
       auto reduce_sum = in__.template read<local_scalar_t__>();
+      current_statement__ = 32;
       auto segment =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(4);
+      current_statement__ = 33;
       auto ode_bdf = in__.template read<local_scalar_t__>();
+      current_statement__ = 34;
       auto ode_bdf_tol = in__.template read<local_scalar_t__>();
       local_scalar_t__ mu = DUMMY_VAR__;
       current_statement__ = 38;
@@ -40863,45 +41245,79 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto e = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto pi = in__.template read<local_scalar_t__>();
+      current_statement__ = 3;
       auto log2 = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
       auto log10 = in__.template read<local_scalar_t__>();
+      current_statement__ = 5;
       auto sqrt2 = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto not_a_number = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto positive_infinity = in__.template read<local_scalar_t__>();
+      current_statement__ = 8;
       auto negative_infinity = in__.template read<local_scalar_t__>();
+      current_statement__ = 9;
       auto machine_precision = in__.template read<local_scalar_t__>();
+      current_statement__ = 10;
       auto inv_logit = in__.template read<local_scalar_t__>();
+      current_statement__ = 11;
       auto logit = in__.template read<local_scalar_t__>();
+      current_statement__ = 12;
       auto num_elements = in__.template read<local_scalar_t__>();
+      current_statement__ = 13;
       auto pow = in__.template read<local_scalar_t__>();
+      current_statement__ = 14;
       auto add = in__.template read<local_scalar_t__>();
+      current_statement__ = 15;
       auto sub = in__.template read<local_scalar_t__>();
+      current_statement__ = 16;
       auto multiply = in__.template read<local_scalar_t__>();
+      current_statement__ = 17;
       auto lchoose = in__.template read<local_scalar_t__>();
+      current_statement__ = 18;
       auto binomial_coefficient_log = in__.template read<local_scalar_t__>();
+      current_statement__ = 19;
       auto read_constrain_lb =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 20;
       auto read = in__.template read<local_scalar_t__>();
+      current_statement__ = 21;
       auto validate_non_negative_index =
         in__.template read<local_scalar_t__>();
+      current_statement__ = 22;
       auto length = in__.template read<local_scalar_t__>();
+      current_statement__ = 23;
       auto validate_positive_index =
         in__.template read_constrain_simplex<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 5);
+      current_statement__ = 24;
       auto profile_map = in__.template read<local_scalar_t__>();
+      current_statement__ = 25;
       auto assign = in__.template read<local_scalar_t__>();
+      current_statement__ = 26;
       auto rvalue = in__.template read<local_scalar_t__>();
+      current_statement__ = 27;
       auto stan_print = in__.template read<local_scalar_t__>();
+      current_statement__ = 28;
       auto model_base_crtp = in__.template read<local_scalar_t__>();
+      current_statement__ = 29;
       auto index_uni = in__.template read<local_scalar_t__>();
+      current_statement__ = 30;
       auto bernoulli_logit_glm_lpmf = in__.template read<local_scalar_t__>();
+      current_statement__ = 31;
       auto reduce_sum = in__.template read<local_scalar_t__>();
+      current_statement__ = 32;
       auto segment =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(4);
+      current_statement__ = 33;
       auto ode_bdf = in__.template read<local_scalar_t__>();
+      current_statement__ = 34;
       auto ode_bdf_tol = in__.template read<local_scalar_t__>();
       local_scalar_t__ mu = DUMMY_VAR__;
       current_statement__ = 38;
@@ -40990,45 +41406,79 @@ class shadowing_model final : public model_base_crtp<shadowing_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto e = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto pi = in__.template read<local_scalar_t__>();
+      current_statement__ = 3;
       auto log2 = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
       auto log10 = in__.template read<local_scalar_t__>();
+      current_statement__ = 5;
       auto sqrt2 = in__.template read<local_scalar_t__>();
+      current_statement__ = 6;
       auto not_a_number = in__.template read<local_scalar_t__>();
+      current_statement__ = 7;
       auto positive_infinity = in__.template read<local_scalar_t__>();
+      current_statement__ = 8;
       auto negative_infinity = in__.template read<local_scalar_t__>();
+      current_statement__ = 9;
       auto machine_precision = in__.template read<local_scalar_t__>();
+      current_statement__ = 10;
       auto inv_logit = in__.template read<local_scalar_t__>();
+      current_statement__ = 11;
       auto logit = in__.template read<local_scalar_t__>();
+      current_statement__ = 12;
       auto num_elements = in__.template read<local_scalar_t__>();
+      current_statement__ = 13;
       auto pow = in__.template read<local_scalar_t__>();
+      current_statement__ = 14;
       auto add = in__.template read<local_scalar_t__>();
+      current_statement__ = 15;
       auto sub = in__.template read<local_scalar_t__>();
+      current_statement__ = 16;
       auto multiply = in__.template read<local_scalar_t__>();
+      current_statement__ = 17;
       auto lchoose = in__.template read<local_scalar_t__>();
+      current_statement__ = 18;
       auto binomial_coefficient_log = in__.template read<local_scalar_t__>();
+      current_statement__ = 19;
       auto read_constrain_lb =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 20;
       auto read = in__.template read<local_scalar_t__>();
+      current_statement__ = 21;
       auto validate_non_negative_index =
         in__.template read<local_scalar_t__>();
+      current_statement__ = 22;
       auto length = in__.template read<local_scalar_t__>();
+      current_statement__ = 23;
       auto validate_positive_index =
         in__.template read_constrain_simplex<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 5);
+      current_statement__ = 24;
       auto profile_map = in__.template read<local_scalar_t__>();
+      current_statement__ = 25;
       auto assign = in__.template read<local_scalar_t__>();
+      current_statement__ = 26;
       auto rvalue = in__.template read<local_scalar_t__>();
+      current_statement__ = 27;
       auto stan_print = in__.template read<local_scalar_t__>();
+      current_statement__ = 28;
       auto model_base_crtp = in__.template read<local_scalar_t__>();
+      current_statement__ = 29;
       auto index_uni = in__.template read<local_scalar_t__>();
+      current_statement__ = 30;
       auto bernoulli_logit_glm_lpmf = in__.template read<local_scalar_t__>();
+      current_statement__ = 31;
       auto reduce_sum = in__.template read<local_scalar_t__>();
+      current_statement__ = 32;
       auto segment =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(4);
+      current_statement__ = 33;
       auto ode_bdf = in__.template read<local_scalar_t__>();
+      current_statement__ = 34;
       auto ode_bdf_tol = in__.template read<local_scalar_t__>();
       double mu = std::numeric_limits<double>::quiet_NaN();
       std::vector<Eigen::Matrix<double,-1,1>> called =
@@ -42390,6 +42840,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -42449,6 +42900,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -42519,6 +42971,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -43177,6 +43630,7 @@ class transform_model final : public model_base_crtp<transform_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_1 =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -43186,6 +43640,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_1", p_1, "lower",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 2;
       auto p_2 =
         in__.template read_constrain_ub<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -43195,6 +43650,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_2", p_2, "upper",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 3;
       auto p_3 =
         in__.template read_constrain_lub<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -43209,6 +43665,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_3", p_3, "upper",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 4;
       auto p_4 =
         in__.template read_constrain_lub<std::vector<local_scalar_t__>,
           jacobian__>(0,
@@ -43218,6 +43675,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_4", p_4, "upper",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 5;
       auto p_5 =
         in__.template read_constrain_lub<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -43227,6 +43685,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_5", p_5, "lower",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 6;
       auto p_6 =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>,
@@ -43237,6 +43696,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_6", p_6, "offset",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 7;
       auto p_7 =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(0,
@@ -43246,6 +43706,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_7", p_7, "multiplier",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 8;
       auto p_8 =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>,
@@ -43261,6 +43722,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_8", p_8, "multiplier",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 9;
       auto p_9 =
         in__.template read_constrain_lub<
           std::vector<std::vector<local_scalar_t__>>,
@@ -43269,12 +43731,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 9;
       stan::math::check_matching_dims("constraint", "p_9", p_9, "lower",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1)));
+      current_statement__ = 10;
       auto p_10 =
         in__.template read_constrain_lub<
           std::vector<std::vector<std::vector<local_scalar_t__>>>,
           jacobian__>(0, ds, lp__, n, m, k);
       current_statement__ = 10;
       stan::math::check_matching_dims("constraint", "p_10", p_10, "upper", ds);
+      current_statement__ = 11;
       auto pv_1 =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>,
@@ -43290,6 +43754,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "pv_1", pv_1, "upper",
         stan::model::rvalue(dv, "dv", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 12;
       auto pv_2 =
         in__.template read_constrain_lb<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>,
@@ -43298,12 +43763,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 12;
       stan::math::check_matching_dims("constraint", "pv_2", pv_2, "lower",
         stan::model::rvalue(dv, "dv", stan::model::index_uni(1)));
+      current_statement__ = 13;
       auto pv_3 =
         in__.template read_constrain_ub<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>,
           jacobian__>(dv, lp__, n, m, k);
       current_statement__ = 13;
       stan::math::check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
+      current_statement__ = 14;
       auto pr_1 =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,1,-1>,
@@ -43319,6 +43786,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "pr_1", pr_1, "upper",
         stan::model::rvalue(dr, "dr", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 15;
       auto pr_2 =
         in__.template read_constrain_lb<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>,
@@ -43327,12 +43795,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 15;
       stan::math::check_matching_dims("constraint", "pr_2", pr_2, "lower",
         stan::model::rvalue(dr, "dr", stan::model::index_uni(1)));
+      current_statement__ = 16;
       auto pr_3 =
         in__.template read_constrain_ub<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>,
           jacobian__>(dr, lp__, n, m, k);
       current_statement__ = 16;
       stan::math::check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
+      current_statement__ = 17;
       auto pm_1 =
         in__.template read_constrain_lb<
           Eigen::Matrix<local_scalar_t__,-1,-1>,
@@ -43341,6 +43811,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 17;
       stan::math::check_matching_dims("constraint", "pm_1", pm_1, "lower",
         stan::model::rvalue(dm, "dm", stan::model::index_uni(1)));
+      current_statement__ = 18;
       auto pm_2 =
         in__.template read_constrain_ub<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>, jacobian__>(dm,
@@ -43609,6 +44080,7 @@ class transform_model final : public model_base_crtp<transform_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_1 =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -43618,6 +44090,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_1", p_1, "lower",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 2;
       auto p_2 =
         in__.template read_constrain_ub<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -43627,6 +44100,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_2", p_2, "upper",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 3;
       auto p_3 =
         in__.template read_constrain_lub<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -43641,6 +44115,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_3", p_3, "upper",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 4;
       auto p_4 =
         in__.template read_constrain_lub<std::vector<local_scalar_t__>,
           jacobian__>(0,
@@ -43650,6 +44125,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_4", p_4, "upper",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 5;
       auto p_5 =
         in__.template read_constrain_lub<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -43659,6 +44135,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_5", p_5, "lower",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 6;
       auto p_6 =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>,
@@ -43669,6 +44146,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_6", p_6, "offset",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 7;
       auto p_7 =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(0,
@@ -43678,6 +44156,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_7", p_7, "multiplier",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 8;
       auto p_8 =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>,
@@ -43693,6 +44172,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_8", p_8, "multiplier",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 9;
       auto p_9 =
         in__.template read_constrain_lub<
           std::vector<std::vector<local_scalar_t__>>,
@@ -43701,12 +44181,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 9;
       stan::math::check_matching_dims("constraint", "p_9", p_9, "lower",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1)));
+      current_statement__ = 10;
       auto p_10 =
         in__.template read_constrain_lub<
           std::vector<std::vector<std::vector<local_scalar_t__>>>,
           jacobian__>(0, ds, lp__, n, m, k);
       current_statement__ = 10;
       stan::math::check_matching_dims("constraint", "p_10", p_10, "upper", ds);
+      current_statement__ = 11;
       auto pv_1 =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>,
@@ -43722,6 +44204,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "pv_1", pv_1, "upper",
         stan::model::rvalue(dv, "dv", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 12;
       auto pv_2 =
         in__.template read_constrain_lb<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>,
@@ -43730,12 +44213,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 12;
       stan::math::check_matching_dims("constraint", "pv_2", pv_2, "lower",
         stan::model::rvalue(dv, "dv", stan::model::index_uni(1)));
+      current_statement__ = 13;
       auto pv_3 =
         in__.template read_constrain_ub<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>,
           jacobian__>(dv, lp__, n, m, k);
       current_statement__ = 13;
       stan::math::check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
+      current_statement__ = 14;
       auto pr_1 =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,1,-1>,
@@ -43751,6 +44236,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "pr_1", pr_1, "upper",
         stan::model::rvalue(dr, "dr", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 15;
       auto pr_2 =
         in__.template read_constrain_lb<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>,
@@ -43759,12 +44245,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 15;
       stan::math::check_matching_dims("constraint", "pr_2", pr_2, "lower",
         stan::model::rvalue(dr, "dr", stan::model::index_uni(1)));
+      current_statement__ = 16;
       auto pr_3 =
         in__.template read_constrain_ub<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>,
           jacobian__>(dr, lp__, n, m, k);
       current_statement__ = 16;
       stan::math::check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
+      current_statement__ = 17;
       auto pm_1 =
         in__.template read_constrain_lb<
           Eigen::Matrix<local_scalar_t__,-1,-1>,
@@ -43773,6 +44261,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 17;
       stan::math::check_matching_dims("constraint", "pm_1", pm_1, "lower",
         stan::model::rvalue(dm, "dm", stan::model::index_uni(1)));
+      current_statement__ = 18;
       auto pm_2 =
         in__.template read_constrain_ub<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>, jacobian__>(dm,
@@ -44052,6 +44541,7 @@ class transform_model final : public model_base_crtp<transform_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_1 =
         in__.template read_constrain_lb<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -44061,6 +44551,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_1", p_1, "lower",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 2;
       auto p_2 =
         in__.template read_constrain_ub<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -44070,6 +44561,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_2", p_2, "upper",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 3;
       auto p_3 =
         in__.template read_constrain_lub<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -44084,6 +44576,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_3", p_3, "upper",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 4;
       auto p_4 =
         in__.template read_constrain_lub<std::vector<local_scalar_t__>,
           jacobian__>(0,
@@ -44093,6 +44586,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_4", p_4, "upper",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 5;
       auto p_5 =
         in__.template read_constrain_lub<std::vector<local_scalar_t__>,
           jacobian__>(stan::model::rvalue(ds, "ds",
@@ -44102,6 +44596,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_5", p_5, "lower",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 6;
       auto p_6 =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>,
@@ -44112,6 +44607,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_6", p_6, "offset",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 7;
       auto p_7 =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>, jacobian__>(0,
@@ -44121,6 +44617,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_7", p_7, "multiplier",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(1)));
+      current_statement__ = 8;
       auto p_8 =
         in__.template read_constrain_offset_multiplier<
           std::vector<local_scalar_t__>,
@@ -44136,6 +44633,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "p_8", p_8, "multiplier",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 9;
       auto p_9 =
         in__.template read_constrain_lub<
           std::vector<std::vector<local_scalar_t__>>,
@@ -44144,12 +44642,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 9;
       stan::math::check_matching_dims("constraint", "p_9", p_9, "lower",
         stan::model::rvalue(ds, "ds", stan::model::index_uni(1)));
+      current_statement__ = 10;
       auto p_10 =
         in__.template read_constrain_lub<
           std::vector<std::vector<std::vector<local_scalar_t__>>>,
           jacobian__>(0, ds, lp__, n, m, k);
       current_statement__ = 10;
       stan::math::check_matching_dims("constraint", "p_10", p_10, "upper", ds);
+      current_statement__ = 11;
       auto pv_1 =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,-1,1>,
@@ -44165,6 +44665,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "pv_1", pv_1, "upper",
         stan::model::rvalue(dv, "dv", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 12;
       auto pv_2 =
         in__.template read_constrain_lb<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>,
@@ -44173,12 +44674,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 12;
       stan::math::check_matching_dims("constraint", "pv_2", pv_2, "lower",
         stan::model::rvalue(dv, "dv", stan::model::index_uni(1)));
+      current_statement__ = 13;
       auto pv_3 =
         in__.template read_constrain_ub<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>,
           jacobian__>(dv, lp__, n, m, k);
       current_statement__ = 13;
       stan::math::check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
+      current_statement__ = 14;
       auto pr_1 =
         in__.template read_constrain_lub<
           Eigen::Matrix<local_scalar_t__,1,-1>,
@@ -44194,6 +44697,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       stan::math::check_matching_dims("constraint", "pr_1", pr_1, "upper",
         stan::model::rvalue(dr, "dr", stan::model::index_uni(1),
           stan::model::index_uni(2)));
+      current_statement__ = 15;
       auto pr_2 =
         in__.template read_constrain_lb<
           std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>,
@@ -44202,12 +44706,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 15;
       stan::math::check_matching_dims("constraint", "pr_2", pr_2, "lower",
         stan::model::rvalue(dr, "dr", stan::model::index_uni(1)));
+      current_statement__ = 16;
       auto pr_3 =
         in__.template read_constrain_ub<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,1,-1>>>,
           jacobian__>(dr, lp__, n, m, k);
       current_statement__ = 16;
       stan::math::check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
+      current_statement__ = 17;
       auto pm_1 =
         in__.template read_constrain_lb<
           Eigen::Matrix<local_scalar_t__,-1,-1>,
@@ -44216,6 +44722,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 17;
       stan::math::check_matching_dims("constraint", "pm_1", pm_1, "lower",
         stan::model::rvalue(dm, "dm", stan::model::index_uni(1)));
+      current_statement__ = 18;
       auto pm_2 =
         in__.template read_constrain_ub<
           std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>, jacobian__>(dm,
@@ -45871,7 +46378,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto m = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto y =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -45987,7 +46496,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto m = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto y =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -46114,7 +46625,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto m = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto y =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -46422,6 +46935,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
@@ -46457,6 +46971,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       {
         current_statement__ = 2;
@@ -46503,6 +47018,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x = in__.template read<local_scalar_t__>();
       out__.write(x);
       if (stan::math::logical_negation(
@@ -46799,6 +47315,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -46836,6 +47353,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -46884,6 +47402,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto x =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -47188,7 +47707,9 @@ class variable_named_context_model final : public model_base_crtp<variable_named
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -47226,7 +47747,9 @@ class variable_named_context_model final : public model_base_crtp<variable_named
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -47275,7 +47798,9 @@ class variable_named_context_model final : public model_base_crtp<variable_named
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -47691,12 +48216,16 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto vector_mu =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 4;
       auto vector_sigma =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       {
@@ -48206,12 +48735,16 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto vector_mu =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 4;
       auto vector_sigma =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       {
@@ -48732,12 +49265,16 @@ class vector_truncate_model final : public model_base_crtp<vector_truncate_model
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto mu = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto vector_mu =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 4;
       auto vector_sigma =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       out__.write(mu);

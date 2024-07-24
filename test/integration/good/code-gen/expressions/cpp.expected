@@ -110,8 +110,11 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 2;
       auto rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      current_statement__ = 3;
       auto A =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
     } catch (const std::exception& e) {
@@ -144,8 +147,11 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 2;
       auto rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      current_statement__ = 3;
       auto A =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
     } catch (const std::exception& e) {
@@ -189,8 +195,11 @@ class operators_model final : public model_base_crtp<operators_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      current_statement__ = 2;
       auto rv = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
+      current_statement__ = 3;
       auto A =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       out__.write(v);
@@ -1175,9 +1184,13 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 2;
       auto b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 3;
       auto r = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
       auto zp = in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__,-1,1> c =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
@@ -1242,9 +1255,13 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 2;
       auto b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 3;
       auto r = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
       auto zp = in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<local_scalar_t__,-1,1> c =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
@@ -1320,9 +1337,13 @@ class ternary_if_model final : public model_base_crtp<ternary_if_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto a = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 2;
       auto b = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 3;
       auto r = in__.template read<local_scalar_t__>();
+      current_statement__ = 4;
       auto zp = in__.template read<std::complex<local_scalar_t__>>();
       Eigen::Matrix<double,-1,1> c =
         Eigen::Matrix<double,-1,1>::Constant(2,

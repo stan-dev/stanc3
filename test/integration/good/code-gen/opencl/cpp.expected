@@ -933,16 +933,22 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_real = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
+      current_statement__ = 3;
       auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
+      current_statement__ = 4;
       auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
+      current_statement__ = 5;
       auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
+      current_statement__ = 6;
       auto y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real = DUMMY_VAR__;
       current_statement__ = 8;
@@ -3974,16 +3980,22 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_real = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
+      current_statement__ = 3;
       auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
+      current_statement__ = 4;
       auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
+      current_statement__ = 5;
       auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
+      current_statement__ = 6;
       auto y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real = DUMMY_VAR__;
       current_statement__ = 8;
@@ -7026,16 +7038,22 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_real = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
+      current_statement__ = 3;
       auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
+      current_statement__ = 4;
       auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
+      current_statement__ = 5;
       auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
+      current_statement__ = 6;
       auto y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real =
         std::numeric_limits<double>::quiet_NaN();
@@ -10597,16 +10615,22 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_real = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
+      current_statement__ = 3;
       auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
+      current_statement__ = 4;
       auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
+      current_statement__ = 5;
       auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
+      current_statement__ = 6;
       auto y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real = DUMMY_VAR__;
       current_statement__ = 8;
@@ -10691,16 +10715,22 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_real = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
+      current_statement__ = 3;
       auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
+      current_statement__ = 4;
       auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
+      current_statement__ = 5;
       auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
+      current_statement__ = 6;
       auto y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real = DUMMY_VAR__;
       current_statement__ = 8;
@@ -10796,16 +10826,22 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto p_real = in__.template read<local_scalar_t__>();
+      current_statement__ = 2;
       auto p_real_array =
         in__.template read<std::vector<local_scalar_t__>>(d_int);
+      current_statement__ = 3;
       auto p_matrix =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(d_int,
           d_int);
+      current_statement__ = 4;
       auto p_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(d_int);
+      current_statement__ = 5;
       auto p_row_vector =
         in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(d_int);
+      current_statement__ = 6;
       auto y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real =
         std::numeric_limits<double>::quiet_NaN();

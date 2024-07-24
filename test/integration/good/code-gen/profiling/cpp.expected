@@ -144,12 +144,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto rho =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 2;
       auto alpha =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -241,12 +244,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto rho =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 2;
       auto alpha =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
@@ -349,12 +355,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) function__;
     try {
+      current_statement__ = 1;
       auto rho =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 2;
       auto alpha =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
+      current_statement__ = 3;
       auto sigma =
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
