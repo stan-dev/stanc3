@@ -887,7 +887,7 @@ let var_context_unconstrain_transform (decl_id, smeta, outvar) =
           ; decl_type= Type.Sized st
           ; initialize= Default }
     ; meta= smeta }
-  :: fst (var_context_read (Stmt.Helpers.lvariable decl_id, smeta, st))
+  :: var_context_read_internal (Stmt.Helpers.lvariable decl_id, smeta, st)
   @ param_serializer_write ~unconstrain:true (decl_id, outvar)
 
 (** Reads in parameters from a serializer and then writes out the unconstrained versions *)

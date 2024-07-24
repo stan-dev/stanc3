@@ -474,6 +474,7 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
   match s with
   | Assignment (lhs, _, _) ->
       Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
+  | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
   | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
   | NRFunApp
       ( ( UserDefined (_, (FnTarget | FnJacobian))

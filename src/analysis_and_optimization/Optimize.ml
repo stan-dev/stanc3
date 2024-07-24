@@ -752,13 +752,13 @@ let dead_code_elimination (mir : Program.Typed.t) =
                  (Middle.Stmt.Helpers.lhs_indices lhs)
           then stmt
           else Skip
-      | Decl {decl_id; initialize= Assign e; _} ->
-          if Set.mem live_variables_s decl_id || cannot_remove_expr e then stmt
-          else Skip
       (* NOTE: we never get rid of declarations as we might not be able to
          remove an assignment to a variable
             due to side effects. *)
       (* TODO: maybe we should revisit that. *)
+      | Decl ({decl_id; initialize= Assign e; _} as decl) ->
+          if Set.mem live_variables_s decl_id || cannot_remove_expr e then stmt
+          else Decl {decl with initialize= Uninit}
       | Decl _ | TargetPE _ | JacobianPE _
        |NRFunApp (_, _)
        |Break | Continue | Return _ | Skip ->
@@ -835,7 +835,8 @@ let rec find_assignment_idx (name : string) Stmt.Fixed.{pattern; _} =
 and unenforce_initialize (lst : Stmt.Located.t list) =
   let rec unenforce_initialize_patt (Stmt.Fixed.{pattern; _} as stmt) sub_lst =
     match pattern with
-    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as decl_pat) -> (
+    | Stmt.Fixed.Pattern.Decl ({decl_id; initialize= Default; _} as decl_pat)
+      -> (
         match List.hd sub_lst with
         | Some next_stmt -> (
             match find_assignment_idx decl_id next_stmt with
