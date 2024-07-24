@@ -402,7 +402,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
           ]
         |> swrap ]
 
-let rec var_context_read
+let rec var_context_read_internal
     ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), smeta, st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
@@ -430,11 +430,10 @@ let rec var_context_read
             Indexed
               (readfnapp decl_id flat_type, [Single Expr.Helpers.loop_bottom])
         ; meta= {decl_var.meta with type_= unsized} } in
-      ([Assignment (decl_id_lval, unsized, e) |> swrap], None)
+      [Assignment (decl_id_lval, unsized, e) |> swrap]
   | SArray ((SInt | SReal), _) ->
-      ( [ Assignment (decl_id_lval, flat_type, readfnapp decl_id flat_type)
-          |> swrap ]
-      , None )
+      [ Assignment (decl_id_lval, flat_type, readfnapp decl_id flat_type)
+        |> swrap ]
   | STuple subtypes ->
       let sub_sts =
         List.mapi
@@ -445,7 +444,7 @@ let rec var_context_read
                else Location_span.empty)
             , x ))
           subtypes in
-      (List.concat_map ~f:(fun x -> fst (var_context_read x)) sub_sts, None)
+      List.concat_map ~f:var_context_read_internal sub_sts
   | SArray _ when SizedType.contains_tuple st ->
       (* The IO format for tuples is complicated in this case.
          Therefore, we need to do the following
@@ -551,7 +550,7 @@ let rec var_context_read
                 @ final_assignment loopvars)
               |> swrap_noloc)
             Location_span.empty ] in
-      ([Block (flat_decls @ temps @ loop) |> swrap], None)
+      [Block (flat_decls @ temps @ loop) |> swrap]
   | SVector _ | SRowVector _ | SMatrix _ | SComplexMatrix _
    |SComplexRowVector _ | SComplexVector _ | SArray _ ->
       let decl, assign, flat_var =
@@ -590,12 +589,15 @@ let rec var_context_read
         Stmt.Fixed.Pattern.Assignment
           (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom)
         |> swrap_noloc in
-      ( [ Block
-            [ decl; assign; pos_reset
-            ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var Location_span.empty
-            ]
-          |> swrap ]
-      , None )
+      [ Block
+          [ decl; assign; pos_reset
+          ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var Location_span.empty
+          ]
+        |> swrap ]
+
+let var_context_read p =
+  (* this never uses the declare-define fast path at the moment *)
+  (var_context_read_internal p, None)
 
 (*
   Get the dimension expressions that are expected by constrain/unconstrain
@@ -679,14 +681,17 @@ let param_deserializer_read
                 , st
                 , trans ))
               subtys in
-          (List.concat_map ~f:(fun x -> fst (read_stmt x)) sub_sts, None)
-      | _ ->
+          (List.concat_map ~f:(Fn.compose fst read_stmt) sub_sts, None)
+      | _ -> (
           let read = basic_read (cst, out_trans) in
           ( [ Stmt.Fixed.
                 { pattern=
                     Pattern.Assignment (lval, SizedType.to_unsized cst, read)
                 ; meta= smeta } ]
-          , Some read ) in
+          , (* if we're assigning to a top level variable, we can opt into to the declare-define *)
+            match lval with
+            | Stmt.Fixed.Pattern.LVariable _, [] -> Some read
+            | _ -> None )) in
     read_stmt (decl_id_lval, cst, out_trans)
 
 let escape_name str =
@@ -772,10 +777,9 @@ let add_reads vars mkread stmts =
         let param_reader, op_assign =
           mkread (Stmt.Helpers.lvariable decl_id, loc, out) in
         match op_assign with
-        | Some e when List.length param_reader = 1 ->
+        | Some e ->
             [{stmt with pattern= Decl {decl_rec with initialize= Assign e}}]
-        | None -> stmt :: param_reader
-        | Some _ -> stmt :: param_reader)
+        | None -> stmt :: param_reader)
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
