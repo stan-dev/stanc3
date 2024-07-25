@@ -1455,6 +1455,11 @@ model {
   x ~ normal(0, linspaced_array(size(x), 1.0, 10.0));
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format decl_assign.stan
+parameters {
+  vector[10] xx_param;
+}
+
   $ ../../../../install/default/bin/stanc --auto-format declarations.stan
 data {
   int a0;
