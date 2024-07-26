@@ -66,8 +66,18 @@ let functor_suffix_select = function
 let is_scalar e =
   match Expr.Typed.type_of e with UInt | UReal | UComplex -> true | _ -> false
 
-let is_matrix e = Expr.Typed.type_of e = UMatrix
-let is_row_vector e = Expr.Typed.type_of e = URowVector
+(** Used to determine if [operator/] should be
+      mdivide_right() or divide() *)
+let is_matrix e =
+  match Expr.Typed.type_of e with
+  | UMatrix | UComplexMatrix -> true
+  | _ -> false
+
+let is_row_vector e =
+  match Expr.Typed.type_of e with
+  | URowVector | UComplexRowVector -> true
+  | _ -> false
+
 let first es = List.nth_exn es 0
 let second es = List.nth_exn es 1
 let default_multiplier = 1
@@ -94,7 +104,7 @@ let promote_adtype =
 
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
-  | FnTarget -> ["lp__"; "lp_accum__"]
+  | FnTarget | FnJacobian -> ["lp__"; "lp_accum__"]
   | FnPlain | FnLpdf _ -> []
 
 let rec stantype_prim = function
@@ -107,6 +117,7 @@ let templates udf suffix =
   | Fun_kind.FnLpdf true -> [TemplateType "propto__"]
   | FnLpdf false -> [TemplateType "false"]
   | FnTarget when udf -> [TemplateType "propto__"]
+  | FnJacobian when udf -> [TemplateType "jacobian__"]
   | _ -> []
 
 let deserializer = Var "in__"
@@ -243,6 +254,8 @@ and lower_operator_app op es_in =
   | Minus -> lower_binary_op Subtract "stan::math::subtract" es
   | Times -> lower_binary_op Multiply "stan::math::multiply" es
   | Divide | IntDivide ->
+      (* XXX: This conditional is probably a sign that we need to rethink how we store Operators
+         in the MIR *)
       if
         is_matrix (second es)
         && (is_matrix (first es) || is_row_vector (first es))

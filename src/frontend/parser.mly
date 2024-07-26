@@ -214,15 +214,8 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
-  | id_and_v = future_keyword
-    {
-      let id, v = id_and_v in
-      Input_warnings.future_keyword id.name v $loc;
-      id
-    }
-
-future_keyword:
-  | JACOBIAN { build_id "jacobian" $loc, "2.38.0" }
+(* TODO(2.38) remove *)
+  | JACOBIAN { build_id "jacobian" $loc }
 
 decl_identifier:
   | id=identifier { id }
@@ -305,6 +298,21 @@ unsized_type:
     {  grammar_logger "unsized_type";
         nest_unsized_array t n
     }
+  (* This is just a helper for the fact that we don't support the old array syntax any more
+    It can go away at some point if it starts causing conflicts.
+  *)
+  | bt=basic_type dims=unsized_dims {
+    raise
+    (Errors.SyntaxError
+       (Errors.Parsing
+          (Fmt.str
+              "An identifier is expected after the type as a function argument \
+               name.@ It looks like you are trying to use the old array \
+               syntax.@ Please use the new syntax: @ @[<h>array[%s] %a@]@\n"
+              (String.make (dims-1) ',')
+              UnsizedType.pp bt
+          , location_span_of_positions $loc(dims) )))
+  }
   | bt=basic_type
     {  grammar_logger "unsized_type";
        bt
@@ -376,6 +384,21 @@ remaining_declarations(rhs):
  * identifier.
  *)
 decl(type_rule, rhs):
+  (* This is just a helper for the fact that we don't support the old array syntax any more *)
+  | ty=type_rule id=decl_identifier LBRACK dims=separated_nonempty_list(COMMA, expression) RBRACK {
+    let (ty, trans) = ty in
+    let ty = List.fold_right ~f:(fun e ty -> SizedType.SArray (ty, e)) ~init:ty dims in
+    let ty = (ty, trans) in
+    raise
+    (Errors.SyntaxError
+       (Errors.Parsing
+          ( Fmt.str
+              "\";\" expected after variable declaration.@ It looks like you \
+               are trying to use the old array syntax.@ Please use the new \
+               syntax:@ @[<h>%a %s;@]@\n"
+              Pretty_printing.pp_transformed_type ty id.name
+          , location_span_of_positions $loc(dims) )))
+    }
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
@@ -748,6 +771,10 @@ atomic_statement:
     }
   | TARGET PLUSASSIGN e=expression SEMICOLON
     {   grammar_logger "targetpe_statement" ; TargetPE e }
+  (* TODO(2.38) use this instead of current workaround in typechecker.ml
+  | JACOBIAN PLUSASSIGN e=expression SEMICOLON
+    {   grammar_logger "jacobianpe_statement" ; JacobianPE e }
+  *)
   | BREAK SEMICOLON
     {  grammar_logger "break_statement" ; Break }
   | CONTINUE SEMICOLON

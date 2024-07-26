@@ -2,12 +2,6 @@
 
 open Core
 
-(**/**)
-
-module Str = Re.Str
-
-(**/**)
-
 (** Source code locations *)
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
 [@@deriving sexp, hash]
@@ -33,7 +27,12 @@ let pp_context_list ppf (lines, {line_num; col_num; _}) =
   let line_2_before = get_line (line_num - 2) in
   let line_before = get_line (line_num - 1) in
   let our_line = get_line line_num in
-  let cursor_line = String.make (col_num + 9) ' ' ^ "^\n" in
+  let offset = 9 + col_num in
+  let copied = Int.min offset (String.length our_line) in
+  let blank_line =
+    String.slice our_line 0 copied
+    |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
+  let cursor_line = blank_line ^ String.make (offset - copied) ' ' ^ "^\n" in
   let line_after = get_line (line_num + 1) in
   let line_2_after = get_line (line_num + 2) in
   Fmt.pf ppf

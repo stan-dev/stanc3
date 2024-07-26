@@ -7,26 +7,26 @@ open Js_of_ocaml
 
 let version = "%%NAME%% %%VERSION%%"
 
-type stanc_error =
-  | RemovedDeprecations of (Location_span.t * string) list
-  | ProgramError of Errors.t
+type stanc_error = ProgramError of Errors.t
 
-let stan2cpp model_name model_string is_flag_set flag_val :
+let stan2cpp model_name model_string is_flag_set flag_val includes :
     (string, stanc_error) result
     * Warnings.t list
     * Pedantic_analysis.warning_span list =
   Common.Gensym.reset_danger_use_cautiously ();
+  Include_files.include_provider := Include_files.InMemory includes;
   Typechecker.model_name := model_name;
   Typechecker.check_that_all_functions_have_definition :=
     not (is_flag_set "allow_undefined" || is_flag_set "allow-undefined");
   Transform_Mir.use_opencl := is_flag_set "use-opencl";
+  let bare_functions = is_flag_set "functions-only" in
   Lower_program.standalone_functions :=
-    is_flag_set "standalone-functions" || is_flag_set "functions-only";
+    bare_functions || is_flag_set "standalone-functions";
   With_return.with_return (fun r ->
       if is_flag_set "version" then
         r.return (Result.Ok (Fmt.str "%s" version), [], []);
       let ast, parser_warnings =
-        if is_flag_set "functions-only" then
+        if bare_functions then
           Parse.parse_string Parser.Incremental.functions_only model_string
         else Parse.parse_string Parser.Incremental.program model_string in
       let open Result.Monad_infix in
@@ -52,7 +52,6 @@ let stan2cpp model_name model_string is_flag_set flag_val :
                   | "parentheses" -> {settings with parentheses= true}
                   | "braces" -> {settings with braces= true}
                   | "strip-comments" -> {settings with strip_comments= true}
-                  (* this probably never applies to stancjs, but for completion: *)
                   | "includes" -> {settings with inline_includes= true}
                   | _ -> settings in
                 List.fold ~f:parse ~init:Canonicalize.none
@@ -61,20 +60,14 @@ let stan2cpp model_name model_string is_flag_set flag_val :
           flag_val "max-line-length"
           |> Option.map ~f:int_of_string
           |> Option.value ~default:78 in
-        let deprecation_warnings, deprecation_errors =
-          if canonicalizer_settings.deprecations then ([], [])
-          else
-            ( Deprecation_analysis.collect_warnings typed_ast
-            , Deprecation_removals.collect_removals typed_ast ) in
+        let deprecation_warnings =
+          if canonicalizer_settings.deprecations then []
+          else Deprecation_analysis.collect_warnings typed_ast in
         let warnings = warnings @ deprecation_warnings in
-        if not (List.is_empty deprecation_errors) then
-          r.return
-            (Result.Error (RemovedDeprecations deprecation_errors), warnings, []);
         if is_flag_set "auto-format" || is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
-                (Pretty_printing.pretty_print_typed_program
-                   ~bare_functions:(is_flag_set "functions-only")
+                (Pretty_print_prog.pretty_print_typed_program ~bare_functions
                    ~line_length
                    ~inline_includes:canonicalizer_settings.inline_includes
                    ~strip_comments:canonicalizer_settings.strip_comments
@@ -174,32 +167,72 @@ let stan2cpp model_name model_string is_flag_set flag_val :
           (Result.Ok cpp, warnings, pedantic_mode_warnings)
       | Result.Error e -> (Result.Error (ProgramError e), parser_warnings, []))
 
+let wrap_warnings ~warnings =
+  ( "warnings"
+  , Js.Unsafe.inject (Js.array (List.to_array (List.map ~f:Js.string warnings)))
+  )
+
+let wrap_error ~warnings e =
+  Js.Unsafe.obj
+    [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [| e |]))
+     ; wrap_warnings ~warnings |]
+
 let wrap_result ?printed_filename ~code ~warnings res =
-  let js_warnings =
-    ( "warnings"
-    , Js.Unsafe.inject
-        (Js.array (List.to_array (List.map ~f:Js.string warnings))) ) in
   match res with
   | Result.Ok s ->
       Js.Unsafe.obj
-        [| ("result", Js.Unsafe.inject (Js.string s)); js_warnings |]
+        [| ("result", Js.Unsafe.inject (Js.string s)); wrap_warnings ~warnings
+        |]
   | Error (ProgramError e) ->
       let e =
         Fmt.str "%a"
           (Errors.pp ?printed_filename ?code:(Some (Js.to_string code)))
           e in
-      Js.Unsafe.obj
-        [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [| e |]))
-         ; js_warnings |]
-  | Error (RemovedDeprecations ls) ->
-      let errors =
-        Fmt.str "%a" (Deprecation_removals.pp_removals ?printed_filename) ls
-      in
-      Js.Unsafe.obj
-        [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [| errors |]))
-         ; js_warnings |]
+      wrap_error ~warnings e
 
-let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
+exception BadJsInput of string
+
+let () =
+  Stdlib.Printexc.register_printer (function
+    | BadJsInput s -> Some s
+    | _ -> None)
+
+let typecheck e typ = String.equal (Js.to_string (Js.typeof e)) typ
+
+(** Converts from a [{ [s:string]:string }] JS object type
+to an OCaml map, with error messages on bad input. *)
+let to_file_map includes =
+  try
+    match Js.Optdef.to_option includes with
+    | None -> Result.Ok String.Map.empty (* normal use: argument not supplied *)
+    | Some includes ->
+        if not (typecheck includes "object") then
+          raise
+            (BadJsInput
+               "Included files map was provided but was not of type 'object'");
+        let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
+        let value k =
+          let value_js = Js.Unsafe.get includes k in
+          if typecheck value_js "string" then
+            value_js |> Js.Unsafe.coerce |> Js.to_string
+          else
+            raise
+              (BadJsInput
+                 (Fmt.str
+                    "Failed to read property '%s' of included files map!@ It \
+                     had type '%s' instead of 'string'."
+                    (Js.to_string k)
+                    (Js.typeof value_js |> Js.to_string))) in
+        Result.Ok
+          (String.Map.of_alist_exn (* JS objects cannot have duplicate keys *)
+             (List.map keys ~f:(fun k ->
+                  let key_clean = k |> Js.to_string in
+                  (key_clean, value k))))
+  with
+  | BadJsInput s -> Result.Error s
+  | e -> Result.Error (Exn.to_string e)
+
+let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) includes =
   let flags =
     let to_ocaml_str_array a =
       Js.(str_array a |> to_array |> Array.map ~f:to_string) in
@@ -230,13 +263,29 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
     |> List.map ~f:(fun o -> "--" ^ o)
     |> String.concat ~sep:" " in
   Lower_program.stanc_args_to_print := stanc_args_to_print;
-  let result, warnings, pedantic_mode_warnings =
-    stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val in
-  let warnings =
-    List.map
-      ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))
-      (warnings @ pedantic_mode_warnings) in
-  wrap_result ?printed_filename ~code result ~warnings
+  let maybe_includes = to_file_map includes in
+  let includes, include_reader_warnings =
+    match maybe_includes with
+    | Result.Ok map -> (map, [])
+    | Result.Error warn ->
+        ( String.Map.empty
+        , [ Fmt.str
+              "Warning: stanc.js failed to parse included file mapping!@ %s"
+              warn ] ) in
+  match
+    Common.ICE.with_exn_message (fun () ->
+        stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val
+          includes)
+  with
+  | Ok (result, warnings, pedantic_mode_warnings) ->
+      let warnings =
+        include_reader_warnings
+        @ List.map
+            ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))
+            (warnings @ pedantic_mode_warnings) in
+      wrap_result ?printed_filename ~code result ~warnings
+  | Error internal_error ->
+      wrap_error ~warnings:include_reader_warnings internal_error
 
 let dump_stan_math_signatures () =
   Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()

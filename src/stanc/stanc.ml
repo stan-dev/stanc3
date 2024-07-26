@@ -204,7 +204,9 @@ let options =
     ; ( "--include-paths"
       , Arg.String
           (fun str ->
-            Preprocessor.include_paths := String.split_on_chars ~on:[','] str)
+            Include_files.include_provider :=
+              Include_files.FileSystemPaths
+                (String.split_on_chars ~on:[','] str))
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
     ; ( "--use-opencl"
@@ -289,7 +291,7 @@ let use_file filename =
     Canonicalize.canonicalize_program typed_ast !canonicalize_settings in
   if !pretty_print_program then
     print_or_write
-      (Pretty_printing.pretty_print_typed_program
+      (Pretty_print_prog.pretty_print_typed_program
          ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
          ~inline_includes:!canonicalize_settings.inline_includes canonical_ast
          ~strip_comments:!canonicalize_settings.strip_comments);
@@ -299,11 +301,6 @@ let use_file filename =
   if not !canonicalize_settings.deprecations then
     Warnings.pp_warnings Fmt.stderr ?printed_filename
       (Deprecation_analysis.collect_warnings typed_ast);
-  (if not !canonicalize_settings.deprecations then
-     let removals = Deprecation_removals.collect_removals typed_ast in
-     if not (List.is_empty removals) then (
-       Deprecation_removals.pp_removals Fmt.stderr ?printed_filename removals;
-       exit 65 (* EX_DATAERR in sysexits.h*)));
   if !generate_data then (
     let decls = Ast_to_Mir.gather_declarations typed_ast.datablock in
     let context =
@@ -417,4 +414,10 @@ let main () =
   else Typechecker.model_name := mangle !Typechecker.model_name;
   use_file !model_file
 
-let () = main ()
+let () =
+  match Common.ICE.with_exn_message main with
+  | Ok () -> ()
+  | Error internal_error ->
+      Out_channel.output_string stderr internal_error;
+      Out_channel.flush stderr;
+      exit 2

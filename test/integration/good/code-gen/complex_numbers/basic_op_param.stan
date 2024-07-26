@@ -51,6 +51,11 @@ transformed parameters {
   tp_c_matrix = vec * crowvec;
   tp_c_matrix = cvec * rowvec;
 
+  // matrix-matrix division
+  tp_c_matrix = cmat / cmat;
+  tp_c_matrix = cmat / mat;
+  tp_c_matrix = mat / cmat;
+
   complex_vector[N] tp_c_vector = crowvec';
   // matrix-vector products
   tp_c_vector = cmat * cvec;
@@ -114,6 +119,11 @@ transformed parameters {
   tp_c_rowvector = rowvec - crowvec;
   tp_c_rowvector = -crowvec;
   tp_c_rowvector = -rowvec;
+
+  // rowvector-matrix division
+  tp_c_rowvector = crowvec / cmat;
+  tp_c_rowvector = crowvec / mat;
+  tp_c_rowvector = rowvec / cmat;
 
   complex tp_c;
   // rowvector-vector multiply

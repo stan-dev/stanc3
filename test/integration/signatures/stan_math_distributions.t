@@ -1,11 +1,11 @@
 Display all Stan math distributions exposed in the language
   $ stanc --dump-stan-math-distributions
-  beta_binomial: lpmf, rng, ccdf, cdf
-  beta: lpdf, rng, ccdf, cdf
-  beta_proportion: lpdf, ccdf, cdf
   bernoulli: lpmf, rng, ccdf, cdf
   bernoulli_logit: lpmf, rng
   bernoulli_logit_glm: lpmf
+  beta: lpdf, rng, ccdf, cdf
+  beta_binomial: lpmf, rng, ccdf, cdf
+  beta_proportion: lpdf, ccdf, cdf
   binomial: lpmf, rng, ccdf, cdf
   binomial_logit: lpmf
   binomial_logit_glm: lpmf
@@ -28,8 +28,8 @@ Display all Stan math distributions exposed in the language
   hypergeometric: lpmf, rng
   inv_chi_square: lpdf, rng, ccdf, cdf
   inv_gamma: lpdf, rng, ccdf, cdf
-  inv_wishart_cholesky: lpdf
   inv_wishart: lpdf
+  inv_wishart_cholesky: lpdf
   lkj_corr: lpdf
   lkj_corr_cholesky: lpdf
   lkj_cov: lpdf
@@ -38,13 +38,13 @@ Display all Stan math distributions exposed in the language
   lognormal: lpdf, rng, ccdf, cdf
   multi_gp: lpdf
   multi_gp_cholesky: lpdf
-  multinomial: lpmf
-  multinomial_logit: lpmf
   multi_normal: lpdf
   multi_normal_cholesky: lpdf
   multi_normal_prec: lpdf
   multi_student_t: lpdf
   multi_student_t_cholesky: lpdf
+  multinomial: lpmf
+  multinomial_logit: lpmf
   neg_binomial: lpmf, rng, ccdf, cdf
   neg_binomial_2: lpmf, rng, ccdf, cdf
   neg_binomial_2_log: lpmf, rng
@@ -61,13 +61,13 @@ Display all Stan math distributions exposed in the language
   poisson_log_glm: lpmf
   rayleigh: lpdf, rng, ccdf, cdf
   scaled_inv_chi_square: lpdf, rng, ccdf, cdf
-  skew_normal: lpdf, rng, ccdf, cdf
   skew_double_exponential: lpdf, rng, ccdf, cdf
-  student_t: lpdf, rng, ccdf, cdf
+  skew_normal: lpdf, rng, ccdf, cdf
   std_normal: lpdf, rng, ccdf, cdf
+  student_t: lpdf, rng, ccdf, cdf
   uniform: lpdf, rng, ccdf, cdf
   von_mises: lpdf, rng, ccdf, cdf
   weibull: lpdf, rng, ccdf, cdf
   wiener: lpdf
-  wishart_cholesky: lpdf
   wishart: lpdf
+  wishart_cholesky: lpdf

@@ -429,7 +429,7 @@ Semantic error in 'ccdf-sample.stan', line 5, column 2 to column 24:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with sampling notation. Use target += weibull_ccdf_log(...) instead.
+CDF and CCDF functions may not be used with distribution notation (~). Use target += weibull_ccdf_log(...) instead.
   $ ../../../../install/default/bin/stanc cdf-sample.stan
 Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
    -------------------------------------------------
@@ -440,7 +440,7 @@ Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with sampling notation. Use target += normal_cdf_log(...) instead.
+CDF and CCDF functions may not be used with distribution notation (~). Use target += normal_cdf_log(...) instead.
   $ ../../../../install/default/bin/stanc complex_mat_bad.stan
 Semantic error in 'complex_mat_bad.stan', line 7, column 2 to column 18:
    -------------------------------------------------
@@ -468,7 +468,7 @@ Semantic error in 'conditional_condition_bad_1.stan', line 6, column 6 to column
      8:  }
    -------------------------------------------------
 
-Condition in conditional must be of type int or real. Instead found type vector.
+Condition in conditional must be of type int. Instead found type vector.
   $ ../../../../install/default/bin/stanc conditional_condition_bad_2.stan
 Semantic error in 'conditional_condition_bad_2.stan', line 9, column 11 to column 12:
    -------------------------------------------------
@@ -480,7 +480,7 @@ Semantic error in 'conditional_condition_bad_2.stan', line 9, column 11 to colum
     11:  }
    -------------------------------------------------
 
-Condition in conditional must be of type int or real. Instead found type vector.
+Condition in conditional must be of type int. Instead found type vector.
   $ ../../../../install/default/bin/stanc continue1.stan
 Semantic error in 'continue1.stan', line 4, column 2 to column 11:
    -------------------------------------------------
@@ -954,6 +954,40 @@ Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, 
 
 Unexpected input after the conclusion of a valid expression.
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope.stan
+Semantic error in 'err-jacobian-plusequals-scope.stan', line 4, column 2 to column 16:
+   -------------------------------------------------
+     2:    real x;
+     3:    x = 2.0;
+     4:    jacobian += x;
+           ^
+     5:  }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope2.stan
+Semantic error in 'err-jacobian-plusequals-scope2.stan', line 3, column 4 to column 18:
+   -------------------------------------------------
+     1:  functions {
+     2:    real upper_bound(real x, real ub) {
+     3:      jacobian += x;
+             ^
+     4:      return ub - exp(x);
+     5:    }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope3.stan
+Semantic error in 'err-jacobian-plusequals-scope3.stan', line 14, column 11 to column 42:
+   -------------------------------------------------
+    12:  
+    13:  model {
+    14:    real b = upper_bound_jacobian(b_raw, ub);
+                    ^
+    15:  }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
   $ ../../../../install/default/bin/stanc err-minus-types.stan
 Semantic error in 'err-minus-types.stan', line 4, column 6 to column 11:
    -------------------------------------------------
@@ -1978,7 +2012,6 @@ Semantic error in 'op_logical_negation_bad.stan', line 7, column 6 to column 8:
 
 Ill-typed arguments supplied to prefix operator !. Available signatures: 
 (int) => int
-(real) => int
 Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_mdivide_left_bad.stan
 Semantic error in 'op_mdivide_left_bad.stan', line 7, column 6 to column 11:
@@ -2780,7 +2813,6 @@ Semantic error in 'validate_logical_negate_expr_bad.stan', line 3, column 6 to c
 
 Ill-typed arguments supplied to prefix operator !. Available signatures: 
 (int) => int
-(real) => int
 Instead supplied argument of incompatible type: vector.
   $ ../../../../install/default/bin/stanc validate_modulus_bad.stan
 Semantic error in 'validate_modulus_bad.stan', line 7, column 6 to column 11:

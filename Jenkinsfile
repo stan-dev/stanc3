@@ -53,9 +53,20 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
         cd performance-tests-cmdstan/cmdstan
         echo 'O=0' >> make/local
         echo 'CXXFLAGS+=-Wall' >> make/local
-        make -j${env.PARALLEL} build; cd ..
-        ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+        make -j${env.PARALLEL} build
     """
+
+    if (params.run_slow_perf_tests) {
+        sh """
+            cd performance-tests-cmdstan
+            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 --no-ignore-models ${testsPath}
+        """
+    } else {
+        sh """
+            cd performance-tests-cmdstan
+            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+        """
+    }
 }
 
 def cleanCheckout() {
@@ -67,7 +78,7 @@ def cleanCheckout() {
             userRemoteConfigs: scm.userRemoteConfigs,
         ])
     }
-    
+
     sh 'git clean -xffd'
 }
 
@@ -87,6 +98,8 @@ pipeline {
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
+        booleanParam(name:"run_slow_perf_tests", defaultValue: false, description:"Run additional 'slow' performance tests")
+        string(defaultValue: '', name: 'build_multiarch_docker_tag', description: "Docker tag for the multiarch image")
     }
     options {
         parallelsAlwaysFailFast()
@@ -100,6 +113,7 @@ pipeline {
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
         GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
+        MULTIARCH_DOCKER_TAG = 'multiarch-ocaml-4.14-v2'
     }
     stages {
         stage('Verify changes') {
@@ -155,7 +169,7 @@ pipeline {
                 """)
 
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+                stash name:'ubuntu-exe', includes:'bin/stanc'
             }
             post { always { runShell("rm -rf ./*") }}
         }
@@ -588,6 +602,51 @@ pipeline {
             }
         }
 
+        stage('Build and push multiarch docker image') {
+            when {
+                beforeAgent true
+                expression {
+                    params.build_multiarch_docker_tag != ""
+                }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/builder/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            environment { DOCKER_TOKEN = credentials('aada4f7b-baa9-49cf-ac97-5490620fce8a') }
+            steps {
+                script {
+                    retry(3) { checkout scm }
+                    sh '''
+                        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+                        docker buildx create --name stanc3_builder
+                        docker buildx use stanc3_builder
+
+                        docker login --username stanorg --password "${DOCKER_TOKEN}"
+
+                        cd scripts/docker/multiarch
+
+                        docker buildx build -t stanorg/stanc3:$build_multiarch_docker_tag \
+                        --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x \
+                        --build-arg PUID=$(id -u) \
+                        --build-arg PGID=$(id -g) \
+                        --progress=plain --push .
+                    '''
+                }
+            }
+            post {
+                always {
+                    deleteDir()
+                }
+            }
+        }
+
 
         stage('Build binaries') {
             parallel {
@@ -628,7 +687,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/debian/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -643,6 +702,11 @@ pipeline {
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
                             sh "mv `find _build -name index.html` bin/load_stanc.html"
+                            runShell("""
+                                eval \$(opam env)
+                                dune build --force --profile=dev --root=. src/stancjs
+                            """)
+                            sh "mv `find _build -name stancjs.bc.js` bin/stanc-pretty.js"
                             stash name:'js-exe', includes:'bin/*'
                         }
                     }
@@ -660,7 +724,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -692,7 +756,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -700,9 +764,10 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-mips64el"){
                             cleanCheckout()
+
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh mips64el
+                                bash -x scripts/build_multiarch_stanc3.sh mips64el ${MULTIARCH_DOCKER_TAG}
                             """
 
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
@@ -725,7 +790,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -735,7 +800,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh ppc64el
+                                bash -x scripts/build_multiarch_stanc3.sh ppc64el ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
@@ -756,7 +821,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -766,7 +831,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh s390x
+                                bash -x scripts/build_multiarch_stanc3.sh s390x ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             stash name:'linux-s390x-exe', includes:'bin/*'
@@ -787,7 +852,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -797,7 +862,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh arm64
+                                bash -x scripts/build_multiarch_stanc3.sh arm64 ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             stash name:'linux-arm64-exe', includes:'bin/*'
@@ -818,7 +883,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -828,7 +893,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh armhf
+                                bash -x scripts/build_multiarch_stanc3.sh armhf ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             stash name:'linux-armhf-exe', includes:'bin/*'
@@ -849,7 +914,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/static/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -859,7 +924,7 @@ pipeline {
                             cleanCheckout()
                             sh """
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh armel
+                                bash -x scripts/build_multiarch_stanc3.sh armel ${MULTIARCH_DOCKER_TAG}
                             """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             stash name:'linux-armel-exe', includes:'bin/*'
@@ -880,7 +945,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/debian-windows/Dockerfile'
                             dir '.'
-                            label 'linux'
+                            label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -963,9 +1028,8 @@ pipeline {
                         unstash 'js-exe'
 
                         runShell("""
-                            wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
-                            tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz && rm bin/ghr_v0.12.1_linux_amd64.tar.gz || true
-                            ./ghr_v0.12.1_linux_amd64/ghr -r stanc3 -u stan-dev -recreate ${tagName()} bin/
+                            gh release delete ${tagName()} --cleanup-tag -y || true
+                            gh release create ${tagName()} --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
                         """)
                     }
                 }

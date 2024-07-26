@@ -286,7 +286,11 @@ let distributions =
   ; (full_lpdf, "von_mises", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "weibull", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf], "wiener", [DVReal; DVReal; DVReal; DVReal; DVReal], SoA)
-  ; ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
+  ; ([Lpdf], "wiener", [DReal; DReal; DReal; DReal; DReal; DReal], AoS)
+  ; ( [Lpdf]
+    , "wiener"
+    , [DReal; DReal; DReal; DReal; DReal; DReal; DReal; DReal]
+    , AoS ); ([Lpdf], "wishart_cholesky", [DMatrix; DReal; DMatrix], SoA)
   ; ([Lpdf], "wishart", [DMatrix; DReal; DMatrix], SoA) ]
 
 let basic_vectorized = UnaryVectorized IntsToReals
@@ -483,7 +487,12 @@ let pretty_print_all_math_sigs ppf () =
 
 let pretty_print_all_math_distributions ppf () =
   let open Fmt in
-  let pp_dist ppf (kinds, name, _, _) =
+  let distributions =
+    String.Map.of_alist_reduce
+      (List.map ~f:(fun (kinds, name, _, _) -> (name, kinds)) distributions)
+      ~f:(fun v1 v2 -> v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
+    |> Map.to_alist in
+  let pp_dist ppf (name, kinds) =
     pf ppf "@[%s: %a@]" name
       (list ~sep:comma Fmt.string)
       (List.map ~f:(Fn.compose String.lowercase show_fkind) kinds) in
@@ -1651,17 +1660,19 @@ let () =
   add_unqualified ("log_sum_exp", ReturnType UReal, [URowVector], SoA);
   add_unqualified ("log_sum_exp", ReturnType UReal, [UMatrix], SoA);
   add_binary_vec "log_sum_exp" AoS;
-  let logical_binops =
-    [ "logical_or"; "logical_and"; "logical_eq"; "logical_neq"; "logical_lt"
-    ; "logical_lte"; "logical_gt"; "logical_gte" ] in
+  add_unqualified ("logical_and", ReturnType UInt, [UInt; UInt], SoA);
+  add_unqualified ("logical_or", ReturnType UInt, [UInt; UInt], SoA);
+  add_unqualified ("logical_negation", ReturnType UInt, [UInt], SoA);
+  let comparison_binops =
+    [ "logical_eq"; "logical_neq"; "logical_lt"; "logical_lte"; "logical_gt"
+    ; "logical_gte" ] in
   List.iter
     ~f:(fun t1 ->
-      add_unqualified ("logical_negation", ReturnType UInt, [t1], SoA);
       List.iter
         ~f:(fun t2 ->
           List.iter
             ~f:(fun o -> add_unqualified (o, ReturnType UInt, [t1; t2], SoA))
-            logical_binops)
+            comparison_binops)
         primitive_types)
     primitive_types;
   add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UReal], SoA);

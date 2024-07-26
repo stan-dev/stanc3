@@ -369,10 +369,11 @@ module StatementError = struct
     | LValueMultiIndexing
     | LValueTupleUnpackDuplicates of Ast.untyped_lval list
     | LValueTupleReadAndWrite of string list
-    | InvalidSamplingPDForPMF
-    | InvalidSamplingCDForCCDF of string
-    | InvalidSamplingNoSuchDistribution of string * bool
+    | InvalidTildePDForPMF
+    | InvalidTildeCDForCCDF of string
+    | InvalidTildeNoSuchDistribution of string * bool
     | TargetPlusEqualsOutsideModelOrLogProb
+    | JacobianPlusEqualsNotAllowed
     | InvalidTruncationCDForCCDF of
         (UnsizedType.autodifftype * UnsizedType.t) list
     | BreakOutsideLoop
@@ -428,26 +429,31 @@ module StatementError = struct
           Fmt.(list ~sep:comma string)
           ids
     | TargetPlusEqualsOutsideModelOrLogProb ->
-        Fmt.pf ppf
+        Fmt.string ppf
           "Target can only be accessed in the model block or in definitions of \
            functions with the suffix _lp."
-    | InvalidSamplingPDForPMF ->
-        Fmt.pf ppf
+    | JacobianPlusEqualsNotAllowed ->
+        Fmt.string ppf
+          "The jacobian adjustment can only be applied in the transformed \
+           parameters block or in functions ending with _jacobian"
+    | InvalidTildePDForPMF ->
+        Fmt.string ppf
           "~ statement should refer to a distribution without its \
            \"_lpdf/_lupdf\" or \"_lpmf/_lupmf\" suffix.\n\
            For example, \"target += normal_lpdf(y, 0, 1)\" should become \"y ~ \
            normal(0, 1).\""
-    | InvalidSamplingCDForCCDF name ->
+    | InvalidTildeCDForCCDF name ->
         Fmt.pf ppf
-          "CDF and CCDF functions may not be used with sampling notation. Use \
-           target += %s_log(...) instead."
+          "CDF and CCDF functions may not be used with distribution notation \
+           (~). Use target += %s_log(...) instead."
           name
-    | InvalidSamplingNoSuchDistribution (name, true) ->
+    | InvalidTildeNoSuchDistribution (name, true) ->
         Fmt.pf ppf
-          "Ill-typed arguments to '~' statement. No function '%s_lpmf' or \
-           '%s_lpdf' was found when looking for distribution '%s'."
+          "Ill-typed arguments to distribution statement (~). No function \
+           '%s_lpmf' or '%s_lpdf' was found when looking for distribution \
+           '%s'."
           name name name
-    | InvalidSamplingNoSuchDistribution (name, false) ->
+    | InvalidTildeNoSuchDistribution (name, false) ->
         Fmt.pf ppf
           "Ill-typed arguments to '~' statement. No function '%s_lpdf' was \
            found when looking for distribution '%s'."
@@ -708,18 +714,21 @@ let cannot_assign_duplicate_unpacking loc names =
 let cannot_access_assigning_var loc names =
   StatementError (loc, StatementError.LValueTupleReadAndWrite names)
 
-let invalid_sampling_pdf_or_pmf loc =
-  StatementError (loc, StatementError.InvalidSamplingPDForPMF)
+let invalid_tilde_pdf_or_pmf loc =
+  StatementError (loc, StatementError.InvalidTildePDForPMF)
 
-let invalid_sampling_cdf_or_ccdf loc name =
-  StatementError (loc, StatementError.InvalidSamplingCDForCCDF name)
+let invalid_tilde_cdf_or_ccdf loc name =
+  StatementError (loc, StatementError.InvalidTildeCDForCCDF name)
 
-let invalid_sampling_no_such_dist loc name is_int =
+let invalid_tilde_no_such_dist loc name is_int =
   StatementError
-    (loc, StatementError.InvalidSamplingNoSuchDistribution (name, is_int))
+    (loc, StatementError.InvalidTildeNoSuchDistribution (name, is_int))
 
 let target_plusequals_outside_model_or_logprob loc =
   StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
+
+let jacobian_plusequals_not_allowed loc =
+  StatementError (loc, StatementError.JacobianPlusEqualsNotAllowed)
 
 let invalid_truncation_cdf_or_ccdf loc args =
   StatementError (loc, StatementError.InvalidTruncationCDForCCDF args)

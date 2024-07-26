@@ -2,7 +2,7 @@ open Core
 open Ast
 open Middle
 
-let current_removal_version = (2, 34)
+let current_removal_version = (2, 35)
 
 let expired (major, minor) =
   let removal_major, removal_minor = current_removal_version in
@@ -38,7 +38,7 @@ let is_redundant_forwarddecl fundefs funname arguments =
 let lkj_cov_message =
   "lkj_cov is deprecated and will be removed in Stan 3.0. Use lkj_corr with an \
    independent lognormal distribution on the scales, see: \
-   https://mc-stan.org/docs/reference-manual/lkj_cov-distribution.html"
+   https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution"
 
 let rec collect_deprecated_expr (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :

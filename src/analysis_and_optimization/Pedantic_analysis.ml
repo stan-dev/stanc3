@@ -388,10 +388,12 @@ let maybe_jacobian_adjustment_warnings (mir : Program.Typed.t) =
   Set.Poly.map
     ~f:(fun loc ->
       ( loc
-      , "Left-hand side of sampling statement (~) may contain a non-linear \
+      , "Left-hand side of distribution statement (~) may contain a non-linear \
          transform of a parameter or local variable. If it does, you need to \
          include a target += statement with the log absolute determinant of \
-         the Jacobian of the transform." ))
+         the Jacobian of the transform. You could also consider defining a \
+         transformed parameter and using jacobian += in the transformed \
+         parameters block." ))
     locations
 
 let multi_tildes_message (vname : string) : string =

@@ -4,7 +4,12 @@
 
 open Core
 
-type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
+type 'propto suffix =
+  | FnPlain
+  | FnRng
+  | FnLpdf of 'propto
+  | FnTarget
+  | FnJacobian
 [@@deriving compare, hash, fold, map, sexp, equal]
 
 let without_propto = map_suffix (function true | false -> ())
@@ -19,6 +24,7 @@ let suffix_from_name fname =
   let is_suffix suffix = Core.String.is_suffix ~suffix fname in
   if is_suffix "_rng" then FnRng
   else if is_suffix "_lp" then FnTarget
+  else if is_suffix "_jacobian" then FnJacobian
   else if is_suffix "_lupdf" || is_suffix "_lupmf" then FnLpdf true
   else if is_suffix "_lpdf" || is_suffix "_lpmf" then FnLpdf false
   else FnPlain

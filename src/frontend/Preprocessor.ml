@@ -3,13 +3,11 @@
 open Core
 open Lexing
 open Debugging
-module Str = Re.Str
 
 let comments = Queue.create ()
 let add_comment = Queue.enqueue comments
 let get_comments () = Queue.to_list comments
 let include_stack = Stack.create ()
-let include_paths : string list ref = ref []
 let included_files : string list ref = ref []
 let size () = Stack.length include_stack
 
@@ -62,6 +60,9 @@ let current_buffer () =
   let buf = Stack.top_exn include_stack in
   buf
 
+let current_location () =
+  location_of_position (lexeme_start_p (current_buffer ()))
+
 let pop_buffer () = Stack.pop_exn include_stack
 
 let update_start_positions pos =
@@ -82,7 +83,13 @@ let restore_prior_lexbuf () =
   lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
-let try_open_in all_paths fname =
+let maybe_remove_quotes str =
+  let open String in
+  if is_prefix str ~prefix:"\"" && is_suffix str ~suffix:"\"" then
+    drop_suffix (drop_prefix str 1) 1
+  else str
+
+let find_include_fs lookup_paths fname =
   let rec loop paths =
     match paths with
     | [] ->
@@ -93,31 +100,39 @@ let try_open_in all_paths fname =
             | _ -> Fmt.(list ~sep:comma string) ppf l in
           Fmt.str
             "Could not find include file '%s' in specified include paths.@\n\
-             @[Current include paths: %a@]" fname pp_list all_paths in
-        raise
-          (Errors.SyntaxError
-             (Include
-                ( message
-                , location_of_position
-                    (lexeme_start_p (Stack.top_exn include_stack)) )))
+             @[Current include paths: %a@]" fname pp_list lookup_paths in
+        raise (Errors.SyntaxError (Include (message, current_location ())))
     | path :: rest_of_paths -> (
         try
           let full_path = path ^ "/" ^ fname in
-          (In_channel.create full_path, full_path)
+          (In_channel.create full_path |> Lexing.from_channel, full_path)
         with _ -> loop rest_of_paths) in
-  loop all_paths
+  loop lookup_paths
 
-let maybe_remove_quotes str =
-  let open String in
-  if is_prefix str ~prefix:"\"" && is_suffix str ~suffix:"\"" then
-    drop_suffix (drop_prefix str 1) 1
-  else str
+let find_include_inmemory map fname =
+  match Map.find map fname with
+  | None ->
+      let message =
+        let pp_list ppf l =
+          let keys = Map.keys l in
+          if List.is_empty keys then Fmt.string ppf "None"
+          else Fmt.(list ~sep:comma string) ppf keys in
+        Fmt.str
+          "Could not find include file '%s'.@ stanc was given information \
+           about the following files:@ %a"
+          fname pp_list map in
+      raise (Errors.SyntaxError (Include (message, current_location ())))
+  | Some s -> (Lexing.from_string s, fname)
+
+let find_include fname =
+  match !Include_files.include_provider with
+  | FileSystemPaths lookup_paths -> find_include_fs lookup_paths fname
+  | InMemory map -> find_include_inmemory map fname
 
 let try_get_new_lexbuf fname =
   let lexbuf = Stack.top_exn include_stack in
-  let chan, file = try_open_in !include_paths (maybe_remove_quotes fname) in
+  let new_lexbuf, file = find_include (maybe_remove_quotes fname) in
   lexer_logger ("opened " ^ file);
-  let new_lexbuf = from_channel chan in
   new_lexbuf.lex_start_p <-
     new_file_start_position file
     @@ Some (location_of_position lexbuf.lex_start_p);

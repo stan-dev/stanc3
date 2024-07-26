@@ -1,21 +1,44 @@
 functions {
-  void alignas(int asm){}
-  void alignof(int char){}
-  int and(int STAN_MAJOR){
+  void alignas(int asm) {
+    
+  }
+  void alignof(int char) {
+    
+  }
+  int and(int STAN_MAJOR) {
     return STAN_MAJOR;
   }
-  void and_eq(real STAN_MINOR){}
-  void asm(vector class){}
-  void bitand(int constexpr){}
-  void bitor(){}
-  void bool(){}
-  void case(){}
-  void catch(){}
-  void char(){}
-  void char16_t(){}
-  void char32_t(){}
+  void and_eq(real STAN_MINOR) {
+    
+  }
+  void asm(vector class) {
+    
+  }
+  void bitand(int constexpr) {
+    
+  }
+  void bitor() {
+    
+  }
+  void bool() {
+    
+  }
+  void case() {
+    
+  }
+  void catch() {
+    
+  }
+  void char() {
+    
+  }
+  void char16_t() {
+    
+  }
+  void char32_t() {
+    
+  }
 }
-
 data {
   real class;
   real compl;
@@ -30,7 +53,6 @@ data {
   real dynamic_cast;
   real enum;
 }
-
 parameters {
   real explicit;
   real float;
@@ -48,7 +70,6 @@ parameters {
   real operator;
   real or;
 }
-
 model {
   real or_eq;
   real private;
@@ -66,7 +87,6 @@ model {
   real this;
   real thread_local;
 }
-
 generated quantities {
   real throw;
   real try;
@@ -84,11 +104,23 @@ generated quantities {
   real STAN_MATH_MAJOR;
   real STAN_MATH_MINOR;
   real STAN_MATH_PATCH;
-
-  for(STAN_MAJOR in 1:2){
+  
+  for (STAN_MAJOR in 1 : 2) {
     int STAN_MINOR = 3;
     int STAN_PATCH = STAN_MINOR;
     alignas(STAN_PATCH);
-    STAN_MINOR=and(STAN_PATCH);
+    STAN_MINOR = and(STAN_PATCH);
   }
+  
+  int BSD;
+  int BSD4_2;
+  int BSD4_3;
+  int BSD4_4;
+  int EMSCRIPTEN;
+  int hpux;
+  int sun;
+  int linux;
+  int VMS;
+  int i386;
+  int mips;
 }

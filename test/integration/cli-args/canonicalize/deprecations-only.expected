@@ -157,16 +157,7 @@ parameters {
   array[3] real theta;
 }
 model {
-  if (b != 0.0) {
-    x ~ normal(0, 1);
-  } else {
-    x ~ exponential(1);
-  }
-  while (0.0 != 0.0) {
-    
-  }
   
-  int bool = !(b != 0.0) < 2 && (d != 0.0) || (x != 0.0);
 }
 generated quantities {
   array[2] real y0 = {1.0, 2.0};

@@ -137,7 +137,7 @@ Syntax error in 'fun-app-bad4.stan', line 1, column 24 to column 29, parsing err
                                  ^
    -------------------------------------------------
 
-Ill-formed phrase. Found a well-formed function application. After this, there are many legal completions of the phrase.
+Ill-formed phrase. Found a well-formed function application. Expected either a ";" or a valid continuation of the expression.
   $ ../../../../../install/default/bin/stanc fun-app-bad5.stan
 Syntax error in 'fun-app-bad5.stan', line 1, column 26 to column 27, parsing error:
    -------------------------------------------------
@@ -212,7 +212,7 @@ Syntax error in 'fundef-bad4.stan', line 1, column 24 to column 29, parsing erro
                                  ^
    -------------------------------------------------
 
-An identifier is expected as a function argument name.
+An identifier is expected after the type as a function argument name.
   $ ../../../../../install/default/bin/stanc fundef-bad5.stan
 Syntax error in 'fundef-bad5.stan', line 1, column 22 to column 26, parsing error:
    -------------------------------------------------
@@ -781,7 +781,7 @@ Syntax error in 'ill-formed-expression68.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed expression. Found L-value "=". Expect an expression followed by ";" next.
+Ill-formed assignment statement. Expected an expression followed by ";" next.
   $ ../../../../../install/default/bin/stanc ill-formed-expression69.stan
 Syntax error in 'ill-formed-expression69.stan', line 1, column 24 to column 29, parsing error:
    -------------------------------------------------
@@ -789,7 +789,7 @@ Syntax error in 'ill-formed-expression69.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed expression. Found L-value "=". Expect an expression followed by ";" next.
+Ill-formed assignment statement. Expected an expression followed by ";" next.
   $ ../../../../../install/default/bin/stanc ill-formed-expression7.stan
 Syntax error in 'ill-formed-expression7.stan', line 1, column 24 to column 29, parsing error:
    -------------------------------------------------
@@ -813,7 +813,7 @@ Syntax error in 'ill-formed-expression71.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed expression. Found L-value "/=". Expect an expression followed by ";" next.
+Ill-formed compound assignment statement. Expected an expression followed by ";" next.
   $ ../../../../../install/default/bin/stanc ill-formed-expression72.stan
 Syntax error in 'ill-formed-expression72.stan', line 1, column 24 to column 29, parsing error:
    -------------------------------------------------
@@ -829,7 +829,7 @@ Syntax error in 'ill-formed-expression73.stan', line 1, column 25 to column 30, 
                                   ^
    -------------------------------------------------
 
-Ill-formed expression. Found L-value "./=". Expect an expression followed by ";" next.
+Ill-formed compound assignment statement. Expected an expression followed by ";" next.
   $ ../../../../../install/default/bin/stanc ill-formed-expression74.stan
 Syntax error in 'ill-formed-expression74.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
@@ -949,7 +949,7 @@ Syntax error in 'ill-formed-expression87.stan', line 1, column 26 to column 31, 
                                    ^
    -------------------------------------------------
 
-Ill-formed expression. Found L-value "+=". Expect an expression followed by ";" next.
+Ill-formed compound assignment statement. Expected an expression followed by ";" next.
   $ ../../../../../install/default/bin/stanc ill-formed-expression88.stan
 Syntax error in 'ill-formed-expression88.stan', line 1, column 30 to column 35, parsing error:
    -------------------------------------------------
@@ -1025,7 +1025,7 @@ Syntax error in 'ill-formed-expression94.stan', line 1, column 24 to column 29, 
                                  ^
    -------------------------------------------------
 
-Ill-formed expression. Found L-value "*=". Expect an expression followed by ";" next.
+Ill-formed compound assignment statement. Expected an expression followed by ";" next.
   $ ../../../../../install/default/bin/stanc ill-formed-statement1.stan
 Syntax error in 'ill-formed-statement1.stan', line 1, column 25 to column 30, parsing error:
    -------------------------------------------------
