@@ -22,7 +22,7 @@ Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  tuple(...)
+  stochastic_row_matrix, stochastic_column_matrix, tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
 Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
@@ -37,7 +37,7 @@ Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  tuple(...)
+  stochastic_row_matrix, stochastic_column_matrix, tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-read-write-assign.stan
 Semantic error in 'array-read-write-assign.stan', line 3, column 0 to column 7:
@@ -784,7 +784,7 @@ Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  tuple(...)
+  stochastic_row_matrix, stochastic_column_matrix, tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan
 Semantic error in 'err-decl-matrix-2.stan', line 2, column 13 to column 17:
