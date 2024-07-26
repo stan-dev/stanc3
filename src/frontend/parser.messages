@@ -3477,7 +3477,7 @@ program: DATABLOCK LBRACE STOCHASTICROWMATRIX WHILE
 ## STOCHASTICROWMATRIX
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_row_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK WHILE
 ##
@@ -3491,7 +3491,7 @@ program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK WHILE
 ## STOCHASTICROWMATRIX LBRACK
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_row_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER TILDE
 ##
@@ -3533,7 +3533,7 @@ program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER TILDE
 ## In state 123, spurious reduction of production expression -> common_expression
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_row_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA WHILE
 ##
@@ -3547,7 +3547,7 @@ program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA WHILE
 ## STOCHASTICROWMATRIX LBRACK expression COMMA
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_row_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
 ##
@@ -3589,7 +3589,7 @@ program: DATABLOCK LBRACE STOCHASTICROWMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER
 ## In state 123, spurious reduction of production expression -> common_expression
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_row_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX WHILE
 ##
@@ -3603,7 +3603,7 @@ program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX WHILE
 ## STOCHASTICCOLUMNMATRIX
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_column_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK WHILE
 ##
@@ -3617,7 +3617,7 @@ program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK WHILE
 ## STOCHASTICCOLUMNMATRIX LBRACK
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_column_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER TILDE
 ##
@@ -3659,7 +3659,7 @@ program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER TILDE
 ## In state 123, spurious reduction of production expression -> common_expression
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_column_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA WHILE
 ##
@@ -3673,7 +3673,7 @@ program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA WHILE
 ## STOCHASTICCOLUMNMATRIX LBRACK expression COMMA
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_column_matrix.
 
 program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA IDENTIFIER TILDE
 ##
@@ -3715,4 +3715,5 @@ program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA IDENTIF
 ## In state 123, spurious reduction of production expression -> common_expression
 ##
 
-TODO: PARSER MESSAGE NEEDED HERE.
+Expected "[" expression "," expression "]" for size of stochastic_column_matrix.
+
