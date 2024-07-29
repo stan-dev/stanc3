@@ -26,8 +26,6 @@ type 'e t =
 [@@deriving sexp, compare, map, hash, fold]
 
 let rec has_check = function
-  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | StochasticRow
-   |StochasticColumn ->
-      false
+  | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false
   | TupleTransformation transforms -> List.exists ~f:has_check transforms
   | _ -> true

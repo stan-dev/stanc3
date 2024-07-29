@@ -1,23 +1,28 @@
 data {
-   stochastic_column_matrix[10, 10] d_scm;
-   stochastic_row_matrix[10, 10] d_srm;
+   column_stochastic_matrix[10, 10] d_csm;
+   row_stochastic_matrix[10, 10] d_rsm;
+   array[2, 2] row_stochastic_matrix[10, 10] d_arsm;
 }
 
 transformed data {
-   stochastic_column_matrix[10, 10] td_scm = d_scm;
-   stochastic_row_matrix[10, 10] td_srm = d_srm;
+   column_stochastic_matrix[10, 10] td_csm = d_csm;
+   row_stochastic_matrix[10, 10] td_rsm = d_rsm;
+   array[2, 2] row_stochastic_matrix[10, 10] td_arsm;
 }
 parameters {
-   stochastic_column_matrix[10, 10] p_scm;
-   stochastic_row_matrix[10, 10] p_srm;
+   column_stochastic_matrix[10, 10] p_csm;
+   row_stochastic_matrix[10, 10] p_rsm;
+   array[2, 2] row_stochastic_matrix[10, 10] p_arsm;
 }
 
 transformed parameters {
-   stochastic_column_matrix[10, 10] tp_scm = p_scm;
-   stochastic_row_matrix[10, 10] tp_srm = p_srm;
+   column_stochastic_matrix[10, 10] tp_csm = p_csm;
+   row_stochastic_matrix[10, 10] tp_rsm = p_rsm;
+   array[2, 2] row_stochastic_matrix[10, 10] tp_arsm = p_arsm;
 }
 
 generated quantities {
-   stochastic_column_matrix[10, 10] gq_scm = tp_scm;
-   stochastic_row_matrix[10, 10] gq_srm = tp_srm;
+   column_stochastic_matrix[10, 10] gq_csm = tp_csm;
+   row_stochastic_matrix[10, 10] gq_rsm = tp_rsm;
+   array[2, 2] row_stochastic_matrix[10, 10] gq_arsm = tp_arsm;
 }

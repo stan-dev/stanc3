@@ -323,6 +323,18 @@ let rec param_size transform sizedtype =
   let k_choose_2 k =
     Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
+  let rec stoch_size f1 f2 st =
+    match st with
+    | SizedType.SMatrix (mem_pattern, d1, d2) ->
+        SizedType.SMatrix (mem_pattern, f1 d1, f2 d2)
+    | SArray (t, d) -> SizedType.SArray (stoch_size f1 f2 t, d)
+    | SInt | SReal | SComplex | SRowVector _ | SVector _ | STuple _
+     |SComplexRowVector _ | SComplexVector _ | SComplexMatrix _ ->
+        Common.ICE.internal_compiler_error
+          [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
+  in
+  let min_one d = Expr.Helpers.(binop d Minus (int 1)) in
+  let noop d = d in
   match transform with
   | Transformation.Identity | Lower _ | Upper _
    |LowerUpper (_, _)
@@ -341,16 +353,8 @@ let rec param_size transform sizedtype =
   | Simplex ->
       shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
-  | StochasticRow -> (
-      match sizedtype with
-      | SMatrix (mem_pattern, d1, d2) ->
-          SMatrix (mem_pattern, d1, Expr.Helpers.(binop d2 Minus (int 1)))
-      | _ -> sizedtype)
-  | StochasticColumn -> (
-      match sizedtype with
-      | SMatrix (mem_pattern, d1, d2) ->
-          SMatrix (mem_pattern, Expr.Helpers.(binop d1 Minus (int 1)), d2)
-      | _ -> sizedtype)
+  | StochasticRow -> stoch_size noop min_one sizedtype
+  | StochasticColumn -> stoch_size min_one noop sizedtype
   | CholeskyCov ->
       (* (N * (N + 1)) / 2 + (M - N) * N *)
       shrink_eigen_mat
