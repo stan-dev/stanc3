@@ -51,7 +51,8 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values =
   | Upper upper -> {lower= `None; upper= bound_value upper}
   | LowerUpper (lower, upper) ->
       {lower= bound_value lower; upper= bound_value upper}
-  | Simplex -> {lower= `Lit 0.; upper= `Lit 1.}
+  | Simplex | StochasticColumn | StochasticRow ->
+      {lower= `Lit 0.; upper= `Lit 1.}
   | PositiveOrdered -> {lower= `Lit 0.; upper= `None}
   | UnitVector -> {lower= `Lit (-1.); upper= `Lit 1.}
   | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered | Offset _

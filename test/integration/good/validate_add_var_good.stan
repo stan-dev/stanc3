@@ -11,6 +11,8 @@ data {
   matrix[4, 5] m;
   cov_matrix[3] covm;
   corr_matrix[3] corrm;
+  row_stochastic_matrix[3,4] rowstoch;
+  column_stochastic_matrix[3,4] colstoch;
 }
 transformed data {
   int n_td;
@@ -25,6 +27,8 @@ transformed data {
   matrix[4, 5] m_td;
   cov_matrix[3] covm_td;
   corr_matrix[3] corrm_td;
+  row_stochastic_matrix[3,4] rowstoch_td;
+  column_stochastic_matrix[3,4] colstoch_td;
 }
 parameters {
   real x_p;
@@ -37,6 +41,8 @@ parameters {
   matrix[4, 5] m_p;
   cov_matrix[3] covm_p;
   corr_matrix[3] corrm_p;
+  row_stochastic_matrix[3,4] rowstoch_p;
+  column_stochastic_matrix[3,4] colstoch_p;
 }
 transformed parameters {
   real x_tp;
@@ -49,6 +55,8 @@ transformed parameters {
   matrix[4, 5] m_tp;
   cov_matrix[3] covm_tp;
   corr_matrix[3] corrm_tp;
+  row_stochastic_matrix[3,4] rowstoch_tp;
+  column_stochastic_matrix[3,4] colstoch_tp;
 }
 model {
   int n_l;
@@ -58,7 +66,7 @@ model {
   vector[3] v_l;
   row_vector[3] rv_l;
   matrix[4, 5] m_l;
-  
+
   x_p ~ normal(0, 1);
 }
 generated quantities {
@@ -74,5 +82,7 @@ generated quantities {
   matrix[4, 5] m_gq;
   cov_matrix[3] covm_gq;
   corr_matrix[3] corrm_gq;
+  row_stochastic_matrix[3,4] rowstoch_gq;
+  column_stochastic_matrix[3,4] colstoch_gq;
 }
 
