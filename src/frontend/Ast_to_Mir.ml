@@ -334,7 +334,6 @@ let rec param_size transform sizedtype =
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
   let min_one d = Expr.Helpers.(binop d Minus (int 1)) in
-  let noop d = d in
   match transform with
   | Transformation.Identity | Lower _ | Upper _
    |LowerUpper (_, _)
@@ -353,8 +352,8 @@ let rec param_size transform sizedtype =
   | Simplex ->
       shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
-  | StochasticRow -> stoch_size noop min_one sizedtype
-  | StochasticColumn -> stoch_size min_one noop sizedtype
+  | StochasticRow -> stoch_size Fn.id min_one sizedtype
+  | StochasticColumn -> stoch_size min_one Fn.id sizedtype
   | CholeskyCov ->
       (* (N * (N + 1)) / 2 + (M - N) * N *)
       shrink_eigen_mat
