@@ -258,6 +258,8 @@ reserved_word:
   | CHOLESKYFACTORCOV { "cholesky_factor_cov", $loc, true }
   | CORRMATRIX { "corr_matrix", $loc, true }
   | COVMATRIX { "cov_matrix", $loc, true  }
+  | STOCHASTICCOLUMNMATRIX { "column_stochastic_matrix", $loc, true }
+  | STOCHASTICROWMATRIX { "row_stochastic_matrix", $loc, true }
   | PRINT { "print", $loc, false }
   | REJECT { "reject", $loc, false }
   | FATAL_ERROR { "fatal_error", $loc, false }
