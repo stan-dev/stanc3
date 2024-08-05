@@ -56,8 +56,8 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values =
   | PositiveOrdered -> {lower= `Lit 0.; upper= `None}
   | UnitVector -> {lower= `Lit (-1.); upper= `Lit 1.}
   | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered | Offset _
-   |Multiplier _ | OffsetMultiplier _
-   |Identity
+   |Multiplier _ | OffsetMultiplier _ | Identity
+   |SumToZero
     (* This is a stub, but,
        until we define a distribution which accepts a tuple,
        this doesn't matter.

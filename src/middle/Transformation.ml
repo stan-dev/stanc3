@@ -16,6 +16,7 @@ type 'e t =
   | PositiveOrdered
   | Simplex
   | UnitVector
+  | SumToZero
   | CholeskyCorr
   | CholeskyCov
   | Correlation
