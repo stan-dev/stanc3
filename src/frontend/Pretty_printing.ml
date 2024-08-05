@@ -364,8 +364,8 @@ let rec pp_transformed_type ppf (st, trans) =
     | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
     | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
     | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
-    | StochasticColumn -> pf ppf "stochastic_column_matrix%a" sizes_fmt ()
-    | StochasticRow -> pf ppf "stochastic_row_matrix%a" sizes_fmt ()
+    | StochasticColumn -> pf ppf "column_stochastic_matrix%a" sizes_fmt ()
+    | StochasticRow -> pf ppf "row_stochastic_matrix%a" sizes_fmt ()
     | TupleTransformation transforms ->
         (* NB this calls the top-level function to handle internal arrays etc *)
         let transTypes = Middle.Utils.zip_stuple_trans_exn st transforms in

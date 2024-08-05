@@ -85,7 +85,7 @@ let nest_unsized_array basic_type n =
        POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
        CHOLESKYFACTORCORR "cholesky_factor_corr" CHOLESKYFACTORCOV "cholesky_factor_cov"
        CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix" COMPLEXMATRIX "complex_matrix"
-       STOCHASTICCOLUMNMATRIX "stochastic_column_matrix" STOCHASTICROWMATRIX "stochastic_row_matrix"
+       STOCHASTICCOLUMNMATRIX "column_stochastic_matrix" STOCHASTICROWMATRIX "row_stochastic_matrix"
 %token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
 %token JACOBIAN "jacobian"
 %token <string> INTNUMERAL "24"
