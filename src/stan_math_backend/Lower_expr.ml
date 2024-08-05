@@ -27,6 +27,7 @@ let constraint_to_string = function
   | PositiveOrdered -> Some "positive_ordered"
   | Simplex -> Some "simplex"
   | UnitVector -> Some "unit_vector"
+  | SumToZero -> Some "sum_to_zero"
   | CholeskyCorr -> Some "cholesky_factor_corr"
   | CholeskyCov -> Some "cholesky_factor_cov"
   | Correlation -> Some "corr_matrix"
