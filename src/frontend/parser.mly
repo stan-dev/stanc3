@@ -83,7 +83,7 @@ let nest_unsized_array basic_type n =
        ROWVECTOR "row_vector" ARRAY "array" TUPLE "tuple" MATRIX "matrix" ORDERED "ordered"
        COMPLEXVECTOR "complex_vector" COMPLEXROWVECTOR "complex_row_vector"
        POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
-       SUMTOZERO "sum_to_zero" CHOLESKYFACTORCORR "cholesky_factor_corr"
+       SUMTOZERO "sum_to_zero_vector" CHOLESKYFACTORCORR "cholesky_factor_corr"
        CHOLESKYFACTORCOV "cholesky_factor_cov" CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix"
        COMPLEXMATRIX "complex_matrix" STOCHASTICCOLUMNMATRIX "column_stochastic_matrix"
        STOCHASTICROWMATRIX "row_stochastic_matrix"
@@ -255,7 +255,7 @@ reserved_word:
   | POSITIVEORDERED { "positive_ordered", $loc, true }
   | SIMPLEX { "simplex", $loc, true }
   | UNITVECTOR { "unit_vector", $loc, true }
-  | SUMTOZERO  { "sum_to_zero", $loc, true }
+  | SUMTOZERO  { "sum_to_zero_vector", $loc, true }
   | CHOLESKYFACTORCORR { "cholesky_factor_corr", $loc, true }
   | CHOLESKYFACTORCOV { "cholesky_factor_cov", $loc, true }
   | CORRMATRIX { "corr_matrix", $loc, true }

@@ -43692,16 +43692,16 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 11> locations_array__ =
   {" (found before start of program)",
-  " (in 'sum_to_zero.stan', line 11, column 3 to column 25)",
-  " (in 'sum_to_zero.stan', line 12, column 3 to column 38)",
-  " (in 'sum_to_zero.stan', line 16, column 3 to column 34)",
-  " (in 'sum_to_zero.stan', line 17, column 3 to column 48)",
-  " (in 'sum_to_zero.stan', line 21, column 3 to column 35)",
-  " (in 'sum_to_zero.stan', line 22, column 3 to column 49)",
-  " (in 'sum_to_zero.stan', line 2, column 3 to column 25)",
-  " (in 'sum_to_zero.stan', line 3, column 3 to column 38)",
-  " (in 'sum_to_zero.stan', line 7, column 3 to column 34)",
-  " (in 'sum_to_zero.stan', line 8, column 3 to column 39)"};
+  " (in 'sum_to_zero.stan', line 11, column 3 to column 32)",
+  " (in 'sum_to_zero.stan', line 12, column 3 to column 45)",
+  " (in 'sum_to_zero.stan', line 16, column 3 to column 41)",
+  " (in 'sum_to_zero.stan', line 17, column 3 to column 55)",
+  " (in 'sum_to_zero.stan', line 21, column 3 to column 42)",
+  " (in 'sum_to_zero.stan', line 22, column 3 to column 56)",
+  " (in 'sum_to_zero.stan', line 2, column 3 to column 32)",
+  " (in 'sum_to_zero.stan', line 3, column 3 to column 45)",
+  " (in 'sum_to_zero.stan', line 7, column 3 to column 41)",
+  " (in 'sum_to_zero.stan', line 8, column 3 to column 46)"};
 class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
  private:
   Eigen::Matrix<double,-1,1> d_stz_data__;

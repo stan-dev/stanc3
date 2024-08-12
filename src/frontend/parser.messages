@@ -760,7 +760,7 @@ program: DATABLOCK LBRACE IDENTIFIER
 
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
-  unit_vector, simplex, sum_to_zero, ordered, positive_ordered,
+  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
   row_stochastic_matrix, column_stochastic_matrix, tuple(...)
 optionally preceded by a single array[...]
@@ -3566,12 +3566,12 @@ program: DATABLOCK LBRACE STOCHASTICCOLUMNMATRIX LBRACK IDENTIFIER COMMA IDENTIF
 Expected "[" expression "," expression "]" for size of column_stochastic_matrix.
 
 program: DATABLOCK LBRACE SUMTOZERO LBRACK IDENTIFIER TILDE
-## Concrete syntax: data { sum_to_zero [ foo ~
+## Concrete syntax: data { sum_to_zero_vector [ foo ~
 program: DATABLOCK LBRACE SUMTOZERO LBRACK WHILE
-## Concrete syntax: data { sum_to_zero [ while
+## Concrete syntax: data { sum_to_zero_vector [ while
 program: DATABLOCK LBRACE SUMTOZERO WHILE
 ##
-## Concrete syntax: data { sum_to_zero while
+## Concrete syntax: data { sum_to_zero_vector while
 ##
 ## Ends in an error in state: 490.
 ##
@@ -3581,4 +3581,4 @@ program: DATABLOCK LBRACE SUMTOZERO WHILE
 ## SUMTOZERO
 ##
 
-Expected "[" expression "]" for size of sum_to_zero vector.
+Expected "[" expression "]" for size of sum_to_zero_vector vector.

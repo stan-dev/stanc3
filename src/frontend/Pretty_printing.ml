@@ -360,7 +360,7 @@ let rec pp_transformed_type ppf (st, trans) =
     | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
     | Simplex -> pf ppf "simplex%a" sizes_fmt ()
     | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
-    | SumToZero -> pf ppf "sum_to_zero%a" sizes_fmt ()
+    | SumToZero -> pf ppf "sum_to_zero_vector%a" sizes_fmt ()
     | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
     | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
     | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()

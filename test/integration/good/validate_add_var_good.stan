@@ -7,7 +7,7 @@ data {
   row_vector[3] rv;
   simplex[5] sv;
   unit_vector[7] uv;
-  sum_to_zero[8] stzv;
+  sum_to_zero_vector[8] stzv;
   ordered[3] ov;
   matrix[4, 5] m;
   cov_matrix[3] covm;
@@ -24,7 +24,7 @@ transformed data {
   row_vector[3] rv_td;
   simplex[5] sv_td;
   unit_vector[7] uv_td;
-  sum_to_zero[8] stzv_td;
+  sum_to_zero_vector[8] stzv_td;
   ordered[3] ov_td;
   matrix[4, 5] m_td;
   cov_matrix[3] covm_td;
@@ -39,7 +39,7 @@ parameters {
   row_vector[3] rv_p;
   simplex[5] sv_p;
   unit_vector[7] uv_p;
-  sum_to_zero[8] stzv_p;
+  sum_to_zero_vector[8] stzv_p;
   ordered[3] ov_p;
   matrix[4, 5] m_p;
   cov_matrix[3] covm_p;
@@ -54,7 +54,7 @@ transformed parameters {
   row_vector[3] rv_tp;
   simplex[5] sv_tp;
   unit_vector[7] uv_tp;
-  sum_to_zero[8] stzv_tp;
+  sum_to_zero_vector[8] stzv_tp;
   ordered[3] ov_tp;
   matrix[4, 5] m_tp;
   cov_matrix[3] covm_tp;
@@ -82,7 +82,7 @@ generated quantities {
   row_vector[3] rv_gq;
   simplex[5] sv_gq;
   unit_vector[7] uv_gq;
-  sum_to_zero[8] stzv_gq;
+  sum_to_zero_vector[8] stzv_gq;
   ordered[3] ov_gq;
   matrix[4, 5] m_gq;
   cov_matrix[3] covm_gq;

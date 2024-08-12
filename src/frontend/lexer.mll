@@ -133,7 +133,7 @@ rule token = parse
                                 Parser.POSITIVEORDERED }
   | "simplex"                 { lexer_logger "simplex" ; Parser.SIMPLEX }
   | "unit_vector"             { lexer_logger "unit_vector" ; Parser.UNITVECTOR }
-  | "sum_to_zero"             { lexer_logger "sum_to_zero" ; Parser.SUMTOZERO }
+  | "sum_to_zero_vector"      { lexer_logger "sum_to_zero_vector" ; Parser.SUMTOZERO }
   | "cholesky_factor_corr"    { lexer_logger "cholesky_factor_corr" ;
                                 Parser.CHOLESKYFACTORCORR }
   | "cholesky_factor_cov"     { lexer_logger "cholesky_factor_cov" ;
