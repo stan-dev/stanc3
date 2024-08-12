@@ -240,43 +240,30 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 1;
-      cmat = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvec = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> crowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      crowvec = in__.template read<
-                  Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<local_scalar_t__> z =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto crowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      z = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> mat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto z = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      mat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<local_scalar_t__,-1,1> vec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto mat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> rowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      rowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ r = DUMMY_VAR__;
+      auto rowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      r = in__.template read<local_scalar_t__>();
+      auto r = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -781,43 +768,30 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 1;
-      cmat = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvec = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> crowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      crowvec = in__.template read<
-                  Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<local_scalar_t__> z =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto crowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      z = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> mat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto z = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      mat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<local_scalar_t__,-1,1> vec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto mat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> rowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      rowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ r = DUMMY_VAR__;
+      auto rowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      r = in__.template read<local_scalar_t__>();
+      auto r = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -1333,50 +1307,30 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<std::complex<double>,-1,-1> cmat =
-        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 1;
-      cmat = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<double>,-1,1> cvec =
-        Eigen::Matrix<std::complex<double>,-1,1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto cmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvec = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<double>,1,-1> crowvec =
-        Eigen::Matrix<std::complex<double>,1,-1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto cvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      crowvec = in__.template read<
-                  Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<double> z =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
+      auto crowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      z = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<double,-1,-1> mat =
-        Eigen::Matrix<double,-1,-1>::Constant(N, N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto z = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      mat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<double,-1,1> vec =
-        Eigen::Matrix<double,-1,1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto mat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<double,1,-1> rowvec =
-        Eigen::Matrix<double,1,-1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      rowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      double r = std::numeric_limits<double>::quiet_NaN();
+      auto rowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      r = in__.template read<local_scalar_t__>();
+      auto r = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<double>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
@@ -4058,43 +4012,30 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cvmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 1;
-      cvmat = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvvec = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> cvrowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      cvrowvec = in__.template read<
-                   Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<local_scalar_t__> zv =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto cvrowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      zv = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> vmat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto zv = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      vmat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<local_scalar_t__,-1,1> vvec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto vmat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> vrowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      vrowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ v = DUMMY_VAR__;
+      auto vrowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      v = in__.template read<local_scalar_t__>();
+      auto v = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -4687,43 +4628,30 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cvmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 1;
-      cvmat = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvvec = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> cvrowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      cvrowvec = in__.template read<
-                   Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<local_scalar_t__> zv =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto cvrowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      zv = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> vmat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto zv = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      vmat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<local_scalar_t__,-1,1> vvec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto vmat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> vrowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      vrowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ v = DUMMY_VAR__;
+      auto vrowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      v = in__.template read<local_scalar_t__>();
+      auto v = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -5327,50 +5255,30 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<std::complex<double>,-1,-1> cvmat =
-        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 1;
-      cvmat = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<double>,-1,1> cvvec =
-        Eigen::Matrix<std::complex<double>,-1,1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto cvmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvvec = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<double>,1,-1> cvrowvec =
-        Eigen::Matrix<std::complex<double>,1,-1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto cvvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      cvrowvec = in__.template read<
-                   Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<double> zv =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
+      auto cvrowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      zv = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<double,-1,-1> vmat =
-        Eigen::Matrix<double,-1,-1>::Constant(N, N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto zv = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      vmat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<double,-1,1> vvec =
-        Eigen::Matrix<double,-1,1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto vmat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<double,1,-1> vrowvec =
-        Eigen::Matrix<double,1,-1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      vrowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      double v = std::numeric_limits<double>::quiet_NaN();
+      auto vrowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      v = in__.template read<local_scalar_t__>();
+      auto v = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<double>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
@@ -8208,29 +8116,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ p_r = DUMMY_VAR__;
       current_statement__ = 1;
-      p_r = in__.template read<local_scalar_t__>();
-      std::complex<local_scalar_t__> p_complex =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto p_r = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>();
-      std::vector<std::complex<local_scalar_t__>> p_complex_array =
-        std::vector<std::complex<local_scalar_t__>>(2,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto p_complex = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 3;
-      p_complex_array = in__.template read<
-                          std::vector<std::complex<local_scalar_t__>>>(2);
-      std::vector<std::vector<std::complex<local_scalar_t__>>>
-        p_complex_array_2d =
-        std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-          std::vector<std::complex<local_scalar_t__>>(3,
-            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
+      auto p_complex_array =
+        in__.template read<std::vector<std::complex<local_scalar_t__>>>(2);
       current_statement__ = 4;
-      p_complex_array_2d = in__.template read<
-                             std::vector<
-                               std::vector<std::complex<local_scalar_t__>>>>(2,
-                             3);
+      auto p_complex_array_2d =
+        in__.template read<
+          std::vector<std::vector<std::complex<local_scalar_t__>>>>(2, 3);
       local_scalar_t__ tp_r = DUMMY_VAR__;
       current_statement__ = 5;
       tp_r = 1.1;
@@ -8469,29 +8365,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ p_r = DUMMY_VAR__;
       current_statement__ = 1;
-      p_r = in__.template read<local_scalar_t__>();
-      std::complex<local_scalar_t__> p_complex =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto p_r = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>();
-      std::vector<std::complex<local_scalar_t__>> p_complex_array =
-        std::vector<std::complex<local_scalar_t__>>(2,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto p_complex = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 3;
-      p_complex_array = in__.template read<
-                          std::vector<std::complex<local_scalar_t__>>>(2);
-      std::vector<std::vector<std::complex<local_scalar_t__>>>
-        p_complex_array_2d =
-        std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-          std::vector<std::complex<local_scalar_t__>>(3,
-            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
+      auto p_complex_array =
+        in__.template read<std::vector<std::complex<local_scalar_t__>>>(2);
       current_statement__ = 4;
-      p_complex_array_2d = in__.template read<
-                             std::vector<
-                               std::vector<std::complex<local_scalar_t__>>>>(2,
-                             3);
+      auto p_complex_array_2d =
+        in__.template read<
+          std::vector<std::vector<std::complex<local_scalar_t__>>>>(2, 3);
       local_scalar_t__ tp_r = DUMMY_VAR__;
       current_statement__ = 5;
       tp_r = 1.1;
@@ -8741,31 +8625,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      double p_r = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      p_r = in__.template read<local_scalar_t__>();
-      std::complex<double> p_complex =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
+      auto p_r = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>();
-      std::vector<std::complex<double>> p_complex_array =
-        std::vector<std::complex<double>>(2,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto p_complex = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 3;
-      p_complex_array = in__.template read<
-                          std::vector<std::complex<local_scalar_t__>>>(2);
-      std::vector<std::vector<std::complex<double>>> p_complex_array_2d =
-        std::vector<std::vector<std::complex<double>>>(2,
-          std::vector<std::complex<double>>(3,
-            std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-              std::numeric_limits<double>::quiet_NaN())));
+      auto p_complex_array =
+        in__.template read<std::vector<std::complex<local_scalar_t__>>>(2);
       current_statement__ = 4;
-      p_complex_array_2d = in__.template read<
-                             std::vector<
-                               std::vector<std::complex<local_scalar_t__>>>>(2,
-                             3);
+      auto p_complex_array_2d =
+        in__.template read<
+          std::vector<std::vector<std::complex<local_scalar_t__>>>>(2, 3);
       double tp_r = std::numeric_limits<double>::quiet_NaN();
       std::complex<double> tp_complex =
         std::complex<double>(std::numeric_limits<double>::quiet_NaN(),

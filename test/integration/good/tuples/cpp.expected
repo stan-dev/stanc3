@@ -3376,9 +3376,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ x = DUMMY_VAR__;
       current_statement__ = 1;
-      x = in__.template read<local_scalar_t__>();
+      auto x = in__.template read<local_scalar_t__>();
       {
         std::vector<std::tuple<local_scalar_t__, local_scalar_t__>> z =
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>(2,
@@ -3421,9 +3420,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ x = DUMMY_VAR__;
       current_statement__ = 1;
-      x = in__.template read<local_scalar_t__>();
+      auto x = in__.template read<local_scalar_t__>();
       {
         std::vector<std::tuple<local_scalar_t__, local_scalar_t__>> z =
           std::vector<std::tuple<local_scalar_t__, local_scalar_t__>>(2,
@@ -3477,9 +3475,8 @@ class infer_tuple_ad_model final : public model_base_crtp<infer_tuple_ad_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      double x = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      x = in__.template read<local_scalar_t__>();
+      auto x = in__.template read<local_scalar_t__>();
       out__.write(x);
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
@@ -4210,10 +4207,9 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> A =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
       current_statement__ = 1;
-      A = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, M);
+      auto A =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, M);
       {
         current_statement__ = 2;
         stan::math::validate_non_negative_index("Q", "N", N);
@@ -4272,10 +4268,9 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> A =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, M, DUMMY_VAR__);
       current_statement__ = 1;
-      A = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, M);
+      auto A =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, M);
       {
         current_statement__ = 2;
         stan::math::validate_non_negative_index("Q", "N", N);
@@ -4345,11 +4340,9 @@ class qr_unpack_model final : public model_base_crtp<qr_unpack_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> A =
-        Eigen::Matrix<double,-1,-1>::Constant(N, M,
-          std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
-      A = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, M);
+      auto A =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, M);
       out__.write(A);
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
@@ -6151,10 +6144,10 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                                                            4);
         }
       }
-      local_scalar_t__ t = DUMMY_VAR__;
       current_statement__ = 3;
-      t = in__.template read_constrain_lub<local_scalar_t__,
-            jacobian__>(std::get<0>(foo(pstream__)), std::get<1>(ps), lp__);
+      auto t =
+        in__.template read_constrain_lub<local_scalar_t__,
+          jacobian__>(std::get<0>(foo(pstream__)), std::get<1>(ps), lp__);
       std::vector<
         std::tuple<local_scalar_t__,
           std::vector<
@@ -6272,10 +6265,10 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                                                            4);
         }
       }
-      local_scalar_t__ t = DUMMY_VAR__;
       current_statement__ = 3;
-      t = in__.template read_constrain_lub<local_scalar_t__,
-            jacobian__>(std::get<0>(foo(pstream__)), std::get<1>(ps), lp__);
+      auto t =
+        in__.template read_constrain_lub<local_scalar_t__,
+          jacobian__>(std::get<0>(foo(pstream__)), std::get<1>(ps), lp__);
       std::vector<
         std::tuple<local_scalar_t__,
           std::vector<
@@ -6399,10 +6392,10 @@ class tuple_constraints_params_model final : public model_base_crtp<tuple_constr
                                                            4);
         }
       }
-      double t = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 3;
-      t = in__.template read_constrain_lub<local_scalar_t__,
-            jacobian__>(std::get<0>(foo(pstream__)), std::get<1>(ps), lp__);
+      auto t =
+        in__.template read_constrain_lub<local_scalar_t__,
+          jacobian__>(std::get<0>(foo(pstream__)), std::get<1>(ps), lp__);
       std::vector<
         std::tuple<double,
           std::vector<
@@ -12847,14 +12840,12 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> m1 =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
       current_statement__ = 1;
-      m1 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
-      Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      auto m1 =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
       current_statement__ = 1;
-      m2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
+      auto m2 =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
       {
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
           Eigen::Matrix<local_scalar_t__,-1,-1>> temp =
@@ -12953,14 +12944,12 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,-1> m1 =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
       current_statement__ = 1;
-      m1 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
-      Eigen::Matrix<local_scalar_t__,-1,-1> m2 =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(3, 3, DUMMY_VAR__);
+      auto m1 =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
       current_statement__ = 1;
-      m2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
+      auto m2 =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
       {
         std::tuple<Eigen::Matrix<local_scalar_t__,-1,-1>,
           Eigen::Matrix<local_scalar_t__,-1,-1>> temp =
@@ -13070,16 +13059,12 @@ class tuple_copying_model final : public model_base_crtp<tuple_copying_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,-1> m1 =
-        Eigen::Matrix<double,-1,-1>::Constant(3, 3,
-          std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
-      m1 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
-      Eigen::Matrix<double,-1,-1> m2 =
-        Eigen::Matrix<double,-1,-1>::Constant(3, 3,
-          std::numeric_limits<double>::quiet_NaN());
+      auto m1 =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
       current_statement__ = 1;
-      m2 = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
+      auto m2 =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(3, 3);
       out__.write(m1);
       out__.write(m2);
       if (stan::math::logical_negation(
@@ -13916,10 +13901,8 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<local_scalar_t__> param_y =
-        std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       current_statement__ = 1;
-      param_y = in__.template read<std::vector<local_scalar_t__>>(N);
+      auto param_y = in__.template read<std::vector<local_scalar_t__>>(N);
       local_scalar_t__ sum2 = DUMMY_VAR__;
       current_statement__ = 2;
       sum2 = stan::math::reduce_sum<fun_rsfunctor__>(param_y, 1, pstream__,
@@ -13954,10 +13937,8 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<local_scalar_t__> param_y =
-        std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       current_statement__ = 1;
-      param_y = in__.template read<std::vector<local_scalar_t__>>(N);
+      auto param_y = in__.template read<std::vector<local_scalar_t__>>(N);
       local_scalar_t__ sum2 = DUMMY_VAR__;
       current_statement__ = 2;
       sum2 = stan::math::reduce_sum<fun_rsfunctor__>(param_y, 1, pstream__,
@@ -14003,10 +13984,8 @@ class tuple_hof_model final : public model_base_crtp<tuple_hof_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<double> param_y =
-        std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
-      param_y = in__.template read<std::vector<local_scalar_t__>>(N);
+      auto param_y = in__.template read<std::vector<local_scalar_t__>>(N);
       double sum2 = std::numeric_limits<double>::quiet_NaN();
       out__.write(param_y);
       if (stan::math::logical_negation(
@@ -15874,14 +15853,11 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<local_scalar_t__> alpha =
-        std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       current_statement__ = 1;
-      alpha = in__.template read<std::vector<local_scalar_t__>>(N);
-      Eigen::Matrix<local_scalar_t__,-1,1> theta =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto alpha = in__.template read<std::vector<local_scalar_t__>>(N);
       current_statement__ = 2;
-      theta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      auto theta =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       {
         current_statement__ = 3;
         stan::math::validate_non_negative_index("r", "N", N);
@@ -16029,14 +16005,11 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<local_scalar_t__> alpha =
-        std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       current_statement__ = 1;
-      alpha = in__.template read<std::vector<local_scalar_t__>>(N);
-      Eigen::Matrix<local_scalar_t__,-1,1> theta =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto alpha = in__.template read<std::vector<local_scalar_t__>>(N);
       current_statement__ = 2;
-      theta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      auto theta =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       {
         current_statement__ = 3;
         stan::math::validate_non_negative_index("r", "N", N);
@@ -16195,15 +16168,11 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
     // suppress unused var warning
     (void) function__;
     try {
-      std::vector<double> alpha =
-        std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
-      alpha = in__.template read<std::vector<local_scalar_t__>>(N);
-      Eigen::Matrix<double,-1,1> theta =
-        Eigen::Matrix<double,-1,1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto alpha = in__.template read<std::vector<local_scalar_t__>>(N);
       current_statement__ = 2;
-      theta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
+      auto theta =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       out__.write(alpha);
       out__.write(theta);
       if (stan::math::logical_negation(

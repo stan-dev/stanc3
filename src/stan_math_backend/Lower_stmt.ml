@@ -91,8 +91,12 @@ let rec initialize_value st adtype =
             (adtype : UnsizedType.autodifftype)]
 
 (*Initialize an object of a given size.*)
-let lower_assign_sized st adtype initialize =
-  if initialize then Some (initialize_value st adtype) else None
+let lower_assign_sized st adtype (initialize : 'a Stmt.Fixed.Pattern.decl_init)
+    =
+  match initialize with
+  | Assign e -> Some (lower_expr e)
+  | Default -> Some (initialize_value st adtype)
+  | Uninit -> None
 
 let lower_unsized_decl name ut adtype =
   let type_ =
@@ -103,17 +107,25 @@ let lower_unsized_decl name ut adtype =
     | true, _ -> TypeLiteral "matrix_cl<double>" in
   make_variable_defn ~type_ ~name ()
 
-let lower_possibly_opencl_decl name st adtype =
+let lower_possibly_opencl_decl name st adtype
+    (initialize : 'a Stmt.Fixed.Pattern.decl_init) =
   let ut = SizedType.to_unsized st in
   let mem_pattern = SizedType.get_mem_pattern st in
   match (Transform_Mir.is_opencl_var name, ut) with
-  | _, UnsizedType.(UInt | UReal) | false, _ ->
-      lower_possibly_var_decl adtype ut mem_pattern
+  | _, UnsizedType.(UInt | UReal) | false, _ -> (
+      match initialize with
+      | Assign
+          Expr.Fixed.
+            { pattern= FunApp (CompilerInternal (Internal_fun.FnReadParam _), _)
+            ; _ } ->
+          (* Peephole optimization for param reads, avoids copying *)
+          Auto
+      | _ -> lower_possibly_var_decl adtype ut mem_pattern)
   | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
   | true, _ -> TypeLiteral "matrix_cl<double>"
 
 let lower_sized_decl name st adtype initialize =
-  let type_ = lower_possibly_opencl_decl name st adtype in
+  let type_ = lower_possibly_opencl_decl name st adtype initialize in
   let init =
     lower_assign_sized st adtype initialize
     |> Option.value_map ~default:Uninitialized ~f:(fun i -> Assignment i) in
@@ -197,7 +209,10 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
     | _ -> e in
   let location =
     match pattern with
-    | Block _ | SList _ | Decl _ | Skip | Break | Continue -> []
+    | Block _ | SList _
+     |Decl {initialize= Default | Uninit; _}
+     |Skip | Break | Continue ->
+        []
     | _ -> Numbering.assign_loc meta in
   let wrap_e e = [Expression e] in
   let open Expression_syntax in
@@ -320,7 +335,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | Return e -> [Return (Option.map ~f:lower_expr e)]
   | Block ls -> [Stmts.block (lower_statements ls)]
   | SList ls -> lower_statements ls
-  | Decl {decl_adtype; decl_id; decl_type; initialize; _} ->
+  | Decl {decl_adtype; decl_id; decl_type; initialize; decl_annotations= _} ->
       [lower_decl decl_id decl_type decl_adtype initialize]
   | Profile (name, ls) -> [lower_profile name (lower_statements ls)]
 
@@ -333,7 +348,7 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly false)
+         DataOnly Stmt.Fixed.Pattern.Uninit)
     |> print_endline;
     [%expect {| |}]
 
@@ -343,7 +358,7 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly true)
+         DataOnly Stmt.Fixed.Pattern.Default)
     |> print_endline;
     [%expect
       {|

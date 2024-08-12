@@ -144,18 +144,18 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ rho = DUMMY_VAR__;
       current_statement__ = 1;
-      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
-      local_scalar_t__ alpha = DUMMY_VAR__;
+      auto rho =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 2;
-      alpha = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      local_scalar_t__ sigma = DUMMY_VAR__;
+      auto alpha =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 3;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
+      auto sigma =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       {
         current_statement__ = 4;
         stan::math::validate_non_negative_index("cov", "N", N);
@@ -244,18 +244,18 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) function__;
     try {
-      local_scalar_t__ rho = DUMMY_VAR__;
       current_statement__ = 1;
-      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
-      local_scalar_t__ alpha = DUMMY_VAR__;
+      auto rho =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 2;
-      alpha = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      local_scalar_t__ sigma = DUMMY_VAR__;
+      auto alpha =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 3;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
+      auto sigma =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       {
         current_statement__ = 4;
         stan::math::validate_non_negative_index("cov", "N", N);
@@ -355,18 +355,18 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     // suppress unused var warning
     (void) function__;
     try {
-      double rho = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
-      double alpha = std::numeric_limits<double>::quiet_NaN();
+      auto rho =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 2;
-      alpha = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      double sigma = std::numeric_limits<double>::quiet_NaN();
+      auto alpha =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 3;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
+      auto sigma =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       out__.write(rho);
       out__.write(alpha);
       out__.write(sigma);

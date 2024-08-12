@@ -271,7 +271,8 @@ let check_transform_shape decl_id decl_var meta = function
       same_shape decl_id decl_var "lower" e1 meta
       @ same_shape decl_id decl_var "upper" e2 meta
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
+   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _
+   |StochasticRow | StochasticColumn ->
       []
 
 let copy_indices indexed (var : Expr.Typed.t) =
@@ -294,7 +295,8 @@ let extract_transform_args var = function
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) ->
       [copy_indices var a1; copy_indices var a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
+   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _
+   |StochasticRow | StochasticColumn ->
       []
 
 let rec param_size transform sizedtype =
@@ -321,6 +323,17 @@ let rec param_size transform sizedtype =
   let k_choose_2 k =
     Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
+  let rec stoch_size f1 f2 st =
+    match st with
+    | SizedType.SMatrix (mem_pattern, d1, d2) ->
+        SizedType.SMatrix (mem_pattern, f1 d1, f2 d2)
+    | SArray (t, d) -> SizedType.SArray (stoch_size f1 f2 t, d)
+    | SInt | SReal | SComplex | SRowVector _ | SVector _ | STuple _
+     |SComplexRowVector _ | SComplexVector _ | SComplexMatrix _ ->
+        Common.ICE.internal_compiler_error
+          [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
+  in
+  let min_one d = Expr.Helpers.(binop d Minus (int 1)) in
   match transform with
   | Transformation.Identity | Lower _ | Upper _
    |LowerUpper (_, _)
@@ -339,6 +352,8 @@ let rec param_size transform sizedtype =
   | Simplex ->
       shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
+  | StochasticRow -> stoch_size Fn.id min_one sizedtype
+  | StochasticColumn -> stoch_size min_one Fn.id sizedtype
   | CholeskyCov ->
       (* (N * (N + 1)) / 2 + (M - N) * N *)
       shrink_eigen_mat
@@ -460,7 +475,11 @@ let create_decl_with_assign decl_id declc decl_type initial_value
     Stmt.
       { Fixed.pattern=
           Decl
-            {decl_adtype; decl_id; decl_type; decl_annotations; initialize= true}
+            { decl_adtype
+            ; decl_id
+            ; decl_type
+            ; decl_annotations
+            ; initialize= Default }
       ; meta= smeta } in
   let rhs_assignment =
     Option.map
@@ -586,7 +605,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                 ; decl_id= loopvar.name
                 ; decl_type= Unsized decl_type
                 ; decl_annotations= []
-                ; initialize= true } } in
+                ; initialize= Default } } in
       let assignment var =
         Stmt.Fixed.
           { pattern=
@@ -634,7 +653,7 @@ and trans_packed_assign loc trans_stmt lvals rhs assign_op =
           ; decl_id= sym
           ; decl_type= Unsized rhs_type
           ; decl_annotations= []
-          ; initialize= false }
+          ; initialize= Uninit }
     ; meta= rhs.emeta.loc } in
   let assign =
     { temp with
@@ -750,7 +769,7 @@ let rec trans_sizedtype_decl declc tr name st =
                 ; decl_id
                 ; decl_adtype= DataOnly
                 ; decl_annotations= []
-                ; initialize= true }
+                ; initialize= Default }
           ; meta= e.meta.loc } in
         let assign =
           { Stmt.Fixed.pattern=

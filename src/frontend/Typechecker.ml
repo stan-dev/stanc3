@@ -1652,6 +1652,8 @@ and check_transformation cf tenv ut trans =
   | CholeskyCov -> CholeskyCov
   | Correlation -> Correlation
   | Covariance -> Covariance
+  | StochasticColumn -> StochasticColumn
+  | StochasticRow -> StochasticRow
   | TupleTransformation tms ->
       let typesTrans = Utils.zip_utuple_trans_exn ut tms in
       let tes =
