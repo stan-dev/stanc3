@@ -20,7 +20,7 @@ Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 10, pars
 
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
-  unit_vector, simplex, ordered, positive_ordered,
+  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
   row_stochastic_matrix, column_stochastic_matrix, tuple(...)
 optionally preceded by a single array[...]
@@ -35,7 +35,7 @@ Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsi
 
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
-  unit_vector, simplex, ordered, positive_ordered,
+  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
   row_stochastic_matrix, column_stochastic_matrix, tuple(...)
 optionally preceded by a single array[...]
@@ -782,7 +782,7 @@ Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing er
 
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
-  unit_vector, simplex, ordered, positive_ordered,
+  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
   row_stochastic_matrix, column_stochastic_matrix, tuple(...)
 optionally preceded by a single array[...]

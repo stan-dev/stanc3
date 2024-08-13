@@ -320,9 +320,9 @@ let pp_bracketed_transform ppf = function
   | Multiplier e -> pf ppf "<@[multiplier=%a@]>" pp_expression e
   | OffsetMultiplier (e1, e2) ->
       pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1 pp_expression e2
-  | Identity | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
-   |CholeskyCov | Correlation | Covariance | TupleTransformation _
-   |StochasticColumn
+  | Identity | Ordered | PositiveOrdered | Simplex | UnitVector | SumToZero
+   |CholeskyCorr | CholeskyCov | Correlation | Covariance
+   |TupleTransformation _ | StochasticColumn
    |StochasticRow (* tuple transformations are handled in pp_transformed_type *)
     ->
       ()
@@ -360,6 +360,7 @@ let rec pp_transformed_type ppf (st, trans) =
     | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
     | Simplex -> pf ppf "simplex%a" sizes_fmt ()
     | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
+    | SumToZero -> pf ppf "sum_to_zero_vector%a" sizes_fmt ()
     | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
     | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
     | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
