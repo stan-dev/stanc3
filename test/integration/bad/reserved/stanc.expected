@@ -348,6 +348,16 @@ Semantic error in 'struct.stan', line 2, column 7 to column 13:
    -------------------------------------------------
 
 Identifier 'struct' clashes with reserved keyword.
+  $ ../../../../../install/default/bin/stanc sum_to_zero.stan
+Syntax error in 'sum_to_zero.stan', line 2, column 7 to column 25, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    real sum_to_zero_vector;
+                ^
+     3:  }
+   -------------------------------------------------
+
+Expected a new identifier but found reserved keyword 'sum_to_zero_vector'.
   $ ../../../../../install/default/bin/stanc then.stan
 Semantic error in 'then.stan', line 2, column 7 to column 11:
    -------------------------------------------------

@@ -271,8 +271,8 @@ let check_transform_shape decl_id decl_var meta = function
       same_shape decl_id decl_var "lower" e1 meta
       @ same_shape decl_id decl_var "upper" e2 meta
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _
-   |StochasticRow | StochasticColumn ->
+   |PositiveOrdered | Simplex | UnitVector | SumToZero | Identity
+   |TupleTransformation _ | StochasticRow | StochasticColumn ->
       []
 
 let copy_indices indexed (var : Expr.Typed.t) =
@@ -295,8 +295,8 @@ let extract_transform_args var = function
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) ->
       [copy_indices var a1; copy_indices var a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _
-   |StochasticRow | StochasticColumn ->
+   |PositiveOrdered | Simplex | UnitVector | SumToZero | Identity
+   |TupleTransformation _ | StochasticRow | StochasticColumn ->
       []
 
 let rec param_size transform sizedtype =
@@ -349,7 +349,7 @@ let rec param_size transform sizedtype =
         (SizedType.STuple
            (List.map subtypes_transforms ~f:(fun (st, trans) ->
                 param_size trans st)))
-  | Simplex ->
+  | Simplex | SumToZero ->
       shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
   | StochasticRow -> stoch_size Fn.id min_one sizedtype

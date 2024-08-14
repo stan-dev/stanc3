@@ -1648,6 +1648,7 @@ and check_transformation cf tenv ut trans =
   | PositiveOrdered -> PositiveOrdered
   | Simplex -> Simplex
   | UnitVector -> UnitVector
+  | SumToZero -> SumToZero
   | CholeskyCorr -> CholeskyCorr
   | CholeskyCov -> CholeskyCov
   | Correlation -> Correlation
