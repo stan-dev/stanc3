@@ -23,3 +23,11 @@ transformed data {
       array[N/*test1*/ , //test1.5
     N/*test2*/] real arr;
 }
+
+model {
+  // unicode in comments
+  // Љ😃
+  /*
+  λ β ζ π
+  //*/
+}

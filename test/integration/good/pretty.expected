@@ -1359,6 +1359,13 @@ transformed data {
   
   /* ^^^:test2*/
 }
+model {
+  // unicode in comments
+  // Љ😃
+  /*
+  λ β ζ π
+  //*/
+}
 
   $ ../../../../install/default/bin/stanc --auto-format conditional_condition_good.stan
 parameters {
