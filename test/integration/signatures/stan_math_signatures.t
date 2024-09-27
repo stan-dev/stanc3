@@ -21031,6 +21031,8 @@ Display all Stan math signatures exposed in the language
   wiener_lpdf(vector, vector, vector, real, array[] real) => real
   wiener_lpdf(vector, vector, vector, vector, real) => real
   wiener_lpdf(vector, vector, vector, vector, vector) => real
+  wiener_lpdf(vector, vector, vector, vector, vector, vector) => real
+  wiener_lpdf(vector, vector, vector, vector, vector, vector, vector, vector) => real
   wiener_lpdf(vector, vector, vector, vector, row_vector) => real
   wiener_lpdf(vector, vector, vector, vector, array[] real) => real
   wiener_lpdf(vector, vector, vector, row_vector, real) => real
