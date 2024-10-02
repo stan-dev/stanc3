@@ -166,7 +166,8 @@ let opencl_supported_functions =
   ; "ordered_logistic_glm_lpmf"; "pareto_lpdf"; "pareto_type_2_lpdf"
   ; "poisson_lpmf"; "poisson_log_lpmf"; "poisson_log_glm_lpmf"; "rayleigh_lpdf"
   ; "scaled_inv_chi_square_lpdf"; "skew_normal_lpdf"; "std_normal_lpdf"
-  ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf" ]
+  ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf"; "binomial_logit_lpmf"
+  ; "binomial_logit_glm_lpmf" ]
   |> String.Set.of_list
 
 let opencl_suffix = "_opencl__"
