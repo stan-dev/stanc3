@@ -1,57 +1,27 @@
   $ ../../../../../install/default/bin/stanc --auto-format deprecated_syntax.stan
 parameters {
-  
+  real jacobian;
 }
 model {
-  real z = 3.0;
-  real x = target();
-  array[5] real xyz;
-  
   if (1 < 2 < 3 < 4) {
     // multiple comparisons
   }
-  while (z) {
-    // real as boolean value
-    if (1.0) {
-      // same
-    }
-    if (x && !z || xyz[3]) {
-      // more boolean reals
-    }
-  }
 }
 
-Warning in 'deprecated_syntax.stan', line 9, column 6: Found 1 < 2 < 3. This
+Warning in 'deprecated_syntax.stan', line 2, column 7: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 5, column 6: Found 1 < 2 < 3. This
     is interpreted as (1 < 2) < 3. Consider if the intended meaning was 
     1 < 2 && 2 < 3 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 9, column 6: Found 1 < 2 < 3 < 4.
+Warning in 'deprecated_syntax.stan', line 5, column 6: Found 1 < 2 < 3 < 4.
     This is interpreted as (1 < 2 < 3) < 4. Consider if the intended meaning
     was 
     1 < 2 < 3 && 3 < 4 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 12, column 9: Condition of type
-    real is deprecated and will be disallowed in Stan 2.34. Use an explicit
-    != 0 comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 14, column 8: Condition of type
-    real is deprecated and will be disallowed in Stan 2.34. Use an explicit
-    != 0 comparison instead. This can be automatically changed using the
-    canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 17, column 19: Using a real as a
-    boolean value is deprecated and will be disallowed in Stan 2.34. Use an
-    explicit != 0 comparison instead. This can be automatically changed using
-    the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 17, column 8: Using a real as a
-    boolean value is deprecated and will be disallowed in Stan 2.34. Use an
-    explicit != 0 comparison instead. This can be automatically changed using
-    the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 17, column 14: Using a real as a
-    boolean value is deprecated and will be disallowed in Stan 2.34. Use an
-    explicit != 0 comparison instead. This can be automatically changed using
-    the canonicalize flag for stanc
   $ ../../../../../install/default/bin/stanc --auto-format empty.stan
 
 Warning: Empty file 'empty.stan' detected; this is a valid stan model but
@@ -500,6 +470,10 @@ model {
   Sigma ~ lkj_cov(mu, sigma, eta);
 }
 
+Warning in 'lkj_cov_deprecation1.stan', line 8, column 10: lkj_cov is
+    deprecated and will be removed in Stan 3.0. Use lkj_corr with an
+    independent lognormal distribution on the scales, see:
+    https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
   $ ../../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation2.stan
 parameters {
   cov_matrix[3] Sigma;
@@ -511,6 +485,10 @@ model {
   target += lkj_cov_lpdf(Sigma | mu, sigma, eta);
 }
 
+Warning in 'lkj_cov_deprecation2.stan', line 8, column 12: lkj_cov is
+    deprecated and will be removed in Stan 3.0. Use lkj_corr with an
+    independent lognormal distribution on the scales, see:
+    https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
   $ ../../../../../install/default/bin/stanc --auto-format matrix_pow_warning.stan
 data {
   int<lower=0> N;
@@ -619,11 +597,19 @@ functions {
     reject("Cannot be 0");
     return;
   }
+  
+  real bar(real x) {
+    fatal_error("don't call this function");
+    return x;
+  }
 }
 
 Warning in 'unreachable_statement.stan', line 5, column 5: Unreachable
-    statement (following a reject, break, continue, or return) found, is this
-    intended?
+    statement (following a reject, fatal_error, break, continue, or return)
+    found, is this intended?
+Warning in 'unreachable_statement.stan', line 10, column 4: Unreachable
+    statement (following a reject, fatal_error, break, continue, or return)
+    found, is this intended?
   $ ../../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
 transformed data {
   real u;

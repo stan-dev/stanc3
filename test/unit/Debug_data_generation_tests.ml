@@ -1,5 +1,5 @@
 open Analysis_and_optimization
-open Core_kernel
+open Core
 open Frontend
 open Debug_data_generation
 
@@ -20,7 +20,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str ;
+  print_string str;
   [%expect
     {|
       {
@@ -51,7 +51,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str ;
+  print_string str;
   [%expect
     {|
       {
@@ -100,7 +100,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str ;
+  print_string str;
   [%expect
     {|
       {
@@ -137,7 +137,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str ;
+  print_string str;
   [%expect
     {|
       {
@@ -259,7 +259,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str ;
+  print_string str;
   [%expect
     {|
       {
@@ -518,7 +518,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str ;
+  print_string str;
   [%expect
     {|
     {
@@ -650,7 +650,7 @@ let%expect_test "whole program data generation check" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str ;
+  print_string str;
   [%expect
     {|
       { "K": 3, "N": 1, "player1": [ 2 ], "player0": [ 1 ], "y": [ 1 ] } |}]
@@ -669,7 +669,7 @@ let%expect_test "Complex numbers program" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str ;
+  print_string str;
   [%expect
     {|
       {
@@ -715,7 +715,7 @@ let%expect_test "Tuples program" =
       |}
   in
   let str = print_data_prog ast in
-  print_string str ;
+  print_string str;
   [%expect
     {|
       {

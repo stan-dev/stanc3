@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 
 (** Type errors that may arise during semantic check *)
@@ -32,8 +32,8 @@ module TypeError = struct
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
-        * ( UnsizedType.returntype
-          * (UnsizedType.autodifftype * UnsizedType.t) list )
+        * (UnsizedType.returntype
+          * (UnsizedType.autodifftype * UnsizedType.t) list)
           list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
@@ -163,7 +163,7 @@ module TypeError = struct
              (fun ppf tys ->
                Fmt.pf ppf "For args @[(%a)@], this"
                  (Fmt.list ~sep:Fmt.comma UnsizedType.pp)
-                 tys ) )
+                 tys))
           arg_tys
           (Fmt.list ~sep:Fmt.cut pp_sig)
           signatures
@@ -204,29 +204,30 @@ module TypeError = struct
            was supplied."
           fn_name
     | ReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
-      match sug with
-      | None ->
-          Fmt.pf ppf
-            "A returning function was expected but an undeclared identifier \
-             '%s' was supplied."
-            fn_name
-      | Some s ->
-          Fmt.pf ppf
-            "A returning function was expected but an undeclared identifier \
-             '%s' was supplied.@ A similar known identifier is '%s'"
-            fn_name s )
+        match sug with
+        | None ->
+            Fmt.pf ppf
+              "A returning function was expected but an undeclared identifier \
+               '%s' was supplied."
+              fn_name
+        | Some s ->
+            Fmt.pf ppf
+              "A returning function was expected but an undeclared identifier \
+               '%s' was supplied.@ A similar known identifier is '%s'"
+              fn_name s)
     | NonReturningFnExpectedUndeclaredIdentFound (fn_name, sug) -> (
-      match sug with
-      | None ->
-          Fmt.pf ppf
-            "A non-returning function was expected but an undeclared \
-             identifier '%s' was supplied."
-            fn_name
-      | Some s ->
-          Fmt.pf ppf
-            "A non-returning function was expected but an undeclared \
-             identifier '%s' was supplied.@ A nearby known identifier is '%s'"
-            fn_name s )
+        match sug with
+        | None ->
+            Fmt.pf ppf
+              "A non-returning function was expected but an undeclared \
+               identifier '%s' was supplied."
+              fn_name
+        | Some s ->
+            Fmt.pf ppf
+              "A non-returning function was expected but an undeclared \
+               identifier '%s' was supplied.@ A nearby known identifier is \
+               '%s'"
+              fn_name s)
     | ReturningFnExpectedUndeclaredDistSuffixFound (prefix, suffix) ->
         Fmt.pf ppf "Function '%s_%s' is not implemented for distribution '%s'."
           prefix suffix prefix
@@ -238,7 +239,7 @@ module TypeError = struct
           | "lpmf" -> "lpdf"
           | "lupmf" -> "lupdf"
           | _ ->
-              Common.FatalError.fatal_error_msg
+              Common.ICE.internal_compiler_error
                 [%message "Bad suffix:" (suffix : string)] in
         Fmt.pf ppf
           "Function '%s_%s' is not implemented for distribution '%s', use \
@@ -252,8 +253,8 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied arguments of incompatible type: \
            %a, %a.@]"
           Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n")
           UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
@@ -261,16 +262,16 @@ module TypeError = struct
            signatures: %s@[<h>Instead supplied argument of incompatible type: \
            %a.@]"
           Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n")
           UnsizedType.pp ut
     | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
            signatures: %s\n\
            Instead supplied argument of incompatible type: %a." Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          (Stan_math_signatures.pretty_print_math_lib_operator_sigs op
+          |> String.concat ~sep:"\n")
           UnsizedType.pp ut
 end
 
@@ -295,10 +296,11 @@ module IdentifierError = struct
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
     | NotInScope (name, sug) -> (
-      match sug with
-      | None -> Fmt.pf ppf "Identifier '%s' not in scope." name
-      | Some s ->
-          Fmt.pf ppf "Identifier '%s' not in scope. Did you mean '%s'?" name s )
+        match sug with
+        | None -> Fmt.pf ppf "Identifier '%s' not in scope." name
+        | Some s ->
+            Fmt.pf ppf "Identifier '%s' not in scope. Did you mean '%s'?" name s
+        )
     | UnnormalizedSuffix name ->
         Fmt.pf ppf
           "Identifier '%s' has a _lupdf/_lupmf suffix, which is only allowed \
@@ -367,10 +369,11 @@ module StatementError = struct
     | LValueMultiIndexing
     | LValueTupleUnpackDuplicates of Ast.untyped_lval list
     | LValueTupleReadAndWrite of string list
-    | InvalidSamplingPDForPMF
-    | InvalidSamplingCDForCCDF of string
-    | InvalidSamplingNoSuchDistribution of string * bool
+    | InvalidTildePDForPMF
+    | InvalidTildeCDForCCDF of string
+    | InvalidTildeNoSuchDistribution of string * bool
     | TargetPlusEqualsOutsideModelOrLogProb
+    | JacobianPlusEqualsNotAllowed
     | InvalidTruncationCDForCCDF of
         (UnsizedType.autodifftype * UnsizedType.t) list
     | BreakOutsideLoop
@@ -426,26 +429,31 @@ module StatementError = struct
           Fmt.(list ~sep:comma string)
           ids
     | TargetPlusEqualsOutsideModelOrLogProb ->
-        Fmt.pf ppf
+        Fmt.string ppf
           "Target can only be accessed in the model block or in definitions of \
            functions with the suffix _lp."
-    | InvalidSamplingPDForPMF ->
-        Fmt.pf ppf
+    | JacobianPlusEqualsNotAllowed ->
+        Fmt.string ppf
+          "The jacobian adjustment can only be applied in the transformed \
+           parameters block or in functions ending with _jacobian"
+    | InvalidTildePDForPMF ->
+        Fmt.string ppf
           "~ statement should refer to a distribution without its \
            \"_lpdf/_lupdf\" or \"_lpmf/_lupmf\" suffix.\n\
            For example, \"target += normal_lpdf(y, 0, 1)\" should become \"y ~ \
            normal(0, 1).\""
-    | InvalidSamplingCDForCCDF name ->
+    | InvalidTildeCDForCCDF name ->
         Fmt.pf ppf
-          "CDF and CCDF functions may not be used with sampling notation. Use \
-           target += %s_log(...) instead."
+          "CDF and CCDF functions may not be used with distribution notation \
+           (~). Use target += %s_log(...) instead."
           name
-    | InvalidSamplingNoSuchDistribution (name, true) ->
+    | InvalidTildeNoSuchDistribution (name, true) ->
         Fmt.pf ppf
-          "Ill-typed arguments to '~' statement. No function '%s_lpmf' or \
-           '%s_lpdf' was found when looking for distribution '%s'."
+          "Ill-typed arguments to distribution statement (~). No function \
+           '%s_lpmf' or '%s_lpdf' was found when looking for distribution \
+           '%s'."
           name name name
-    | InvalidSamplingNoSuchDistribution (name, false) ->
+    | InvalidTildeNoSuchDistribution (name, false) ->
         Fmt.pf ppf
           "Ill-typed arguments to '~' statement. No function '%s_lpdf' was \
            found when looking for distribution '%s'."
@@ -486,8 +494,8 @@ module StatementError = struct
           name UnsizedType.pp_returntype rt'
     | FuncDeclRedefined (name, ut, stan_math) ->
         Fmt.pf ppf "Function '%s' %s signature %a" name
-          ( if stan_math then "is already declared in the Stan Math library with"
-          else "has already been declared for" )
+          (if stan_math then "is already declared in the Stan Math library with"
+           else "has already been declared for")
           UnsizedType.pp ut
     | FunDeclExists name ->
         Fmt.pf ppf
@@ -706,18 +714,21 @@ let cannot_assign_duplicate_unpacking loc names =
 let cannot_access_assigning_var loc names =
   StatementError (loc, StatementError.LValueTupleReadAndWrite names)
 
-let invalid_sampling_pdf_or_pmf loc =
-  StatementError (loc, StatementError.InvalidSamplingPDForPMF)
+let invalid_tilde_pdf_or_pmf loc =
+  StatementError (loc, StatementError.InvalidTildePDForPMF)
 
-let invalid_sampling_cdf_or_ccdf loc name =
-  StatementError (loc, StatementError.InvalidSamplingCDForCCDF name)
+let invalid_tilde_cdf_or_ccdf loc name =
+  StatementError (loc, StatementError.InvalidTildeCDForCCDF name)
 
-let invalid_sampling_no_such_dist loc name is_int =
+let invalid_tilde_no_such_dist loc name is_int =
   StatementError
-    (loc, StatementError.InvalidSamplingNoSuchDistribution (name, is_int))
+    (loc, StatementError.InvalidTildeNoSuchDistribution (name, is_int))
 
 let target_plusequals_outside_model_or_logprob loc =
   StatementError (loc, StatementError.TargetPlusEqualsOutsideModelOrLogProb)
+
+let jacobian_plusequals_not_allowed loc =
+  StatementError (loc, StatementError.JacobianPlusEqualsNotAllowed)
 
 let invalid_truncation_cdf_or_ccdf loc args =
   StatementError (loc, StatementError.InvalidTruncationCDForCCDF args)

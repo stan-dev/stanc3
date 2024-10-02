@@ -3,7 +3,7 @@
     functions for dealing with those signatures.
 *)
 
-open Core_kernel
+open Core
 
 (** Function arguments are represented by their type an autodiff
    type. This is [AutoDiffable] for everything except arguments
@@ -48,7 +48,6 @@ type return_behavior
 type fkind = private
   | Lpmf
   | Lpdf
-  | Log
   | Rng
   | Cdf
   | Ccdf

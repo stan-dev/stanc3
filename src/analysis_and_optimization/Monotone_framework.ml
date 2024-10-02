@@ -1,7 +1,7 @@
 (** The common elements of a monotone framework *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Monotone_framework_sigs
 open Mir_utils
 open Middle
@@ -16,9 +16,9 @@ let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
     [%sexp (s : Stmt.Located.Non_recursive.t)] |> Sexp.to_string_hum in
   Map.iteri mfp ~f:(fun ~key ~data ->
       print_endline
-        ( string_of_int key ^ ":\n "
+        (string_of_int key ^ ":\n "
         ^ print_stmt (Map.Poly.find_exn flowgraph_to_mir key)
-        ^ ":\n " ^ print_set data.entry ^ " \t-> " ^ print_set data.exit ) )
+        ^ ":\n " ^ print_set data.entry ^ " \t-> " ^ print_set data.exit))
 
 (** Calculate the free (non-bound) variables in an expression *)
 let rec free_vars_expr (e : Expr.Typed.t) =
@@ -40,7 +40,7 @@ and free_vars_idx (i : Expr.Typed.t Index.t) =
   match i with
   | All -> Set.Poly.empty
   | Single e | Upfrom e | MultiIndex e -> free_vars_expr e
-  | Between (e1, e2) -> Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
+  | Between (e1, e2) -> Set.union (free_vars_expr e1) (free_vars_expr e2)
 
 and free_vars_fnapp kind l =
   let arg_vars = List.map ~f:free_vars_expr (l @ Fun_kind.collect_exprs kind) in
@@ -53,13 +53,13 @@ let rec free_vars_lval ((lval, idxs) : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
   let free_idx = Set.Poly.union_list (List.map ~f:free_vars_idx idxs) in
   match lval with
   | LVariable _ -> free_idx
-  | LTupleProjection (e, _) -> Set.Poly.union free_idx (free_vars_lval e)
+  | LTupleProjection (e, _) -> Set.union free_idx (free_vars_lval e)
 
 (** Calculate the free (non-bound) variables in a statement *)
 let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
     =
   match s with
-  | Return (Some e) | TargetPE e -> free_vars_expr e
+  | Return (Some e) | TargetPE e | JacobianPE e -> free_vars_expr e
   | Assignment (l, _, e) ->
       Set.Poly.union_list [free_vars_expr e; free_vars_lval l]
   | NRFunApp (kind, l) -> free_vars_fnapp kind l
@@ -67,12 +67,13 @@ let rec free_vars_stmt (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
       Set.Poly.union_list
         [free_vars_expr e; free_vars_stmt b1.pattern; free_vars_stmt b2.pattern]
   | IfElse (e, b, None) | While (e, b) ->
-      Set.Poly.union (free_vars_expr e) (free_vars_stmt b.pattern)
+      Set.union (free_vars_expr e) (free_vars_stmt b.pattern)
   | For {lower= e1; upper= e2; body= b; _} ->
       Set.Poly.union_list
         [free_vars_expr e1; free_vars_expr e2; free_vars_stmt b.pattern]
   | Profile (_, l) | Block l | SList l ->
       Set.Poly.union_list (List.map ~f:(fun s -> free_vars_stmt s.pattern) l)
+  | Decl {initialize= Assign e; _} -> free_vars_expr e
   | Decl _ | Break | Continue | Return None | Skip -> Set.Poly.empty
 
 (** A variation on free_vars_stmt, where we do not recursively count free
@@ -81,8 +82,9 @@ let top_free_vars_stmt
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
   match s with
-  | Assignment _ | Return _ | TargetPE _ | NRFunApp _ | Decl _ | Break
-   |Continue | Skip ->
+  | Decl {initialize= Assign e; _} -> free_vars_expr e
+  | Assignment _ | Return _ | TargetPE _ | JacobianPE _ | NRFunApp _ | Decl _
+   |Break | Continue | Skip ->
       free_vars_stmt
         (statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir s)
   | While (e, _) | IfElse (e, _, _) -> free_vars_expr e
@@ -103,7 +105,7 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
   let initials, successors =
     Dataflow_utils.build_predecessor_graph ~flatten_loops ~blocks_after_body
       flowgraph_to_mir in
-  ( ( module struct
+  ( (module struct
       type labels = int
       type t = labels
 
@@ -111,8 +113,9 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
       let hash = Int.hash
       let sexp_of_t = Int.sexp_of_t
       let initials = initials
-      let successors = successors end : FLOWGRAPH
-      with type labels = int )
+      let successors = successors
+    end : FLOWGRAPH
+      with type labels = int)
   , Map.Poly.map
       ~f:(fun (pattern, meta) -> Stmt.Located.Non_recursive.{pattern; meta})
       flowgraph_to_mir )
@@ -120,7 +123,7 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
 (** Reverse flowgraphs to be used for reverse analyses.
     Observe that this respects the invariants listed for a FLOWGRAPH *)
 let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
-  ( module struct
+  (module struct
     type labels = F.labels
     type t = labels
 
@@ -135,9 +138,9 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
         ~f:(fun ~key:old_pred ~data:old_succs accum ->
           Set.fold old_succs ~init:accum ~f:(fun accum old_succ ->
               Map.set accum ~key:old_succ
-                ~data:(Set.add (Map.find_exn accum old_succ) old_pred) ) ) end
-  : FLOWGRAPH
-    with type labels = l )
+                ~data:(Set.add (Map.find_exn accum old_succ) old_pred)))
+  end : FLOWGRAPH
+    with type labels = l)
 
 (** Modify the end nodes of a flowgraph to depend on its inits
   To force the monotone framework to run until the program never changes
@@ -153,7 +156,7 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
 let make_circular_flowgraph (type l)
     (module Flowgraph : FLOWGRAPH with type labels = l)
     (module RevFlowgraph : FLOWGRAPH with type labels = l) =
-  ( module struct
+  (module struct
     type labels = Flowgraph.labels
     type t = labels
 
@@ -164,12 +167,12 @@ let make_circular_flowgraph (type l)
 
     let successors =
       let set_exits_to_depend_on_inits ~key ~data =
-        if Set.Poly.mem RevFlowgraph.initials key then
-          Set.Poly.union data Flowgraph.initials
+        if Set.mem RevFlowgraph.initials key then
+          Set.union data Flowgraph.initials
         else data in
-      Map.mapi Flowgraph.successors ~f:set_exits_to_depend_on_inits end
-  : FLOWGRAPH
-    with type labels = l )
+      Map.mapi Flowgraph.successors ~f:set_exits_to_depend_on_inits
+  end : FLOWGRAPH
+    with type labels = l)
 
 (** Compute the forward flowgraph of a Stan statement (for forward analyses) *)
 let forward_flowgraph_of_stmt ?(flatten_loops = false)
@@ -181,74 +184,78 @@ let forward_flowgraph_of_stmt ?(flatten_loops = false)
 (**  The lattice of sets of some values, with the inclusion order, set union
      and the empty set *)
 let powerset_lattice (type v) (module S : INITIALTYPE with type vals = v) =
-  ( module struct
+  (module struct
     type properties = S.vals Set.Poly.t
 
     let bottom = Set.Poly.empty
-    let lub s1 s2 = Set.Poly.union s1 s2
-    let leq s1 s2 = Set.Poly.is_subset s1 ~of_:s2
-    let initial = S.initial end : LATTICE
-    with type properties = v Set.Poly.t )
+    let lub s1 s2 = Set.union s1 s2
+    let leq s1 s2 = Set.is_subset s1 ~of_:s2
+    let initial = S.initial
+  end : LATTICE
+    with type properties = v Set.Poly.t)
 
 (**  The lattice of subsets of some set, with the inverse inclusion order,
      set intersection and the total set *)
 let dual_powerset_lattice (type v)
     (module S : INITIALTOTALTYPE with type vals = v) =
-  ( module struct
+  (module struct
     type properties = S.vals Set.Poly.t
 
     let bottom = S.total
-    let lub s1 s2 = Set.Poly.inter s1 s2
-    let leq s1 s2 = Set.Poly.is_subset s2 ~of_:s1
-    let initial = S.initial end : LATTICE
-    with type properties = v Set.Poly.t )
+    let lub s1 s2 = Set.inter s1 s2
+    let leq s1 s2 = Set.is_subset s2 ~of_:s1
+    let initial = S.initial
+  end : LATTICE
+    with type properties = v Set.Poly.t)
 
 let powerset_lattice_expressions (initial : Expr.Typed.Set.t) =
-  ( module struct
+  (module struct
     type properties = Expr.Typed.Set.t
 
     let bottom = Expr.Typed.Set.empty
-    let lub s1 s2 = Expr.Typed.Set.union s1 s2
-    let leq s1 s2 = Expr.Typed.Set.is_subset s1 ~of_:s2
-    let initial = initial end : LATTICE
-    with type properties = Expr.Typed.Set.t )
+    let lub s1 s2 = Set.union s1 s2
+    let leq s1 s2 = Set.is_subset s1 ~of_:s2
+    let initial = initial
+  end : LATTICE
+    with type properties = Expr.Typed.Set.t)
 
 let dual_powerset_lattice_expressions (initial : Expr.Typed.Set.t)
     (total : Expr.Typed.Set.t) =
-  ( module struct
+  (module struct
     type properties = Expr.Typed.Set.t
 
     let bottom = total
-    let lub s1 s2 = Expr.Typed.Set.inter s1 s2
-    let leq s1 s2 = Expr.Typed.Set.is_subset s2 ~of_:s1
-    let initial = initial end : LATTICE
-    with type properties = Expr.Typed.Set.t )
+    let lub s1 s2 = Set.inter s1 s2
+    let leq s1 s2 = Set.is_subset s2 ~of_:s1
+    let initial = initial
+  end : LATTICE
+    with type properties = Expr.Typed.Set.t)
 
 (**  Add a fresh bottom element to a lattice (possibly without bottom) *)
 let new_bot (type p) (module L : LATTICE_NO_BOT with type properties = p) =
-  ( module struct
+  (module struct
     type properties = L.properties option
 
     let bottom = None
 
     let lub = function
-      | Some s1 -> (
-          function Some s2 -> Some (L.lub s1 s2) | None -> Some s1 )
+      | Some s1 -> ( function Some s2 -> Some (L.lub s1 s2) | None -> Some s1)
       | None -> fun x -> x
 
     let leq = function
-      | Some s1 -> ( function Some s2 -> L.leq s1 s2 | None -> false )
+      | Some s1 -> ( function Some s2 -> L.leq s1 s2 | None -> false)
       | None -> fun _ -> true
 
-    let initial = Some L.initial end : LATTICE
-    with type properties = p option )
+    let initial = Some L.initial
+  end : LATTICE
+    with type properties = p option)
 
 (** The lattice (without bottom) of partial functions, ordered under
     inverse graph inclusion, with intersection *)
 let dual_partial_function_lattice (type dv cv)
     (module Dom : TOTALTYPE with type vals = dv)
     (module Codom : TYPE with type vals = cv) =
-  ( module struct
+  (module struct
     type properties = (Dom.vals, Codom.vals) Map.Poly.t
 
     (* intersection *)
@@ -261,10 +268,11 @@ let dual_partial_function_lattice (type dv cv)
           match (Map.find s1 k, Map.find s2 k) with
           | Some x, Some y -> x = y
           | Some _, None | None, None -> true
-          | None, Some _ -> false )
+          | None, Some _ -> false)
 
-    let initial = Map.Poly.empty end : LATTICE_NO_BOT
-    with type properties = (dv, cv) Map.Poly.t )
+    let initial = Map.Poly.empty
+  end : LATTICE_NO_BOT
+    with type properties = (dv, cv) Map.Poly.t)
 
 (** The lattice of partial functions, where we add a fresh bottom element,
    to represent an inconsistent combination of functions *)
@@ -277,47 +285,47 @@ let dual_partial_function_lattice_with_bot (type dv cv)
 let dual_powerset_lattice_empty_initial (type v)
     (module T : TOTALTYPE with type vals = v) =
   dual_powerset_lattice
-    ( module struct
+    (module struct
       type vals = T.vals
 
       let initial = Set.Poly.empty
       let total = T.total
-    end )
+    end)
 
 (** A powerset lattice, where we set the initial set to be empty *)
 let powerset_lattice_empty_initial (type v) (module T : TYPE with type vals = v)
     =
   powerset_lattice
-    ( module struct
+    (module struct
       type vals = T.vals
 
       let initial = Set.Poly.empty
-    end )
+    end)
 
 (** The specific powerset lattice we use for reaching definitions analysis *)
 let reaching_definitions_lattice (type v l)
     (module Variables : INITIALTYPE with type vals = v)
     (module Labels : TYPE with type vals = l) =
   powerset_lattice
-    ( module struct
+    (module struct
       type vals = Variables.vals * Labels.vals option
 
       let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
-    end )
+    end)
 
 (** Lattice for finding the smallest set that satisfies some criterion *)
 let minimal_variables_lattice initial_variables =
   powerset_lattice
-    ( module struct
+    (module struct
       type vals = string
 
       let initial = initial_variables
-    end )
+    end)
 
 (* The transfer function for a constant propagation analysis *)
 let constant_propagation_transfer ?(preserve_stability = false)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = (string, Expr.Typed.t) Map.Poly.t option
 
@@ -327,31 +335,32 @@ let constant_propagation_transfer ?(preserve_stability = false)
       | Some m ->
           let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
           Some
-            ( match mir_node with
+            (match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
                We could do the same for matrix and array expressions if we wanted. *)
             (* TODO: We could propagate tuple elements if we make the map more flexible *)
             | Assignment ((LVariable s, []), t, e) -> (
-              match Partial_evaluator.try_eval_expr (subst_expr m e) with
-              | { pattern=
-                    Promotion ({pattern= Lit (_, _); _}, _, _) | Lit (_, _)
-                ; _ } as e'
-                when not (preserve_stability && UnsizedType.is_autodiffable t)
-                ->
-                  Map.set m ~key:s ~data:e'
-              | _ -> Map.remove m s )
+                match Partial_evaluator.try_eval_expr (subst_expr m e) with
+                | { pattern=
+                      Promotion ({pattern= Lit (_, _); _}, _, _) | Lit (_, _)
+                  ; _ } as e'
+                  when not (preserve_stability && UnsizedType.is_autodiffable t)
+                  ->
+                    Map.set m ~key:s ~data:e'
+                | _ -> Map.remove m s)
             | Decl {decl_id= s; _} -> Map.remove m s
             | Assignment (lhs, _, _) ->
                 Map.remove m (Middle.Stmt.Helpers.lhs_variable lhs)
-            | TargetPE _
+            | TargetPE _ | JacobianPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
              |While (_, _)
              |For _ | Profile _ | Block _ | SList _ ->
-                m ) end : TRANSFER_FUNCTION
+                m)
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, Expr.Typed.t) Map.Poly.t option )
+     and type properties = (string, Expr.Typed.t) Map.Poly.t option)
 
 let rec label_top_decls
     (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t)
@@ -368,7 +377,7 @@ let rec label_top_decls
 let expression_propagation_transfer ?(preserve_stability = false)
     (can_side_effect_expr : Middle.Expr.Typed.t -> bool)
     (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = (string, Expr.Typed.t) Map.Poly.t option
 
@@ -379,16 +388,16 @@ let expression_propagation_transfer ?(preserve_stability = false)
           let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
           let kill_var m v =
             Map.filteri m ~f:(fun ~key ~data ->
-                not (key = v || Set.Poly.mem (free_vars_expr data) v) ) in
+                not (key = v || Set.mem (free_vars_expr data) v)) in
           Some
-            ( match mir_node with
+            (match mir_node with
             (* TODO: we are currently only propagating constants for scalars.
                We could do the same for matrix and array expressions if we wanted. *)
             | Middle.Stmt.Fixed.Pattern.Assignment ((LVariable s, []), t, e) ->
                 let m' = kill_var m s in
                 if
                   can_side_effect_expr e
-                  || Set.Poly.mem (free_vars_expr e) s
+                  || Set.mem (free_vars_expr e) s
                   || (preserve_stability && UnsizedType.is_autodiffable t)
                 then m'
                 else Map.set m ~key:s ~data:(subst_expr m e)
@@ -399,21 +408,22 @@ let expression_propagation_transfer ?(preserve_stability = false)
                 let kills =
                   Set.Poly.union_list
                     (List.map ~f:(label_top_decls flowgraph_to_mir) b) in
-                Set.Poly.fold kills ~init:m ~f:kill_var
-            | TargetPE _
+                Set.fold kills ~init:m ~f:kill_var
+            | TargetPE _ | JacobianPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
              |While (_, _)
              |For _ | SList _ ->
-                m ) end : TRANSFER_FUNCTION
+                m)
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, Expr.Typed.t) Map.Poly.t option )
+     and type properties = (string, Expr.Typed.t) Map.Poly.t option)
 
 (** The transfer function for a copy propagation analysis *)
 let copy_propagation_transfer (globals : string Set.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = (string, Expr.Typed.t) Map.Poly.t option
 
@@ -424,13 +434,13 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
           let mir_node = (Map.find_exn flowgraph_to_mir int_label).pattern in
           let kill_var m var_name =
             Map.filteri m ~f:(fun ~key ~(data : Expr.Typed.t) ->
-                not (key = var_name || data.pattern = Var var_name) ) in
+                not (key = var_name || data.pattern = Var var_name)) in
           Some
-            ( match mir_node with
+            (match mir_node with
             | Assignment
                 ((LVariable assignee, []), _, {pattern= Var assigner; meta}) ->
                 let m' = kill_var expr_map assignee in
-                if Set.Poly.mem globals assignee then expr_map
+                if Set.mem globals assignee then expr_map
                 else
                   Map.set m' ~key:assignee
                     ~data:Expr.Fixed.{pattern= Var assigner; meta}
@@ -442,16 +452,17 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                   Set.Poly.union_list
                     (List.map ~f:(label_top_decls flowgraph_to_mir) stmt_lst)
                 in
-                Set.Poly.fold kills ~init:expr_map ~f:kill_var
-            | TargetPE _
+                Set.fold kills ~init:expr_map ~f:kill_var
+            | TargetPE _ | JacobianPE _
              |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip | SList _
              |IfElse (_, _, _)
              |While (_, _)
              |For _ ->
-                expr_map ) end : TRANSFER_FUNCTION
+                expr_map)
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string, Expr.Typed.t) Map.Poly.t option )
+     and type properties = (string, Expr.Typed.t) Map.Poly.t option)
 
 (** A helper function for building transfer functions from gen and kill sets *)
 let transfer_gen_kill p gen kill = Set.union gen (Set.diff p kill)
@@ -463,8 +474,12 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
   match s with
   | Assignment (lhs, _, _) ->
       Set.Poly.singleton (Middle.Stmt.Helpers.lhs_variable lhs)
-  | TargetPE _ -> Set.Poly.singleton "target"
-  | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) ->
+  | Decl {decl_id; initialize= Assign _; _} -> Set.Poly.singleton decl_id
+  | TargetPE _ | JacobianPE _ -> Set.Poly.singleton "target"
+  | NRFunApp
+      ( ( UserDefined (_, (FnTarget | FnJacobian))
+        | StanLib (_, (FnTarget | FnJacobian), _) )
+      , _ ) ->
       Set.Poly.singleton "target"
   | For {loopvar= x; _} -> Set.Poly.singleton x
   | Decl {decl_id= _; _}
@@ -484,12 +499,12 @@ let declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
 (** Calculate the set of variables that a statement can assign to or declare *)
 let assigned_or_declared_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t)
     =
-  Set.Poly.union (assigned_vars_stmt s) (declared_vars_stmt s)
+  Set.union (assigned_vars_stmt s) (declared_vars_stmt s)
 
 (** The transfer function for a reaching definitions analysis *)
 let reaching_definitions_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = (string * labels option) Set.Poly.t
 
@@ -505,9 +520,12 @@ let reaching_definitions_transfer
          |Assignment ((LVariable x, []), _, _)
          |For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
-        | TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _)
-          ->
+        | TargetPE _ | JacobianPE _ ->
+            Set.filter p ~f:(fun (y, _) -> y = "target")
+        | NRFunApp
+            ( ( UserDefined (_, (FnTarget | FnJacobian))
+              | StanLib (_, (FnTarget | FnJacobian), _) )
+            , _ ) ->
             Set.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
@@ -515,28 +533,30 @@ let reaching_definitions_transfer
          |While (_, _)
          |Profile _ | Block _ | SList _ | Assignment _ ->
             Set.Poly.empty in
-      transfer_gen_kill p gen kill end : TRANSFER_FUNCTION
+      transfer_gen_kill p gen kill
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = (string * int option) Set.Poly.t )
+     and type properties = (string * int option) Set.Poly.t)
 
 (** The transfer function for an initialized variables analysis *)
 let initialized_vars_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = string Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
       let gen = assigned_vars_stmt mir_node in
-      transfer_gen_kill p gen Set.Poly.empty end : TRANSFER_FUNCTION
+      transfer_gen_kill p gen Set.Poly.empty
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = string Set.Poly.t )
+     and type properties = string Set.Poly.t)
 
 (** The transfer function for a live variables analysis *)
 let live_variables_transfer (never_kill : string Set.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = string Set.Poly.t
 
@@ -547,7 +567,7 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
         match mir_node with
         | Assignment ((LVariable x, []), _, _) | Decl {decl_id= x; _} ->
             Set.Poly.singleton x
-        | TargetPE _
+        | TargetPE _ | JacobianPE _
          |NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
@@ -555,16 +575,16 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
          |For _ | Profile _ | Block _ | SList _
          |Assignment (_, _, _) ->
             Set.Poly.empty in
-      transfer_gen_kill p gen (Set.Poly.diff kill never_kill) end
-  : TRANSFER_FUNCTION
+      transfer_gen_kill p gen (Set.diff kill never_kill)
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = string Set.Poly.t )
+     and type properties = string Set.Poly.t)
 
 (** Calculate the set of sub-expressions of an expression *)
 let rec used_subexpressions_expr (e : Expr.Typed.t) =
-  Expr.Typed.Set.union
+  Set.union
     (Expr.Typed.Set.singleton e)
-    ( match e.pattern with
+    (match e.pattern with
     | Var _ | Lit (_, _) -> Expr.Typed.Set.empty
     | Promotion (expr, _, _) -> used_subexpressions_expr expr
     | FunApp (k, l) ->
@@ -576,19 +596,19 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
           ; used_subexpressions_expr e3 ]
     | Indexed (e, l) ->
         Expr.Typed.Set.union_list
-          ( used_subexpressions_expr e
+          (used_subexpressions_expr e
           :: List.map ~f:(used_expressions_idx_help used_subexpressions_expr) l
           )
     | TupleProjection (e, _) -> used_subexpressions_expr e
     | EAnd (e1, e2) | EOr (e1, e2) ->
         Expr.Typed.Set.union_list
-          [used_subexpressions_expr e1; used_subexpressions_expr e2] )
+          [used_subexpressions_expr e1; used_subexpressions_expr e2])
 
 and used_expressions_idx_help f (i : Expr.Typed.t Index.t) =
   match i with
   | All -> Expr.Typed.Set.empty
   | Single e | Upfrom e | MultiIndex e -> f e
-  | Between (e1, e2) -> Expr.Typed.Set.union (f e1) (f e2)
+  | Between (e1, e2) -> Set.union (f e1) (f e2)
 
 let rec used_expressions_lval f
     ((lval, idxs) : Expr.Typed.t Stmt.Fixed.Pattern.lvalue) =
@@ -597,8 +617,7 @@ let rec used_expressions_lval f
   in
   match lval with
   | LVariable _ -> used_idx
-  | LTupleProjection (e, _) ->
-      Expr.Typed.Set.union used_idx (used_expressions_lval f e)
+  | LTupleProjection (e, _) -> Set.union used_idx (used_expressions_lval f e)
 
 (** Calculate the set of expressions of an expression *)
 let used_expressions_expr e = Expr.Typed.Set.singleton e
@@ -606,9 +625,10 @@ let used_expressions_expr e = Expr.Typed.Set.singleton e
 let rec used_expressions_stmt_help f
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
   match s with
-  | TargetPE e | Return (Some e) -> f e
-  | Assignment (l, _, e) ->
-      Expr.Typed.Set.union (f e) (used_expressions_lval f l)
+  | TargetPE e | JacobianPE e | Return (Some e) | Decl {initialize= Assign e; _}
+    ->
+      f e
+  | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | IfElse (e, b1, Some b2) ->
       Expr.Typed.Set.union_list
         [ f e; used_expressions_stmt_help f b1.pattern
@@ -617,7 +637,7 @@ let rec used_expressions_stmt_help f
       Expr.Typed.Set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
   | Decl _ | Return None | Break | Continue | Skip -> Expr.Typed.Set.empty
   | IfElse (e, b, None) | While (e, b) ->
-      Expr.Typed.Set.union (f e) (used_expressions_stmt_help f b.pattern)
+      Set.union (f e) (used_expressions_stmt_help f b.pattern)
   | For {lower= e1; upper= e2; body= b; loopvar= s} ->
       Expr.Typed.Set.union_list
         [ f e1; f e2; used_expressions_stmt_help f b.pattern
@@ -641,9 +661,10 @@ let used_expressions_stmt = used_expressions_stmt_help used_expressions_expr
 let top_used_expressions_stmt_help f
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
   match s with
-  | TargetPE e | Return (Some e) -> f e
-  | Assignment (l, _, e) ->
-      Expr.Typed.Set.union (f e) (used_expressions_lval f l)
+  | TargetPE e | JacobianPE e | Return (Some e) | Decl {initialize= Assign e; _}
+    ->
+      f e
+  | Assignment (l, _, e) -> Set.union (f e) (used_expressions_lval f l)
   | While (e, _) | IfElse (e, _, _) -> f e
   | NRFunApp (k, l) ->
       Expr.Typed.Set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
@@ -666,19 +687,19 @@ let top_used_expressions_stmt =
     by s) *)
 let killed_expressions_stmt (p : Expr.Typed.Set.t)
     (s : (Expr.Typed.t, int) Stmt.Fixed.Pattern.t) =
-  Expr.Typed.Set.filter p ~f:(fun e ->
+  Set.filter p ~f:(fun e ->
       let free_vars = free_vars_expr e in
       (* Note: a simple test for membership would be more efficient here,
          but it would require us to duplicate some code. *)
       let assigned_vars = assigned_or_declared_vars_stmt s in
-      not (Set.Poly.is_empty (Set.Poly.inter free_vars assigned_vars)) )
+      not (Set.is_empty (Set.inter free_vars assigned_vars)))
 
 (** Calculate the set of subexpressions that needs to be computed at each node
     in the flowgraph *)
 let used (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   Map.Poly.fold flowgraph_to_mir ~init:Map.Poly.empty
     ~f:(fun ~key ~data accum ->
-      Map.Poly.set accum ~key ~data:(top_used_subexpressions_stmt data.pattern) )
+      Map.Poly.set accum ~key ~data:(top_used_subexpressions_stmt data.pattern))
 
 (* TODO: figure out whether we will also want to reuse the computation of killed *)
 
@@ -687,7 +708,7 @@ let used (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
 let anticipated_expressions_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (used : (int, Expr.Typed.Set.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = Expr.Typed.Set.t
 
@@ -695,9 +716,10 @@ let anticipated_expressions_transfer
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
       let gen = Map.Poly.find_exn used l in
       let kill = killed_expressions_stmt p mir_node in
-      transfer_gen_kill p gen kill end : TRANSFER_FUNCTION
+      transfer_gen_kill p gen kill
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = Expr.Typed.Set.t )
+     and type properties = Expr.Typed.Set.t)
 
 (** A helper function for defining transfer functions in terms of gen and kill sets
     in an alternative way, that is used in some of the subanalyses of lazy code motion *)
@@ -713,17 +735,18 @@ let transfer_gen_kill_alt p gen kill = Set.diff (Set.union p gen) kill
 let available_expressions_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (anticipated_expressions : (int, Expr.Typed.Set.t entry_exit) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = Expr.Typed.Set.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
       let gen = (Map.find_exn anticipated_expressions l).exit in
-      let kill = killed_expressions_stmt (Expr.Typed.Set.union p gen) mir_node in
-      transfer_gen_kill_alt p gen kill end : TRANSFER_FUNCTION
+      let kill = killed_expressions_stmt (Set.union p gen) mir_node in
+      transfer_gen_kill_alt p gen kill
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = Expr.Typed.Set.t )
+     and type properties = Expr.Typed.Set.t)
 
 (** Calculates the set of expressions that can be calculated for the first time
     at each node in the flow graph *)
@@ -734,22 +757,23 @@ let earliest
     ~f:(fun ~key ~data accum ->
       Map.set accum ~key
         ~data:
-          (Set.diff data.exit (Map.find_exn available_expressions key).entry) )
+          (Set.diff data.exit (Map.find_exn available_expressions key).entry))
 
 (** The transfer function for a postponable expressions analysis (as a part of lazy code motion) *)
 let postponable_expressions_transfer
     (earliest : (int, Expr.Typed.Set.t) Map.Poly.t)
     (used : (int, Expr.Typed.Set.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = Expr.Typed.Set.t
 
     let transfer_function l p =
       let gen = Map.find_exn earliest l in
       let kill = Map.find_exn used l in
-      transfer_gen_kill_alt p gen kill end : TRANSFER_FUNCTION
+      transfer_gen_kill_alt p gen kill
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = Expr.Typed.Set.t )
+     and type properties = Expr.Typed.Set.t)
 
 (** Calculates the set of expressions that can be computed at the latest at each node *)
 let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
@@ -757,31 +781,32 @@ let latest (successors : (int, int Set.Poly.t) Map.Poly.t)
     (postponable_expressions : (int, Expr.Typed.Set.t entry_exit) Map.Poly.t)
     (used : (int, Expr.Typed.Set.t) Map.Poly.t) =
   let earliest_or_postponable key =
-    Expr.Typed.Set.union
+    Set.union
       (Map.Poly.find_exn earliest key)
       (Map.Poly.find_exn postponable_expressions key).entry in
   let latest key =
     Set.filter (earliest_or_postponable key) ~f:(fun e ->
         Set.mem (Map.Poly.find_exn used key) e
-        || Set.Poly.exists (Map.Poly.find_exn successors key) ~f:(fun s ->
-               not (Set.mem (earliest_or_postponable s) e) ) ) in
+        || Set.exists (Map.Poly.find_exn successors key) ~f:(fun s ->
+               not (Set.mem (earliest_or_postponable s) e))) in
   Map.fold successors ~init:Map.Poly.empty ~f:(fun ~key ~data:_ accum ->
-      Map.set accum ~key ~data:(latest key) )
+      Map.set accum ~key ~data:(latest key))
 
 (** The transfer function for a used-not-latest expressions analysis, as a part of lazy code motion *)
 let used_not_latest_expressions_transfer
     (used : (int, Expr.Typed.Set.t) Map.Poly.t)
     (latest : (int, Expr.Typed.Set.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = Expr.Typed.Set.t
 
     let transfer_function l p =
       let gen = Map.find_exn used l in
       let kill = Map.find_exn latest l in
-      transfer_gen_kill_alt p gen kill end : TRANSFER_FUNCTION
+      transfer_gen_kill_alt p gen kill
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = Expr.Typed.Set.t )
+     and type properties = Expr.Typed.Set.t)
 
 (** The transfer function for the first forward analysis part of determining optimal ad-levels for variables *)
 let minimal_variables_fwd_transfer
@@ -789,9 +814,9 @@ let minimal_variables_fwd_transfer
          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
       -> int
       -> string Set.Poly.t
-      -> string Set.Poly.t )
+      -> string Set.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
-  ( module struct
+  (module struct
     type labels = int
     type properties = string Set.Poly.t
 
@@ -803,9 +828,10 @@ let minimal_variables_fwd_transfer
         (* This probably isn't necessary because Stan doesn't allow shadowing, right? *)
         | Decl {decl_id; decl_adtype= DataOnly; _} -> Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty in
-      transfer_gen_kill p gen kill end : TRANSFER_FUNCTION
+      transfer_gen_kill p gen kill
+  end : TRANSFER_FUNCTION
     with type labels = int
-     and type properties = string Set.Poly.t )
+     and type properties = string Set.Poly.t)
 
 (** The central definition of a monotone dataflow analysis framework.
     Given a compatible flowgraph, lattice and transfer function, we can
@@ -820,7 +846,7 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
     (module L : LATTICE with type properties = p)
     (module T : TRANSFER_FUNCTION with type labels = l and type properties = p)
     =
-  ( module struct
+  (module struct
     type labels = l
     type properties = p
 
@@ -829,13 +855,13 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
       let workstack = Stack.create () in
       (* TODO: does the order matter a lot for efficiency here? *)
       Map.iteri F.successors ~f:(fun ~key ~data ->
-          Set.iter data ~f:(fun succ -> Stack.push workstack (key, succ)) ) ;
+          Set.iter data ~f:(fun succ -> Stack.push workstack (key, succ)));
       let analysis_in = Hashtbl.create (module F) in
       Map.iter_keys
         ~f:(fun l ->
           Hashtbl.add_exn analysis_in ~key:l
-            ~data:(if Set.mem F.initials l then L.initial else L.bottom) )
-        F.successors ;
+            ~data:(if Set.mem F.initials l then L.initial else L.bottom))
+        F.successors;
       (* STEP 2: iterate *)
       while Stack.length workstack <> 0 do
         let l, l' = Stack.pop_exn workstack in
@@ -847,8 +873,8 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
             Hashtbl.set analysis_in ~key:l'
               ~data:(L.lub old_analysis_in_l' new_analysis_in_l') in
           Set.iter (Map.find_exn F.successors l') ~f:(fun l'' ->
-              Stack.push workstack (l', l'') )
-      done ;
+              Stack.push workstack (l', l''))
+      done;
       (* STEP 3: present final results *)
       let analysis_in_out =
         Map.fold ~init:Map.Poly.empty
@@ -857,28 +883,29 @@ let monotone_framework (type l p) (module F : FLOWGRAPH with type labels = l)
             Map.add_exn accum ~key
               ~data:
                 { entry= analysis_in_data
-                ; exit= T.transfer_function key analysis_in_data } )
+                ; exit= T.transfer_function key analysis_in_data })
           F.successors in
-      analysis_in_out end : MONOTONE_FRAMEWORK
+      analysis_in_out
+  end : MONOTONE_FRAMEWORK
     with type labels = l
-     and type properties = p )
+     and type properties = p)
 
 let rec declared_variables_stmt
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
   match s with
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | Assignment (_, _, _)
-   |TargetPE _
+   |TargetPE _ | JacobianPE _
    |NRFunApp (_, _)
    |Break | Continue | Return _ | Skip ->
       Set.Poly.empty
   | IfElse (_, b1, Some b2) ->
-      Set.Poly.union
+      Set.union
         (declared_variables_stmt b1.pattern)
         (declared_variables_stmt b2.pattern)
   | While (_, b) | IfElse (_, b, None) -> declared_variables_stmt b.pattern
   | For {loopvar= s; body= b; _} ->
-      Set.Poly.add (declared_variables_stmt b.pattern) s
+      Set.add (declared_variables_stmt b.pattern) s
   | Profile (_, l) | Block l | SList l ->
       Set.Poly.union_list
         (List.map ~f:(fun x -> declared_variables_stmt x.pattern) l)
@@ -890,11 +917,10 @@ let propagation_mfp (prog : Program.Typed.t)
          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
       -> (module TRANSFER_FUNCTION
             with type labels = int
-             and type properties = (string, Expr.Typed.t) Map.Poly.t option ) )
-    =
+             and type properties = (string, Expr.Typed.t) Map.Poly.t option)) =
   let mir = Map.find_exn flowgraph_to_mir 1 in
   let domain =
-    ( module struct
+    (module struct
       type vals = string
 
       let total =
@@ -902,12 +928,14 @@ let propagation_mfp (prog : Program.Typed.t)
           [ Set.Poly.of_list (List.map ~f:fst3 prog.input_vars)
           ; Set.Poly.of_list (List.map ~f:fst3 prog.output_vars)
           ; declared_variables_stmt
-              (stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).pattern ] end
-    : TOTALTYPE
-      with type vals = string ) in
+              (stmt_loc_of_stmt_loc_num flowgraph_to_mir mir).pattern ]
+    end : TOTALTYPE
+      with type vals = string) in
   let codomain =
-    (module struct type vals = Expr.Typed.t end : TYPE
-      with type vals = Expr.Typed.t ) in
+    (module struct
+      type vals = Expr.Typed.t
+    end : TYPE
+      with type vals = Expr.Typed.t) in
   let (module Lattice) =
     dual_partial_function_lattice_with_bot domain codomain in
   let (module Transfer) = propagation_transfer flowgraph_to_mir in
@@ -920,16 +948,20 @@ let reaching_definitions_mfp (mir : Program.Typed.t)
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   let variables =
-    ( module struct
+    (module struct
       type vals = string
 
       let initial =
         Set.Poly.union_list
           [ Set.Poly.of_list (List.map ~f:fst3 mir.input_vars)
-          ; Set.Poly.of_list (List.map ~f:fst3 mir.output_vars) ] end
-    : INITIALTYPE
-      with type vals = string ) in
-  let labels = (module struct type vals = int end : TYPE with type vals = int) in
+          ; Set.Poly.of_list (List.map ~f:fst3 mir.output_vars) ]
+    end : INITIALTYPE
+      with type vals = string) in
+  let labels =
+    (module struct
+      type vals = int
+    end : TYPE
+      with type vals = int) in
   let (module Lattice) = reaching_definitions_lattice variables labels in
   let (module Transfer) = reaching_definitions_transfer flowgraph_to_mir in
   let (module Mf) =
@@ -942,11 +974,11 @@ let initialized_vars_mfp (total : string Set.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   let (module Lattice) =
     dual_powerset_lattice_empty_initial
-      ( module struct
+      (module struct
         type vals = string
 
         let total = total
-      end ) in
+      end) in
   let (module Transfer) = initialized_vars_transfer flowgraph_to_mir in
   let (module Mf) =
     monotone_framework (module Flowgraph) (module Lattice) (module Transfer)
@@ -970,17 +1002,18 @@ let globals (prog : Program.Typed.t) =
     flowgraph. *)
 let live_variables_mfp (prog : Program.Typed.t)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int )
+      with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   let never_kill = globals prog in
   let variables =
-    ( module struct
+    (module struct
       type vals = string
 
       (* NOTE: global generated quantities, (transformed) parameters and target are always observable
          so should be live. *)
-      let initial = never_kill end : INITIALTYPE
-      with type vals = string ) in
+      let initial = never_kill
+    end : INITIALTYPE
+      with type vals = string) in
   let (module Lattice) = powerset_lattice variables in
   let (module Transfer) = live_variables_transfer never_kill flowgraph_to_mir in
   let (module Mf) =
@@ -993,12 +1026,12 @@ let live_variables_mfp (prog : Program.Typed.t)
 let lazy_expressions_mfp
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH with type labels = int)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int )
+      with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   let all_expressions =
     used_subexpressions_stmt
       (stmt_loc_of_stmt_loc_num flowgraph_to_mir
-         (Map.Poly.find_exn flowgraph_to_mir 1) )
+         (Map.Poly.find_exn flowgraph_to_mir 1))
         .pattern in
   (* TODO: this could probably be done in a nicer way *)
   let used_expr = used flowgraph_to_mir in
@@ -1052,14 +1085,14 @@ let lazy_expressions_mfp
  *)
 let minimal_variables_mfp
     (module Circular_Fwd_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-      with type labels = int )
+      with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (initial_variables : string Set.Poly.t)
     (gen_variable :
          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
       -> int
       -> string Set.Poly.t
-      -> string Set.Poly.t ) =
+      -> string Set.Poly.t) =
   let (module Lattice) = minimal_variables_lattice initial_variables in
   let (module Transfer) =
     minimal_variables_fwd_transfer gen_variable flowgraph_to_mir in

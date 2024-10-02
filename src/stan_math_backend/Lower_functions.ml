@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 open Lower_expr
 open Lower_stmt
@@ -48,7 +48,7 @@ let requires ut t =
         [ RequireAllCondition
             (`OneOf ["stan::is_autodiff"; "std::is_floating_point"], t) ]
     | UTuple _ | UMathLibraryFunction | UFun _ ->
-        Common.FatalError.fatal_error_msg
+        Common.ICE.internal_compiler_error
           [%message
             "Cannot formulate require templates for type " (ut : UnsizedType.t)]
   in
@@ -73,13 +73,13 @@ let return_optional_arg_types (args : Program.fun_arg_decl) =
             let templates = List.concat temps in
             templates
         | _ ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message
                 "Impossible: type passes UnsizedType.contains_tuple but \
                  unwrapped scalar is not tuple"
                   (typ : UnsizedType.t)
                   (internal : UnsizedType.t)
-                  (ad : UnsizedType.autodifftype)] )
+                  (ad : UnsizedType.autodifftype)])
     | UnsizedType.DataOnly, ut when not (UnsizedType.is_eigen_type ut) -> []
     | ( _
       , ( UnsizedType.UArray _ | UComplex | UVector | URowVector | UMatrix
@@ -120,7 +120,7 @@ let template_parameters (args : Program.fun_arg_decl) =
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (AutoDiffable, "yint", UInt)]
   |> template_parameters |> List.map ~f:fst3 |> List.concat
-  |> String.concat ~sep:"," |> print_endline ;
+  |> String.concat ~sep:"," |> print_endline;
   [%expect {| T0__,T1__ |}]
 
 let%expect_test "arg types tuple template" =
@@ -129,11 +129,11 @@ let%expect_test "arg types tuple template" =
       , "xreal"
       , UTuple [UReal; UMatrix; UInt] ) ]
     |> template_parameters |> List.unzip3 in
-  templates |> List.concat |> String.concat ~sep:"," |> print_endline ;
-  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s ;
+  templates |> List.concat |> String.concat ~sep:"," |> print_endline;
+  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s;
   type_
   |> Fmt.to_to_string (Fmt.list ~sep:Fmt.comma Cpp.Printing.pp_type_)
-  |> print_endline ;
+  |> print_endline;
   [%expect
     {|
     T0__0__,T0__1__,T0__2__
@@ -149,11 +149,11 @@ let%expect_test "arg types tuple template" =
   let templates, reqs, type_ =
     [(AutoDiffable, "xreal", UArray (UTuple [UArray UInt; UMatrix]))]
     |> template_parameters |> List.unzip3 in
-  templates |> List.concat |> String.concat ~sep:"," |> print_endline ;
-  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s ;
+  templates |> List.concat |> String.concat ~sep:"," |> print_endline;
+  reqs |> List.concat |> List.sexp_of_t sexp_of_template_parameter |> print_s;
   type_
   |> Fmt.to_to_string (Fmt.list ~sep:Fmt.comma Cpp.Printing.pp_type_)
-  |> print_endline ;
+  |> print_endline;
   [%expect
     {|
   T0__0__,T0__1__
@@ -195,13 +195,13 @@ let lower_eigen_args_to_ref arg_types =
       (make_variable_defn ~type_:(Types.const_ref Auto) ~name
          ~init:
            (Assignment
-              (Exprs.fun_call "stan::math::to_ref" [Var (name ^ "_arg__")]) )
-         () ) in
+              (Exprs.fun_call "stan::math::to_ref" [Var (name ^ "_arg__")]))
+         ()) in
   List.map ~f:lower_ref
     (List.filter_map
        ~f:(fun (_, name, ut) ->
-         if UnsizedType.is_eigen_type ut then Some name else None )
-       arg_types )
+         if UnsizedType.is_eigen_type ut then Some name else None)
+       arg_types)
 
 let typename parameter_name = Typename parameter_name
 
@@ -227,11 +227,11 @@ let lower_fun_body fdargs fdsuffix fdbody =
   let to_refs = lower_eigen_args_to_ref fdargs in
   let propto =
     match fdsuffix with
-    | Fun_kind.FnLpdf _ | FnTarget -> []
+    | Fun_kind.FnLpdf _ | FnTarget | FnJacobian -> []
     | FnPlain | FnRng ->
         VariableDefn
           (make_variable_defn ~static:true ~constexpr:true ~type_:Types.bool
-             ~name:"propto__" ~init:(Assignment (Literal "true")) () )
+             ~name:"propto__" ~init:(Assignment (Literal "true")) ())
         :: Stmts.unused "propto__" in
   let body = lower_statement fdbody in
   ((local_scalar :: Decls.current_statement) @ to_refs)
@@ -257,7 +257,8 @@ let lower_args extra_templates extra args variadic =
 
 let extra_suffix_args fdsuffix =
   match fdsuffix with
-  | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
+  | Fun_kind.FnTarget | FnJacobian ->
+      (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
   | FnRng -> (["base_rng__"], ["RNG"])
   | FnLpdf _ | FnPlain -> ([], [])
 
@@ -283,15 +284,14 @@ let lower_fun_def (functors : Lower_expr.variadic list)
     match (fdsuffix, variadic_fun_type) with
     | (FnLpdf _ | FnTarget), FixedArgs ->
         (Bool "propto__" :: template_params, args)
+    | FnJacobian, FixedArgs -> (Bool "jacobian__" :: template_params, args)
     | _ -> (template_params, args) in
   let template_params, templated_args =
     template_parameter_and_arg_names true FixedArgs in
   let cpp_arg_gen = lower_args extra_template_names extra_arg_names in
   let cpp_args = cpp_arg_gen templated_args FixedArgs in
   let almost_fn =
-    make_fun_defn
-      ~templates_init:([template_params], true)
-      ~name:fdname
+    make_fun_defn ~templates_init:([template_params], true) ~name:fdname
       ~return_type:(lower_returntype fdargs fdrt)
       ~args:cpp_args in
   let fd =
@@ -311,6 +311,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
     let defn_template =
       match fdsuffix with
       | FnLpdf _ | FnTarget -> [TemplateType "propto__"]
+      | FnJacobian -> [TemplateType "jacobian__"]
       | _ -> [] in
     let defn_args =
       List.map ~f:Exprs.to_var
@@ -324,9 +325,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
       [Return (Some (Exprs.templated_fun_call fdname defn_template defn_args))]
     in
     let functor_decl =
-      make_fun_defn
-        ~templates_init:([arg_templates], true)
-        ~name:"operator()"
+      make_fun_defn ~templates_init:([arg_templates], true) ~name:"operator()"
         ~return_type:(lower_returntype fdargs fdrt)
         ~args:cpp_args ~cv_qualifiers:[Const] ~body:defn_body () in
     make_struct_defn ~param:struct_template ~name:functor_name
@@ -364,15 +363,16 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let register_functors (d : _ Program.fun_def) =
     let functors =
       Map.find_multi functor_required d.fdname
-      |> List.stable_dedup
-      |> List.filter_map ~f:(fun (hof, types) ->
-             if matching_argtypes d types then Some hof else None ) in
+      |> Set.Poly.of_list
+      |> Set.Poly.filter_map ~f:(fun (hof, types) ->
+             if matching_argtypes d types then Some hof else None)
+      |> Set.to_list in
     let fn, st = lower_fun_def functors d in
     List.iter st ~f:(fun s ->
         (* Side effecting, collates functor structs *)
         Hashtbl.update structs s.struct_name ~f:(function
           | Some x -> {x with body= x.body @ s.body}
-          | None -> s ) ) ;
+          | None -> s));
     fn in
   let fun_decls, fun_defns =
     p.functions_block
@@ -381,7 +381,7 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
            if Option.is_none d.fdbody then None
            else
              let decl, defn = Cpp.split_fun_decl_defn fn in
-             Some (FunDef decl, [signature_comment d; FunDef defn]) )
+             Some (FunDef decl, [signature_comment d; FunDef defn]))
     |> List.unzip in
   let structs = Hashtbl.data structs |> List.map ~f:(fun s -> Struct s) in
   fun_decls @ structs @ List.concat fun_defns
@@ -390,14 +390,14 @@ let lower_standalone_fun_def namespace_fun
     Program.{fdname; fdsuffix; fdargs; fdrt; _} =
   let extra, extra_templates =
     match fdsuffix with
-    | Fun_kind.FnTarget ->
+    | Fun_kind.FnTarget | FnJacobian ->
         (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
-    | FnRng -> (["base_rng__"], ["boost::ecuyer1988"])
+    | FnRng -> (["base_rng__"], ["stan::rng_t"])
     | FnLpdf _ | FnPlain -> ([], []) in
   let args =
     List.map
       ~f:(fun (_, name, ut) ->
-        (Types.const_ref (lower_type ut (stantype_prim ut)), name) )
+        (Types.const_ref (lower_type ut (stantype_prim ut)), name))
       fdargs in
   let all_args =
     args
@@ -413,6 +413,7 @@ let lower_standalone_fun_def namespace_fun
   let template =
     match fdsuffix with
     | FnLpdf _ | FnTarget -> [TypeLiteral "false"]
+    | FnJacobian -> [TypeLiteral "true"]
     | FnRng | FnPlain -> [] in
   let call_args =
     List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
@@ -429,8 +430,8 @@ module Testing = struct
 
   let pp_fun_def_test ppf a =
     let defn, st = lower_fun_def [FixedArgs] a in
-    Cpp.Printing.pp_fun_defn ppf defn ;
-    cut ppf () ;
+    Cpp.Printing.pp_fun_defn ppf defn;
+    cut ppf ();
     (list ~sep:cut Cpp.Printing.pp_struct_defn) ppf st
 
   let%expect_test "udf" =
@@ -444,15 +445,15 @@ module Testing = struct
     ; fdbody=
         Stmt.Fixed.Pattern.Return
           (Some
-             ( w
+             (w
              @@ FunApp
                   ( StanLib ("add", FnPlain, AoS)
-                  , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ) )
+                  , [w @@ Var "x"; w @@ Lit (Int, "1")] )))
         |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
         |> Some
     ; fdloc= Location_span.empty }
     |> str "@[<v>%a" pp_fun_def_test
-    |> print_endline ;
+    |> print_endline;
     [%expect
       {|
     template <typename T0__, typename T1__,
@@ -506,15 +507,15 @@ module Testing = struct
     ; fdbody=
         Stmt.Fixed.Pattern.Return
           (Some
-             ( w
+             (w
              @@ FunApp
                   ( StanLib ("add", FnPlain, AoS)
-                  , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ) )
+                  , [w @@ Var "x"; w @@ Lit (Int, "1")] )))
         |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
         |> Some
     ; fdloc= Location_span.empty }
     |> str "@[<v>%a" pp_fun_def_test
-    |> print_endline ;
+    |> print_endline;
     [%expect
       {|
     template <typename T0__, typename T1__, typename T2__, typename T3__,

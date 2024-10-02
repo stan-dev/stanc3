@@ -1,7 +1,7 @@
 (** The API for a monotone framework, as described in 2.3-2.4 of
     Nielson, Nielson, and Hankin or 9.3 of Aho et al..
     This gives a modular way of implementing many static analyses. *)
-open Core_kernel
+open Core
 
 (** The API for a flowgraph, needed for the mfp algorithm
     in the monotone framework.
@@ -37,7 +37,8 @@ end
 
 (** The data we need to form a dual powerset lattice *)
 module type INITIALTOTALTYPE = sig
-  include INITIALTYPE include TOTALTYPE with type vals := vals
+  include INITIALTYPE
+  include TOTALTYPE with type vals := vals
 end
 
 module type LATTICE_NO_BOT = sig

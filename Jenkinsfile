@@ -53,9 +53,33 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
         cd performance-tests-cmdstan/cmdstan
         echo 'O=0' >> make/local
         echo 'CXXFLAGS+=-Wall' >> make/local
-        make -j${env.PARALLEL} build; cd ..
-        ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+        make -j${env.PARALLEL} build
     """
+
+    if (params.run_slow_perf_tests) {
+        sh """
+            cd performance-tests-cmdstan
+            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 --no-ignore-models ${testsPath}
+        """
+    } else {
+        sh """
+            cd performance-tests-cmdstan
+            ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ${testsPath}
+        """
+    }
+}
+
+def cleanCheckout() {
+    retry(3) {
+        checkout([
+            $class: 'GitSCM',
+            branches: scm.branches,
+            extensions: [[$class: 'CloneOption', noTags: false]],
+            userRemoteConfigs: scm.userRemoteConfigs,
+        ])
+    }
+
+    sh 'git clean -xffd'
 }
 
 pipeline {
@@ -63,6 +87,9 @@ pipeline {
     parameters {
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
         booleanParam(name:"skip_compile_O1", defaultValue: false, description:"Skip compile tests that run with STANCFLAGS = --O1")
+        booleanParam(name:"skip_compile", defaultValue: false, description:"Skip compile tests")
+        booleanParam(name:"skip_math_func_expr", defaultValue: false, description:"Skip math functions expressions test")
+        booleanParam(name:"skip_ocaml_tests", defaultValue: false, description:"Skip ocaml tests")
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
@@ -71,10 +98,13 @@ pipeline {
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
+        booleanParam(name:"run_slow_perf_tests", defaultValue: false, description:"Run additional 'slow' performance tests")
+        string(defaultValue: '', name: 'build_multiarch_docker_tag', description: "Docker tag for the multiarch image")
     }
     options {
         parallelsAlwaysFailFast()
-        skipDefaultCheckout()
+        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30'))
+        disableConcurrentBuilds(abortPrevious: true)
     }
     environment {
         CXX = 'clang++-6.0'
@@ -83,40 +113,22 @@ pipeline {
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
         GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
+        MULTIARCH_DOCKER_TAG = 'multiarch-ocaml-4.14-v2'
     }
     stages {
-        stage('Kill previous builds') {
-            when {
-                not { branch 'develop' }
-                not { branch 'master' }
-                not { branch 'downstream_tests' }
-            }
-            steps { script { utils.killOldBuilds() } }
-        }
         stage('Verify changes') {
             agent {
-                docker {
-                    image 'stanorg/stanc3:debian-js4.1.0'
-                    args "--entrypoint=\'\'"
+                dockerfile {
+                    filename 'scripts/docker/debian/Dockerfile'
+                    dir '.'
                     label 'linux'
+                    args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             steps {
                 script {
-                    retry(3) {
-                        checkout([
-                          $class: 'GitSCM',
-                          branches: scm.branches,
-                          extensions: [[$class: 'CloneOption', noTags: false]],
-                          userRemoteConfigs: scm.userRemoteConfigs,
-                        ])
-                    }
-                    sh 'git clean -xffd'
-
-                    runShell """
-                        eval \$(opam env)
-                        dune subst
-                    """
+                    cleanCheckout()
 
                     stash 'Stanc3Setup'
 
@@ -140,18 +152,13 @@ pipeline {
         }
 
         stage("Build") {
-            when {
-                beforeAgent true
-                expression {
-                    !skipRemainingStages
-                }
-            }
             agent {
-                docker {
-                    image 'stanorg/stanc3:debian-js4.1.0'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                dockerfile {
+                    filename 'scripts/docker/debian/Dockerfile'
+                    dir '.'
                     label 'linux'
+                    args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             steps {
@@ -162,7 +169,7 @@ pipeline {
                 """)
 
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+                stash name:'ubuntu-exe', includes:'bin/stanc'
             }
             post { always { runShell("rm -rf ./*") }}
         }
@@ -175,10 +182,12 @@ pipeline {
                 }
             }
             agent {
-                docker {
-                    image 'stanorg/stanc3:debian-js4.1.0'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                dockerfile {
+                    filename 'scripts/docker/debian/Dockerfile'
+                    dir '.'
+                    label 'linux'
+                    args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             steps {
@@ -201,17 +210,24 @@ pipeline {
         stage("OCaml tests") {
             when {
                 beforeAgent true
-                expression {
-                    !skipRemainingStages
+                allOf {
+                    expression {
+                        !skipRemainingStages
+                    }
+                    expression {
+                        !params.skip_ocaml_tests
+                    }
                 }
             }
             parallel {
                 stage("Dune tests") {
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:debian-js4.1.0'
-                            //Forces image to ignore entrypoint
-                            args "--entrypoint=\'\'"
+                        dockerfile {
+                            filename 'scripts/docker/debian/Dockerfile'
+                            dir '.'
+                            label 'linux'
+                            args '--entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -242,10 +258,12 @@ pipeline {
                 }
                 stage("stancjs tests") {
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:debian-js4.1.0'
-                            //Forces image to ignore entrypoint
-                            args "--entrypoint=\'\'"
+                        dockerfile {
+                            filename 'scripts/docker/debian/Dockerfile'
+                            dir '.'
+                            label 'linux'
+                            args '--entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
@@ -268,8 +286,13 @@ pipeline {
                 stage("Compile tests - good") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                          expression {
                             !skipCompileTests
+                          }
+                          expression {
+                            !params.skip_compile
+                          }
                         }
                     }
                     agent {
@@ -300,8 +323,13 @@ pipeline {
                 stage("Compile tests - example-models") {
                     when {
                         beforeAgent true
-                        expression {
+                        allOf {
+                          expression {
                             !skipCompileTests
+                          }
+                          expression {
+                            !params.skip_compile
+                          }
                         }
                     }
                     agent {
@@ -443,7 +471,7 @@ pipeline {
                                     echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
                                     echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                     cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                                    CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "\$(readlink -f ../bin/stanc)"
                                 """
                             }
 
@@ -457,31 +485,20 @@ pipeline {
 
                             archiveArtifacts 'performance-tests-cmdstan/performance.xml'
 
-//                             perfReport modePerformancePerTestCase: true,
-//                                 sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-//                                 modeThroughput: false,
-//                                 excludeResponseTime: true,
-//                                 errorFailedThreshold: 100,
-//                                 errorUnstableThreshold: 100
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
                 }
+
                 stage("Model end-to-end tests at O=1") {
                     when {
                         beforeAgent true
                         allOf {
                          expression {
-                            !skipCompileTests
-                         }
-                         expression {
                             !params.skip_end_to_end
                          }
                          expression {
                             !skipCompileTestsAtO1
-                         }
-                         expression {
-                            !params.skip_compile_O1
                          }
                         }
                     }
@@ -506,6 +523,8 @@ pipeline {
                                     cd performance-tests-cmdstan
                                     git show HEAD --stat
                                     echo "example-models/regression_tests/mother.stan" > all.tests
+                                    cat optimizer.tests >> all.tests
+                                    echo "" >> all.tests
                                     cat known_good_perf_all.tests >> all.tests
                                     echo "" >> all.tests
                                     cat shotgun_perf_all.tests >> all.tests
@@ -513,7 +532,7 @@ pipeline {
                                     echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
                                     echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                     cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10" "--O1" "\$(readlink -f ../bin/stanc)"
+                                    CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "--O1" "\$(readlink -f ../bin/stanc)"
                                 """
                             }
 
@@ -526,17 +545,11 @@ pipeline {
                             ])
 
                             archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-
-//                             perfReport modePerformancePerTestCase: true,
-//                                 sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-//                                 modeThroughput: false,
-//                                 excludeResponseTime: true,
-//                                 errorFailedThreshold: 100,
-//                                 errorUnstableThreshold: 100
                         }
                     }
                     post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}
                 }
+
                 stage('Math functions expressions test') {
                     when {
                         beforeAgent true
@@ -546,6 +559,9 @@ pipeline {
                             }
                             expression {
                                 !skipExpressionTests
+                            }
+                            expression {
+                                !params.skip_math_func_expr
                             }
                         }
                     }
@@ -586,6 +602,51 @@ pipeline {
             }
         }
 
+        stage('Build and push multiarch docker image') {
+            when {
+                beforeAgent true
+                expression {
+                    params.build_multiarch_docker_tag != ""
+                }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/builder/Dockerfile'
+                    dir '.'
+                    label 'linux && triqs'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            environment { DOCKER_TOKEN = credentials('aada4f7b-baa9-49cf-ac97-5490620fce8a') }
+            steps {
+                script {
+                    retry(3) { checkout scm }
+                    sh '''
+                        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+                        docker buildx create --name stanc3_builder
+                        docker buildx use stanc3_builder
+
+                        docker login --username stanorg --password "${DOCKER_TOKEN}"
+
+                        cd scripts/docker/multiarch
+
+                        docker buildx build -t stanorg/stanc3:$build_multiarch_docker_tag \
+                        --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x \
+                        --build-arg PUID=$(id -u) \
+                        --build-arg PGID=$(id -g) \
+                        --progress=plain --push .
+                    '''
+                }
+            }
+            post {
+                always {
+                    deleteDir()
+                }
+            }
+        }
+
 
         stage('Build binaries') {
             parallel {
@@ -597,11 +658,12 @@ pipeline {
                     agent { label 'osx && !m1' }
                     steps {
                         dir("${env.WORKSPACE}/osx"){
-                            unstash "Stanc3Setup"
+                            cleanCheckout()
                             withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
                                 runShell("""
                                     export PATH=/Users/jenkins/brew/bin:\$PATH
-                                    eval \$(opam env --switch=/Users/jenkins/.opam/4.12.0-mac10.11 --set-switch)
+                                    eval \$(opam env --switch=stanc-4.14.1 --set-switch)
+                                    dune subst
                                     opam update || true
                                     bash -x scripts/install_build_deps.sh
                                     dune build @install --root=.
@@ -622,22 +684,29 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:debian-js4.1.0'
-                            //Forces image to ignore entrypoint
-                            args "--entrypoint=\'\'"
-                            label 'linux'
+                        dockerfile {
+                            filename 'scripts/docker/debian/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/stancjs"){
-                            unstash "Stanc3Setup"
+                            cleanCheckout()
                             runShell("""
                                 eval \$(opam env)
+                                dune subst
                                 dune build --root=. --profile release src/stancjs
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
                             sh "mv `find _build -name index.html` bin/load_stanc.html"
+                            runShell("""
+                                eval \$(opam env)
+                                dune build --force --profile=dev --root=. src/stancjs
+                            """)
+                            sh "mv `find _build -name stancjs.bc.js` bin/stanc-pretty.js"
                             stash name:'js-exe', includes:'bin/*'
                         }
                     }
@@ -652,18 +721,20 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:staticfi'
-                            //Forces image to ignore entrypoint
-                            args "--entrypoint=\'\'"
-                            label 'linux'
+                        dockerfile {
+                            filename 'scripts/docker/static/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux"){
-                            unstash "Stanc3Setup"
+                            cleanCheckout()
                             runShell("""
                                 eval \$(opam env)
+                                dune subst
                                 dune build @install --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
@@ -682,17 +753,22 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:staticfi'
-                            //Forces image to ignore entrypoint
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
-                            label 'linux'
+                        dockerfile {
+                            filename 'scripts/docker/static/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-mips64el"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh mips64el"
+                            cleanCheckout()
+
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh mips64el ${MULTIARCH_DOCKER_TAG}
+                            """
 
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
 
@@ -711,17 +787,21 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:staticfi'
-                            //Forces image to ignore entrypoint
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
-                            label 'linux'
+                        dockerfile {
+                            filename 'scripts/docker/static/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-ppc64el"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh ppc64el"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh ppc64el ${MULTIARCH_DOCKER_TAG}
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
                         }
@@ -738,17 +818,21 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:staticfi'
-                            //Forces image to ignore entrypoint
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
-                            label 'linux'
+                        dockerfile {
+                            filename 'scripts/docker/static/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-s390x"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh s390x"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh s390x ${MULTIARCH_DOCKER_TAG}
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             stash name:'linux-s390x-exe', includes:'bin/*'
                         }
@@ -765,17 +849,21 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:staticfi'
-                            //Forces image to ignore entrypoint
-                            label 'linux'
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        dockerfile {
+                            filename 'scripts/docker/static/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-arm64"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh arm64"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh arm64 ${MULTIARCH_DOCKER_TAG}
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             stash name:'linux-arm64-exe', includes:'bin/*'
                         }
@@ -792,17 +880,21 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:staticfi'
-                            //Forces image to ignore entrypoint
-                            label 'linux'
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        dockerfile {
+                            filename 'scripts/docker/static/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armhf"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh armhf"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh armhf ${MULTIARCH_DOCKER_TAG}
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             stash name:'linux-armhf-exe', includes:'bin/*'
                         }
@@ -819,17 +911,21 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:staticfi'
-                            //Forces image to ignore entrypoint
-                            label 'linux'
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        dockerfile {
+                            filename 'scripts/docker/static/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armel"){
-                            unstash "Stanc3Setup"
-                            sh "bash -x scripts/build_multiarch_stanc3.sh armel"
+                            cleanCheckout()
+                            sh """
+                                eval \$(opam env)
+                                bash -x scripts/build_multiarch_stanc3.sh armel ${MULTIARCH_DOCKER_TAG}
+                            """
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             stash name:'linux-armel-exe', includes:'bin/*'
                         }
@@ -846,18 +942,20 @@ pipeline {
                         }
                     }
                     agent {
-                        docker {
-                            image 'stanorg/stanc3:debian-windowsfi'
-                            label 'linux'
-                            //Forces image to ignore entrypoint
-                            args "--group-add=987 --group-add=988 --entrypoint=\'\'"
+                        dockerfile {
+                            filename 'scripts/docker/debian-windows/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/windows"){
-                            unstash "Stanc3Setup"
+                            cleanCheckout()
                             runShell("""
                                 eval \$(opam env)
+                                dune subst
                                 dune build -x windows --root=.
                             """)
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
@@ -867,6 +965,30 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
                 }
 
+            }
+        }
+
+        stage('Check binary version'){
+            when {
+                beforeAgent true
+                expression { !skipRebuildingBinaries }
+            }
+            agent {
+                dockerfile {
+                    filename 'scripts/docker/publish/Dockerfile'
+                    dir '.'
+                    label 'linux'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                }
+            }
+            steps {
+                sh "rm -r bin/ || true"
+
+                dir("bin"){
+                    unstash 'linux-exe'
+                    sh "bin/linux-stanc --version"
+                }
             }
         }
 
@@ -880,30 +1002,36 @@ pipeline {
                 }
             }
             agent {
-                docker {
-                    image 'stanorg/ci:gpu'
+                dockerfile {
+                    filename 'scripts/docker/publish/Dockerfile'
+                    dir '.'
                     label 'linux'
+                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
                 retry(3) {
-                    unstash 'windows-exe'
-                    unstash 'linux-exe'
-                    unstash 'mac-exe'
-                    unstash 'linux-mips64el-exe'
-                    unstash 'linux-ppc64el-exe'
-                    unstash 'linux-s390x-exe'
-                    unstash 'linux-arm64-exe'
-                    unstash 'linux-armhf-exe'
-                    unstash 'linux-armel-exe'
-                    unstash 'js-exe'
+                    sh "rm -r bin/ || true"
 
-                    runShell("""
-                        wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
-                        tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
-                        ./ghr_v0.12.1_linux_amd64/ghr -r stanc3 -u stan-dev -recreate ${tagName()} bin/
-                    """)
+                    dir("bin"){
+                        unstash 'windows-exe'
+                        unstash 'linux-exe'
+                        unstash 'mac-exe'
+                        unstash 'linux-mips64el-exe'
+                        unstash 'linux-ppc64el-exe'
+                        unstash 'linux-s390x-exe'
+                        unstash 'linux-arm64-exe'
+                        unstash 'linux-armhf-exe'
+                        unstash 'linux-armel-exe'
+                        unstash 'js-exe'
+
+                        runShell("""
+                            gh release delete ${tagName()} --cleanup-tag -y || true
+                            gh release create ${tagName()} --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
+                        """)
+                    }
                 }
             }
             post {
@@ -918,13 +1046,13 @@ pipeline {
                 beforeAgent true
                 branch 'master'
             }
-            options { skipDefaultCheckout(true) }
             agent {
-                docker {
-                    image 'stanorg/stanc3:staticfi'
+                dockerfile {
+                    filename 'scripts/docker/static/Dockerfile'
+                    dir '.'
                     label 'linux'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                    args '--entrypoint=\'\''
+                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
             }
             steps {
@@ -980,7 +1108,7 @@ pipeline {
 
     }
     post {
-       always {
+      always {
           script {
             utils.mailBuildResults()
           }

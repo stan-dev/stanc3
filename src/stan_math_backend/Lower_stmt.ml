@@ -1,7 +1,7 @@
 (** Lowering of Stan statements to C++ *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 open Cpp
 open Lower_expr
@@ -14,7 +14,7 @@ let check_to_string = function
   | Upper _ -> Some "less_or_equal"
   | CholeskyCov -> Some "cholesky_factor"
   | LowerUpper _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "LowerUpper is really two other checks tied together"]
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
   | t -> constraint_to_string t
@@ -84,15 +84,19 @@ let rec initialize_value st adtype =
       let typ = lower_st st adtype in
       InitializerExpr (typ, List.map2_exn ~f:initialize_value subts ads)
   | _, STuple _ | TupleAD _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Mismatch between Tuple type and Tuple AD in code gen"
             (st : Expr.Typed.t SizedType.t)
             (adtype : UnsizedType.autodifftype)]
 
 (*Initialize an object of a given size.*)
-let lower_assign_sized st adtype initialize =
-  if initialize then Some (initialize_value st adtype) else None
+let lower_assign_sized st adtype (initialize : 'a Stmt.Fixed.Pattern.decl_init)
+    =
+  match initialize with
+  | Assign e -> Some (lower_expr e)
+  | Default -> Some (initialize_value st adtype)
+  | Uninit -> None
 
 let lower_unsized_decl name ut adtype =
   let type_ =
@@ -103,17 +107,25 @@ let lower_unsized_decl name ut adtype =
     | true, _ -> TypeLiteral "matrix_cl<double>" in
   make_variable_defn ~type_ ~name ()
 
-let lower_possibly_opencl_decl name st adtype =
+let lower_possibly_opencl_decl name st adtype
+    (initialize : 'a Stmt.Fixed.Pattern.decl_init) =
   let ut = SizedType.to_unsized st in
   let mem_pattern = SizedType.get_mem_pattern st in
   match (Transform_Mir.is_opencl_var name, ut) with
-  | _, UnsizedType.(UInt | UReal) | false, _ ->
-      lower_possibly_var_decl adtype ut mem_pattern
+  | _, UnsizedType.(UInt | UReal) | false, _ -> (
+      match initialize with
+      | Assign
+          Expr.Fixed.
+            { pattern= FunApp (CompilerInternal (Internal_fun.FnReadParam _), _)
+            ; _ } ->
+          (* Peephole optimization for param reads, avoids copying *)
+          Auto
+      | _ -> lower_possibly_var_decl adtype ut mem_pattern)
   | true, UArray UInt -> TypeLiteral "matrix_cl<int>"
   | true, _ -> TypeLiteral "matrix_cl<double>"
 
 let lower_sized_decl name st adtype initialize =
-  let type_ = lower_possibly_opencl_decl name st adtype in
+  let type_ = lower_possibly_opencl_decl name st adtype initialize in
   let init =
     lower_assign_sized st adtype initialize
     |> Option.value_map ~default:Uninitialized ~f:(fun i -> Assignment i) in
@@ -135,8 +147,8 @@ let lower_profile name body =
               [ Var name
               ; Exprs.templated_fun_call "const_cast"
                   [Ref (TypeLiteral "stan::math::profile_map")]
-                  [Var "profiles__"] ] )
-         () ) in
+                  [Var "profiles__"] ])
+         ()) in
   Stmts.block (profile :: body)
 
 let lower_bool_expr expr =
@@ -150,7 +162,7 @@ let rec lower_nonrange_lvalue lvalue =
   | lv, idcs when List.for_all ~f:is_single_index idcs ->
       lower_indexed_simple (lower_nonrange_lbase lv) idcs
   | _, _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Multi-index must be the last (rightmost) index."]
 
 and lower_nonrange_lbase = function
@@ -168,12 +180,25 @@ let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Fixed.Pattern.lvalue)
     (* Convert the expression to an lvalue to get rid of everything but variables and indices *)
     (Stmt.Helpers.lvalue_of_expr_opt expr)
     (* If we can't, this expression can't be deep copied *)
-    ~default:
-      false
+    ~default:false
       (* If we can, then find it's base reference and see if it overlaps with the LHS *)
     ~f:(fun expr_lv ->
       let expr_base_ref = Stmt.Helpers.lvalue_base_reference expr_lv in
-      expr_base_ref = lhs_base_ref )
+      expr_base_ref = lhs_base_ref)
+
+let throw_exn exn_type args =
+  let open Expression_syntax in
+  let err_strm_name = "errmsg_stream__" in
+  let stream_decl =
+    VariableDefn
+      (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
+         ~name:err_strm_name ()) in
+  let throw = Throw (Exprs.fun_call exn_type [(Var err_strm_name).@!("str")]) in
+  let add_to_string e =
+    Expression
+      (fun_call "stan::math::stan_print" [VarRef err_strm_name; lower_expr e])
+  in
+  Stmts.block ((stream_decl :: List.map ~f:add_to_string args) @ [throw])
 
 let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   let remove_promotions (e : 'a Expr.Fixed.t) =
@@ -184,7 +209,10 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
     | _ -> e in
   let location =
     match pattern with
-    | Block _ | SList _ | Decl _ | Skip | Break | Continue -> []
+    | Block _ | SList _
+     |Decl {initialize= Default | Uninit; _}
+     |Skip | Break | Continue ->
+        []
     | _ -> Numbering.assign_loc meta in
   let wrap_e e = [Expression e] in
   let open Expression_syntax in
@@ -200,9 +228,9 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | Assignment
       ( (((LVariable _ | LTupleProjection _) as lhs), [])
       , _
-      , ( ( {meta= {Expr.Typed.Meta.type_= UInt | UReal | UComplex; _}; _}
-          | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
-            ; _ } ) as rhs ) ) ->
+      , (( {meta= {Expr.Typed.Meta.type_= UInt | UReal | UComplex; _}; _}
+         | { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _)
+           ; _ } ) as rhs) ) ->
       Assign (lower_nonrange_lbase lhs, lower_expr rhs) |> wrap_e
   | Assignment ((LVariable assignee, idcs), (UInt | UReal | UComplex), rhs)
     when List.for_all ~f:is_single_index idcs ->
@@ -234,14 +262,18 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       (* Split up the top-level lvalue to fit in the assign call *)
       let lhs_base, lhs_idcs = lhs in
       Exprs.fun_call "stan::model::assign"
-        ( [ lower_nonrange_lbase lhs_base; lower_expr rhs
-          ; Exprs.literal_string
-              ("assigning variable " ^ Stmt.Helpers.get_lhs_name lhs) ]
-        @ List.map ~f:lower_index lhs_idcs )
+        ([ lower_nonrange_lbase lhs_base; lower_expr rhs
+         ; Exprs.literal_string
+             ("assigning variable " ^ Stmt.Helpers.get_lhs_name lhs) ]
+        @ List.map ~f:lower_index lhs_idcs)
       |> wrap_e
   | TargetPE e ->
       let accum = Var "lp_accum__" in
-      accum.@?(("add", [lower_expr e])) |> wrap_e
+      accum.@?("add", [lower_expr e]) |> wrap_e
+  | JacobianPE e ->
+      let accum = Var "lp_accum__" in
+      [ Stmts.if_block (Var "jacobian__")
+          (accum.@?("add", [lower_expr e]) |> wrap_e) ]
   | NRFunApp (CompilerInternal FnPrint, args) ->
       let open Expression_syntax in
       let pstream = Var "pstream__" in
@@ -254,29 +286,18 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
         @ [Expression (Deref pstream << [Cpp.Literal "std::endl"])] in
       [Stmts.if_block pstream body]
   | NRFunApp (CompilerInternal FnReject, args) ->
-      let err_strm_name = "errmsg_stream__" in
-      let stream_decl =
-        VariableDefn
-          (make_variable_defn ~type_:(TypeLiteral "std::stringstream")
-             ~name:err_strm_name () ) in
-      let throw =
-        Throw
-          (Exprs.fun_call "std::domain_error" [(Var err_strm_name).@!("str")])
-      in
-      let add_to_string e =
-        Expression
-          (fun_call "stan::math::stan_print"
-             [VarRef err_strm_name; lower_expr e] ) in
-      (stream_decl :: List.map ~f:add_to_string args) @ [throw]
+      [throw_exn "std::domain_error" args]
+  | NRFunApp (CompilerInternal FnFatalError, args) ->
+      [throw_exn "std::runtime_error" args]
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
       Option.value_map (check_to_string trans) ~default:[] ~f:(fun check_name ->
           let function_arg = Expr.Helpers.variable "function__" in
           Exprs.fun_call
             ("stan::math::check_" ^ check_name)
-            ( [ lower_expr function_arg; Exprs.literal_string var_name
-              ; lower_expr var ]
-            @ List.map ~f:lower_expr args )
-          |> wrap_e )
+            ([ lower_expr function_arg; Exprs.literal_string var_name
+             ; lower_expr var ]
+            @ List.map ~f:lower_expr args)
+          |> wrap_e)
   | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
       let out = Var "out__" in
       match
@@ -284,12 +305,12 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       with
       (* When the current block or this transformation doesn't require unconstraining,
          use vanilla write *)
-      | None, _ | _, None -> out.@?(("write", [lower_expr var])) |> wrap_e
+      | None, _ | _, None -> out.@?("write", [lower_expr var]) |> wrap_e
       (* Otherwise, use stan::io::serializer's write_free functions *)
       | Some trans, Some unconstrain_string ->
           let unconstrain_args = transform_args trans in
           let write_fn = "write_free_" ^ unconstrain_string in
-          out.@?((write_fn, lower_exprs (unconstrain_args @ [var]))) |> wrap_e )
+          out.@?(write_fn, lower_exprs (unconstrain_args @ [var])) |> wrap_e)
   | NRFunApp (CompilerInternal f, args) ->
       let fname = trans_math_fn f in
       Exprs.fun_call fname (lower_exprs args) |> wrap_e
@@ -314,7 +335,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
   | Return e -> [Return (Option.map ~f:lower_expr e)]
   | Block ls -> [Stmts.block (lower_statements ls)]
   | SList ls -> lower_statements ls
-  | Decl {decl_adtype; decl_id; decl_type; initialize; _} ->
+  | Decl {decl_adtype; decl_id; decl_type; initialize} ->
       [lower_decl decl_id decl_type decl_adtype initialize]
   | Profile (name, ls) -> [lower_profile name (lower_statements ls)]
 
@@ -327,8 +348,8 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly false )
-    |> print_endline ;
+         DataOnly Stmt.Fixed.Pattern.Uninit)
+    |> print_endline;
     [%expect {| |}]
 
   let%expect_test "set size mat array" =
@@ -337,8 +358,8 @@ module Testing = struct
       (Fmt.option Cpp.Printing.pp_expr)
       (lower_assign_sized
          (SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5))
-         DataOnly true )
-    |> print_endline ;
+         DataOnly Stmt.Fixed.Pattern.Default)
+    |> print_endline;
     [%expect
       {|
     std::vector<std::vector<Eigen::Matrix<double,-1,-1>>>(5,

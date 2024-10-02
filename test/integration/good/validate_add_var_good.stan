@@ -7,10 +7,13 @@ data {
   row_vector[3] rv;
   simplex[5] sv;
   unit_vector[7] uv;
+  sum_to_zero_vector[8] stzv;
   ordered[3] ov;
   matrix[4, 5] m;
   cov_matrix[3] covm;
   corr_matrix[3] corrm;
+  row_stochastic_matrix[3,4] rowstoch;
+  column_stochastic_matrix[3,4] colstoch;
 }
 transformed data {
   int n_td;
@@ -21,10 +24,13 @@ transformed data {
   row_vector[3] rv_td;
   simplex[5] sv_td;
   unit_vector[7] uv_td;
+  sum_to_zero_vector[8] stzv_td;
   ordered[3] ov_td;
   matrix[4, 5] m_td;
   cov_matrix[3] covm_td;
   corr_matrix[3] corrm_td;
+  row_stochastic_matrix[3,4] rowstoch_td;
+  column_stochastic_matrix[3,4] colstoch_td;
 }
 parameters {
   real x_p;
@@ -33,10 +39,13 @@ parameters {
   row_vector[3] rv_p;
   simplex[5] sv_p;
   unit_vector[7] uv_p;
+  sum_to_zero_vector[8] stzv_p;
   ordered[3] ov_p;
   matrix[4, 5] m_p;
   cov_matrix[3] covm_p;
   corr_matrix[3] corrm_p;
+  row_stochastic_matrix[3,4] rowstoch_p;
+  column_stochastic_matrix[3,4] colstoch_p;
 }
 transformed parameters {
   real x_tp;
@@ -45,10 +54,13 @@ transformed parameters {
   row_vector[3] rv_tp;
   simplex[5] sv_tp;
   unit_vector[7] uv_tp;
+  sum_to_zero_vector[8] stzv_tp;
   ordered[3] ov_tp;
   matrix[4, 5] m_tp;
   cov_matrix[3] covm_tp;
   corr_matrix[3] corrm_tp;
+  row_stochastic_matrix[3,4] rowstoch_tp;
+  column_stochastic_matrix[3,4] colstoch_tp;
 }
 model {
   int n_l;
@@ -58,7 +70,7 @@ model {
   vector[3] v_l;
   row_vector[3] rv_l;
   matrix[4, 5] m_l;
-  
+
   x_p ~ normal(0, 1);
 }
 generated quantities {
@@ -70,9 +82,12 @@ generated quantities {
   row_vector[3] rv_gq;
   simplex[5] sv_gq;
   unit_vector[7] uv_gq;
+  sum_to_zero_vector[8] stzv_gq;
   ordered[3] ov_gq;
   matrix[4, 5] m_gq;
   cov_matrix[3] covm_gq;
   corr_matrix[3] corrm_gq;
+  row_stochastic_matrix[3,4] rowstoch_gq;
+  column_stochastic_matrix[3,4] colstoch_gq;
 }
 

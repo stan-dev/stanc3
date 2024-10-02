@@ -1,5 +1,5 @@
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 open Mir_utils
 
@@ -164,7 +164,7 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
         let arg_fail_msg =
           Printf.sprintf "Distribution %s at %s expects more arguments." name
             (Location_span.to_string loc) in
-        Common.FatalError.fatal_error_msg [%message arg_fail_msg] in
+        Common.ICE.internal_compiler_error [%message arg_fail_msg] in
   match v with
   | Param (pname, trans), meta ->
       if transform_mismatch_constraint constr.constr trans then
@@ -208,7 +208,7 @@ let uniform_dist_warning (dist_info : dist_info) :
        |_, Number (uni, _), {upper= `Lit bound; _} ->
           (* the variate is bounded differently than the uniform dist *)
           if uni = bound then None else warning
-      | _ -> None )
+      | _ -> None)
   | _ -> None
 
 let lkj_corr_message : string =

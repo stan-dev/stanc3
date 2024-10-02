@@ -1,15 +1,14 @@
 open Frontend
-open Core_kernel
+open Core
 
 let untyped_ast_of_string s =
   let res, warnings = Parse.parse_string Parser.Incremental.program s in
-  Fmt.epr "%a" (Fmt.list ~sep:Fmt.nop Warnings.pp) warnings ;
+  Fmt.epr "%a" (Fmt.list ~sep:Fmt.nop Warnings.pp) warnings;
   res
 
 let typed_ast_of_string_exn s =
   Result.(
-    untyped_ast_of_string s
-    >>= fun ast ->
+    untyped_ast_of_string s >>= fun ast ->
     Typechecker.check_program ast
     |> map_error ~f:(fun e -> Errors.Semantic_error e))
   |> Result.map_error ~f:Errors.to_string

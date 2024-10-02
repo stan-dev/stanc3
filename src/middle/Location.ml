@@ -1,12 +1,6 @@
 (** Storing locations in the original source *)
 
-open Core_kernel
-
-(**/**)
-
-module Str = Re.Str
-
-(**/**)
+open Core
 
 (** Source code locations *)
 type t = {filename: string; line_num: int; col_num: int; included_from: t option}
@@ -17,13 +11,13 @@ let pp_context_list ppf (lines, {line_num; col_num; _}) =
     let front = List.hd !l in
     match front with
     | Some _ ->
-        l := List.tl_exn !l ;
+        l := List.tl_exn !l;
         front
     | None -> None in
   let input = ref lines in
   for _ = 1 to line_num - 3 do
     ignore (advance input : string option)
-  done ;
+  done;
   let get_line num =
     if num > 0 then
       match advance input with
@@ -33,7 +27,12 @@ let pp_context_list ppf (lines, {line_num; col_num; _}) =
   let line_2_before = get_line (line_num - 2) in
   let line_before = get_line (line_num - 1) in
   let our_line = get_line line_num in
-  let cursor_line = String.make (col_num + 9) ' ' ^ "^\n" in
+  let offset = 9 + col_num in
+  let copied = Int.min offset (String.length our_line) in
+  let blank_line =
+    String.slice our_line 0 copied
+    |> String.map ~f:(function '\t' -> '\t' | _ -> ' ') in
+  let cursor_line = blank_line ^ String.make (offset - copied) ' ' ^ "^\n" in
   let line_after = get_line (line_num + 1) in
   let line_2_after = get_line (line_num + 2) in
   Fmt.pf ppf
@@ -49,7 +48,7 @@ let pp_context_list ppf (lines, {line_num; col_num; _}) =
 let context_to_string (context_cb : unit -> string list) (loc : t) :
     string option =
   Option.try_with (fun () ->
-      Fmt.to_to_string pp_context_list (context_cb (), loc) )
+      Fmt.to_to_string pp_context_list (context_cb (), loc))
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 

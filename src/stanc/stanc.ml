@@ -1,7 +1,7 @@
 (** stanc console application *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Frontend
 open Stan_math_backend
 open Analysis_and_optimization
@@ -54,10 +54,10 @@ let parse_canonical_options (settings : Canonicalize.canonicalizer_settings)
   | s ->
       raise
       @@ Arg.Bad
-           ( "Unrecognized canonicalizer option '" ^ s
-           ^ "'. \n\
-              Should be one of 'deprecations', 'parentheses', 'braces', \
-              'includes', 'strip-comments'" )
+           ("Unrecognized canonicalizer option '" ^ s
+          ^ "'. \n\
+             Should be one of 'deprecations', 'parentheses', 'braces', \
+             'includes', 'strip-comments'")
 
 (** Some example command-line options here *)
 let options =
@@ -143,7 +143,7 @@ let options =
             let settings =
               List.fold ~f:parse_canonical_options ~init:!canonicalize_settings
                 (String.split s ~on:',') in
-            canonicalize_settings := settings )
+            canonicalize_settings := settings)
       , " Enable specific canonicalizations in a comma separated list. Options \
          are 'deprecations', 'parentheses', 'braces', 'includes', \
          'strip-comments'." )
@@ -154,15 +154,15 @@ let options =
     ; ( "--print-canonical"
       , Arg.Unit
           (fun () ->
-            pretty_print_program := true ;
-            canonicalize_settings := Canonicalize.legacy )
+            pretty_print_program := true;
+            canonicalize_settings := Canonicalize.legacy)
       , " Prints the canonicalized program. Equivalent to --auto-format \
          --canonicalize deprecations,includes,parentheses,braces" )
     ; ( "--version"
       , Arg.Unit
           (fun _ ->
-            print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")") ;
-            exit 0 )
+            print_endline (version ^ " " ^ "(" ^ Sys.os_type ^ ")");
+            exit 0)
       , " Display stanc version number" )
     ; ( "--name"
       , Arg.Set_string Typechecker.model_name
@@ -204,7 +204,9 @@ let options =
     ; ( "--include-paths"
       , Arg.String
           (fun str ->
-            Preprocessor.include_paths := String.split_on_chars ~on:[','] str )
+            Include_files.include_provider :=
+              Include_files.FileSystemPaths
+                (String.split_on_chars ~on:[','] str))
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
     ; ( "--use-opencl"
@@ -223,7 +225,7 @@ let options =
       , " If set, print information about the model." ) ]
 
 let model_file_err () =
-  Arg.usage options ("Please specify a model_file.\n" ^ usage) ;
+  Arg.usage options ("Please specify a model_file.\n" ^ usage);
   exit 127
 
 let add_file filename =
@@ -241,25 +243,25 @@ let get_ast_or_exit ?printed_filename ?(print_warnings = true)
       Parse.parse_file Parser.Incremental.functions_only filename
     else Parse.parse_file Parser.Incremental.program filename in
   if print_warnings then
-    (Warnings.pp_warnings ?printed_filename) Fmt.stderr warnings ;
+    (Warnings.pp_warnings ?printed_filename) Fmt.stderr warnings;
   match res with
   | Result.Ok ast -> ast
   | Result.Error err ->
-      Errors.pp ?printed_filename Fmt.stderr err ;
+      Errors.pp ?printed_filename Fmt.stderr err;
       exit 1
 
 let print_sexp sexp =
   let ppf = Format.std_formatter in
-  Format.pp_set_margin ppf 90 ;
+  Format.pp_set_margin ppf 90;
   Sexp.pp_hum ppf sexp
 
 let type_ast_or_exit ?printed_filename ast =
   match Typechecker.check_program ast with
   | Result.Ok (p, warns) ->
-      Warnings.pp_warnings ?printed_filename Fmt.stderr warns ;
+      Warnings.pp_warnings ?printed_filename Fmt.stderr warns;
       p
   | Result.Error error ->
-      Errors.pp_semantic_error ?printed_filename Fmt.stderr error ;
+      Errors.pp_semantic_error ?printed_filename Fmt.stderr error;
       exit 1
 
 (*
@@ -283,29 +285,22 @@ let use_file filename =
     get_ast_or_exit ?printed_filename filename
       ~print_warnings:(not !canonicalize_settings.deprecations)
       ~bare_functions:!bare_functions in
-  (* must be before typecheck to fix up deprecated syntax which gets rejected *)
-  let ast = Canonicalize.repair_syntax ast !canonicalize_settings in
-  Debugging.ast_logger ast ;
+  Debugging.ast_logger ast;
   let typed_ast = type_ast_or_exit ?printed_filename ast in
   let canonical_ast =
     Canonicalize.canonicalize_program typed_ast !canonicalize_settings in
   if !pretty_print_program then
     print_or_write
-      (Pretty_printing.pretty_print_typed_program
+      (Pretty_print_prog.pretty_print_typed_program
          ~bare_functions:!bare_functions ~line_length:!pretty_print_line_length
          ~inline_includes:!canonicalize_settings.inline_includes canonical_ast
-         ~strip_comments:!canonicalize_settings.strip_comments ) ;
+         ~strip_comments:!canonicalize_settings.strip_comments);
   if !print_info_json then (
-    print_endline (Info.info canonical_ast) ;
-    exit 0 ) ;
+    print_endline (Info.info canonical_ast);
+    exit 0);
   if not !canonicalize_settings.deprecations then
     Warnings.pp_warnings Fmt.stderr ?printed_filename
-      (Deprecation_analysis.collect_warnings typed_ast) ;
-  ( if not !canonicalize_settings.deprecations then
-    let removals = Deprecation_removals.collect_removals typed_ast in
-    if not (List.is_empty removals) then (
-      Deprecation_removals.pp_removals Fmt.stderr ?printed_filename removals ;
-      exit 65 (* EX_DATAERR in sysexits.h*) ) ) ;
+      (Deprecation_analysis.collect_warnings typed_ast);
   if !generate_data then (
     let decls = Ast_to_Mir.gather_declarations typed_ast.datablock in
     let context =
@@ -315,10 +310,12 @@ let use_file filename =
           Debug_data_generation.json_to_mir decls (Yojson.Basic.from_file file)
     in
     match Debug_data_generation.gen_values_json ~context decls with
-    | Ok s -> print_or_write s ; exit 0
+    | Ok s ->
+        print_or_write s;
+        exit 0
     | Error e ->
-        Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e) ;
-        exit 1 )
+        Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e);
+        exit 1)
   else if !generate_inits then (
     let context =
       match !data_file with
@@ -331,28 +328,30 @@ let use_file filename =
       Debug_data_generation.gen_values_json ~new_only:true ~context
         (Ast_to_Mir.gather_declarations typed_ast.parametersblock)
     with
-    | Ok s -> print_or_write s ; exit 0
+    | Ok s ->
+        print_or_write s;
+        exit 0
     | Error e ->
-        Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e) ;
+        Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e);
         if Option.is_none !data_file then
-          Fmt.pf Fmt.stderr "Supplying a --debug-data-file may help@;" ;
-        exit 1 )
+          Fmt.pf Fmt.stderr "Supplying a --debug-data-file may help@;";
+        exit 1)
   else if Option.is_some !data_file then
-    Fmt.pf Fmt.stderr "Warning: ignoring --debug-data-file" ;
-  Debugging.typed_ast_logger typed_ast ;
+    Fmt.pf Fmt.stderr "Warning: ignoring --debug-data-file";
+  Debugging.typed_ast_logger typed_ast;
   if not !pretty_print_program then (
     let mir = Ast_to_Mir.trans_prog filename typed_ast in
-    if !dump_mir then print_sexp [%sexp (mir : Middle.Program.Typed.t)] ;
-    if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
+    if !dump_mir then print_sexp [%sexp (mir : Middle.Program.Typed.t)];
+    if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir;
     if !warn_pedantic then
       Pedantic_analysis.warn_pedantic mir
       |> pp_stderr (Warnings.pp_warnings ?printed_filename)
     else if !warn_uninitialized then
       Pedantic_analysis.warn_uninitialized mir
-      |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
+      |> pp_stderr (Warnings.pp_warnings ?printed_filename);
     let tx_mir = Transform_Mir.trans_prog mir in
-    if !dump_tx_mir then print_sexp [%sexp (tx_mir : Middle.Program.Typed.t)] ;
-    if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir ;
+    if !dump_tx_mir then print_sexp [%sexp (tx_mir : Middle.Program.Typed.t)];
+    if !dump_tx_mir_pretty then Program.Typed.pp Format.std_formatter tx_mir;
     let opt_mir =
       let set_optims =
         let base_optims = Optimize.level_optimizations !opt_lvl in
@@ -361,34 +360,34 @@ let use_file filename =
         else base_optims in
       Optimize.optimization_suite ~settings:set_optims tx_mir in
     if !dump_mem_pattern then
-      Memory_patterns.pp_mem_patterns Format.std_formatter opt_mir ;
-    if !dump_opt_mir then print_sexp [%sexp (opt_mir : Middle.Program.Typed.t)] ;
-    if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt_mir ;
-    if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
+      Memory_patterns.pp_mem_patterns Format.std_formatter opt_mir;
+    if !dump_opt_mir then print_sexp [%sexp (opt_mir : Middle.Program.Typed.t)];
+    if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt_mir;
+    if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp";
     let cpp = Lower_program.lower_program ?printed_filename opt_mir in
-    if !dump_lir then print_sexp [%sexp (cpp : Cpp.program)] ;
+    if !dump_lir then print_sexp [%sexp (cpp : Cpp.program)];
     let cpp_str = Fmt.(to_to_string Cpp.Printing.pp_program) cpp in
-    Out_channel.write_all !output_file ~data:cpp_str ;
-    if !print_model_cpp then print_endline cpp_str )
+    Out_channel.write_all !output_file ~data:cpp_str;
+    if !print_model_cpp then print_endline cpp_str)
 
 let mangle =
   String.concat_map ~f:(fun c ->
       Char.(
         if is_alphanum c || c = '_' then to_string c
-        else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (to_int c)) )
+        else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (to_int c)))
 
 let main () =
   (* Parse the arguments. *)
-  Arg.parse options add_file usage ;
+  Arg.parse options add_file usage;
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
-    Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
-    exit 0 ) ;
+    Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter ();
+    exit 0);
   if !dump_stan_math_distributions then (
     Stan_math_signatures.pretty_print_all_math_distributions
-      Format.std_formatter () ;
-    exit 0 ) ;
-  if !model_file = "" then model_file_err () ;
+      Format.std_formatter ();
+    exit 0);
+  if !model_file = "" then model_file_err ();
   let stanc_args_to_print =
     let sans_model_and_hpp_paths x =
       not
@@ -397,21 +396,28 @@ let main () =
           && not (is_prefix ~prefix:"--filename-in-msg" x)
           || is_prefix ~prefix:"--o" x) in
     (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
-    Array.to_list Sys.argv |> List.tl_exn
+    Array.to_list (Sys.get_argv ())
+    |> List.tl_exn
     |> List.filter ~f:sans_model_and_hpp_paths
     |> String.concat ~sep:" " in
-  Lower_program.stanc_args_to_print := stanc_args_to_print ;
+  Lower_program.stanc_args_to_print := stanc_args_to_print;
   (* if we only have functions, always compile as standalone *)
   if String.is_suffix !model_file ~suffix:".stanfunctions" then (
-    Lower_program.standalone_functions := true ;
-    bare_functions := true ) ;
+    Lower_program.standalone_functions := true;
+    bare_functions := true);
   (* Just translate a stan program *)
   if !Typechecker.model_name = "" then
     Typechecker.model_name :=
       mangle
         (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
       ^ "_model"
-  else Typechecker.model_name := mangle !Typechecker.model_name ;
+  else Typechecker.model_name := mangle !Typechecker.model_name;
   use_file !model_file
 
-let () = main ()
+let () =
+  match Common.ICE.with_exn_message main with
+  | Ok () -> ()
+  | Error internal_error ->
+      Out_channel.output_string stderr internal_error;
+      Out_channel.flush stderr;
+      exit 2

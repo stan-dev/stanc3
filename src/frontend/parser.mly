@@ -1,7 +1,7 @@
 (** The parser for Stan. A Menhir file. *)
 
 %{
-open Core_kernel
+open Core
 open Middle
 open Ast
 open Debugging
@@ -65,10 +65,6 @@ let try_convert_to_lvalue expr loc =
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
 
-let note_deprecated_array ?(unsized = false) (pos1, pos2) =
-  let loc_span = location_span_of_positions (pos1, pos2) in
-  Deprecation_removals.old_array_usages :=
-    (loc_span, unsized) :: !Deprecation_removals.old_array_usages
 %}
 
 (* Token definitions. The quoted strings are aliases, used in the examples generated in
@@ -87,9 +83,12 @@ let note_deprecated_array ?(unsized = false) (pos1, pos2) =
        ROWVECTOR "row_vector" ARRAY "array" TUPLE "tuple" MATRIX "matrix" ORDERED "ordered"
        COMPLEXVECTOR "complex_vector" COMPLEXROWVECTOR "complex_row_vector"
        POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
-       CHOLESKYFACTORCORR "cholesky_factor_corr" CHOLESKYFACTORCOV "cholesky_factor_cov"
-       CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix" COMPLEXMATRIX "complex_matrix"
+       SUMTOZERO "sum_to_zero_vector" CHOLESKYFACTORCORR "cholesky_factor_corr"
+       CHOLESKYFACTORCOV "cholesky_factor_cov" CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix"
+       COMPLEXMATRIX "complex_matrix" STOCHASTICCOLUMNMATRIX "column_stochastic_matrix"
+       STOCHASTICROWMATRIX "row_stochastic_matrix"
 %token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
+%token JACOBIAN "jacobian"
 %token <string> INTNUMERAL "24"
 %token <string> REALNUMERAL "3.1415" DOTNUMERAL ".2"
 %token <string> IMAGNUMERAL "1i"
@@ -101,8 +100,7 @@ let note_deprecated_array ?(unsized = false) (pos1, pos2) =
        ELTDIVIDE "./" OR "||" AND "&&" EQUALS "==" NEQUALS "!=" LEQ "<=" GEQ ">=" TILDE "~"
 %token ASSIGN "=" PLUSASSIGN "+=" MINUSASSIGN "-=" TIMESASSIGN "*="
        DIVIDEASSIGN "/=" ELTDIVIDEASSIGN "./=" ELTTIMESASSIGN ".*="
-%token ARROWASSIGN "<-" INCREMENTLOGPROB "increment_log_prob" GETLP "get_lp" (* all of these are deprecated *)
-%token PRINT "print" REJECT "reject"
+%token PRINT "print" REJECT "reject" FATAL_ERROR "fatal_error"
 %token TRUNCATE "T"
 %token EOF ""
 
@@ -217,7 +215,8 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
-
+(* TODO(2.38) remove *)
+  | JACOBIAN { build_id "jacobian" $loc }
 
 decl_identifier:
   | id=identifier { id }
@@ -256,14 +255,17 @@ reserved_word:
   | POSITIVEORDERED { "positive_ordered", $loc, true }
   | SIMPLEX { "simplex", $loc, true }
   | UNITVECTOR { "unit_vector", $loc, true }
+  | SUMTOZERO  { "sum_to_zero_vector", $loc, true }
   | CHOLESKYFACTORCORR { "cholesky_factor_corr", $loc, true }
   | CHOLESKYFACTORCOV { "cholesky_factor_cov", $loc, true }
   | CORRMATRIX { "corr_matrix", $loc, true }
   | COVMATRIX { "cov_matrix", $loc, true  }
+  | STOCHASTICCOLUMNMATRIX { "column_stochastic_matrix", $loc, true }
+  | STOCHASTICROWMATRIX { "row_stochastic_matrix", $loc, true }
   | PRINT { "print", $loc, false }
   | REJECT { "reject", $loc, false }
+  | FATAL_ERROR { "fatal_error", $loc, false }
   | TARGET { "target", $loc, false }
-  | GETLP { "get_lp", $loc, false }
   | PROFILE { "profile", $loc, false }
   | TUPLE { "tuple", $loc, true }
   | OFFSET { "offset", $loc, false }
@@ -287,7 +289,7 @@ return_type:
   | VOID
     { grammar_logger "return_type VOID" ; Void }
   | ut=unsized_type
-    {  grammar_logger "return_type unsized_type" ; ReturnType ut }
+    {  grammar_logger "return_type unsized_type" ; UnsizedType.ReturnType ut }
 
 arg_decl:
   | od=option(DATABLOCK) ut=unsized_type id=decl_identifier
@@ -300,11 +302,24 @@ unsized_type:
     {  grammar_logger "unsized_type";
         nest_unsized_array t n
     }
-  | bt=basic_type n_opt=option(unsized_dims)
+  (* This is just a helper for the fact that we don't support the old array syntax any more
+    It can go away at some point if it starts causing conflicts.
+  *)
+  | bt=basic_type dims=unsized_dims {
+    raise
+    (Errors.SyntaxError
+       (Errors.Parsing
+          (Fmt.str
+              "An identifier is expected after the type as a function argument \
+               name.@ It looks like you are trying to use the old array \
+               syntax.@ Please use the new syntax: @ @[<h>array[%s] %a@]@\n"
+              (String.make (dims-1) ',')
+              UnsizedType.pp bt
+          , location_span_of_positions $loc(dims) )))
+  }
+  | bt=basic_type
     {  grammar_logger "unsized_type";
-       if Option.is_some n_opt then
-         note_deprecated_array ~unsized:true $loc;
-       nest_unsized_array bt (Option.value n_opt ~default:0)
+       bt
     }
   | t=unsized_tuple_type
     { t }
@@ -342,7 +357,7 @@ unsized_dims:
 no_assign:
   | UNREACHABLE
     { (* This code will never be reached *)
-       Common.FatalError.fatal_error_msg
+       Common.ICE.internal_compiler_error
           [%message "the UNREACHABLE token should never be produced"]
     }
 
@@ -373,38 +388,21 @@ remaining_declarations(rhs):
  * identifier.
  *)
 decl(type_rule, rhs):
-  (* This rule matches the old array syntax, e.g:
-       int x[1,2] = ..;
-
-     We need to match it separately because we won't support multiple inline
-     declarations using this form.
-
-     This form is deprecated.
-   *)
-  | ty=type_rule id=decl_identifier dims=dims rhs_opt=optional_assignment(rhs)
-      SEMICOLON
-    { note_deprecated_array $loc;
-      (fun ~is_global ->
-      { stmt=
-          VarDecl {
-              decl_type= (reducearray (fst ty, dims))
-            ; transformation= snd ty
-            ; variables= [ { identifier= id
-                           ; initial_value= rhs_opt
-                           } ]
-            ; is_global
-            }
-      ; smeta= {
-          loc= location_span_of_positions $loc
-        }
-    })
+  (* This is just a helper for the fact that we don't support the old array syntax any more *)
+  | ty=type_rule id=decl_identifier LBRACK dims=separated_nonempty_list(COMMA, expression) RBRACK {
+    let (ty, trans) = ty in
+    let ty = List.fold_right ~f:(fun e ty -> SizedType.SArray (ty, e)) ~init:ty dims in
+    let ty = (ty, trans) in
+    raise
+    (Errors.SyntaxError
+       (Errors.Parsing
+          ( Fmt.str
+              "\";\" expected after variable declaration.@ It looks like you \
+               are trying to use the old array syntax.@ Please use the new \
+               syntax:@ @[<h>%a %s;@]@\n"
+              Pretty_printing.pp_transformed_type ty id.name
+          , location_span_of_positions $loc(dims) )))
     }
-
-  (* This rule matches non-array declarations and also the new array syntax, e.g:
-       array[1,2] int x = ..;
-   *)
-  (* Note that the array dimensions option must be inlined with ioption, else
-     it will conflict with first rule. *)
   | ty=higher_type(type_rule)
     (* additional indirection only for better error messaging *)
     v = id_and_optional_assignment(rhs, decl_identifier) vs=option(remaining_declarations(rhs)) SEMICOLON
@@ -447,7 +445,7 @@ tuple_type(type_rule):
   { grammar_logger "tuple_type" ;
     let ts = head::rest in
     let types, trans = List.unzip ts in
-    (SizedType.STuple types, TupleTransformation trans)
+    (SizedType.STuple types, Transformation.TupleTransformation trans)
   }
 
 var_decl:
@@ -492,7 +490,7 @@ sized_basic_type:
   | COMPLEXROWVECTOR LBRACK e=expression RBRACK
     { grammar_logger "COMPLEXROWVECTOR_var_type" ; (SizedType.SComplexRowVector e , Identity) }
   | COMPLEXMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "COMPLEXMATRIX_var_type" ; (SizedType.SComplexMatrix (e1, e2), Identity) }
+    { grammar_logger "COMPLEXMATRIX_var_type" ; (SizedType.SComplexMatrix (e1, e2), Transformation.Identity) }
 
 top_var_type:
   | INT r=range_constraint
@@ -524,6 +522,8 @@ top_var_type:
     { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex) }
   | UNITVECTOR LBRACK e=expression RBRACK
     { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector) }
+  | SUMTOZERO LBRACK e=expression RBRACK
+    { grammar_logger "SUMTOZERO_top_var_type" ; (SVector (AoS, e), SumToZero) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
@@ -539,7 +539,11 @@ top_var_type:
   | CORRMATRIX LBRACK e=expression RBRACK
     { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Covariance) }
+    { grammar_logger "COVMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e, e), Transformation.Covariance) }
+  | STOCHASTICCOLUMNMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "STOCHASTICCOLUMNMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Transformation.StochasticColumn) }
+  | STOCHASTICROWMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "STOCHASTICROWMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Transformation.StochasticRow) }
 
 type_constraint:
   | r=range_constraint
@@ -574,10 +578,6 @@ offset_mult:
  arr_dims:
     | ARRAY LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
                  { grammar_logger "array dims" ; l  }
-
-dims:
-  | LBRACK l=separated_nonempty_list(COMMA, expression) RBRACK
-    { grammar_logger "dims" ; l  }
 
 (* Expressions that can be used everywhere except constraint expressions *)
 expression:
@@ -646,9 +646,6 @@ common_expression:
   | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ;
       build_expr GetTarget $loc }
-  | GETLP LPAREN RPAREN
-    { grammar_logger "get_lp" ;
-      build_expr GetLP $loc } (* deprecated *)
   | id=identifier LPAREN e=expression BAR args=separated_list(COMMA, expression)
     RPAREN
     { grammar_logger "conditional_dist_app" ;
@@ -772,9 +769,7 @@ atomic_statement:
                    assign_rhs=e} }
   | id=identifier LPAREN args=separated_list(COMMA, expression) RPAREN SEMICOLON
     {  grammar_logger "funapp_statement" ; NRFunApp ((),id, args)  }
-  | INCREMENTLOGPROB LPAREN e=expression RPAREN SEMICOLON
-    {   grammar_logger "incrementlogprob_statement" ; IncrementLogProb e } (* deprecated *)
-  | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
+ | e=expression TILDE id=identifier LPAREN es=separated_list(COMMA, expression)
     RPAREN ot=option(truncation) SEMICOLON
     {  grammar_logger "tilde_statement" ;
        let t = match ot with Some tt -> tt | None -> NoTruncate in
@@ -782,6 +777,10 @@ atomic_statement:
     }
   | TARGET PLUSASSIGN e=expression SEMICOLON
     {   grammar_logger "targetpe_statement" ; TargetPE e }
+  (* TODO(2.38) use this instead of current workaround in typechecker.ml
+  | JACOBIAN PLUSASSIGN e=expression SEMICOLON
+    {   grammar_logger "jacobianpe_statement" ; JacobianPE e }
+  *)
   | BREAK SEMICOLON
     {  grammar_logger "break_statement" ; Break }
   | CONTINUE SEMICOLON
@@ -790,6 +789,8 @@ atomic_statement:
     {  grammar_logger "print_statement" ; Print l }
   | REJECT LPAREN l=printables RPAREN SEMICOLON
     {  grammar_logger "reject_statement" ; Reject l  }
+  | FATAL_ERROR LPAREN l=printables RPAREN SEMICOLON
+    {  grammar_logger "exit_statement" ; FatalError l  }
   | RETURN e=expression SEMICOLON
     {  grammar_logger "return_statement" ; Return e }
   | RETURN SEMICOLON
@@ -800,8 +801,6 @@ atomic_statement:
 %inline assignment_op:
   | ASSIGN
     {  grammar_logger "assign_plain" ; Assign }
-  | ARROWASSIGN
-    { grammar_logger "assign_arrow" ; ArrowAssign  } (* deprecated *)
   | PLUSASSIGN
     { grammar_logger "assign_plus" ; OperatorAssign Plus }
   | MINUSASSIGN

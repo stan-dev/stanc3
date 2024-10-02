@@ -1,6 +1,6 @@
 (** Types which have a concrete size associated, e.g. [vector\[n\]] *)
 
-open Core_kernel
+open Core
 
 type 'a t =
   | SInt
@@ -73,7 +73,7 @@ let rec get_dims_io st =
   | SComplexMatrix (dim1, dim2) -> [dim1; dim2; two]
   | SArray (t, dim) -> dim :: get_dims_io t
   | STuple _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message
           "Tried to get IO dims of a tuple, which is not rectangular"
             (st : Expr.Typed.t t)]
@@ -162,13 +162,13 @@ let%expect_test "dims" =
   str "@[%a@]" (list ~sep:comma string)
     (List.map
        ~f:(fun Expr.Fixed.{pattern; _} ->
-         match pattern with Expr.Fixed.Pattern.Lit (_, x) -> x | _ -> "fail" )
+         match pattern with Expr.Fixed.Pattern.Lit (_, x) -> x | _ -> "fail")
        (get_dims_io
           (SArray
              ( SMatrix
                  (Mem_pattern.AoS, Expr.Helpers.str "x", Expr.Helpers.str "y")
-             , Expr.Helpers.str "z" ) ) ) )
-  |> print_endline ;
+             , Expr.Helpers.str "z" ))))
+  |> print_endline;
   [%expect {| z, x, y |}]
 
 let rec contains_tuple st =
@@ -252,5 +252,5 @@ let%expect_test "dims" =
   let sclr, dims = get_array_dims st in
   let st2 = build_sarray dims sclr in
   let open Fmt in
-  pf stdout "%a = %a" (pp Expr.Typed.pp) st (pp Expr.Typed.pp) st2 ;
+  pf stdout "%a = %a" (pp Expr.Typed.pp) st (pp Expr.Typed.pp) st2;
   [%expect {| array[array[real, N], 1] = array[array[real, N], 1] |}]

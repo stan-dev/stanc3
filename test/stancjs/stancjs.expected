@@ -47,35 +47,41 @@ Semantic error in 'string', line 6, column 4 to column 5:
 Identifier 'z' not in scope.
 
 $ node canonical.js
+functions {
+  int foo(int x) {
+    return x;
+  }
+}
 parameters {
   real y;
 }
 model {
-  if (y != 0.0) {
-    print("y is nonzero ");
-  }
-  
   y ~ normal(0, 1);
 }
 
+functions {
+  int foo(int x) {
+    return x;
+  }
+}
 parameters {
   real y;
 }
 model {
-  if (y != 0.0) 
-    print("y is nonzero ");
-  
   y ~ normal(((((((((0)))))))), 1);
 }
 
+functions {
+  int foo(int x);
+  
+  int foo(int x) {
+    return x;
+  }
+}
 parameters {
   real y;
 }
 model {
-  if (y) {
-    print("y is nonzero ");
-  }
-  
   y ~ normal(0, 1);
 }
 
@@ -199,6 +205,81 @@ Syntax error in 'string', line 8, column 0 to column 5, parsing error:
 
 Expected "generated quantities {" or end of file after end of model block.
 
+$ node includes.js
+Syntax error in 'string', line 2, column 0, include error:
+   -------------------------------------------------
+     1:  
+     2:  #include <foo.stan>
+         ^
+     3:  data {
+     4:      int a;
+   -------------------------------------------------
+
+Could not find include file 'foo.stan'.
+stanc was given information about the following files:
+None
+
+Syntax error in 'string', line 2, column 0, include error:
+   -------------------------------------------------
+     1:  
+     2:  #include <foo.stan>
+         ^
+     3:  data {
+     4:      int a;
+   -------------------------------------------------
+
+Could not find include file 'foo.stan'.
+stanc was given information about the following files:
+bar.stan
+
+Syntax error in 'string', line 2, column 0, include error:
+   -------------------------------------------------
+     1:  
+     2:  #include <foo.stan>
+         ^
+     3:  data {
+     4:      int a;
+   -------------------------------------------------
+
+Could not find include file 'foo.stan'.
+stanc was given information about the following files:
+./foo.stan
+
+functions {
+  int foo(real a) {
+    return 1;
+  }
+}
+data {
+  int a;
+}
+
+{
+  "inputs": { "a": { "type": "int", "dimensions": 0 } },
+  "parameters": {},
+  "transformed parameters": {},
+  "generated quantities": {},
+  "functions": [],
+  "distributions": [],
+  "included_files": [ "foo.stan" ]
+}
+Warning: stanc.js failed to parse included file mapping!
+Failed to read property 'foo.stan' of included files map!
+It had type 'object' instead of 'string'.
+Warning: stanc.js failed to parse included file mapping!
+Included files map was provided but was not of type 'object'
+Syntax error in 'include/b.stan', line 1, column 0, included from
+'include/a.stan', line 2, column 0, included from
+'include/b.stan', line 1, column 0, included from
+'include/a.stan', line 2, column 0, include error:
+   -------------------------------------------------
+     1:  #include <include/a.stan>
+         ^
+     2:   // comment here
+   -------------------------------------------------
+
+File include/a.stan recursively included itself.
+
 $ node info.js
 {
   "inputs": {
@@ -247,26 +328,45 @@ Function 'foo' is declared without specifying a definition.
 
 "stancflags = --use-opencl --allow-undefined"
 $ node pedantic.js
-["Warning in 'string', line 7, column 17: Argument 10000 suggests there may be\n    parameters that are not unit scale; consider rescaling with a multiplier\n    (see manual section 22.12).","Warning: The parameter k was declared but was not used in the density\n    calculation."]
-[]
-["Warning in 'string', line 4, column 9: The variable tt may not have been\n    assigned a value before its use."]
-[]
+Warning in 'string', line 7, column 17: Argument 10000 suggests there may be
+    parameters that are not unit scale; consider rescaling with a multiplier
+    (see manual section 22.12).
+Warning: The parameter k was declared but was not used in the density
+    calculation.
+Warning in 'string', line 4, column 9: The variable tt may not have been
+    assigned a value before its use.
 $ node removed.js
-Error in 'string', line 3, column 1: Declaration of arrays by placing
-    brackets after a variable name was removed in Stan 2.33.0. Instead use
-    the array keyword before the type. This can be changed automatically
-    using the auto-format flag to stanc
-Error in 'string', line 6, column 14: std_normal_log was removed in Stan
-    2.33. Use std_normal_lpdf instead. This can be automatically changed
-    using the canonicalize flag for stanc
+Syntax error in 'string', line 3, column 8 to column 10, parsing error:
+   -------------------------------------------------
+     1:  
+     2:  parameters {
+     3:  	real y[10];
+         	       ^
+     4:  }
+     5:  model {
+   -------------------------------------------------
 
-parameters {
-  array[10] real y;
-}
-model {
-  target += std_normal_lpdf(y);
-}
+";" expected after variable declaration.
+It looks like you are trying to use the old array syntax.
+Please use the new syntax:
+array[10] real y;
 
+Syntax error in 'string', line 3, column 8 to column 10, parsing error:
+   -------------------------------------------------
+     1:  
+     2:  parameters {
+     3:  	real y[10];
+         	       ^
+     4:  }
+     5:  model {
+   -------------------------------------------------
+
+";" expected after variable declaration.
+It looks like you are trying to use the old array syntax.
+Please use the new syntax:
+array[10] real y;
+
+undefined
 $ node standalone-functions.js
 
 $ node version.js
@@ -274,5 +374,10 @@ $ node version.js
 %%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%
 $ node warnings.js
-[]
-["Warning in 'string', line 10, column 11: Found int division:\n      x / w\n    Values will be rounded towards zero. If rounding is not desired you can\n    write\n    the division as\n      x * 1.0 / w\n    If rounding is intended please use the integer division operator %/%."]
+Warning in 'string', line 10, column 11: Found int division:
+      x / w
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      x * 1.0 / w
+    If rounding is intended please use the integer division operator %/%.

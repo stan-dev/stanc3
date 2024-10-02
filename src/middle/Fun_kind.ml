@@ -2,9 +2,14 @@
   function suffix types, e.g. [foo_ldfp], [bar_lp]
 *)
 
-open Core_kernel
+open Core
 
-type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
+type 'propto suffix =
+  | FnPlain
+  | FnRng
+  | FnLpdf of 'propto
+  | FnTarget
+  | FnJacobian
 [@@deriving compare, hash, fold, map, sexp, equal]
 
 let without_propto = map_suffix (function true | false -> ())
@@ -16,19 +21,20 @@ type 'e t =
 [@@deriving compare, sexp, hash, map, fold]
 
 let suffix_from_name fname =
-  let is_suffix suffix = Core_kernel.String.is_suffix ~suffix fname in
+  let is_suffix suffix = Core.String.is_suffix ~suffix fname in
   if is_suffix "_rng" then FnRng
   else if is_suffix "_lp" then FnTarget
+  else if is_suffix "_jacobian" then FnJacobian
   else if is_suffix "_lupdf" || is_suffix "_lupmf" then FnLpdf true
   else if is_suffix "_lpdf" || is_suffix "_lpmf" then FnLpdf false
   else FnPlain
 
 let with_unnormalized_suffix (name : string) =
   Option.first_some
-    ( String.chop_suffix ~suffix:"_lpdf" name
-    |> Option.map ~f:(fun n -> n ^ "_lupdf") )
-    ( String.chop_suffix ~suffix:"_lpmf" name
-    |> Option.map ~f:(fun n -> n ^ "_lupmf") )
+    (String.chop_suffix ~suffix:"_lpdf" name
+    |> Option.map ~f:(fun n -> n ^ "_lupdf"))
+    (String.chop_suffix ~suffix:"_lpmf" name
+    |> Option.map ~f:(fun n -> n ^ "_lupmf"))
 
 let pp pp_expr ppf kind =
   match kind with

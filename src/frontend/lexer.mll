@@ -1,8 +1,8 @@
 (** The lexer that will feed into the parser. An OCamllex file. *)
 
 {
-  module Stack = Core_kernel.Stack
-  module Queue = Core_kernel.Queue
+  module Stack = Core.Stack
+  module Queue = Core.Queue
   open Lexing
   open Debugging
   open Preprocessor
@@ -15,11 +15,6 @@
       pos_lnum = pos.pos_lnum + 1;
       pos_bol = pos.pos_cnum } ;
     update_start_positions lexbuf.lex_curr_p
-
-
-  let note_deprecated_comment pos =
-    let loc_span = location_span_of_positions (pos, pos) in
-    Deprecation_removals.pound_comment_usages := loc_span :: !Deprecation_removals.pound_comment_usages
 
   (* Store comments *)
   let add_line_comment (begin_pos, buffer) end_pos =
@@ -79,10 +74,6 @@ rule token = parse
                                 let new_lexbuf =
                                   try_get_new_lexbuf fname in
                                 token new_lexbuf }
-  | "#"                       { lexer_logger "#comment" ;
-                                note_deprecated_comment lexbuf.lex_curr_p ;
-                                singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf;
-                                token lexbuf } (* deprecated *)
 (* Program blocks *)
   | "functions"               { lexer_logger "functions" ;
                                 Parser.FUNCTIONBLOCK }
@@ -142,17 +133,21 @@ rule token = parse
                                 Parser.POSITIVEORDERED }
   | "simplex"                 { lexer_logger "simplex" ; Parser.SIMPLEX }
   | "unit_vector"             { lexer_logger "unit_vector" ; Parser.UNITVECTOR }
+  | "sum_to_zero_vector"      { lexer_logger "sum_to_zero_vector" ; Parser.SUMTOZERO }
   | "cholesky_factor_corr"    { lexer_logger "cholesky_factor_corr" ;
                                 Parser.CHOLESKYFACTORCORR }
   | "cholesky_factor_cov"     { lexer_logger "cholesky_factor_cov" ;
                                 Parser.CHOLESKYFACTORCOV }
   | "corr_matrix"             { lexer_logger "corr_matrix" ; Parser.CORRMATRIX }
   | "cov_matrix"              { lexer_logger "cov_matrix" ; Parser.COVMATRIX }
+  | "column_stochastic_matrix"{ lexer_logger "column_stochastic_matrix" ; Parser.STOCHASTICCOLUMNMATRIX }
+  | "row_stochastic_matrix"   { lexer_logger "row_stochastic_matrix" ; Parser.STOCHASTICROWMATRIX }
 (* Transformation keywords *)
   | "lower"                   { lexer_logger "lower" ; Parser.LOWER }
   | "upper"                   { lexer_logger "upper" ; Parser.UPPER }
   | "offset"                  { lexer_logger "offset" ; Parser.OFFSET }
   | "multiplier"              { lexer_logger "multiplier" ; Parser.MULTIPLIER }
+  | "jacobian"                { lexer_logger "jacobian" ; Parser.JACOBIAN }
 (* Operators *)
   | '?'                       { lexer_logger "?" ; add_separator lexbuf ; Parser.QMARK }
   | ':'                       { lexer_logger ":" ; Parser.COLON }
@@ -184,13 +179,10 @@ rule token = parse
   | "/="                      { lexer_logger "/=" ; Parser.DIVIDEASSIGN }
   | ".*="                     { lexer_logger ".*=" ; Parser.ELTTIMESASSIGN }
   | "./="                     { lexer_logger "./=" ; Parser.ELTDIVIDEASSIGN }
-  | "<-"                      { lexer_logger "<-" ;
-                                Parser.ARROWASSIGN } (* deprecated *)
-  | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
-                                Parser.INCREMENTLOGPROB } (* deprecated *)
 (* Effects *)
   | "print"                   { lexer_logger "print" ; Parser.PRINT }
   | "reject"                  { lexer_logger "reject" ; Parser.REJECT }
+  | "fatal_error"             { lexer_logger "fatal_error" ; Parser.FATAL_ERROR }
   | 'T'                       { lexer_logger "T" ; Parser.TRUNCATE } (* TODO: this is a hack; we should change to something like truncate and make it a reserved keyword *)
 (* Constants and identifiers *)
   | integer_constant as i     { lexer_logger ("int_constant " ^ i) ;
@@ -202,9 +194,7 @@ rule token = parse
                                 Parser.DOTNUMERAL (lexeme lexbuf) }
   | imag_constant as z        { lexer_logger ("imag_constant " ^ z) ;
                                 Parser.IMAGNUMERAL (lexeme lexbuf) }
-  | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
-  | "get_lp"                  { lexer_logger "get_lp" ;
-                                Parser.GETLP } (* deprecated *)
+  | "target"                  { lexer_logger "target" ; Parser.TARGET }
   | string_literal as s       { lexer_logger ("string_literal " ^ s) ;
                                 Parser.STRINGLITERAL (lexeme lexbuf) }
   | identifier as id          { lexer_logger ("identifier " ^ id) ;

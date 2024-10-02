@@ -7,6 +7,7 @@ module Fixed : sig
     type ('a, 'b) t =
       | Assignment of 'a lvalue * UnsizedType.t * 'a
       | TargetPE of 'a
+      | JacobianPE of 'a
       | NRFunApp of 'a Fun_kind.t * 'a list
       | Break
       | Continue
@@ -22,7 +23,7 @@ module Fixed : sig
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
           ; decl_type: 'a Type.t
-          ; initialize: bool }
+          ; initialize: 'a decl_init }
     [@@deriving sexp, hash, compare]
 
     and 'e lvalue = 'e lbase * 'e Index.t list
@@ -30,6 +31,9 @@ module Fixed : sig
 
     and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
+
+    and 'a decl_init = Uninit | Default | Assign of 'a
+    [@@deriving sexp, hash, map, fold, compare]
 
     include Pattern.S2 with type ('a, 'b) t := ('a, 'b) t
   end
@@ -49,9 +53,7 @@ module Located : sig
     Specialized.S
       with module Meta := Meta
        and type t =
-            ( Expr.Typed.Meta.t
-            , (Meta.t[@sexp.opaque] [@compare.ignore]) )
-            Fixed.t
+        (Expr.Typed.Meta.t, (Meta.t[@sexp.opaque] [@compare.ignore])) Fixed.t
 
   val loc_of : t -> Location_span.t
 

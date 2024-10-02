@@ -1,0 +1,7 @@
+# usage: git config blame.ignoreRevsFile .git-blame-ignore-revs
+# generated with: git log --grep "[fF]ormat.*ocamlformat" --format="format:%H # %s"
+
+2030298f84a95a78953866bf46bc6564f9faee1b # Migrate to Core and format with ocamlformat 0.26.1
+845f34e165e16c95596fd48da67bb987bbbe2446 # Format with ocamlformat 0.19.0
+9c75bd01015157bae5a133417acf1f7e8af71887 # reformatting using ocamlformat 0.9
+b98f92d6a970967bd51158c1b555bf338d4da3b7 # Reformat master with ocamlformat.

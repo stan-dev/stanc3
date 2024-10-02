@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 
 let rec transpose = function
@@ -16,14 +16,14 @@ let dotproduct xs ys =
 let matprod x y =
   let y_T = transpose y in
   if List.length x <> List.length y_T then
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message "Matrix multiplication dim. mismatch"]
   else List.map ~f:(fun row -> List.map ~f:(dotproduct row) y_T) x
 
 let rec vect_to_mat l m =
   let len = List.length l in
   if len % m <> 0 then
-    Common.FatalError.fatal_error_msg
+    Common.ICE.internal_compiler_error
       [%message "The length has to be a whole multiple of the partition size"]
   else if len = m then [l]
   else
@@ -81,7 +81,7 @@ let gen_bounded m gen e =
   | None ->
       reject e.meta.loc
         (Fmt.str "Cannot evaluate bounded (upper OR lower) expr: %a"
-           Expr.Typed.pp e )
+           Expr.Typed.pp e)
 
 let gen_ul_bounded m gen e1 e2 =
   let create_bounds l u =
@@ -100,7 +100,7 @@ let gen_ul_bounded m gen e1 e2 =
   | None, None ->
       reject e1.meta.loc
         (Fmt.str "Cannot evaluate upper and lower bound expr: %a and %a"
-           Expr.Typed.pp e1 Expr.Typed.pp e2 )
+           Expr.Typed.pp e1 Expr.Typed.pp e2)
 
 let gen_row_vector m n t =
   match (t : Expr.Typed.t Transformation.t) with
@@ -124,7 +124,7 @@ let gen_vector m n t =
     let l = repeat_th n (fun _ -> Random.float 1.) in
     List.fold_map l ~init:0. ~f:(fun accum elt ->
         let elt = accum +. elt in
-        (elt, elt) ) in
+        (elt, elt)) in
   match t with
   | Transformation.Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
@@ -164,7 +164,7 @@ let gen_diag_mat l =
     ~f:(fun k ->
       repeat (min (k - 1) n) 0.
       @ (if k <= n then [List.nth_exn l (k - 1)] else [])
-      @ repeat (n - k) 0. )
+      @ repeat (n - k) 0.)
 
 let fill_lower_triangular m =
   let fill_row i l =
@@ -259,8 +259,8 @@ let rec gen_array m st n t =
 
 and gen_tuple m st t =
   Expr.Helpers.tuple_expr
-    ( Utils.(zip_stuple_trans_exn st (tuple_trans_exn t))
-    |> List.map ~f:(fun (x, y) -> generate_value m x y) )
+    (Utils.(zip_stuple_trans_exn st (tuple_trans_exn t))
+    |> List.map ~f:(fun (x, y) -> generate_value m x y))
 
 and generate_value m st t =
   match st with
@@ -285,7 +285,7 @@ let generate_expressions input data =
       | Some value -> ((name, value) :: l, m)
       | None ->
           let value = generate_value m sizedtype transformation in
-          ((name, value) :: l, Map.set m ~key:name ~data:value) )
+          ((name, value) :: l, Map.set m ~key:name ~data:value))
   |> fst |> List.rev
 
 open Yojson
@@ -327,7 +327,7 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
     | `Assoc l, UTuple ts ->
         l
         |> List.sort ~compare:(fun (x, _) (y, _) ->
-               Int.compare (int_of_string x) (int_of_string y) )
+               Int.compare (int_of_string x) (int_of_string y))
         |> List.map2_exn ~f:(fun typ_ (_, json) -> create_expr typ_ json) ts
         |> Option.all
         |> Option.map ~f:(fun l -> Expr.Helpers.tuple_expr l)
@@ -339,8 +339,8 @@ let json_to_mir (decls : (Expr.Typed.t SizedType.t * 'a * string) list)
   List.filter_map decls ~f:(fun (st, _, name) ->
       Map.find map name
       |> Option.bind ~f:(fun value ->
-             create_expr (SizedType.to_unsized st) value )
-      |> Option.map ~f:(fun value -> (name, value)) )
+             create_expr (SizedType.to_unsized st) value)
+      |> Option.map ~f:(fun value -> (name, value)))
   |> Map.Poly.of_alist_reduce ~f:Fn.const
 
 let generate_json_entries (name, expr) : string * t =

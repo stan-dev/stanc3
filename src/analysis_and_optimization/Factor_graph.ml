@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 open Dataflow_types
 open Dataflow_utils
@@ -20,9 +20,9 @@ type factor_graph =
 
 let extract_factors_statement stmt =
   match stmt with
-  | Stmt.Fixed.Pattern.TargetPE e ->
+  | Stmt.Fixed.Pattern.TargetPE e | JacobianPE e ->
       List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
-  | NRFunApp (CompilerInternal FnReject, _) -> [Reject]
+  | NRFunApp (CompilerInternal (FnReject | FnFatalError), _) -> [Reject]
   | NRFunApp ((UserDefined (s, FnTarget) | StanLib (s, FnTarget, _)), args) ->
       [LPFunction (s, args)]
   | Assignment (_, _, _)
@@ -57,7 +57,7 @@ let factor_var_dependencies statement_map blockers (label, factor) =
       (stmt_rhs_var_set (fst (Map.Poly.find_exn statement_map l)))
       ~f:fst in
   let dep_vars = union_map dep_labels ~f:label_vars in
-  Set.Poly.union dep_vars rhs
+  Set.union dep_vars rhs
 
 (** Helper function to generate the factor graph adjacency map representation
    from a factor-adjacency list *)
@@ -67,13 +67,13 @@ let build_adjacency_maps (factors : (label * factor * vexpr Set.Poly.t) List.t)
     List.fold ~f:merge_set_maps ~init:Map.Poly.empty
       (List.map
          ~f:(fun (l, fac, vars) -> Map.Poly.singleton (fac, l) vars)
-         factors ) in
+         factors) in
   let var_map =
     List.fold ~f:merge_set_maps ~init:Map.Poly.empty
       (List.concat_map factors ~f:(fun (l, fac, vars) ->
            List.map
              ~f:(fun v -> Map.Poly.singleton v (Set.Poly.singleton (fac, l)))
-             (Set.Poly.to_list vars) ) ) in
+             (Set.to_list vars))) in
   {factor_map; var_map}
 
 let fg_remove_fac (fac : factor * cf_state) (fg : factor_graph) : factor_graph =
@@ -82,15 +82,14 @@ let fg_remove_fac (fac : factor * cf_state) (fg : factor_graph) : factor_graph =
 
 let fg_remove_var (var : vexpr) (fg : factor_graph) : factor_graph =
   let factor_map =
-    Map.Poly.map fg.factor_map ~f:(fun vars -> Set.Poly.remove vars var) in
+    Map.Poly.map fg.factor_map ~f:(fun vars -> Set.remove vars var) in
   let var_map = Map.Poly.remove fg.var_map var in
   {factor_map; var_map}
 
 let remove_touching vars fg =
   let facs =
     union_map vars ~f:(fun v ->
-        Option.value ~default:Set.Poly.empty (Map.Poly.find fg.var_map v) )
-  in
+        Option.value ~default:Set.Poly.empty (Map.Poly.find fg.var_map v)) in
   let without_vars = Set.fold ~f:(fun g v -> fg_remove_var v g) ~init:fg vars in
   let without_facs =
     Set.fold ~f:(fun g f -> fg_remove_fac f g) ~init:without_vars facs in
@@ -104,14 +103,14 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
   let vars =
     Set.Poly.map
       ~f:(fun v -> VVar v)
-      (Set.Poly.union data_vars
-         (parameter_names_set ~include_transformed:false prog) ) in
+      (Set.union data_vars
+         (parameter_names_set ~include_transformed:false prog)) in
   let factor_list =
     List.map factors ~f:(fun (l, fac) ->
         ( l
         , fac
-        , Set.Poly.inter vars
-            (factor_var_dependencies statement_map vars (l, fac)) ) ) in
+        , Set.inter vars (factor_var_dependencies statement_map vars (l, fac))
+        )) in
   let fg = build_adjacency_maps factor_list in
   if exclude_data_facs then
     remove_touching (Set.Poly.map ~f:(fun v -> VVar v) data_vars) fg
@@ -129,13 +128,12 @@ let fg_reaches (starts : vexpr Set.Poly.t) (goals : vexpr Set.Poly.t)
     | next :: frontier' ->
         if Set.mem visited next then step frontier' visited
         else
-          let visited' = Set.Poly.add visited next in
+          let visited' = Set.add visited next in
           let expansion = vneighbors next in
-          if not (Set.Poly.is_empty (Set.Poly.inter expansion goals)) then true
-          else
-            step (List.append frontier' (Set.Poly.to_list expansion)) visited'
+          if not (Set.is_empty (Set.inter expansion goals)) then true
+          else step (List.append frontier' (Set.to_list expansion)) visited'
     | [] -> false in
-  step (Set.Poly.to_list starts) Set.Poly.empty
+  step (Set.to_list starts) Set.Poly.empty
 
 let fg_factor_reaches (start : factor * label) (goals : vexpr Set.Poly.t)
     (fg : factor_graph) : bool =
@@ -161,8 +159,7 @@ let fg_var_priors (var : vexpr) (data : vexpr Set.Poly.t) (fg : factor_graph) :
   match Map.Poly.find fg.var_map var with
   | Some factors ->
       Some
-        (Set.Poly.filter factors ~f:(fun fac ->
-             fg_factor_is_prior var fac data fg ) )
+        (Set.filter factors ~f:(fun fac -> fg_factor_is_prior var fac data fg))
   | None -> None
 
 let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
@@ -171,11 +168,11 @@ let list_priors ?factor_graph:(fg_opt = None) (mir : Program.Typed.t) :
   let params = Set.Poly.map ~f:(fun v -> VVar v) (parameter_names_set mir) in
   let data = Set.Poly.map ~f:(fun v -> VVar v) (data_set mir) in
   let likely_sizes =
-    Set.Poly.diff data
+    Set.diff data
       (Set.Poly.map ~f:(fun v -> VVar v) (data_set ~exclude_ints:true mir))
   in
   let fg' =
-    Set.Poly.fold ~init:fg
+    Set.fold ~init:fg
       ~f:(fun fg likely_size -> fg_remove_var likely_size fg)
       likely_sizes in
   (* for each param, apply fg_var_priors and collect results in a map*)
@@ -196,8 +193,7 @@ let factor_graph_to_dot (fg : factor_graph) : string =
   let names =
     List.map
       ~f:(fun ((f, _), ps) ->
-        (string_of_factor f, List.map ~f:string_of_vexpr (Set.Poly.to_list ps))
-        )
+        (string_of_factor f, List.map ~f:string_of_vexpr (Set.to_list ps)))
       factors in
   let factor_names, param_name_lists = List.unzip names in
   let factor_strings =

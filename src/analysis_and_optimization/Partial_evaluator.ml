@@ -1,7 +1,7 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 
 exception Rejected of Location_span.t * string
@@ -16,30 +16,30 @@ let apply_prefix_operator_int (op : string) i =
   Expr.Fixed.Pattern.Lit
     ( Int
     , Int.to_string
-        ( match op with
+        (match op with
         | "PPlus__" -> i
         | "PMinus__" -> -i
         | "PNot__" -> if i = 0 then 1 else 0
         | s ->
-            Common.FatalError.fatal_error_msg
-              [%message "Not an int prefix operator: " s] ) )
+            Common.ICE.internal_compiler_error
+              [%message "Not an int prefix operator: " s]) )
 
 let apply_prefix_operator_real (op : string) i =
   Expr.Fixed.Pattern.Lit
     ( Real
     , Float.to_string
-        ( match op with
+        (match op with
         | "PPlus__" -> i
         | "PMinus__" -> -.i
         | s ->
-            Common.FatalError.fatal_error_msg
-              [%message "Not a real prefix operator: " s] ) )
+            Common.ICE.internal_compiler_error
+              [%message "Not a real prefix operator: " s]) )
 
 let apply_operator_int (op : string) i1 i2 =
   Expr.Fixed.Pattern.Lit
     ( Int
     , Int.to_string
-        ( match op with
+        (match op with
         | "Plus__" -> i1 + i2
         | "Minus__" -> i1 - i2
         | "Times__" -> i1 * i2
@@ -52,27 +52,27 @@ let apply_operator_int (op : string) i1 i2 =
         | "Greater__" -> Bool.to_int (i1 > i2)
         | "Geq__" -> Bool.to_int (i1 >= i2)
         | s ->
-            Common.FatalError.fatal_error_msg
-              [%message "Not an int operator: " s] ) )
+            Common.ICE.internal_compiler_error
+              [%message "Not an int operator: " s]) )
 
 let apply_arithmetic_operator_real (op : string) r1 r2 =
   Expr.Fixed.Pattern.Lit
     ( Real
     , Float.to_string
-        ( match op with
+        (match op with
         | "Plus__" -> r1 +. r2
         | "Minus__" -> r1 -. r2
         | "Times__" -> r1 *. r2
         | "Divide__" -> r1 /. r2
         | s ->
-            Common.FatalError.fatal_error_msg
-              [%message "Not a real operator: " s] ) )
+            Common.ICE.internal_compiler_error
+              [%message "Not a real operator: " s]) )
 
 let apply_logical_operator_real (op : string) r1 r2 =
   Expr.Fixed.Pattern.Lit
     ( Int
     , Int.to_string
-        ( match op with
+        (match op with
         | "Equals__" -> Bool.to_int (r1 = r2)
         | "NEquals__" -> Bool.to_int (r1 <> r2)
         | "Less__" -> Bool.to_int (r1 < r2)
@@ -80,8 +80,8 @@ let apply_logical_operator_real (op : string) r1 r2 =
         | "Greater__" -> Bool.to_int (r1 > r2)
         | "Geq__" -> Bool.to_int (r1 >= r2)
         | s ->
-            Common.FatalError.fatal_error_msg
-              [%message "Not a logical operator: " s] ) )
+            Common.ICE.internal_compiler_error
+              [%message "Not a logical operator: " s]) )
 
 let is_multi_index = function
   | Index.MultiIndex _ | Upfrom _ | Between _ | All -> true
@@ -90,7 +90,7 @@ let is_multi_index = function
 let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
   { e with
     pattern=
-      ( match e.pattern with
+      (match e.pattern with
       | Var _ | Lit (_, _) -> e.pattern
       | Promotion (expr, ut, ad) ->
           Promotion (eval_expr ~preserve_stability expr, ut, ad)
@@ -108,22 +108,22 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                      ~f:(fun op ->
                        Frontend.Typechecker.operator_stan_math_return_type op
                          argument_types
-                       |> Option.map ~f:fst )
+                       |> Option.map ~f:fst)
                      ~default:
                        (Frontend.Typechecker.stan_math_return_type name
-                          argument_types ) in
+                          argument_types) in
               let try_partially_evaluate_stanlib e =
                 Expr.Fixed.Pattern.(
                   match e with
                   | FunApp (StanLib (f', suffix', mem_type), l') -> (
-                    match get_fun_or_op_rt_opt f' l' with
-                    | Some _ -> FunApp (StanLib (f', suffix', mem_type), l')
-                    | None -> FunApp (StanLib (f, suffix, mem_type), l) )
+                      match get_fun_or_op_rt_opt f' l' with
+                      | Some _ -> FunApp (StanLib (f', suffix', mem_type), l')
+                      | None -> FunApp (StanLib (f, suffix, mem_type), l))
                   | e -> e) in
               let lub_mem_pat lst =
                 Mem_pattern.lub_mem_pat (List.cons mem_type lst) in
               try_partially_evaluate_stanlib
-                ( match (f, l) with
+                (match (f, l) with
                 (* TODO: deal with tilde statements and unnormalized distributions properly here *)
                 | ( "bernoulli_lpmf"
                   , [ y
@@ -817,8 +817,8 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                       ; _ }; z ] )
                   when (not preserve_stability)
                        && not
-                            ( UnsizedType.is_eigen_type x.meta.type_
-                            && UnsizedType.is_eigen_type y.meta.type_ ) ->
+                            (UnsizedType.is_eigen_type x.meta.type_
+                            && UnsizedType.is_eigen_type y.meta.type_) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
                 | ( "Plus__"
@@ -828,8 +828,8 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                       ; _ } ] )
                   when (not preserve_stability)
                        && not
-                            ( UnsizedType.is_eigen_type x.meta.type_
-                            && UnsizedType.is_eigen_type y.meta.type_ ) ->
+                            (UnsizedType.is_eigen_type x.meta.type_
+                            && UnsizedType.is_eigen_type y.meta.type_) ->
                     let lub_mem = lub_mem_pat [mem] in
                     FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
                 | ( "Plus__"
@@ -979,75 +979,76 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
                       (StanLib ("diag_pre_multiply", suffix, lub_mem), [v; e2'])
                     (* Constant folding for operators *)
                 | op, [{pattern= Lit (Int, i); _}] -> (
-                  match op with
-                  | "PPlus__" | "PMinus__" | "PNot__" ->
-                      apply_prefix_operator_int op (Int.of_string i)
-                  | _ -> FunApp (kind, l) )
+                    match op with
+                    | "PPlus__" | "PMinus__" | "PNot__" ->
+                        apply_prefix_operator_int op (Int.of_string i)
+                    | _ -> FunApp (kind, l))
                 | op, [{pattern= Lit (Real, r); _}] -> (
-                  match op with
-                  | "PPlus__" | "PMinus__" ->
-                      apply_prefix_operator_real op (Float.of_string r)
-                  | _ -> FunApp (kind, l) )
+                    match op with
+                    | "PPlus__" | "PMinus__" ->
+                        apply_prefix_operator_real op (Float.of_string r)
+                    | _ -> FunApp (kind, l))
                 | ( ("Divide__" | "IntDivide__" | "Modulo__")
                   , [{meta= {type_= UInt; _}; _}; {pattern= Lit (Int, i2); _}] )
                   when Int.of_string i2 = 0 ->
                     raise (Rejected (e.meta.loc, "Integer division by zero"))
                 | op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Int, i2); _}]
                   -> (
-                  match op with
-                  | "Plus__" | "Minus__" | "Times__" | "Divide__"
-                   |"IntDivide__" | "Modulo__" | "Or__" | "And__" | "Equals__"
-                   |"NEquals__" | "Less__" | "Leq__" | "Greater__" | "Geq__" ->
-                      apply_operator_int op (Int.of_string i1)
-                        (Int.of_string i2)
-                  | _ -> FunApp (kind, l) )
+                    match op with
+                    | "Plus__" | "Minus__" | "Times__" | "Divide__"
+                     |"IntDivide__" | "Modulo__" | "Or__" | "And__"
+                     |"Equals__" | "NEquals__" | "Less__" | "Leq__"
+                     |"Greater__" | "Geq__" ->
+                        apply_operator_int op (Int.of_string i1)
+                          (Int.of_string i2)
+                    | _ -> FunApp (kind, l))
                 | ( op
                   , [{pattern= Lit (Real, i1); _}; {pattern= Lit (Real, i2); _}]
                   )
                  |op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Real, i2); _}]
                  |op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Int, i2); _}]
                   -> (
-                  match op with
-                  | "Plus__" | "Minus__" | "Times__" | "Divide__" ->
-                      apply_arithmetic_operator_real op (Float.of_string i1)
-                        (Float.of_string i2)
-                  | "Or__" | "And__" | "Equals__" | "NEquals__" | "Less__"
-                   |"Leq__" | "Greater__" | "Geq__" ->
-                      apply_logical_operator_real op (Float.of_string i1)
-                        (Float.of_string i2)
-                  | _ -> FunApp (kind, l) )
-                | _ -> FunApp (kind, l) ) )
+                    match op with
+                    | "Plus__" | "Minus__" | "Times__" | "Divide__" ->
+                        apply_arithmetic_operator_real op (Float.of_string i1)
+                          (Float.of_string i2)
+                    | "Or__" | "And__" | "Equals__" | "NEquals__" | "Less__"
+                     |"Leq__" | "Greater__" | "Geq__" ->
+                        apply_logical_operator_real op (Float.of_string i1)
+                          (Float.of_string i2)
+                    | _ -> FunApp (kind, l))
+                | _ -> FunApp (kind, l)))
       | TernaryIf (e1, e2, e3) -> (
-        match
-          ( eval_expr ~preserve_stability e1
-          , eval_expr ~preserve_stability e2
-          , eval_expr ~preserve_stability e3 )
-        with
-        | x, _, e3' when is_int 0 x -> e3'.pattern
-        | {pattern= Lit (Int, _); _}, e2', _ -> e2'.pattern
-        | e1', e2', e3' -> TernaryIf (e1', e2', e3') )
+          match
+            ( eval_expr ~preserve_stability e1
+            , eval_expr ~preserve_stability e2
+            , eval_expr ~preserve_stability e3 )
+          with
+          | x, _, e3' when is_int 0 x -> e3'.pattern
+          | {pattern= Lit (Int, _); _}, e2', _ -> e2'.pattern
+          | e1', e2', e3' -> TernaryIf (e1', e2', e3'))
       | EAnd (e1, e2) -> (
-        match
-          (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2)
-        with
-        | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
-            let i1, i2 = (Int.of_string s1, Int.of_string s2) in
-            Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 && i2 <> 0)))
-        | {pattern= Lit (_, s1); _}, {pattern= Lit (_, s2); _} ->
-            let r1, r2 = (Float.of_string s1, Float.of_string s2) in
-            Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. && r2 <> 0.)))
-        | e1', e2' -> EAnd (e1', e2') )
+          match
+            (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2)
+          with
+          | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
+              let i1, i2 = (Int.of_string s1, Int.of_string s2) in
+              Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 && i2 <> 0)))
+          | {pattern= Lit (_, s1); _}, {pattern= Lit (_, s2); _} ->
+              let r1, r2 = (Float.of_string s1, Float.of_string s2) in
+              Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. && r2 <> 0.)))
+          | e1', e2' -> EAnd (e1', e2'))
       | EOr (e1, e2) -> (
-        match
-          (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2)
-        with
-        | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
-            let i1, i2 = (Int.of_string s1, Int.of_string s2) in
-            Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 || i2 <> 0)))
-        | {pattern= Lit (_, s1); _}, {pattern= Lit (_, s2); _} ->
-            let r1, r2 = (Float.of_string s1, Float.of_string s2) in
-            Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. || r2 <> 0.)))
-        | e1', e2' -> EOr (e1', e2') )
+          match
+            (eval_expr ~preserve_stability e1, eval_expr ~preserve_stability e2)
+          with
+          | {pattern= Lit (Int, s1); _}, {pattern= Lit (Int, s2); _} ->
+              let i1, i2 = (Int.of_string s1, Int.of_string s2) in
+              Lit (Int, Int.to_string (Bool.to_int (i1 <> 0 || i2 <> 0)))
+          | {pattern= Lit (_, s1); _}, {pattern= Lit (_, s2); _} ->
+              let r1, r2 = (Float.of_string s1, Float.of_string s2) in
+              Lit (Int, Int.to_string (Bool.to_int (r1 <> 0. || r2 <> 0.)))
+          | e1', e2' -> EOr (e1', e2'))
       | TupleProjection
           ({pattern= FunApp (CompilerInternal FnMakeTuple, ts); _}, ix) ->
           (List.nth_exn ts (ix - 1)).pattern
@@ -1055,7 +1056,7 @@ let rec eval_expr ?(preserve_stability = false) (e : Expr.Typed.t) =
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
              Note  that we could also constant fold array sizes if we keep those around on declarations. *)
-          Indexed (eval_expr e, List.map ~f:(Index.map eval_expr) l) ) }
+          Indexed (eval_expr e, List.map ~f:(Index.map eval_expr) l)) }
 
 let rec simplify_index_expr pattern =
   Expr.Fixed.(
@@ -1066,58 +1067,58 @@ let rec simplify_index_expr pattern =
               (* , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
                *   :: inner_tl ) *)
           ; meta }
-        , ( Single ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as single_e) as
-          single )
+        , (Single ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as single_e) as
+           single)
           :: outer_tl )
       when List.exists ~f:is_multi_index inner_indices -> (
-      match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
-      | inner_singles, MultiIndex first_multi :: inner_tl ->
-          (* foo [arr1, ..., arrN] [i1, ..., iN] ->
-             foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
-          simplify_index_expr
-            (Indexed
-               ( { pattern=
-                     Indexed
-                       ( obj
-                       , inner_singles
-                         @ [ Index.Single
-                               { pattern= Indexed (first_multi, [single])
-                               ; meta= {meta with type_= UInt} } ]
-                         @ inner_tl )
-                 ; meta }
-               , outer_tl ) )
-      | inner_singles, All :: inner_tl ->
-          (* v[:x][i] -> v[i] *)
-          (* v[:][i] -> v[i] *)
-          (* XXX generate check *)
-          simplify_index_expr
-            (Indexed
-               ( { pattern= Indexed (obj, inner_singles @ [single] @ inner_tl)
-                 ; meta }
-               , outer_tl ) )
-      | inner_singles, Between (bot, _) :: inner_tl
-       |inner_singles, Upfrom bot :: inner_tl ->
-          (* v[x:y][z] -> v[x+z-1] *)
-          (* XXX generate check *)
-          simplify_index_expr
-            (Indexed
-               ( { pattern=
-                     Indexed
-                       ( obj
-                       , inner_singles
-                         @ [ Index.Single
-                               Expr.Helpers.(
-                                 binop (binop bot Plus single_e) Minus
-                                   loop_bottom) ]
-                         @ inner_tl )
-                 ; meta }
-               , outer_tl ) )
-      | inner_singles, (([] | Single _ :: _) as multis) ->
-          Common.FatalError.fatal_error_msg
-            [%message
-              " There must be a multi-index."
-                (inner_singles : Expr.Typed.t Index.t list)
-                (multis : Expr.Typed.t Index.t list)] )
+        match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
+        | inner_singles, MultiIndex first_multi :: inner_tl ->
+            (* foo [arr1, ..., arrN] [i1, ..., iN] ->
+               foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
+            simplify_index_expr
+              (Indexed
+                 ( { pattern=
+                       Indexed
+                         ( obj
+                         , inner_singles
+                           @ [ Index.Single
+                                 { pattern= Indexed (first_multi, [single])
+                                 ; meta= {meta with type_= UInt} } ]
+                           @ inner_tl )
+                   ; meta }
+                 , outer_tl ))
+        | inner_singles, All :: inner_tl ->
+            (* v[:x][i] -> v[i] *)
+            (* v[:][i] -> v[i] *)
+            (* XXX generate check *)
+            simplify_index_expr
+              (Indexed
+                 ( { pattern= Indexed (obj, inner_singles @ [single] @ inner_tl)
+                   ; meta }
+                 , outer_tl ))
+        | inner_singles, Between (bot, _) :: inner_tl
+         |inner_singles, Upfrom bot :: inner_tl ->
+            (* v[x:y][z] -> v[x+z-1] *)
+            (* XXX generate check *)
+            simplify_index_expr
+              (Indexed
+                 ( { pattern=
+                       Indexed
+                         ( obj
+                         , inner_singles
+                           @ [ Index.Single
+                                 Expr.Helpers.(
+                                   binop (binop bot Plus single_e) Minus
+                                     loop_bottom) ]
+                           @ inner_tl )
+                   ; meta }
+                 , outer_tl ))
+        | inner_singles, (([] | Single _ :: _) as multis) ->
+            Common.ICE.internal_compiler_error
+              [%message
+                " There must be a multi-index."
+                  (inner_singles : Expr.Typed.t Index.t list)
+                  (multis : Expr.Typed.t Index.t list)])
     | e -> e)
 
 let remove_trailing_alls_expr = function

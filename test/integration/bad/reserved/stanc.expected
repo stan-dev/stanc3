@@ -42,6 +42,16 @@ Syntax error in 'cholesky_factor_cov.stan', line 2, column 7 to column 26, parsi
    -------------------------------------------------
 
 Expected a new identifier but found reserved keyword 'cholesky_factor_cov'.
+  $ ../../../../../install/default/bin/stanc column_stochastic_matrix.stan
+Syntax error in 'column_stochastic_matrix.stan', line 2, column 7 to column 31, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    real column_stochastic_matrix;
+                ^
+     3:  }
+   -------------------------------------------------
+
+Expected a new identifier but found reserved keyword 'column_stochastic_matrix'.
   $ ../../../../../install/default/bin/stanc continue.stan
 Syntax error in 'continue.stan', line 2, column 7 to column 15, parsing error:
    -------------------------------------------------
@@ -284,6 +294,16 @@ Syntax error in 'return.stan', line 2, column 7 to column 13, parsing error:
    -------------------------------------------------
 
 Expected a new identifier but found reserved keyword 'return'.
+  $ ../../../../../install/default/bin/stanc row_stochastic_matrix.stan
+Syntax error in 'row_stochastic_matrix.stan', line 2, column 6 to column 27, parsing error:
+   -------------------------------------------------
+     1:  generated quantities {
+     2:    int row_stochastic_matrix;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Expected a new identifier but found reserved keyword 'row_stochastic_matrix'.
   $ ../../../../../install/default/bin/stanc row_vector.stan
 Syntax error in 'row_vector.stan', line 2, column 7 to column 17, parsing error:
    -------------------------------------------------
@@ -328,6 +348,16 @@ Semantic error in 'struct.stan', line 2, column 7 to column 13:
    -------------------------------------------------
 
 Identifier 'struct' clashes with reserved keyword.
+  $ ../../../../../install/default/bin/stanc sum_to_zero.stan
+Syntax error in 'sum_to_zero.stan', line 2, column 7 to column 25, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    real sum_to_zero_vector;
+                ^
+     3:  }
+   -------------------------------------------------
+
+Expected a new identifier but found reserved keyword 'sum_to_zero_vector'.
   $ ../../../../../install/default/bin/stanc then.stan
 Semantic error in 'then.stan', line 2, column 7 to column 11:
    -------------------------------------------------

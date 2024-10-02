@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Common
 
 (** Fixed-point of statements *)
@@ -9,6 +9,7 @@ module Fixed = struct
     type ('a, 'b) t =
       | Assignment of 'a lvalue * UnsizedType.t * 'a
       | TargetPE of 'a
+      | JacobianPE of 'a
       | NRFunApp of 'a Fun_kind.t * 'a list
       | Break
       | Continue
@@ -24,7 +25,7 @@ module Fixed = struct
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
           ; decl_type: 'a Type.t
-          ; initialize: bool }
+          ; initialize: 'a decl_init }
     [@@deriving sexp, hash, map, fold, compare]
 
     and 'e lvalue = 'e lbase * 'e Index.t list
@@ -32,6 +33,9 @@ module Fixed = struct
 
     and 'e lbase = LVariable of string | LTupleProjection of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
+
+    and 'a decl_init = Uninit | Default | Assign of 'a
+    [@@deriving sexp, hash, map, fold, compare]
 
     let rec pp_lvalue pp_e ppf (lbase, idcs) =
       match lbase with
@@ -45,6 +49,7 @@ module Fixed = struct
           Fmt.pf ppf "@[<hov>%a =@[<h>@ %a@];@]" (pp_lvalue pp_e) lvalue pp_e
             rhs
       | TargetPE expr -> Fmt.pf ppf "@[<h>target +=@ %a;@]" pp_e expr
+      | JacobianPE expr -> Fmt.pf ppf "@[<h>jacobian +=@ %a;@]" pp_e expr
       | NRFunApp (kind, args) ->
           Fmt.pf ppf "@[%a%a;@]" (Fun_kind.pp pp_e) kind
             Fmt.(list pp_e ~sep:comma |> parens)
@@ -68,9 +73,14 @@ module Fixed = struct
       | Block stmts ->
           Fmt.pf ppf "{@;<1 2>@[<v>%a@]@;}" Fmt.(list pp_s ~sep:cut) stmts
       | SList stmts -> Fmt.(list pp_s ~sep:cut |> vbox) ppf stmts
-      | Decl {decl_adtype; decl_id; decl_type; _} ->
-          Fmt.pf ppf "@[<hov 2>%a%a@ %s;@]" UnsizedType.pp_autodifftype
-            decl_adtype (Type.pp pp_e) decl_type decl_id
+      | Decl {decl_adtype; decl_id; decl_type; initialize} -> (
+          match initialize with
+          | Assign e ->
+              Fmt.pf ppf "@[<hov 2>%a%a@ %s = %a;@]" UnsizedType.pp_autodifftype
+                decl_adtype (Type.pp pp_e) decl_type decl_id pp_e e
+          | Uninit | Default ->
+              Fmt.pf ppf "@[<hov 2>%a%a@ %s;@]" UnsizedType.pp_autodifftype
+                decl_adtype (Type.pp pp_e) decl_type decl_id)
 
     include Foldable.Make2 (struct
       type nonrec ('a, 'b) t = ('a, 'b) t
@@ -141,7 +151,7 @@ module Helpers = struct
                   { decl_adtype= Expr.Typed.adlevel_of e
                   ; decl_id= sym
                   ; decl_type= Unsized (Expr.Typed.type_of e)
-                  ; initialize= true }
+                  ; initialize= Default }
             ; meta= e.meta.loc } in
           let assign =
             { decl with
@@ -159,7 +169,7 @@ module Helpers = struct
     | _ ->
         let preamble, temp, reset = temp_vars [expr] in
         let body = bodyfn (List.hd_exn temp) meta in
-        reset () ;
+        reset ();
         {body with Fixed.pattern= Block (preamble @ [body])}
 
   let internal_nrfunapp fn args meta =
@@ -175,7 +185,7 @@ module Helpers = struct
         ; pattern= Var loopvar } in
     let lower = Expr.Helpers.loop_bottom in
     let body = Fixed.{meta; pattern= Pattern.Block [bodyfn loopvar_expr]} in
-    reset () ;
+    reset ();
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
     Fixed.{meta; pattern}
 
@@ -189,7 +199,7 @@ module Helpers = struct
           (fun loopvar ->
             mk_nested_for uppers'
               (fun loopvars -> bodyfn (loopvar :: loopvars))
-              Location_span.empty )
+              Location_span.empty)
           meta
 
   (** [mk_for_iteratee] returns a MIR For statement that iterates over the given expression
@@ -220,7 +230,7 @@ module Helpers = struct
         mk_for_iteratee rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mk_for_iteratee (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ | UTuple _ ->
-        FatalError.fatal_error_msg
+        ICE.internal_compiler_error
           [%message "Can't iterate over " (iteratee : Expr.Typed.t)]
 
   let contains_fn_kind is_fn_kind ?(init = false) stmt =
@@ -230,7 +240,7 @@ module Helpers = struct
       | stmt_pattern ->
           Fixed.Pattern.fold_left ~init:accu stmt_pattern
             ~f:(fun accu expr ->
-              Expr.Helpers.contains_fn_kind is_fn_kind ~init:accu expr )
+              Expr.Helpers.contains_fn_kind is_fn_kind ~init:accu expr)
             ~g:aux in
     aux init stmt
 
@@ -307,14 +317,14 @@ module Helpers = struct
       | Var s -> Some (Fixed.Pattern.LVariable s)
       | TupleProjection (l, i) ->
           Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-              Fixed.Pattern.LTupleProjection (lv, i) )
+              Fixed.Pattern.LTupleProjection (lv, i))
       | _ -> None in
     match expr.pattern with
     | Var s -> Some (lvariable s)
     | Indexed (l, i) -> Option.map (lbase_of_expr_opt l) ~f:(fun lv -> (lv, i))
     | TupleProjection (l, i) ->
         Option.map (lvalue_of_expr_opt l) ~f:(fun lv ->
-            (Fixed.Pattern.LTupleProjection (lv, i), []) )
+            (Fixed.Pattern.LTupleProjection (lv, i), []))
     | _ -> None
 
   let rec expr_of_lvalue (lhs : 'e Expr.Fixed.t Fixed.Pattern.lvalue)
@@ -379,10 +389,10 @@ module Helpers = struct
             ((LTupleProjection (lvariable "x", 3), [Index.Single 4]), 5)
         , [] ) ] in
     let pp = Fmt.(list ~sep:comma (Fixed.Pattern.pp_lvalue int)) in
-    Fmt.(str "Before: @[<hov>%a@]" pp) lvals |> print_endline ;
+    Fmt.(str "Before: @[<hov>%a@]" pp) lvals |> print_endline;
     List.map ~f:lvalue_base_reference lvals
     |> Fmt.(str "After: @[<hov>%a@]" pp)
-    |> print_endline ;
+    |> print_endline;
     [%expect
       {|
       Before: x[1, 2, 3], x.1, x.2[3], x.3[4].5

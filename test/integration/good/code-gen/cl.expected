@@ -265,8 +265,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) current_statement__;
     using local_scalar_t__ = double;
-    boost::ecuyer1988 base_rng__ =
-      stan::services::util::create_rng(random_seed__, 0);
+    auto base_rng__ = stan::services::util::create_rng(random_seed__, 0);
     // suppress unused var warning
     (void) base_rng__;
     static constexpr const char* function__ =
@@ -517,41 +516,30 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> alpha_v =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
       current_statement__ = 1;
-      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
+      auto alpha_v =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
       current_statement__ = 2;
-      beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      Eigen::Matrix<local_scalar_t__,-1,1> cuts =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
+      auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
       current_statement__ = 3;
-      cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      local_scalar_t__ sigma = DUMMY_VAR__;
+      auto cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
       current_statement__ = 4;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      local_scalar_t__ alpha = DUMMY_VAR__;
+      auto sigma =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 5;
-      alpha = in__.template read<local_scalar_t__>();
-      local_scalar_t__ phi = DUMMY_VAR__;
+      auto alpha = in__.template read<local_scalar_t__>();
       current_statement__ = 6;
-      phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n, k, DUMMY_VAR__);
+      auto phi = in__.template read<local_scalar_t__>();
       current_statement__ = 7;
-      X_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
-      Eigen::Matrix<local_scalar_t__,-1,-1> beta_m =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n, k, DUMMY_VAR__);
+      auto X_p =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
       current_statement__ = 8;
-      beta_m = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n,
-                 k);
-      Eigen::Matrix<local_scalar_t__,1,-1> X_rv_p =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(n, DUMMY_VAR__);
+      auto beta_m =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
       current_statement__ = 9;
-      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
+      auto X_rv_p =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       {
         current_statement__ = 10;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
@@ -1234,41 +1222,30 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> alpha_v =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
       current_statement__ = 1;
-      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      Eigen::Matrix<local_scalar_t__,-1,1> beta =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
+      auto alpha_v =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
       current_statement__ = 2;
-      beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      Eigen::Matrix<local_scalar_t__,-1,1> cuts =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(k, DUMMY_VAR__);
+      auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
       current_statement__ = 3;
-      cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      local_scalar_t__ sigma = DUMMY_VAR__;
+      auto cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
       current_statement__ = 4;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      local_scalar_t__ alpha = DUMMY_VAR__;
+      auto sigma =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 5;
-      alpha = in__.template read<local_scalar_t__>();
-      local_scalar_t__ phi = DUMMY_VAR__;
+      auto alpha = in__.template read<local_scalar_t__>();
       current_statement__ = 6;
-      phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> X_p =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n, k, DUMMY_VAR__);
+      auto phi = in__.template read<local_scalar_t__>();
       current_statement__ = 7;
-      X_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
-      Eigen::Matrix<local_scalar_t__,-1,-1> beta_m =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n, k, DUMMY_VAR__);
+      auto X_p =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
       current_statement__ = 8;
-      beta_m = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n,
-                 k);
-      Eigen::Matrix<local_scalar_t__,1,-1> X_rv_p =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(n, DUMMY_VAR__);
+      auto beta_m =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
       current_statement__ = 9;
-      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
+      auto X_rv_p =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       {
         current_statement__ = 10;
         lp_accum__.add(stan::math::normal_id_glm_lpdf<false>(y_v_d_opencl__,
@@ -1962,47 +1939,30 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     // suppress unused var warning
     (void) function__;
     try {
-      Eigen::Matrix<double,-1,1> alpha_v =
-        Eigen::Matrix<double,-1,1>::Constant(k,
-          std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 1;
-      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      Eigen::Matrix<double,-1,1> beta =
-        Eigen::Matrix<double,-1,1>::Constant(k,
-          std::numeric_limits<double>::quiet_NaN());
+      auto alpha_v =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
       current_statement__ = 2;
-      beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      Eigen::Matrix<double,-1,1> cuts =
-        Eigen::Matrix<double,-1,1>::Constant(k,
-          std::numeric_limits<double>::quiet_NaN());
+      auto beta = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
       current_statement__ = 3;
-      cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
-      double sigma = std::numeric_limits<double>::quiet_NaN();
+      auto cuts = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(k);
       current_statement__ = 4;
-      sigma = in__.template read_constrain_lb<local_scalar_t__,
-                jacobian__>(0, lp__);
-      double alpha = std::numeric_limits<double>::quiet_NaN();
+      auto sigma =
+        in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+          lp__);
       current_statement__ = 5;
-      alpha = in__.template read<local_scalar_t__>();
-      double phi = std::numeric_limits<double>::quiet_NaN();
+      auto alpha = in__.template read<local_scalar_t__>();
       current_statement__ = 6;
-      phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double,-1,-1> X_p =
-        Eigen::Matrix<double,-1,-1>::Constant(n, k,
-          std::numeric_limits<double>::quiet_NaN());
+      auto phi = in__.template read<local_scalar_t__>();
       current_statement__ = 7;
-      X_p = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
-      Eigen::Matrix<double,-1,-1> beta_m =
-        Eigen::Matrix<double,-1,-1>::Constant(n, k,
-          std::numeric_limits<double>::quiet_NaN());
+      auto X_p =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
       current_statement__ = 8;
-      beta_m = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n,
-                 k);
-      Eigen::Matrix<double,1,-1> X_rv_p =
-        Eigen::Matrix<double,1,-1>::Constant(n,
-          std::numeric_limits<double>::quiet_NaN());
+      auto beta_m =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(n, k);
       current_statement__ = 9;
-      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
+      auto X_rv_p =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(n);
       out__.write(alpha_v);
       out__.write(beta);
       out__.write(cuts);

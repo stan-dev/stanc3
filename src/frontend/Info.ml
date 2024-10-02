@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Ast
 open Middle
 open Yojson.Basic
@@ -35,8 +35,8 @@ let get_var_decl {stmts; _} : t =
                  ~f:(fun {identifier; _} -> (identifier.name, type_info))
                  decl.variables in
              decl_info @ acc
-         | _ -> acc )
-       stmts )
+         | _ -> acc)
+       stmts)
 
 let block_info_json name block : t =
   `Assoc [(name, Option.value_map block ~default:(`Assoc []) ~f:get_var_decl)]
@@ -55,6 +55,7 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
     | NRFunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
     | Print _ -> (Set.add funs "print", distrs)
     | Reject _ -> (Set.add funs "reject", distrs)
+    | FatalError _ -> (Set.add funs "fatal_error", distrs)
     | Tilde {distribution; _} ->
         let possible_names =
           List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
@@ -97,8 +98,8 @@ let includes_json () =
   `Assoc
     [ ( "included_files"
       , `List
-          ( List.rev !Preprocessor.included_files
-          |> List.map ~f:(fun str -> `String str) ) ) ]
+          (List.rev !Preprocessor.included_files
+          |> List.map ~f:(fun str -> `String str)) ) ]
 
 let info_json ast =
   List.fold ~f:Util.combine ~init:(`Assoc [])

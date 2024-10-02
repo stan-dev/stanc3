@@ -1,5 +1,5 @@
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 open Middle.Program
 open Middle.Expr
@@ -10,8 +10,8 @@ let rec fold_expr ~take_expr ~(init : 'c) (expr : Expr.Typed.t) : 'c =
     ~f:(fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
     ~init expr.pattern
 
-let fold_stmts ~take_expr ~take_stmt ~(init : 'c) (stmts : Stmt.Located.t List.t)
-    : 'c =
+let fold_stmts ~take_expr ~take_stmt ~(init : 'c)
+    (stmts : Stmt.Located.t List.t) : 'c =
   (* let rec fold_expr (state : 'c) (expr : Expr.t) =
    *   Expr.Fixed.Pattern.fold_left
    *     ~f:(fun a e -> fold_expr (take_expr a e) e)
@@ -34,9 +34,9 @@ let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
       Some (float_of_string str, str)
   | {pattern= Fixed.Pattern.FunApp (StanLib ("PMinus__", FnPlain, _), [v]); _}
     -> (
-    match num_expr_value v with
-    | Some (v, s) -> Some (-.v, "-" ^ s)
-    | None -> None )
+      match num_expr_value v with
+      | Some (v, s) -> Some (-.v, "-" ^ s)
+      | None -> None)
   | _ -> None
 
 type bound_values =
@@ -51,12 +51,13 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values =
   | Upper upper -> {lower= `None; upper= bound_value upper}
   | LowerUpper (lower, upper) ->
       {lower= bound_value lower; upper= bound_value upper}
-  | Simplex -> {lower= `Lit 0.; upper= `Lit 1.}
+  | Simplex | StochasticColumn | StochasticRow ->
+      {lower= `Lit 0.; upper= `Lit 1.}
   | PositiveOrdered -> {lower= `Lit 0.; upper= `None}
   | UnitVector -> {lower= `Lit (-1.); upper= `Lit 1.}
   | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered | Offset _
-   |Multiplier _ | OffsetMultiplier _
-   |Identity
+   |Multiplier _ | OffsetMultiplier _ | Identity
+   |SumToZero
     (* This is a stub, but,
        until we define a distribution which accepts a tuple,
        this doesn't matter.
@@ -69,7 +70,7 @@ let chop_dist_name (fname : string) : string Option.t =
   List.fold ~init:None ~f:Option.first_some
     (List.map
        ~f:(fun suffix -> String.chop_suffix ~suffix fname)
-       Middle.Utils.distribution_suffices )
+       Middle.Utils.distribution_suffices)
 
 let rec top_var_declarations Stmt.Fixed.{pattern; _} : string Set.Poly.t =
   match pattern with
@@ -83,19 +84,18 @@ let data_set ?(exclude_transformed = false) ?(exclude_ints = false)
   let data = Set.Poly.of_list mir.input_vars in
   (* Possibly remove ints from the data set *)
   let filtered_data =
-    let remove_ints =
-      Set.Poly.filter ~f:(fun (_, _, st) -> st <> SizedType.SInt) in
-    Set.Poly.map ~f:fst3 ((if exclude_ints then remove_ints else ident) data)
+    let remove_ints = Set.filter ~f:(fun (_, _, st) -> st <> SizedType.SInt) in
+    Set.Poly.map ~f:fst3 ((if exclude_ints then remove_ints else Fn.id) data)
   in
   (* Transformed data are declarations in prepare_data but excluding data *)
   if exclude_transformed then filtered_data
   else
     let trans_data =
-      Set.Poly.diff
+      Set.diff
         (Set.Poly.union_list
-           (List.map ~f:top_var_declarations mir.prepare_data) )
+           (List.map ~f:top_var_declarations mir.prepare_data))
         (Set.Poly.map ~f:fst3 data) in
-    Set.Poly.union trans_data filtered_data
+    Set.union trans_data filtered_data
 
 let parameter_set ?(include_transformed = false) (mir : Program.Typed.t) =
   Set.Poly.of_list
@@ -104,8 +104,8 @@ let parameter_set ?(include_transformed = false) (mir : Program.Typed.t) =
        (List.filter
           ~f:(fun (_, _, {out_block; _}) ->
             out_block = Parameters
-            || (include_transformed && out_block = TransformedParameters) )
-          mir.output_vars ) )
+            || (include_transformed && out_block = TransformedParameters))
+          mir.output_vars))
 
 let parameter_names_set ?(include_transformed = false) (mir : Program.Typed.t) =
   Set.Poly.map ~f:fst (parameter_set ~include_transformed mir)
@@ -115,7 +115,7 @@ let rec var_declarations Stmt.Fixed.{pattern; _} : string Set.Poly.t =
   | Decl {decl_id; _} -> Set.Poly.singleton decl_id
   | IfElse (_, s, None) | While (_, s) | For {body= s; _} -> var_declarations s
   | IfElse (_, s1, Some s2) ->
-      Set.Poly.union (var_declarations s1) (var_declarations s2)
+      Set.union (var_declarations s1) (var_declarations s2)
   | Block slist | SList slist | Profile (_, slist) ->
       Set.Poly.union_list (List.map ~f:var_declarations slist)
   | _ -> Set.Poly.empty
@@ -128,7 +128,7 @@ let map_rec_expr_state f state e =
   let cur_state = ref state in
   let g e' =
     let e', state = f !cur_state e' in
-    cur_state := state ;
+    cur_state := state;
     e' in
   let e = map_rec_expr g e in
   let state = !cur_state in
@@ -146,7 +146,7 @@ let map_rec_state_stmt_loc f state stmt =
   let cur_state = ref state in
   let g stmt =
     let stmt, state = f !cur_state stmt in
-    cur_state := state ;
+    cur_state := state;
     stmt in
   let stmt = map_rec_stmt_loc g stmt in
   let state = !cur_state in
@@ -168,7 +168,7 @@ let stmt_loc_of_stmt_loc_num flowgraph_to_mir s =
 
 let statement_stmt_loc_of_statement_stmt_loc_num flowgraph_to_mir pattern =
   (stmt_loc_of_stmt_loc_num flowgraph_to_mir
-     Stmt.Located.{Non_recursive.pattern; meta= Meta.empty} )
+     Stmt.Located.{Non_recursive.pattern; meta= Meta.empty})
     .pattern
 
 (** Forgetful function from numbered to unnumbered programs *)
@@ -185,7 +185,7 @@ let fwd_traverse_statement stmt ~init ~f =
           ~default:(s', IfElse (pred, c, None))
           ~f:(fun else_s ->
             let s'', c' = f s' else_s in
-            (s'', IfElse (pred, c, Some c')) )
+            (s'', IfElse (pred, c, Some c')))
     | While (pred, body) ->
         let s', c = f init body in
         (s', While (pred, c))
@@ -197,7 +197,7 @@ let fwd_traverse_statement stmt ~init ~f =
           List.fold_left stmts
             ~f:(fun (s, l) stmt ->
               let s', c = f s stmt in
-              (s', List.cons c l) )
+              (s', List.cons c l))
             ~init:(init, []) in
         (s', Profile (name, List.rev ls))
     | Block stmts ->
@@ -205,7 +205,7 @@ let fwd_traverse_statement stmt ~init ~f =
           List.fold_left stmts
             ~f:(fun (s, l) stmt ->
               let s', c = f s stmt in
-              (s', List.cons c l) )
+              (s', List.cons c l))
             ~init:(init, []) in
         (s', Block (List.rev ls))
     | SList stmts ->
@@ -213,11 +213,12 @@ let fwd_traverse_statement stmt ~init ~f =
           List.fold_left stmts
             ~f:(fun (s, l) stmt ->
               let s', c = f s stmt in
-              (s', List.cons c l) )
+              (s', List.cons c l))
             ~init:(init, []) in
         (s', SList (List.rev ls))
     | Assignment _ as s -> (init, s)
     | TargetPE _ as s -> (init, s)
+    | JacobianPE _ as s -> (init, s)
     | NRFunApp _ as s -> (init, s)
     | Break as s -> (init, s)
     | Continue as s -> (init, s)
@@ -230,7 +231,7 @@ let vexpr_of_expr_exn Expr.Fixed.{pattern; _} =
   match pattern with
   | Var s -> VVar s
   | _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Non-var expression found, but var expected"]
 
 (** See interface file *)
@@ -253,7 +254,7 @@ and index_var_set ix =
   | Single expr -> expr_var_set expr
   | Upfrom expr -> expr_var_set expr
   | Between (expr1, expr2) ->
-      Set.Poly.union (expr_var_set expr1) (expr_var_set expr2)
+      Set.union (expr_var_set expr1) (expr_var_set expr2)
   | MultiIndex expr -> expr_var_set expr
 
 let expr_var_names_set expr =
@@ -269,6 +270,7 @@ let stmt_rhs stmt =
    |While (rhs, _)
    |Assignment (_, _, rhs)
    |TargetPE rhs
+   |JacobianPE rhs
    |Return (Some rhs) ->
       Set.Poly.singleton rhs
   | Return None
@@ -276,7 +278,7 @@ let stmt_rhs stmt =
       Set.Poly.empty
 
 let union_map (set : ('a, 'c) Set_intf.Set.t) ~(f : 'a -> 'b Set.Poly.t) =
-  Set.fold set ~init:Set.Poly.empty ~f:(fun s a -> Set.Poly.union s (f a))
+  Set.fold set ~init:Set.Poly.empty ~f:(fun s a -> Set.union s (f a))
 
 let stmt_rhs_var_set stmt = union_map (stmt_rhs stmt) ~f:expr_var_set
 
@@ -286,7 +288,7 @@ let expr_assigned_var Expr.Fixed.{pattern; _} =
   | Var s -> VVar s
   | Indexed ({pattern= Var s; _}, _) -> VVar s
   | _ ->
-      Common.FatalError.fatal_error_msg
+      Common.ICE.internal_compiler_error
         [%message "Unimplemented: analysis of assigning to non-var"]
 
 (** See interface file *)
@@ -322,9 +324,9 @@ let fn_subst_stmt m = map_rec_stmt_loc (fn_subst_stmt_base m)
 let name_map m (e : Expr.Typed.t) =
   match e.pattern with
   | Var s -> (
-    match Map.Poly.find m s with
-    | Some s' -> Some {e with pattern= Var s'}
-    | None -> None )
+      match Map.Poly.find m s with
+      | Some s' -> Some {e with pattern= Var s'}
+      | None -> None)
   | _ -> None
 
 let name_subst_stmt m = fn_subst_stmt (name_map m)
@@ -355,12 +357,12 @@ let rec expr_depth Expr.Fixed.{pattern; _} =
       1
       + Option.value ~default:0
           (List.max_elt ~compare:compare_int
-             (List.map ~f:expr_depth [e1; e2; e3]) )
+             (List.map ~f:expr_depth [e1; e2; e3]))
   | Indexed (e, l) ->
       1
       + max (expr_depth e)
           (Option.value ~default:0
-             (List.max_elt ~compare:compare_int (List.map ~f:idx_depth l)) )
+             (List.max_elt ~compare:compare_int (List.map ~f:idx_depth l)))
   | Promotion (expr, _, _) -> 1 + expr_depth expr
   | EAnd (e1, e2) | EOr (e1, e2) ->
       1
@@ -380,13 +382,13 @@ let rec update_expr_ad_levels autodiffable_variables
     let base =
       if
         List.exists l ~f:(fun x ->
-            UnsizedType.is_autodifftype @@ Expr.Typed.adlevel_of x )
+            UnsizedType.is_autodifftype @@ Expr.Typed.adlevel_of x)
       then UnsizedType.AutoDiffable
       else DataOnly in
     UnsizedType.fill_adtype_for_type base Expr.Typed.Meta.(e.meta.type_) in
   match pattern with
   | Var x ->
-      if Set.Poly.mem autodiffable_variables x then e
+      if Set.mem autodiffable_variables x then e
       else
         let adlevel =
           UnsizedType.fill_adtype_for_type DataOnly
@@ -495,11 +497,11 @@ let unsafe_unsized_to_sized_type (rt : Expr.Typed.t Type.t) =
         | UTuple ts -> STuple (List.map ~f:to_sized ts)
         | UFun (_, UnsizedType.ReturnType inner_ut, _, _) -> to_sized inner_ut
         | UFun (_, Void, _, _) | UMathLibraryFunction ->
-            Common.FatalError.fatal_error_msg
+            Common.ICE.internal_compiler_error
               [%message
-                ( "return type of a function was a void user defined function \
-                   or math library function."
-                  : string )] in
+                ("return type of a function was a void user defined function \
+                  or math library function."
+                  : string)] in
       Type.Sized (to_sized ut)
 
 let%expect_test "cleanup" =
@@ -510,6 +512,6 @@ let%expect_test "cleanup" =
   let body = Block [Skip |> swrap] |> swrap in
   let s = For {loopvar= "i"; lower= loop_bottom; upper= loop_bottom; body} in
   let res = [s |> swrap] |> cleanup_empty_stmts in
-  [%sexp (res : Stmt.Located.t list)] |> print_s ;
+  [%sexp (res : Stmt.Located.t list)] |> print_s;
   [%expect {|
     () |}]

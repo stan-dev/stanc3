@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Common
 
 (** Pattern and fixed-point of MIR expressions *)
@@ -36,8 +36,8 @@ module Fixed = struct
           Fmt.pf ppf "(@[%a@ ?@ %a@ :@ %a@])" pp_e pred pp_e texpr pp_e fexpr
       | Indexed (expr, indices) ->
           Fmt.pf ppf "@[%a%a@]" pp_e expr
-            ( if List.is_empty indices then fun _ _ -> ()
-            else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
+            (if List.is_empty indices then fun _ _ -> ()
+             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets))
             indices
       | TupleProjection (expr, ix) -> Fmt.pf ppf "@[%a.%d@]" pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
@@ -183,7 +183,7 @@ module Helpers = struct
     internal_funapp FnReadData [] ()
     |> contains_fn_kind (function
          | CompilerInternal FnReadData -> true
-         | _ -> false )
+         | _ -> false)
 
   let rec infer_type_of_indexed ut indices =
     match (ut, indices) with
@@ -209,7 +209,8 @@ module Helpers = struct
      |UComplexRowVector, [_] ->
         UComplex
     | _ ->
-        FatalError.fatal_error_msg [%message "Can't index" (ut : UnsizedType.t)]
+        ICE.internal_compiler_error
+          [%message "Can't index" (ut : UnsizedType.t)]
 
   (** [add_index expression index] returns an expression that (additionally)
       indexes into the input [expression] by [index].*)
@@ -221,7 +222,7 @@ module Helpers = struct
       | Var _ | TupleProjection _ -> Fixed.Pattern.Indexed (e, [i])
       | Indexed (e, indices) -> Indexed (e, indices @ [i])
       | _ ->
-          Common.FatalError.fatal_error_msg
+          ICE.internal_compiler_error
             [%message "Expected Var or Indexed but found " (e : Typed.t)] in
     Fixed.{meta; pattern}
 
@@ -234,7 +235,7 @@ module Helpers = struct
       match Typed.(type_of e) with
       | UTuple ts -> List.nth_exn ts (i - 1)
       | t ->
-          Common.FatalError.fatal_error_msg
+          ICE.internal_compiler_error
             [%message
               "Internal error: Attempted to apply tuple index to a non-tuple \
                type:"
@@ -261,7 +262,7 @@ module Helpers = struct
       , [Upfrom loop_bottom; Single loop_bottom; Single loop_bottom] ) ]
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
     |> Fmt.(str "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
-    |> print_endline ;
+    |> print_endline;
     [%expect
       {|
       vector, array[] matrix, matrix, array[] vector, real, array[] real |}]

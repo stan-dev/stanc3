@@ -117,9 +117,7 @@ Built-in Functions
 Probability Functions
 ----------------------------------------------------------------------
 get_prob_function(fname, args) {
-  if (is_user_defined(fname + "_log"))
-    fname + "_log"
-  else if (args[1] is integer or integer array)
+  if (args[1] is integer or integer array)
     fname + "_lpmf"
   else
     fname + "_lpdf"

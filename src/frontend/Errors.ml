@@ -1,7 +1,6 @@
 (** Setup of our compiler errors *)
 
-open Core_kernel
-module Str = Re.Str
+open Core
 
 (** Our type of syntax error information *)
 type syntax_error =
@@ -23,14 +22,21 @@ type t =
   | Semantic_error of Semantic_error.t
   | DebugDataError of (Middle.Location_span.t * string)
 
+let get_context_callback ?code Middle.Location.{filename; included_from; _} () =
+  (* By the time we are printing an error, all these files are already resolved. *)
+  match !Include_files.include_provider with
+  | FileSystemPaths _ ->
+      (* So we can read directly from the filesystem *)
+      In_channel.read_lines filename
+  | InMemory m ->
+      (* If the location is not included from anywhere, it's the orignal code,
+         otherwise we know we can find it in the map *)
+      (if Option.is_none included_from then code else Map.find m filename)
+      |> Option.value_exn |> String.split_lines
+
 let pp_context_with_message ?code ppf (msg, loc) =
-  let open Middle.Location in
-  let context_callback =
-    match code with
-    | Some s -> fun () -> String.split_lines s
-    | None -> fun () -> In_channel.read_lines loc.filename in
   Fmt.pf ppf "%a@,%s" (Fmt.option Fmt.string)
-    (context_to_string context_callback loc)
+    (Middle.Location.context_to_string (get_context_callback ?code loc) loc)
     msg
 
 let pp_semantic_error ?printed_filename ?code ppf err =
@@ -50,13 +56,13 @@ let pp_syntax_error ?printed_filename ?code ppf = function
   | Lexing loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1} )
+           {loc with col_num= loc.col_num - 1})
         (pp_context_with_message ?code)
         ("Invalid character found.", loc)
   | UnexpectedEOF loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1} )
+           {loc with col_num= loc.col_num - 1})
         (pp_context_with_message ?code)
         ("Unexpected end of input", loc)
   | Include (message, loc) ->

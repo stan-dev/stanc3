@@ -1,5 +1,5 @@
-open Core_kernel
-open Core_kernel.Poly
+open Core
+open Core.Poly
 open Middle
 
 (**
@@ -40,9 +40,9 @@ let query_var_eigen_names (expr : Expr.Typed.t) : string Set.Poly.t =
   Check whether one set is a nonzero subset of another set.
  *)
 let is_nonzero_subset ~set ~subset =
-  Set.Poly.is_subset subset ~of_:set
-  && (not (Set.Poly.is_empty set))
-  && not (Set.Poly.is_empty subset)
+  Set.is_subset subset ~of_:set
+  && (not (Set.is_empty set))
+  && not (Set.is_empty subset)
 
 (**
  Check an Index to count how many times we see a single index.
@@ -79,10 +79,10 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
           true
       | UMatrix, _ when contains_single_idx > 1 -> true
       | (UArray t | UFun (_, ReturnType t, _, _)), index -> (
-        match List.tl index with
-        | Some cut_list -> is_uni_eigen_loop_indexing in_loop t cut_list
-        | None -> false )
-      | _ -> false )
+          match List.tl index with
+          | Some cut_list -> is_uni_eigen_loop_indexing in_loop t cut_list
+          | None -> false)
+      | _ -> false)
 
 let query_stan_math_mem_pattern_support (name : string)
     (args : (UnsizedType.autodifftype * UnsizedType.t) list) =
@@ -100,7 +100,7 @@ let query_stan_math_mem_pattern_support (name : string)
           ~f:(fun x ->
             Frontend.SignatureMismatch.check_compatible_arguments_mod_conv
               (snd3 x) args
-            |> Result.is_ok )
+            |> Result.is_ok)
           namematches in
       let is_soa ((_ : UnsizedType.returntype), _, mem) =
         mem = Mem_pattern.SoA in
@@ -133,28 +133,27 @@ let rec query_initial_demotable_expr (in_loop : bool) ~(acc : string Set.Poly.t)
         Set.Poly.union_list
           (List.map
              ~f:
-               (Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
-                  (query_expr acc) )
-             indexed ) in
+               (Index.apply ~default:Set.Poly.empty ~merge:Set.union
+                  (query_expr acc))
+             indexed) in
       let index_demotes =
         if is_uni_eigen_loop_indexing in_loop type_ indexed then
-          Set.Poly.union (query_var_eigen_names expr) index_set
-        else Set.Poly.union (query_expr acc expr) index_set in
-      Set.Poly.union acc index_demotes
+          Set.union (query_var_eigen_names expr) index_set
+        else Set.union (query_expr acc expr) index_set in
+      Set.union acc index_demotes
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       acc
   | Promotion (expr, _, _) -> query_expr acc expr
   | TupleProjection (expr, _) -> query_expr acc expr
   | TernaryIf (predicate, texpr, fexpr) ->
       let predicate_demotes = query_expr acc predicate in
-      Set.Poly.union
-        (Set.Poly.union predicate_demotes (query_var_eigen_names texpr))
+      Set.union
+        (Set.union predicate_demotes (query_var_eigen_names texpr))
         (query_var_eigen_names fexpr)
   | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
       (*We need to get the demotes from both sides*)
-      let full_lhs_rhs =
-        Set.Poly.union (query_expr acc lhs) (query_expr acc rhs) in
-      Set.Poly.union (query_expr full_lhs_rhs lhs) (query_expr full_lhs_rhs rhs)
+      let full_lhs_rhs = Set.union (query_expr acc lhs) (query_expr acc rhs) in
+      Set.union (query_expr full_lhs_rhs lhs) (query_expr full_lhs_rhs rhs)
 
 (**
   Query a function to detect if it or any of its used
@@ -180,20 +179,20 @@ and query_initial_demotable_funs (in_loop : bool) (acc : string Set.Poly.t)
     Set.Poly.union_list (List.map ~f:query_var_eigen_names exprs) in
   let demoted_eigen_names = List.fold ~init:acc ~f:query_expr exprs in
   let demoted_and_top_level_names =
-    Set.Poly.union demoted_eigen_names top_level_eigen_names in
+    Set.union demoted_eigen_names top_level_eigen_names in
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
-    match name with
-    | "check_matching_dims" -> acc
-    | name -> (
-      match is_fun_soa_supported name exprs with
-      | true -> Set.Poly.union acc demoted_eigen_names
-      | false -> Set.Poly.union acc demoted_and_top_level_names ) )
+      match name with
+      | "check_matching_dims" -> acc
+      | name -> (
+          match is_fun_soa_supported name exprs with
+          | true -> Set.union acc demoted_eigen_names
+          | false -> Set.union acc demoted_and_top_level_names))
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec | FnMakeTuple) ->
-      Set.Poly.union acc demoted_and_top_level_names
+      Set.union acc demoted_and_top_level_names
   | CompilerInternal (_ : 'a Internal_fun.t) -> acc
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) ->
-      Set.Poly.union acc demoted_and_top_level_names
+      Set.union acc demoted_and_top_level_names
 
 (**
   * Recurse through subexpressions and return a list of Unsized types.
@@ -235,16 +234,16 @@ and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.t list) =
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
-    match name with
-    | "check_matching_dims" -> []
-    | "rep_vector" -> [(UnsizedType.AutoDiffable, UnsizedType.UVector)]
-    | "rep_row_vector" -> [(UnsizedType.AutoDiffable, UnsizedType.URowVector)]
-    | "rep_matrix"
-      when match List.map ~f:Expr.Typed.fun_arg exprs with
-           | [(_, UnsizedType.UReal); _; _] -> true
-           | _ -> false ->
-        [(UnsizedType.AutoDiffable, UnsizedType.UMatrix)]
-    | _ -> List.concat_map ~f:extract_nonderived_admatrix_types exprs )
+      match name with
+      | "check_matching_dims" -> []
+      | "rep_vector" -> [(UnsizedType.AutoDiffable, UnsizedType.UVector)]
+      | "rep_row_vector" -> [(UnsizedType.AutoDiffable, UnsizedType.URowVector)]
+      | "rep_matrix"
+        when match List.map ~f:Expr.Typed.fun_arg exprs with
+             | [(_, UnsizedType.UReal); _; _] -> true
+             | _ -> false ->
+          [(UnsizedType.AutoDiffable, UnsizedType.UMatrix)]
+      | _ -> List.concat_map ~f:extract_nonderived_admatrix_types exprs)
   (*While not "true", we need to tell the optimizer these are danger functions*)
   | CompilerInternal Internal_fun.FnMakeArray ->
       [(AutoDiffable, UReal); (DataOnly, UArray UReal)]
@@ -260,7 +259,7 @@ let contains_at_least_one_ad_matrix_or_all_data
   || List.exists
        ~f:(fun x ->
          UnsizedType.is_autodifftype (fst x)
-         && UnsizedType.is_eigen_type (snd x) )
+         && UnsizedType.is_eigen_type (snd x))
        fun_args
   || List.for_all ~f:(fun x -> UnsizedType.is_dataonlytype (fst x)) fun_args
 
@@ -307,20 +306,19 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
             ~f:(fun accum x ->
               Index.folder accum
                 (fun acc -> query_initial_demotable_expr in_loop ~acc)
-                x )
+                x)
             idx in
         match is_uni_eigen_loop_indexing in_loop ut idx with
-        | true -> Set.Poly.add idx_list name
+        | true -> Set.add idx_list name
         | false -> idx_list in
       let rhs_demotable_names = query_expr acc rhs in
-      let rhs_and_idx_demotions =
-        Set.Poly.union idx_demotable rhs_demotable_names in
+      let rhs_and_idx_demotions = Set.union idx_demotable rhs_demotable_names in
       (* RHS (1)*)
       let tuple_demotions =
         match lval with
         | LTupleProjection _, _ ->
-            Set.Poly.add
-              (Set.Poly.union rhs_and_idx_demotions (query_var_eigen_names rhs))
+            Set.add
+              (Set.union rhs_and_idx_demotions (query_var_eigen_names rhs))
               name
         | _ -> rhs_and_idx_demotions in
       let assign_demotions =
@@ -332,7 +330,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
             | true, UnsizedType.AutoDiffable ->
                 not
                   (contains_at_least_one_ad_matrix_or_all_data
-                     (extract_nonderived_admatrix_types rhs) )
+                     (extract_nonderived_admatrix_types rhs))
             | _ -> false in
           (* LHS (3) rhs unsupported function*)
           let is_not_supported_func =
@@ -342,7 +340,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
             | FunApp (StanLib (name, _, _), exprs) ->
                 not
                   (query_stan_math_mem_pattern_support name
-                     (List.map ~f:Expr.Typed.fun_arg exprs) )
+                     (List.map ~f:Expr.Typed.fun_arg exprs))
             | _ -> false in
           (* LHS (3) all rhs aos*)
           let is_all_rhs_aos =
@@ -353,29 +351,27 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
             is_all_rhs_aos || is_rhs_not_promoteable_to_soa
             || is_not_supported_func
           then
-            Set.Poly.add
-              (Set.Poly.union tuple_demotions (query_var_eigen_names rhs))
-              name
+            Set.add (Set.union tuple_demotions (query_var_eigen_names rhs)) name
           else tuple_demotions
         else tuple_demotions in
-      Set.Poly.union acc assign_demotions
+      Set.union acc assign_demotions
   | NRFunApp (kind, exprs) ->
       query_initial_demotable_funs in_loop acc kind exprs
   | IfElse (predicate, true_stmt, op_false_stmt) ->
       let predicate_acc = query_expr acc predicate in
-      Set.Poly.union acc
+      Set.union acc
         (Set.Poly.union_list
            [ predicate_acc
            ; query_initial_demotable_stmt in_loop predicate_acc true_stmt
            ; Option.value_map
                ~f:(query_initial_demotable_stmt in_loop predicate_acc)
-               ~default:Set.Poly.empty op_false_stmt ] )
+               ~default:Set.Poly.empty op_false_stmt ])
   | Return optional_expr ->
       Option.value_map ~f:(query_expr acc) ~default:Set.Poly.empty optional_expr
   | SList lst | Profile (_, lst) | Block lst ->
       Set.Poly.union_list
         (List.map ~f:(query_initial_demotable_stmt in_loop acc) lst)
-  | TargetPE expr -> query_expr acc expr
+  | TargetPE expr | JacobianPE expr -> query_expr acc expr
   (* NOTE: loops generated by inlining are not actually loops;
      we do not unconditionally set "in_loop" *)
   | For
@@ -386,16 +382,23 @@ let rec query_initial_demotable_stmt (in_loop : bool) (acc : string Set.Poly.t)
     when lb = "1" && ub = "1" ->
       query_initial_demotable_stmt in_loop acc body
   | For {lower; upper; body; _} ->
-      Set.Poly.union
-        (Set.Poly.union (query_expr acc lower) (query_expr acc upper))
+      Set.union
+        (Set.union (query_expr acc lower) (query_expr acc upper))
         (query_initial_demotable_stmt true acc body)
   | While (predicate, body) ->
       Set.Poly.union_list
         [ acc; query_expr acc predicate
         ; query_initial_demotable_stmt true acc body ]
-  | Decl {decl_type= Type.Sized st; decl_id; _}
-    when SizedType.is_complex_type st ->
-      Set.Poly.add acc decl_id
+  | Decl {decl_type= Type.Sized st; decl_id; initialize; _} ->
+      let complex_name =
+        match SizedType.is_complex_type st with
+        | true -> Set.Poly.singleton decl_id
+        | false -> Set.Poly.empty in
+      let init_names =
+        match initialize with
+        | Assign e -> query_expr acc e
+        | _ -> Set.Poly.empty in
+      Set.union acc (Set.union complex_name init_names)
   | Skip | Break | Continue | Decl _ -> acc
 
 (** Look through a statement to see whether the objects used in it need to be
@@ -417,12 +420,19 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
       (lval, (_ : UnsizedType.t), (rhs : Expr.Typed.t)) -> (
       let assign_name = Stmt.Helpers.lhs_variable lval in
       let all_rhs_eigen_names = query_var_eigen_names rhs in
-      if Set.Poly.mem aos_exits assign_name then
-        Set.Poly.add all_rhs_eigen_names assign_name
+      if Set.mem aos_exits assign_name then
+        Set.add all_rhs_eigen_names assign_name
       else
         match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
-        | true -> Set.Poly.add all_rhs_eigen_names assign_name
-        | false -> Set.Poly.empty )
+        | true -> Set.add all_rhs_eigen_names assign_name
+        | false -> Set.Poly.empty)
+  | Decl {decl_id; initialize= Assign e; _} -> (
+      let all_rhs_eigen_names = query_var_eigen_names e in
+      if Set.mem aos_exits decl_id then Set.add all_rhs_eigen_names decl_id
+      else
+        match is_nonzero_subset ~set:aos_exits ~subset:all_rhs_eigen_names with
+        | true -> Set.add all_rhs_eigen_names decl_id
+        | false -> Set.Poly.empty)
   (* All other statements do not need logic here*)
   | _ -> Set.Poly.empty
 
@@ -457,7 +467,7 @@ let rec modify_kind ?force_demotion:(force = false)
         (Fun_kind.StanLib (name, sfx, Mem_pattern.AoS), exprs')
       else
         ( Fun_kind.StanLib (name, sfx, SoA)
-        , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs
+        , List.map ~f:(modify_expr ~force_demotion:false modifiable_set) exprs
         )
   | UserDefined _ as udf ->
       (udf, List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs)
@@ -542,17 +552,61 @@ and modify_expr ?force_demotion:(force = false)
 *)
 let rec modify_stmt_pattern
     (pattern : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
-    (modifiable_set : string Core_kernel.Set.Poly.t) =
+    (modifiable_set : string Core.Set.Poly.t) =
   let mod_expr force = modify_expr ~force_demotion:force modifiable_set in
   let mod_stmt stmt = modify_stmt stmt modifiable_set in
   match pattern with
   | Stmt.Fixed.Pattern.Decl
-      ({decl_id; decl_type= Type.Sized sized_type; _} as decl) ->
-      if Set.Poly.mem modifiable_set decl_id then
+      { decl_id
+      ; decl_adtype
+      ; decl_type= Type.Sized sized_type
+      ; initialize=
+          Assign
+            ({ pattern= FunApp (CompilerInternal (FnReadParam read_param), args)
+             ; _ } as assigner) } ->
+      let name = decl_id in
+      if Set.mem modifiable_set name then
+        Stmt.Fixed.Pattern.Decl
+          { decl_id
+          ; decl_adtype
+          ; decl_type=
+              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type)
+          ; initialize=
+              Assign
+                { assigner with
+                  pattern=
+                    FunApp
+                      ( CompilerInternal
+                          (FnReadParam {read_param with mem_pattern= AoS})
+                      , List.map ~f:(mod_expr true) args ) } }
+      else
+        Stmt.Fixed.Pattern.Decl
+          { decl_id
+          ; decl_adtype
+          ; decl_type=
+              Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type)
+          ; initialize=
+              Assign
+                { assigner with
+                  pattern=
+                    FunApp
+                      ( CompilerInternal
+                          (FnReadParam {read_param with mem_pattern= SoA})
+                      , List.map ~f:(mod_expr false) args ) } }
+  | Stmt.Fixed.Pattern.Decl
+      ({decl_id; decl_type= Type.Sized sized_type; initialize; _} as decl) ->
+      if Set.mem modifiable_set decl_id then
+        let init_expr =
+          match initialize with
+          | Stmt.Fixed.Pattern.Assign e ->
+              Stmt.Fixed.Pattern.Assign (mod_expr false e)
+          | Default -> Default
+          | Uninit -> Uninit in
         Stmt.Fixed.Pattern.Decl
           { decl with
             decl_type=
-              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type) }
+              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type)
+          ; initialize= init_expr }
       else
         Decl
           { decl with
@@ -564,10 +618,10 @@ let rec modify_stmt_pattern
   | Assignment
       ( lval
       , ut
-      , ( {pattern= FunApp (CompilerInternal (FnReadParam read_param), args); _}
-        as assigner ) ) ->
+      , ({pattern= FunApp (CompilerInternal (FnReadParam read_param), args); _}
+         as assigner) ) ->
       let name = Stmt.Helpers.lhs_variable lval in
-      if Set.Poly.mem modifiable_set name then
+      if Set.mem modifiable_set name then
         Assignment
           ( lval
           , ut
@@ -589,7 +643,7 @@ let rec modify_stmt_pattern
                   , List.map ~f:(mod_expr false) args ) } )
   | Assignment (lval, (ut : UnsizedType.t), rhs) ->
       let name = Stmt.Helpers.lhs_variable lval in
-      if Set.Poly.mem modifiable_set name then
+      if Set.mem modifiable_set name then
         (*If assignee is in bad set, force demotion of rhs functions*)
         Assignment (lval, ut, mod_expr true rhs)
       else Assignment (lval, ut, (mod_expr false) rhs)
@@ -607,6 +661,7 @@ let rec modify_stmt_pattern
         ; upper= mod_expr false upper
         ; body= mod_stmt body }
   | TargetPE expr -> TargetPE ((mod_expr false) expr)
+  | JacobianPE expr -> JacobianPE ((mod_expr false) expr)
   | Return optional_expr ->
       Return (Option.map ~f:(mod_expr false) optional_expr)
   | Profile ((p_name : string), stmt) ->

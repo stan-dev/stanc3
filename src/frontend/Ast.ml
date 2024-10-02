@@ -8,7 +8,7 @@
   later be filled in with something like [type expr_with_meta = metadata expression]
 *)
 
-open Core_kernel
+open Core
 open Middle
 
 (** Our type for identifiers, on which we record a location *)
@@ -45,8 +45,6 @@ type ('e, 'f) expression =
   | FunApp of 'f * identifier * 'e list
   | CondDistApp of 'f * identifier * 'e list
   | Promotion of 'e * UnsizedType.t * UnsizedType.autodifftype
-  (* GetLP is deprecated *)
-  | GetLP
   | GetTarget
   | ArrayExpr of 'e list
   | RowVectorExpr of 'e list
@@ -93,11 +91,7 @@ let expr_ad_lub exprs =
   exprs |> List.map ~f:(fun x -> x.emeta.ad_level) |> UnsizedType.lub_ad_type
 
 (** Assignment operators *)
-type assignmentoperator =
-  | Assign
-  (* ArrowAssign is deprecated *)
-  | ArrowAssign
-  | OperatorAssign of Operator.t
+type assignmentoperator = Assign | OperatorAssign of Operator.t
 [@@deriving sexp, hash, compare]
 
 (** Truncations *)
@@ -149,8 +143,7 @@ type ('e, 's, 'l, 'f) statement =
       {assign_lhs: 'l lvalue_pack; assign_op: assignmentoperator; assign_rhs: 'e}
   | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
-  (* IncrementLogProb is deprecated *)
-  | IncrementLogProb of 'e
+  | JacobianPE of 'e
   | Tilde of
       { arg: 'e
       ; distribution: identifier
@@ -162,6 +155,7 @@ type ('e, 's, 'l, 'f) statement =
   | ReturnVoid
   | Print of 'e printable list
   | Reject of 'e printable list
+  | FatalError of 'e printable list
   | Skip
   | IfThenElse of 'e * 's * 's option
   | While of 'e * 's
@@ -265,8 +259,8 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (*========================== Helper functions ===============================*)
 
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression ({expr; emeta} : typed_expression)
-    : untyped_expression =
+let rec untyped_expression_of_typed_expression
+    ({expr; emeta} : typed_expression) : untyped_expression =
   match expr with
   | Promotion (e, _, _) -> untyped_expression_of_typed_expression e
   | _ ->
@@ -292,12 +286,25 @@ let rec untyped_lvalue_of_typed_lvalue_pack :
 
 (** Forgetful function from typed to untyped statements *)
 let rec untyped_statement_of_typed_statement {stmt; smeta} =
-  { stmt=
-      map_statement untyped_expression_of_typed_expression
-        untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
-        (fun _ -> ())
-        stmt
-  ; smeta= {loc= smeta.loc} }
+  match stmt with
+  (* TODO(2.38): Remove this workaround *)
+  | JacobianPE e ->
+      { stmt=
+          Assignment
+            { assign_lhs=
+                LValue
+                  { lval= LVariable {name= "jacobian"; id_loc= smeta.loc}
+                  ; lmeta= {loc= smeta.loc} }
+            ; assign_op= OperatorAssign Plus
+            ; assign_rhs= untyped_expression_of_typed_expression e }
+      ; smeta= {loc= smeta.loc} }
+  | _ ->
+      { stmt=
+          map_statement untyped_expression_of_typed_expression
+            untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
+            (fun _ -> ())
+            stmt
+      ; smeta= {loc= smeta.loc} }
 
 (** Forgetful function from typed to untyped programs *)
 let untyped_program_of_typed_program : typed_program -> untyped_program =
@@ -305,10 +312,10 @@ let untyped_program_of_typed_program : typed_program -> untyped_program =
 
 let rec expr_of_lvalue {lval; lmeta} =
   { expr=
-      ( match lval with
+      (match lval with
       | LVariable s -> Variable s
       | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i)
-      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i) )
+      | LTupleProjection (l, i) -> TupleProjection (expr_of_lvalue l, i))
   ; emeta= lmeta }
 
 let rec extract_ids {expr; _} =
@@ -330,7 +337,7 @@ let rec extract_ids {expr; _} =
    |CondDistApp (_, _, es)
    |FunApp (_, _, es) ->
       List.concat_map ~f:extract_ids es
-  | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP | GetTarget -> []
+  | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetTarget -> []
 
 let rec lvalue_of_expr_opt ({expr; emeta} : untyped_expression) =
   let rec base_lvalue {expr; emeta} =
@@ -397,19 +404,16 @@ let get_first_loc (s : untyped_statement) =
    |ForEach (id, _, _)
    |FunDef {funname= id; _} ->
       id.id_loc.begin_loc
-  | TargetPE e
-   |IncrementLogProb e
-   |Return e
-   |IfThenElse (e, _, _)
-   |While (e, _) ->
+  | TargetPE e | JacobianPE e | Return e | IfThenElse (e, _, _) | While (e, _)
+    ->
       e.emeta.loc.begin_loc
   | Assignment _ | Profile _ | Block _ | Tilde _ | Break | Continue
-   |ReturnVoid | Print _ | Reject _ | Skip ->
+   |ReturnVoid | Print _ | Reject _ | FatalError _ | Skip ->
       s.smeta.loc.begin_loc
   | VarDecl {decl_type; transformation; variables; _} -> (
-    match get_loc_dt decl_type with
-    | Some loc -> loc
-    | None -> (
-      match get_loc_tf transformation with
+      match get_loc_dt decl_type with
       | Some loc -> loc
-      | None -> (List.hd_exn variables).identifier.id_loc.begin_loc ) )
+      | None -> (
+          match get_loc_tf transformation with
+          | Some loc -> loc
+          | None -> (List.hd_exn variables).identifier.id_loc.begin_loc))

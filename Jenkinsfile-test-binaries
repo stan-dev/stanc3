@@ -57,7 +57,7 @@ pipeline {
         stage("Dune tests") {
             agent {
                 docker {
-                    image 'stanorg/stanc3:debianfi'
+                    image 'stanorg/stanc3:debian-ocaml-4.14'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"
                 }
@@ -74,7 +74,7 @@ pipeline {
         stage("Build") {
             agent {
                 docker {
-                    image 'stanorg/stanc3:debianfi'
+                    image 'stanorg/stanc3:debian-ocaml-4.14'
                     args "--entrypoint=\'\'"
                 }
             }
@@ -115,7 +115,7 @@ pipeline {
         stage("Build stanc.js") {
             agent {
                 docker {
-                    image 'stanorg/stanc3:debianfi'
+                    image 'stanorg/stanc3:debian-ocaml-4.14'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"
                 }
@@ -139,7 +139,7 @@ pipeline {
         stage("Build & test a static Linux binary") {
             agent {
                 docker {
-                    image 'stanorg/stanc3:staticfi'
+                    image 'stanorg/stanc3:static-ocaml-4.14'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"
                 }
@@ -162,7 +162,7 @@ pipeline {
         stage("Build & test static Windows binary") {
             agent {
                 docker {
-                    image 'stanorg/stanc3:debian-windowsfi'
+                    image 'stanorg/stanc3:debian-windows-ocaml-4.14'
                     //Forces image to ignore entrypoint
                     args "--entrypoint=\'\'"
                 }

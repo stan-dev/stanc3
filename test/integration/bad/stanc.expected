@@ -20,9 +20,9 @@ Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 10, pars
 
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
-  unit_vector, simplex, ordered, positive_ordered,
+  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  tuple(...)
+  row_stochastic_matrix, column_stochastic_matrix, tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
 Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
@@ -35,31 +35,10 @@ Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsi
 
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
-  unit_vector, simplex, ordered, positive_ordered,
+  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  tuple(...)
+  row_stochastic_matrix, column_stochastic_matrix, tuple(...)
 optionally preceded by a single array[...]
-  $ ../../../../install/default/bin/stanc array-multi-decl-bad.stan
-Syntax error in 'array-multi-decl-bad.stan', line 2, column 11 to column 12, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    real x[5], y;
-                    ^
-     3:  }
-   -------------------------------------------------
-
-Expected ";" or assignment.
-  $ ../../../../install/default/bin/stanc array-multi-decl-bad2.stan
-Syntax error in 'array-multi-decl-bad2.stan', line 2, column 21 to column 22, parsing error:
-   -------------------------------------------------
-     1:  model {
-     2:    real x[3] = {1,2,3}, y;
-                              ^
-     3:  }
-   -------------------------------------------------
-
-Multiple declarations are not allowed when array dimensions are given in TYPE IDENTIFIER[DIMENSIONS] form.
-When all declarations share array dimensions, use 'array[DIMENSIONS] TYPE IDENTIFIER' form, otherwise use separate declarations.
   $ ../../../../install/default/bin/stanc array-read-write-assign.stan
 Semantic error in 'array-read-write-assign.stan', line 3, column 0 to column 7:
    -------------------------------------------------
@@ -428,6 +407,18 @@ Semantic error in 'break8.stan', line 12, column 4 to column 10:
    -------------------------------------------------
 
 Break statements may only be used in loops.
+  $ ../../../../install/default/bin/stanc call_dist_no_suffix.stan
+Semantic error in 'call_dist_no_suffix.stan', line 5, column 12 to column 25:
+   -------------------------------------------------
+     3:  }
+     4:  model {
+     5:    target += std_normal(x);
+                     ^
+     6:  }
+   -------------------------------------------------
+
+A returning function was expected but an undeclared identifier 'std_normal' was supplied.
+A similar known identifier is 'std_normal_lpdf'
   $ ../../../../install/default/bin/stanc ccdf-sample.stan
 Semantic error in 'ccdf-sample.stan', line 5, column 2 to column 24:
    -------------------------------------------------
@@ -438,7 +429,7 @@ Semantic error in 'ccdf-sample.stan', line 5, column 2 to column 24:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with sampling notation. Use target += weibull_ccdf_log(...) instead.
+CDF and CCDF functions may not be used with distribution notation (~). Use target += weibull_ccdf_log(...) instead.
   $ ../../../../install/default/bin/stanc cdf-sample.stan
 Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
    -------------------------------------------------
@@ -449,7 +440,7 @@ Semantic error in 'cdf-sample.stan', line 5, column 2 to column 23:
      6:  }
    -------------------------------------------------
 
-CDF and CCDF functions may not be used with sampling notation. Use target += normal_cdf_log(...) instead.
+CDF and CCDF functions may not be used with distribution notation (~). Use target += normal_cdf_log(...) instead.
   $ ../../../../install/default/bin/stanc complex_mat_bad.stan
 Semantic error in 'complex_mat_bad.stan', line 7, column 2 to column 18:
    -------------------------------------------------
@@ -477,7 +468,7 @@ Semantic error in 'conditional_condition_bad_1.stan', line 6, column 6 to column
      8:  }
    -------------------------------------------------
 
-Condition in conditional must be of type int or real. Instead found type vector.
+Condition in conditional must be of type int. Instead found type vector.
   $ ../../../../install/default/bin/stanc conditional_condition_bad_2.stan
 Semantic error in 'conditional_condition_bad_2.stan', line 9, column 11 to column 12:
    -------------------------------------------------
@@ -489,7 +480,7 @@ Semantic error in 'conditional_condition_bad_2.stan', line 9, column 11 to colum
     11:  }
    -------------------------------------------------
 
-Condition in conditional must be of type int or real. Instead found type vector.
+Condition in conditional must be of type int. Instead found type vector.
   $ ../../../../install/default/bin/stanc continue1.stan
 Semantic error in 'continue1.stan', line 4, column 2 to column 11:
    -------------------------------------------------
@@ -735,11 +726,11 @@ The left hand side has type
 and the right hand side has type
   row_vector
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
-Syntax error in 'err-bare-type-close-square.stan', line 2, column 8 to column 11, parsing error:
+Syntax error in 'err-bare-type-close-square.stan', line 2, column 9 to column 13, parsing error:
    -------------------------------------------------
      1:  functions {
-     2:    real[ foo(int n) { return n; }
-                 ^
+     2:    array[ real foo(int n) { return n; }
+                  ^
      3:  }
      4:  model {
    -------------------------------------------------
@@ -791,9 +782,9 @@ Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing er
 
 Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
-  unit_vector, simplex, ordered, positive_ordered,
+  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  tuple(...)
+  row_stochastic_matrix, column_stochastic_matrix, tuple(...)
 optionally preceded by a single array[...]
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan
 Semantic error in 'err-decl-matrix-2.stan', line 2, column 13 to column 17:
@@ -963,6 +954,40 @@ Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, 
 
 Unexpected input after the conclusion of a valid expression.
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope.stan
+Semantic error in 'err-jacobian-plusequals-scope.stan', line 4, column 2 to column 16:
+   -------------------------------------------------
+     2:    real x;
+     3:    x = 2.0;
+     4:    jacobian += x;
+           ^
+     5:  }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope2.stan
+Semantic error in 'err-jacobian-plusequals-scope2.stan', line 3, column 4 to column 18:
+   -------------------------------------------------
+     1:  functions {
+     2:    real upper_bound(real x, real ub) {
+     3:      jacobian += x;
+             ^
+     4:      return ub - exp(x);
+     5:    }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope3.stan
+Semantic error in 'err-jacobian-plusequals-scope3.stan', line 14, column 11 to column 42:
+   -------------------------------------------------
+    12:  
+    13:  model {
+    14:    real b = upper_bound_jacobian(b_raw, ub);
+                    ^
+    15:  }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
   $ ../../../../install/default/bin/stanc err-minus-types.stan
 Semantic error in 'err-minus-types.stan', line 4, column 6 to column 11:
    -------------------------------------------------
@@ -1987,7 +2012,6 @@ Semantic error in 'op_logical_negation_bad.stan', line 7, column 6 to column 8:
 
 Ill-typed arguments supplied to prefix operator !. Available signatures: 
 (int) => int
-(real) => int
 Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_mdivide_left_bad.stan
 Semantic error in 'op_mdivide_left_bad.stan', line 7, column 6 to column 11:
@@ -2211,42 +2235,18 @@ Semantic error in 'real_idx.stan', line 3, column 4 to column 7:
    -------------------------------------------------
 
 Index must be of type int or int[] or must be a range. Instead found type real.
-  $ ../../../../install/default/bin/stanc redefine-ccdf3.stan
-Semantic error in 'redefine-ccdf3.stan', line 5, column 2 to line 7, column 3:
+  $ ../../../../install/default/bin/stanc rng-no-suffix.stan
+Semantic error in 'rng-no-suffix.stan', line 7, column 13 to column 31:
    -------------------------------------------------
-     3:      return -x^2;
-     4:    }
-     5:    real foo_ccdf_log(int n, real x) {
-           ^
-     6:      return -x^2;
-     7:    }
-   -------------------------------------------------
-
-Function 'foo_ccdf_log' has already been declared for signature (int, real) => real
-  $ ../../../../install/default/bin/stanc redefine-cdf3.stan
-Semantic error in 'redefine-cdf3.stan', line 5, column 2 to line 7, column 3:
-   -------------------------------------------------
-     3:      return -x^2;
-     4:    }
-     5:    real foo_cdf_log(int n, real x) {
-           ^
-     6:      return -x^2;
-     7:    }
+     5:  }
+     6:  transformed data {
+     7:      real x = newdistribution(1);
+                      ^
+     8:  }
    -------------------------------------------------
 
-Function 'foo_cdf_log' has already been declared for signature (int, real) => real
-  $ ../../../../install/default/bin/stanc redefine-prob3.stan
-Semantic error in 'redefine-prob3.stan', line 5, column 2 to line 7, column 3:
-   -------------------------------------------------
-     3:      return -y^2;
-     4:    }
-     5:    real foo_lpmf(int y) {
-           ^
-     6:      return y^2 / 2;
-     7:    }
-   -------------------------------------------------
-
-Function 'foo_lpmf' has already been declared for signature (int) => real
+A returning function was expected but an undeclared identifier 'newdistribution' was supplied.
+A similar known identifier is 'newdistribution_rng'
   $ ../../../../install/default/bin/stanc rng_loc1.stan
 Semantic error in 'rng_loc1.stan', line 3, column 11 to column 29:
    -------------------------------------------------
@@ -2813,7 +2813,6 @@ Semantic error in 'validate_logical_negate_expr_bad.stan', line 3, column 6 to c
 
 Ill-typed arguments supplied to prefix operator !. Available signatures: 
 (int) => int
-(real) => int
 Instead supplied argument of incompatible type: vector.
   $ ../../../../install/default/bin/stanc validate_modulus_bad.stan
 Semantic error in 'validate_modulus_bad.stan', line 7, column 6 to column 11:

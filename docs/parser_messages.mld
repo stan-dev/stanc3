@@ -73,7 +73,7 @@ I can now replace this message with my new version
 
 Often a new language feature will need new syntax messages. The command
 [dune build @update_messages] will add dummy error messages to [parser.messages]
-that you can replace.
+that you can replace. This sub-command requires Python 3 to be installed.
 
 It is crucial to understand that the example programs Menhir provides in this file
 may not represent all possible programs leading to this state. See

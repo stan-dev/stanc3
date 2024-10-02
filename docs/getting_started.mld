@@ -23,7 +23,8 @@ installed via apt, homebrew, or your system's package manager.
    If you wish to {e install} stanc on your system, you can run the above
 [opam] command without [--deps-only].}
 
- {- You can now build a stanc binary by running [make]. If this succeeds, you have the required software.}
+ {- You can now build a stanc binary by running [make]. If this succeeds,
+  you have the required software.}
 }
 
 
@@ -41,8 +42,8 @@ through the WSL shell.
 {2:nix Alternative: Using Nix}
 
 {{:https://nixos.org/nix/}Nix} is a declarative package manager with a focus on reproducible builds.
-We provide the ability to use Nix to build, test and run Stanc3. We recommend trying the [opam] instructions
-first if you are not an existing Nix user, with these as a backup.
+We provide the ability to use Nix to build, test and run Stanc3. We recommend trying the [opam]
+instructions first if you are not an existing Nix user, with these as a backup.
 
 If you have nix installed, you can build Stanc3 by running the following command in the [stanc3] directory:
 
@@ -73,10 +74,20 @@ of Stanc3 plus packages for an OCaml development environment
 
 {3 Testing}
 Once you have the necessary software, you can make your edits to the source files in [src/] and
-tests in [test/]. Running the command [dune runtest] will show any test output which is different
-from the expected output. In our continuous integration, this results in test failures. If you
-are knowingly changing the output, and the differences highlighted by [dune runtest] look correct,
-you can run [dune promote] to change the expected output to match your current tests.
+tests in [test/]. Running the command [dune runtest] (or [make test]) will show any test output
+which is different from the expected output. In our continuous integration, this results in test
+failures. If you are knowingly changing the output, and the differences highlighted by
+[dune runtest] look correct, you can run [dune promote] to change the expected output to match
+your current tests.
+
+{4 Test coverage}
+
+We have support for computing test coverage using the {{:https://github.com/aantron/bisect_ppx}bisect_ppx}
+library. To generate a coverage report, run [make testcoverage]. This will print a summary of the
+coverage to the terminal, and generate a detailed HTML report in the [_coverage] directory.
+This report can be opened in a web browser.
+
+Code coverage of the master branch is available on {{:https://app.codecov.io/gh/stan-dev/stanc3}codecov.io}.
 
 {3 Code formatting}
 We recommend setting up your editor to use OCamlformat automatically. This will
@@ -101,6 +112,13 @@ new error states to the [parser.messages] file. These will say
 
 See {{!page-parser_messages}adding or changing the syntax error messages} for more information.
 
+Note that python3 is required to run this command.
+
+{3 Building these docs}
+
+Docs can be built with [make doc]. This will generate a [_build/default/_doc/_html/index.html] file
+which can be opened in a web browser.
+
 {2:cmdstan Developing with stanc3 and CmdStan}
 
 In order to use the locally built development version of stanc3 with CmdStan,
@@ -108,7 +126,8 @@ you need to set the [STANC3] makefile variable in the make/local file in CmdStan
 
 [STANC3=relative/or/absolute/path/to/the/cloned/stanc3/folder]
 
-This will automatically rebuild the stanc3 binary used in CmdStan if a change was made to the stanc3 source files.
+This will automatically rebuild the stanc3 binary used in CmdStan if a change was made to the
+stanc3 source files.
 
 {2:editors Editor advice}
 For working on this project, we recommend using either VSCode or Emacs as an editor, due to their good OCaml support through
@@ -120,10 +139,12 @@ Anything with Merlin support is fine.
 Install instructions for VSCode can be found {{:https://code.visualstudio.com/docs/setup/setup-overview}here}.
 
 {b For Windows users}: We recommend using {{:https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl}Remote - WSL}
-to program within WSL from a native Windows installation of VSCode. This extension allows you to connect to the WSL instance as if it is a remote machine,
-removing the need for an X11 server or other method of running a Linux GUI app directly.
+to program within WSL from a native Windows installation of VSCode. This extension allows you to connect to the
+WSL instance as if it is a remote machine, removing the need for an X11 server or other method of running a
+Linux GUI app directly.
 
-Once in VSCode (on any platform), simply install the {{:https://github.com/reasonml-editor/vscode-reasonml}OCaml extension} and you should be ready to go.
+Once in VSCode (on any platform), simply install the {{:https://github.com/reasonml-editor/vscode-reasonml}OCaml extension}
+and you should be ready to go.
 
 {3 Setting up Emacs}
 The best way to edit OCaml in Emacs is through {{:https://github.com/ocaml/tuareg}Tuareg mode}.
@@ -162,3 +183,44 @@ If you use {{:https://github.com/jwiegley/use-package}[use-package.el]}, this sn
 Even to an experienced OCaml developer, there are certain practices
 in the stanc3 codebase which might be unfamiliar. We have tried to document
 those on our {{!page-core_ideas}Core ideas} page.
+
+
+{2 Advanced development}
+
+{3 Fuzzing}
+
+OCaml has {{:https://v2.ocaml.org/manual/afl-fuzz.html}support} for building binaries
+instrumented for use with the{{:https://aflplus.plus/}AFL++} fuzzing tool.
+This requires a new opam switch which includes the [ocaml-option-afl] base package.
+
+{[
+opam switch create "stanc-fuzz" --packages "ocaml-option-afl,ocaml.4.14.1"
+eval $(opam env)
+./scripts/install_build_deps.sh
+]}
+
+After this, the normal build process will produce a binary ready for fuzzing.
+
+{3 Profiling}
+
+Profiling support is not directly provided in the stanc3 repository, but you can use the
+{{:https://github.com/LexiFi/landmarks}Landmarks} library to profile the code.
+
+This requires editing the [dune] files in the [src/] directory to include the landmarks library,
+similar to how the [bisect_ppx] library is instrumented by default.
+
+{[
+(instrumentation
+  (backend landmarks --auto))
+]}
+
+You can then build a profiled version of the code by running
+[dune build src/stanc/stanc.exe --instrument-with landmarks --force].
+
+To configure the profiler at runtime, consult the Landmarks documentation. A
+good starting command is
+
+{[
+OCAML_LANDMARKS="on,output=prof.txt" stanc.exe mymodel.stan
+]}
+

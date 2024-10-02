@@ -1,4 +1,4 @@
-open Core_kernel
+open Core
 open Middle
 module Str = Re.Str
 
@@ -49,7 +49,7 @@ let%expect_test "outvar to json pretty" =
      }
   *)
   ("var_one", SArray (SVector (Mem_pattern.AoS, var "N"), var "K"), Parameters)
-  |> out_var_json |> Yojson.Basic.pretty_to_string |> print_endline ;
+  |> out_var_json |> Yojson.Basic.pretty_to_string |> print_endline;
   [%expect
     {|
   {
@@ -82,7 +82,7 @@ let%expect_test "outvar to json" =
   [ ( "var_one"
     , SizedType.SArray (SVector (AoS, var "N"), var "K")
     , Program.Parameters ) ]
-  |> out_var_interpolated_json_str |> print_endline ;
+  |> out_var_interpolated_json_str |> print_endline;
   [%expect
     {|
     "[{\"name\":\"var_one\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"}]" |}]
