@@ -597,7 +597,7 @@ pipeline {
                             }
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-expressions/") }}
+                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-expressions/*") }}
                 }
             }
         }
