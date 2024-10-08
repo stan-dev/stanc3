@@ -3,25 +3,28 @@ name: Build binaries
 on:
   workflow_dispatch: {}
 
+env:
+  OCAML_VERSION: 4.14.1
+
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - macos
-          - ubuntu
-        ocaml-compiler:
-          - 4.14.1
+        include:
+          - os: ubuntu-latest
+            name: ubuntu
+          - os: macos-13
+            name: macos
 
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download older SDK
-        if: matrix.os == 'macos'
+        if: matrix.name == 'macos'
         run: |
           wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.11.sdk.tar.xz
           tar -xvf MacOSX10.11.sdk.tar.xz
@@ -30,48 +33,47 @@ jobs:
           echo "MACOSX_DEPLOYMENT_TARGET=10.11" >> $GITHUB_ENV
           echo "SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk/" >> $GITHUB_ENV
 
-      - name: Use OCaml ${{ matrix.ocaml-compiler }}
+      - name: Use OCaml ${{ env.OCAML_VERSION }}
         uses: ocaml/setup-ocaml@v2
         with:
-          ocaml-compiler: ${{ matrix.ocaml-compiler }}
-          cache-prefix: v3
+          ocaml-compiler: ${{ env.OCAML_VERSION }}
 
-      - if: matrix.os == 'macos'
+      - if: matrix.name == 'macos'
         run: opam pin -y dune 3.6.0 --no-action
 
       - run: bash -x scripts/install_build_deps.sh
 
       - name: Build macos
-        if: matrix.os == 'macos'
+        if: matrix.name == 'macos'
         run: opam exec -- dune subst; opam exec -- dune build
 
       - name: Build ubuntu
-        if: matrix.os == 'ubuntu'
+        if: matrix.name == 'ubuntu'
         run: opam exec -- dune subst; opam exec -- dune build --profile static
 
-      - run: mv _build/default/src/stanc/stanc.exe ${{ matrix.os }}-stanc
+      - run: mv _build/default/src/stanc/stanc.exe ${{ matrix.name }}-stanc
 
-      - name: Upload ${{ matrix.os }} stanc
-        uses: actions/upload-artifact@v3
+      - name: Upload ${{ matrix.name }} stanc
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-stanc
-          path: ${{ matrix.os }}-stanc
+          name: ${{ matrix.name }}-stanc
+          path: ${{ matrix.name }}-stanc
 
   build-cross:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install cross-compiler
         run: sudo apt-get update; sudo apt-get install -y gcc-mingw-w64-x86-64
 
-      - name: Use OCaml 4.14.1
+      - name: Use OCaml ${{ env.OCAML_VERSION }}
         uses: ocaml/setup-ocaml@v2
         with:
           cache-prefix: v1-windows
-          ocaml-compiler: ocaml-windows64.4.14.1
+          ocaml-compiler: ocaml-windows64.${{ env.OCAML_VERSION }}
           opam-repositories: |
               windows: http://github.com/ocaml-cross/opam-cross-windows.git
               default: https://github.com/ocaml/opam-repository.git
@@ -86,7 +88,7 @@ jobs:
       - run: mv _build/default.windows/src/stanc/stanc.exe windows-stanc
 
       - name: Upload Windows stanc
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-stanc
           path: windows-stanc
@@ -98,7 +100,7 @@ jobs:
       - run: mv _build/default/src/stancjs/stancjs.bc.js stanc.js
 
       - name: Upload stanc.js
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: stanc.js
           path: stanc.js
