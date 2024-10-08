@@ -563,12 +563,14 @@ let rec modify_stmt_pattern
       ; initialize=
           Assign
             ({ pattern= FunApp (CompilerInternal (FnReadParam read_param), args)
-             ; _ } as assigner) } ->
+             ; _ } as assigner)
+      ; decl_annotations } ->
       let name = decl_id in
       if Set.mem modifiable_set name then
         Stmt.Fixed.Pattern.Decl
           { decl_id
           ; decl_adtype
+          ; decl_annotations
           ; decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type)
           ; initialize=
@@ -583,6 +585,7 @@ let rec modify_stmt_pattern
         Stmt.Fixed.Pattern.Decl
           { decl_id
           ; decl_adtype
+          ; decl_annotations
           ; decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type)
           ; initialize=

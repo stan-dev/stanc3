@@ -21,6 +21,7 @@ type info =
   ; kind:
       [ `Variable of varinfo
       | `UserDeclared of Location_span.t
+      | `UserExtern of Location_span.t
       | `StanMath
       | `UserDefined ] }
 
@@ -37,6 +38,7 @@ val add :
   -> string
   -> Middle.UnsizedType.t
   -> [ `UserDeclared of Location_span.t
+     | `UserExtern of Location_span.t
      | `StanMath
      | `UserDefined
      | `Variable of varinfo ]
