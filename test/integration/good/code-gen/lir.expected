@@ -1030,7 +1030,7 @@
        (TypeTrait stan::promote_args_t
         ((TypeTrait stan::base_type_t ((TemplateType T0__)))
          (TypeTrait stan::base_type_t ((TemplateType T1__)))))
-       -1 1 AoS))
+       -1 1))
      (name foo_5)
      (args
       (((Const (Ref (TemplateType T0__))) shared_params_arg__)
@@ -1108,7 +1108,7 @@
       (Matrix
        (TypeTrait stan::promote_args_t
         ((TypeTrait stan::base_type_t ((TemplateType T0__)))))
-       -1 -1 AoS))
+       -1 -1))
      (name covsqrt2corsqrt)
      (args
       (((Const (Ref (TemplateType T0__))) mat_arg__)
@@ -1716,7 +1716,7 @@
            (TypeTrait stan::base_type_t ((TemplateType T9__)))
            (TypeTrait stan::base_type_t ((TemplateType T10__)))
            (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-       -1 1 AoS))
+       -1 1))
      (name f7)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -1801,7 +1801,7 @@
             (TypeTrait stan::base_type_t ((TemplateType T9__)))
             (TypeTrait stan::base_type_t ((TemplateType T10__)))
             (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-        -1 1 AoS)))
+        -1 1)))
      (name f8)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -1887,7 +1887,7 @@
              (TypeTrait stan::base_type_t ((TemplateType T9__)))
              (TypeTrait stan::base_type_t ((TemplateType T10__)))
              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-         -1 1 AoS))))
+         -1 1))))
      (name f9)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -1971,7 +1971,7 @@
            (TypeTrait stan::base_type_t ((TemplateType T9__)))
            (TypeTrait stan::base_type_t ((TemplateType T10__)))
            (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-       -1 -1 AoS))
+       -1 -1))
      (name f10)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -2056,7 +2056,7 @@
             (TypeTrait stan::base_type_t ((TemplateType T9__)))
             (TypeTrait stan::base_type_t ((TemplateType T10__)))
             (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-        -1 -1 AoS)))
+        -1 -1)))
      (name f11)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -2142,7 +2142,7 @@
              (TypeTrait stan::base_type_t ((TemplateType T9__)))
              (TypeTrait stan::base_type_t ((TemplateType T10__)))
              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-         -1 -1 AoS))))
+         -1 -1))))
      (name f12)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -2159,11 +2159,11 @@
      (args (((Pointer (TypeLiteral std::ostream)) pstream__))) (cv_qualifiers ())
      (body ())))
    (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type (Matrix Double -1 -1 AoS))
+    ((templates_init ((()) true)) (inline false) (return_type (Matrix Double -1 -1))
      (name matfoo) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
-    ((templates_init ((()) true)) (inline false) (return_type (Matrix Double -1 1 AoS))
+    ((templates_init ((()) true)) (inline false) (return_type (Matrix Double -1 1))
      (name vecfoo) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ()) (body ())))
    (FunDef
@@ -2173,8 +2173,7 @@
           (TemplateType T0__))))
        true))
      (inline false)
-     (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
+     (return_type (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
      (name vecmufoo)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
@@ -2187,8 +2186,7 @@
           (TemplateType T0__))))
        true))
      (inline false)
-     (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
+     (return_type (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
      (name vecmubar)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
@@ -2215,7 +2213,7 @@
         ((TypeTrait stan::base_type_t ((TemplateType T0__)))
          (TypeTrait stan::base_type_t ((TemplateType T1__)))
          (TypeTrait stan::base_type_t ((TemplateType T2__)))))
-       -1 1 AoS))
+       -1 1))
      (name algebra_system)
      (args
       (((Const (Ref (TemplateType T0__))) x_arg__)
@@ -2238,7 +2236,7 @@
        (TypeTrait stan::promote_args_t
         ((TypeTrait stan::base_type_t ((TemplateType T0__)))
          (TypeTrait stan::base_type_t ((TemplateType T1__)))))
-       -1 1 AoS))
+       -1 1))
      (name binomialf)
      (args
       (((Const (Ref (TemplateType T0__))) phi_arg__)
@@ -2270,7 +2268,7 @@
             ((TypeTrait stan::base_type_t ((TemplateType T0__)))
              (TypeTrait stan::base_type_t ((TemplateType T1__)))
              (TypeTrait stan::base_type_t ((TemplateType T2__)))))
-           -1 1 AoS))
+           -1 1))
          (name "operator()")
          (args
           (((Const (Ref (TemplateType T0__))) x) ((Const (Ref (TemplateType T1__))) y)
@@ -2299,7 +2297,7 @@
            (TypeTrait stan::promote_args_t
             ((TypeTrait stan::base_type_t ((TemplateType T0__)))
              (TypeTrait stan::base_type_t ((TemplateType T1__)))))
-           -1 1 AoS))
+           -1 1))
          (name "operator()")
          (args
           (((Const (Ref (TemplateType T0__))) phi)
@@ -2917,12 +2915,12 @@
                (name z) (init (Assignment (Var DUMMY_VAR__)))))
              (VariableDefn
               ((static false) (constexpr false)
-               (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
+               (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                (name vs)
                (init
                 (Assignment
-                 (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-                  Constant () ((Literal 2) (Literal 3) (Var DUMMY_VAR__)))))))
+                 (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1) Constant
+                  () ((Literal 2) (Literal 3) (Var DUMMY_VAR__)))))))
              (Expression (Assign (Var current_statement__) (Literal 663)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -2993,12 +2991,11 @@
                (name z) (init (Assignment (Var DUMMY_VAR__)))))
              (VariableDefn
               ((static false) (constexpr false)
-               (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-               (name vs)
+               (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) (name vs)
                (init
                 (Assignment
-                 (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                  Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
+                 (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                  () ((Literal 2) (Var DUMMY_VAR__)))))))
              (Expression (Assign (Var current_statement__) (Literal 673)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -3039,12 +3036,11 @@
                (name z) (init (Assignment (Var DUMMY_VAR__)))))
              (VariableDefn
               ((static false) (constexpr false)
-               (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
-               (name vs)
+               (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1)) (name vs)
                (init
                 (Assignment
-                 (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
-                  Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
+                 (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1) Constant
+                  () ((Literal 2) (Var DUMMY_VAR__)))))))
              (Expression (Assign (Var current_statement__) (Literal 683)))
              (For
               ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -3437,7 +3433,7 @@
        (TypeTrait stan::promote_args_t
         ((TypeTrait stan::base_type_t ((TemplateType T0__)))
          (TypeTrait stan::base_type_t ((TemplateType T1__)))))
-       -1 1 AoS))
+       -1 1))
      (name foo_5)
      (args
       (((Const (Ref (TemplateType T0__))) shared_params_arg__)
@@ -3479,7 +3475,7 @@
            ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
              ((MethodCall
                (Parens
-                (StreamInsertion (Constructor (Matrix Double -1 1 AoS) ((Literal 3)))
+                (StreamInsertion (Constructor (Matrix Double -1 1) ((Literal 3)))
                  ((Literal 1) (Literal 2) (Literal 3))))
                finished () ()))))))
          ((Const (Ref (TypeLiteral std::exception))) e)
@@ -3610,7 +3606,7 @@
       (Matrix
        (TypeTrait stan::promote_args_t
         ((TypeTrait stan::base_type_t ((TemplateType T0__)))))
-       -1 -1 AoS))
+       -1 -1))
      (name covsqrt2corsqrt)
      (args
       (((Const (Ref (TemplateType T0__))) mat_arg__)
@@ -3653,12 +3649,10 @@
              (FunCall stan::math::cols () ((Var mat))))))
           (VariableDefn
            ((static false) (constexpr false)
-            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
-            (name o)
+            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) (name o)
             (init
              (Assignment
-              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
-               Constant ()
+              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1) Constant ()
                ((FunCall stan::math::rows () ((Var mat)))
                 (FunCall stan::math::cols () ((Var mat))) (Var DUMMY_VAR__)))))))
           (Expression (Assign (Var current_statement__) (Literal 732)))
@@ -4624,7 +4618,7 @@
            (TypeTrait stan::base_type_t ((TemplateType T9__)))
            (TypeTrait stan::base_type_t ((TemplateType T10__)))
            (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-       -1 1 AoS))
+       -1 1))
      (name f7)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -4755,7 +4749,7 @@
             (TypeTrait stan::base_type_t ((TemplateType T9__)))
             (TypeTrait stan::base_type_t ((TemplateType T10__)))
             (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-        -1 1 AoS)))
+        -1 1)))
      (name f8)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -4887,7 +4881,7 @@
              (TypeTrait stan::base_type_t ((TemplateType T9__)))
              (TypeTrait stan::base_type_t ((TemplateType T10__)))
              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-         -1 1 AoS))))
+         -1 1))))
      (name f9)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -5017,7 +5011,7 @@
            (TypeTrait stan::base_type_t ((TemplateType T9__)))
            (TypeTrait stan::base_type_t ((TemplateType T10__)))
            (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-       -1 -1 AoS))
+       -1 -1))
      (name f10)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -5148,7 +5142,7 @@
             (TypeTrait stan::base_type_t ((TemplateType T9__)))
             (TypeTrait stan::base_type_t ((TemplateType T10__)))
             (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-        -1 -1 AoS)))
+        -1 -1)))
      (name f11)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -5280,7 +5274,7 @@
              (TypeTrait stan::base_type_t ((TemplateType T9__)))
              (TypeTrait stan::base_type_t ((TemplateType T10__)))
              (TypeTrait stan::base_type_t ((TemplateType T11__)))))))
-         -1 -1 AoS))))
+         -1 -1))))
      (name f12)
      (args
       (((Const (Ref (TemplateType T0__))) a1) ((Const (Ref (TemplateType T1__))) a2)
@@ -5374,18 +5368,16 @@
                  ((Literal 30) (Var DUMMY_VAR__)))))))))
           (VariableDefn
            ((static false) (constexpr false)
-            (type_
-             (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))))
+            (type_ (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))))
             (name ar_mat)
             (init
              (Assignment
               (Constructor
-               (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+               (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                ((Literal 60)
-                (Constructor
-                 (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                  ((Literal 70)
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 40) (Literal 50) (Var DUMMY_VAR__)))))))))))
           (Expression (Assign (Var current_statement__) (Literal 767)))
           (Expression
@@ -5401,7 +5393,7 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "matrix matfoo()")
    (FunDef
-    ((templates_init ((()) false)) (inline false) (return_type (Matrix Double -1 -1 AoS))
+    ((templates_init ((()) false)) (inline false) (return_type (Matrix Double -1 -1))
      (name matfoo) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
@@ -5425,12 +5417,11 @@
          ((Expression (Assign (Var current_statement__) (Literal 769)))
           (Return
            ((FunCall stan::math::to_matrix ()
-             ((InitializerExpr
-               (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+             ((InitializerExpr (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))
                ((MethodCall
                  (Parens
                   (StreamInsertion
-                   (Constructor (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                   (Constructor (Matrix (TypeLiteral local_scalar_t__) 1 -1)
                     ((Literal 10)))
                    ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
                     (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
@@ -5438,7 +5429,7 @@
                 (MethodCall
                  (Parens
                   (StreamInsertion
-                   (Constructor (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                   (Constructor (Matrix (TypeLiteral local_scalar_t__) 1 -1)
                     ((Literal 10)))
                    ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
                     (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
@@ -5446,7 +5437,7 @@
                 (MethodCall
                  (Parens
                   (StreamInsertion
-                   (Constructor (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                   (Constructor (Matrix (TypeLiteral local_scalar_t__) 1 -1)
                     ((Literal 10)))
                    ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
                     (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
@@ -5457,7 +5448,7 @@
             ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "vector vecfoo()")
    (FunDef
-    ((templates_init ((()) false)) (inline false) (return_type (Matrix Double -1 1 AoS))
+    ((templates_init ((()) false)) (inline false) (return_type (Matrix Double -1 1))
      (name vecfoo) (args (((Pointer (TypeLiteral std::ostream)) pstream__)))
      (cv_qualifiers ())
      (body
@@ -5483,7 +5474,7 @@
            ((FunCall stan::math::promote_scalar ((TypeLiteral local_scalar_t__))
              ((MethodCall
                (Parens
-                (StreamInsertion (Constructor (Matrix Double -1 1 AoS) ((Literal 10)))
+                (StreamInsertion (Constructor (Matrix Double -1 1) ((Literal 10)))
                  ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5) 
                   (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
                finished () ()))))))
@@ -5499,8 +5490,7 @@
           (TemplateType T0__))))
        false))
      (inline false)
-     (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
+     (return_type (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
      (name vecmufoo)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
@@ -5526,12 +5516,11 @@
         (TryCatch
          ((VariableDefn
            ((static false) (constexpr false)
-            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-            (name l)
+            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) (name l)
             (init
              (Assignment
-              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant
-               () ((Literal 10) (Var DUMMY_VAR__)))))))
+              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
+               ((Literal 10) (Var DUMMY_VAR__)))))))
           (Expression (Assign (Var current_statement__) (Literal 773)))
           (Expression
            (FunCall stan::model::assign ()
@@ -5553,8 +5542,7 @@
           (TemplateType T0__))))
        false))
      (inline false)
-     (return_type
-      (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1 AoS))
+     (return_type (Matrix (TypeTrait stan::promote_args_t ((TemplateType T0__))) -1 1))
      (name vecmubar)
      (args
       (((Const (Ref (TemplateType T0__))) mu)
@@ -5580,12 +5568,11 @@
         (TryCatch
          ((VariableDefn
            ((static false) (constexpr false)
-            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-            (name l)
+            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) (name l)
             (init
              (Assignment
-              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant
-               () ((Literal 10) (Var DUMMY_VAR__)))))))
+              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
+               ((Literal 10) (Var DUMMY_VAR__)))))))
           (Expression (Assign (Var current_statement__) (Literal 776)))
           (Expression
            (FunCall stan::model::assign ()
@@ -5594,7 +5581,7 @@
               ((Var mu)
                (MethodCall
                 (Parens
-                 (StreamInsertion (Constructor (Matrix Double -1 1 AoS) ((Literal 10)))
+                 (StreamInsertion (Constructor (Matrix Double -1 1) ((Literal 10)))
                   ((Literal 1) (Literal 2) (Literal 3) (Literal 4) (Literal 5)
                    (Literal 6) (Literal 7) (Literal 8) (Literal 9) (Literal 10))))
                 finished () ())))
@@ -5632,7 +5619,7 @@
         ((TypeTrait stan::base_type_t ((TemplateType T0__)))
          (TypeTrait stan::base_type_t ((TemplateType T1__)))
          (TypeTrait stan::base_type_t ((TemplateType T2__)))))
-       -1 1 AoS))
+       -1 1))
      (name algebra_system)
      (args
       (((Const (Ref (TemplateType T0__))) x_arg__)
@@ -5671,12 +5658,11 @@
         (TryCatch
          ((VariableDefn
            ((static false) (constexpr false)
-            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-            (name f_x)
+            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) (name f_x)
             (init
              (Assignment
-              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant
-               () ((Literal 2) (Var DUMMY_VAR__)))))))
+              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
+               ((Literal 2) (Var DUMMY_VAR__)))))))
           (Expression (Assign (Var current_statement__) (Literal 780)))
           (Expression
            (FunCall stan::model::assign ()
@@ -5729,7 +5715,7 @@
        (TypeTrait stan::promote_args_t
         ((TypeTrait stan::base_type_t ((TemplateType T0__)))
          (TypeTrait stan::base_type_t ((TemplateType T1__)))))
-       -1 1 AoS))
+       -1 1))
      (name binomialf)
      (args
       (((Const (Ref (TemplateType T0__))) phi_arg__)
@@ -5768,12 +5754,11 @@
         (TryCatch
          ((VariableDefn
            ((static false) (constexpr false)
-            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-            (name lpmf)
+            (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) (name lpmf)
             (init
              (Assignment
-              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant
-               () ((Literal 1) (Var DUMMY_VAR__)))))))
+              (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant ()
+               ((Literal 1) (Var DUMMY_VAR__)))))))
           (Expression (Assign (Var current_statement__) (Literal 785)))
           (Expression
            (FunCall stan::model::assign ()
@@ -5811,47 +5796,47 @@
          (type_ (StdVector (StdVector (StdVector Double)))) (name d_real_3d_ar)
          (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 1))
          (name d_vec_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
          (name d_1d_vec) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1))))) 
          (name d_3d_vec) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double 1 -1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double 1 -1))
          (name d_row_vec_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double 1 -1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double 1 -1)))
          (name d_1d_row_vec) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1)))))
          (name d_3d_row_vec) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (Matrix Double -1 -1 AoS)))) (name d_ar_mat)
+         (type_ (StdVector (StdVector (Matrix Double -1 -1)))) (name d_ar_mat)
          (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 1))
          (name d_simplex_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
          (name d_1d_simplex) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1)))))
          (name d_3d_simplex) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
          (name d_cfcov_54_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
          (name d_cfcov_33_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 -1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 -1)))
          (name d_cfcov_33_ar) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false) (type_ Int) (name d_int) (init Uninitialized)))
@@ -5878,46 +5863,46 @@
          (type_ (StdVector (StdVector (StdVector Double)))) (name d_real_array_3d)
          (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
          (name d_matrix_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 -1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 -1)))
          (name d_matrix_array) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (Matrix Double -1 -1 AoS))))
-         (name d_matrix_array_2d) (init Uninitialized)))
+         (type_ (StdVector (StdVector (Matrix Double -1 -1)))) (name d_matrix_array_2d)
+         (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 -1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 -1)))))
          (name d_matrix_array_3d) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 1))
          (name d_vector_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
          (name d_vector_array) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (Matrix Double -1 1 AoS))))
-         (name d_vector_array_2d) (init Uninitialized)))
+         (type_ (StdVector (StdVector (Matrix Double -1 1)))) (name d_vector_array_2d)
+         (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1)))))
          (name d_vector_array_3d) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double 1 -1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double 1 -1))
          (name d_row_vector_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double 1 -1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double 1 -1)))
          (name d_row_vector_array) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (Matrix Double 1 -1 AoS))))
+         (type_ (StdVector (StdVector (Matrix Double 1 -1))))
          (name d_row_vector_array_2d) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1)))))
          (name d_row_vector_array_3d) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false) (type_ Int) (name td_int) (init Uninitialized)))
@@ -5937,29 +5922,29 @@
          (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (Matrix Double -1 -1 AoS)))) (name td_ar_mat)
+         (type_ (StdVector (StdVector (Matrix Double -1 -1)))) (name td_ar_mat)
          (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 1))
          (name td_simplex_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
          (name td_1d_simplex) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1)))))
          (name td_3d_simplex) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
          (name td_cfcov_54_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
          (name td_cfcov_33_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 1)) 
          (name x_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 1)) 
          (name y_data__) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false) (type_ (StdVector Double)) 
@@ -5993,112 +5978,112 @@
          (type_ (StdVector (StdVector (StdVector Double))))
          (name transformed_data_real_array_3d) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
          (name transformed_data_matrix_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 -1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 -1)))
          (name transformed_data_matrix_array) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (Matrix Double -1 -1 AoS))))
+         (type_ (StdVector (StdVector (Matrix Double -1 -1))))
          (name transformed_data_matrix_array_2d) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 -1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 -1)))))
          (name transformed_data_matrix_array_3d) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double -1 1))
          (name transformed_data_vector_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
          (name transformed_data_vector_array) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (Matrix Double -1 1 AoS))))
+         (type_ (StdVector (StdVector (Matrix Double -1 1))))
          (name transformed_data_vector_array_2d) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1)))))
          (name transformed_data_vector_array_3d) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (Matrix Double 1 -1 AoS))
+        ((static false) (constexpr false) (type_ (Matrix Double 1 -1))
          (name transformed_data_row_vector_data__) (init Uninitialized)))
        (GlobalVariableDefn
-        ((static false) (constexpr false) (type_ (StdVector (Matrix Double 1 -1 AoS)))
+        ((static false) (constexpr false) (type_ (StdVector (Matrix Double 1 -1)))
          (name transformed_data_row_vector_array) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (Matrix Double 1 -1 AoS))))
+         (type_ (StdVector (StdVector (Matrix Double 1 -1))))
          (name transformed_data_row_vector_array_2d) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS)))))
+         (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1)))))
          (name transformed_data_row_vector_array_3d) (init Uninitialized)))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))) (name d_vec)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1)))) (name d_vec)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double 1 -1 AoS)))) (name d_row_vec)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double 1 -1)))) (name d_row_vec)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))) (name d_simplex)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1)))) (name d_simplex)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))) (name d_cfcov_54)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1)))) (name d_cfcov_54)
          (init (InitializerList ((Literal nullptr) (Literal 0) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))) (name d_cfcov_33)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1)))) (name d_cfcov_33)
          (init (InitializerList ((Literal nullptr) (Literal 0) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))) (name d_matrix)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1)))) (name d_matrix)
          (init (InitializerList ((Literal nullptr) (Literal 0) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))) (name d_vector)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1)))) (name d_vector)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double 1 -1 AoS)))) (name d_row_vector)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double 1 -1)))) (name d_row_vector)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))) (name td_simplex)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1)))) (name td_simplex)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))) (name td_cfcov_54)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1)))) (name td_cfcov_54)
          (init (InitializerList ((Literal nullptr) (Literal 0) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))) (name td_cfcov_33)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1)))) (name td_cfcov_33)
          (init (InitializerList ((Literal nullptr) (Literal 0) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))) (name x)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1)))) (name x)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))) (name y)
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1)))) (name y)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS))))
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 -1))))
          (name transformed_data_matrix)
          (init (InitializerList ((Literal nullptr) (Literal 0) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS))))
+         (type_ (TypeTrait Eigen::Map ((Matrix Double -1 1))))
          (name transformed_data_vector)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))
        (GlobalVariableDefn
         ((static false) (constexpr false)
-         (type_ (TypeTrait Eigen::Map ((Matrix Double 1 -1 AoS))))
+         (type_ (TypeTrait Eigen::Map ((Matrix Double 1 -1))))
          (name transformed_data_row_vector)
          (init (InitializerList ((Literal nullptr) (Literal 0))))))))
      (public_members
@@ -6234,7 +6219,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)
                     (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 10)))
@@ -6243,7 +6228,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                    ((Var N) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 11)))
               (VariableDefn
@@ -6252,8 +6237,7 @@
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 12)))
               (VariableDefn
@@ -6261,15 +6245,14 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
-                   ((Var N)))))))
+                   ((Matrix (TypeLiteral local_scalar_t__) 1 -1)) ((Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 13)))
               (VariableDefn
                ((static false) (constexpr false) (type_ Auto) (name p_1d_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                    ((Var N) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 14)))
               (VariableDefn
@@ -6278,8 +6261,7 @@
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 15)))
               (VariableDefn
@@ -6287,7 +6269,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1))
                    ((Literal 5) (Literal 4)))))))
               (Expression (Assign (Var current_statement__) (Literal 16)))
               (VariableDefn
@@ -6295,8 +6277,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lub"
-                   ((StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                   ((StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                     (TemplateType jacobian__))
                    ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5)
                     (Literal 2) (Literal 3)))))))
@@ -6306,7 +6287,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 18)))
@@ -6315,7 +6296,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 19)))
@@ -6325,8 +6306,7 @@
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
                    ((StdVector
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 20)))
@@ -6335,7 +6315,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1)
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 5) (Literal 4)))))))
               (Expression (Assign (Var current_statement__) (Literal 21)))
@@ -6344,7 +6324,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1)
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 3) (Literal 3)))))))
               (Expression (Assign (Var current_statement__) (Literal 22)))
@@ -6353,7 +6333,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                     (TemplateType jacobian__))
                    ((Var lp__) (Var K) (Literal 3) (Literal 3)))))))
               (Expression (Assign (Var current_statement__) (Literal 23)))
@@ -6362,16 +6342,14 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                   ((Literal 2)))))))
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Literal 2)))))))
               (Expression (Assign (Var current_statement__) (Literal 24)))
               (VariableDefn
                ((static false) (constexpr false) (type_ Auto) (name y_p)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                   ((Literal 2)))))))
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Literal 2)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__))) (name tp_real_1d_ar)
@@ -6395,193 +6373,175 @@
                        ((Var K) (Var DUMMY_VAR__)))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name tp_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                 (name tp_1d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                 (name tp_3d_vec)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1)) 
                 (name tp_row_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                 (name tp_1d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))))
                 (name tp_3d_row_vec)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name tp_mat)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
-                 (StdVector
-                  (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))))
+                 (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))))
                 (name tp_ar_mat)
                 (init
                  (Assignment
                   (Constructor
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                   (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                    ((Literal 4)
                     (Constructor
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                      ((Literal 5)
-                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                        Constant () ((Literal 2) (Literal 3) (Var DUMMY_VAR__)))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name tp_simplex)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                 (name tp_1d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                 (name tp_3d_simplex)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name tp_cfcov_54)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name tp_cfcov_33)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                 (name tp_cfcov_33_ar)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                    ((Var K)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                      Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name theta_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Literal 2) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
                 (name tp_real) (init (Assignment (Var DUMMY_VAR__)))))
@@ -6832,22 +6792,21 @@
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
-                  (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                  (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                   (name tmp)
                   (init
                    (Assignment
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Literal 0) (Var DUMMY_VAR__)))))))
                 (VariableDefn
                  ((static false) (constexpr false)
-                  (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                  (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                   (name tmp2)
                   (init
                    (Assignment
-                    (Constructor
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                    (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                      ((Literal 0)
-                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                        Constant () ((Literal 0) (Var DUMMY_VAR__)))))))))
                 (VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
@@ -7191,7 +7150,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)
                     (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 10)))
@@ -7200,7 +7159,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                    ((Var N) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 11)))
               (VariableDefn
@@ -7209,8 +7168,7 @@
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 12)))
               (VariableDefn
@@ -7218,15 +7176,14 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
-                   ((Var N)))))))
+                   ((Matrix (TypeLiteral local_scalar_t__) 1 -1)) ((Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 13)))
               (VariableDefn
                ((static false) (constexpr false) (type_ Auto) (name p_1d_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                    ((Var N) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 14)))
               (VariableDefn
@@ -7235,8 +7192,7 @@
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 15)))
               (VariableDefn
@@ -7244,7 +7200,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1))
                    ((Literal 5) (Literal 4)))))))
               (Expression (Assign (Var current_statement__) (Literal 16)))
               (VariableDefn
@@ -7252,8 +7208,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lub"
-                   ((StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                   ((StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                     (TemplateType jacobian__))
                    ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5)
                     (Literal 2) (Literal 3)))))))
@@ -7263,7 +7218,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 18)))
@@ -7272,7 +7227,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 19)))
@@ -7282,8 +7237,7 @@
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
                    ((StdVector
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 20)))
@@ -7292,7 +7246,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1)
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 5) (Literal 4)))))))
               (Expression (Assign (Var current_statement__) (Literal 21)))
@@ -7301,7 +7255,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1)
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 3) (Literal 3)))))))
               (Expression (Assign (Var current_statement__) (Literal 22)))
@@ -7310,7 +7264,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                     (TemplateType jacobian__))
                    ((Var lp__) (Var K) (Literal 3) (Literal 3)))))))
               (Expression (Assign (Var current_statement__) (Literal 23)))
@@ -7319,16 +7273,14 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                   ((Literal 2)))))))
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Literal 2)))))))
               (Expression (Assign (Var current_statement__) (Literal 24)))
               (VariableDefn
                ((static false) (constexpr false) (type_ Auto) (name y_p)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                   ((Literal 2)))))))
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Literal 2)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_ (StdVector (TypeLiteral local_scalar_t__))) (name tp_real_1d_ar)
@@ -7352,193 +7304,175 @@
                        ((Var K) (Var DUMMY_VAR__)))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name tp_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                 (name tp_1d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                 (name tp_3d_vec)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1)) 
                 (name tp_row_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                 (name tp_1d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))))
                 (name tp_3d_row_vec)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name tp_mat)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
-                 (StdVector
-                  (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))))
+                 (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))))
                 (name tp_ar_mat)
                 (init
                  (Assignment
                   (Constructor
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                   (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                    ((Literal 4)
                     (Constructor
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                      ((Literal 5)
-                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                        Constant () ((Literal 2) (Literal 3) (Var DUMMY_VAR__)))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name tp_simplex)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                 (name tp_1d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                 (name tp_3d_simplex)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name tp_cfcov_54)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name tp_cfcov_33)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                 (name tp_cfcov_33_ar)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                    ((Var K)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                      Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name theta_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Literal 2) (Var DUMMY_VAR__)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
                 (name tp_real) (init (Assignment (Var DUMMY_VAR__)))))
@@ -7789,22 +7723,21 @@
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
-                  (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                  (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                   (name tmp)
                   (init
                    (Assignment
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Literal 0) (Var DUMMY_VAR__)))))))
                 (VariableDefn
                  ((static false) (constexpr false)
-                  (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                  (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                   (name tmp2)
                   (init
                    (Assignment
-                    (Constructor
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                    (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                      ((Literal 0)
-                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                        Constant () ((Literal 0) (Var DUMMY_VAR__)))))))))
                 (VariableDefn
                  ((static false) (constexpr false) (type_ (TypeLiteral local_scalar_t__))
@@ -8162,7 +8095,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lb"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)
                     (TemplateType jacobian__))
                    ((Literal 0) (Var lp__) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 10)))
@@ -8171,7 +8104,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                    ((Var N) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 11)))
               (VariableDefn
@@ -8180,8 +8113,7 @@
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 12)))
               (VariableDefn
@@ -8189,15 +8121,14 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
-                   ((Var N)))))))
+                   ((Matrix (TypeLiteral local_scalar_t__) 1 -1)) ((Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 13)))
               (VariableDefn
                ((static false) (constexpr false) (type_ Auto) (name p_1d_row_vec)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                    ((Var N) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 14)))
               (VariableDefn
@@ -8206,8 +8137,7 @@
                  (Assignment
                   (MethodCall (Var in__) "template read"
                    ((StdVector
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))))
                    ((Var N) (Var M) (Var K) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 15)))
               (VariableDefn
@@ -8215,7 +8145,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1))
                    ((Literal 5) (Literal 4)))))))
               (Expression (Assign (Var current_statement__) (Literal 16)))
               (VariableDefn
@@ -8223,8 +8153,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_lub"
-                   ((StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                   ((StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                     (TemplateType jacobian__))
                    ((Literal 0) (Literal 1) (Var lp__) (Literal 4) (Literal 5)
                     (Literal 2) (Literal 3)))))))
@@ -8234,7 +8163,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 18)))
@@ -8243,7 +8172,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 19)))
@@ -8253,8 +8182,7 @@
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_simplex"
                    ((StdVector
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                     (TemplateType jacobian__))
                    ((Var lp__) (Var N) (Var M) (Var K) (Var N)))))))
               (Expression (Assign (Var current_statement__) (Literal 20)))
@@ -8263,7 +8191,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1)
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 5) (Literal 4)))))))
               (Expression (Assign (Var current_statement__) (Literal 21)))
@@ -8272,7 +8200,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 -1)
                     (TemplateType jacobian__))
                    ((Var lp__) (Literal 3) (Literal 3)))))))
               (Expression (Assign (Var current_statement__) (Literal 22)))
@@ -8281,7 +8209,7 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read_constrain_cholesky_factor_cov"
-                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                   ((StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                     (TemplateType jacobian__))
                    ((Var lp__) (Var K) (Literal 3) (Literal 3)))))))
               (Expression (Assign (Var current_statement__) (Literal 23)))
@@ -8290,16 +8218,14 @@
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                   ((Literal 2)))))))
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Literal 2)))))))
               (Expression (Assign (Var current_statement__) (Literal 24)))
               (VariableDefn
                ((static false) (constexpr false) (type_ Auto) (name y_p)
                 (init
                  (Assignment
                   (MethodCall (Var in__) "template read"
-                   ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                   ((Literal 2)))))))
+                   ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Literal 2)))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ (StdVector Double))
                 (name tp_real_1d_ar)
@@ -8319,151 +8245,148 @@
                       (Constructor (StdVector Double)
                        ((Var K) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 1))
                 (name tp_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 1) Constant ()
                    ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 1 AoS))) (name tp_1d_vec)
+               ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
+                (name tp_1d_vec)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 1) Constant ()
                      ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
+                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1)))))
                 (name tp_3d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
+                  (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1))))
                    ((Var N)
-                    (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+                    (Constructor (StdVector (StdVector (Matrix Double -1 1)))
                      ((Var M)
-                      (Constructor (StdVector (Matrix Double -1 1 AoS))
+                      (Constructor (StdVector (Matrix Double -1 1))
                        ((Var K)
-                        (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                        (StaticMethodCall (Matrix Double -1 1) Constant ()
                          ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double 1 -1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double 1 -1))
                 (name tp_row_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double 1 -1) Constant ()
                    ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double 1 -1 AoS))) (name tp_1d_row_vec)
+               ((static false) (constexpr false) (type_ (StdVector (Matrix Double 1 -1)))
+                (name tp_1d_row_vec)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double 1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double 1 -1))
                    ((Var N)
-                    (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double 1 -1) Constant ()
                      ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS)))))
+                (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1)))))
                 (name tp_3d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS))))
+                  (Constructor (StdVector (StdVector (StdVector (Matrix Double 1 -1))))
                    ((Var N)
-                    (Constructor (StdVector (StdVector (Matrix Double 1 -1 AoS)))
+                    (Constructor (StdVector (StdVector (Matrix Double 1 -1)))
                      ((Var M)
-                      (Constructor (StdVector (Matrix Double 1 -1 AoS))
+                      (Constructor (StdVector (Matrix Double 1 -1))
                        ((Var K)
-                        (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                        (StaticMethodCall (Matrix Double 1 -1) Constant ()
                          ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
                 (name tp_mat)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 -1) Constant ()
                    ((Literal 5) (Literal 4)
                     (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (Matrix Double -1 -1 AoS))))
+                (type_ (StdVector (StdVector (Matrix Double -1 -1)))) 
                 (name tp_ar_mat)
                 (init
                  (Assignment
-                  (Constructor (StdVector (StdVector (Matrix Double -1 -1 AoS)))
+                  (Constructor (StdVector (StdVector (Matrix Double -1 -1)))
                    ((Literal 4)
-                    (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                    (Constructor (StdVector (Matrix Double -1 -1))
                      ((Literal 5)
-                      (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                      (StaticMethodCall (Matrix Double -1 -1) Constant ()
                        ((Literal 2) (Literal 3)
                         (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 1))
                 (name tp_simplex)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 1) Constant ()
                    ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 1 AoS))) (name tp_1d_simplex)
+               ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
+                (name tp_1d_simplex)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 1) Constant ()
                      ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
+                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1)))))
                 (name tp_3d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
+                  (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1))))
                    ((Var N)
-                    (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+                    (Constructor (StdVector (StdVector (Matrix Double -1 1)))
                      ((Var M)
-                      (Constructor (StdVector (Matrix Double -1 1 AoS))
+                      (Constructor (StdVector (Matrix Double -1 1))
                        ((Var K)
-                        (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                        (StaticMethodCall (Matrix Double -1 1) Constant ()
                          ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
                 (name tp_cfcov_54)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 -1) Constant ()
                    ((Literal 5) (Literal 4)
                     (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
                 (name tp_cfcov_33)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 -1) Constant ()
                    ((Literal 3) (Literal 3)
                     (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name tp_cfcov_33_ar)
+                (type_ (StdVector (Matrix Double -1 -1))) (name tp_cfcov_33_ar)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 -1))
                    ((Var K)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 -1) Constant ()
                      ((Literal 3) (Literal 3)
                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 1))
                 (name theta_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 1) Constant ()
                    ((Literal 2) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
                ((static false) (constexpr false) (type_ Double) (name tp_real)
@@ -9227,135 +9150,132 @@
                       (Constructor (StdVector Double)
                        ((Var K) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 1))
                 (name gq_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 1) Constant ()
                    ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 1 AoS))) (name gq_1d_vec)
+               ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
+                (name gq_1d_vec)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 1) Constant ()
                      ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
+                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1)))))
                 (name gq_3d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
+                  (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1))))
                    ((Var N)
-                    (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+                    (Constructor (StdVector (StdVector (Matrix Double -1 1)))
                      ((Var M)
-                      (Constructor (StdVector (Matrix Double -1 1 AoS))
+                      (Constructor (StdVector (Matrix Double -1 1))
                        ((Var K)
-                        (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                        (StaticMethodCall (Matrix Double -1 1) Constant ()
                          ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double 1 -1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double 1 -1))
                 (name gq_row_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double 1 -1) Constant ()
                    ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double 1 -1 AoS))) (name gq_1d_row_vec)
+               ((static false) (constexpr false) (type_ (StdVector (Matrix Double 1 -1)))
+                (name gq_1d_row_vec)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double 1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double 1 -1))
                    ((Var N)
-                    (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double 1 -1) Constant ()
                      ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS)))))
+                (type_ (StdVector (StdVector (StdVector (Matrix Double 1 -1)))))
                 (name gq_3d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS))))
+                  (Constructor (StdVector (StdVector (StdVector (Matrix Double 1 -1))))
                    ((Var N)
-                    (Constructor (StdVector (StdVector (Matrix Double 1 -1 AoS)))
+                    (Constructor (StdVector (StdVector (Matrix Double 1 -1)))
                      ((Var M)
-                      (Constructor (StdVector (Matrix Double 1 -1 AoS))
+                      (Constructor (StdVector (Matrix Double 1 -1))
                        ((Var K)
-                        (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                        (StaticMethodCall (Matrix Double 1 -1) Constant ()
                          ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (Matrix Double -1 -1 AoS))))
+                (type_ (StdVector (StdVector (Matrix Double -1 -1)))) 
                 (name gq_ar_mat)
                 (init
                  (Assignment
-                  (Constructor (StdVector (StdVector (Matrix Double -1 -1 AoS)))
+                  (Constructor (StdVector (StdVector (Matrix Double -1 -1)))
                    ((Literal 4)
-                    (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                    (Constructor (StdVector (Matrix Double -1 -1))
                      ((Literal 5)
-                      (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                      (StaticMethodCall (Matrix Double -1 -1) Constant ()
                        ((Literal 2) (Literal 3)
                         (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 1))
                 (name gq_simplex)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 1) Constant ()
                    ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 1 AoS))) (name gq_1d_simplex)
+               ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
+                (name gq_1d_simplex)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 1) Constant ()
                      ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS)))))
+                (type_ (StdVector (StdVector (StdVector (Matrix Double -1 1)))))
                 (name gq_3d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
+                  (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1))))
                    ((Var N)
-                    (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+                    (Constructor (StdVector (StdVector (Matrix Double -1 1)))
                      ((Var M)
-                      (Constructor (StdVector (Matrix Double -1 1 AoS))
+                      (Constructor (StdVector (Matrix Double -1 1))
                        ((Var K)
-                        (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                        (StaticMethodCall (Matrix Double -1 1) Constant ()
                          ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
                 (name gq_cfcov_54)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 -1) Constant ()
                    ((Literal 5) (Literal 4)
                     (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
-               ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+               ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
                 (name gq_cfcov_33)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                  (StaticMethodCall (Matrix Double -1 -1) Constant ()
                    ((Literal 3) (Literal 3)
                     (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name gq_cfcov_33_ar)
+                (type_ (StdVector (Matrix Double -1 -1))) (name gq_cfcov_33_ar)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 -1))
                    ((Var K)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 -1) Constant ()
                      ((Literal 3) (Literal 3)
                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
@@ -9373,91 +9293,91 @@
                  (Literal "\"assigning variable indices\""))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name indexing_mat)
+                (type_ (StdVector (Matrix Double -1 -1))) (name indexing_mat)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 -1))
                    ((Literal 5)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 -1) Constant ()
                      ((Literal 3) (Literal 4)
                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name idx_res1)
+                (type_ (StdVector (Matrix Double -1 -1))) (name idx_res1)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 -1))
                    ((Literal 3)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 -1) Constant ()
                      ((Literal 3) (Literal 4)
                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name idx_res2)
+                (type_ (StdVector (Matrix Double -1 -1))) (name idx_res2)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 -1))
                    ((Literal 5)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 -1) Constant ()
                      ((Literal 3) (Literal 4)
                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name idx_res3)
+                (type_ (StdVector (Matrix Double -1 -1))) (name idx_res3)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 -1))
                    ((Literal 3)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 -1) Constant ()
                      ((Literal 3) (Literal 3)
                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name idx_res11)
+                (type_ (StdVector (Matrix Double -1 -1))) (name idx_res11)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 -1))
                    ((Literal 3)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 -1) Constant ()
                      ((Literal 3) (Literal 4)
                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name idx_res21)
+                (type_ (StdVector (Matrix Double -1 -1))) (name idx_res21)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 -1))
                    ((Literal 5)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 -1) Constant ()
                      ((Literal 3) (Literal 4)
                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 -1 AoS))) (name idx_res31)
+                (type_ (StdVector (Matrix Double -1 -1))) (name idx_res31)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 -1))
                    ((Literal 3)
-                    (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 -1) Constant ()
                      ((Literal 3) (Literal 3)
                       (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double 1 -1 AoS))) (name idx_res4)
+               ((static false) (constexpr false) (type_ (StdVector (Matrix Double 1 -1)))
+                (name idx_res4)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double 1 -1 AoS))
+                  (Constructor (StdVector (Matrix Double 1 -1))
                    ((Literal 3)
-                    (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double 1 -1) Constant ()
                      ((Literal 4) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (VariableDefn
-               ((static false) (constexpr false)
-                (type_ (StdVector (Matrix Double -1 1 AoS))) (name idx_res5)
+               ((static false) (constexpr false) (type_ (StdVector (Matrix Double -1 1)))
+                (name idx_res5)
                 (init
                  (Assignment
-                  (Constructor (StdVector (Matrix Double -1 1 AoS))
+                  (Constructor (StdVector (Matrix Double -1 1))
                    ((Literal 2)
-                    (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                    (StaticMethodCall (Matrix Double -1 1) Constant ()
                      ((Literal 2) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
               (Expression (Assign (Var current_statement__) (Literal 105)))
               (Expression
@@ -10498,32 +10418,30 @@
                (MethodCall (Var out__) write_free_lb () ((Literal 0) (Var p_real_3d_ar))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name p_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (Expression (Assign (Var current_statement__) (Literal 9)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_vec)
                  (MethodCall (Var in__) read
-                  ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                  ((Var N)))
+                  ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Var N)))
                  (Literal "\"assigning variable p_vec\""))))
               (Expression
                (MethodCall (Var out__) write_free_lb () ((Literal 0) (Var p_vec))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                 (name p_1d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (Expression (Assign (Var current_statement__) (Literal 10)))
               (For
@@ -10549,26 +10467,22 @@
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                 (name p_3d_vec)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 11)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -10604,31 +10518,29 @@
               (Expression (MethodCall (Var out__) write () ((Var p_3d_vec))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1)) 
                 (name p_row_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (Expression (Assign (Var current_statement__) (Literal 12)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_row_vec)
                  (MethodCall (Var in__) read
-                  ((Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
-                  ((Var N)))
+                  ((Matrix (TypeLiteral local_scalar_t__) 1 -1)) ((Var N)))
                  (Literal "\"assigning variable p_row_vec\""))))
               (Expression (MethodCall (Var out__) write () ((Var p_row_vec))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                 (name p_1d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (Expression (Assign (Var current_statement__) (Literal 13)))
               (For
@@ -10654,26 +10566,22 @@
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))))
                 (name p_3d_row_vec)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 14)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -10709,37 +10617,35 @@
               (Expression (MethodCall (Var out__) write () ((Var p_3d_row_vec))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name p_mat)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
               (Expression (Assign (Var current_statement__) (Literal 15)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_mat)
                  (MethodCall (Var in__) read
-                  ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                  ((Matrix (TypeLiteral local_scalar_t__) -1 -1))
                   ((Literal 5) (Literal 4)))
                  (Literal "\"assigning variable p_mat\""))))
               (Expression (MethodCall (Var out__) write () ((Var p_mat))))
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
-                 (StdVector
-                  (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))))
+                 (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))))
                 (name p_ar_mat)
                 (init
                  (Assignment
                   (Constructor
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                   (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                    ((Literal 4)
                     (Constructor
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                      ((Literal 5)
-                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                        Constant () ((Literal 2) (Literal 3) (Var DUMMY_VAR__)))))))))))
               (Expression (Assign (Var current_statement__) (Literal 16)))
               (For
@@ -10778,32 +10684,30 @@
                 ((Literal 0) (Literal 1) (Var p_ar_mat))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name p_simplex)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (Expression (Assign (Var current_statement__) (Literal 17)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_simplex)
                  (MethodCall (Var in__) read
-                  ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                  ((Var N)))
+                  ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Var N)))
                  (Literal "\"assigning variable p_simplex\""))))
               (Expression
                (MethodCall (Var out__) write_free_simplex () ((Var p_simplex))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                 (name p_1d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (Expression (Assign (Var current_statement__) (Literal 18)))
               (For
@@ -10830,26 +10734,22 @@
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                 (name p_3d_simplex)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 19)))
               (For
                ((static false) (constexpr false) (type_ Int) (name sym1__)
@@ -10886,18 +10786,18 @@
                (MethodCall (Var out__) write_free_simplex () ((Var p_3d_simplex))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name p_cfcov_54)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
               (Expression (Assign (Var current_statement__) (Literal 20)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_cfcov_54)
                  (MethodCall (Var in__) read
-                  ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                  ((Matrix (TypeLiteral local_scalar_t__) -1 -1))
                   ((Literal 5) (Literal 4)))
                  (Literal "\"assigning variable p_cfcov_54\""))))
               (Expression
@@ -10905,18 +10805,18 @@
                 ((Var p_cfcov_54))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name p_cfcov_33)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))
               (Expression (Assign (Var current_statement__) (Literal 21)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var p_cfcov_33)
                  (MethodCall (Var in__) read
-                  ((Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                  ((Matrix (TypeLiteral local_scalar_t__) -1 -1))
                   ((Literal 3) (Literal 3)))
                  (Literal "\"assigning variable p_cfcov_33\""))))
               (Expression
@@ -10924,14 +10824,13 @@
                 ((Var p_cfcov_33))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                 (name p_cfcov_33_ar)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                    ((Var K)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                      Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))))
               (Expression (Assign (Var current_statement__) (Literal 22)))
               (For
@@ -10964,36 +10863,34 @@
                 ((Var p_cfcov_33_ar))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name x_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Literal 2) (Var DUMMY_VAR__)))))))
               (Expression (Assign (Var current_statement__) (Literal 23)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var x_p)
                  (MethodCall (Var in__) read
-                  ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                  ((Literal 2)))
+                  ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Literal 2)))
                  (Literal "\"assigning variable x_p\""))))
               (Expression (MethodCall (Var out__) write () ((Var x_p))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name y_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Literal 2) (Var DUMMY_VAR__)))))))
               (Expression (Assign (Var current_statement__) (Literal 24)))
               (Expression
                (FunCall stan::model::assign ()
                 ((Var y_p)
                  (MethodCall (Var in__) read
-                  ((Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
-                  ((Literal 2)))
+                  ((Matrix (TypeLiteral local_scalar_t__) -1 1)) ((Literal 2)))
                  (Literal "\"assigning variable y_p\""))))
               (Expression (MethodCall (Var out__) write () ((Var y_p)))))
              ((Const (Ref (TypeLiteral std::exception))) e)
@@ -11364,12 +11261,12 @@
                (MethodCall (Var out__) write_free_lb () ((Literal 0) (Var p_real_3d_ar))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name p_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
@@ -11398,14 +11295,13 @@
                (MethodCall (Var out__) write_free_lb () ((Literal 0) (Var p_vec))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                 (name p_1d_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (Block
                ((VariableDefn
@@ -11442,26 +11338,22 @@
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                 (name p_3d_vec)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
@@ -11508,12 +11400,12 @@
               (Expression (MethodCall (Var out__) write () ((Var p_3d_vec))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) 1 -1)) 
                 (name p_row_vec)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
@@ -11541,14 +11433,13 @@
               (Expression (MethodCall (Var out__) write () ((Var p_row_vec))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                 (name p_1d_row_vec)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (Block
                ((VariableDefn
@@ -11585,26 +11476,22 @@
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))))
                 (name p_3d_row_vec)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) 1 -1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) 1 -1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) 1 -1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
@@ -11651,11 +11538,11 @@
               (Expression (MethodCall (Var out__) write () ((Var p_3d_row_vec))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name p_mat)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
               (Block
                ((VariableDefn
@@ -11691,19 +11578,17 @@
               (VariableDefn
                ((static false) (constexpr false)
                 (type_
-                 (StdVector
-                  (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))))
+                 (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))))
                 (name p_ar_mat)
                 (init
                  (Assignment
                   (Constructor
-                   (StdVector
-                    (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                   (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                    ((Literal 4)
                     (Constructor
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                      ((Literal 5)
-                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                      (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                        Constant () ((Literal 2) (Literal 3) (Var DUMMY_VAR__)))))))))))
               (Block
                ((VariableDefn
@@ -11753,12 +11638,12 @@
                 ((Literal 0) (Literal 1) (Var p_ar_mat))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name p_simplex)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Var N) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Var N) (Var DUMMY_VAR__)))))))
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
@@ -11787,14 +11672,13 @@
                (MethodCall (Var out__) write_free_simplex () ((Var p_simplex))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                 (name p_1d_simplex)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                    ((Var N)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
                      Constant () ((Var N) (Var DUMMY_VAR__)))))))))
               (Block
                ((VariableDefn
@@ -11832,26 +11716,22 @@
                ((static false) (constexpr false)
                 (type_
                  (StdVector
-                  (StdVector
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))))
+                  (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))))
                 (name p_3d_simplex)
                 (init
                  (Assignment
                   (Constructor
                    (StdVector
-                    (StdVector
-                     (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))))
+                    (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))))
                    ((Var N)
                     (Constructor
-                     (StdVector
-                      (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)))
+                     (StdVector (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1)))
                      ((Var M)
                       (Constructor
-                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS))
+                       (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 1))
                        ((Var K)
-                        (StaticMethodCall
-                         (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS) Constant ()
-                         ((Var N) (Var DUMMY_VAR__)))))))))))))
+                        (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1)
+                         Constant () ((Var N) (Var DUMMY_VAR__)))))))))))))
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
@@ -11899,11 +11779,11 @@
                (MethodCall (Var out__) write_free_simplex () ((Var p_3d_simplex))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name p_cfcov_54)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 5) (Literal 4) (Var DUMMY_VAR__)))))))
               (Block
                ((VariableDefn
@@ -11940,11 +11820,11 @@
                 ((Var p_cfcov_54))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 -1)) 
                 (name p_cfcov_33)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                    Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))
               (Block
                ((VariableDefn
@@ -11981,14 +11861,13 @@
                 ((Var p_cfcov_33))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)))
+                (type_ (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1)))
                 (name p_cfcov_33_ar)
                 (init
                  (Assignment
-                  (Constructor
-                   (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS))
+                  (Constructor (StdVector (Matrix (TypeLiteral local_scalar_t__) -1 -1))
                    ((Var K)
-                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1 AoS)
+                    (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 -1)
                      Constant () ((Literal 3) (Literal 3) (Var DUMMY_VAR__)))))))))
               (Block
                ((VariableDefn
@@ -12032,12 +11911,12 @@
                 ((Var p_cfcov_33_ar))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name x_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Literal 2) (Var DUMMY_VAR__)))))))
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
@@ -12065,12 +11944,12 @@
               (Expression (MethodCall (Var out__) write () ((Var x_p))))
               (VariableDefn
                ((static false) (constexpr false)
-                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)) 
+                (type_ (Matrix (TypeLiteral local_scalar_t__) -1 1)) 
                 (name y_p)
                 (init
                  (Assignment
-                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1 AoS)
-                   Constant () ((Literal 2) (Var DUMMY_VAR__)))))))
+                  (StaticMethodCall (Matrix (TypeLiteral local_scalar_t__) -1 1) Constant
+                   () ((Literal 2) (Var DUMMY_VAR__)))))))
               (Block
                ((VariableDefn
                  ((static false) (constexpr false)
@@ -15379,8 +15258,8 @@
         ((templates_init ((((Typename RNG))) false)) (inline true) (return_type Void)
          (name write_array)
          (args
-          (((Ref (TemplateType RNG)) base_rng) ((Ref (Matrix Double -1 1 AoS)) params_r)
-           ((Ref (Matrix Double -1 1 AoS)) vars)
+          (((Ref (TemplateType RNG)) base_rng) ((Ref (Matrix Double -1 1)) params_r)
+           ((Ref (Matrix Double -1 1)) vars)
            ((Const (TypeLiteral bool)) "emit_transformed_parameters = true")
            ((Const (TypeLiteral bool)) "emit_generated_quantities = true")
            ((Pointer (TypeLiteral std::ostream)) "pstream = nullptr")))
@@ -15746,7 +15625,7 @@
               (name params_i) (init Uninitialized)))
             (Expression
              (Assign (Var vars)
-              (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+              (StaticMethodCall (Matrix Double -1 1) Constant ()
                ((Var num_to_write)
                 (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
             (Expression
@@ -16134,12 +16013,12 @@
         ((templates_init ((((Bool propto__) (Bool jacobian__) (Typename T_))) false))
          (inline true) (return_type (TemplateType T_)) (name log_prob)
          (args
-          (((Ref (Matrix (TemplateType T_) -1 1 AoS)) params_r)
+          (((Ref (Matrix (TemplateType T_) -1 1)) params_r)
            ((Pointer (TypeLiteral std::ostream)) "pstream = nullptr")))
          (cv_qualifiers (Const))
          (body
           (((VariableDefn
-             ((static false) (constexpr false) (type_ (Matrix Int -1 1 AoS))
+             ((static false) (constexpr false) (type_ (Matrix Int -1 1)) 
               (name params_i) (init Uninitialized)))
             (Return
              ((FunCall log_prob_impl ((TemplateType propto__) (TemplateType jacobian__))
@@ -16161,7 +16040,7 @@
          (name transform_inits)
          (args
           (((Const (Ref (TypeLiteral stan::io::var_context))) context)
-           ((Ref (Matrix Double -1 1 AoS)) params_r)
+           ((Ref (Matrix Double -1 1)) params_r)
            ((Pointer (TypeLiteral std::ostream)) "pstream = nullptr")))
          (cv_qualifiers (Const Final))
          (body
@@ -16177,7 +16056,7 @@
               ((Var context) (Var params_i) (Var params_r_vec) (Var pstream))))
             (Expression
              (Assign (Var params_r)
-              (Constructor (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
+              (Constructor (TypeTrait Eigen::Map ((Matrix Double -1 1)))
                ((MethodCall (Var params_r_vec) data () ())
                 (MethodCall (Var params_r_vec) size () ()))))))))))
        (FunDef
@@ -16217,8 +16096,8 @@
         ((templates_init ((()) false)) (inline true) (return_type Void)
          (name unconstrain_array)
          (args
-          (((Const (Ref (Matrix Double -1 1 AoS))) params_constrained)
-           ((Ref (Matrix Double -1 1 AoS)) params_unconstrained)
+          (((Const (Ref (Matrix Double -1 1))) params_constrained)
+           ((Ref (Matrix Double -1 1)) params_unconstrained)
            ((Pointer (TypeLiteral std::ostream)) "pstream = nullptr")))
          (cv_qualifiers (Const))
          (body
@@ -16227,7 +16106,7 @@
               (name params_i) (init Uninitialized)))
             (Expression
              (Assign (Var params_unconstrained)
-              (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+              (StaticMethodCall (Matrix Double -1 1) Constant ()
                ((Var num_params_r__)
                 (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
             (Expression
@@ -16532,10 +16411,10 @@
                ((FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
            (Expression
             (Assign (Var d_vec_data__)
-             (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 1) Constant ()
               ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew d_vec (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
+            (OperatorNew d_vec (TypeTrait Eigen::Map ((Matrix Double -1 1)))
              ((MethodCall (Var d_vec_data__) data () ()) (Var N))))
            (Block
             ((VariableDefn
@@ -16579,9 +16458,9 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
            (Expression
             (Assign (Var d_1d_vec)
-             (Constructor (StdVector (Matrix Double -1 1 AoS))
+             (Constructor (StdVector (Matrix Double -1 1))
               ((Var N)
-               (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double -1 1) Constant ()
                 ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Block
             ((VariableDefn
@@ -16641,13 +16520,13 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
            (Expression
             (Assign (Var d_3d_vec)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1))))
               ((Var N)
-               (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double -1 1)))
                 ((Var M)
-                 (Constructor (StdVector (Matrix Double -1 1 AoS))
+                 (Constructor (StdVector (Matrix Double -1 1))
                   ((Var K)
-                   (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double -1 1) Constant ()
                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Block
             ((VariableDefn
@@ -16705,10 +16584,10 @@
                ((FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
            (Expression
             (Assign (Var d_row_vec_data__)
-             (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double 1 -1) Constant ()
               ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew d_row_vec (TypeTrait Eigen::Map ((Matrix Double 1 -1 AoS)))
+            (OperatorNew d_row_vec (TypeTrait Eigen::Map ((Matrix Double 1 -1)))
              ((MethodCall (Var d_row_vec_data__) data () ()) (Var N))))
            (Block
             ((VariableDefn
@@ -16752,9 +16631,9 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
            (Expression
             (Assign (Var d_1d_row_vec)
-             (Constructor (StdVector (Matrix Double 1 -1 AoS))
+             (Constructor (StdVector (Matrix Double 1 -1))
               ((Var N)
-               (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double 1 -1) Constant ()
                 ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Block
             ((VariableDefn
@@ -16814,13 +16693,13 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
            (Expression
             (Assign (Var d_3d_row_vec)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double 1 -1))))
               ((Var N)
-               (Constructor (StdVector (StdVector (Matrix Double 1 -1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double 1 -1)))
                 ((Var M)
-                 (Constructor (StdVector (Matrix Double 1 -1 AoS))
+                 (Constructor (StdVector (Matrix Double 1 -1))
                   ((Var K)
-                   (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double 1 -1) Constant ()
                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Block
             ((VariableDefn
@@ -16877,11 +16756,11 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 3))))))))
            (Expression
             (Assign (Var d_ar_mat)
-             (Constructor (StdVector (StdVector (Matrix Double -1 -1 AoS)))
+             (Constructor (StdVector (StdVector (Matrix Double -1 -1)))
               ((Literal 4)
-               (Constructor (StdVector (Matrix Double -1 -1 AoS))
+               (Constructor (StdVector (Matrix Double -1 -1))
                 ((Literal 5)
-                 (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                 (StaticMethodCall (Matrix Double -1 -1) Constant ()
                   ((Literal 2) (Literal 3)
                    (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
            (Block
@@ -16948,10 +16827,10 @@
                ((FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
            (Expression
             (Assign (Var d_simplex_data__)
-             (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 1) Constant ()
               ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew d_simplex (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
+            (OperatorNew d_simplex (TypeTrait Eigen::Map ((Matrix Double -1 1)))
              ((MethodCall (Var d_simplex_data__) data () ()) (Var N))))
            (Block
             ((VariableDefn
@@ -16999,9 +16878,9 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
            (Expression
             (Assign (Var d_1d_simplex)
-             (Constructor (StdVector (Matrix Double -1 1 AoS))
+             (Constructor (StdVector (Matrix Double -1 1))
               ((Var N)
-               (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double -1 1) Constant ()
                 ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Block
             ((VariableDefn
@@ -17065,13 +16944,13 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var N))))))))
            (Expression
             (Assign (Var d_3d_simplex)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1))))
               ((Var N)
-               (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double -1 1)))
                 ((Var M)
-                 (Constructor (StdVector (Matrix Double -1 1 AoS))
+                 (Constructor (StdVector (Matrix Double -1 1))
                   ((Var K)
-                   (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double -1 1) Constant ()
                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Block
             ((VariableDefn
@@ -17130,11 +17009,11 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 4))))))))
            (Expression
             (Assign (Var d_cfcov_54_data__)
-             (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 -1) Constant ()
               ((Literal 5) (Literal 4)
                (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew d_cfcov_54 (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))
+            (OperatorNew d_cfcov_54 (TypeTrait Eigen::Map ((Matrix Double -1 -1)))
              ((MethodCall (Var d_cfcov_54_data__) data () ()) (Literal 5) (Literal 4))))
            (Block
             ((VariableDefn
@@ -17180,11 +17059,11 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 3))))))))
            (Expression
             (Assign (Var d_cfcov_33_data__)
-             (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 -1) Constant ()
               ((Literal 3) (Literal 3)
                (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew d_cfcov_33 (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))
+            (OperatorNew d_cfcov_33 (TypeTrait Eigen::Map ((Matrix Double -1 -1)))
              ((MethodCall (Var d_cfcov_33_data__) data () ()) (Literal 3) (Literal 3))))
            (Block
             ((VariableDefn
@@ -17235,9 +17114,9 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Literal 3))))))))
            (Expression
             (Assign (Var d_cfcov_33_ar)
-             (Constructor (StdVector (Matrix Double -1 -1 AoS))
+             (Constructor (StdVector (Matrix Double -1 -1))
               ((Var K)
-               (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double -1 -1) Constant ()
                 ((Literal 3) (Literal 3)
                  (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Block
@@ -17569,11 +17448,11 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_matrix_data__)
-             (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 -1) Constant ()
               ((Var d_int) (Var d_int)
                (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew d_matrix (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))
+            (OperatorNew d_matrix (TypeTrait Eigen::Map ((Matrix Double -1 -1)))
              ((MethodCall (Var d_matrix_data__) data () ()) (Var d_int) (Var d_int))))
            (Block
             ((VariableDefn
@@ -17628,9 +17507,9 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_matrix_array)
-             (Constructor (StdVector (Matrix Double -1 -1 AoS))
+             (Constructor (StdVector (Matrix Double -1 -1))
               ((Var d_int)
-               (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double -1 -1) Constant ()
                 ((Var d_int) (Var d_int)
                  (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Block
@@ -17693,11 +17572,11 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_matrix_array_2d)
-             (Constructor (StdVector (StdVector (Matrix Double -1 -1 AoS)))
+             (Constructor (StdVector (StdVector (Matrix Double -1 -1)))
               ((Var d_int)
-               (Constructor (StdVector (Matrix Double -1 -1 AoS))
+               (Constructor (StdVector (Matrix Double -1 -1))
                 ((Literal 2)
-                 (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                 (StaticMethodCall (Matrix Double -1 -1) Constant ()
                   ((Var d_int) (Var d_int)
                    (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
            (Block
@@ -17768,13 +17647,13 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_matrix_array_3d)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 -1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 -1))))
               ((Var d_int)
-               (Constructor (StdVector (StdVector (Matrix Double -1 -1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double -1 -1)))
                 ((Literal 2)
-                 (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                 (Constructor (StdVector (Matrix Double -1 -1))
                   ((Literal 3)
-                   (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double -1 -1) Constant ()
                     ((Var d_int) (Var d_int)
                      (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Block
@@ -17839,10 +17718,10 @@
                ((FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_vector_data__)
-             (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 1) Constant ()
               ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew d_vector (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
+            (OperatorNew d_vector (TypeTrait Eigen::Map ((Matrix Double -1 1)))
              ((MethodCall (Var d_vector_data__) data () ()) (Var d_int))))
            (Block
             ((VariableDefn
@@ -17886,9 +17765,9 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_vector_array)
-             (Constructor (StdVector (Matrix Double -1 1 AoS))
+             (Constructor (StdVector (Matrix Double -1 1))
               ((Var d_int)
-               (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double -1 1) Constant ()
                 ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Block
             ((VariableDefn
@@ -17939,11 +17818,11 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_vector_array_2d)
-             (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+             (Constructor (StdVector (StdVector (Matrix Double -1 1)))
               ((Var d_int)
-               (Constructor (StdVector (Matrix Double -1 1 AoS))
+               (Constructor (StdVector (Matrix Double -1 1))
                 ((Literal 2)
-                 (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                 (StaticMethodCall (Matrix Double -1 1) Constant ()
                   ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
            (Block
             ((VariableDefn
@@ -18001,13 +17880,13 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_vector_array_3d)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1))))
               ((Var d_int)
-               (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double -1 1)))
                 ((Literal 2)
-                 (Constructor (StdVector (Matrix Double -1 1 AoS))
+                 (Constructor (StdVector (Matrix Double -1 1))
                   ((Literal 3)
-                   (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double -1 1) Constant ()
                     ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Block
             ((VariableDefn
@@ -18065,10 +17944,10 @@
                ((FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_row_vector_data__)
-             (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double 1 -1) Constant ()
               ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew d_row_vector (TypeTrait Eigen::Map ((Matrix Double 1 -1 AoS)))
+            (OperatorNew d_row_vector (TypeTrait Eigen::Map ((Matrix Double 1 -1)))
              ((MethodCall (Var d_row_vector_data__) data () ()) (Var d_int))))
            (Block
             ((VariableDefn
@@ -18112,9 +17991,9 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_row_vector_array)
-             (Constructor (StdVector (Matrix Double 1 -1 AoS))
+             (Constructor (StdVector (Matrix Double 1 -1))
               ((Var d_int)
-               (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double 1 -1) Constant ()
                 ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Block
             ((VariableDefn
@@ -18166,11 +18045,11 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_row_vector_array_2d)
-             (Constructor (StdVector (StdVector (Matrix Double 1 -1 AoS)))
+             (Constructor (StdVector (StdVector (Matrix Double 1 -1)))
               ((Var d_int)
-               (Constructor (StdVector (Matrix Double 1 -1 AoS))
+               (Constructor (StdVector (Matrix Double 1 -1))
                 ((Literal 2)
-                 (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                 (StaticMethodCall (Matrix Double 1 -1) Constant ()
                   ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
            (Block
             ((VariableDefn
@@ -18229,13 +18108,13 @@
                 (FunCall static_cast ((TypeLiteral size_t)) ((Var d_int))))))))
            (Expression
             (Assign (Var d_row_vector_array_3d)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double 1 -1))))
               ((Var d_int)
-               (Constructor (StdVector (StdVector (Matrix Double 1 -1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double 1 -1)))
                 ((Literal 2)
-                 (Constructor (StdVector (Matrix Double 1 -1 AoS))
+                 (Constructor (StdVector (Matrix Double 1 -1))
                   ((Literal 3)
-                   (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double 1 -1) Constant ()
                     ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Block
             ((VariableDefn
@@ -18325,11 +18204,11 @@
            (Expression (Assign (Var current_statement__) (Literal 300)))
            (Expression
             (Assign (Var td_ar_mat)
-             (Constructor (StdVector (StdVector (Matrix Double -1 -1 AoS)))
+             (Constructor (StdVector (StdVector (Matrix Double -1 -1)))
               ((Literal 4)
-               (Constructor (StdVector (Matrix Double -1 -1 AoS))
+               (Constructor (StdVector (Matrix Double -1 -1))
                 ((Literal 5)
-                 (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                 (StaticMethodCall (Matrix Double -1 -1) Constant ()
                   ((Literal 2) (Literal 3)
                    (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
            (Expression (Assign (Var current_statement__) (Literal 301)))
@@ -18339,10 +18218,10 @@
            (Expression (Assign (Var current_statement__) (Literal 302)))
            (Expression
             (Assign (Var td_simplex_data__)
-             (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 1) Constant ()
               ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew td_simplex (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
+            (OperatorNew td_simplex (TypeTrait Eigen::Map ((Matrix Double -1 1)))
              ((MethodCall (Var td_simplex_data__) data () ()) (Var N))))
            (Expression (Assign (Var current_statement__) (Literal 303)))
            (Expression
@@ -18355,9 +18234,9 @@
            (Expression (Assign (Var current_statement__) (Literal 305)))
            (Expression
             (Assign (Var td_1d_simplex)
-             (Constructor (StdVector (Matrix Double -1 1 AoS))
+             (Constructor (StdVector (Matrix Double -1 1))
               ((Var N)
-               (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double -1 1) Constant ()
                 ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Expression (Assign (Var current_statement__) (Literal 306)))
            (Expression
@@ -18378,47 +18257,47 @@
            (Expression (Assign (Var current_statement__) (Literal 310)))
            (Expression
             (Assign (Var td_3d_simplex)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1))))
               ((Var N)
-               (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double -1 1)))
                 ((Var M)
-                 (Constructor (StdVector (Matrix Double -1 1 AoS))
+                 (Constructor (StdVector (Matrix Double -1 1))
                   ((Var K)
-                   (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double -1 1) Constant ()
                     ((Var N) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Expression (Assign (Var current_statement__) (Literal 311)))
            (Expression
             (Assign (Var td_cfcov_54_data__)
-             (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 -1) Constant ()
               ((Literal 5) (Literal 5)
                (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew td_cfcov_54 (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))
+            (OperatorNew td_cfcov_54 (TypeTrait Eigen::Map ((Matrix Double -1 -1)))
              ((MethodCall (Var td_cfcov_54_data__) data () ()) (Literal 5) (Literal 5))))
            (Expression (Assign (Var current_statement__) (Literal 312)))
            (Expression
             (Assign (Var td_cfcov_33_data__)
-             (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 -1) Constant ()
               ((Literal 3) (Literal 3)
                (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew td_cfcov_33 (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))
+            (OperatorNew td_cfcov_33 (TypeTrait Eigen::Map ((Matrix Double -1 -1)))
              ((MethodCall (Var td_cfcov_33_data__) data () ()) (Literal 3) (Literal 3))))
            (Expression (Assign (Var current_statement__) (Literal 313)))
            (Expression
             (Assign (Var x_data__)
-             (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 1) Constant ()
               ((Literal 2) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew x (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
+            (OperatorNew x (TypeTrait Eigen::Map ((Matrix Double -1 1)))
              ((MethodCall (Var x_data__) data () ()) (Literal 2))))
            (Expression (Assign (Var current_statement__) (Literal 314)))
            (Expression
             (Assign (Var y_data__)
-             (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 1) Constant ()
               ((Literal 2) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
-            (OperatorNew y (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
+            (OperatorNew y (TypeTrait Eigen::Map ((Matrix Double -1 1)))
              ((MethodCall (Var y_data__) data () ()) (Literal 2))))
            (Expression (Assign (Var current_statement__) (Literal 315)))
            (Expression
@@ -18549,11 +18428,11 @@
                (BinOp (Var j) LEq (Literal 5)) (Increment (Var j))
                (Block
                 ((VariableDefn
-                  ((static false) (constexpr false) (type_ (Matrix Double -1 -1 AoS))
+                  ((static false) (constexpr false) (type_ (Matrix Double -1 -1))
                    (name l_mat)
                    (init
                     (Assignment
-                     (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                     (StaticMethodCall (Matrix Double -1 -1) Constant ()
                       ((Literal 2) (Literal 3)
                        (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
                  (Expression (Assign (Var current_statement__) (Literal 341)))
@@ -18607,11 +18486,11 @@
               ((static false) (constexpr false) (type_ Double) (name z)
                (init (Assignment (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
              (VariableDefn
-              ((static false) (constexpr false) (type_ (Matrix Double 1 -1 AoS))
+              ((static false) (constexpr false) (type_ (Matrix Double 1 -1))
                (name blocked_tdata_vs)
                (init
                 (Assignment
-                 (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                 (StaticMethodCall (Matrix Double 1 -1) Constant ()
                   ((Literal 2) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
              (Expression (Assign (Var current_statement__) (Literal 351)))
              (For
@@ -18787,12 +18666,12 @@
            (Expression (Assign (Var current_statement__) (Literal 374)))
            (Expression
             (Assign (Var transformed_data_matrix_data__)
-             (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 -1) Constant ()
               ((Var d_int) (Var d_int)
                (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
             (OperatorNew transformed_data_matrix
-             (TypeTrait Eigen::Map ((Matrix Double -1 -1 AoS)))
+             (TypeTrait Eigen::Map ((Matrix Double -1 -1)))
              ((MethodCall (Var transformed_data_matrix_data__) data () ()) 
               (Var d_int) (Var d_int))))
            (Expression (Assign (Var current_statement__) (Literal 375)))
@@ -18813,9 +18692,9 @@
            (Expression (Assign (Var current_statement__) (Literal 378)))
            (Expression
             (Assign (Var transformed_data_matrix_array)
-             (Constructor (StdVector (Matrix Double -1 -1 AoS))
+             (Constructor (StdVector (Matrix Double -1 -1))
               ((Var d_int)
-               (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double -1 -1) Constant ()
                 ((Var d_int) (Var d_int)
                  (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Expression (Assign (Var current_statement__) (Literal 379)))
@@ -18836,11 +18715,11 @@
            (Expression (Assign (Var current_statement__) (Literal 382)))
            (Expression
             (Assign (Var transformed_data_matrix_array_2d)
-             (Constructor (StdVector (StdVector (Matrix Double -1 -1 AoS)))
+             (Constructor (StdVector (StdVector (Matrix Double -1 -1)))
               ((Var d_int)
-               (Constructor (StdVector (Matrix Double -1 -1 AoS))
+               (Constructor (StdVector (Matrix Double -1 -1))
                 ((Literal 2)
-                 (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                 (StaticMethodCall (Matrix Double -1 -1) Constant ()
                   ((Var d_int) (Var d_int)
                    (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
            (Expression (Assign (Var current_statement__) (Literal 383)))
@@ -18861,13 +18740,13 @@
            (Expression (Assign (Var current_statement__) (Literal 386)))
            (Expression
             (Assign (Var transformed_data_matrix_array_3d)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 -1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 -1))))
               ((Var d_int)
-               (Constructor (StdVector (StdVector (Matrix Double -1 -1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double -1 -1)))
                 ((Literal 2)
-                 (Constructor (StdVector (Matrix Double -1 -1 AoS))
+                 (Constructor (StdVector (Matrix Double -1 -1))
                   ((Literal 3)
-                   (StaticMethodCall (Matrix Double -1 -1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double -1 -1) Constant ()
                     ((Var d_int) (Var d_int)
                      (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Expression (Assign (Var current_statement__) (Literal 387)))
@@ -18877,11 +18756,11 @@
            (Expression (Assign (Var current_statement__) (Literal 388)))
            (Expression
             (Assign (Var transformed_data_vector_data__)
-             (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double -1 1) Constant ()
               ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
             (OperatorNew transformed_data_vector
-             (TypeTrait Eigen::Map ((Matrix Double -1 1 AoS)))
+             (TypeTrait Eigen::Map ((Matrix Double -1 1)))
              ((MethodCall (Var transformed_data_vector_data__) data () ()) (Var d_int))))
            (Expression (Assign (Var current_statement__) (Literal 389)))
            (Expression
@@ -18896,9 +18775,9 @@
            (Expression (Assign (Var current_statement__) (Literal 391)))
            (Expression
             (Assign (Var transformed_data_vector_array)
-             (Constructor (StdVector (Matrix Double -1 1 AoS))
+             (Constructor (StdVector (Matrix Double -1 1))
               ((Var d_int)
-               (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double -1 1) Constant ()
                 ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Expression (Assign (Var current_statement__) (Literal 392)))
            (Expression
@@ -18913,11 +18792,11 @@
            (Expression (Assign (Var current_statement__) (Literal 394)))
            (Expression
             (Assign (Var transformed_data_vector_array_2d)
-             (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+             (Constructor (StdVector (StdVector (Matrix Double -1 1)))
               ((Var d_int)
-               (Constructor (StdVector (Matrix Double -1 1 AoS))
+               (Constructor (StdVector (Matrix Double -1 1))
                 ((Literal 2)
-                 (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                 (StaticMethodCall (Matrix Double -1 1) Constant ()
                   ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
            (Expression (Assign (Var current_statement__) (Literal 395)))
            (Expression
@@ -18932,13 +18811,13 @@
            (Expression (Assign (Var current_statement__) (Literal 397)))
            (Expression
             (Assign (Var transformed_data_vector_array_3d)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double -1 1))))
               ((Var d_int)
-               (Constructor (StdVector (StdVector (Matrix Double -1 1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double -1 1)))
                 ((Literal 2)
-                 (Constructor (StdVector (Matrix Double -1 1 AoS))
+                 (Constructor (StdVector (Matrix Double -1 1))
                   ((Literal 3)
-                   (StaticMethodCall (Matrix Double -1 1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double -1 1) Constant ()
                     ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Expression (Assign (Var current_statement__) (Literal 398)))
            (Expression
@@ -18948,11 +18827,11 @@
            (Expression (Assign (Var current_statement__) (Literal 399)))
            (Expression
             (Assign (Var transformed_data_row_vector_data__)
-             (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+             (StaticMethodCall (Matrix Double 1 -1) Constant ()
               ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))
            (Expression
             (OperatorNew transformed_data_row_vector
-             (TypeTrait Eigen::Map ((Matrix Double 1 -1 AoS)))
+             (TypeTrait Eigen::Map ((Matrix Double 1 -1)))
              ((MethodCall (Var transformed_data_row_vector_data__) data () ())
               (Var d_int))))
            (Expression (Assign (Var current_statement__) (Literal 400)))
@@ -18968,9 +18847,9 @@
            (Expression (Assign (Var current_statement__) (Literal 402)))
            (Expression
             (Assign (Var transformed_data_row_vector_array)
-             (Constructor (StdVector (Matrix Double 1 -1 AoS))
+             (Constructor (StdVector (Matrix Double 1 -1))
               ((Var d_int)
-               (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+               (StaticMethodCall (Matrix Double 1 -1) Constant ()
                 ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))
            (Expression (Assign (Var current_statement__) (Literal 403)))
            (Expression
@@ -18985,11 +18864,11 @@
            (Expression (Assign (Var current_statement__) (Literal 405)))
            (Expression
             (Assign (Var transformed_data_row_vector_array_2d)
-             (Constructor (StdVector (StdVector (Matrix Double 1 -1 AoS)))
+             (Constructor (StdVector (StdVector (Matrix Double 1 -1)))
               ((Var d_int)
-               (Constructor (StdVector (Matrix Double 1 -1 AoS))
+               (Constructor (StdVector (Matrix Double 1 -1))
                 ((Literal 2)
-                 (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                 (StaticMethodCall (Matrix Double 1 -1) Constant ()
                   ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))
            (Expression (Assign (Var current_statement__) (Literal 406)))
            (Expression
@@ -19004,13 +18883,13 @@
            (Expression (Assign (Var current_statement__) (Literal 408)))
            (Expression
             (Assign (Var transformed_data_row_vector_array_3d)
-             (Constructor (StdVector (StdVector (StdVector (Matrix Double 1 -1 AoS))))
+             (Constructor (StdVector (StdVector (StdVector (Matrix Double 1 -1))))
               ((Var d_int)
-               (Constructor (StdVector (StdVector (Matrix Double 1 -1 AoS)))
+               (Constructor (StdVector (StdVector (Matrix Double 1 -1)))
                 ((Literal 2)
-                 (Constructor (StdVector (Matrix Double 1 -1 AoS))
+                 (Constructor (StdVector (Matrix Double 1 -1))
                   ((Literal 3)
-                   (StaticMethodCall (Matrix Double 1 -1 AoS) Constant ()
+                   (StaticMethodCall (Matrix Double 1 -1) Constant ()
                     ((Var d_int) (FunCall std::numeric_limits<double>::quiet_NaN () ())))))))))))
            (Expression (Assign (Var current_statement__) (Literal 409)))
            (Expression
