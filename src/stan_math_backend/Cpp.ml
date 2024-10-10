@@ -19,7 +19,7 @@ type type_ =
   | Tuple of type_ list
   | TypeLiteral of identifier  (** Used for things like Eigen::Index *)
   | NonTypeTemplateInt of int
-  | Matrix of type_ * int * int * Middle.Mem_pattern.t
+  | Matrix of type_ * int * int
   | Ref of type_
   | Const of type_
   | Pointer of type_
@@ -41,15 +41,24 @@ module Types = struct
 
   (** An [Eigen::Matrix<s, -1, 1>] *)
   let vector ?(mem_pattern = Middle.Mem_pattern.AoS) s =
-    Matrix (s, -1, 1, mem_pattern)
+    match mem_pattern with
+    | Middle.Mem_pattern.AoS -> Matrix (s, -1, 1)
+    | Middle.Mem_pattern.SoA ->
+        TypeTrait ("stan::math::var_value", [Matrix (Double, -1, 1)])
 
   (** An [Eigen::Matrix<s, 1, -1>] *)
   let row_vector ?(mem_pattern = Middle.Mem_pattern.AoS) s =
-    Matrix (s, 1, -1, mem_pattern)
+    match mem_pattern with
+    | Middle.Mem_pattern.AoS -> Matrix (s, 1, -1)
+    | Middle.Mem_pattern.SoA ->
+        TypeTrait ("stan::math::var_value", [Matrix (Double, 1, -1)])
 
   (** An [Eigen::Matrix<s, -1, -1>] *)
   let matrix ?(mem_pattern = Middle.Mem_pattern.AoS) s =
-    Matrix (s, -1, -1, mem_pattern)
+    match mem_pattern with
+    | Middle.Mem_pattern.AoS -> Matrix (s, -1, -1)
+    | Middle.Mem_pattern.SoA ->
+        TypeTrait ("stan::math::var_value", [Matrix (Double, -1, -1)])
 
   (** A [std::string] *)
   let string = TypeLiteral "std::string"
@@ -443,12 +452,7 @@ module Printing = struct
         pf ppf "@[<2>std::tuple<@,%a>@]" (list ~sep:comma pp_type_) subtypes
     | TypeLiteral id -> pp_identifier ppf id
     | NonTypeTemplateInt i -> int ppf i
-    | Matrix (t, i, j, mem_pattern) -> (
-        match mem_pattern with
-        | Middle.Mem_pattern.AoS ->
-            pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
-        | Middle.Mem_pattern.SoA ->
-            pf ppf "stan::math::var_value<Eigen::Matrix<double,%i,%i>>" i j)
+    | Matrix (t, i, j) -> pf ppf "Eigen::Matrix<%a,%i,%i>" pp_type_ t i j
     | Const t -> pf ppf "const %a" pp_type_ t
     | Ref t -> pf ppf "%a&" pp_type_ t
     | Pointer t -> pf ppf "%a*" pp_type_ t
@@ -795,7 +799,7 @@ module Tests = struct
       {|
           (MethodCall
            (Parens
-            (StreamInsertion (Constructor (Matrix Double 1 -1 AoS) ((Literal 3)))
+            (StreamInsertion (Constructor (Matrix Double 1 -1) ((Literal 3)))
              ((Literal 1) (Var a) (Literal 3))))
            finished () ())
 
