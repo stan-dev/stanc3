@@ -74,3 +74,4 @@ internal_fun(const std::vector<std::vector<double>>& a,
 Warning in 'external.stan', line 7, column 7: Functions do not need to be
     declared before definition; all user defined function names are always in
     scope regardless of definition order.
+[exit 0]
