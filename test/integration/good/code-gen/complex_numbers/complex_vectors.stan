@@ -7,4 +7,7 @@ transformed parameters {
    complex_row_vector[2] zx = x;
 
    complex_matrix[2,2] cm = [[1,2], [3,4i]];
+
+   array[2] complex_matrix[2,2] acm = {[[1,2], [3,4]],  cm};
+   array[2] complex_vector[3] az = {z, [1,2,3]'};
 }

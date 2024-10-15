@@ -954,6 +954,24 @@ Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, 
 
 Unexpected input after the conclusion of a valid expression.
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-functor.stan
+Semantic error in 'err-jacobian-plusequals-functor.stan', line 16, column 16 to column 57:
+   -------------------------------------------------
+    14:    void weird_jacobian(data vector y0, data real t0, data array[] real ts,
+    15:                        data real theta) {
+    16:      jacobian += ode_rk45(sho_jacobian, y0, t0, ts, theta);
+                         ^
+    17:    }
+    18:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'ode_rk45':
+(<F1>, vector, real, array[] real, real)
+where F1 = (real, vector, real) => vector
+Available signatures:
+(<F2>, vector, real, array[] real) => vector
+where F2 = (real, vector) => vector
+  The first argument must be a pure function but got a _jacobian function. These function types are not compatible.
   $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope.stan
 Semantic error in 'err-jacobian-plusequals-scope.stan', line 4, column 2 to column 16:
    -------------------------------------------------

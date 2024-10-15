@@ -27394,7 +27394,7 @@ static constexpr std::array<const char*, 29> locations_array__ =
   " (in 'partial-eval.stan', line 27, column 2 to column 29)",
   " (in 'partial-eval.stan', line 29, column 2 to column 25)",
   " (in 'partial-eval.stan', line 30, column 2 to column 11)",
-  " (in 'partial-eval.stan', line 31, column 2 to column 13)",
+  " (in 'partial-eval.stan', line 31, column 2 to column 14)",
   " (in 'partial-eval.stan', line 32, column 2 to column 24)",
   " (in 'partial-eval.stan', line 2, column 2 to column 17)",
   " (in 'partial-eval.stan', line 3, column 2 to column 22)",
@@ -27629,6 +27629,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         z = stan::math::to_complex(5, 4);
         current_statement__ = 16;
         lp_accum__.add(stan::math::get_real(z));
+        if (pstream__) {
+          stan::math::stan_print(pstream__, 0);
+          *(pstream__) << std::endl;
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -27716,6 +27720,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         z = stan::math::to_complex(5, 4);
         current_statement__ = 16;
         lp_accum__.add(stan::math::get_real(z));
+        if (pstream__) {
+          stan::math::stan_print(pstream__, 0);
+          *(pstream__) << std::endl;
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

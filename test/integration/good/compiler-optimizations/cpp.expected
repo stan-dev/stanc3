@@ -39416,6 +39416,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         lcm_sym30__ = stan::math::to_complex(5, 4);
         current_statement__ = 15;
         lp_accum__.add(stan::math::get_real(lcm_sym30__));
+        if (pstream__) {
+          stan::math::stan_print(pstream__, 0);
+          *(pstream__) << std::endl;
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -39530,6 +39534,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         lcm_sym20__ = stan::math::to_complex(5, 4);
         current_statement__ = 15;
         lp_accum__.add(stan::math::get_real(lcm_sym20__));
+        if (pstream__) {
+          stan::math::stan_print(pstream__, 0);
+          *(pstream__) << std::endl;
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
