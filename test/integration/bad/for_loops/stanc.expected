@@ -154,3 +154,55 @@ Semantic error in 'for_statements_bad_indices4.stan', line 6, column 18 to colum
 
 Foreach-loop must be over array, vector, row_vector or matrix. Instead found expression of type real.
 [exit 1]
+  $ ../../../../../install/default/bin/stanc name_in_use.stan
+Semantic error in 'name_in_use.stan', line 7, column 7 to column 10:
+   -------------------------------------------------
+     5:    int foo;
+     6:  
+     7:    for (foo in 1:N) {
+                ^
+     8:      print("foo");
+     9:    }
+   -------------------------------------------------
+
+Identifier 'foo' is already in use.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc name_in_use_foreach.stan
+Semantic error in 'name_in_use_foreach.stan', line 7, column 7 to column 10:
+   -------------------------------------------------
+     5:    int foo;
+     6:  
+     7:    for (foo in N) {
+                ^
+     8:      print("foo");
+     9:    }
+   -------------------------------------------------
+
+Identifier 'foo' is already in use.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc reserved.stan
+Semantic error in 'reserved.stan', line 5, column 7 to column 10:
+   -------------------------------------------------
+     3:  }
+     4:  generated quantities {
+     5:    for (var in 1:N) {
+                ^
+     6:      print("foo");
+     7:    }
+   -------------------------------------------------
+
+Identifier 'var' clashes with reserved keyword.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc reserved_foreach.stan
+Semantic error in 'reserved_foreach.stan', line 5, column 7 to column 10:
+   -------------------------------------------------
+     3:  }
+     4:  generated quantities {
+     5:    for (var in N) {
+                ^
+     6:      print("foo");
+     7:    }
+   -------------------------------------------------
+
+Identifier 'var' clashes with reserved keyword.
+[exit 1]

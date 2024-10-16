@@ -4,5 +4,5 @@ functions {
    }
 }
 model {
-   target += bar_lpmf(19.2);
+   target += bar_lupmf(19.2);
 }

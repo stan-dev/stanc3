@@ -318,6 +318,25 @@ where F2 = (vector) => vector
     but the other is
      vector
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_solve_newton_lpdf.stan
+Semantic error in 'bad_solve_newton_lpdf.stan', line 28, column 12 to column 65:
+   -------------------------------------------------
+    26:    vector[2] theta_p;
+    27:  
+    28:    theta_p = solve_newton(algebra_system_lpdf, x, y, dat, dat_int);
+                     ^
+    29:  
+    30:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'solve_newton':
+(<F1>, vector, vector, array[] real, array[] int)
+where F1 = (vector, vector, array[] real, array[] int) => real
+Available signatures:
+(<F2>, vector) => vector
+where F2 = (vector) => vector
+  The first argument must be a pure function but got a probability density or mass function. These function types are not compatible.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_newton_tol_arguments_number.stan
 Semantic error in 'bad_solve_newton_tol_arguments_number.stan', line 34, column 10 to line 35, column 50:
    -------------------------------------------------

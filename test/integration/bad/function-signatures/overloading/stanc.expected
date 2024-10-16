@@ -1,3 +1,16 @@
+  $ ../../../../../../install/default/bin/stanc invalid_lpmf.stan
+Semantic error in 'invalid_lpmf.stan', line 8, column 3 to line 10, column 4:
+   -------------------------------------------------
+     6:     }
+     7:  
+     8:     real foo_lpmf(real x, real y){
+            ^
+     9:       return x/y;
+    10:     }
+   -------------------------------------------------
+
+Probability mass functions require integer variates (first argument). Instead found type real.
+[exit 1]
   $ ../../../../../../install/default/bin/stanc no_minimum_dae.stan
 Semantic error in 'no_minimum_dae.stan', line 38, column 12 to column 59:
    -------------------------------------------------

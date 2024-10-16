@@ -10031,18 +10031,24 @@ namespace complex_vectors_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 8> locations_array__ =
+static constexpr std::array<const char*, 12> locations_array__ =
   {" (found before start of program)",
-  " (in 'complex_vectors.stan', line 4, column 3 to column 37)",
-  " (in 'complex_vectors.stan', line 5, column 3 to column 42)",
-  " (in 'complex_vectors.stan', line 6, column 3 to column 27)",
-  " (in 'complex_vectors.stan', line 7, column 3 to column 32)",
-  " (in 'complex_vectors.stan', line 9, column 3 to column 44)",
-  " (in 'complex_vectors.stan', line 11, column 3 to column 60)",
-  " (in 'complex_vectors.stan', line 12, column 3 to column 49)"};
+  " (in 'complex_vectors.stan', line 5, column 2 to column 36)",
+  " (in 'complex_vectors.stan', line 6, column 2 to column 45)",
+  " (in 'complex_vectors.stan', line 7, column 2 to column 27)",
+  " (in 'complex_vectors.stan', line 8, column 2 to column 31)",
+  " (in 'complex_vectors.stan', line 9, column 2 to column 54)",
+  " (in 'complex_vectors.stan', line 12, column 2 to column 61)",
+  " (in 'complex_vectors.stan', line 13, column 2 to column 50)",
+  " (in 'complex_vectors.stan', line 10, column 2 to column 19)",
+  " (in 'complex_vectors.stan', line 2, column 2 to column 12)",
+  " (in 'complex_vectors.stan', line 9, column 17 to column 22)",
+  " (in 'complex_vectors.stan', line 9, column 24 to column 29)"};
 class complex_vectors_model final : public model_base_crtp<complex_vectors_model> {
  private:
-  
+  int n;
+  int cm_1dim__;
+  int cm_2dim__;
  public:
   ~complex_vectors_model() {}
   complex_vectors_model(stan::io::var_context& context__, unsigned int
@@ -10062,6 +10068,26 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
+    try {
+      current_statement__ = 9;
+      n = std::numeric_limits<int>::min();
+      current_statement__ = 9;
+      n = 1;
+      current_statement__ = 10;
+      cm_1dim__ = std::numeric_limits<int>::min();
+      current_statement__ = 10;
+      cm_1dim__ = (n + 1);
+      current_statement__ = 10;
+      stan::math::validate_non_negative_index("cm", "n + 1", cm_1dim__);
+      current_statement__ = 11;
+      cm_2dim__ = std::numeric_limits<int>::min();
+      current_statement__ = 11;
+      cm_2dim__ = (n + 1);
+      current_statement__ = 11;
+      stan::math::validate_non_negative_index("cm", "n + 1", cm_2dim__);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
     num_params_r__ = 0U;
   }
   inline std::string model_name() const final {
@@ -10137,7 +10163,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
       current_statement__ = 4;
       stan::model::assign(zx, x, "assigning variable zx");
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cm =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(2, 2,
+        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(cm_1dim__,
+          cm_2dim__,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 5;
       stan::model::assign(cm,
@@ -10152,6 +10179,12 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                                                              3, 0),
                                                            stan::math::to_complex(
                                                              0, 4)).finished()}),
+        "assigning variable cm");
+      current_statement__ = 8;
+      stan::model::assign(cm,
+        stan::math::to_matrix(
+          std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>{zx,
+            stan::model::rvalue(cm, "cm", stan::model::index_uni(1))}),
         "assigning variable cm");
       std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>> acm =
         std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(2,
@@ -10251,7 +10284,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
       current_statement__ = 4;
       stan::model::assign(zx, x, "assigning variable zx");
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cm =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(2, 2,
+        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(cm_1dim__,
+          cm_2dim__,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 5;
       stan::model::assign(cm,
@@ -10266,6 +10300,12 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                                                              3, 0),
                                                            stan::math::to_complex(
                                                              0, 4)).finished()}),
+        "assigning variable cm");
+      current_statement__ = 8;
+      stan::model::assign(cm,
+        stan::math::to_matrix(
+          std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>{zx,
+            stan::model::rvalue(cm, "cm", stan::model::index_uni(1))}),
         "assigning variable cm");
       std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>> acm =
         std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(2,
@@ -10350,7 +10390,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()));
       Eigen::Matrix<std::complex<double>,-1,-1> cm =
-        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(2, 2,
+        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(cm_1dim__,
+          cm_2dim__,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()));
       std::vector<Eigen::Matrix<std::complex<double>,-1,-1>> acm =
@@ -10411,6 +10452,12 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                                                              3, 0),
                                                            stan::math::to_complex(
                                                              0, 4)).finished()}),
+        "assigning variable cm");
+      current_statement__ = 8;
+      stan::model::assign(cm,
+        stan::math::to_matrix(
+          std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>{zx,
+            stan::model::rvalue(cm, "cm", stan::model::index_uni(1))}),
         "assigning variable cm");
       current_statement__ = 6;
       stan::model::assign(acm,
@@ -10516,8 +10563,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
              std::vector<size_t>{static_cast<size_t>(2)},
              std::vector<size_t>{static_cast<size_t>(2),
                static_cast<size_t>(2)},
-             std::vector<size_t>{static_cast<size_t>(2),
-               static_cast<size_t>(2), static_cast<size_t>(2)},
+             std::vector<size_t>{static_cast<size_t>(cm_1dim__),
+               static_cast<size_t>(cm_2dim__), static_cast<size_t>(2)},
              std::vector<size_t>{static_cast<size_t>(2),
                static_cast<size_t>(2), static_cast<size_t>(2),
                static_cast<size_t>(2)},
@@ -10559,8 +10606,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
         param_names__.emplace_back(std::string() + "zx" + '.' +
           std::to_string(sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= cm_2dim__; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= cm_1dim__; ++sym2__) {
           param_names__.emplace_back(std::string() + "cm" + '.' +
             std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
             "real");
@@ -10625,8 +10672,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
         param_names__.emplace_back(std::string() + "zx" + '.' +
           std::to_string(sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= cm_2dim__; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= cm_1dim__; ++sym2__) {
           param_names__.emplace_back(std::string() + "cm" + '.' +
             std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
             "real");
@@ -10661,10 +10708,10 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"acm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"az\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(cm_1dim__) + ",\"cols\":" + std::to_string(cm_2dim__) + "},\"block\":\"transformed_parameters\"},{\"name\":\"acm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"az\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "}},\"block\":\"transformed_parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"acm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"az\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "}},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(cm_1dim__) + ",\"cols\":" + std::to_string(cm_2dim__) + "},\"block\":\"transformed_parameters\"},{\"name\":\"acm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"az\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "}},\"block\":\"transformed_parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -10675,8 +10722,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * ((((((((3 *
-      2) + (2 * (2 * 2))) + 2) + (2 * 2)) + (2 * (2 * 2))) + (2 * (2 * (2 *
-      2)))) + (2 * (3 * 2))));
+      2) + (2 * (2 * 2))) + 2) + (2 * 2)) + (cm_1dim__ * (cm_2dim__ * 2))) +
+      (2 * (2 * (2 * 2)))) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -10694,8 +10741,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
               pstream = nullptr) const {
     const size_t num_params__ = 0;
     const size_t num_transformed = emit_transformed_parameters * ((((((((3 *
-      2) + (2 * (2 * 2))) + 2) + (2 * 2)) + (2 * (2 * 2))) + (2 * (2 * (2 *
-      2)))) + (2 * (3 * 2))));
+      2) + (2 * (2 * 2))) + 2) + (2 * 2)) + (cm_1dim__ * (cm_2dim__ * 2))) +
+      (2 * (2 * (2 * 2)))) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;

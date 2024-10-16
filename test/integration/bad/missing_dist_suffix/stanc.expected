@@ -45,6 +45,18 @@ Semantic error in 'lpmf_lpdf_replacement2.stan', line 5, column 14 to column 32:
 
 Function 'normal_lpmf' is not implemented for distribution 'normal', use 'normal_lpdf' instead.
 [exit 1]
+  $ ../../../../../install/default/bin/stanc lpmf_lpdf_replacement3.stan
+Semantic error in 'lpmf_lpdf_replacement3.stan', line 5, column 14 to column 35:
+   -------------------------------------------------
+     3:  model {
+     4:      // known family, known suffix, not implemented
+     5:      target += binomial_lupdf(1|0,1);
+                       ^
+     6:  }
+   -------------------------------------------------
+
+Function 'binomial_lupdf' is not implemented for distribution 'binomial', use 'binomial_lupmf' instead.
+[exit 1]
   $ ../../../../../install/default/bin/stanc no_rng_suffix.stan
 Semantic error in 'no_rng_suffix.stan', line 2, column 12 to column 55:
    -------------------------------------------------
@@ -152,4 +164,16 @@ Semantic error in 'user_defined_no_rng.stan', line 7, column 12 to column 23:
    -------------------------------------------------
 
 A returning function was expected but an undeclared identifier 'bar_rng' was supplied.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc user_defined_unnormalized.stan
+Semantic error in 'user_defined_unnormalized.stan', line 7, column 13 to column 28:
+   -------------------------------------------------
+     5:  }
+     6:  model {
+     7:     target += bar_lupmf(19.2);
+                      ^
+     8:  }
+   -------------------------------------------------
+
+Function 'bar_lupmf' is not implemented for distribution 'bar', use 'bar_lupdf' instead.
 [exit 1]

@@ -113,17 +113,11 @@ let verify_identifier id : unit =
       "Variable name 'jacobian' will be a reserved word starting in Stan 2.38. \
        Please rename it!";
   if id.name = !model_name then
-    Semantic_error.ident_is_model_name id.id_loc id.name |> error
-  else if
+    Semantic_error.ident_is_model_name id.id_loc id.name |> error;
+  if
     String.is_suffix id.name ~suffix:"__"
     || List.mem reserved_keywords id.name ~equal:String.equal
   then Semantic_error.ident_is_keyword id.id_loc id.name |> error
-
-let distribution_name_variants name =
-  match Utils.split_distribution_suffix name with
-  | Some (stem, "lpmf") -> [name; stem ^ "_lpdf"]
-  | Some (stem, "lpdf") -> [name; stem ^ "_lpmf"]
-  | _ -> [name]
 
 (** verify that the variable being declared is previous unused.
    allowed to shadow StanLib *)
@@ -160,10 +154,8 @@ let verify_name_fresh_udf loc tenv name =
   - is not already in use (for now)
 *)
 let verify_name_fresh tenv id ~is_udf =
-  let f =
-    if is_udf then verify_name_fresh_udf id.id_loc tenv
-    else verify_name_fresh_var id.id_loc tenv in
-  List.iter ~f (distribution_name_variants id.name)
+  if is_udf then verify_name_fresh_udf id.id_loc tenv id.name
+  else verify_name_fresh_var id.id_loc tenv id.name
 
 let is_of_compatible_return_type rt1 srt2 =
   UnsizedType.(
@@ -513,10 +505,10 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
           let is_known_family s =
             List.mem known_families s ~equal:String.equal in
           match suffix with
-          | ("lpmf" | "lumpf") when Env.mem tenv (prefix ^ "_lpdf") ->
+          | ("lpmf" | "lupmf") when Env.mem tenv (prefix ^ "_lpdf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
                 (prefix, suffix)
-          | ("lpdf" | "lumdf") when Env.mem tenv (prefix ^ "_lpmf") ->
+          | ("lpdf" | "lupdf") when Env.mem tenv (prefix ^ "_lpmf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
                 (prefix, suffix)
           | _ ->
@@ -1692,9 +1684,7 @@ and check_var_decl loc cf tenv sized_ty trans
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
-  let options =
-    List.concat_map ~f:(Env.find tenv) (distribution_name_variants id.name)
-  in
+  let options = Env.find tenv id.name in
   let f = function
     | Env.{kind= `UserDeclared _; type_= UFun (listedtypes, rt', _, _)}
       when arg_tys = listedtypes && rt = rt' ->
@@ -1703,9 +1693,7 @@ and exists_matching_fn_declared tenv id arg_tys rt =
   List.exists ~f options
 
 and verify_unique_signature tenv loc id arg_tys rt =
-  let existing =
-    List.concat_map ~f:(Env.find tenv) (distribution_name_variants id.name)
-  in
+  let existing = Env.find tenv id.name in
   let same_args = function
     | Env.{type_= UFun (listedtypes, _, _, _); _}
       when List.map ~f:snd arg_tys = List.map ~f:snd listedtypes ->

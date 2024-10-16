@@ -1,4 +1,16 @@
   $ ../../../../../install/default/bin/stanc --auto-format deprecated_syntax.stan
+functions {
+  real jacobian(real x, int y) {
+    return x + y;
+  }
+  void jacobian(real x, real y) {
+    print(x + y);
+  }
+}
+transformed data {
+  print(jacobian(1.0, 2));
+  jacobian(1.0, 2.0);
+}
 parameters {
   real jacobian;
 }
@@ -11,12 +23,24 @@ model {
 Warning in 'deprecated_syntax.stan', line 2, column 7: Variable name
     'jacobian' will be a reserved word starting in Stan 2.38. Please rename
     it!
-Warning in 'deprecated_syntax.stan', line 5, column 6: Found 1 < 2 < 3. This
+Warning in 'deprecated_syntax.stan', line 5, column 7: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 10, column 8: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 11, column 2: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 14, column 7: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 17, column 6: Found 1 < 2 < 3. This
     is interpreted as (1 < 2) < 3. Consider if the intended meaning was 
     1 < 2 && 2 < 3 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 5, column 6: Found 1 < 2 < 3 < 4.
+Warning in 'deprecated_syntax.stan', line 17, column 6: Found 1 < 2 < 3 < 4.
     This is interpreted as (1 < 2 < 3) < 4. Consider if the intended meaning
     was 
     1 < 2 < 3 && 3 < 4 instead.
@@ -634,6 +658,9 @@ transformed data {
   j = 2;
   k = 3;
   u = j / k;
+  u = j / 3;
+  u = 2 / k;
+  u = 2 / 3;
 }
 parameters {
   real y;
@@ -649,5 +676,29 @@ Warning in 'validate_division_int_warning.stan', line 7, column 6: Found int
     write
     the division as
       j * 1.0 / k
+    If rounding is intended please use the integer division operator %/%.
+Warning in 'validate_division_int_warning.stan', line 8, column 6: Found int
+    division:
+      j / 3
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j / 3.0
+    If rounding is intended please use the integer division operator %/%.
+Warning in 'validate_division_int_warning.stan', line 9, column 6: Found int
+    division:
+      2 / k
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      2.0 / k
+    If rounding is intended please use the integer division operator %/%.
+Warning in 'validate_division_int_warning.stan', line 10, column 6: Found int
+    division:
+      2 / 3
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      2.0 / 3
     If rounding is intended please use the integer division operator %/%.
 [exit 0]

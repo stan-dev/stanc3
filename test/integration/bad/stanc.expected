@@ -1596,6 +1596,42 @@ Syntax error in 'functions-bad26.stan', line 5, column 2 to column 3, parsing er
 
 Ill-formed return statement. ";" or expression followed by ";" expected after "return".
 [exit 1]
+  $ ../../../../install/default/bin/stanc functions-bad27.stan
+Semantic error in 'functions-bad27.stan', line 10, column 2 to column 20:
+   -------------------------------------------------
+     8:  }
+     9:  generated quantities {
+    10:    unit_normal_lp(y);
+           ^
+    11:  }
+   -------------------------------------------------
+
+Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+[exit 1]
+  $ ../../../../install/default/bin/stanc functions-bad28.stan
+Semantic error in 'functions-bad28.stan', line 5, column 2 to column 8:
+   -------------------------------------------------
+     3:  }
+     4:  generated quantities {
+     5:    extern(y);
+           ^
+     6:  }
+   -------------------------------------------------
+
+Identifier 'extern' clashes with reserved keyword.
+[exit 1]
+  $ ../../../../install/default/bin/stanc functions-bad29.stan
+Semantic error in 'functions-bad29.stan', line 2, column 16 to column 25:
+   -------------------------------------------------
+     1:  functions {
+     2:    real foo(real bar_lupdf) {
+                         ^
+     3:      return bar_lupdf;
+     4:    }
+   -------------------------------------------------
+
+Identifier 'bar_lupdf' has a _lupdf/_lupmf suffix, which is only allowed for functions.
+[exit 1]
   $ ../../../../install/default/bin/stanc functions-bad3.stan
 Syntax error in 'functions-bad3.stan', line 2, column 10 to column 11, parsing error:
    -------------------------------------------------
@@ -1607,6 +1643,42 @@ Syntax error in 'functions-bad3.stan', line 2, column 10 to column 11, parsing e
    -------------------------------------------------
 
 "(" expected after function name.
+[exit 1]
+  $ ../../../../install/default/bin/stanc functions-bad30.stan
+Semantic error in 'functions-bad30.stan', line 2, column 7 to column 16:
+   -------------------------------------------------
+     1:  functions {
+     2:    real generated(real bar) {
+                ^
+     3:      return bar;
+     4:    }
+   -------------------------------------------------
+
+Identifier 'generated' clashes with reserved keyword.
+[exit 1]
+  $ ../../../../install/default/bin/stanc functions-bad31.stan
+Syntax error in 'functions-bad31.stan', line 2, column 16 to column 26, parsing error:
+   -------------------------------------------------
+     1:  functions {
+     2:    real gen(real parameters) {
+                         ^
+     3:      return 1;
+     4:    }
+   -------------------------------------------------
+
+Expected a new identifier but found reserved keyword 'parameters'.
+[exit 1]
+  $ ../../../../install/default/bin/stanc functions-bad32.stan
+Semantic error in 'functions-bad32.stan', line 9, column 8 to column 14:
+   -------------------------------------------------
+     7:  generated quantities {
+     8:    real gen;
+     9:    gen = gen(1);
+                 ^
+    10:  }
+   -------------------------------------------------
+
+A returning function was expected but a non-function value 'gen' was supplied.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad4.stan
 Semantic error in 'functions-bad4.stan', line 10, column 2 to column 9:
@@ -1720,6 +1792,18 @@ Semantic error in 'get_lp_bad_scope2.stan', line 3, column 15 to column 23:
    -------------------------------------------------
 
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
+[exit 1]
+  $ ../../../../install/default/bin/stanc jacobian_pe_bad.stan
+Semantic error in 'jacobian_pe_bad.stan', line 8, column 2 to column 18:
+   -------------------------------------------------
+     6:  
+     7:  transformed parameters {
+     8:    jacobian += foo;
+           ^
+     9:  }
+   -------------------------------------------------
+
+A (container of) real or int was expected. Instead found type () => real.
 [exit 1]
   $ ../../../../install/default/bin/stanc local_var_constraint.stan
 Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, parsing error:
@@ -1888,6 +1972,18 @@ Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing
 Unexpected input after the conclusion of a valid expression.
 You may be missing a "," between expressions, an operator, or a terminating "}", ")", "]", or ";".
 [exit 1]
+  $ ../../../../install/default/bin/stanc missing-pmf.stan
+Semantic error in 'missing-pmf.stan', line 2, column 2 to line 4, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real foo_lpmf( ) {
+           ^
+     3:      return -2;
+     4:    }
+   -------------------------------------------------
+
+Probability mass functions require integer variates (first argument).
+[exit 1]
   $ ../../../../install/default/bin/stanc multiply_sample.stan
 Semantic error in 'multiply_sample.stan', line 5, column 2 to column 18:
    -------------------------------------------------
@@ -1932,6 +2028,18 @@ Semantic error in 'noninfinite_loop_return3.stan', line 2, column 2 to line 8, c
            ^
      3:      while (1) {
      4:        if (0) return 1.0;
+   -------------------------------------------------
+
+Function bodies must contain a return statement of correct type in every branch.
+[exit 1]
+  $ ../../../../install/default/bin/stanc noninfinite_loop_return4.stan
+Semantic error in 'noninfinite_loop_return4.stan', line 2, column 2 to line 10, column 3:
+   -------------------------------------------------
+     1:  functions {
+     2:    real not_endless() {
+           ^
+     3:      for (i in 1:10){
+     4:        while (1) {
    -------------------------------------------------
 
 Function bodies must contain a return statement of correct type in every branch.
@@ -2617,6 +2725,18 @@ Available signatures:
   The first argument must be int but got vector
 (Additional signatures omitted)
 [exit 1]
+  $ ../../../../install/default/bin/stanc signature_sampling_reserved.stan
+Semantic error in 'signature_sampling_reserved.stan', line 8, column 6 to column 12:
+   -------------------------------------------------
+     6:  }
+     7:  model {
+     8:    x ~ extern(theta);
+               ^
+     9:  }
+   -------------------------------------------------
+
+Identifier 'extern' clashes with reserved keyword.
+[exit 1]
   $ ../../../../install/default/bin/stanc signature_sampling_udf.stan
 Semantic error in 'signature_sampling_udf.stan', line 8, column 2 to column 19:
    -------------------------------------------------
@@ -2644,6 +2764,18 @@ Semantic error in 'signature_sampling_unknown.stan', line 8, column 2 to column 
    -------------------------------------------------
 
 Ill-typed arguments to '~' statement. No function 'foo_whatev_lpdf' was found when looking for distribution 'foo_whatev'.
+[exit 1]
+  $ ../../../../install/default/bin/stanc signature_sampling_unknown2.stan
+Semantic error in 'signature_sampling_unknown2.stan', line 8, column 2 to column 24:
+   -------------------------------------------------
+     6:  }
+     7:  model {
+     8:    x ~ foo_whatev(theta);
+           ^
+     9:  }
+   -------------------------------------------------
+
+Ill-typed arguments to distribution statement (~). No function 'foo_whatev_lpmf' or 'foo_whatev_lpdf' was found when looking for distribution 'foo_whatev'.
 [exit 1]
   $ ../../../../install/default/bin/stanc stanc_helper.stan
 Semantic error in 'stanc_helper.stan', line 5, column 2 to column 18:
@@ -2775,6 +2907,18 @@ Semantic error in 'truncation-bad-type4.stan', line 1, column 8 to column 36:
 Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.
 No matching signature for arguments: 
 (data real, data real)
+[exit 1]
+  $ ../../../../install/default/bin/stanc truncation-bad-type5.stan
+Semantic error in 'truncation-bad-type5.stan', line 5, column 25 to column 26:
+   -------------------------------------------------
+     3:  }
+     4:  model {
+     5:    1 ~ normal(0.2, 0.1) T[T, ];
+                                  ^
+     6:  }
+   -------------------------------------------------
+
+Truncation bound must be of type int or real. Instead found type array[] int.
 [exit 1]
   $ ../../../../install/default/bin/stanc truncation_missing_overloads.stan
 Semantic error in 'truncation_missing_overloads.stan', line 28, column 2 to column 28:
