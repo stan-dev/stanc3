@@ -1,2 +1,3 @@
   $ ../../../../install/default/bin/stanc notfound.stan
 Error: file 'notfound.stan' not found or cannot be opened
+[exit 1]

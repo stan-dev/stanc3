@@ -5,6 +5,7 @@ void foo(real x) {
   return;
 }
 // another line comment a
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes b.stanfunctions
 // line comment a
 /*weird block a*/
@@ -20,6 +21,7 @@ void bar(real y) {
   return;
 }
 // another line comment b
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes c.stanfunctions
 /**
   A documentation comment
@@ -31,6 +33,7 @@ int baz(real z) {
     return 3;
   // trailing coment in c
 }
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes main.stan
 functions {
   // line comment a
@@ -100,6 +103,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --auto-format --include-paths=. --canonicalize=includes tdata.stan
 // I'm in another file!
 
@@ -107,3 +111,4 @@ transformed data {
   int x = 30;
 }
 
+[exit 0]

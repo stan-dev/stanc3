@@ -15,6 +15,7 @@ Available signatures:
 (<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The 5th argument must be array[,] int but got array[,,] int
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_data_int_const.stan
 Semantic error in 'bad_data_int_const.stan', line 21, column 8 to line 22, column 43:
    -------------------------------------------------
@@ -35,6 +36,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The 5th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
   the keyword 'data'.)
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_data_r_type.stan
 Semantic error in 'bad_data_r_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -52,6 +54,7 @@ Available signatures:
 (<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The fourth argument must be array[,] real but got real
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_data_real_const.stan
 Semantic error in 'bad_data_real_const.stan', line 20, column 8 to column 70:
    -------------------------------------------------
@@ -71,6 +74,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The fourth argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword 'data'.)
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 Semantic error in 'bad_fun_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -96,6 +100,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
      array[] vector
     but the other is
      vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_job_params_type.stan
 Semantic error in 'bad_job_params_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -113,6 +118,7 @@ Available signatures:
 (<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The third argument must be array[] vector but got array[] matrix
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_lp_fn.stan
 Semantic error in 'bad_lp_fn.stan', line 22, column 16 to column 52:
    -------------------------------------------------
@@ -130,6 +136,7 @@ Available signatures:
 (<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be a pure function but got an _lp function. These function types are not compatible.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_not_enough_args.stan
 Semantic error in 'bad_not_enough_args.stan', line 13, column 8 to column 68:
    -------------------------------------------------
@@ -152,6 +159,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
    (vector, vector, array[] real) => vector
   These are not compatible because:
     One takes 3 arguments but the other takes 4 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_rng_fn.stan
 Semantic error in 'bad_rng_fn.stan', line 22, column 19 to column 56:
    -------------------------------------------------
@@ -169,6 +177,7 @@ Available signatures:
 (<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be a pure function but got an rng function. These function types are not compatible.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_shared_params_type.stan
 Semantic error in 'bad_shared_params_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -186,3 +195,4 @@ Available signatures:
 (<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The second argument must be vector but got array[] vector
+[exit 1]

@@ -16,6 +16,7 @@ Available signatures:
   The second argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword 'data'.)
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_log_omega_var.stan
 Semantic error in 'bad_log_omega_var.stan', line 19, column 9 to column 55:
    -------------------------------------------------
@@ -34,6 +35,7 @@ Available signatures:
   The first argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword 'data'.)
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_rho_var.stan
 Semantic error in 'bad_rho_var.stan', line 19, column 9 to column 55:
    -------------------------------------------------
@@ -52,3 +54,4 @@ Available signatures:
   The third argument must be data-only. (Local variables are assumed to
   depend on parameters; same goes for function inputs unless they are marked
   with the keyword 'data'.)
+[exit 1]

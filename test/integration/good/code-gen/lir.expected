@@ -20137,3 +20137,4 @@
   (MacroApply STAN_REGISTER_MAP_RECT (1 mother_model_namespace::binomialf_functor__)))
  (Preprocessor
   (MacroApply STAN_REGISTER_MAP_RECT (2 mother_model_namespace::binomialf_functor__))))
+[exit 0]

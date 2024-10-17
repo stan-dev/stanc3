@@ -950,6 +950,7 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
 'bernoulli.stan', line 7, column 2: Functions
     do not need to be declared before definition; all user defined function
     names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined binomial.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -1761,6 +1762,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined continuous.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -3342,6 +3344,7 @@ Warning in './/functions/SSfunctions.stan', line 10, column 7, included from
 'continuous.stan', line 9, column 2: Functions
     do not need to be declared before definition; all user defined function
     names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined count.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -4215,6 +4218,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined jm.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -7259,6 +7263,7 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
 'jm.stan', line 8, column 0: Functions
     do not need to be declared before definition; all user defined function
     names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined lm.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -7404,6 +7409,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined mvmer.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -9322,6 +9328,7 @@ Warning in './/functions/bernoulli_likelihoods.stan', line 84, column 7, include
 'mvmer.stan', line 8, column 0: Functions
     do not need to be declared before definition; all user defined function
     names are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --canonicalize=includes --allow-undefined polr.stan
 //    This file is part of rstanarm.
 //    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
@@ -9711,3 +9718,4 @@ generated quantities {
   }
 }
 
+[exit 0]

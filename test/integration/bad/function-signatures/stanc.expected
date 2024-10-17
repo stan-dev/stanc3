@@ -9,6 +9,7 @@ Semantic error in 'duplicate-args.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
 
 All function arguments must have distinct identifiers.
+[exit 1]
   $ ../../../../../install/default/bin/stanc falling_factorial.stan
 Semantic error in 'falling_factorial.stan', line 7, column 26 to column 59:
    -------------------------------------------------
@@ -34,6 +35,7 @@ Available signatures:
 (real, array[,,,] int) => array[,,,] real
   The second argument must be array[,,,] int but got real
 (Additional signatures omitted)
+[exit 1]
   $ ../../../../../install/default/bin/stanc rising_factorial.stan
 Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
    -------------------------------------------------
@@ -58,3 +60,4 @@ Available signatures:
 (real, array[,,,] int) => array[,,,] real
   The second argument must be array[,,,] int but got real
 (Additional signatures omitted)
+[exit 1]

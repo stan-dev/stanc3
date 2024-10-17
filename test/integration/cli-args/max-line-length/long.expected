@@ -646,3 +646,4 @@ generated quantities {
   idx_res5 = indexing_mat[4 : , 2 : 3, 1];
 }
 
+[exit 0]
