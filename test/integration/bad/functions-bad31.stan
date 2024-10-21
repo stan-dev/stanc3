@@ -1,5 +1,5 @@
 functions {
-  real gen(real parameters) {
+  real gen(real true) {
     return 1;
   }
 }

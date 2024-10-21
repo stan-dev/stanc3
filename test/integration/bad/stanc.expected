@@ -1657,16 +1657,16 @@ Semantic error in 'functions-bad30.stan', line 2, column 7 to column 16:
 Identifier 'generated' clashes with reserved keyword.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad31.stan
-Syntax error in 'functions-bad31.stan', line 2, column 16 to column 26, parsing error:
+Semantic error in 'functions-bad31.stan', line 2, column 16 to column 20:
    -------------------------------------------------
      1:  functions {
-     2:    real gen(real parameters) {
+     2:    real gen(real true) {
                          ^
      3:      return 1;
      4:    }
    -------------------------------------------------
 
-Expected a new identifier but found reserved keyword 'parameters'.
+Identifier 'true' clashes with reserved keyword.
 [exit 1]
   $ ../../../../install/default/bin/stanc functions-bad32.stan
 Semantic error in 'functions-bad32.stan', line 9, column 8 to column 14:

@@ -512,6 +512,28 @@ Semantic error in 'reused_name.stan', line 4, column 14 to column 15:
 
 Identifier 'e' is already in use.
 [exit 1]
+  $ ../../../../../install/default/bin/stanc tparam_array_int.stan
+Semantic error in 'tparam_array_int.stan', line 2, column 2 to column 21:
+   -------------------------------------------------
+     1:  transformed parameters {
+     2:    array[1,2,3] int x;
+           ^
+     3:  }
+   -------------------------------------------------
+
+(Transformed) Parameters cannot be integers.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc tparam_tuple_int.stan
+Semantic error in 'tparam_tuple_int.stan', line 2, column 2 to column 21:
+   -------------------------------------------------
+     1:  transformed parameters {
+     2:    tuple(real, int) x;
+           ^
+     3:  }
+   -------------------------------------------------
+
+(Transformed) Parameters cannot be integers.
+[exit 1]
   $ ../../../../../install/default/bin/stanc unterminated_comment.stan
 Syntax error in 'unterminated_comment.stan', line 4, column -1, lexing error:
    -------------------------------------------------
