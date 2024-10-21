@@ -17,3 +17,10 @@ Don't provide _enough_ data
   Error in 'debug.stan', line 8, column 10 to column 25:
   Cannot evaluate expression: (((14 + N) + 1) + x.1)
   [1]
+
+Bad data block, cannot be partially evaluated
+
+  $ stanc --debug-generate-data div0.stan --debug-data-file partial-div0.json
+  Error in 'div0.stan', line 4, column 9 to column 16:
+  Integer division by zero
+  [1]

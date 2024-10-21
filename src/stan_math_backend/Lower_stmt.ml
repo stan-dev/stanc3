@@ -16,7 +16,9 @@ let check_to_string = function
   | LowerUpper _ ->
       Common.ICE.internal_compiler_error
         [%message "LowerUpper is really two other checks tied together"]
-  | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
+  | Offset _ | Multiplier _ | OffsetMultiplier _ ->
+      Common.ICE.internal_compiler_error
+        [%message "Offset and multiplier don't have a check"]
   | t -> constraint_to_string t
 
 let math_fn_translations = function

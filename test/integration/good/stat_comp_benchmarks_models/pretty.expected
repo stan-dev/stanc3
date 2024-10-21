@@ -25,6 +25,7 @@ model {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format arma.stan
 // ARMA(1, 1)
 
@@ -57,6 +58,7 @@ model {
   err ~ normal(0, sigma);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format eight_schools.stan
 data {
   int<lower=0> J;
@@ -80,6 +82,7 @@ model {
   y ~ normal(theta, sigma);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format garch.stan
 data {
   int<lower=0> T;
@@ -102,6 +105,7 @@ model {
   y ~ normal(mu, sigma);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format gen_gp_data.stan
 transformed data {
   real rho = 5.5;
@@ -132,6 +136,7 @@ generated quantities {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format gp_pois_regr.stan
 data {
   int<lower=1> N;
@@ -160,6 +165,7 @@ model {
   k ~ poisson_log(f);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format gp_regr.stan
 data {
   int<lower=1> N;
@@ -183,6 +189,7 @@ model {
   y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format irt_2pl.stan
 data {
   int<lower=0> I;
@@ -215,6 +222,7 @@ model {
     y[i] ~ bernoulli_logit(a[i] * (theta - b[i]));
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format low_dim_corr_gauss.stan
 transformed data {
   vector[2] mu;
@@ -256,6 +264,7 @@ generated quantities {
   delta_corr = (z[1] - mu[1]) * (z[2] - mu[2]) / (sigma1 * sigma2) - rho;
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix.stan
 data {
   int<lower=0> N;
@@ -275,6 +284,7 @@ model {
                       normal_lpdf(y[n] | mu[2], sigma[2]));
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format low_dim_gauss_mix_collapse.stan
 data {
   int<lower=0> N;
@@ -294,6 +304,7 @@ model {
                       normal_lpdf(y[n] | mu[2], sigma[2]));
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format one_comp_mm_elim_abs.stan
 functions {
   array[] real one_comp_mm_elim_abs(real t, array[] real y,
@@ -368,6 +379,7 @@ Warning in 'one_comp_mm_elim_abs.stan', line 49, column 8: integrate_ode_bdf
     is deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
 functions {
   array[] real one_comp_mm_elim_abs(real t, array[] real y,
@@ -433,6 +445,7 @@ Warning in 'sim_one_comp_mm_elim_abs.stan', line 55, column 6: integrate_ode_bdf
     is deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format sir.stan
 // Simple SIR model inspired by the presentation in
 // http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
@@ -499,3 +512,4 @@ Warning in 'sir.stan', line 46, column 8: integrate_ode_rk45 is deprecated
     and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+[exit 0]

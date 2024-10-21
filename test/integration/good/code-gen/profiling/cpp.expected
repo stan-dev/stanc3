@@ -591,3 +591,4 @@ stan::math::profile_map& get_stan_profile_data() {
   return simple_function_model_namespace::profiles__;
 }
 #endif
+[exit 0]

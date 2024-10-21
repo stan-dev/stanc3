@@ -2413,3 +2413,4 @@ stan::math::profile_map& get_stan_profile_data() {
   return optimize_glm_model_namespace::profiles__;
 }
 #endif
+[exit 0]

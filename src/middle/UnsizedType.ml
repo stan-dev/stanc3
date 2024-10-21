@@ -42,12 +42,6 @@ let pp_autodifftype ppf = function
   | AutoDiffable -> ()
   | tup -> pp_tuple_autodifftype ppf tup
 
-let unsized_array_depth unsized_ty =
-  let rec aux depth = function
-    | UArray ut -> aux (depth + 1) ut
-    | ut -> (ut, depth) in
-  aux 0 unsized_ty
-
 let count_dims unsized_ty =
   let rec aux dims = function
     | UArray t -> aux (dims + 1) t
@@ -176,7 +170,7 @@ let rec common_type = function
 let rec is_autodiffable = function
   | UReal | UVector | URowVector | UMatrix -> true
   | UArray t -> is_autodiffable t
-  | _ -> false
+  | _ (* wrong? *) -> false
 
 let rec is_autodifftype possibly_adtype =
   match possibly_adtype with

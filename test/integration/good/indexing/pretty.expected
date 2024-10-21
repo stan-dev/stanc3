@@ -841,6 +841,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good-ints.stan
 /**
  * Check all possible legal indexing for assignment statements (left
@@ -1684,6 +1685,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good-lb.stan
 /**
  * Check all possible legal indexing for assignment statements (left
@@ -2525,6 +2527,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good-lub.stan
 /**
  * Check all possible legal indexing for assignment statements (left
@@ -3390,6 +3393,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good-omni.stan
 /**
  * Check all possible legal indexing for assignment statements (left
@@ -4233,6 +4237,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good-omni2.stan
 /**
  * Check all possible legal indexing for assignment statements (left
@@ -5076,6 +5081,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good-omni3.stan
 /**
  * Check all possible legal indexing for assignment statements (left
@@ -5919,6 +5925,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format good-ub.stan
 /**
  * Check all possible legal indexing for assignment statements (left
@@ -6760,3 +6767,4 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]

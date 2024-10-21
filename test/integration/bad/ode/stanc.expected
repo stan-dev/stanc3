@@ -26,6 +26,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 Semantic error in 'bad_fun_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -56,6 +57,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
      array[] real
     but the other is
      real
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf.stan
 Semantic error in 'bad_fun_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -89,6 +91,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf_control.stan
 Semantic error in 'bad_fun_type_bdf_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -122,6 +125,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_type_rk45.stan
 Semantic error in 'bad_fun_type_rk45.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -155,6 +159,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_fun_type_rk45_control.stan
 Semantic error in 'bad_fun_type_rk45_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -188,6 +193,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_t_type.stan
 Semantic error in 'bad_t_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -209,6 +215,7 @@ Available signatures:
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The third argument must be real but got matrix
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_t_type_bdf.stan
 Semantic error in 'bad_t_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -233,6 +240,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_t_type_bdf_control.stan
 Semantic error in 'bad_t_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -257,6 +265,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_t_type_rk45.stan
 Semantic error in 'bad_t_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -281,6 +290,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_t_type_rk45_control.stan
 Semantic error in 'bad_t_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -305,6 +315,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_theta_type.stan
 Semantic error in 'bad_theta_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -326,6 +337,7 @@ Available signatures:
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 5th argument must be array[] real but got array[,] real
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_theta_type_bdf.stan
 Semantic error in 'bad_theta_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -350,6 +362,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_theta_type_bdf_control.stan
 Semantic error in 'bad_theta_type_bdf_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -374,6 +387,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_theta_type_rk45.stan
 Semantic error in 'bad_theta_type_rk45.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -398,6 +412,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_theta_type_rk45_control.stan
 Semantic error in 'bad_theta_type_rk45_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -422,6 +437,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_ts_type.stan
 Semantic error in 'bad_ts_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -443,6 +459,7 @@ Available signatures:
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The fourth argument must be array[] real but got array[,] real
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_ts_type_bdf.stan
 Semantic error in 'bad_ts_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -467,6 +484,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_ts_type_bdf_control.stan
 Semantic error in 'bad_ts_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -491,6 +509,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_ts_type_rk45.stan
 Semantic error in 'bad_ts_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -515,6 +534,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_ts_type_rk45_control.stan
 Semantic error in 'bad_ts_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -539,6 +559,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_var_tol_1.stan
 Semantic error in 'bad_var_tol_1.stan', line 38, column 6 to line 39, column 104:
    -------------------------------------------------
@@ -561,6 +582,7 @@ Available signatures:
   The 9th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
   the keyword 'data'.)
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_var_tol_2.stan
 Semantic error in 'bad_var_tol_2.stan', line 38, column 6 to line 39, column 104:
    -------------------------------------------------
@@ -583,6 +605,7 @@ Available signatures:
   The 7th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
   the keyword 'data'.)
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_var_tol_3.stan
 Semantic error in 'bad_var_tol_3.stan', line 38, column 6 to line 39, column 104:
    -------------------------------------------------
@@ -605,6 +628,7 @@ Available signatures:
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
   the keyword 'data'.)
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_int_type.stan
 Semantic error in 'bad_x_int_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -626,6 +650,7 @@ Available signatures:
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 7th argument must be array[] int but got array[,] int
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_int_type_bdf.stan
 Semantic error in 'bad_x_int_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -650,6 +675,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_int_type_bdf_control.stan
 Semantic error in 'bad_x_int_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -674,6 +700,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_int_type_rk45.stan
 Semantic error in 'bad_x_int_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -698,6 +725,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_int_type_rk45_control.stan
 Semantic error in 'bad_x_int_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -722,6 +750,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_type.stan
 Semantic error in 'bad_x_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -743,6 +772,7 @@ Available signatures:
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The 6th argument must be array[] real but got array[] vector
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_type_bdf.stan
 Semantic error in 'bad_x_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -767,6 +797,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_type_bdf_control.stan
 Semantic error in 'bad_x_type_bdf_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -791,6 +822,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_type_rk45.stan
 Semantic error in 'bad_x_type_rk45.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -815,6 +847,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_type_rk45_control.stan
 Semantic error in 'bad_x_type_rk45_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -839,6 +872,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_var_type.stan
 Semantic error in 'bad_x_var_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -862,6 +896,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
   The 6th argument must be data-only. (Local variables are assumed to depend
   on parameters; same goes for function inputs unless they are marked with
   the keyword 'data'.)
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_var_type_bdf.stan
 Semantic error in 'bad_x_var_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -888,6 +923,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_var_type_bdf_control.stan
 Semantic error in 'bad_x_var_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -914,6 +950,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_var_type_rk45.stan
 Semantic error in 'bad_x_var_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -940,6 +977,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_x_var_type_rk45_control.stan
 Semantic error in 'bad_x_var_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -966,6 +1004,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_y_type.stan
 Semantic error in 'bad_y_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -987,6 +1026,7 @@ Available signatures:
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The second argument must be array[] real but got array[,] real
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_y_type_bdf.stan
 Semantic error in 'bad_y_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -1011,6 +1051,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_y_type_bdf_control.stan
 Semantic error in 'bad_y_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -1035,6 +1076,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_y_type_rk45.stan
 Semantic error in 'bad_y_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -1059,6 +1101,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_y_type_rk45_control.stan
 Semantic error in 'bad_y_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -1083,3 +1126,4 @@ where F2 = (real, array[] real, array[] real, data array[] real,
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
+[exit 1]

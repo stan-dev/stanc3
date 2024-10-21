@@ -15,6 +15,7 @@ and the right hand side has type
   real
 Available signatures for given lhs:
 No matching signatures
+[exit 1]
   $ ../../../../../install/default/bin/stanc elt_times_equals_prim.stan
 Semantic error in 'elt_times_equals_prim.stan', line 4, column 2 to column 3:
    -------------------------------------------------
@@ -32,6 +33,7 @@ and the right hand side has type
   real
 Available signatures for given lhs:
 No matching signatures
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_bad_init.stan
 Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, parsing error:
    -------------------------------------------------
@@ -43,6 +45,7 @@ Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, par
    -------------------------------------------------
 
 ";" or plain assignment expected after variable declaration.
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_bad_lhs_idxs.stan
 Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
    -------------------------------------------------
@@ -54,6 +57,7 @@ Semantic error in 'plus_equals_bad_lhs_idxs.stan', line 4, column 2 to column 8:
    -------------------------------------------------
 
 Too many indexes, expression dimensions=1, indexes found=2.
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs.stan
 Semantic error in 'plus_equals_bad_var_lhs.stan', line 3, column 4 to column 7:
    -------------------------------------------------
@@ -72,6 +76,7 @@ and the right hand side has type
   real
 Available signatures for given lhs:
 No matching signatures
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_lhs2.stan
 Semantic error in 'plus_equals_bad_var_lhs2.stan', line 6, column 2 to column 3:
    -------------------------------------------------
@@ -83,6 +88,7 @@ Semantic error in 'plus_equals_bad_var_lhs2.stan', line 6, column 2 to column 3:
    -------------------------------------------------
 
 Cannot assign to global variable 'x' declared in previous blocks.
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_bad_var_rhs.stan
 Semantic error in 'plus_equals_bad_var_rhs.stan', line 4, column 11 to column 13:
    -------------------------------------------------
@@ -95,6 +101,7 @@ Semantic error in 'plus_equals_bad_var_rhs.stan', line 4, column 11 to column 13
    -------------------------------------------------
 
 Identifier 'a2' not in scope. Did you mean 'a1'?
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_array.stan
 Semantic error in 'plus_equals_matrix_array.stan', line 7, column 2 to column 3:
    -------------------------------------------------
@@ -112,6 +119,7 @@ and the right hand side has type
   array[] matrix
 Available signatures for given lhs:
 No matching signatures
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_array2.stan
 Semantic error in 'plus_equals_matrix_array2.stan', line 7, column 2 to column 6:
    -------------------------------------------------
@@ -131,6 +139,7 @@ Available signatures for given lhs:
 (matrix, int) => void
 (matrix, real) => void
 (matrix, matrix) => void
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_shape_mismatch.stan
 Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to column 11, parsing error:
    -------------------------------------------------
@@ -143,6 +152,7 @@ Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to c
    -------------------------------------------------
 
 Expected "[" expression "]" for vector size.
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_prim_array.stan
 Semantic error in 'plus_equals_prim_array.stan', line 5, column 2 to column 3:
    -------------------------------------------------
@@ -160,6 +170,7 @@ and the right hand side has type
   array[] real
 Available signatures for given lhs:
 No matching signatures
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_row_vec_array.stan
 Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 2 to column 3:
    -------------------------------------------------
@@ -177,6 +188,7 @@ and the right hand side has type
   array[] row_vector
 Available signatures for given lhs:
 No matching signatures
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_sliced.stan
 Semantic error in 'plus_equals_sliced.stan', line 6, column 4 to column 11:
    -------------------------------------------------
@@ -197,6 +209,7 @@ Available signatures for given lhs:
 (vector, int) => void
 (vector, real) => void
 (vector, vector) => void
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch.stan
 Semantic error in 'plus_equals_type_mismatch.stan', line 4, column 2 to column 3:
    -------------------------------------------------
@@ -214,6 +227,7 @@ and the right hand side has type
   real
 Available signatures for given lhs:
 (int, int) => void
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_type_mismatch2.stan
 Semantic error in 'plus_equals_type_mismatch2.stan', line 4, column 2 to column 3:
    -------------------------------------------------
@@ -233,6 +247,7 @@ Available signatures for given lhs:
 (int, int) => void
 (real, int) => void
 (real, real) => void
+[exit 1]
   $ ../../../../../install/default/bin/stanc plus_equals_vector_array.stan
 Semantic error in 'plus_equals_vector_array.stan', line 5, column 2 to column 3:
    -------------------------------------------------
@@ -250,6 +265,7 @@ and the right hand side has type
   array[] vector
 Available signatures for given lhs:
 No matching signatures
+[exit 1]
   $ ../../../../../install/default/bin/stanc times_equals_matrix_array.stan
 Semantic error in 'times_equals_matrix_array.stan', line 5, column 2 to column 8:
    -------------------------------------------------
@@ -270,3 +286,4 @@ Available signatures for given lhs:
 (row_vector, int) => void
 (row_vector, real) => void
 (row_vector, matrix) => void
+[exit 1]

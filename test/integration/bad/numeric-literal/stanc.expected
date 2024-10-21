@@ -8,6 +8,7 @@ Syntax error in 'int-bad1.stan', line 2, column 17, lexing error:
    -------------------------------------------------
 
 Invalid character found.
+[exit 1]
   $ ../../../../../install/default/bin/stanc int-bad2.stan
 Syntax error in 'int-bad2.stan', line 2, column 13, lexing error:
    -------------------------------------------------
@@ -18,6 +19,7 @@ Syntax error in 'int-bad2.stan', line 2, column 13, lexing error:
    -------------------------------------------------
 
 Invalid character found.
+[exit 1]
   $ ../../../../../install/default/bin/stanc int-bad3.stan
 Semantic error in 'int-bad3.stan', line 2, column 12 to column 26:
    -------------------------------------------------
@@ -28,6 +30,7 @@ Semantic error in 'int-bad3.stan', line 2, column 12 to column 26:
    -------------------------------------------------
 
 Integer literal cannot be larger than 2_147_483_647.
+[exit 1]
   $ ../../../../../install/default/bin/stanc int-bad4.stan
 Semantic error in 'int-bad4.stan', line 2, column 12 to column 25:
    -------------------------------------------------
@@ -38,6 +41,7 @@ Semantic error in 'int-bad4.stan', line 2, column 12 to column 25:
    -------------------------------------------------
 
 Integer literal cannot be larger than 2_147_483_647.
+[exit 1]
   $ ../../../../../install/default/bin/stanc int-bad6.stan
 Semantic error in 'int-bad6.stan', line 2, column 13 to column 23:
    -------------------------------------------------
@@ -48,6 +52,7 @@ Semantic error in 'int-bad6.stan', line 2, column 13 to column 23:
    -------------------------------------------------
 
 Integer literal cannot be larger than 2_147_483_647.
+[exit 1]
   $ ../../../../../install/default/bin/stanc real-bad1.stan
 Syntax error in 'real-bad1.stan', line 2, column 12, lexing error:
    -------------------------------------------------
@@ -58,6 +63,7 @@ Syntax error in 'real-bad1.stan', line 2, column 12, lexing error:
    -------------------------------------------------
 
 Invalid character found.
+[exit 1]
   $ ../../../../../install/default/bin/stanc real-bad2.stan
 Syntax error in 'real-bad2.stan', line 2, column 14, lexing error:
    -------------------------------------------------
@@ -68,6 +74,7 @@ Syntax error in 'real-bad2.stan', line 2, column 14, lexing error:
    -------------------------------------------------
 
 Invalid character found.
+[exit 1]
   $ ../../../../../install/default/bin/stanc real-bad3.stan
 Syntax error in 'real-bad3.stan', line 2, column 15, lexing error:
    -------------------------------------------------
@@ -78,6 +85,7 @@ Syntax error in 'real-bad3.stan', line 2, column 15, lexing error:
    -------------------------------------------------
 
 Invalid character found.
+[exit 1]
   $ ../../../../../install/default/bin/stanc real-bad4.stan
 Syntax error in 'real-bad4.stan', line 2, column 18, lexing error:
    -------------------------------------------------
@@ -88,6 +96,7 @@ Syntax error in 'real-bad4.stan', line 2, column 18, lexing error:
    -------------------------------------------------
 
 Invalid character found.
+[exit 1]
   $ ../../../../../install/default/bin/stanc real-bad5.stan
 Syntax error in 'real-bad5.stan', line 2, column 16, lexing error:
    -------------------------------------------------
@@ -98,6 +107,7 @@ Syntax error in 'real-bad5.stan', line 2, column 16, lexing error:
    -------------------------------------------------
 
 Invalid character found.
+[exit 1]
   $ ../../../../../install/default/bin/stanc real-bad6.stan
 Syntax error in 'real-bad6.stan', line 2, column 20, lexing error:
    -------------------------------------------------
@@ -108,3 +118,4 @@ Syntax error in 'real-bad6.stan', line 2, column 20, lexing error:
    -------------------------------------------------
 
 Invalid character found.
+[exit 1]
