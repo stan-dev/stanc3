@@ -142,3 +142,4 @@ model {
   y ~ normal(Y, sigma_obs);
 }
 
+[exit 0]

@@ -4,8 +4,11 @@ functions {
     return ub - exp(x);
   }
   vector upper_bound_jacobian(vector x, real ub) {
-    jacobian += x;
-    return ub - exp(x);
+    vector[size(x)] result;
+    for (n in 1:size(x)) {
+      result[n] = upper_bound_jacobian(x[n], ub);
+    }
+    return result;
   }
 }
 data {

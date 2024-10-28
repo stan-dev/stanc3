@@ -83,12 +83,6 @@ let restore_prior_lexbuf () =
   lexbuf.lex_start_p <- old_pos;
   old_lexbuf
 
-let maybe_remove_quotes str =
-  let open String in
-  if is_prefix str ~prefix:"\"" && is_suffix str ~suffix:"\"" then
-    drop_suffix (drop_prefix str 1) 1
-  else str
-
 let find_include_fs lookup_paths fname =
   let rec loop paths =
     match paths with
@@ -131,7 +125,7 @@ let find_include fname =
 
 let try_get_new_lexbuf fname =
   let lexbuf = Stack.top_exn include_stack in
-  let new_lexbuf, file = find_include (maybe_remove_quotes fname) in
+  let new_lexbuf, file = find_include fname in
   lexer_logger ("opened " ^ file);
   new_lexbuf.lex_start_p <-
     new_file_start_position file

@@ -13,6 +13,7 @@ parameters {
   real<lower=0, upper=1> theta;
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_containers.stan
 functions {
   
@@ -154,11 +155,13 @@ generated quantities {
   print("gq_m_ar_dim2_2 = ", gq_m_ar_dim2_2);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_mixed.stan
 transformed parameters {
   array[3, 3] real td_arr33 = {{1, 2, 3}, {1, 2., 3}, {1., 2., 3}};
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_primitives.stan
 functions {
   array[] int f1_arr_int() {
@@ -351,3 +354,4 @@ generated quantities {
   }
 }
 
+[exit 0]

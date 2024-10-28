@@ -49,6 +49,7 @@ model {
     y[t] ~ normal(y_hat[t], sigma); // independent normal noise
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format is_real.stan
 functions {
   int is_real(real x) {
@@ -65,6 +66,7 @@ transformed data {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format minimum_promotion.stan
 functions {
   real something(int x) {
@@ -90,6 +92,7 @@ generated quantities {
   print(something(1i));
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format multi_fun.stan
 functions {
   int foo(int a) {
@@ -106,6 +109,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format num_args.stan
 functions {
   real foo(real one) {
@@ -117,6 +121,7 @@ functions {
   }
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format redefine-prob1.stan
 functions {
   real poisson_lpdf(real n, real x) {
@@ -130,6 +135,7 @@ model {
   y ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reduce_sum_multiple.stan
 functions {
   real fun(array[] real y_slice, int start, int end, real m) {
@@ -164,6 +170,7 @@ model {
   y ~ std_normal();
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format reduce_sum_ordering.stan
 functions {
   real s(array[] real y_slice, int start, int end) {
@@ -184,6 +191,7 @@ transformed data {
   real tsd = reduce_sum(s, y1d, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format sir_overloaded_odes.stan
 // Simple SIR model inspired by the presentation in
 // http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3380087/pdf/nihms372789.pdf
@@ -278,6 +286,7 @@ model {
   B ~ lognormal(log(y2[ : , 4]), 0.15);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format stan_math.stan
 functions {
   vector to_vector(real one, real two, real three) {
@@ -295,6 +304,7 @@ transformed data {
   to_vector(3);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format tilde_resolve.stan
 // different than test/bad's no_minimum_tilde because of lpdf/lpmf checks
 
@@ -311,3 +321,4 @@ model {
   1 ~ foo(3);
 }
 
+[exit 0]

@@ -1,4 +1,16 @@
   $ ../../../../../install/default/bin/stanc --auto-format deprecated_syntax.stan
+functions {
+  real jacobian(real x, int y) {
+    return x + y;
+  }
+  void jacobian(real x, real y) {
+    print(x + y);
+  }
+}
+transformed data {
+  print(jacobian(1.0, 2));
+  jacobian(1.0, 2.0);
+}
 parameters {
   real jacobian;
 }
@@ -11,21 +23,35 @@ model {
 Warning in 'deprecated_syntax.stan', line 2, column 7: Variable name
     'jacobian' will be a reserved word starting in Stan 2.38. Please rename
     it!
-Warning in 'deprecated_syntax.stan', line 5, column 6: Found 1 < 2 < 3. This
+Warning in 'deprecated_syntax.stan', line 5, column 7: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 10, column 8: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 11, column 2: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 14, column 7: Variable name
+    'jacobian' will be a reserved word starting in Stan 2.38. Please rename
+    it!
+Warning in 'deprecated_syntax.stan', line 17, column 6: Found 1 < 2 < 3. This
     is interpreted as (1 < 2) < 3. Consider if the intended meaning was 
     1 < 2 && 2 < 3 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
-Warning in 'deprecated_syntax.stan', line 5, column 6: Found 1 < 2 < 3 < 4.
+Warning in 'deprecated_syntax.stan', line 17, column 6: Found 1 < 2 < 3 < 4.
     This is interpreted as (1 < 2 < 3) < 4. Consider if the intended meaning
     was 
     1 < 2 < 3 && 3 < 4 instead.
     You can silence this warning by adding explicit parenthesis. This can be
     automatically changed using the canonicalize flag for stanc
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format empty.stan
 
 Warning: Empty file 'empty.stan' detected; this is a valid stan model but
     likely unintended!
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format fun_log_forward_decl.stan
 /**
  * this one's for issue #1768, where there was a duplicate fun decl
@@ -50,6 +76,7 @@ model {
 Warning in 'fun_log_forward_decl.stan', line 6, column 7: Functions do not
     need to be declared before definition; all user defined function names
     are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
@@ -70,6 +97,7 @@ model {
 Warning in 'functions-fwd-ref.stan', line 3, column 6: Functions do not need
     to be declared before definition; all user defined function names are
     always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format int_div_user.stan
 data {
   array[4] int a;
@@ -90,6 +118,7 @@ Warning in 'int_div_user.stan', line 7, column 6: Found int division:
     the division as
       a[1] * 1.0 / b[2]
     If rounding is intended please use the integer division operator %/%.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format integrate_1d_good.stan
 functions {
   real foo(real x, real xc, array[] real theta, array[] real x_r,
@@ -121,6 +150,7 @@ model {
   real int_foo9 = integrate_1d(foo, lb, ub, theta_d, x_r, x_i, 0.01);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format integrate_ode_adams.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
@@ -230,6 +260,7 @@ Warning in 'integrate_ode_adams.stan', line 49, column 10: integrate_ode_adams
     is deprecated and will be removed in Stan 3.0. Use ode_adams instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
@@ -350,6 +381,7 @@ Warning in 'integrate_ode_bdf.stan', line 52, column 10: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
@@ -389,6 +421,7 @@ Warning in 'integrate_ode_deprecation.stan', line 26, column 10: integrate_ode
     is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format integrate_ode_rk45.stan
 functions {
   array[] real sho(real t, array[] real y, array[] real theta,
@@ -459,6 +492,7 @@ Warning in 'integrate_ode_rk45.stan', line 35, column 10: integrate_ode_rk45
     is deprecated and will be removed in Stan 3.0. Use ode_rk45 instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation1.stan
 parameters {
   cov_matrix[3] Sigma;
@@ -474,6 +508,7 @@ Warning in 'lkj_cov_deprecation1.stan', line 8, column 10: lkj_cov is
     deprecated and will be removed in Stan 3.0. Use lkj_corr with an
     independent lognormal distribution on the scales, see:
     https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format lkj_cov_deprecation2.stan
 parameters {
   cov_matrix[3] Sigma;
@@ -489,6 +524,7 @@ Warning in 'lkj_cov_deprecation2.stan', line 8, column 12: lkj_cov is
     deprecated and will be removed in Stan 3.0. Use lkj_corr with an
     independent lognormal distribution on the scales, see:
     https://mc-stan.org/docs/reference-manual/deprecations.html#lkj_cov-distribution
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format matrix_pow_warning.stan
 data {
   int<lower=0> N;
@@ -516,6 +552,7 @@ Warning in 'matrix_pow_warning.stan', line 9, column 25: Found matrix^scalar:
     If you intended matrix exponentiation, use the
     function
     matrix_power(matrix,int) instead.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format overloaded_forward_decl.stan
 functions {
   int is_real(int x);
@@ -541,6 +578,7 @@ Warning in 'overloaded_forward_decl.stan', line 2, column 6: Functions do not
 Warning in 'overloaded_forward_decl.stan', line 3, column 6: Functions do not
     need to be declared before definition; all user defined function names
     are always in scope regardless of definition order.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format self-assign.stan
 model {
   real foo = 1.5;
@@ -589,6 +627,7 @@ Warning in 'self-assign.stan', line 22, column 2: Assignment of variable to
     itself.
 Warning in 'self-assign.stan', line 24, column 2: Assignment of variable to
     itself during declaration. This is almost certainly a bug.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format unreachable_statement.stan
 functions {
   void foo(real x) {
@@ -610,6 +649,7 @@ Warning in 'unreachable_statement.stan', line 5, column 5: Unreachable
 Warning in 'unreachable_statement.stan', line 10, column 4: Unreachable
     statement (following a reject, fatal_error, break, continue, or return)
     found, is this intended?
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
 transformed data {
   real u;
@@ -618,6 +658,9 @@ transformed data {
   j = 2;
   k = 3;
   u = j / k;
+  u = j / 3;
+  u = 2 / k;
+  u = 2 / 3;
 }
 parameters {
   real y;
@@ -634,3 +677,28 @@ Warning in 'validate_division_int_warning.stan', line 7, column 6: Found int
     the division as
       j * 1.0 / k
     If rounding is intended please use the integer division operator %/%.
+Warning in 'validate_division_int_warning.stan', line 8, column 6: Found int
+    division:
+      j / 3
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      j / 3.0
+    If rounding is intended please use the integer division operator %/%.
+Warning in 'validate_division_int_warning.stan', line 9, column 6: Found int
+    division:
+      2 / k
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      2.0 / k
+    If rounding is intended please use the integer division operator %/%.
+Warning in 'validate_division_int_warning.stan', line 10, column 6: Found int
+    division:
+      2 / 3
+    Values will be rounded towards zero. If rounding is not desired you can
+    write
+    the division as
+      2.0 / 3
+    If rounding is intended please use the integer division operator %/%.
+[exit 0]
