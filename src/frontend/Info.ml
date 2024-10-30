@@ -4,8 +4,8 @@ open Middle
 open Yojson.Basic
 
 let rec unsized_basetype_json t =
-  let to_json (type_, dim) : t =
-    `Assoc [("type", `String type_); ("dimensions", `Int dim)] in
+  let to_json (type_, dim) =
+    [("type", `String type_); ("dimensions", `Int dim)] in
   let internal, dims = UnsizedType.unwind_array_type t in
   match internal with
   | UnsizedType.UInt -> to_json ("int", dims)
@@ -16,12 +16,43 @@ let rec unsized_basetype_json t =
   | UMatrix -> to_json ("real", dims + 2)
   | UComplexMatrix -> to_json ("complex", dims + 2)
   | UTuple internals ->
-      `Assoc
-        [ ("type", `List (List.map ~f:unsized_basetype_json internals))
-        ; ("dimensions", `Int dims) ]
+      [ ( "type"
+        , `List
+            (List.map ~f:(fun t -> `Assoc (unsized_basetype_json t)) internals)
+        ); ("dimensions", `Int dims) ]
   | UMathLibraryFunction | UFun _ | UArray _ -> assert false
 
 let basetype_dims t = SizedType.to_unsized t |> unsized_basetype_json
+
+let rec transformation t =
+  let expr_string = Fmt.to_to_string Pretty_printing.pp_expression in
+  let expr_string e =
+    `String (expr_string (Ast.untyped_expression_of_typed_expression e)) in
+  let transform details = [("constraint", details)] in
+  match t with
+  | Transformation.Identity -> transform (`String "none")
+  | Lower e -> transform @@ `Assoc [("lower", expr_string e)]
+  | Upper e -> transform @@ `Assoc [("upper", expr_string e)]
+  | LowerUpper (e1, e2) ->
+      transform @@ `Assoc [("lower", expr_string e1); ("upper", expr_string e2)]
+  | Offset e -> transform @@ `Assoc [("offset", expr_string e)]
+  | Multiplier e -> transform @@ `Assoc [("multiplier", expr_string e)]
+  | OffsetMultiplier (e1, e2) ->
+      transform
+      @@ `Assoc [("offset", expr_string e1); ("multiplier", expr_string e2)]
+  | Ordered -> transform (`String "ordered")
+  | PositiveOrdered -> transform (`String "positive_ordered")
+  | Simplex -> transform (`String "simplex")
+  | UnitVector -> transform (`String "unit_vector")
+  | SumToZero -> transform (`String "sum_to_zero")
+  | CholeskyCorr -> transform (`String "cholesky_corr")
+  | CholeskyCov -> transform (`String "cholesky_cov")
+  | Correlation -> transform (`String "correlation")
+  | Covariance -> transform (`String "covariance")
+  | StochasticRow -> transform (`String "stochastic_row")
+  | StochasticColumn -> transform (`String "stochastic_column")
+  | TupleTransformation ts ->
+      transform (`List (List.map ~f:(fun t -> `Assoc (transformation t)) ts))
 
 let get_var_decl {stmts; _} : t =
   `Assoc
@@ -30,9 +61,11 @@ let get_var_decl {stmts; _} : t =
          match stmt.Ast.stmt with
          | Ast.VarDecl decl ->
              let type_info = basetype_dims decl.decl_type in
+             let transform_info = transformation decl.transformation in
              let decl_info =
                List.map
-                 ~f:(fun {identifier; _} -> (identifier.name, type_info))
+                 ~f:(fun {identifier; _} ->
+                   (identifier.name, `Assoc (type_info @ transform_info)))
                  decl.variables in
              decl_info @ acc
          | _ -> acc)
