@@ -176,9 +176,11 @@ let pp_comments_spacing space_before f ppf loc =
     go true comments)
 
 let comma_no_break = any ", "
+let indent = ref "  "
+let set_indent i = indent := String.make i ' '
 
-let indented_box ?(offset = 0) pp_v ppf v =
-  pf ppf "@[<h>  %a@]" (box ~indent:offset pp_v) v
+let indented_box pp_v ppf v =
+  pf ppf "@[<h>%s%a@]" !indent (box ~indent:0 pp_v) v
 
 let pp_unsizedtype = Middle.UnsizedType.pp
 let pp_autodifftype = Middle.UnsizedType.pp_autodifftype
