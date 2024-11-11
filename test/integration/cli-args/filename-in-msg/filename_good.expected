@@ -281,3 +281,4 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
+[exit 0]

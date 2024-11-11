@@ -13,6 +13,7 @@ model {
   print(bar({2.3, 3}));
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format array_promotion.stan
 functions {
   void printer(array[] real x) {
@@ -49,6 +50,7 @@ model {
   print(nested(zs));
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format complex_functions.stan
 functions {
   void promote_complex_array(array[] complex zs) {
@@ -88,6 +90,7 @@ generated quantities {
   real answer = sum_weird(A);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format newton_x_r_type.stan
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
@@ -118,6 +121,7 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format newton_x_r_type_control.stan
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
@@ -149,11 +153,13 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format propto.stan
 model {
   target += normal_lupdf(1 | {0}, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format return_position.stan
 functions {
   array[] complex foo(real a) {
@@ -172,6 +178,7 @@ transformed parameters {
   complex_vector[2] c = bar(a);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format tilde_syntax.stan
 functions {
   real multi_wallenius_integral(real t, // Function argument
@@ -225,6 +232,7 @@ model {
     y[i] ~ multi_wallenius(m, probs, x_i, tol);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format x_r_type.stan
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
@@ -255,6 +263,7 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format x_r_type_control.stan
 functions {
   vector algebra_system(vector y, vector theta, array[] real x_r,
@@ -286,3 +295,4 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
+[exit 0]

@@ -320,9 +320,11 @@ let pp_bracketed_transform ppf = function
   | Multiplier e -> pf ppf "<@[multiplier=%a@]>" pp_expression e
   | OffsetMultiplier (e1, e2) ->
       pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1 pp_expression e2
-  | Identity | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
-   |CholeskyCov | Correlation | Covariance | TupleTransformation _
-  (* tuple transformations are handled in pp_transformed_type *) ->
+  | Identity | Ordered | PositiveOrdered | Simplex | UnitVector | SumToZero
+   |CholeskyCorr | CholeskyCov | Correlation | Covariance
+   |TupleTransformation _ | StochasticColumn
+   |StochasticRow (* tuple transformations are handled in pp_transformed_type *)
+    ->
       ()
 
 let rec pp_transformed_type ppf (st, trans) =
@@ -358,10 +360,13 @@ let rec pp_transformed_type ppf (st, trans) =
     | PositiveOrdered -> pf ppf "positive_ordered%a" sizes_fmt ()
     | Simplex -> pf ppf "simplex%a" sizes_fmt ()
     | UnitVector -> pf ppf "unit_vector%a" sizes_fmt ()
+    | SumToZero -> pf ppf "sum_to_zero_vector%a" sizes_fmt ()
     | CholeskyCorr -> pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
     | CholeskyCov -> pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
     | Correlation -> pf ppf "corr_matrix%a" cov_sizes_fmt ()
     | Covariance -> pf ppf "cov_matrix%a" cov_sizes_fmt ()
+    | StochasticColumn -> pf ppf "column_stochastic_matrix%a" sizes_fmt ()
+    | StochasticRow -> pf ppf "row_stochastic_matrix%a" sizes_fmt ()
     | TupleTransformation transforms ->
         (* NB this calls the top-level function to handle internal arrays etc *)
         let transTypes = Middle.Utils.zip_stuple_trans_exn st transforms in
@@ -421,6 +426,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
   | NRFunApp (_, id, es) ->
       pf ppf "%a(@[%a);@]" pp_identifier id pp_list_of_expression (es, loc)
   | TargetPE e -> pf ppf "target += %a;" pp_expression e
+  | JacobianPE e -> pf ppf "jacobian += %a;" pp_expression e
   | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
       pf ppf "%a ~ %a(@[%a)@]%a;" pp_expression e pp_identifier id
         pp_list_of_expression (es, loc) pp_truncation t

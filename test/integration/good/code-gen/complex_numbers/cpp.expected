@@ -233,43 +233,30 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     static constexpr const char* function__ =
       "basic_op_param_model_namespace::log_prob";
     try {
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 1;
-      cmat = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvec = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> crowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      crowvec = in__.template read<
-                  Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<local_scalar_t__> z =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto crowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      z = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> mat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto z = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      mat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<local_scalar_t__,-1,1> vec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto mat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> rowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      rowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ r = DUMMY_VAR__;
+      auto rowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      r = in__.template read<local_scalar_t__>();
+      auto r = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -768,43 +755,30 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     static constexpr const char* function__ =
       "basic_op_param_model_namespace::log_prob";
     try {
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 1;
-      cmat = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvec = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> crowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      crowvec = in__.template read<
-                  Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<local_scalar_t__> z =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto crowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      z = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> mat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto z = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      mat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<local_scalar_t__,-1,1> vec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto mat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> rowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      rowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ r = DUMMY_VAR__;
+      auto rowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      r = in__.template read<local_scalar_t__>();
+      auto r = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -1308,50 +1282,30 @@ class basic_op_param_model final : public model_base_crtp<basic_op_param_model> 
     static constexpr const char* function__ =
       "basic_op_param_model_namespace::write_array";
     try {
-      Eigen::Matrix<std::complex<double>,-1,-1> cmat =
-        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 1;
-      cmat = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<double>,-1,1> cvec =
-        Eigen::Matrix<std::complex<double>,-1,1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto cmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvec = in__.template read<
-               Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<double>,1,-1> crowvec =
-        Eigen::Matrix<std::complex<double>,1,-1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto cvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      crowvec = in__.template read<
-                  Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<double> z =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
+      auto crowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      z = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<double,-1,-1> mat =
-        Eigen::Matrix<double,-1,-1>::Constant(N, N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto z = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      mat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<double,-1,1> vec =
-        Eigen::Matrix<double,-1,1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto mat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<double,1,-1> rowvec =
-        Eigen::Matrix<double,1,-1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto vec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      rowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      double r = std::numeric_limits<double>::quiet_NaN();
+      auto rowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      r = in__.template read<local_scalar_t__>();
+      auto r = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<double>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
@@ -2395,6 +2349,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --print-cpp basic_operations.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -3551,6 +3506,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --print-cpp basic_ops_mix.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -3991,43 +3947,30 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     static constexpr const char* function__ =
       "basic_ops_mix_model_namespace::log_prob";
     try {
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cvmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 1;
-      cvmat = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvvec = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> cvrowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      cvrowvec = in__.template read<
-                   Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<local_scalar_t__> zv =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto cvrowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      zv = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> vmat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto zv = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      vmat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<local_scalar_t__,-1,1> vvec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto vmat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> vrowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      vrowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ v = DUMMY_VAR__;
+      auto vrowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      v = in__.template read<local_scalar_t__>();
+      auto v = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -4614,43 +4557,30 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     static constexpr const char* function__ =
       "basic_ops_mix_model_namespace::log_prob";
     try {
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cvmat =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 1;
-      cvmat = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,-1,1> cvvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvvec = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<local_scalar_t__>,1,-1> cvrowvec =
-        Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>::Constant(N,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto cvvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      cvrowvec = in__.template read<
-                   Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<local_scalar_t__> zv =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto cvrowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      zv = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<local_scalar_t__,-1,-1> vmat =
-        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(N, N, DUMMY_VAR__);
+      auto zv = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      vmat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<local_scalar_t__,-1,1> vvec =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      auto vmat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<local_scalar_t__,1,-1> vrowvec =
-        Eigen::Matrix<local_scalar_t__,1,-1>::Constant(N, DUMMY_VAR__);
+      auto vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      vrowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      local_scalar_t__ v = DUMMY_VAR__;
+      auto vrowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      v = in__.template read<local_scalar_t__>();
+      auto v = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(N, N,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
@@ -5242,50 +5172,30 @@ class basic_ops_mix_model final : public model_base_crtp<basic_ops_mix_model> {
     static constexpr const char* function__ =
       "basic_ops_mix_model_namespace::write_array";
     try {
-      Eigen::Matrix<std::complex<double>,-1,-1> cvmat =
-        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 1;
-      cvmat = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
-      Eigen::Matrix<std::complex<double>,-1,1> cvvec =
-        Eigen::Matrix<std::complex<double>,-1,1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto cvmat =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(N, N);
       current_statement__ = 2;
-      cvvec = in__.template read<
-                Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
-      Eigen::Matrix<std::complex<double>,1,-1> cvrowvec =
-        Eigen::Matrix<std::complex<double>,1,-1>::Constant(N,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto cvvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(N);
       current_statement__ = 3;
-      cvrowvec = in__.template read<
-                   Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
-      std::complex<double> zv =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
+      auto cvrowvec =
+        in__.template read<
+          Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>(N);
       current_statement__ = 4;
-      zv = in__.template read<std::complex<local_scalar_t__>>();
-      Eigen::Matrix<double,-1,-1> vmat =
-        Eigen::Matrix<double,-1,-1>::Constant(N, N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto zv = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 5;
-      vmat = in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
-      Eigen::Matrix<double,-1,1> vvec =
-        Eigen::Matrix<double,-1,1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto vmat =
+        in__.template read<Eigen::Matrix<local_scalar_t__,-1,-1>>(N, N);
       current_statement__ = 6;
-      vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
-      Eigen::Matrix<double,1,-1> vrowvec =
-        Eigen::Matrix<double,1,-1>::Constant(N,
-          std::numeric_limits<double>::quiet_NaN());
+      auto vvec = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(N);
       current_statement__ = 7;
-      vrowvec = in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
-      double v = std::numeric_limits<double>::quiet_NaN();
+      auto vrowvec =
+        in__.template read<Eigen::Matrix<local_scalar_t__,1,-1>>(N);
       current_statement__ = 8;
-      v = in__.template read<local_scalar_t__>();
+      auto v = in__.template read<local_scalar_t__>();
       Eigen::Matrix<std::complex<double>,-1,-1> tp_c_matrix =
         Eigen::Matrix<std::complex<double>,-1,-1>::Constant(N, N,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
@@ -6417,6 +6327,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --print-cpp complex_data.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -6957,6 +6868,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --print-cpp complex_scalar.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -8015,29 +7927,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     static constexpr const char* function__ =
       "complex_scalar_model_namespace::log_prob";
     try {
-      local_scalar_t__ p_r = DUMMY_VAR__;
       current_statement__ = 1;
-      p_r = in__.template read<local_scalar_t__>();
-      std::complex<local_scalar_t__> p_complex =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto p_r = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>();
-      std::vector<std::complex<local_scalar_t__>> p_complex_array =
-        std::vector<std::complex<local_scalar_t__>>(2,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto p_complex = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 3;
-      p_complex_array = in__.template read<
-                          std::vector<std::complex<local_scalar_t__>>>(2);
-      std::vector<std::vector<std::complex<local_scalar_t__>>>
-        p_complex_array_2d =
-        std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-          std::vector<std::complex<local_scalar_t__>>(3,
-            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
+      auto p_complex_array =
+        in__.template read<std::vector<std::complex<local_scalar_t__>>>(2);
       current_statement__ = 4;
-      p_complex_array_2d = in__.template read<
-                             std::vector<
-                               std::vector<std::complex<local_scalar_t__>>>>(2,
-                             3);
+      auto p_complex_array_2d =
+        in__.template read<
+          std::vector<std::vector<std::complex<local_scalar_t__>>>>(2, 3);
       local_scalar_t__ tp_r = DUMMY_VAR__;
       current_statement__ = 5;
       tp_r = 1.1;
@@ -8270,29 +8170,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     static constexpr const char* function__ =
       "complex_scalar_model_namespace::log_prob";
     try {
-      local_scalar_t__ p_r = DUMMY_VAR__;
       current_statement__ = 1;
-      p_r = in__.template read<local_scalar_t__>();
-      std::complex<local_scalar_t__> p_complex =
-        std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__);
+      auto p_r = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>();
-      std::vector<std::complex<local_scalar_t__>> p_complex_array =
-        std::vector<std::complex<local_scalar_t__>>(2,
-          std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
+      auto p_complex = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 3;
-      p_complex_array = in__.template read<
-                          std::vector<std::complex<local_scalar_t__>>>(2);
-      std::vector<std::vector<std::complex<local_scalar_t__>>>
-        p_complex_array_2d =
-        std::vector<std::vector<std::complex<local_scalar_t__>>>(2,
-          std::vector<std::complex<local_scalar_t__>>(3,
-            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
+      auto p_complex_array =
+        in__.template read<std::vector<std::complex<local_scalar_t__>>>(2);
       current_statement__ = 4;
-      p_complex_array_2d = in__.template read<
-                             std::vector<
-                               std::vector<std::complex<local_scalar_t__>>>>(2,
-                             3);
+      auto p_complex_array_2d =
+        in__.template read<
+          std::vector<std::vector<std::complex<local_scalar_t__>>>>(2, 3);
       local_scalar_t__ tp_r = DUMMY_VAR__;
       current_statement__ = 5;
       tp_r = 1.1;
@@ -8530,31 +8418,17 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     static constexpr const char* function__ =
       "complex_scalar_model_namespace::write_array";
     try {
-      double p_r = std::numeric_limits<double>::quiet_NaN();
       current_statement__ = 1;
-      p_r = in__.template read<local_scalar_t__>();
-      std::complex<double> p_complex =
-        std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-          std::numeric_limits<double>::quiet_NaN());
+      auto p_r = in__.template read<local_scalar_t__>();
       current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>();
-      std::vector<std::complex<double>> p_complex_array =
-        std::vector<std::complex<double>>(2,
-          std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-            std::numeric_limits<double>::quiet_NaN()));
+      auto p_complex = in__.template read<std::complex<local_scalar_t__>>();
       current_statement__ = 3;
-      p_complex_array = in__.template read<
-                          std::vector<std::complex<local_scalar_t__>>>(2);
-      std::vector<std::vector<std::complex<double>>> p_complex_array_2d =
-        std::vector<std::vector<std::complex<double>>>(2,
-          std::vector<std::complex<double>>(3,
-            std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
-              std::numeric_limits<double>::quiet_NaN())));
+      auto p_complex_array =
+        in__.template read<std::vector<std::complex<local_scalar_t__>>>(2);
       current_statement__ = 4;
-      p_complex_array_2d = in__.template read<
-                             std::vector<
-                               std::vector<std::complex<local_scalar_t__>>>>(2,
-                             3);
+      auto p_complex_array_2d =
+        in__.template read<
+          std::vector<std::vector<std::complex<local_scalar_t__>>>>(2, 3);
       double tp_r = std::numeric_limits<double>::quiet_NaN();
       std::complex<double> tp_complex =
         std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
@@ -9933,6 +9807,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --print-cpp complex_vectors.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -9947,16 +9822,24 @@ namespace complex_vectors_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 6> locations_array__ =
+static constexpr std::array<const char*, 12> locations_array__ =
   {" (found before start of program)",
-  " (in 'complex_vectors.stan', line 4, column 3 to column 37)",
-  " (in 'complex_vectors.stan', line 5, column 3 to column 42)",
-  " (in 'complex_vectors.stan', line 6, column 3 to column 27)",
-  " (in 'complex_vectors.stan', line 7, column 3 to column 32)",
-  " (in 'complex_vectors.stan', line 9, column 3 to column 44)"};
+  " (in 'complex_vectors.stan', line 5, column 2 to column 36)",
+  " (in 'complex_vectors.stan', line 6, column 2 to column 45)",
+  " (in 'complex_vectors.stan', line 7, column 2 to column 27)",
+  " (in 'complex_vectors.stan', line 8, column 2 to column 31)",
+  " (in 'complex_vectors.stan', line 9, column 2 to column 54)",
+  " (in 'complex_vectors.stan', line 12, column 2 to column 61)",
+  " (in 'complex_vectors.stan', line 13, column 2 to column 50)",
+  " (in 'complex_vectors.stan', line 10, column 2 to column 19)",
+  " (in 'complex_vectors.stan', line 2, column 2 to column 12)",
+  " (in 'complex_vectors.stan', line 9, column 17 to column 22)",
+  " (in 'complex_vectors.stan', line 9, column 24 to column 29)"};
 class complex_vectors_model final : public model_base_crtp<complex_vectors_model> {
  private:
-  
+  int n;
+  int cm_1dim__;
+  int cm_2dim__;
  public:
   ~complex_vectors_model() {}
   complex_vectors_model(stan::io::var_context& context__, unsigned int
@@ -9968,6 +9851,26 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
     static constexpr const char* function__ =
       "complex_vectors_model_namespace::complex_vectors_model";
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    try {
+      current_statement__ = 9;
+      n = std::numeric_limits<int>::min();
+      current_statement__ = 9;
+      n = 1;
+      current_statement__ = 10;
+      cm_1dim__ = std::numeric_limits<int>::min();
+      current_statement__ = 10;
+      cm_1dim__ = (n + 1);
+      current_statement__ = 10;
+      stan::math::validate_non_negative_index("cm", "n + 1", cm_1dim__);
+      current_statement__ = 11;
+      cm_2dim__ = std::numeric_limits<int>::min();
+      current_statement__ = 11;
+      cm_2dim__ = (n + 1);
+      current_statement__ = 11;
+      stan::math::validate_non_negative_index("cm", "n + 1", cm_2dim__);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+    }
     num_params_r__ = 0U;
   }
   inline std::string model_name() const final {
@@ -10037,7 +9940,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
       current_statement__ = 4;
       stan::model::assign(zx, x, "assigning variable zx");
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cm =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(2, 2,
+        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(cm_1dim__,
+          cm_2dim__,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 5;
       stan::model::assign(cm,
@@ -10053,6 +9957,38 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                                                            stan::math::to_complex(
                                                              0, 4)).finished()}),
         "assigning variable cm");
+      current_statement__ = 8;
+      stan::model::assign(cm,
+        stan::math::to_matrix(
+          std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>{zx,
+            stan::model::rvalue(cm, "cm", stan::model::index_uni(1))}),
+        "assigning variable cm");
+      std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>> acm =
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(2,
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(2, 2,
+            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
+      current_statement__ = 6;
+      stan::model::assign(acm,
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>{
+          stan::math::to_matrix(
+            std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>{
+              (Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>(2) <<
+                 stan::math::promote_scalar<std::complex<local_scalar_t__>>(1),
+                stan::math::promote_scalar<std::complex<local_scalar_t__>>(2)).finished(),
+              (Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>(2) <<
+                 stan::math::promote_scalar<std::complex<local_scalar_t__>>(3),
+                stan::math::promote_scalar<std::complex<local_scalar_t__>>(4)).finished()}),
+          cm}, "assigning variable acm");
+      std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> az =
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(2,
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(3,
+            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
+      current_statement__ = 7;
+      stan::model::assign(az,
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>{z,
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+            (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished())},
+        "assigning variable az");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -10119,7 +10055,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
       current_statement__ = 4;
       stan::model::assign(zx, x, "assigning variable zx");
       Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1> cm =
-        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(2, 2,
+        Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(cm_1dim__,
+          cm_2dim__,
           std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__));
       current_statement__ = 5;
       stan::model::assign(cm,
@@ -10135,6 +10072,38 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                                                            stan::math::to_complex(
                                                              0, 4)).finished()}),
         "assigning variable cm");
+      current_statement__ = 8;
+      stan::model::assign(cm,
+        stan::math::to_matrix(
+          std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>{zx,
+            stan::model::rvalue(cm, "cm", stan::model::index_uni(1))}),
+        "assigning variable cm");
+      std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>> acm =
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>(2,
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>::Constant(2, 2,
+            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
+      current_statement__ = 6;
+      stan::model::assign(acm,
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>{
+          stan::math::to_matrix(
+            std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>{
+              (Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>(2) <<
+                 stan::math::promote_scalar<std::complex<local_scalar_t__>>(1),
+                stan::math::promote_scalar<std::complex<local_scalar_t__>>(2)).finished(),
+              (Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>(2) <<
+                 stan::math::promote_scalar<std::complex<local_scalar_t__>>(3),
+                stan::math::promote_scalar<std::complex<local_scalar_t__>>(4)).finished()}),
+          cm}, "assigning variable acm");
+      std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>> az =
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>(2,
+          Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>::Constant(3,
+            std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
+      current_statement__ = 7;
+      stan::model::assign(az,
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>{z,
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+            (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished())},
+        "assigning variable az");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -10180,9 +10149,20 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()));
       Eigen::Matrix<std::complex<double>,-1,-1> cm =
-        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(2, 2,
+        Eigen::Matrix<std::complex<double>,-1,-1>::Constant(cm_1dim__,
+          cm_2dim__,
           std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
             std::numeric_limits<double>::quiet_NaN()));
+      std::vector<Eigen::Matrix<std::complex<double>,-1,-1>> acm =
+        std::vector<Eigen::Matrix<std::complex<double>,-1,-1>>(2,
+          Eigen::Matrix<std::complex<double>,-1,-1>::Constant(2, 2,
+            std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+              std::numeric_limits<double>::quiet_NaN())));
+      std::vector<Eigen::Matrix<std::complex<double>,-1,1>> az =
+        std::vector<Eigen::Matrix<std::complex<double>,-1,1>>(2,
+          Eigen::Matrix<std::complex<double>,-1,1>::Constant(3,
+            std::complex<double>(std::numeric_limits<double>::quiet_NaN(),
+              std::numeric_limits<double>::quiet_NaN())));
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {
@@ -10232,12 +10212,53 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                                                            stan::math::to_complex(
                                                              0, 4)).finished()}),
         "assigning variable cm");
+      current_statement__ = 8;
+      stan::model::assign(cm,
+        stan::math::to_matrix(
+          std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>{zx,
+            stan::model::rvalue(cm, "cm", stan::model::index_uni(1))}),
+        "assigning variable cm");
+      current_statement__ = 6;
+      stan::model::assign(acm,
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,-1>>{
+          stan::math::to_matrix(
+            std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>>{
+              (Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>(2) <<
+                 stan::math::promote_scalar<std::complex<local_scalar_t__>>(1),
+                stan::math::promote_scalar<std::complex<local_scalar_t__>>(2)).finished(),
+              (Eigen::Matrix<std::complex<local_scalar_t__>,1,-1>(2) <<
+                 stan::math::promote_scalar<std::complex<local_scalar_t__>>(3),
+                stan::math::promote_scalar<std::complex<local_scalar_t__>>(4)).finished()}),
+          cm}, "assigning variable acm");
+      current_statement__ = 7;
+      stan::model::assign(az,
+        std::vector<Eigen::Matrix<std::complex<local_scalar_t__>,-1,1>>{z,
+          stan::math::promote_scalar<std::complex<local_scalar_t__>>(
+            (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished())},
+        "assigning variable az");
       if (emit_transformed_parameters__) {
         out__.write(z);
         out__.write(zs);
         out__.write(x);
         out__.write(zx);
         out__.write(cm);
+        current_statement__ = 6;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+              out__.write(stan::model::rvalue(acm, "acm",
+                            stan::model::index_uni(sym3__),
+                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(sym1__)));
+            }
+          }
+        }
+        current_statement__ = 7;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            out__.write(az[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
@@ -10273,7 +10294,7 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
                   emit_generated_quantities__ = true) const {
     names__ = std::vector<std::string>{};
     if (emit_transformed_parameters__) {
-      std::vector<std::string> temp{"z", "zs", "x", "zx", "cm"};
+      std::vector<std::string> temp{"z", "zs", "x", "zx", "cm", "acm", "az"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
@@ -10293,8 +10314,13 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
              std::vector<size_t>{static_cast<size_t>(2)},
              std::vector<size_t>{static_cast<size_t>(2),
                static_cast<size_t>(2)},
+             std::vector<size_t>{static_cast<size_t>(cm_1dim__),
+               static_cast<size_t>(cm_2dim__), static_cast<size_t>(2)},
              std::vector<size_t>{static_cast<size_t>(2),
-               static_cast<size_t>(2), static_cast<size_t>(2)}};
+               static_cast<size_t>(2), static_cast<size_t>(2),
+               static_cast<size_t>(2)},
+             std::vector<size_t>{static_cast<size_t>(2),
+               static_cast<size_t>(3), static_cast<size_t>(2)}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
@@ -10331,12 +10357,34 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
         param_names__.emplace_back(std::string() + "zx" + '.' +
           std::to_string(sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= cm_2dim__; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= cm_1dim__; ++sym2__) {
           param_names__.emplace_back(std::string() + "cm" + '.' +
             std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
             "real");
           param_names__.emplace_back(std::string() + "cm" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+            param_names__.emplace_back(std::string() + "acm" + '.' +
+              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+              std::to_string(sym1__) + '.' + "real");
+            param_names__.emplace_back(std::string() + "acm" + '.' +
+              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+              std::to_string(sym1__) + '.' + "imag");
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "az" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "az" + '.' +
             std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
             "imag");
         }
@@ -10375,8 +10423,8 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
         param_names__.emplace_back(std::string() + "zx" + '.' +
           std::to_string(sym1__) + '.' + "imag");
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+      for (int sym1__ = 1; sym1__ <= cm_2dim__; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= cm_1dim__; ++sym2__) {
           param_names__.emplace_back(std::string() + "cm" + '.' +
             std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
             "real");
@@ -10385,14 +10433,36 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
             "imag");
         }
       }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+            param_names__.emplace_back(std::string() + "acm" + '.' +
+              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+              std::to_string(sym1__) + '.' + "real");
+            param_names__.emplace_back(std::string() + "acm" + '.' +
+              std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+              std::to_string(sym1__) + '.' + "imag");
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          param_names__.emplace_back(std::string() + "az" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "real");
+          param_names__.emplace_back(std::string() + "az" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__) + '.' +
+            "imag");
+        }
+      }
     }
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(cm_1dim__) + ",\"cols\":" + std::to_string(cm_2dim__) + "},\"block\":\"transformed_parameters\"},{\"name\":\"acm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"az\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "}},\"block\":\"transformed_parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"z\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zs\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"zx\",\"type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(2) + "},\"block\":\"transformed_parameters\"},{\"name\":\"cm\",\"type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(cm_1dim__) + ",\"cols\":" + std::to_string(cm_2dim__) + "},\"block\":\"transformed_parameters\"},{\"name\":\"acm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_matrix\",\"rows\":" + std::to_string(2) + ",\"cols\":" + std::to_string(2) + "}},\"block\":\"transformed_parameters\"},{\"name\":\"az\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex_vector\",\"length\":" + std::to_string(3) + "}},\"block\":\"transformed_parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -10402,8 +10472,9 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * ((((((3 * 2)
-      + (2 * (2 * 2))) + 2) + (2 * 2)) + (2 * (2 * 2))));
+    const size_t num_transformed = emit_transformed_parameters * ((((((((3 *
+      2) + (2 * (2 * 2))) + 2) + (2 * 2)) + (cm_1dim__ * (cm_2dim__ * 2))) +
+      (2 * (2 * (2 * 2)))) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -10420,8 +10491,9 @@ class complex_vectors_model final : public model_base_crtp<complex_vectors_model
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
     const size_t num_params__ = 0;
-    const size_t num_transformed = emit_transformed_parameters * ((((((3 * 2)
-      + (2 * (2 * 2))) + 2) + (2 * 2)) + (2 * (2 * 2))));
+    const size_t num_transformed = emit_transformed_parameters * ((((((((3 *
+      2) + (2 * (2 * 2))) + 2) + (2 * 2)) + (cm_1dim__ * (cm_2dim__ * 2))) +
+      (2 * (2 * (2 * 2)))) + (2 * (3 * 2))));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -10495,6 +10567,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --print-cpp user_function_templating.stan
 // Code generated by %%NAME%% %%VERSION%%
 #include <stan/model/model_header.hpp>
@@ -11096,3 +11169,4 @@ stan::math::profile_map& get_stan_profile_data() {
 #ifndef _MSC_VER
 #pragma GCC diagnostic pop
 #endif
+[exit 0]

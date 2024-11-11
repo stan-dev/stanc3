@@ -6,6 +6,7 @@ model {
   x ~ normal(0, 1);
 }
 
+[exit 0]
   $ ../../../../../../../install/default/bin/stanc --auto-format gauss3D.stan
 parameters {
   array[3] real x;
@@ -14,3 +15,4 @@ model {
   x ~ normal(0, 1);
 }
 
+[exit 0]

@@ -133,12 +133,15 @@ rule token = parse
                                 Parser.POSITIVEORDERED }
   | "simplex"                 { lexer_logger "simplex" ; Parser.SIMPLEX }
   | "unit_vector"             { lexer_logger "unit_vector" ; Parser.UNITVECTOR }
+  | "sum_to_zero_vector"      { lexer_logger "sum_to_zero_vector" ; Parser.SUMTOZERO }
   | "cholesky_factor_corr"    { lexer_logger "cholesky_factor_corr" ;
                                 Parser.CHOLESKYFACTORCORR }
   | "cholesky_factor_cov"     { lexer_logger "cholesky_factor_cov" ;
                                 Parser.CHOLESKYFACTORCOV }
   | "corr_matrix"             { lexer_logger "corr_matrix" ; Parser.CORRMATRIX }
   | "cov_matrix"              { lexer_logger "cov_matrix" ; Parser.COVMATRIX }
+  | "column_stochastic_matrix"{ lexer_logger "column_stochastic_matrix" ; Parser.STOCHASTICCOLUMNMATRIX }
+  | "row_stochastic_matrix"   { lexer_logger "row_stochastic_matrix" ; Parser.STOCHASTICROWMATRIX }
 (* Transformation keywords *)
   | "lower"                   { lexer_logger "lower" ; Parser.LOWER }
   | "upper"                   { lexer_logger "upper" ; Parser.UPPER }

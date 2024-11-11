@@ -166,7 +166,8 @@ let opencl_supported_functions =
   ; "ordered_logistic_glm_lpmf"; "pareto_lpdf"; "pareto_type_2_lpdf"
   ; "poisson_lpmf"; "poisson_log_lpmf"; "poisson_log_glm_lpmf"; "rayleigh_lpdf"
   ; "scaled_inv_chi_square_lpdf"; "skew_normal_lpdf"; "std_normal_lpdf"
-  ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf" ]
+  ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf"; "binomial_logit_lpmf"
+  ; "binomial_logit_glm_lpmf" ]
   |> String.Set.of_list
 
 let opencl_suffix = "_opencl__"
@@ -322,7 +323,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= true }
+              ; initialize= Default }
             |> swrap)
           tuple_component_names tuple_types in
       let loop =
@@ -369,7 +370,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
-            ; initialize= true }
+            ; initialize= Default }
           |> swrap
         , Assignment (Stmt.Helpers.lvariable decl_id_flat, flat_type, origin)
           |> swrap
@@ -402,7 +403,7 @@ let rec var_context_read_inside_tuple enclosing_tuple_name origin_type
           ]
         |> swrap ]
 
-let rec var_context_read
+let rec var_context_read_internal
     ((decl_id_lval : 'a Stmt.Fixed.Pattern.lvalue), smeta, st) =
   let unsized = SizedType.to_unsized st in
   let scalar = base_type st in
@@ -444,7 +445,7 @@ let rec var_context_read
                else Location_span.empty)
             , x ))
           subtypes in
-      List.concat_map ~f:var_context_read sub_sts
+      List.concat_map ~f:var_context_read_internal sub_sts
   | SArray _ when SizedType.contains_tuple st ->
       (* The IO format for tuples is complicated in this case.
          Therefore, we need to do the following
@@ -473,7 +474,7 @@ let rec var_context_read
                 { decl_adtype= AutoDiffable
                 ; decl_id= variable_name
                 ; decl_type= Unsized array_type
-                ; initialize= true }
+                ; initialize= Default }
               |> swrap_noloc
             ; Assignment
                 ( Stmt.Helpers.lvariable variable_name
@@ -484,7 +485,7 @@ let rec var_context_read
                 { decl_adtype= DataOnly
                 ; decl_id= variable_name ^ "pos__"
                 ; decl_type= Unsized UInt
-                ; initialize= true }
+                ; initialize= Default }
               |> swrap_noloc
             ; Stmt.Fixed.Pattern.Assignment
                 ( Stmt.Helpers.lvariable (variable_name ^ "pos__")
@@ -512,7 +513,7 @@ let rec var_context_read
                     (SizedType.to_unsized t)
               ; decl_id= make_tuple_temp name
               ; decl_type= Sized t
-              ; initialize= true }
+              ; initialize= Default }
             |> swrap_noloc)
           tuple_component_names tuple_types in
       let loop =
@@ -559,7 +560,7 @@ let rec var_context_read
             { decl_adtype= AutoDiffable
             ; decl_id= decl_id_flat
             ; decl_type= Unsized flat_type
-            ; initialize= false }
+            ; initialize= Uninit }
           |> swrap
         , Assignment
             ( Stmt.Helpers.lvariable decl_id_flat
@@ -594,6 +595,10 @@ let rec var_context_read
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var Location_span.empty
           ]
         |> swrap ]
+
+let var_context_read p =
+  (* this never uses the declare-define fast path at the moment *)
+  (var_context_read_internal p, None)
 
 (*
   Get the dimension expressions that are expected by constrain/unconstrain
@@ -630,7 +635,7 @@ let param_deserializer_read
     ( decl_id_lval
     , smeta
     , Program.{out_constrained_st= cst; out_block; out_trans; _} ) =
-  if not (out_block = Parameters) then []
+  if not (out_block = Parameters) then ([], None)
   else
     let basic_read (cst, out_trans) =
       let ut = SizedType.to_unsized cst in
@@ -639,34 +644,34 @@ let param_deserializer_read
           ~adlevel:(UnsizedType.fill_adtype_for_type AutoDiffable ut)
           () in
       let dims = read_constrain_dims out_trans cst in
-      let read =
-        Expr.Helpers.internal_funapp
-          (FnReadParam
-             { constrain= out_trans
-             ; dims
-             ; mem_pattern= SizedType.get_mem_pattern cst })
-          [] emeta in
-      read in
+      Expr.Helpers.internal_funapp
+        (FnReadParam
+           { constrain= out_trans
+           ; dims
+           ; mem_pattern= SizedType.get_mem_pattern cst })
+        [] emeta in
     let rec read_stmt (lval, cst, out_trans) =
       match cst with
       | SizedType.SArray _ when SizedType.contains_tuple cst ->
           let tupl, array_dims = SizedType.get_array_dims cst in
-          [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
-              (fun loopvars ->
-                Stmt.Fixed.
-                  { meta= smeta
-                  ; pattern=
-                      SList
-                        (read_stmt
-                           (let lbase, idxs = lval in
-                            ( ( lbase
-                              , idxs
-                                @ List.map
-                                    ~f:(fun e -> Index.Single e)
-                                    (List.rev loopvars) )
-                            , tupl
-                            , out_trans ))) })
-              smeta ]
+          ( [ Stmt.Helpers.mk_nested_for (List.rev array_dims)
+                (fun loopvars ->
+                  Stmt.Fixed.
+                    { meta= smeta
+                    ; pattern=
+                        SList
+                          (fst
+                             (read_stmt
+                                (let lbase, idxs = lval in
+                                 ( ( lbase
+                                   , idxs
+                                     @ List.map
+                                         ~f:(fun e -> Index.Single e)
+                                         (List.rev loopvars) )
+                                 , tupl
+                                 , out_trans )))) })
+                smeta ]
+          , None )
       | SizedType.STuple _ ->
           let subtys =
             Utils.(zip_stuple_trans_exn cst (tuple_trans_exn out_trans)) in
@@ -677,13 +682,17 @@ let param_deserializer_read
                 , st
                 , trans ))
               subtys in
-          List.concat_map ~f:read_stmt sub_sts
-      | _ ->
+          (List.concat_map ~f:(Fn.compose fst read_stmt) sub_sts, None)
+      | _ -> (
           let read = basic_read (cst, out_trans) in
-          [ Stmt.Fixed.
-              { pattern=
-                  Pattern.Assignment (lval, SizedType.to_unsized cst, read)
-              ; meta= smeta } ] in
+          ( [ Stmt.Fixed.
+                { pattern=
+                    Pattern.Assignment (lval, SizedType.to_unsized cst, read)
+                ; meta= smeta } ]
+          , (* if we're assigning to a top level variable, we can opt into to the declare-define *)
+            match lval with
+            | Stmt.Fixed.Pattern.LVariable _, [] -> Some read
+            | _ -> None )) in
     read_stmt (decl_id_lval, cst, out_trans)
 
 let escape_name str =
@@ -764,9 +773,14 @@ let add_reads vars mkread stmts =
   let var_names = String.Map.of_alist_exn vars in
   let add_read_to_decl (Stmt.Fixed.{pattern; _} as stmt) =
     match pattern with
-    | Decl {decl_id; _} when Map.mem var_names decl_id ->
+    | Decl ({decl_id; _} as decl_rec) when Map.mem var_names decl_id -> (
         let loc, out = Map.find_exn var_names decl_id in
-        stmt :: mkread (Stmt.Helpers.lvariable decl_id, loc, out)
+        let param_reader, op_assign =
+          mkread (Stmt.Helpers.lvariable decl_id, loc, out) in
+        match op_assign with
+        | Some e ->
+            [{stmt with pattern= Decl {decl_rec with initialize= Assign e}}]
+        | None -> stmt :: param_reader)
     | _ -> [stmt] in
   List.concat_map ~f:add_read_to_decl stmts
 
@@ -872,9 +886,9 @@ let var_context_unconstrain_transform (decl_id, smeta, outvar) =
                 (SizedType.to_unsized st)
           ; decl_id
           ; decl_type= Type.Sized st
-          ; initialize= true }
+          ; initialize= Default }
     ; meta= smeta }
-  :: var_context_read (Stmt.Helpers.lvariable decl_id, smeta, st)
+  :: var_context_read_internal (Stmt.Helpers.lvariable decl_id, smeta, st)
   @ param_serializer_write ~unconstrain:true (decl_id, outvar)
 
 (** Reads in parameters from a serializer and then writes out the unconstrained versions *)
@@ -888,7 +902,7 @@ let array_unconstrain_transform (decl_id, smeta, outvar) =
                   (SizedType.to_unsized outvar.Program.out_constrained_st)
             ; decl_id
             ; decl_type= Type.Sized outvar.Program.out_constrained_st
-            ; initialize= true }
+            ; initialize= Default }
       ; meta= smeta } in
   let rec read (lval, st) =
     match st with
@@ -1028,7 +1042,7 @@ let trans_prog (p : Program.Typed.t) =
         { decl_adtype= DataOnly
         ; decl_id= pos
         ; decl_type= Sized SInt
-        ; initialize= true }
+        ; initialize= Default }
     ; Assignment (Stmt.Helpers.lvariable pos, UInt, Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty}) in
@@ -1145,7 +1159,7 @@ let trans_prog (p : Program.Typed.t) =
                   { decl_adtype= DataOnly
                   ; decl_id= vident
                   ; decl_type= Type.Unsized type_of_input_var
-                  ; initialize= true }
+                  ; initialize= Default }
             ; meta= Location_span.empty }
         ; { pattern=
               Assignment

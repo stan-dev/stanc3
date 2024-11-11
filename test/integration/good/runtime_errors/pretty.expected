@@ -4,6 +4,7 @@ transformed data {
   matrix[2, 3] td_m23 = [[1, 2, 3, 4], [4, 5, 6, 8]];
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_fun.stan
 // compiles, should throw run-time error, mismatched sizes
 functions {
@@ -19,6 +20,7 @@ transformed data {
   real bar = foo(a1);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_gq.stan
 // compiles, should throw run-time error, mismatched sizes
 generated quantities {
@@ -26,6 +28,7 @@ generated quantities {
   matrix[2, 2] ident = [[1, 0], [0, 1]];
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_gq2.stan
 // compiles, should throw run-time error, mismatched sizes
 generated quantities {
@@ -34,6 +37,7 @@ generated quantities {
   z += ident;
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_lp_local.stan
 // compiles, should throw run-time error, mismatched sizes
 parameters {
@@ -44,6 +48,7 @@ model {
   x ~ normal(0, 5);
 }
 
+[exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format size_mismatch_tparam.stan
 // compiles, should throw run-time error, mismatched sizes
 transformed data {
@@ -53,3 +58,4 @@ transformed parameters {
   matrix[2, 3] tp_m23 = [[1, 2, 3, 4], [4, 5, 6, 8]];
 }
 
+[exit 0]

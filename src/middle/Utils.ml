@@ -58,16 +58,6 @@ let%expect_test "unnormalized name mangling" =
   stdlib_distribution_name "normal" |> ( ^ ) "; " |> print_string;
   [%expect {| bernoulli_logit_lpmf; normal_lpdf; normal_lpdf; normal |}]
 
-let all_but_last_n l n =
-  List.fold_right l ~init:([], n) ~f:(fun ele (accum, n) ->
-      if n = 0 then (ele :: accum, n) else (accum, n - 1))
-  |> fst
-
-let%expect_test "all but last n" =
-  let l = all_but_last_n [1; 2; 3; 4] 2 in
-  print_s [%sexp (l : int list)];
-  [%expect {| (1 2) |}]
-
 (* Utilities for using Tuples and Transformations together *)
 let tuple_trans_exn = function
   | Transformation.TupleTransformation transforms -> transforms

@@ -59,6 +59,11 @@ let in_lp_function cf =
   | NonReturning FnTarget | Returning (FnTarget, _) -> true
   | _ -> false
 
+let in_jacobian_function cf =
+  match cf.containing_function with
+  | NonReturning FnJacobian | Returning (FnJacobian, _) -> true
+  | _ -> false
+
 let in_udf_distribution cf =
   match cf.containing_function with
   | NonReturning (FnLpdf ()) | Returning (FnLpdf (), _) -> true
@@ -103,18 +108,16 @@ let reserved_keywords =
   ; "false"; "typedef"; "struct"; "var"; "export"; "extern"; "static"; "auto" ]
 
 let verify_identifier id : unit =
+  if id.name = "jacobian" then
+    add_warning id.id_loc
+      "Variable name 'jacobian' will be a reserved word starting in Stan 2.38. \
+       Please rename it!";
   if id.name = !model_name then
-    Semantic_error.ident_is_model_name id.id_loc id.name |> error
-  else if
+    Semantic_error.ident_is_model_name id.id_loc id.name |> error;
+  if
     String.is_suffix id.name ~suffix:"__"
     || List.mem reserved_keywords id.name ~equal:String.equal
   then Semantic_error.ident_is_keyword id.id_loc id.name |> error
-
-let distribution_name_variants name =
-  match Utils.split_distribution_suffix name with
-  | Some (stem, "lpmf") -> [name; stem ^ "_lpdf"]
-  | Some (stem, "lpdf") -> [name; stem ^ "_lpmf"]
-  | _ -> [name]
 
 (** verify that the variable being declared is previous unused.
    allowed to shadow StanLib *)
@@ -151,10 +154,8 @@ let verify_name_fresh_udf loc tenv name =
   - is not already in use (for now)
 *)
 let verify_name_fresh tenv id ~is_udf =
-  let f =
-    if is_udf then verify_name_fresh_udf id.id_loc tenv
-    else verify_name_fresh_var id.id_loc tenv in
-  List.iter ~f (distribution_name_variants id.name)
+  if is_udf then verify_name_fresh_udf id.id_loc tenv id.name
+  else verify_name_fresh_var id.id_loc tenv id.name
 
 let is_of_compatible_return_type rt1 srt2 =
   UnsizedType.(
@@ -436,12 +437,21 @@ let verify_fn_conditioning loc id =
     with right suffix (same for tilde etc)
 *)
 let verify_fn_target_plus_equals cf loc id =
+  if String.is_suffix id.name ~suffix:"_lp" then
+    if cf.current_block = TParam then
+      add_warning loc
+        "Using _lp functions in transformed parameters is deprecated and will \
+         be disallowed in Stan 2.39. Use an _jacobian function instead, as \
+         this allows change of variable adjustments which are conditionally \
+         enabled by the algorithms."
+    else if in_lp_function cf || cf.current_block = Model then ()
+    else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
+
+let verify_fn_jacobian_plus_equals cf loc id =
   if
-    String.is_suffix id.name ~suffix:"_lp"
-    && not
-         (in_lp_function cf || cf.current_block = Model
-        || cf.current_block = TParam)
-  then Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
+    String.is_suffix id.name ~suffix:"_jacobian"
+    && not (in_jacobian_function cf || cf.current_block = TParam)
+  then Semantic_error.jacobian_plusequals_not_allowed loc |> error
 
 (** Rng functions cannot be used in Tp or Model and only
     in function defs with the right suffix
@@ -495,10 +505,10 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
           let is_known_family s =
             List.mem known_families s ~equal:String.equal in
           match suffix with
-          | ("lpmf" | "lumpf") when Env.mem tenv (prefix ^ "_lpdf") ->
+          | ("lpmf" | "lupmf") when Env.mem tenv (prefix ^ "_lpdf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
                 (prefix, suffix)
-          | ("lpdf" | "lumdf") when Env.mem tenv (prefix ^ "_lpmf") ->
+          | ("lpdf" | "lupdf") when Env.mem tenv (prefix ^ "_lpmf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
                 (prefix, suffix)
           | _ ->
@@ -693,6 +703,7 @@ and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   verify_identifier id;
   name_check loc id;
   verify_fn_target_plus_equals cf loc id;
+  verify_fn_jacobian_plus_equals cf loc id;
   verify_fn_rng cf loc id;
   verify_unnormalized cf loc id;
   res
@@ -948,6 +959,32 @@ let check_nr_fn_app loc cf tenv id es =
   verify_nrfn_target loc cf id;
   check_nrfn loc tenv id tes
 
+(* target plus-equals / jacobian plus-equals *)
+
+let verify_target_pe_expr_type loc e =
+  if UnsizedType.is_fun_type e.emeta.type_ then
+    Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
+
+let verify_target_pe_usage loc cf =
+  if in_lp_function cf || cf.current_block = Model then ()
+  else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
+
+let check_target_pe loc cf tenv e =
+  let te = check_expression cf tenv e in
+  verify_target_pe_usage loc cf;
+  verify_target_pe_expr_type loc te;
+  mk_typed_statement ~stmt:(TargetPE te) ~return_type:Incomplete ~loc
+
+let verify_jacobian_pe_usage loc cf =
+  if in_jacobian_function cf || cf.current_block = TParam then ()
+  else Semantic_error.jacobian_plusequals_not_allowed loc |> error
+
+let check_jacobian_pe loc cf tenv e =
+  let te = check_expression cf tenv e in
+  verify_jacobian_pe_usage loc cf;
+  verify_target_pe_expr_type loc te;
+  mk_typed_statement ~stmt:(JacobianPE te) ~return_type:Incomplete ~loc
+
 (* assignments *)
 let verify_assignment_read_only loc is_readonly id =
   if is_readonly then
@@ -1197,66 +1234,59 @@ let rec check_lvalues cf tenv = function
       LTuplePack {lvals; loc}
 
 let check_assignment loc cf tenv assign_lhs assign_op assign_rhs =
-  let lhs = check_lvalues cf tenv assign_lhs in
-  verify_lvalue_unique lhs;
-  let rhs = check_expression cf tenv assign_rhs in
-  let rhs' = check_assignment_operator loc assign_op lhs rhs in
-  mk_typed_statement ~return_type:Incomplete ~loc
-    ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
+  (* TODO(2.38): Remove this workaround *)
+  match (assign_lhs, assign_op, Env.find tenv "jacobian") with
+  | LValue {lval= LVariable {name= "jacobian"; _}; _}, OperatorAssign Plus, []
+    ->
+      (* if jacobian is not a user-defined variable, and we find a statement like "jacobian +=",
+         we can assume it is the new statement
+      *)
+      check_jacobian_pe loc cf tenv assign_rhs
+  | _ ->
+      let lhs = check_lvalues cf tenv assign_lhs in
+      verify_lvalue_unique lhs;
+      let rhs = check_expression cf tenv assign_rhs in
+      let rhs' = check_assignment_operator loc assign_op lhs rhs in
+      mk_typed_statement ~return_type:Incomplete ~loc
+        ~stmt:(Assignment {assign_lhs= lhs; assign_op; assign_rhs= rhs'})
 
-(* target plus-equals / increment log-prob *)
-
-let verify_target_pe_expr_type loc e =
-  if UnsizedType.is_fun_type e.emeta.type_ then
-    Semantic_error.int_or_real_container_expected loc e.emeta.type_ |> error
-
-let verify_target_pe_usage loc cf =
-  if in_lp_function cf || cf.current_block = Model then ()
-  else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
-
-let check_target_pe loc cf tenv e =
-  let te = check_expression cf tenv e in
-  verify_target_pe_usage loc cf;
-  verify_target_pe_expr_type loc te;
-  mk_typed_statement ~stmt:(TargetPE te) ~return_type:Incomplete ~loc
-
-(* tilde/sampling notation*)
-let verify_sampling_pdf_pmf id =
+(* tilde/distribution notation*)
+let verify_distribution_pdf_pmf id =
   if
     String.(
       is_suffix id.name ~suffix:"_lpdf"
       || is_suffix id.name ~suffix:"_lpmf"
       || is_suffix id.name ~suffix:"_lupdf"
       || is_suffix id.name ~suffix:"_lupmf")
-  then Semantic_error.invalid_sampling_pdf_or_pmf id.id_loc |> error
+  then Semantic_error.invalid_tilde_pdf_or_pmf id.id_loc |> error
 
-let verify_sampling_cdf_ccdf loc id =
+let verify_distribution_cdf_ccdf loc id =
   if
     String.(
       is_suffix id.name ~suffix:"_cdf" || is_suffix id.name ~suffix:"_ccdf")
-  then Semantic_error.invalid_sampling_cdf_or_ccdf loc id.name |> error
+  then Semantic_error.invalid_tilde_cdf_or_ccdf loc id.name |> error
 
 (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
-let verify_valid_sampling_pos loc cf =
+let verify_valid_distribution_pos loc cf =
   if in_lp_function cf || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
-let check_sampling_distribution loc tenv id arguments =
+let check_tilde_distribution loc tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
-  let name_w_suffix_sampling_dist suffix =
+  let name_w_suffix_dist suffix =
     SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
-  let sampling_dists =
-    List.map ~f:name_w_suffix_sampling_dist Utils.distribution_suffices in
+  let distributions =
+    List.map ~f:name_w_suffix_dist Utils.distribution_suffices in
   match
-    List.min_elt sampling_dists ~compare:SignatureMismatch.compare_match_results
+    List.min_elt distributions ~compare:SignatureMismatch.compare_match_results
   with
   | Some (UniqueMatch (_, _, p)) ->
       Promotion.promote_list arguments p
       (* real return type is enforced by [verify_fundef_dist_rt] *)
   | None | Some (SignatureErrors ([], _)) ->
       (* Function is non existent *)
-      Semantic_error.invalid_sampling_no_such_dist loc name
+      Semantic_error.invalid_tilde_no_such_dist loc name
         (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
       |> error
   | Some (AmbiguousMatch sigs) ->
@@ -1281,7 +1311,7 @@ let is_cumulative_density_defined tenv id arguments =
     | _ -> false in
   valid_arg_types_for_suffix "_lcdf" && valid_arg_types_for_suffix "_lccdf"
 
-let verify_sampling_cdf_defined loc tenv id truncation args =
+let verify_distribution_cdf_defined loc tenv id truncation args =
   let check e =
     if not (is_cumulative_density_defined tenv id (e :: args)) then
       Semantic_error.invalid_truncation_cdf_or_ccdf loc
@@ -1308,13 +1338,13 @@ let check_tilde loc cf tenv distribution truncation arg args =
   let tes = List.map ~f:(check_expression cf tenv) args in
   let ttrunc = check_truncation cf tenv truncation in
   verify_identifier distribution;
-  verify_sampling_pdf_pmf distribution;
-  verify_valid_sampling_pos loc cf;
-  verify_sampling_cdf_ccdf loc distribution;
+  verify_distribution_pdf_pmf distribution;
+  verify_valid_distribution_pos loc cf;
+  verify_distribution_cdf_ccdf loc distribution;
   let promoted_args =
-    check_sampling_distribution loc tenv distribution (te :: tes) in
+    check_tilde_distribution loc tenv distribution (te :: tes) in
   let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
-  verify_sampling_cdf_defined loc tenv distribution ttrunc tes;
+  verify_distribution_cdf_defined loc tenv distribution ttrunc tes;
   let stmt = Tilde {arg= te; distribution; args= tes; truncation= ttrunc} in
   mk_typed_statement ~stmt ~loc ~return_type:Incomplete
 
@@ -1609,10 +1639,13 @@ and check_transformation cf tenv ut trans =
   | PositiveOrdered -> PositiveOrdered
   | Simplex -> Simplex
   | UnitVector -> UnitVector
+  | SumToZero -> SumToZero
   | CholeskyCorr -> CholeskyCorr
   | CholeskyCov -> CholeskyCov
   | Correlation -> Correlation
   | Covariance -> Covariance
+  | StochasticColumn -> StochasticColumn
+  | StochasticRow -> StochasticRow
   | TupleTransformation tms ->
       let typesTrans = Utils.zip_utuple_trans_exn ut tms in
       let tes =
@@ -1651,9 +1684,7 @@ and check_var_decl loc cf tenv sized_ty trans
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
-  let options =
-    List.concat_map ~f:(Env.find tenv) (distribution_name_variants id.name)
-  in
+  let options = Env.find tenv id.name in
   let f = function
     | Env.{kind= `UserDeclared _; type_= UFun (listedtypes, rt', _, _)}
       when arg_tys = listedtypes && rt = rt' ->
@@ -1662,9 +1693,7 @@ and exists_matching_fn_declared tenv id arg_tys rt =
   List.exists ~f options
 
 and verify_unique_signature tenv loc id arg_tys rt =
-  let existing =
-    List.concat_map ~f:(Env.find tenv) (distribution_name_variants id.name)
-  in
+  let existing = Env.find tenv id.name in
   let same_args = function
     | Env.{type_= UFun (listedtypes, _, _, _); _}
       when List.map ~f:snd arg_tys = List.map ~f:snd listedtypes ->
@@ -1789,6 +1818,7 @@ and check_fundef loc cf tenv return_ty id args body =
       if is_udf_dist id.name then Fun_kind.FnLpdf ()
       else if String.is_suffix id.name ~suffix:"_rng" then FnRng
       else if String.is_suffix id.name ~suffix:"_lp" then FnTarget
+      else if String.is_suffix id.name ~suffix:"_jacobian" then FnJacobian
       else FnPlain in
     { cf with
       containing_function=
@@ -1812,6 +1842,7 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
   | Assignment {assign_lhs; assign_op; assign_rhs} ->
       (tenv, check_assignment loc cf tenv assign_lhs assign_op assign_rhs)
   | TargetPE e -> (tenv, check_target_pe loc cf tenv e)
+  | JacobianPE e -> (tenv, check_jacobian_pe loc cf tenv e)
   | Tilde {arg; distribution; args; truncation} ->
       (tenv, check_tilde loc cf tenv distribution truncation arg args)
   | Break -> (tenv, check_break loc cf)

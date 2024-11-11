@@ -27,6 +27,7 @@ let constraint_to_string = function
   | PositiveOrdered -> Some "positive_ordered"
   | Simplex -> Some "simplex"
   | UnitVector -> Some "unit_vector"
+  | SumToZero -> Some "sum_to_zero"
   | CholeskyCorr -> Some "cholesky_factor_corr"
   | CholeskyCov -> Some "cholesky_factor_cov"
   | Correlation -> Some "corr_matrix"
@@ -35,6 +36,8 @@ let constraint_to_string = function
   | Upper _ -> Some "ub"
   | LowerUpper _ -> Some "lub"
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
+  | StochasticRow -> Some "stochastic_row"
+  | StochasticColumn -> Some "stochastic_column"
   | Identity -> None
   | TupleTransformation _ ->
       Common.ICE.internal_compiler_error
@@ -102,7 +105,7 @@ let promote_adtype =
 
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
-  | FnTarget -> ["lp__"; "lp_accum__"]
+  | FnTarget | FnJacobian -> ["lp__"; "lp_accum__"]
   | FnPlain | FnLpdf _ -> []
 
 let rec stantype_prim = function
@@ -115,6 +118,7 @@ let templates udf suffix =
   | Fun_kind.FnLpdf true -> [TemplateType "propto__"]
   | FnLpdf false -> [TemplateType "false"]
   | FnTarget when udf -> [TemplateType "propto__"]
+  | FnJacobian when udf -> [TemplateType "jacobian__"]
   | _ -> []
 
 let deserializer = Var "in__"

@@ -376,6 +376,7 @@ Warning: The parameter chol_cov has no priors. This means either no prior is
 Warning: The parameter chol_corr has no priors. This means either no prior is
     provided, or the prior(s) depend on data variables. In the later case,
     this may be a false positive.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  distribution_bounds.stan
 Warning in 'distribution_bounds.stan', line 10, column 2: Parameter c is
     given a lognormal distribution, which has strictly positive support, but
@@ -383,6 +384,7 @@ Warning in 'distribution_bounds.stan', line 10, column 2: Parameter c is
 Warning in 'distribution_bounds.stan', line 8, column 2: Parameter a is given
     a gamma distribution, which has strictly positive support, but a was not
     constrained to be strictly positive.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  function-param-control-flow.stan
 Warning in 'function-param-control-flow.stan', line 3, column 4: A control
     flow statement inside function func depends on argument b. At
@@ -391,6 +393,7 @@ Warning in 'function-param-control-flow.stan', line 3, column 4: A control
 Warning: The parameter sigma has no priors. This means either no prior is
     provided, or the prior(s) depend on data variables. In the later case,
     this may be a false positive.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  gamma-args.stan
 Warning in 'gamma-args.stan', line 11, column 21: A inv_gamma distribution is
     given parameter b as a scale parameter (argument 2), but b was not
@@ -418,6 +421,7 @@ Warning in 'gamma-args.stan', line 8, column 2: The parameter a is on the
     left-hand side of more than one tilde statement.
 Warning: The parameter b has 2 priors.
 Warning: The parameter a has 4 priors.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  hard-constraint.stan
 Warning: Your Stan program has a parameter d with a lower and upper bound in
     its declaration. These hard constraints are not recommended, for two
@@ -455,68 +459,100 @@ Warning: Parameter f has constraints that don't make sense. The lower bound
     should be strictly less than the upper bound.
 Warning: Parameter e has constraints that don't make sense. The lower bound
     should be strictly less than the upper bound.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_false_alarm.stan
 Warning: The parameter z has 7 priors.
 Warning: The parameter y has 9 priors.
 Warning: The parameter v has 8 priors.
 Warning: The parameter m has 12 priors.
 Warning: The parameter a has 2 priors.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning1.stan
 Warning in 'jacobian_warning1.stan', line 7, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
 Warning in 'jacobian_warning1.stan', line 5, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
 Warning: The parameter y has 2 priors.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning2.stan
 Warning in 'jacobian_warning2.stan', line 5, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning3.stan
 Warning in 'jacobian_warning3.stan', line 5, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning4.stan
 Warning in 'jacobian_warning4.stan', line 5, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning5.stan
 Warning in 'jacobian_warning5.stan', line 5, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning6.stan
 Warning in 'jacobian_warning6.stan', line 5, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning7.stan
 Warning in 'jacobian_warning7.stan', line 6, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
 Warning in 'jacobian_warning7.stan', line 5, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
 Warning: The parameter y has 2 priors.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  jacobian_warning_user.stan
 Warning in 'jacobian_warning_user.stan', line 5, column 2: Left-hand side of
-    sampling statement (~) may contain a non-linear transform of a parameter
-    or local variable. If it does, you need to include a target += statement
-    with the log absolute determinant of the Jacobian of the transform.
+    distribution statement (~) may contain a non-linear transform of a
+    parameter or local variable. If it does, you need to include a target +=
+    statement with the log absolute determinant of the Jacobian of the
+    transform. You could also consider defining a transformed parameter and
+    using jacobian += in the transformed parameters block.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  lp_fun.stan
 Warning: The parameter y has 2 priors.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  missing-prior-false-alarm.stan
 Warning: The parameter theta has no priors. This means either no prior is
     provided, or the prior(s) depend on data variables. In the later case,
     this may be a false positive.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  missing_priors.stan
 Warning: The parameter tau has no priors. This means either no prior is
     provided, or the prior(s) depend on data variables. In the later case,
@@ -524,11 +560,13 @@ Warning: The parameter tau has no priors. This means either no prior is
 Warning: The parameter mu has no priors. This means either no prior is
     provided, or the prior(s) depend on data variables. In the later case,
     this may be a false positive.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  multi-tilde.stan
 Warning in 'multi-tilde.stan', line 6, column 2: The parameter x is on the
     left-hand side of more than one tilde statement.
 Warning: The parameter y has 2 priors.
 Warning: The parameter x has 2 priors.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  non-one-priors.stan
 Warning in 'non-one-priors.stan', line 16, column 16: A normal distribution
     is given parameter d as a scale parameter (argument 2), but d was not
@@ -536,6 +574,7 @@ Warning in 'non-one-priors.stan', line 16, column 16: A normal distribution
 Warning in 'non-one-priors.stan', line 14, column 16: A normal distribution
     is given parameter b as a scale parameter (argument 2), but b was not
     constrained to be strictly positive.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  non-one-priors2.stan
 Warning in 'non-one-priors2.stan', line 21, column 2: The parameter f is on
     the left-hand side of more than one tilde statement.
@@ -553,6 +592,7 @@ Warning: The parameter c has no priors. This means either no prior is
     this may be a false positive.
 Warning: The parameter b has 2 priors.
 Warning: The parameter a has 3 priors.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  param-depend-control.stan
 Warning in 'param-depend-control.stan', line 16, column 2: A control flow
     statement depends on parameter(s): a.
@@ -560,6 +600,7 @@ Warning in 'param-depend-control.stan', line 13, column 2: A control flow
     statement depends on parameter(s): a.
 Warning in 'param-depend-control.stan', line 8, column 2: A control flow
     statement depends on parameter(s): a.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unbounded-sigma.stan
 Warning in 'unbounded-sigma.stan', line 12, column 17: A normal distribution
     is given parameter sigma_c as a scale parameter (argument 2), but sigma_c
@@ -580,6 +621,7 @@ Warning: Your Stan program has a parameter sigma_e with a lower and upper
     between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5)
     prior distribution.
 Warning: The parameter x has 6 priors.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  uniform.stan
 Warning in 'uniform.stan', line 12, column 2: Parameter d is given a uniform
     distribution. The uniform distribution is not recommended, for two
@@ -609,6 +651,7 @@ Warning in 'uniform.stan', line 8, column 2: Parameter a is given a uniform
     for example, instead of giving an elasticity parameter a uniform(0,1)
     distribution, try normal(0.5,0.5).
 Warning: The parameter a has 2 priors.
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unscaled.stan
 Warning in 'unscaled.stan', line 10, column 20: Argument 10000 suggests there
     may be parameters that are not unit scale; consider rescaling with a
@@ -616,6 +659,7 @@ Warning in 'unscaled.stan', line 10, column 20: Argument 10000 suggests there
 Warning in 'unscaled.stan', line 10, column 13: Argument 0.001 suggests there
     may be parameters that are not unit scale; consider rescaling with a
     multiplier (see manual section 22.12).
+[exit 0]
   $ ../../../../../install/default/bin/stanc --warn-pedantic  unused-param.stan
 Warning: The parameter e was declared but was not used in the density
     calculation.
@@ -624,3 +668,4 @@ Warning: The parameter d was declared but was not used in the density
 Warning: The parameter c was declared but was not used in the density
     calculation.
 Warning: The parameter b has 2 priors.
+[exit 0]

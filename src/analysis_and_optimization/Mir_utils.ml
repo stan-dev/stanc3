@@ -51,12 +51,13 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values =
   | Upper upper -> {lower= `None; upper= bound_value upper}
   | LowerUpper (lower, upper) ->
       {lower= bound_value lower; upper= bound_value upper}
-  | Simplex -> {lower= `Lit 0.; upper= `Lit 1.}
+  | Simplex | StochasticColumn | StochasticRow ->
+      {lower= `Lit 0.; upper= `Lit 1.}
   | PositiveOrdered -> {lower= `Lit 0.; upper= `None}
   | UnitVector -> {lower= `Lit (-1.); upper= `Lit 1.}
   | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered | Offset _
-   |Multiplier _ | OffsetMultiplier _
-   |Identity
+   |Multiplier _ | OffsetMultiplier _ | Identity
+   |SumToZero
     (* This is a stub, but,
        until we define a distribution which accepts a tuple,
        this doesn't matter.
@@ -217,6 +218,7 @@ let fwd_traverse_statement stmt ~init ~f =
         (s', SList (List.rev ls))
     | Assignment _ as s -> (init, s)
     | TargetPE _ as s -> (init, s)
+    | JacobianPE _ as s -> (init, s)
     | NRFunApp _ as s -> (init, s)
     | Break as s -> (init, s)
     | Continue as s -> (init, s)
@@ -268,6 +270,7 @@ let stmt_rhs stmt =
    |While (rhs, _)
    |Assignment (_, _, rhs)
    |TargetPE rhs
+   |JacobianPE rhs
    |Return (Some rhs) ->
       Set.Poly.singleton rhs
   | Return None

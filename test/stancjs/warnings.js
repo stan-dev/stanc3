@@ -11,7 +11,7 @@ model {
 }
 `
 var deprecated_test = stanc.stanc("deprecated", deprecated_model);
-console.log(JSON.stringify(deprecated_test.warnings))
+utils.print_warnings(deprecated_test)
 
 var test_no_stderr_model = `
 transformed data {
@@ -45,7 +45,7 @@ generated quantities {
 }
 `
 var typechecker_test = stanc.stanc("deprecated", tc_warn);
-console.log(JSON.stringify(typechecker_test.warnings))
+utils.print_warnings(typechecker_test)
 
 var tc_no_warn = `
 parameters {

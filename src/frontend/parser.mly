@@ -83,8 +83,10 @@ let nest_unsized_array basic_type n =
        ROWVECTOR "row_vector" ARRAY "array" TUPLE "tuple" MATRIX "matrix" ORDERED "ordered"
        COMPLEXVECTOR "complex_vector" COMPLEXROWVECTOR "complex_row_vector"
        POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
-       CHOLESKYFACTORCORR "cholesky_factor_corr" CHOLESKYFACTORCOV "cholesky_factor_cov"
-       CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix" COMPLEXMATRIX "complex_matrix"
+       SUMTOZERO "sum_to_zero_vector" CHOLESKYFACTORCORR "cholesky_factor_corr"
+       CHOLESKYFACTORCOV "cholesky_factor_cov" CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix"
+       COMPLEXMATRIX "complex_matrix" STOCHASTICCOLUMNMATRIX "column_stochastic_matrix"
+       STOCHASTICROWMATRIX "row_stochastic_matrix"
 %token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
 %token JACOBIAN "jacobian"
 %token <string> INTNUMERAL "24"
@@ -213,15 +215,8 @@ generated_quantities_block:
 identifier:
   | id=IDENTIFIER { build_id id $loc }
   | TRUNCATE { build_id "T" $loc}
-  | id_and_v = future_keyword
-    {
-      let id, v = id_and_v in
-      Input_warnings.future_keyword id.name v $loc;
-      id
-    }
-
-future_keyword:
-  | JACOBIAN { build_id "jacobian" $loc, "2.38.0" }
+(* TODO(2.38) remove *)
+  | JACOBIAN { build_id "jacobian" $loc }
 
 decl_identifier:
   | id=identifier { id }
@@ -260,10 +255,13 @@ reserved_word:
   | POSITIVEORDERED { "positive_ordered", $loc, true }
   | SIMPLEX { "simplex", $loc, true }
   | UNITVECTOR { "unit_vector", $loc, true }
+  | SUMTOZERO  { "sum_to_zero_vector", $loc, true }
   | CHOLESKYFACTORCORR { "cholesky_factor_corr", $loc, true }
   | CHOLESKYFACTORCOV { "cholesky_factor_cov", $loc, true }
   | CORRMATRIX { "corr_matrix", $loc, true }
   | COVMATRIX { "cov_matrix", $loc, true  }
+  | STOCHASTICCOLUMNMATRIX { "column_stochastic_matrix", $loc, true }
+  | STOCHASTICROWMATRIX { "row_stochastic_matrix", $loc, true }
   | PRINT { "print", $loc, false }
   | REJECT { "reject", $loc, false }
   | FATAL_ERROR { "fatal_error", $loc, false }
@@ -524,6 +522,8 @@ top_var_type:
     { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex) }
   | UNITVECTOR LBRACK e=expression RBRACK
     { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector) }
+  | SUMTOZERO LBRACK e=expression RBRACK
+    { grammar_logger "SUMTOZERO_top_var_type" ; (SVector (AoS, e), SumToZero) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
@@ -540,6 +540,10 @@ top_var_type:
     { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
     { grammar_logger "COVMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e, e), Transformation.Covariance) }
+  | STOCHASTICCOLUMNMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "STOCHASTICCOLUMNMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Transformation.StochasticColumn) }
+  | STOCHASTICROWMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "STOCHASTICROWMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Transformation.StochasticRow) }
 
 type_constraint:
   | r=range_constraint
@@ -773,6 +777,10 @@ atomic_statement:
     }
   | TARGET PLUSASSIGN e=expression SEMICOLON
     {   grammar_logger "targetpe_statement" ; TargetPE e }
+  (* TODO(2.38) use this instead of current workaround in typechecker.ml
+  | JACOBIAN PLUSASSIGN e=expression SEMICOLON
+    {   grammar_logger "jacobianpe_statement" ; JacobianPE e }
+  *)
   | BREAK SEMICOLON
     {  grammar_logger "break_statement" ; Break }
   | CONTINUE SEMICOLON
