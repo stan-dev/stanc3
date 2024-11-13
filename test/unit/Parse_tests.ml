@@ -406,7 +406,7 @@ let%expect_test "parse crazy truncation example" =
              (smeta ((loc <opaque>))))
             ((stmt
               (Tilde (arg ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
-               (distribution ((name normal) (id_loc <opaque>)))
+               (distribution ((name normal) (id_loc <opaque>))) (kind ())
                (args
                 (((expr (IntNumeral 0)) (emeta ((loc <opaque>))))
                  ((expr (IntNumeral 1)) (emeta ((loc <opaque>))))))
