@@ -536,7 +536,12 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         match kind with
         | UserDefined (FnLpdf _) | StanLib (FnLpdf _) -> "_lpdf"
         | UserDefined (FnLpmf _) | StanLib (FnLpmf _) -> "_lpmf"
-        | _ -> "" in
+        | _ ->
+            Common.ICE.internal_compiler_error
+              [%message
+                "Impossible: tilde with non-distribution after typechecking"
+                  (distribution : Ast.identifier)
+                  (kind : Ast.fun_kind)] in
       let name = distribution.name ^ sfx in
       let add_dist =
         let adlevel =
