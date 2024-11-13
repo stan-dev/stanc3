@@ -531,17 +531,13 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       NRFunApp (trans_fn_kind fn_kind name, trans_exprs args) |> swrap
   | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.JacobianPE e -> JacobianPE (trans_expr e) |> swrap
-  | Ast.Tilde {arg; distribution; args; truncation} ->
-      let suffix =
-        Stan_math_signatures.dist_name_suffix ud_dists distribution.name in
-      let name = distribution.name ^ suffix in
-      let kind =
-        let possible_names =
-          List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
-          |> String.Set.of_list in
-        if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists then
-          Fun_kind.UserDefined (name, FnLpdf true)
-        else StanLib (name, FnLpdf true, AoS) in
+  | Ast.Tilde {arg; distribution; args; truncation; kind} ->
+      let sfx =
+        match kind with
+        | UserDefined (FnLpdf _) | StanLib (FnLpdf _) -> "_lpdf"
+        | UserDefined (FnLpmf _) | StanLib (FnLpmf _) -> "_lpmf"
+        | _ -> "" in
+      let name = distribution.name ^ sfx in
       let add_dist =
         let adlevel =
           if
@@ -551,7 +547,8 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           else DataOnly in
         Stmt.Fixed.Pattern.TargetPE
           Expr.
-            { Fixed.pattern= FunApp (kind, trans_exprs (arg :: args))
+            { Fixed.pattern=
+                FunApp (trans_fn_kind kind name, trans_exprs (arg :: args))
             ; meta= Typed.Meta.create ~type_:UReal ~loc:mloc ~adlevel () } in
       swrap add_dist @ truncate_dist ud_dists distribution arg args truncation
   | Ast.Print ps ->

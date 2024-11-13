@@ -272,6 +272,11 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
                 , Fun_kind.with_unnormalized_suffix fname
                   |> Option.value ~default:fname )
             | FnLpdf _ -> (Fun_kind.FnLpdf false, fname)
+            | FnLpmf propto' when propto' && propto ->
+                ( Fun_kind.FnLpmf true
+                , Fun_kind.with_unnormalized_suffix fname
+                  |> Option.value ~default:fname )
+            | FnLpmf _ -> (FnLpmf false, fname)
             | _ -> (suffix, fname) in
           match Map.find fim fname' with
           | None ->
