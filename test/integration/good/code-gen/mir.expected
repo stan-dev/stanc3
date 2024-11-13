@@ -172,7 +172,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpdf ()))
+   ((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpmf ()))
     (fdargs ((AutoDiffable y UInt) (AutoDiffable lambda UReal)))
     (fdbody
      (((pattern

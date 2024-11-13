@@ -28553,7 +28553,7 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
           lp__);
       {
         current_statement__ = 2;
-        lp_accum__.add(bernoulli_lpmf<propto__>(y, theta, pstream__));
+        lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(y, theta));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -28591,7 +28591,7 @@ class overload_tilde_stanlib_model final : public model_base_crtp<overload_tilde
           lp__);
       {
         current_statement__ = 2;
-        lp_accum__.add(bernoulli_lpmf<propto__>(y, theta, pstream__));
+        lp_accum__.add(stan::math::bernoulli_lpmf<propto__>(y, theta));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -29018,7 +29018,7 @@ class overload_tilde_udfs_model final : public model_base_crtp<overload_tilde_ud
         current_statement__ = 3;
         lp_accum__.add(distribution_lpdf<false>(y, mu, sigma, pstream__));
         current_statement__ = 4;
-        lp_accum__.add(distribution_lpmf<propto__>(y, mu, sigma, pstream__));
+        lp_accum__.add(distribution_lpdf<propto__>(y, mu, sigma, pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -29060,7 +29060,7 @@ class overload_tilde_udfs_model final : public model_base_crtp<overload_tilde_ud
         current_statement__ = 3;
         lp_accum__.add(distribution_lpdf<false>(y, mu, sigma, pstream__));
         current_statement__ = 4;
-        lp_accum__.add(distribution_lpmf<propto__>(y, mu, sigma, pstream__));
+        lp_accum__.add(distribution_lpdf<propto__>(y, mu, sigma, pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

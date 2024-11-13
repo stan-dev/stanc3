@@ -335,7 +335,7 @@ where F1 = (vector, vector, array[] real, array[] int) => real
 Available signatures:
 (<F2>, vector) => vector
 where F2 = (vector) => vector
-  The first argument must be a pure function but got a probability density or mass function. These function types are not compatible.
+  The first argument must be a pure function but got a probability density function. These function types are not compatible.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_solve_newton_tol_arguments_number.stan
 Semantic error in 'bad_solve_newton_tol_arguments_number.stan', line 34, column 10 to line 35, column 50:
