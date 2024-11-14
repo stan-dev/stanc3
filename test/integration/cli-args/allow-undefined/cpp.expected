@@ -345,3 +345,4 @@ STAN_REGISTER_MAP_RECT(1, external_model_namespace::external_map_rectable_functo
 Warning in 'external.stan', line 7, column 7: Functions do not need to be
     declared before definition; all user defined function names are always in
     scope regardless of definition order.
+[exit 0]

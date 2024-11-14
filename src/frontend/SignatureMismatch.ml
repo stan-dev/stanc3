@@ -297,7 +297,10 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
       let wrap_func_error x =
         TypeMismatch (minimal_func_type, func_type, Some x) |> wrap_err in
       let suffix = Fun_kind.without_propto suffix in
-      if suffix = FnPlain || (allow_lpdf && suffix = FnLpdf ()) then
+      if
+        suffix = FnPlain
+        || (allow_lpdf && (suffix = FnLpdf () || suffix = FnLpmf ()))
+      then
         match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
         | Error x -> wrap_func_error (InputMismatch x)
         | Ok _ -> (
@@ -323,7 +326,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let suffix_str = function
     | Fun_kind.FnPlain -> "a pure function"
     | FnRng -> "an rng function"
-    | FnLpdf () -> "a probability density or mass function"
+    | FnLpdf () -> "a probability density function"
+    | FnLpmf () -> "a probability mass function"
     | FnTarget -> "an _lp function"
     | FnJacobian -> "a _jacobian function" in
   let index_str = function

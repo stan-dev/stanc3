@@ -66,7 +66,11 @@ let in_jacobian_function cf =
 
 let in_udf_distribution cf =
   match cf.containing_function with
-  | NonReturning (FnLpdf ()) | Returning (FnLpdf (), _) -> true
+  | NonReturning (FnLpdf ())
+   |Returning (FnLpdf (), _)
+   |NonReturning (FnLpmf ())
+   |Returning (FnLpmf (), _) ->
+      true
   | _ -> false
 
 let context block =
@@ -113,17 +117,11 @@ let verify_identifier id : unit =
       "Variable name 'jacobian' will be a reserved word starting in Stan 2.38. \
        Please rename it!";
   if id.name = !model_name then
-    Semantic_error.ident_is_model_name id.id_loc id.name |> error
-  else if
+    Semantic_error.ident_is_model_name id.id_loc id.name |> error;
+  if
     String.is_suffix id.name ~suffix:"__"
     || List.mem reserved_keywords id.name ~equal:String.equal
   then Semantic_error.ident_is_keyword id.id_loc id.name |> error
-
-let distribution_name_variants name =
-  match Utils.split_distribution_suffix name with
-  | Some (stem, "lpmf") -> [name; stem ^ "_lpdf"]
-  | Some (stem, "lpdf") -> [name; stem ^ "_lpmf"]
-  | _ -> [name]
 
 (** verify that the variable being declared is previous unused.
    allowed to shadow StanLib *)
@@ -160,10 +158,8 @@ let verify_name_fresh_udf loc tenv name =
   - is not already in use (for now)
 *)
 let verify_name_fresh tenv id ~is_udf =
-  let f =
-    if is_udf then verify_name_fresh_udf id.id_loc tenv
-    else verify_name_fresh_var id.id_loc tenv in
-  List.iter ~f (distribution_name_variants id.name)
+  if is_udf then verify_name_fresh_udf id.id_loc tenv id.name
+  else verify_name_fresh_var id.id_loc tenv id.name
 
 let is_of_compatible_return_type rt1 srt2 =
   UnsizedType.(
@@ -293,7 +289,7 @@ let check_id cf loc tenv id =
   | {kind= `Variable {origin; _}; type_} :: _ ->
       (calculate_autodifftype cf origin type_, type_)
   | { kind= `UserDefined | `UserDeclared _
-    ; type_= UFun (args, rt, FnLpdf _, mem_pattern) }
+    ; type_= UFun (args, rt, (FnLpdf _ | FnLpmf _), mem_pattern) }
     :: _ ->
       let type_ =
         UnsizedType.UFun
@@ -513,10 +509,10 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
           let is_known_family s =
             List.mem known_families s ~equal:String.equal in
           match suffix with
-          | ("lpmf" | "lumpf") when Env.mem tenv (prefix ^ "_lpdf") ->
+          | ("lpmf" | "lupmf") when Env.mem tenv (prefix ^ "_lpdf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
                 (prefix, suffix)
-          | ("lpdf" | "lumdf") when Env.mem tenv (prefix ^ "_lpmf") ->
+          | ("lpdf" | "lupdf") when Env.mem tenv (prefix ^ "_lpmf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
                 (prefix, suffix)
           | _ ->
@@ -582,7 +578,7 @@ let find_matching_first_order_fn tenv matches fname =
   | Error None -> SignatureMismatch.SignatureErrors (List.hd_exn errs)
 
 let make_function_variable cf loc id = function
-  | UnsizedType.UFun (args, rt, FnLpdf _, mem_pattern) ->
+  | UnsizedType.UFun (args, rt, (FnLpdf _ | FnLpmf _), mem_pattern) ->
       let type_ =
         UnsizedType.UFun
           (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern) in
@@ -1283,26 +1279,30 @@ let check_tilde_distribution loc tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
   let name_w_suffix_dist suffix =
-    SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes in
+    ( SignatureMismatch.matching_function tenv (name ^ suffix) argumenttypes
+    , suffix ) in
   let distributions =
     List.map ~f:name_w_suffix_dist Utils.distribution_suffices in
   match
-    List.min_elt distributions ~compare:SignatureMismatch.compare_match_results
+    List.min_elt distributions ~compare:(fun (m1, _) (m2, _) ->
+        SignatureMismatch.compare_match_results m1 m2)
   with
-  | Some (UniqueMatch (_, _, p)) ->
-      Promotion.promote_list arguments p
+  | Some (UniqueMatch (_, f, p), sfx) ->
+      let suffix =
+        Fun_kind.suffix_from_name (name ^ Utils.unnormalized_suffix sfx) in
+      (Promotion.promote_list arguments p, f suffix)
       (* real return type is enforced by [verify_fundef_dist_rt] *)
-  | None | Some (SignatureErrors ([], _)) ->
+  | None | Some (SignatureErrors ([], _), _) ->
       (* Function is non existent *)
       Semantic_error.invalid_tilde_no_such_dist loc name
         (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
       |> error
-  | Some (AmbiguousMatch sigs) ->
+  | Some (AmbiguousMatch sigs, _) ->
       Semantic_error.ambiguous_function_promotion loc id.name
         (Some (List.map ~f:type_of_expr_typed arguments))
         sigs
       |> error
-  | Some (SignatureErrors (l, b)) ->
+  | Some (SignatureErrors (l, b), _) ->
       arguments
       |> List.map ~f:(fun e -> e.emeta.type_)
       |> Semantic_error.illtyped_fn_app loc id.name (l, b)
@@ -1349,11 +1349,12 @@ let check_tilde loc cf tenv distribution truncation arg args =
   verify_distribution_pdf_pmf distribution;
   verify_valid_distribution_pos loc cf;
   verify_distribution_cdf_ccdf loc distribution;
-  let promoted_args =
+  let promoted_args, kind =
     check_tilde_distribution loc tenv distribution (te :: tes) in
   let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
   verify_distribution_cdf_defined loc tenv distribution ttrunc tes;
-  let stmt = Tilde {arg= te; distribution; args= tes; truncation= ttrunc} in
+  let stmt =
+    Tilde {arg= te; distribution; args= tes; truncation= ttrunc; kind} in
   mk_typed_statement ~stmt ~loc ~return_type:Incomplete
 
 (* Break and continue only occur in loops. *)
@@ -1692,9 +1693,7 @@ and check_var_decl loc cf tenv sized_ty trans
 
 (* function definitions *)
 and exists_matching_fn_declared tenv id arg_tys rt =
-  let options =
-    List.concat_map ~f:(Env.find tenv) (distribution_name_variants id.name)
-  in
+  let options = Env.find tenv id.name in
   let f = function
     | Env.{kind= `UserDeclared _; type_= UFun (listedtypes, rt', _, _)}
       when arg_tys = listedtypes && rt = rt' ->
@@ -1703,9 +1702,7 @@ and exists_matching_fn_declared tenv id arg_tys rt =
   List.exists ~f options
 
 and verify_unique_signature tenv loc id arg_tys rt =
-  let existing =
-    List.concat_map ~f:(Env.find tenv) (distribution_name_variants id.name)
-  in
+  let existing = Env.find tenv id.name in
   let same_args = function
     | Env.{type_= UFun (listedtypes, _, _, _); _}
       when List.map ~f:snd arg_tys = List.map ~f:snd listedtypes ->
@@ -1822,16 +1819,8 @@ and check_fundef loc cf tenv return_ty id args body =
              are not modified in function. (passed by const ref) *)
           (`Variable {origin; readonly= true; global= false})) in
   let context =
-    let is_udf_dist name =
-      List.exists
-        ~f:(fun suffix -> String.is_suffix name ~suffix)
-        Utils.distribution_suffices in
     let kind =
-      if is_udf_dist id.name then Fun_kind.FnLpdf ()
-      else if String.is_suffix id.name ~suffix:"_rng" then FnRng
-      else if String.is_suffix id.name ~suffix:"_lp" then FnTarget
-      else if String.is_suffix id.name ~suffix:"_jacobian" then FnJacobian
-      else FnPlain in
+      Fun_kind.suffix_from_name id.name |> Fun_kind.forget_normalization in
     { cf with
       containing_function=
         UnsizedType.returntype_to_type_opt return_ty
@@ -1850,12 +1839,12 @@ and check_statement (cf : context_flags_record) (tenv : Env.t)
     (s : Ast.untyped_statement) : Env.t * typed_statement =
   let loc = s.smeta.loc in
   match s.stmt with
-  | NRFunApp (_, id, es) -> (tenv, check_nr_fn_app loc cf tenv id es)
+  | NRFunApp ((), id, es) -> (tenv, check_nr_fn_app loc cf tenv id es)
   | Assignment {assign_lhs; assign_op; assign_rhs} ->
       (tenv, check_assignment loc cf tenv assign_lhs assign_op assign_rhs)
   | TargetPE e -> (tenv, check_target_pe loc cf tenv e)
   | JacobianPE e -> (tenv, check_jacobian_pe loc cf tenv e)
-  | Tilde {arg; distribution; args; truncation} ->
+  | Tilde {arg; distribution; args; truncation; kind= ()} ->
       (tenv, check_tilde loc cf tenv distribution truncation arg args)
   | Break -> (tenv, check_break loc cf)
   | Continue -> (tenv, check_continue loc cf)

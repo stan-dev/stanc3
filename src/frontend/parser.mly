@@ -773,7 +773,7 @@ atomic_statement:
     RPAREN ot=option(truncation) SEMICOLON
     {  grammar_logger "tilde_statement" ;
        let t = match ot with Some tt -> tt | None -> NoTruncate in
-       Tilde {arg= e; distribution= id; args= es; truncation= t  }
+       Tilde {arg= e; distribution= id; args= es; truncation= t; kind=() }
     }
   | TARGET PLUSASSIGN e=expression SEMICOLON
     {   grammar_logger "targetpe_statement" ; TargetPE e }

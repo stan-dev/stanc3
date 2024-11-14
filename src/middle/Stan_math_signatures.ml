@@ -373,19 +373,6 @@ let is_stan_math_function_name name =
 let is_stan_math_variadic_function_name name =
   Hashtbl.mem stan_math_variadic_signatures name
 
-let dist_name_suffix udf_names name =
-  let is_udf_name s = List.exists ~f:(fun (n, _) -> n = s) udf_names in
-  match
-    Utils.distribution_suffices
-    |> List.filter ~f:(fun sfx ->
-           is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx))
-    |> List.hd
-  with
-  | Some hd -> hd
-  | None ->
-      Common.ICE.internal_compiler_error
-        [%message "Couldn't find distribution " name]
-
 let operator_to_stan_math_fns op =
   match op with
   | Operator.Plus -> ["add"]
@@ -2699,7 +2686,3 @@ let () =
     ~required_fn_rt:UnsizedType.UVector
     ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
     ()
-
-let%expect_test "dist name suffix" =
-  dist_name_suffix [] "normal" |> print_endline;
-  [%expect {| _lpdf |}]

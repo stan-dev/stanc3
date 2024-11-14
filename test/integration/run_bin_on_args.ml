@@ -1,13 +1,21 @@
 module Caml_unix = Unix
 open Core
 
+let string_of_status = function
+  | Caml_unix.WEXITED i -> sprintf "[exit %n]" i
+  | WSIGNALED i -> sprintf "[signal %n]" i
+  | WSTOPPED i -> sprintf "[stopped %n]" i
+
 let run_capturing_output cmd =
   let noflags = Array.create ~len:0 "" in
   let stdout, stdin, stderr = Caml_unix.open_process_full cmd noflags in
   let chns = [stdout; stderr] in
-  let out = List.map ~f:In_channel.input_lines chns in
-  ignore (Caml_unix.close_process_full (stdout, stdin, stderr));
-  String.concat ~sep:"\n" (List.concat out)
+  let out = List.map ~f:In_channel.input_lines chns |> List.concat in
+  let status =
+    string_of_status (Caml_unix.close_process_full (stdout, stdin, stderr))
+  in
+  let out = out @ [status] in
+  String.concat ~sep:"\n" out
 
 let () =
   let args = Sys.get_argv () in

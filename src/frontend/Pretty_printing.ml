@@ -427,7 +427,7 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       pf ppf "%a(@[%a);@]" pp_identifier id pp_list_of_expression (es, loc)
   | TargetPE e -> pf ppf "target += %a;" pp_expression e
   | JacobianPE e -> pf ppf "jacobian += %a;" pp_expression e
-  | Tilde {arg= e; distribution= id; args= es; truncation= t} ->
+  | Tilde {arg= e; distribution= id; args= es; truncation= t; kind= _} ->
       pf ppf "%a ~ %a(@[%a)@]%a;" pp_expression e pp_identifier id
         pp_list_of_expression (es, loc) pp_truncation t
   | Break -> pf ppf "break;"

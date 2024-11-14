@@ -52,6 +52,7 @@ functions {
   }
 }
 
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --standalone-functions --allow-undefined --auto-format basic.stanfunctions
 real my_log1p_exp(real x) {
   return log1p_exp(x);
@@ -90,6 +91,7 @@ real test_rng(real a) {
 real test_lpdf(real a, real b) {
   return normal_lpdf(a | b, 1);
 }
+[exit 0]
   $ ../../../../../../install/default/bin/stanc --standalone-functions --allow-undefined --auto-format integrate.stan
 functions {
   vector integrand(vector x) {
@@ -127,3 +129,4 @@ Warning in 'integrate.stan', line 21, column 12: integrate_ode_bdf is
     deprecated and will be removed in Stan 3.0. Use ode_bdf instead. 
     The new interface is slightly different, see:
     https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+[exit 0]

@@ -106,7 +106,7 @@ let promote_adtype =
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
   | FnTarget | FnJacobian -> ["lp__"; "lp_accum__"]
-  | FnPlain | FnLpdf _ -> []
+  | FnPlain | FnLpdf _ | FnLpmf _ -> []
 
 let rec stantype_prim = function
   | UnsizedType.UInt -> Int
@@ -115,8 +115,8 @@ let rec stantype_prim = function
 
 let templates udf suffix =
   match suffix with
-  | Fun_kind.FnLpdf true -> [TemplateType "propto__"]
-  | FnLpdf false -> [TemplateType "false"]
+  | Fun_kind.FnLpdf true | FnLpmf true -> [TemplateType "propto__"]
+  | FnLpdf false | FnLpmf false -> [TemplateType "false"]
   | FnTarget when udf -> [TemplateType "propto__"]
   | FnJacobian when udf -> [TemplateType "jacobian__"]
   | _ -> []

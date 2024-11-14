@@ -58,8 +58,6 @@ val distributions :
   (fkind list * string * dimensionality list * Mem_pattern.t) list
 (** The distribution {e families} exposed by the math library *)
 
-val dist_name_suffix : (string * 'a) list -> string -> string
-
 (** Helpers for dealing with operators as signatures *)
 
 val operator_to_stan_math_fns : Operator.t -> string list

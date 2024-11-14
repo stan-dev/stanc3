@@ -11,6 +11,7 @@ let expired (major, minor) =
 let deprecated_functions = String.Map.of_alist_exn []
 let stan_lib_deprecations = deprecated_functions
 
+(* TODO deprecate other pre-variadics like algebra_solver? *)
 let deprecated_odes =
   String.Map.of_alist_exn
     [ ("integrate_ode", ("ode_rk45", (3, 0)))
