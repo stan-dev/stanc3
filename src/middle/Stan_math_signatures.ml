@@ -212,8 +212,10 @@ let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 
 let distributions =
   [ (full_lpmf, "beta_binomial", [DVInt; DVInt; DVReal; DVReal], Mem_pattern.SoA)
-  ; ([Lpmf; Ccdf], "beta_neg_binomial", [DVInt; DVReal; DVReal; DVReal], SoA)
-  ; (full_lpdf, "beta", [DVReal; DVReal; DVReal], SoA)
+  ; ( [Lpmf; Ccdf; Cdf]
+    , "beta_neg_binomial"
+    , [DVInt; DVReal; DVReal; DVReal]
+    , SoA ); (full_lpdf, "beta", [DVReal; DVReal; DVReal], SoA)
   ; ([Lpdf; Ccdf; Cdf], "beta_proportion", [DVReal; DVReal; DIntAndReals], SoA)
   ; (full_lpmf, "bernoulli", [DVInt; DVReal], SoA)
   ; ([Lpmf; Rng], "bernoulli_logit", [DVInt; DVReal], SoA)
