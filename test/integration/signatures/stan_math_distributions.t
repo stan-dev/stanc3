@@ -5,7 +5,7 @@ Display all Stan math distributions exposed in the language
   bernoulli_logit_glm: lpmf
   beta: lpdf, rng, ccdf, cdf
   beta_binomial: lpmf, rng, ccdf, cdf
-  beta_neg_binomial: lpmf
+  beta_neg_binomial: lpmf, ccdf, cdf
   beta_proportion: lpdf, ccdf, cdf
   binomial: lpmf, rng, ccdf, cdf
   binomial_logit: lpmf
