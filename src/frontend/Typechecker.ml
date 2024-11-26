@@ -454,6 +454,7 @@ let verify_fn_target_plus_equals cf loc id =
 let verify_fn_jacobian_plus_equals cf loc id =
   if
     String.is_suffix id.name ~suffix:"_jacobian"
+    && (not !Fun_kind.jacobian_compat_mode)
     && not (in_jacobian_function cf || cf.current_block = TParam)
   then Semantic_error.jacobian_plusequals_not_allowed loc |> error
 
@@ -1894,6 +1895,8 @@ let add_userdefined_functions tenv stmts_opt =
   match stmts_opt with
   | None -> tenv
   | Some {stmts; _} ->
+      (* TODO(2.39): Remove this workaround *)
+      Deprecation_analysis.set_jacobian_compatibility_mode stmts;
       let f tenv (s : Ast.untyped_statement) =
         match s with
         | {stmt= FunDef {returntype; funname; arguments; body}; smeta= {loc}} ->
