@@ -1085,6 +1085,18 @@ Semantic error in 'err-jacobian-plusequals-scope3.stan', line 14, column 11 to c
 
 The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
 [exit 1]
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope4.stan
+Semantic error in 'err-jacobian-plusequals-scope4.stan', line 8, column 2 to column 17:
+   -------------------------------------------------
+     6:  }
+     7:  transformed data {
+     8:    foo_jacobian();
+           ^
+     9:  }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+[exit 1]
   $ ../../../../install/default/bin/stanc err-minus-types.stan
 Semantic error in 'err-minus-types.stan', line 4, column 6 to column 11:
    -------------------------------------------------
@@ -1245,6 +1257,18 @@ Syntax error in 'err-transformed-params.stan', line 4, column 0 to column 11, pa
    -------------------------------------------------
 
 "transformed parameters {", "model {" or "generated quantities {" expected after end of parameters block.
+[exit 1]
+  $ ../../../../install/default/bin/stanc err_void_rng_check.stan
+Semantic error in 'err_void_rng_check.stan', line 8, column 4 to column 17:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:      foo_rng(1.0);
+             ^
+     9:  }
+   -------------------------------------------------
+
+Random number generators are only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace.stan
 Syntax error in 'expect_statement_seq_close_brace.stan', line 6, column 0 to column 0, parsing error:

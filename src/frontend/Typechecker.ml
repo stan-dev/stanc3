@@ -454,6 +454,7 @@ let verify_fn_target_plus_equals cf loc id =
 let verify_fn_jacobian_plus_equals cf loc id =
   if
     String.is_suffix id.name ~suffix:"_jacobian"
+    && (not !Fun_kind.jacobian_compat_mode)
     && not (in_jacobian_function cf || cf.current_block = TParam)
   then Semantic_error.jacobian_plusequals_not_allowed loc |> error
 
@@ -913,13 +914,6 @@ let check_expression_of_scalar_or_type cf tenv t e name =
 
 (* -- Statements ------------------------------------------------- *)
 (* non returning functions *)
-let verify_nrfn_target loc cf id =
-  if
-    String.is_suffix id.name ~suffix:"_lp"
-    && not
-         (in_lp_function cf || cf.current_block = Model
-        || cf.current_block = TParam)
-  then Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
 let check_nrfn loc tenv id es =
   match Env.find tenv id.name with
@@ -960,7 +954,9 @@ let check_nrfn loc tenv id es =
 let check_nr_fn_app loc cf tenv id es =
   let tes = List.map ~f:(check_expression cf tenv) es in
   verify_identifier id;
-  verify_nrfn_target loc cf id;
+  verify_fn_target_plus_equals cf loc id;
+  verify_fn_jacobian_plus_equals cf loc id;
+  verify_fn_rng cf loc id;
   check_nrfn loc tenv id tes
 
 (* target plus-equals / jacobian plus-equals *)
@@ -1894,6 +1890,8 @@ let add_userdefined_functions tenv stmts_opt =
   match stmts_opt with
   | None -> tenv
   | Some {stmts; _} ->
+      (* TODO(2.39): Remove this workaround *)
+      Deprecation_analysis.set_jacobian_compatibility_mode stmts;
       let f tenv (s : Ast.untyped_statement) =
         match s with
         | {stmt= FunDef {returntype; funname; arguments; body}; smeta= {loc}} ->
