@@ -255,7 +255,7 @@ data {
 }
 
 {
-  "inputs": { "a": { "type": "int", "dimensions": 0 } },
+  "inputs": { "a": { "type": "int", "dimensions": 0, "constraint": "none" } },
   "parameters": {},
   "transformed parameters": {},
   "generated quantities": {},
@@ -283,27 +283,31 @@ File include/a.stan recursively included itself.
 $ node info.js
 {
   "inputs": {
-    "a": { "type": "int", "dimensions": 0 },
-    "b": { "type": "real", "dimensions": 0 },
-    "c": { "type": "real", "dimensions": 1 },
-    "d": { "type": "real", "dimensions": 1 },
-    "e": { "type": "real", "dimensions": 2 },
-    "f": { "type": "int", "dimensions": 1 },
-    "g": { "type": "real", "dimensions": 1 },
-    "h": { "type": "real", "dimensions": 2 },
-    "i": { "type": "real", "dimensions": 3 },
-    "j": { "type": "int", "dimensions": 3 }
+    "a": { "type": "int", "dimensions": 0, "constraint": "none" },
+    "b": { "type": "real", "dimensions": 0, "constraint": "none" },
+    "c": { "type": "real", "dimensions": 1, "constraint": "none" },
+    "d": { "type": "real", "dimensions": 1, "constraint": "none" },
+    "e": { "type": "real", "dimensions": 2, "constraint": "none" },
+    "f": { "type": "int", "dimensions": 1, "constraint": "none" },
+    "g": { "type": "real", "dimensions": 1, "constraint": "none" },
+    "h": { "type": "real", "dimensions": 2, "constraint": "none" },
+    "i": { "type": "real", "dimensions": 3, "constraint": "none" },
+    "j": { "type": "int", "dimensions": 3, "constraint": "none" }
   },
   "parameters": {
-    "l": { "type": "real", "dimensions": 1 },
-    "m": { "type": "real", "dimensions": 1 },
-    "n": { "type": "real", "dimensions": 1 },
-    "o": { "type": "real", "dimensions": 1 },
-    "p": { "type": "real", "dimensions": 2 },
-    "q": { "type": "real", "dimensions": 2 },
-    "r": { "type": "real", "dimensions": 2 },
-    "s": { "type": "real", "dimensions": 2 },
-    "y": { "type": "real", "dimensions": 0 }
+    "l": { "type": "real", "dimensions": 1, "constraint": "simplex" },
+    "m": { "type": "real", "dimensions": 1, "constraint": "unit_vector" },
+    "n": { "type": "real", "dimensions": 1, "constraint": "ordered" },
+    "o": {
+      "type": "real",
+      "dimensions": 1,
+      "constraint": "positive_ordered"
+    },
+    "p": { "type": "real", "dimensions": 2, "constraint": "covariance" },
+    "q": { "type": "real", "dimensions": 2, "constraint": "correlation" },
+    "r": { "type": "real", "dimensions": 2, "constraint": "cholesky_cov" },
+    "s": { "type": "real", "dimensions": 2, "constraint": "cholesky_corr" },
+    "y": { "type": "real", "dimensions": 0, "constraint": "none" }
   },
   "transformed parameters": {},
   "generated quantities": {},
