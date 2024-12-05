@@ -40,7 +40,11 @@ It had type 'object' instead of 'string'.
 Failed to convert stanc.js argument 'name'!
 It had type 'number' instead of 'string'.
 Failed to convert stanc.js argument 'flags'!
-It had type 'number' instead of 'array' or 'object'.
+Array.isArray returned false for value of type 'number'.
+Failed to convert stanc.js argument 'flags'!
+Array.isArray returned false for value of type 'object'.
+Failed to convert stanc.js argument 'flags'!
+Array.isArray returned false for value of type 'string'.
 Failed to convert stanc.js argument 'flags[1]'!
 It had type 'number' instead of 'string'.
 $ node basic.js

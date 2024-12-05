@@ -254,8 +254,20 @@ let checked_to_string ~name value =
   else Ok (Js.to_string value)
 
 let checked_to_array ~name value =
-  if not (typecheck value "object" || typecheck value "array") then
-    Error (bad_arg_message ~name ~expected:"array' or 'object" value)
+  if
+    not
+      (Js.to_bool
+         (Js.Unsafe.meth_call
+            (Js.Unsafe.pure_js_expr "Array")
+            "isArray"
+            [| Js.Unsafe.inject value |]))
+  then
+    Error
+      (Fmt.str
+         "Failed to convert stanc.js argument '%s'!@ Array.isArray returned \
+          false for value of type '%s'."
+         name
+         (Js.typeof value |> Js.to_string))
   else Ok (Js.to_array value)
 
 let process_flags (flags : 'a Js.opt) =
