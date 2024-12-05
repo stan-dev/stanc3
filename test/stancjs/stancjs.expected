@@ -34,6 +34,38 @@ model {
   y ~ std_normal();
 }
 
+$ node bad_inputs.js
+Internal compiler error:
+TypeError: s.charCodeAt is not a function
+
+
+This should never happen. Please file a bug at https://github.com/stan-dev/stanc3/issues/new
+and include this message and the model that caused this issue.
+
+Internal compiler error:
+TypeError: s.charCodeAt is not a function
+
+
+This should never happen. Please file a bug at https://github.com/stan-dev/stanc3/issues/new
+and include this message and the model that caused this issue.
+
+/home/brian/Dev/ml/stanc3/_build/default/src/stancjs/stancjs.bc.js:6418
+     throw err;
+     ^
+
+RangeError: Invalid array length
+    at caml_js_to_array (/home/brian/Dev/ml/stanc3/_build/default/src/stancjs/stancjs.bc.js:3458:29)
+    at to_ocaml_str_array (/home/brian/Dev/ml/stanc3/_build/default/src/stancjs/stancjs.bc.js:270436:48)
+    at caml_call1 (/home/brian/Dev/ml/stanc3/_build/default/src/stancjs/stancjs.bc.js:34910:15)
+    at map (/home/brian/Dev/ml/stanc3/_build/default/src/stancjs/stancjs.bc.js:34932:53)
+    at caml_call2 (/home/brian/Dev/ml/stanc3/_build/default/src/stancjs/stancjs.bc.js:269708:15)
+    at stan2cpp_wrapped (/home/brian/Dev/ml/stanc3/_build/default/src/stancjs/stancjs.bc.js:270444:46)
+    at caml_call_gen (/home/brian/Dev/ml/stanc3/_build/default/src/stancjs/stancjs.bc.js:2091:15)
+    at Function.stanc (/home/brian/Dev/ml/stanc3/_build/default/src/stancjs/stancjs.bc.js:6969:13)
+    at Object.<anonymous> (/home/brian/Dev/ml/stanc3/_build/default/test/stancjs/bad_inputs.js:19:28)
+    at Module._compile (node:internal/modules/cjs/loader:1275:14)
+
+Node.js v19.9.0
 $ node basic.js
 Semantic error in 'string', line 6, column 4 to column 5:
    -------------------------------------------------
