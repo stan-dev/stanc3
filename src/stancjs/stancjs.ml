@@ -37,13 +37,12 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
         if bare_functions then
           Parse.parse_string Parser.Incremental.functions_only model_string
         else Parse.parse_string Parser.Incremental.program model_string in
-      let open Result.Monad_infix in
+      let open Result_let in
       let result =
-        ast >>= fun ast ->
-        let typed_ast =
+        let* ast = ast in
+        let+ typed_ast, type_warnings =
           Typechecker.check_program ast
           |> Result.map_error ~f:(fun e -> Errors.Semantic_error e) in
-        typed_ast >>| fun (typed_ast, type_warnings) ->
         let warnings = parser_warnings @ type_warnings in
         if is_flag_set "info" then
           r.return (Result.Ok (Info.info typed_ast), warnings, []);
