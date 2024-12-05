@@ -141,15 +141,6 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
             ( Result.Ok (Fmt.str "%a" Memory_patterns.pp_mem_patterns opt_mir)
             , warnings
             , [] );
-        if is_flag_set "debug-transformed-mir" then
-          r.return
-            ( Result.Ok
-                (Sexp.to_string_hum [%sexp (tx_mir : Middle.Program.Typed.t)])
-            , warnings
-            , [] );
-        if is_flag_set "debug-transformed-mir-pretty" then
-          r.return
-            (Result.Ok (Fmt.str "%a" Program.Typed.pp tx_mir), warnings, []);
         let cpp =
           Lower_program.lower_program
             ?printed_filename:(flag_val "filename-in-msg")
