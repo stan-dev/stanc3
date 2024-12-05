@@ -20,7 +20,9 @@
     "--disable"
     "staticeval"
     "--disable"
-    "share"))))
+    "share"
+    "--enable"
+    "with-js-error"))))
 
 (alias
  (name default)
