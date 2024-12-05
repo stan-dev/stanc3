@@ -276,11 +276,24 @@ data {
   "distributions": [],
   "included_files": [ "foo.stan" ]
 }
-Warning: stanc.js failed to parse included file mapping!
-Failed to read property 'foo.stan' of included files map!
+model {
+  
+}
+
+model {
+  
+}
+
+model {
+  
+}
+
+Warning: stanc.js failed to parse included file mapping:
+Failed to convert stanc.js argument 'includes["foo.stan"]'!
 It had type 'object' instead of 'string'.
-Warning: stanc.js failed to parse included file mapping!
-Included files map was provided but was not of type 'object'
+Warning: stanc.js failed to parse included file mapping:
+Failed to convert stanc.js argument 'includes'!
+It had type 'number' instead of 'object'.
 Syntax error in 'include/b.stan', line 1, column 0, included from
 'include/a.stan', line 2, column 0, included from
 'include/b.stan', line 1, column 0, included from

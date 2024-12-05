@@ -197,55 +197,7 @@ let wrap_result ?printed_filename ~code ~warnings res =
           e in
       wrap_error ~warnings e
 
-exception BadJsInput of string
-
-let () =
-  Stdlib.Printexc.register_printer (function
-    | BadJsInput s -> Some s
-    | _ -> None)
-
 let typecheck e typ = String.equal (Js.to_string (Js.typeof e)) typ
-
-(** Converts from a [{ [s:string]:string }] JS object type
-to an OCaml map, with error messages on bad input. *)
-let to_file_map includes =
-  try
-    match Js.Optdef.to_option includes with
-    | None -> Result.Ok String.Map.empty (* normal use: argument not supplied *)
-    | Some includes ->
-        if not (typecheck includes "object") then
-          raise
-            (BadJsInput
-               "Included files map was provided but was not of type 'object'");
-        let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
-        let value k =
-          let value_js = Js.Unsafe.get includes k in
-          if typecheck value_js "string" then
-            value_js |> Js.Unsafe.coerce |> Js.to_string
-          else
-            raise
-              (BadJsInput
-                 (Fmt.str
-                    "Failed to read property '%s' of included files map!@ It \
-                     had type '%s' instead of 'string'."
-                    (Js.to_string k)
-                    (Js.typeof value_js |> Js.to_string))) in
-        Result.Ok
-          (String.Map.of_alist_exn (* JS objects cannot have duplicate keys *)
-             (List.map keys ~f:(fun k ->
-                  let key_clean = k |> Js.to_string in
-                  (key_clean, value k))))
-  with
-  | BadJsInput s -> Result.Error s
-  | e -> Result.Error (Exn.to_string e)
-
-let get_includes includes =
-  match to_file_map includes with
-  | Result.Ok map -> (map, [])
-  | Result.Error warn ->
-      ( String.Map.empty
-      , [ Fmt.str "Warning: stanc.js failed to parse included file mapping!@ %s"
-            warn ] )
 
 let bad_arg_message ~name ~expected value =
   Fmt.str
@@ -276,6 +228,36 @@ let checked_to_array ~name value =
          name
          (Js.typeof value |> Js.to_string))
   else Ok (Js.to_array value)
+
+(** Converts from a [{ [s:string]:string }] JS object type
+to an OCaml map, with error messages on bad input. *)
+let to_file_map includes =
+  let open Result_let in
+  match Js.Opt.to_option includes with
+  | None -> Result.Ok String.Map.empty (* normal use: argument not supplied *)
+  | Some includes ->
+      let* () =
+        if not (typecheck includes "object") then
+          Error (bad_arg_message ~name:"includes" ~expected:"object" includes)
+        else Ok () in
+      let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
+      let value k =
+        let value_js = Js.Unsafe.get includes k in
+        checked_to_string
+          ~name:("includes[\"" ^ Js.to_string k ^ "\"]")
+          value_js in
+      let* values = List.map keys ~f:value |> Result.all in
+      Result.Ok
+        (String.Map.of_alist_exn (* JS objects cannot have duplicate keys *)
+           (List.zip_exn (List.map keys ~f:Js.to_string) values))
+
+let get_includes includes =
+  match to_file_map includes with
+  | Result.Ok map -> (map, [])
+  | Result.Error warn ->
+      ( String.Map.empty
+      , [ Fmt.str "Warning: stanc.js failed to parse included file mapping:@ %s"
+            warn ] )
 
 let process_flags (flags : 'a Js.opt) =
   let set_backend_args_list flags =

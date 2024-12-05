@@ -41,6 +41,18 @@ var include_info_test = stanc.stanc("include-testtest", include_model, ["info"],
 utils.print_error(include_info_test)
 utils.print_result(include_info_test)
 
+// test that undefined and null are fine
+var missing_test = stanc.stanc("empty", "model {}", ["auto-format"], null);
+utils.print_error(missing_test)
+utils.print_result(missing_test)
+
+var missing_test = stanc.stanc("empty", "model {}", ["auto-format"], undefined);
+utils.print_error(missing_test)
+utils.print_result(missing_test)
+
+var missing_test = stanc.stanc("empty", "model {}", ["auto-format"], {});
+utils.print_error(missing_test)
+utils.print_result(missing_test)
 
 // warnings
 var include_test_bad = stanc.stanc("empty", "model {}", [], {"foo.stan": {"internal":"that wasn't a string!"}});
@@ -50,6 +62,7 @@ utils.print_warnings(include_test_bad)
 var include_test_bad = stanc.stanc("empty", "model {}", [], 1234);
 utils.print_error(include_test_bad)
 utils.print_warnings(include_test_bad)
+
 
 // other errors: recursive includes
 var recursive_a = `// comment here\n#include <include/b.stan>`
