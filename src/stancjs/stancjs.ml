@@ -9,6 +9,14 @@ let version = "%%NAME%% %%VERSION%%"
 
 type stanc_error = ProgramError of Errors.t
 
+(* See https://ocaml.org/manual/5.2/bindingops.html#ss%3Aletops-conventions
+   This is an alternative to the [let%bind] and [let%map] syntax from ppx_let:
+   https://blog.janestreet.com/let-syntax-and-why-you-should-use-it/ *)
+module Result_let = struct
+  let ( let* ) = Result.( >>= )
+  let ( let+ ) = Result.( >>| )
+end
+
 let stan2cpp model_name model_string is_flag_set flag_val includes :
     (string, stanc_error) result
     * Warnings.t list
@@ -286,13 +294,13 @@ let process_flags (flags : 'a Js.opt) =
       |> String.concat ~sep:" " in
     Lower_program.stanc_args_to_print := stanc_args_to_print in
   let open Result in
-  let open Result.Let_syntax in
-  let%bind flags =
+  let open Result_let in
+  let* flags =
     match Js.Opt.to_option flags with
     | None -> Ok None
     | Some flags ->
-        let%bind flags_array = checked_to_array ~name:"flags" flags in
-        let%bind ocaml_flags =
+        let* flags_array = checked_to_array ~name:"flags" flags in
+        let* ocaml_flags =
           Array.mapi flags_array ~f:(fun i v ->
               checked_to_string ~name:("flags[" ^ string_of_int i ^ "]") v)
           |> Array.to_list |> Result.all >>| Array.of_list in
@@ -302,26 +310,28 @@ let process_flags (flags : 'a Js.opt) =
     match flags with
     | Some flags -> fun flag -> Array.mem ~equal:String.equal flags flag
     | None -> fun _ -> false in
-  let flag_val flag =
-    let prefix = flag ^ "=" in
-    Option.(
-      flags >>= fun flags ->
-      Array.find flags ~f:(String.is_prefix ~prefix)
-      >>= String.chop_prefix ~prefix) in
+  let flag_val =
+    match flags with
+    | None -> fun _ -> None
+    | Some flags ->
+        fun flag ->
+          let prefix = flag ^ "=" in
+          Array.find flags ~f:(String.is_prefix ~prefix)
+          |> Option.bind ~f:(String.chop_prefix ~prefix) in
   Ok (is_flag_set, flag_val)
 
 (** Handle conversion of JS <-> OCaml values and
   call stan2cpp *)
 let stan2cpp_wrapped name code flags includes =
+  let open Result_let in
   let includes, include_reader_warnings = get_includes includes in
   let compilation_result =
-    let open Result.Let_syntax in
-    let%bind name = checked_to_string ~name:"name" name in
-    let%bind code = checked_to_string ~name:"code" code in
-    let%bind is_flag_set, flag_val = process_flags flags in
-    Common.ICE.with_exn_message (fun () ->
-        stan2cpp name code is_flag_set flag_val includes)
-    >>| fun (result, warnings, pedantic_warnings) ->
+    let* name = checked_to_string ~name:"name" name in
+    let* code = checked_to_string ~name:"code" code in
+    let* is_flag_set, flag_val = process_flags flags in
+    let+ result, warnings, pedantic_warnings =
+      Common.ICE.with_exn_message (fun () ->
+          stan2cpp name code is_flag_set flag_val includes) in
     (result, warnings @ pedantic_warnings, flag_val "filename-in-msg") in
   match compilation_result with
   | Ok (result, warnings, printed_filename) ->
