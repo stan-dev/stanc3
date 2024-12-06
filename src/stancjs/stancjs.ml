@@ -9,6 +9,14 @@ let version = "%%NAME%% %%VERSION%%"
 
 type stanc_error = ProgramError of Errors.t
 
+(* See https://ocaml.org/manual/5.2/bindingops.html#ss%3Aletops-conventions
+   This is an alternative to the [let%bind] and [let%map] syntax from ppx_let:
+   https://blog.janestreet.com/let-syntax-and-why-you-should-use-it/ *)
+module Result_let = struct
+  let ( let* ) = Result.( >>= )
+  let ( let+ ) = Result.( >>| )
+end
+
 let stan2cpp model_name model_string is_flag_set flag_val includes :
     (string, stanc_error) result
     * Warnings.t list
@@ -29,13 +37,12 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
         if bare_functions then
           Parse.parse_string Parser.Incremental.functions_only model_string
         else Parse.parse_string Parser.Incremental.program model_string in
-      let open Result.Monad_infix in
+      let open Result_let in
       let result =
-        ast >>= fun ast ->
-        let typed_ast =
+        let* ast = ast in
+        let+ typed_ast, type_warnings =
           Typechecker.check_program ast
           |> Result.map_error ~f:(fun e -> Errors.Semantic_error e) in
-        typed_ast >>| fun (typed_ast, type_warnings) ->
         let warnings = parser_warnings @ type_warnings in
         if is_flag_set "info" then
           r.return (Result.Ok (Info.info typed_ast), warnings, []);
@@ -134,15 +141,6 @@ let stan2cpp model_name model_string is_flag_set flag_val includes :
             ( Result.Ok (Fmt.str "%a" Memory_patterns.pp_mem_patterns opt_mir)
             , warnings
             , [] );
-        if is_flag_set "debug-transformed-mir" then
-          r.return
-            ( Result.Ok
-                (Sexp.to_string_hum [%sexp (tx_mir : Middle.Program.Typed.t)])
-            , warnings
-            , [] );
-        if is_flag_set "debug-transformed-mir-pretty" then
-          r.return
-            (Result.Ok (Fmt.str "%a" Program.Typed.pp tx_mir), warnings, []);
         let cpp =
           Lower_program.lower_program
             ?printed_filename:(flag_val "filename-in-msg")
@@ -190,102 +188,130 @@ let wrap_result ?printed_filename ~code ~warnings res =
           e in
       wrap_error ~warnings e
 
-exception BadJsInput of string
-
-let () =
-  Stdlib.Printexc.register_printer (function
-    | BadJsInput s -> Some s
-    | _ -> None)
-
 let typecheck e typ = String.equal (Js.to_string (Js.typeof e)) typ
+
+let bad_arg_message ~name ~expected value =
+  Fmt.str
+    "Failed to convert stanc.js argument '%s'!@ It had type '%s' instead of \
+     '%s'."
+    name
+    (Js.typeof value |> Js.to_string)
+    expected
+
+let checked_to_string ~name value =
+  if not (typecheck value "string") then
+    Error (bad_arg_message ~name ~expected:"string" value)
+  else Ok (Js.to_string value)
+
+let checked_to_array ~name value =
+  if
+    not
+      (Js.to_bool
+         (Js.Unsafe.meth_call
+            (Js.Unsafe.pure_js_expr "Array")
+            "isArray"
+            [| Js.Unsafe.inject value |]))
+  then
+    Error
+      (Fmt.str
+         "Failed to convert stanc.js argument '%s'!@ Array.isArray returned \
+          false for value of type '%s'."
+         name
+         (Js.typeof value |> Js.to_string))
+  else Ok (Js.to_array value)
 
 (** Converts from a [{ [s:string]:string }] JS object type
 to an OCaml map, with error messages on bad input. *)
-let to_file_map includes =
-  try
-    match Js.Optdef.to_option includes with
-    | None -> Result.Ok String.Map.empty (* normal use: argument not supplied *)
+let get_includes includes : string String.Map.t * string list =
+  let open Result_let in
+  let map, warnings =
+    match Js.Opt.to_option includes with
+    | None -> (String.Map.empty, [] (* normal use: argument not supplied *))
+    | Some includes when not (typecheck includes "object") ->
+        ( String.Map.empty
+        , [bad_arg_message ~name:"includes" ~expected:"object" includes] )
     | Some includes ->
-        if not (typecheck includes "object") then
-          raise
-            (BadJsInput
-               "Included files map was provided but was not of type 'object'");
         let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
-        let value k =
+        let lookup k =
           let value_js = Js.Unsafe.get includes k in
-          if typecheck value_js "string" then
-            value_js |> Js.Unsafe.coerce |> Js.to_string
-          else
-            raise
-              (BadJsInput
-                 (Fmt.str
-                    "Failed to read property '%s' of included files map!@ It \
-                     had type '%s' instead of 'string'."
-                    (Js.to_string k)
-                    (Js.typeof value_js |> Js.to_string))) in
-        Result.Ok
-          (String.Map.of_alist_exn (* JS objects cannot have duplicate keys *)
-             (List.map keys ~f:(fun k ->
-                  let key_clean = k |> Js.to_string in
-                  (key_clean, value k))))
-  with
-  | BadJsInput s -> Result.Error s
-  | e -> Result.Error (Exn.to_string e)
+          let k_str = Js.to_string k in
+          let+ value_str =
+            checked_to_string ~name:("includes[\"" ^ k_str ^ "\"]") value_js
+          in
+          (k_str, value_str) in
+        let alist, warnings = List.map keys ~f:lookup |> List.partition_result in
+        ( (* JS objects cannot have duplicate keys *)
+          String.Map.of_alist_exn alist
+        , warnings ) in
+  ( map
+  , List.map
+      ~f:
+        (Fmt.str "Warning: stanc.js failed to parse included file mapping:@ %s")
+      warnings )
 
-let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) includes =
-  let flags =
-    let to_ocaml_str_array a =
-      Js.(str_array a |> to_array |> Array.map ~f:to_string) in
-    Js.Opt.map flags to_ocaml_str_array |> Js.Opt.to_option in
-  let is_flag_set =
-    match flags with
-    | Some flags -> fun flag -> Array.mem ~equal:String.equal flags flag
-    | None -> fun _ -> false in
-  let flag_val flag =
-    let prefix = flag ^ "=" in
-    Option.(
-      flags >>= fun flags ->
-      Array.find flags ~f:(String.is_prefix ~prefix)
-      >>= String.chop_prefix ~prefix) in
-  let printed_filename = flag_val "filename-in-msg" in
-  let stanc_args_to_print =
+let process_flags (flags : 'a Js.opt) =
+  let set_backend_args_list flags =
+    (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
     let sans_model_and_hpp_paths x =
       not
         String.(
           is_suffix ~suffix:".stan" x
           && not (is_prefix ~prefix:"filename-in-msg" x)
           || is_prefix ~prefix:"o=" x) in
-    (* Ignore the "--o" arg, the stan file and the binary name (bin/stanc). *)
-    flags
-    |> Option.map ~f:Array.to_list
-    |> Option.value ~default:[]
-    |> List.filter ~f:sans_model_and_hpp_paths
-    |> List.map ~f:(fun o -> "--" ^ o)
-    |> String.concat ~sep:" " in
-  Lower_program.stanc_args_to_print := stanc_args_to_print;
-  let maybe_includes = to_file_map includes in
-  let includes, include_reader_warnings =
-    match maybe_includes with
-    | Result.Ok map -> (map, [])
-    | Result.Error warn ->
-        ( String.Map.empty
-        , [ Fmt.str
-              "Warning: stanc.js failed to parse included file mapping!@ %s"
-              warn ] ) in
-  match
-    Common.ICE.with_exn_message (fun () ->
-        stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set flag_val
-          includes)
-  with
-  | Ok (result, warnings, pedantic_mode_warnings) ->
+    let stanc_args_to_print =
+      flags |> Array.to_list
+      |> List.filter ~f:sans_model_and_hpp_paths
+      |> List.map ~f:(fun o -> "--" ^ o)
+      |> String.concat ~sep:" " in
+    Lower_program.stanc_args_to_print := stanc_args_to_print in
+  let open Result in
+  let open Result_let in
+  let* flags =
+    match Js.Opt.to_option flags with
+    | None -> Ok None
+    | Some flags ->
+        let* flags_array = checked_to_array ~name:"flags" flags in
+        let+ ocaml_flags =
+          Array.mapi flags_array ~f:(fun i v ->
+              checked_to_string ~name:("flags[" ^ string_of_int i ^ "]") v)
+          |> Array.to_list |> Result.all >>| Array.of_list in
+        set_backend_args_list ocaml_flags;
+        Some ocaml_flags in
+  let is_flag_set =
+    match flags with
+    | Some flags -> fun flag -> Array.mem ~equal:String.equal flags flag
+    | None -> fun _ -> false in
+  let flag_val =
+    match flags with
+    | None -> fun _ -> None
+    | Some flags ->
+        fun flag ->
+          let prefix = flag ^ "=" in
+          Array.find_map flags ~f:(String.chop_prefix ~prefix) in
+  Ok (is_flag_set, flag_val)
+
+(** Handle conversion of JS <-> OCaml values and
+  call stan2cpp *)
+let stan2cpp_wrapped name code flags includes =
+  let open Result_let in
+  let includes, include_reader_warnings = get_includes includes in
+  let compilation_result =
+    let* name = checked_to_string ~name:"name" name in
+    let* code = checked_to_string ~name:"code" code in
+    let* is_flag_set, flag_val = process_flags flags in
+    let+ result, warnings, pedantic_warnings =
+      Common.ICE.with_exn_message (fun () ->
+          stan2cpp name code is_flag_set flag_val includes) in
+    (result, warnings @ pedantic_warnings, flag_val "filename-in-msg") in
+  match compilation_result with
+  | Ok (result, warnings, printed_filename) ->
       let warnings =
         include_reader_warnings
-        @ List.map
-            ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename))
-            (warnings @ pedantic_mode_warnings) in
+        @ List.map ~f:(Fmt.str "%a" (Warnings.pp ?printed_filename)) warnings
+      in
       wrap_result ?printed_filename ~code result ~warnings
-  | Error internal_error ->
-      wrap_error ~warnings:include_reader_warnings internal_error
+  | Error non_compilation_error (* either an ICE or malformed JS input *) ->
+      wrap_error ~warnings:include_reader_warnings non_compilation_error
 
 let dump_stan_math_signatures () =
   Js.string @@ Fmt.str "%a" Stan_math_signatures.pretty_print_all_math_sigs ()
