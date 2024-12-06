@@ -222,33 +222,32 @@ let checked_to_array ~name value =
 
 (** Converts from a [{ [s:string]:string }] JS object type
 to an OCaml map, with error messages on bad input. *)
-let to_file_map includes =
+let get_includes includes : string String.Map.t * string list =
   let open Result_let in
-  match Js.Opt.to_option includes with
-  | None -> Result.Ok String.Map.empty (* normal use: argument not supplied *)
-  | Some includes ->
-      let* () =
-        if not (typecheck includes "object") then
-          Error (bad_arg_message ~name:"includes" ~expected:"object" includes)
-        else Ok () in
-      let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
-      let value k =
-        let value_js = Js.Unsafe.get includes k in
-        checked_to_string
-          ~name:("includes[\"" ^ Js.to_string k ^ "\"]")
-          value_js in
-      let* values = List.map keys ~f:value |> Result.all in
-      Result.Ok
-        (String.Map.of_alist_exn (* JS objects cannot have duplicate keys *)
-           (List.zip_exn (List.map keys ~f:Js.to_string) values))
-
-let get_includes includes =
-  match to_file_map includes with
-  | Result.Ok map -> (map, [])
-  | Result.Error warn ->
-      ( String.Map.empty
-      , [ Fmt.str "Warning: stanc.js failed to parse included file mapping:@ %s"
-            warn ] )
+  let map, warnings =
+    match Js.Opt.to_option includes with
+    | None -> (String.Map.empty, [] (* normal use: argument not supplied *))
+    | Some includes when not (typecheck includes "object") ->
+        ( String.Map.empty
+        , [bad_arg_message ~name:"includes" ~expected:"object" includes] )
+    | Some includes ->
+        let keys = Js.object_keys includes |> Js.to_array |> List.of_array in
+        let lookup k =
+          let value_js = Js.Unsafe.get includes k in
+          let k_str = Js.to_string k in
+          let+ value_str =
+            checked_to_string ~name:("includes[\"" ^ k_str ^ "\"]") value_js
+          in
+          (k_str, value_str) in
+        let alist, warnings = List.map keys ~f:lookup |> List.partition_result in
+        ( (* JS objects cannot have duplicate keys *)
+          String.Map.of_alist_exn alist
+        , warnings ) in
+  ( map
+  , List.map
+      ~f:
+        (Fmt.str "Warning: stanc.js failed to parse included file mapping:@ %s")
+      warnings )
 
 let process_flags (flags : 'a Js.opt) =
   let set_backend_args_list flags =
@@ -272,12 +271,12 @@ let process_flags (flags : 'a Js.opt) =
     | None -> Ok None
     | Some flags ->
         let* flags_array = checked_to_array ~name:"flags" flags in
-        let* ocaml_flags =
+        let+ ocaml_flags =
           Array.mapi flags_array ~f:(fun i v ->
               checked_to_string ~name:("flags[" ^ string_of_int i ^ "]") v)
           |> Array.to_list |> Result.all >>| Array.of_list in
         set_backend_args_list ocaml_flags;
-        Ok (Some ocaml_flags) in
+        Some ocaml_flags in
   let is_flag_set =
     match flags with
     | Some flags -> fun flag -> Array.mem ~equal:String.equal flags flag
@@ -288,8 +287,7 @@ let process_flags (flags : 'a Js.opt) =
     | Some flags ->
         fun flag ->
           let prefix = flag ^ "=" in
-          Array.find flags ~f:(String.is_prefix ~prefix)
-          |> Option.bind ~f:(String.chop_prefix ~prefix) in
+          Array.find_map flags ~f:(String.chop_prefix ~prefix) in
   Ok (is_flag_set, flag_val)
 
 (** Handle conversion of JS <-> OCaml values and

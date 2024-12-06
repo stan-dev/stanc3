@@ -55,6 +55,13 @@ utils.print_error(missing_test)
 utils.print_result(missing_test)
 
 // warnings
+
+var include_info_test_warn = stanc.stanc("include-testtest", include_model, ["info"], {...bar_includes, "foo.stan":foo_code, "baz": 1.234});
+utils.print_error(include_info_test_warn)
+utils.print_warnings(include_info_test_warn)
+utils.print_result(include_info_test_warn)
+
+
 var include_test_bad = stanc.stanc("empty", "model {}", [], {"foo.stan": {"internal":"that wasn't a string!"}});
 utils.print_error(include_test_bad)
 utils.print_warnings(include_test_bad)
