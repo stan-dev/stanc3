@@ -314,7 +314,7 @@ let use_file filename =
         print_or_write s;
         exit 0
     | Error e ->
-        Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e);
+        Errors.pp Fmt.stderr ?printed_filename e;
         exit 1)
   else if !generate_inits then (
     let context =
@@ -332,7 +332,7 @@ let use_file filename =
         print_or_write s;
         exit 0
     | Error e ->
-        Errors.pp Fmt.stderr ?printed_filename (Errors.DebugDataError e);
+        Errors.pp Fmt.stderr ?printed_filename e;
         if Option.is_none !data_file then
           Fmt.pf Fmt.stderr "Supplying a --debug-data-file may help@;";
         exit 1)

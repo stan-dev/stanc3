@@ -3,7 +3,12 @@
  (modes
   (byte c)
   (best exe))
- (libraries frontend middle stan_math_backend analysis_and_optimization)
+ (libraries
+  frontend
+  middle
+  stan_math_backend
+  analysis_and_optimization
+  driver)
  (instrumentation
   (backend bisect_ppx))
  (modules Stanc)
