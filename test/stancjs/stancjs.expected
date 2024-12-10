@@ -408,9 +408,9 @@ undefined
 $ node standalone-functions.js
 
 $ node version.js
-%%NAME%% %%VERSION%%
-%%NAME%% %%VERSION%%
-%%NAME%% %%VERSION%%
+%%NAME%%3 %%VERSION%%
+%%NAME%%3 %%VERSION%%
+%%NAME%%3 %%VERSION%%
 $ node warnings.js
 Warning in 'string', line 10, column 11: Found int division:
       x / w

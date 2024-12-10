@@ -21,7 +21,7 @@ Stanc3 has 4 main src packages: `frontend`, `middle`, `analysis_and_optimization
 
 ```mermaid
 flowchart
-    Stanc --> Frontend & Analysis & Backend <-.-> Middle
+   Stanc & StancJS --> Driver --> Frontend & Analysis & Backend <-.-> Middle
 ```
 
 The goal is to keep as many details about the way Stan is implemented by the core C++ implementation in the Stan Math backend library as possible.
