@@ -27,15 +27,15 @@ type t =
 
 (** Settings mainly for developers, not users *)
 and debug_settings =
-  { debug_ast: bool
-  ; debug_typed_ast: bool
-  ; debug_mir: debug_options
-  ; debug_transformed_mir: debug_options
-  ; debug_optimized_mir: debug_options
-  ; debug_mem_patterns: bool
-  ; debug_manual_soa: bool option
-        (* if None, do nothing. If Some true, force on, if Some false, force off *)
-  ; debug_lir: bool
+  { print_ast: bool
+  ; print_typed_ast: bool
+  ; print_mir: debug_options
+  ; print_transformed_mir: debug_options
+  ; print_optimized_mir: debug_options
+  ; print_mem_patterns: bool
+  ; force_soa: bool option
+        (** if None, do nothing. If Some true, force on, if Some false, force off *)
+  ; print_lir: bool
   ; debug_generate_data: bool
   ; debug_generate_inits: bool
   ; debug_data_json: string option }

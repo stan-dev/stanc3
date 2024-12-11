@@ -44,7 +44,7 @@ Show help
     --help                          Display this list of options
 Show version
   $ stanc --version
-  %%NAME%%3 %%VERSION%%
+  %%NAME%%3 %%VERSION%% (Unix)
 Error when no file passed
   $ stanc
   Please specify a model_file.

@@ -52,7 +52,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  {!driver_flags.debug_settings with debug_ast= true} })
+                  {!driver_flags.debug_settings with print_ast= true} })
       , " For debugging purposes: print the undecorated AST, before semantic \
          checking" )
     ; ( "--debug-decorated-ast"
@@ -61,7 +61,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  {!driver_flags.debug_settings with debug_typed_ast= true} })
+                  {!driver_flags.debug_settings with print_typed_ast= true} })
       , " For debugging purposes: print the decorated AST, after semantic \
          checking" )
     ; ( "--debug-generate-data"
@@ -99,7 +99,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  {!driver_flags.debug_settings with debug_mir= Basic} })
+                  {!driver_flags.debug_settings with print_mir= Basic} })
       , " For debugging purposes: print the MIR as an S-expression." )
     ; ( "--debug-mir-pretty"
       , Arg.Unit
@@ -107,7 +107,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  {!driver_flags.debug_settings with debug_mir= Pretty} })
+                  {!driver_flags.debug_settings with print_mir= Pretty} })
       , " For debugging purposes: pretty-print the MIR." )
     ; ( "--debug-optimized-mir"
       , Arg.Unit
@@ -115,7 +115,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  {!driver_flags.debug_settings with debug_optimized_mir= Basic}
+                  {!driver_flags.debug_settings with print_optimized_mir= Basic}
               })
       , " For debugging purposes: print the MIR after it's been optimized. \
          Only has an effect when optimizations are turned on." )
@@ -125,7 +125,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  {!driver_flags.debug_settings with debug_optimized_mir= Pretty}
+                  {!driver_flags.debug_settings with print_optimized_mir= Pretty}
               })
       , " For debugging purposes: pretty print the MIR after it's been \
          optimized. Only has an effect when optimizations are turned on." )
@@ -135,7 +135,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  {!driver_flags.debug_settings with debug_lir= true} })
+                  {!driver_flags.debug_settings with print_lir= true} })
       , " For debugging purposes: print the C++ LIR as a s-expression. Mainly \
          for comparison with --print-cpp" )
     ; ( "--debug-mem-patterns"
@@ -144,7 +144,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  {!driver_flags.debug_settings with debug_mem_patterns= true}
+                  {!driver_flags.debug_settings with print_mem_patterns= true}
               })
       , " For debugging purposes: print a list of matrix variables and their \
          memory type, either AoS (array of structs) or the more efficient SoA \
@@ -157,7 +157,7 @@ let options =
               { !driver_flags with
                 debug_settings=
                   { !driver_flags.debug_settings with
-                    debug_transformed_mir= Basic } })
+                    print_transformed_mir= Basic } })
       , " For debugging purposes: print the MIR after the backend has \
          transformed it." )
     ; ( "--debug-transformed-mir-pretty"
@@ -167,7 +167,7 @@ let options =
               { !driver_flags with
                 debug_settings=
                   { !driver_flags.debug_settings with
-                    debug_transformed_mir= Pretty } })
+                    print_transformed_mir= Pretty } })
       , " For debugging purposes: pretty print the MIR after the backend has \
          transformed it." )
     ; ( "--dump-stan-math-signatures"
@@ -253,8 +253,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  { !driver_flags.debug_settings with
-                    debug_manual_soa= Some false } })
+                  {!driver_flags.debug_settings with force_soa= Some false} })
       , "\tTurn off the Struct of Arrays optimization" )
     ; ( "-fsoa"
       , Arg.Unit
@@ -262,8 +261,7 @@ let options =
             driver_flags :=
               { !driver_flags with
                 debug_settings=
-                  {!driver_flags.debug_settings with debug_manual_soa= Some true}
-              })
+                  {!driver_flags.debug_settings with force_soa= Some true} })
       , "\tTurn on the Struct of Arrays optimization" )
     ; ( "--o"
       , Arg.Set_string output_file
@@ -329,7 +327,7 @@ let print_and_exit data =
 let output_callback printed_filename : Driver.Entry.other_output -> unit =
   function
   | Info s -> print_and_exit s
-  | Version s -> print_and_exit (s ^ "(" ^ Sys.os_type ^ ")")
+  | Version s -> print_and_exit (s ^ " (" ^ Sys.os_type ^ ")")
   | Generated s | Formatted s ->
       (* these options will use the --o flag if it was passed *)
       print_or_write_and_exit s

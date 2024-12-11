@@ -45,11 +45,17 @@ type other_output =
 
 type compilation_result = (string, Errors.t) result
 
+let debug_output_mir output mir = function
+  | Flags.Off -> ()
+  | Basic ->
+      output (DebugOutput (fmt_sexp [%sexp (mir : Middle.Program.Typed.t)]))
+  | Pretty -> output (DebugOutput (Fmt.str "%a" Program.Typed.pp mir))
+
 let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
     : compilation_result =
   let open Common.Let_syntax.Result in
   reset_mutable_states model_name flags;
-  if flags.version then output (Info (Fmt.str "%s" version));
+  if flags.version then output (Version (Fmt.str "%s" version));
   let ast, parser_warnings =
     if flags.functions_only then
       Parse.parse Parser.Incremental.functions_only model
@@ -57,12 +63,12 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
   output (Warnings parser_warnings);
   let* result =
     let* ast = ast in
-    if flags.debug_settings.debug_ast then
+    if flags.debug_settings.print_ast then
       output (DebugOutput (fmt_sexp [%sexp (ast : Ast.untyped_program)]));
     let+ typed_ast, type_warnings =
       Typechecker.check_program ast
       |> Result.map_error ~f:(fun e -> Errors.Semantic_error e) in
-    if flags.debug_settings.debug_typed_ast then
+    if flags.debug_settings.print_typed_ast then
       output (DebugOutput (fmt_sexp [%sexp (typed_ast : Ast.typed_program)]));
     output (Warnings type_warnings);
     if flags.info then output (Info (Info.info typed_ast));
@@ -85,12 +91,7 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
       output (Warnings (Pedantic_analysis.warn_uninitialized mir));
     if flags.warn_pedantic then
       output (Warnings (Pedantic_analysis.warn_pedantic mir));
-    let () =
-      match flags.debug_settings.debug_mir with
-      | Off -> ()
-      | Basic ->
-          output (DebugOutput (fmt_sexp [%sexp (mir : Middle.Program.Typed.t)]))
-      | Pretty -> output (DebugOutput (Fmt.str "%a" Program.Typed.pp mir)) in
+    debug_output_mir output mir flags.debug_settings.print_mir;
     let generation_context =
       match flags.debug_settings.debug_data_json with
       | None -> Map.Poly.empty
@@ -113,33 +114,19 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
         Ok (output (Generated inits))
       else Ok () in
     let tx_mir = Transform_Mir.trans_prog mir in
-    let () =
-      match flags.debug_settings.debug_transformed_mir with
-      | Off -> ()
-      | Basic ->
-          output
-            (DebugOutput (fmt_sexp [%sexp (tx_mir : Middle.Program.Typed.t)]))
-      | Pretty -> output (DebugOutput (Fmt.str "%a" Program.Typed.pp tx_mir))
-    in
+    debug_output_mir output tx_mir flags.debug_settings.print_transformed_mir;
     let opt_mir =
       Optimize.optimization_suite
         ~settings:(Flags.get_optimization_settings flags)
         tx_mir in
-    if flags.debug_settings.debug_mem_patterns then
+    if flags.debug_settings.print_mem_patterns then
       output
         (Memory_patterns (Fmt.str "%a" Memory_patterns.pp_mem_patterns opt_mir));
-    let () =
-      match flags.debug_settings.debug_optimized_mir with
-      | Off -> ()
-      | Basic ->
-          output
-            (DebugOutput (fmt_sexp [%sexp (opt_mir : Middle.Program.Typed.t)]))
-      | Pretty -> output (DebugOutput (Fmt.str "%a" Program.Typed.pp opt_mir))
-    in
+    debug_output_mir output opt_mir flags.debug_settings.print_optimized_mir;
     let cpp =
       Lower_program.lower_program ?printed_filename:flags.filename_in_msg
         opt_mir in
-    if flags.debug_settings.debug_lir then
+    if flags.debug_settings.print_lir then
       output (DebugOutput (fmt_sexp [%sexp (cpp : Cpp.program)]));
     let cpp_str = Fmt.(to_to_string Cpp.Printing.pp_program) cpp in
     Ok cpp_str in

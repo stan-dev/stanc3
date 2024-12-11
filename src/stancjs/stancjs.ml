@@ -150,23 +150,23 @@ let process_flags (flags : 'a Js.opt) includes : (Driver.Flags.t, string) result
         ; auto_format=
             is_flag_set "auto-format" || is_flag_set "print-canonical"
         ; debug_settings=
-            { debug_ast= is_flag_set "debug-ast"
-            ; debug_typed_ast= is_flag_set "debug-typed-ast"
-            ; debug_mir=
+            { print_ast= is_flag_set "debug-ast"
+            ; print_typed_ast= is_flag_set "debug-typed-ast"
+            ; print_mir=
                 (if is_flag_set "debug-mir" then Basic
                  else if is_flag_set "debug-mir-pretty" then Pretty
                  else Off)
-            ; debug_transformed_mir=
+            ; print_transformed_mir=
                 (if is_flag_set "debug-transformed-mir" then Basic
                  else if is_flag_set "debug-transformed-mir-pretty" then Pretty
                  else Off)
-            ; debug_optimized_mir=
+            ; print_optimized_mir=
                 (if is_flag_set "debug-optimized-mir" then Basic
                  else if is_flag_set "debug-optimized-mir-pretty" then Pretty
                  else Off)
-            ; debug_mem_patterns= is_flag_set "debug-mem-patterns"
-            ; debug_manual_soa= None
-            ; debug_lir= is_flag_set "debug-lir"
+            ; print_mem_patterns= is_flag_set "debug-mem-patterns"
+            ; force_soa= None
+            ; print_lir= is_flag_set "debug-lir"
             ; debug_generate_data= is_flag_set "debug-generate-data"
             ; debug_generate_inits= is_flag_set "debug-generate-inits"
             ; debug_data_json= flag_val "debug-data-json" }
