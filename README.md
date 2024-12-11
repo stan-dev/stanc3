@@ -18,10 +18,19 @@ for setup instructions and some useful commands.
 
 ## High-level concepts, invariants, and 30,000-ft view
 Stanc3 has 4 main src packages: `frontend`, `middle`, `analysis_and_optimization` and `stan_math_backend`.
+These are pieced together by the `driver` module.
 
 ```mermaid
 flowchart
-    Stanc --> Frontend & Analysis & Backend <-.-> Middle
+   Stanc & StancJS --> Driver --> Frontend & Analysis & Backend <-.-> Middle
+
+   click Stanc "https://github.com/stan-dev/stanc3/blob/master/src/stanc/stanc.ml"
+   click StancJS "https://github.com/stan-dev/stanc3/blob/master/src/stancjs/stancjs.ml"
+   click Driver "https://github.com/stan-dev/stanc3/blob/master/src/driver/"
+   click Frontend "https://github.com/stan-dev/stanc3/blob/master/src/frontend/"
+   click Analysis "https://github.com/stan-dev/stanc3/blob/master/src/analysis_and_optimization/"
+   click Backend "https://github.com/stan-dev/stanc3/blob/master/src/stan_math_backend/"
+   click Middle "https://github.com/stan-dev/stanc3/blob/master/src/middle/"
 ```
 
 The goal is to keep as many details about the way Stan is implemented by the core C++ implementation in the Stan Math backend library as possible.

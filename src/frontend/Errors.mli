@@ -31,11 +31,3 @@ val to_string : t -> string
 (** Format an error [t] as a string. Should only be used in testing!
   For user facing code, prefer [pp]
   *)
-
-val pp_semantic_error :
-     ?printed_filename:string
-  -> ?code:string
-  -> Format.formatter
-  -> Semantic_error.t
-  -> unit
-(** A semantic error message used when handling a SemanticError *)
