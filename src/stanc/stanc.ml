@@ -316,22 +316,23 @@ let add_file filename =
   if String.equal !model_file "" then model_file := filename
   else raise (Arg.Bad "Please specify only one model_file")
 
-let print_or_write data =
+let print_or_write_and_exit data =
   if not (String.equal !output_file "") then
     Out_channel.write_all !output_file ~data
-  else print_endline data
+  else print_endline data;
+  exit 0
+
+let print_and_exit data =
+  print_endline data;
+  exit 0
 
 let output_callback printed_filename : Driver.Entry.other_output -> unit =
   function
-  | Info s ->
-      print_endline s;
-      exit 0
-  | Version s ->
-      print_endline (s ^ "(" ^ Sys.os_type ^ ")");
-      exit 0
+  | Info s -> print_and_exit s
+  | Version s -> print_and_exit (s ^ "(" ^ Sys.os_type ^ ")")
   | Generated s | Formatted s ->
-      print_or_write s;
-      exit 0
+      (* these options will use the --o flag if it was passed *)
+      print_or_write_and_exit s
   | DebugOutput s | Memory_patterns s ->
       (* historically, these flags didn't prevent you from continuing *)
       print_string s
