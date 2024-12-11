@@ -1,3 +1,5 @@
+(** The main entrypoint for Stan -> C++ compilation *)
+
 open Frontend
 
 (** Either the C++ a model compiled to, or an error *)

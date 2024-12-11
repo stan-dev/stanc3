@@ -1,4 +1,5 @@
 (** General compiler settings. *)
+
 type t =
   { (* ------------------------------- *)
     (* flags affecting code generation *)
