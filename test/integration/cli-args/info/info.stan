@@ -37,6 +37,7 @@ transformed data {
 }
 
 parameters {
+  real <lower=0> low;
   simplex[10] l;
   unit_vector[11] m;
   ordered[12] n;
@@ -46,6 +47,8 @@ parameters {
   cholesky_factor_cov[16] r;
   cholesky_factor_corr[17] s;
   real y;
+
+  tuple(real<lower=y>, tuple(simplex[18], cov_matrix[19])) parameter_transforms;
 }
 
 transformed parameters {
