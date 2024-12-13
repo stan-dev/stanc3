@@ -13,9 +13,9 @@ var opt_test = stanc.stanc("optimization", opt_model, []);
 var ind = opt_test.result.search("int t = 1; t <= 5; \\+\\+t");
 console.assert(ind > -1, "ERROR: Optimization without the O flag!")
 
-var opt_test = stanc.stanc("optimization", opt_model, ["O"]);
+var opt_test = stanc.stanc("optimization", opt_model, ["Oexperimental"]);
 var ind = opt_test.result.search("int t = 1; t <= 5; \\+\\+t");
-console.assert(ind < 0, "ERROR: No optimization without the O flag!")
+console.assert(ind < 0, "ERROR: No optimization with the Oexperimental flag!")
 
 var ad_model = `
 data {
