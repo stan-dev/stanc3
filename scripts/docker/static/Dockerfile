@@ -28,10 +28,10 @@ RUN CONTAINERS_COMMON_VER=$(curl -s https://dl-cdn.alpinelinux.org/alpine/latest
     apk add cont.apk && \
     apk add skopeo.apk
 
-#Switch back to the normal user
+# Switch back to the normal user
 USER jenkins
 
-#Init opam, create and switch to 4.14.0, update shell environment
+# Init opam, create and switch to 4.14.0, update shell environment
 RUN opam init --disable-sandboxing --bare -y
 RUN opam switch create 4.14.0
 RUN opam switch 4.14.0
@@ -44,5 +44,5 @@ RUN opam update; bash -x install_build_deps.sh
 
 RUN opam install odoc -y
 
-#Specify our entrypoint
+# Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
