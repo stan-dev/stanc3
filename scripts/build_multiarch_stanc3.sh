@@ -1,9 +1,11 @@
+export PROFILE=static
 
 # Architecture naming isn't consistent between QEMU and Docker, so lookup correct naming
 if [ $1 = "mips64el" ]; then
   export DOCK_ARCH="mips64le"
   export DOCK_VARIANT=""
 elif [ $1 = "arm64" ]; then
+  export PROFILE=release
   export DOCK_ARCH="arm64"
   export DOCK_VARIANT=""
 elif [ $1 = "ppc64el" ]; then
@@ -28,4 +30,4 @@ SHA=$(skopeo inspect --raw docker://stanorg/stanc3:${DOCKER_IMAGE_TAG} | jq '.ma
 # Register QEMU translation binaries
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
-docker run --group-add=987 --group-add=980 --group-add=988 -v $(pwd):$(pwd):rw,z stanorg/stanc3:${DOCKER_IMAGE_TAG}@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune subst && dune build @install --profile static --root=."
+docker run --group-add=987 --group-add=980 --group-add=988 -v $(pwd):$(pwd):rw,z stanorg/stanc3:${DOCKER_IMAGE_TAG}@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune subst && dune build @install --profile $PROFILE --root=."
