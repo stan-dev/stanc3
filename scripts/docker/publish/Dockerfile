@@ -1,5 +1,5 @@
-# Pull the ubuntu:bionic base image
-FROM ubuntu:bionic
+# Pull the ubuntu:jammy base image
+FROM ubuntu:jammy
 
 USER root
 
