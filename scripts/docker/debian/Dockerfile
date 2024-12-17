@@ -1,5 +1,5 @@
-# Pull the ubuntu:bionic base image
-FROM ubuntu:bionic
+# Pull the ubuntu:jammy base image
+FROM ubuntu:jammy
 
 USER root
 
@@ -27,6 +27,7 @@ WORKDIR /home/jenkins
 #Copy our script and install ocaml + init
 COPY ./scripts/install_opam.sh ./
 RUN printf "\n" | bash -x install_opam.sh
+RUN opam update
 
 # Install and initialize ocaml
 COPY ./scripts/install_ocaml.sh ./
@@ -34,15 +35,15 @@ RUN printf "\n" | bash -x install_ocaml.sh "stanc"
 
 # Install build dependencies
 COPY ./scripts/install_build_deps.sh ./
-RUN opam update; bash -x install_build_deps.sh
+RUN bash -x install_build_deps.sh
 
 # Install dev dependencies
 COPY ./scripts/install_dev_deps.sh ./
-RUN opam update; bash -x install_dev_deps.sh
+RUN bash -x install_dev_deps.sh
 
 # Install Javascript dev environment (js_of_ocaml 5.4.0)
 COPY ./scripts/install_js_deps.sh ./
-RUN opam update; bash -x install_js_deps.sh
+RUN bash -x install_js_deps.sh
 
 # Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]

@@ -24,6 +24,8 @@
    (= 0.9.0))
   (yojson
    (= 2.1.0))
+  (cmdliner
+   (= 1.3.0))
   (ocamlformat
    (and
     :with-test
