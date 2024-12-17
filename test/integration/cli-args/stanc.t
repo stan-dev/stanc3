@@ -200,21 +200,38 @@ Show help
   
 
 
+
+Qmark alias
+  $ stanc -? plain | head
+  NAME
+         %%NAME%% - compile Stan programs to C++
+  
+  SYNOPSIS
+         %%NAME%% [OPTION]… [MODEL_FILE]
+  
+  DESCRIPTION
+         The Stan compiler (also known as stanc or stanc3) reads a Stan file
+         and compiles it to C++. It also allows for other Stan program
+         manipulation like formatting (--auto-format) and introspection
+
 Show version
   $ stanc --version
   %%NAME%%3 %%VERSION%% (Unix)
+
 Error when no file passed
   $ stanc
   %%NAME%%: No model file provided
   Usage: %%NAME%% [OPTION]… [MODEL_FILE]
   Try '%%NAME%% --help' for more information.
   [124]
+
 Error when multiple files passed
   $ stanc foo.stan foo2.stan
   %%NAME%%: too many arguments, don't know what to do with 'foo2.stan'
   Usage: %%NAME%% [OPTION]… [MODEL_FILE]
   Try '%%NAME%% --help' for more information.
   [124]
+
 Error when a folder is passed
   $ mkdir foo.d && stanc foo.d
   %%NAME%%: MODEL_FILE argument: 'foo.d' is a directory
@@ -222,3 +239,10 @@ Error when a folder is passed
   Try '%%NAME%% --help' for more information.
   [124]
 
+Error when nonsense argument is passed
+  $ stanc -fno-generated-quantities
+  %%NAME%%: option '-f': invalid value 'no-generated-quantities', expected
+            either 'soa' or 'no-soa'
+  Usage: %%NAME%% [OPTION]… [MODEL_FILE]
+  Try '%%NAME%% --help' for more information.
+  [124]

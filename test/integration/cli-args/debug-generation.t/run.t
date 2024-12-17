@@ -5,6 +5,14 @@ Provide partial data file
   $ stanc --debug-generate-inits debug.stan --debug-data-file partial_data.json | python3 -c "import sys, json; data=json.loads(sys.stdin.read()); print(len(data['theta']))"
   29
 
+Output file works
+
+  $ stanc --debug-generate-data debug.stan --o output.json && ls *.json && rm output.json
+  incomplete_data.json
+  output.json
+  partial-div0.json
+  partial_data.json
+
 Don't provide any data
   $ stanc --debug-generate-inits debug.stan
   Error in 'debug.stan', line 8, column 10 to column 25:
