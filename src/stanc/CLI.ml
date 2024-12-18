@@ -195,14 +195,22 @@ module Debug_Options = struct
        checking." in
     Arg.(value & flag & info ["debug-ast"] ~doc ~docs)
 
-  let debug_data_file =
+  let debug_data_json : string option Term.ret Term.t =
     let doc =
       "Provide (possibly partially specified) data block values for use with \
        $(b,--debug-generate-data) or $(b,--debug-generate-inits)." in
-    Arg.(
-      value
-      & opt (some non_dir_file) None
-      & info ["debug-data-file"] ~doc ~docv:"JSON_FILE" ~docs)
+    Term.(
+      const (function
+        | None -> `Ok None
+        | Some file -> (
+            try `Ok (Some (In_channel.read_all file))
+            with _ ->
+              `Error (true, "File '" ^ file ^ "' not found or cannot be opened.")
+            ))
+      $ Arg.(
+          value
+          & opt (some non_dir_file) None
+          & info ["debug-data-file"] ~doc ~docv:"JSON_FILE" ~docs))
 
   let debug_decorated_ast =
     let doc =
@@ -328,7 +336,7 @@ module Conversion = struct
     and+ print_lir = debug_lir
     and+ debug_generate_data = debug_generate_data
     and+ debug_generate_inits = debug_generate_inits
-    and+ debug_data_file = debug_data_file in
+    and+ debug_data_json = Term.ret debug_data_json in
     Driver.Flags.
       { print_ast
       ; print_typed_ast
@@ -340,7 +348,7 @@ module Conversion = struct
       ; print_lir
       ; debug_generate_data
       ; debug_generate_inits
-      ; debug_data_json= Option.map ~f:In_channel.read_all debug_data_file }
+      ; debug_data_json }
 
   let flags : Driver.Flags.t Term.t =
     let open Options in

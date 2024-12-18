@@ -34,13 +34,19 @@ Provide a non-existant file
   Try '%%NAME%% --help' for more information.
   [124]
 
-Provide an invalid file
+Provide an invalid JSON file
   $ stanc --debug-generate-inits debug.stan --debug-data-file bad.json
   Error: Failed to parse data JSON for debug generation: Line 3, bytes 10-13:
   Expected ',' or '}' but found 'a,
   '
   [1]
 
+Provide an unreadable JSON file
+  $ touch unreadable.json && chmod -r unreadable.json && stanc --debug-generate-inits debug.stan --debug-data-file unreadable.json
+  %%NAME%%: File 'unreadable.json' not found or cannot be opened.
+  Usage: %%NAME%% [OPTION]… [MODEL_FILE]
+  Try '%%NAME%% --help' for more information.
+  [124]
 
 Bad data block, cannot be partially evaluated
   $ stanc --debug-generate-data div0.stan --debug-data-file partial-div0.json

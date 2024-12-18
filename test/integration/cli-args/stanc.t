@@ -201,6 +201,7 @@ Show help
 
 
 
+
 Qmark alias
   $ stanc -? plain | head
   NAME
@@ -246,3 +247,8 @@ Error when nonsense argument is passed
   Usage: %%NAME%% [OPTION]… [MODEL_FILE]
   Try '%%NAME%% --help' for more information.
   [124]
+
+Error when unreadable file is passed
+  $ touch unreadable.stan && chmod -r unreadable.stan && stanc unreadable.stan
+  Error: file 'unreadable.stan' not found or cannot be opened
+  [1]
