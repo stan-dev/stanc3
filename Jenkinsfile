@@ -100,6 +100,8 @@ pipeline {
                description: "Pass STANCFLAGS to make/local, default none")
         booleanParam(name:"run_slow_perf_tests", defaultValue: false, description:"Run additional 'slow' performance tests")
         string(defaultValue: '', name: 'build_multiarch_docker_tag', description: "Docker tag for the multiarch image")
+        booleanParam(name:"build_multiarch", defaultValue: false, description:"Build multiarch images even when not on 'master'")
+
     }
     options {
         parallelsAlwaysFailFast()
@@ -113,7 +115,7 @@ pipeline {
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
         GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
-        MULTIARCH_DOCKER_TAG = 'multiarch-ocaml-4.14-v2'
+        MULTIARCH_DOCKER_TAG = 'multiarch-ocaml-4.14-v2-and-cmdliner'
     }
     stages {
         stage('Verify changes') {
@@ -749,7 +751,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
                         }
                     }
                     agent {
@@ -783,7 +785,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
                         }
                     }
                     agent {
@@ -814,7 +816,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
                         }
                     }
                     agent {
@@ -845,7 +847,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
                         }
                     }
                     agent {
@@ -876,7 +878,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
                         }
                     }
                     agent {
@@ -907,7 +909,7 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master' }
+                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
                         }
                     }
                     agent {

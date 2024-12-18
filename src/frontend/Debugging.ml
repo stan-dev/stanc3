@@ -1,7 +1,5 @@
 (** Some helpers for debugging *)
 
-(* For s-expression support *)
-
 (** Controls whether the lexing operations get logged *)
 let lexer_logging = ref false
 
