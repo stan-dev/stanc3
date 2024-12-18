@@ -92,13 +92,21 @@ let stan2cpp model_name model (flags : Flags.t) (output : other_output -> unit)
     if flags.warn_pedantic then
       output (Warnings (Pedantic_analysis.warn_pedantic mir));
     debug_output_mir output mir flags.debug_settings.print_mir;
-    let generation_context =
+    let* generation_context =
       match flags.debug_settings.debug_data_json with
-      | None -> Map.Poly.empty
-      | Some file ->
-          Debug_data_generation.json_to_mir
-            (Ast_to_Mir.gather_declarations typed_ast.datablock)
-            (Yojson.Basic.from_string file) in
+      | None -> Ok Map.Poly.empty
+      | Some string -> (
+          try
+            Ok
+              (Debug_data_generation.json_to_mir
+                 (Ast_to_Mir.gather_declarations typed_ast.datablock)
+                 (Yojson.Basic.from_string string))
+          with Yojson.Json_error reason ->
+            Error
+              (Errors.DebugDataError
+                 ( Location_span.empty
+                 , "Failed to parse data JSON for debug generation: " ^ reason
+                 ))) in
     let* () =
       if flags.debug_settings.debug_generate_data then
         let* data =
