@@ -27,3 +27,8 @@ Output file for formatting prevents cpp generation
 Output file isn't present in C++ args array
   $ stanc --O -fno-soa --o=foo.cpp basic.stan && grep "stancflags" foo.cpp && rm foo.cpp
                "stancflags = --O1 -fno-soa"};
+
+Error on un-writable output file
+  $ touch basic.hpp && chmod -w basic.hpp && stanc --o=basic.hpp basic.stan
+  Error writing to file 'basic.hpp': basic.hpp: Permission denied
+  [1]
