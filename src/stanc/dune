@@ -3,10 +3,10 @@
  (modes
   (byte c)
   (best exe))
- (libraries driver)
+ (libraries driver cmdliner)
  (instrumentation
   (backend bisect_ppx))
- (modules Stanc)
+ (modules Stanc CLI)
  (public_name stanc)
  (preprocess
   (pps ppx_jane)))

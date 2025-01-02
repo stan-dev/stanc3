@@ -9,6 +9,7 @@ then
     bash -x ./install_opam.sh
 else
     echo "OPAM already installed, not re-installing."
+	opam update
 fi
 
 read -p "Supply a name for the OPAM switch to be created (default: stanc): " opam_switch_name

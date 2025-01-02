@@ -1,5 +1,5 @@
 # Base image
-FROM debian:buster-20220622-slim
+FROM debian:bullseye-20241202
 
 USER root
 
@@ -51,18 +51,17 @@ RUN eval $(opam env) && opam update
 
 # Native-code compilation not available on MIPS, fall back to bytecode
 RUN if [ "$(cat /qemu-setup/arch)" = "mips64el" ]; then \
-    opam switch create 4.14.1 --packages=ocaml-variants.4.14.1+options,ocaml-option-bytecode-only && opam switch 4.14.1 && opam pin num https://github.com/ocaml/num.git -y; \
+    opam switch create 4.14.1 --packages=ocaml-variants.4.14.1+options,ocaml-option-bytecode-only && opam switch 4.14.1; \
   else \
     opam switch create 4.14.1 && opam switch 4.14.1; \
   fi
 
-RUN eval $(opam env) && opam repo add internet https://opam.ocaml.org
-
-RUN eval $(opam env) && opam install -y dune
+RUN eval $(opam env) && opam repository add dune-universe git+https://github.com/dune-universe/opam-overlays.git
 RUN eval $(opam env) && opam update && opam upgrade
+RUN eval $(opam env) && opam install -y dune
 RUN eval $(opam env) && opam install -y core.v0.16.0
 RUN eval $(opam env) && opam install -y menhir.20230608
 RUN eval $(opam env) && opam install -y ppx_deriving.5.2.1
 RUN eval $(opam env) && opam install -y fmt.0.9.0
 RUN eval $(opam env) && opam install -y yojson.2.1.0
-RUN eval $(opam env)
+RUN eval $(opam env) && opam install -y cmdliner.1.3.0+dune
