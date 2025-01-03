@@ -4,9 +4,14 @@ open Core
 open Frontend
 module Stan_math_signatures = Middle.Stan_math_signatures
 
+let write filename data =
+  try Out_channel.write_all filename ~data
+  with Sys_error msg ->
+    Fmt.epr "Error writing to file '%s': %s@." filename msg;
+    exit 1
+
 let print_or_write_and_exit output_file data =
-  if not (String.equal output_file "") then
-    Out_channel.write_all output_file ~data
+  if not (String.equal output_file "") then write output_file data
   else print_endline data;
   exit 0
 
@@ -58,12 +63,12 @@ let main () =
       (output_callback output_file flags.filename_in_msg)
   with
   | Ok cpp_str ->
+      if print_cpp then print_endline cpp_str;
       let out =
         if String.equal output_file "" then
           Driver.Flags.remove_dotstan model_file ^ ".hpp"
         else output_file in
-      Out_channel.write_all out ~data:cpp_str;
-      if print_cpp then print_endline cpp_str
+      write out cpp_str
   | Error (DebugDataError _ as e) ->
       (* separated out to suggest the possibly-fixing flag *)
       Errors.pp Fmt.stderr ?printed_filename:flags.filename_in_msg e;
