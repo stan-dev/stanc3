@@ -652,30 +652,73 @@ pipeline {
 
         stage('Build binaries') {
             parallel {
-                stage("Build & test Mac OS X binary") {
+                stage("Build MacOS binaries") {
+                    agent none
                     when {
                         beforeAgent true
                         expression { !skipRebuildingBinaries }
                     }
-                    agent { label 'osx && !m1' }
-                    steps {
-                        dir("${env.WORKSPACE}/osx"){
-                            cleanCheckout()
-                            withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
-                                runShell("""
-                                    export PATH=/Users/jenkins/brew/bin:\$PATH
-                                    eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                    dune subst
-                                    opam update || true
-                                    bash -x scripts/install_build_deps.sh
-                                    dune build @install --root=.
-                                """)
+                    stages {
+                        stage("Build & test MacOS x86 binary") {
+                            agent { label 'osx && intel' }
+                            steps {
+                                dir("${env.WORKSPACE}/osx-x86"){
+                                    cleanCheckout()
+                                    withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
+                                        runShell("""
+                                            export PATH=/Users/jenkins/brew/bin:\$PATH
+                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
+                                            dune subst
+                                            opam update || true
+                                            bash -x scripts/install_build_deps.sh
+                                            dune build @install --root=.
+                                        """)
+                                    }
+                                    sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-x86-stanc"
+                                    stash name:'mac-x86-exe', includes:'bin/*'
+                                }
                             }
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                            stash name:'mac-exe', includes:'bin/*'
+                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-x86/*") }}
+                        }
+
+                        stage("Build & test MacOS arm64 binary") {
+                            agent { label 'osx && m1' }
+                            steps {
+                                dir("${env.WORKSPACE}/osx-arm64"){
+                                    cleanCheckout()
+                                    withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
+                                        runShell("""
+                                            export PATH=/Users/jenkins/brew/bin:\$PATH
+                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
+                                            dune subst
+                                            opam update || true
+                                            bash -x scripts/install_build_deps.sh
+                                            dune build @install --root=.
+                                        """)
+                                    }
+                                    sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-arm64-stanc"
+                                    stash name:'mac-arm64-exe', includes:'bin/*'
+                                }
+                            }
+                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-arm64/*") }}
+                        }
+
+                        stage('Build MacOS fat binary') {
+                            agent { label 'osx && m1' }
+                            steps {
+                                dir("${env.WORKSPACE}/osx-universal"){
+                                    unstash 'mac-arm64-exe'
+                                    unstash 'mac-x86-exe'
+                                    withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
+                                        sh "lipo -create bin/mac-x86-stanc bin/mac-arm64-stanc -output bin/mac-stanc"
+                                    }
+                                    sh "lipo -archs bin/mac-stanc"
+                                    stash name:'mac-exe', includes:'bin/mac-stanc'
+                                }
+                            }
+                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-universal/*") }}
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/osx/*") }}
                 }
 
                 stage("Build stanc.js") {
@@ -1021,6 +1064,8 @@ pipeline {
                         unstash 'windows-exe'
                         unstash 'linux-exe'
                         unstash 'mac-exe'
+                        unstash 'mac-arm64-exe'
+                        unstash 'mac-x86-exe'
                         unstash 'linux-mips64el-exe'
                         unstash 'linux-ppc64el-exe'
                         unstash 'linux-s390x-exe'
