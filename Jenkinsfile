@@ -668,9 +668,9 @@ pipeline {
                                         runShell("""
                                             export PATH=/Users/jenkins/brew/bin:\$PATH
                                             eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                            dune subst
                                             opam update || true
                                             bash -x scripts/install_build_deps.sh
+                                            dune subst
                                             dune build @install --root=.
                                         """)
                                     }
@@ -690,9 +690,9 @@ pipeline {
                                         runShell("""
                                             export PATH=/Users/jenkins/brew/bin:\$PATH
                                             eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                            dune subst
                                             opam update || true
                                             bash -x scripts/install_build_deps.sh
+                                            dune subst
                                             dune build @install --root=.
                                         """)
                                     }

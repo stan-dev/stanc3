@@ -182,4 +182,6 @@ jobs:
         run: chmod +x ${{ matrix.name }}-stanc
 
       - name: Run tests
-        run: ./${{ matrix.name }}-stanc --help
+        run: |
+          mv ${{ matrix.name }}-stanc stanc.exe
+          ./stanc.exe --help
