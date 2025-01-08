@@ -11,9 +11,8 @@ ENV OPAMROOT /usr/local/opam
 
 # Install OS dependencies
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-    curl ca-certificates \
-    rsync git build-essential m4 unzip pkg-config libpcre3-dev \
-    python3 python3-pip nodejs sudo
+    curl ca-certificates rsync git build-essential m4 unzip pkg-config\
+    libpcre3-dev python3 python3-pip nodejs sudo
 
 RUN addgroup -gid ${PGID} jenkins
 RUN adduser --disabled-password --gecos '' --ingroup jenkins --uid ${PUID} jenkins
@@ -41,7 +40,7 @@ RUN bash -x install_build_deps.sh
 COPY ./scripts/install_dev_deps.sh ./
 RUN bash -x install_dev_deps.sh
 
-# Install Javascript dev environment (js_of_ocaml 5.9.1 )
+# Install Javascript dev environment (js_of_ocaml 5.9.1)
 COPY ./scripts/install_js_deps.sh ./
 RUN bash -x install_js_deps.sh
 
