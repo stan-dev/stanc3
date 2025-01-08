@@ -7,12 +7,14 @@ Provide partial data file
 
 Output file works
 
-  $ stanc --debug-generate-data debug.stan --o output.json && ls *.json && rm output.json
+  $ stanc --debug-generate-data debug.stan --o output.json
+  $ ls *.json
   bad.json
   incomplete_data.json
   output.json
   partial-div0.json
   partial_data.json
+  $ rm output.json
 
 Don't provide any data
   $ stanc --debug-generate-inits debug.stan
@@ -42,11 +44,14 @@ Provide an invalid JSON file
   [1]
 
 Provide an unreadable JSON file
-  $ touch unreadable.json && chmod -r unreadable.json && stanc --debug-generate-inits debug.stan --debug-data-file unreadable.json
+  $ touch unreadable.json
+  $ chmod -r unreadable.json
+  $ stanc --debug-generate-inits debug.stan --debug-data-file unreadable.json
   %%NAME%%: File 'unreadable.json' not found or cannot be opened.
   Usage: %%NAME%% [OPTION]… [MODEL_FILE]
   Try '%%NAME%% --help' for more information.
   [124]
+  $ rm unreadable.json
 
 Bad data block, cannot be partially evaluated
   $ stanc --debug-generate-data div0.stan --debug-data-file partial-div0.json
