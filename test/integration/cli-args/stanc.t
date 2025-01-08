@@ -200,8 +200,6 @@ Show help
   
 
 
-
-
 Qmark alias
   $ stanc -? plain | head
   NAME
@@ -234,11 +232,13 @@ Error when multiple files passed
   [124]
 
 Error when a folder is passed
-  $ mkdir foo.d && stanc foo.d
+  $ mkdir foo.d
+  $ stanc foo.d
   %%NAME%%: MODEL_FILE argument: 'foo.d' is a directory
   Usage: %%NAME%% [OPTION]… [MODEL_FILE]
   Try '%%NAME%% --help' for more information.
   [124]
+  $ rm -r foo.d
 
 Error when nonsense argument is passed
   $ stanc -fno-generated-quantities
@@ -249,6 +249,9 @@ Error when nonsense argument is passed
   [124]
 
 Error when unreadable file is passed
-  $ touch unreadable.stan && chmod -r unreadable.stan && stanc unreadable.stan
+  $ touch unreadable.stan
+  $ chmod -r unreadable.stan
+  $ stanc unreadable.stan
   Error: file 'unreadable.stan' not found or cannot be opened
   [1]
+  $ rm unreadable.stan
