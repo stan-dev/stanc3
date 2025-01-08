@@ -41,7 +41,7 @@ RUN bash -x install_build_deps.sh
 COPY ./scripts/install_dev_deps.sh ./
 RUN bash -x install_dev_deps.sh
 
-# Install Javascript dev environment (js_of_ocaml 5.9.1)
+# Install Javascript dev environment (js_of_ocaml 5.9.1 )
 COPY ./scripts/install_js_deps.sh ./
 RUN bash -x install_js_deps.sh
 
