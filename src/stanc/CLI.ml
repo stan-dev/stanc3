@@ -423,8 +423,8 @@ let cmd : cli_result Cmd.t =
     ; `P
         "The Stan compiler (also known as $(i,stanc) or $(i,stanc3)) reads a \
          Stan file and compiles it to C++. It also allows for other Stan \
-         program manipulation like formatting ($(b,--auto-format)) and \
-         introspection ($(b,--info))."
+         program manipulation like formatting (see $(b,--auto-format)) and \
+         introspection (see $(b,--info))."
     ; `P "For more information on Stan, see https://mc-stan.org."
     ; `P
         "For more documentation on the compiler for users, see \
