@@ -12,7 +12,9 @@ ENV OPAMROOT /usr/local/opam
 # Install OS dependencies
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     curl ca-certificates rsync git build-essential m4 unzip pkg-config\
-    libpcre3-dev python3 python3-pip nodejs sudo
+    libpcre3-dev python3 python3-pip sudo
+RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+RUN apt-get update -qq && apt-get install -y --no-install-recommends nodejs
 
 RUN addgroup -gid ${PGID} jenkins
 RUN adduser --disabled-password --gecos '' --ingroup jenkins --uid ${PUID} jenkins
