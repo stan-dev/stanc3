@@ -272,6 +272,7 @@ pipeline {
                         dir("${env.WORKSPACE}/stancjs-tests"){
                             unstash "Stanc3Setup"
                             runShell("""
+                                node --version
                                 eval \$(opam env)
                                 dune build @runjstest --root=.
                             """)
