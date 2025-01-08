@@ -26,7 +26,7 @@ def tagName() {
 }
 
 def runPerformanceTests(String testsPath, String stancFlags = ""){
-    unstash 'ubuntu-exe'
+    unstash 'linux-exe'
 
     sh """
         git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
@@ -153,76 +153,84 @@ pipeline {
             post { always { runShell("rm -rf ./*") }}
         }
 
-        stage("Build") {
-            agent {
-                dockerfile {
-                    filename 'scripts/docker/debian/Dockerfile'
-                    dir '.'
-                    label 'linux'
-                    args '--entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                }
-            }
-            steps {
-                unstash "Stanc3Setup"
-                runShell("""
-                    eval \$(opam env)
-                    dune build @install
-                """)
 
-                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-                stash name:'ubuntu-exe', includes:'bin/stanc'
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }
-
-        stage("Code formatting") {
-            when {
-                beforeAgent true
-                expression {
-                    !skipRemainingStages
-                }
-            }
-            agent {
-                dockerfile {
-                    filename 'scripts/docker/debian/Dockerfile'
-                    dir '.'
-                    label 'linux'
-                    args '--entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                }
-            }
-            steps {
-                unstash "Stanc3Setup"
-                sh """
-                    eval \$(opam env)
-                    make format  ||
-                    (
-                        set +x &&
-                        echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
-                        echo "Please consider installing the pre-commit git hook for formatting with the above command." &&
-                        echo "Our hook can be installed with bash ./scripts/hooks/install_hooks.sh" &&
-                        exit 1;
-                    )
-                """
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }
-
-        stage("OCaml tests") {
-            when {
-                beforeAgent true
-                allOf {
-                    expression {
-                        !skipRemainingStages
-                    }
-                    expression {
-                        !params.skip_ocaml_tests
-                    }
-                }
-            }
+        stage("OCaml build & tests") {
             parallel {
+                stage("Build") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/static/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/linux"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build @install --profile static --root=.
+                            """)
+                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                            stash name:'linux-exe', includes:'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
+                }
+                stage("Code formatting") {
+                    when {
+                        beforeAgent true
+                        expression {
+                            !skipRemainingStages
+                        }
+                    }
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/debian/Dockerfile'
+                            dir '.'
+                            label 'linux'
+                            args '--entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        unstash "Stanc3Setup"
+                        sh """
+                            eval \$(opam env)
+                            make format  ||
+                            (
+                                set +x &&
+                                echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
+                                echo "Please consider installing the pre-commit git hook for formatting with the above command." &&
+                                echo "Our hook can be installed with bash ./scripts/hooks/install_hooks.sh" &&
+                                exit 1;
+                            )
+                        """
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
                 stage("Dune tests") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression {
+                                !skipRemainingStages
+                            }
+                            expression {
+                                !params.skip_ocaml_tests
+                            }
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'scripts/docker/debian/Dockerfile'
@@ -259,6 +267,17 @@ pipeline {
                     post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
                 }
                 stage("stancjs tests") {
+                    when {
+                        beforeAgent true
+                        allOf {
+                            expression {
+                                !skipRemainingStages
+                            }
+                            expression {
+                                !params.skip_ocaml_tests
+                            }
+                        }
+                    }
                     agent {
                         dockerfile {
                             filename 'scripts/docker/debian/Dockerfile'
@@ -456,7 +475,7 @@ pipeline {
                         dir("${env.WORKSPACE}/compile-end-to-end"){
                             script {
                                 unstash "Stanc3Setup"
-                                unstash 'ubuntu-exe'
+                                unstash 'linux-exe'
                                 sh """
                                     git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                                 """
@@ -515,7 +534,7 @@ pipeline {
                         dir("${env.WORKSPACE}/compile-end-to-end-O=1"){
                             script {
                                 unstash "Stanc3Setup"
-                                unstash 'ubuntu-exe'
+                                unstash 'linux-exe'
                                 sh """
                                     git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                                 """
@@ -577,7 +596,7 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/compile-expressions"){
                             unstash "Stanc3Setup"
-                            unstash 'ubuntu-exe'
+                            unstash 'linux-exe'
                             script {
                                 sh """
                                     git clone --recursive https://github.com/stan-dev/math.git
@@ -757,37 +776,6 @@ pipeline {
                         }
                     }
                     post {always { runShell("rm -rf ${env.WORKSPACE}/stancjs/*")}}
-                }
-
-                stage("Build & test a static Linux binary") {
-                    when {
-                        beforeAgent true
-                        expression {
-                            !skipRebuildingBinaries
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux"){
-                            cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                                dune build @install --profile static --root=.
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                            stash name:'linux-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
                 }
 
                 stage("Build & test a static Linux mips64el binary") {
