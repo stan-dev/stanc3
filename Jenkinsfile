@@ -41,7 +41,7 @@ def runPerformanceTests(String testsPath, String stancFlags = ""){
     sh """
         cd performance-tests-cmdstan
         mkdir cmdstan/bin
-        cp ../bin/stanc cmdstan/bin/linux-stanc
+        cp ../bin/linux-stanc cmdstan/bin/linux-stanc
         cd cmdstan; make clean-all;
     """
 
@@ -493,7 +493,7 @@ pipeline {
                                     echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
                                     echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                     cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "\$(readlink -f ../bin/stanc)"
+                                    CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "\$(readlink -f ../bin/linux-stanc)"
                                 """
                             }
 
@@ -554,7 +554,7 @@ pipeline {
                                     echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
                                     echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                     cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "--O1" "\$(readlink -f ../bin/stanc)"
+                                    CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "--O1" "\$(readlink -f ../bin/linux-stanc)"
                                 """
                             }
 
@@ -603,7 +603,7 @@ pipeline {
                                 """
                                 utils.checkout_pr("math", "math", params.math_pr)
                                 sh """
-                                    cp bin/stanc math/test/expressions/stanc
+                                    cp bin/linux-stanc math/test/expressions/stanc
                                 """
 
                                 dir("math") {
