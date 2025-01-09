@@ -58,25 +58,33 @@ let main () =
     if String.is_suffix model_file ~suffix:".stanfunctions" then
       {flags with standalone_functions= true; functions_only= true}
     else flags in
+  let model_file_name, model_source, printed_filename =
+    if String.equal model_file "-" then
+      ( "stdin"
+      , `Code (In_channel.input_all In_channel.stdin)
+      , Option.first_some flags.filename_in_msg (Some "stdin") )
+    else (model_file, `File model_file, flags.filename_in_msg) in
   match
-    Driver.Entry.stan2cpp model_file (`File model_file) flags
-      (output_callback output_file flags.filename_in_msg)
+    Driver.Entry.stan2cpp model_file_name model_source flags
+      (output_callback output_file printed_filename)
   with
   | Ok cpp_str ->
       if print_cpp then print_endline cpp_str;
       let out =
         if String.equal output_file "" then
-          Driver.Flags.remove_dotstan model_file ^ ".hpp"
+          Driver.Flags.remove_dotstan model_file_name ^ ".hpp"
         else output_file in
       write out cpp_str
   | Error (DebugDataError _ as e) ->
       (* separated out to suggest the possibly-fixing flag *)
-      Errors.pp Fmt.stderr ?printed_filename:flags.filename_in_msg e;
+      Errors.pp Fmt.stderr ?printed_filename e;
       if Option.is_none flags.debug_settings.debug_data_json then
         Fmt.pf Fmt.stderr "Supplying a --debug-data-file may help@;";
       exit 1
   | Error e ->
-      Errors.pp Fmt.stderr ?printed_filename:flags.filename_in_msg e;
+      (match model_source with
+      | `File _ -> Errors.pp Fmt.stderr ?printed_filename e
+      | `Code code -> Errors.pp Fmt.stderr ?printed_filename ~code e);
       exit 1
 
 let () =

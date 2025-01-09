@@ -7,11 +7,16 @@ module Arguments = struct
 
   let model_file =
     let doc =
-      "The Stan model file to compile. This should be a .stan file or \
-       .stanfunctions file (the latter automatically sets \
-       $(b,--standalone-functions))." in
+      "The Stan model file to compile. This should be a file ending in \
+       $(b,.stan) or $(b,.stanfunctions) (which automatically sets \
+       $(b,--standalone-functions)), or '-' to read from standard input." in
     Arg.(
-      value & pos 0 (some non_dir_file) None & info [] ~docv:"MODEL_FILE" ~doc)
+      let dash_or_file =
+        let else_parse = conv_parser non_dir_file in
+        let pp = conv_printer non_dir_file in
+        let parse s = if String.equal s "-" then Ok s else else_parse s in
+        conv (parse, pp) in
+      value & pos 0 (some dash_or_file) None & info [] ~docv:"MODEL_FILE" ~doc)
 end
 
 module Options = struct
