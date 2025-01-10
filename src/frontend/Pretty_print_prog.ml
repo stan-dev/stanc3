@@ -54,7 +54,8 @@ let check_correctness ?(bare_functions = false) prog pretty =
     match res with
     | Ok prog -> prog
     | Error e ->
-        let error = Errors.to_string e in
+        let error =
+          Fmt.str "%a" (Errors.pp ?printed_filename:None ~code:pretty) e in
         Common.ICE.internal_compiler_error
           [%message
             "Pretty-printed program failed to parse" error

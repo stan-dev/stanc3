@@ -4,7 +4,7 @@ open Frontend
 let print_ast_or_error code =
   let () =
     match Test_utils.untyped_ast_of_string code with
-    | Result.Error e -> print_endline @@ Errors.to_string e
+    | Result.Error e -> print_endline @@ Test_utils.error_to_string e
     | Result.Ok ast -> print_s [%sexp (ast : Ast.untyped_program)] in
   (* reset *) Include_files.include_provider := FileSystemPaths []
 

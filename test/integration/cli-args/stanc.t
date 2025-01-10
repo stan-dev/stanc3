@@ -200,6 +200,7 @@ Show help
   
 
 
+
 Qmark alias
   $ stanc -? plain | head
   NAME
@@ -265,7 +266,8 @@ Can read from stdin
   
 
 
-Can filename is set to stdin when reading from stdin
+
+Filename is set to stdin when reading from stdin
   $ echo 'parameters {real y}' | stanc -
   Syntax error in 'stdin', line 1, column 18 to column 19, parsing error:
      -------------------------------------------------

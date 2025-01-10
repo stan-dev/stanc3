@@ -23,20 +23,20 @@ type t =
   | DebugDataError of (Middle.Location_span.t * string)
 
 let get_context ?code Middle.Location.{filename; included_from; _} () =
-  (* If the location is not included from anywhere, it's the orignal code *)
-  let code = if Option.is_none included_from then code else None in
-  (* Otherwise, by the time we are printing an error,
-     all these files are already resolved. *)
-  match !Include_files.include_provider with
-  | FileSystemPaths _ ->
-      (* So we can read directly from the filesystem *)
-      Option.map code ~f:String.split_lines
-      |> Option.value_or_thunk ~default:(fun () ->
-             In_channel.read_lines filename)
-  | InMemory m ->
-      (* Or, we know we can find it in the map *)
-      Option.value_or_thunk code ~default:(fun () -> Map.find_exn m filename)
-      |> String.split_lines
+  (* If the location is not included from anywhere, and we
+     have code provided, use it *)
+  match (included_from, code) with
+  | None, Some code -> String.split_lines code
+  | _ -> (
+      (* Otherwise, by the time we are printing an error,
+         all these files are already resolved. *)
+      match !Include_files.include_provider with
+      | FileSystemPaths _ ->
+          (* So we can read directly from the filesystem *)
+          In_channel.read_lines filename
+      | InMemory m ->
+          (* Or, we know we can find it in the map *)
+          String.split_lines (Map.find_exn m filename))
 
 let pp_context_with_message ?code ppf (msg, loc) =
   Fmt.pf ppf "%a@,%s" (Fmt.option Fmt.string)
@@ -85,5 +85,3 @@ let pp ?printed_filename ?code ppf = function
       else
         let loc = Middle.Location_span.to_string ?printed_filename loc in
         Fmt.pf ppf "@[<v>Error in %s:@ %s@;@]" loc msg
-
-let to_string = Fmt.str "%a" (pp ?printed_filename:None ?code:None)
