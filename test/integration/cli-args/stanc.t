@@ -22,9 +22,9 @@ Show help
   
   ARGUMENTS
          MODEL_FILE
-             The Stan model file to compile. This should be a .stan file or
-             .stanfunctions file (the latter automatically sets
-             --standalone-functions).
+             The Stan model file to compile. This should be a file ending in
+             .stan or .stanfunctions (which automatically sets
+             --standalone-functions), or '-' to read from standard input.
   
   OPTIONS
          -? [=FMT] (default=auto)
@@ -200,6 +200,7 @@ Show help
   
 
 
+
 Qmark alias
   $ stanc -? plain | head
   NAME
@@ -255,3 +256,24 @@ Error when unreadable file is passed
   Error: file 'unreadable.stan' not found or cannot be opened
   [1]
   $ rm unreadable.stan
+
+
+Can read from stdin
+  $ echo 'parameters {real y;}' | stanc - --auto-format
+  parameters {
+    real y;
+  }
+  
+
+
+
+Filename is set to stdin when reading from stdin
+  $ echo 'parameters {real y}' | stanc -
+  Syntax error in 'stdin', line 1, column 18 to column 19, parsing error:
+     -------------------------------------------------
+       1:  parameters {real y}
+                             ^
+     -------------------------------------------------
+  
+  ";" expected after variable declaration.
+  [1]

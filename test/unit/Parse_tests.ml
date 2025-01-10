@@ -1,10 +1,10 @@
 open Core
 open Frontend
 
-let print_ast_of_string s =
+let print_ast_of_string code =
   let ast =
-    Test_utils.untyped_ast_of_string s
-    |> Result.map_error ~f:Errors.to_string
+    Test_utils.untyped_ast_of_string code
+    |> Result.map_error ~f:(Test_utils.error_to_string ~code)
     |> Result.ok_or_failwith in
   print_s [%sexp (ast : Ast.untyped_program)]
 
