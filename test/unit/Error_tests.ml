@@ -22,7 +22,7 @@ let%expect_test "backtrace indirect test" =
   |> Result.error |> Option.value_exn
   |> fun s ->
     try
-      let _ = Str.search_forward (Str.regexp "^Called from Common") s 0 in
+      let _ = String.substr_index_exn ~pattern:"Called from Common" s ~pos:0 in
       print_endline "Backtrace found in message"
     with _ -> print_endline "FAILED TO FIND BACKTRACE" );
   [%expect {| Backtrace found in message |}]

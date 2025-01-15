@@ -1081,9 +1081,9 @@ let overlapping_lvalues lvals =
     | LIndexed (l, _), _ -> compare_no_indexing l lv2
     | _, LIndexed (l, _) -> compare_no_indexing lv1 l
     | LVariable id1, LVariable id2 -> String.compare id1.name id2.name
-    | LTupleProjection (lv1, idx1), LTupleProjection (lv2, idx2)
-      when idx1 = idx2 ->
-        compare_no_indexing lv1 lv2
+    | LTupleProjection (lv1, idx1), LTupleProjection (lv2, idx2) ->
+        let idx_comp = Int.compare idx1 idx2 in
+        if idx_comp = 0 then compare_no_indexing lv1 lv2 else idx_comp
     | _, _ ->
         (* remaining cases are not equal, we don't care *)
         Ast.compare_untyped_lval lv1 lv2 in

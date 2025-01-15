@@ -13,18 +13,9 @@
 *)
 
 open Core
-open Core.Poly
 
 let kwrds_prefix = "_stan_"
-let prefix_len = String.length kwrds_prefix
-
-let remove_prefix s =
-  if
-    String.length s >= prefix_len + 1
-    && Str.first_chars s prefix_len = kwrds_prefix
-  then Str.string_after s prefix_len
-  else s
-
+let remove_prefix s = String.chop_prefix_if_exists ~prefix:kwrds_prefix s
 let prepend_kwrd x = kwrds_prefix ^ x
 
 let cpp_kwrds =

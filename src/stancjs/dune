@@ -1,6 +1,6 @@
 (executable
  (name stancjs)
- (libraries js_of_ocaml driver)
+ (libraries core fmt js_of_ocaml driver)
  (preprocess
   (pps ppx_jane))
  (modes js))
