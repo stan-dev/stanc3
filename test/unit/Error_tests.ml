@@ -21,10 +21,9 @@ let%expect_test "backtrace indirect test" =
   ( ICE.with_exn_message (fun () -> failwith "oops!")
   |> Result.error |> Option.value_exn
   |> fun s ->
-    try
-      let _ = String.substr_index_exn ~pattern:"Called from Common" s ~pos:0 in
+    if String.is_substring ~substring:"Called from Common" s then
       print_endline "Backtrace found in message"
-    with _ -> print_endline "FAILED TO FIND BACKTRACE" );
+    else print_endline "FAILED TO FIND BACKTRACE" );
   [%expect {| Backtrace found in message |}]
 
 let%expect_test "ICE triggered" =
