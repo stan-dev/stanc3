@@ -3,7 +3,7 @@
  (modes
   (byte c)
   (best exe))
- (libraries driver cmdliner)
+ (libraries core fmt cmdliner driver)
  (instrumentation
   (backend bisect_ppx))
  (modules Stanc CLI)

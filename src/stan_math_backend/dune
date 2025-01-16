@@ -1,7 +1,7 @@
 (library
  (name stan_math_backend)
  (public_name stanc.stan_math_backend)
- (libraries core re fmt middle yojson)
+ (libraries core fmt yojson middle)
  (instrumentation
   (backend bisect_ppx))
  (private_modules

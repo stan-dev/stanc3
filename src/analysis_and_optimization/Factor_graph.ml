@@ -11,12 +11,12 @@ type factor =
   | TargetTerm of Expr.Typed.t
   | Reject
   | LPFunction of (string * Expr.Typed.t list)
-[@@deriving sexp, hash, compare]
+[@@deriving sexp]
 
 type factor_graph =
   { factor_map: (factor * label, vexpr Set.Poly.t) Map.Poly.t
   ; var_map: (vexpr, (factor * label) Set.Poly.t) Map.Poly.t }
-[@@deriving sexp, compare]
+[@@deriving sexp]
 
 let extract_factors_statement stmt =
   match stmt with

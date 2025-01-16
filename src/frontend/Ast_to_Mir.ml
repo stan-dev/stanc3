@@ -752,8 +752,8 @@ let rec trans_sizedtype_decl declc tr name st =
         let e = trans_expr s in
         let decl_name =
           name
-          |> Str.global_replace (Str.regexp "\\[\\]") "_brack"
-          |> Str.global_replace (Str.regexp "\\.") "_dot" in
+          |> String.substr_replace_all ~pattern:"[]" ~with_:"_brack"
+          |> String.substr_replace_all ~pattern:"." ~with_:"_dot" in
         let decl_id = Fmt.str "%s_%ddim__" decl_name n in
         let decl =
           { Stmt.Fixed.pattern=

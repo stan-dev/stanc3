@@ -11,10 +11,8 @@ type originblock =
   | TParam
   | Model
   | GQuant
-[@@deriving sexp]
 
 type varinfo = {origin: originblock; global: bool; readonly: bool}
-[@@deriving sexp]
 
 type info =
   { type_: UnsizedType.t
@@ -23,7 +21,6 @@ type info =
       | `UserDeclared of Location_span.t
       | `StanMath
       | `UserDefined ] }
-[@@deriving sexp]
 
 type t = info list String.Map.t
 

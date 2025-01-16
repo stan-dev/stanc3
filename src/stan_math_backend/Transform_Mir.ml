@@ -221,7 +221,7 @@ let meta_from_sizedtype st =
   ; adlevel= UnsizedType.fill_adtype_for_type DataOnly type_ }
 
 let munge_tuple_name name =
-  Str.global_replace (Str.regexp_string ".") "_dot_" name
+  String.substr_replace_all ~pattern:"." ~with_:"_dot_" name
 
 let make_tuple_temp name = munge_tuple_name name ^ "_temp__"
 
