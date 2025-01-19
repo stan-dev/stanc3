@@ -1067,6 +1067,20 @@ pipeline {
                             gh release delete ${tagName()} --cleanup-tag -y || true
                             gh release create ${tagName()} --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
                         """)
+
+                        // Update stanc.js in StanHeaders
+                        withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                            sh """#!/bin/bash
+                                set -e
+
+                                git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/rstan.git
+                                rm rstan/StanHeaders/inst/stanc.js
+                                cp ./bin/stanc.js rstan/StanHeaders/inst/stanc.js
+                                git -C rstan/StanHeaders add inst/stanc.js
+                                git -C rstan/StanHeaders commit -m "Update stanc.js to ${tagName()}"
+                                git -C rstan/StanHeaders push
+                            """
+                        }
                     }
                 }
             }
