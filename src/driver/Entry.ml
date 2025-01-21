@@ -12,22 +12,27 @@ let fmt_sexp s =
   Sexp.pp_hum ppf s;
   Format.flush_str_formatter ()
 
-let mangle =
-  String.concat_map ~f:(fun c ->
-      Char.(
-        if is_alphanum c || c = '_' then to_string c
-        else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (to_int c)))
+let set_model_name model_name =
+  let mangle =
+    String.concat_map ~f:(fun c ->
+        Char.(
+          if is_alphanum c || c = '_' then to_string c
+          else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (to_int c)))
+  in
+  let model_name_munged =
+    Flags.remove_dotstan List.(hd_exn (rev (String.split model_name ~on:'/')))
+  in
+  if String.equal model_name model_name_munged then
+    (* model name was not file-like, so we leave as is (e.g. from --name argument) *)
+    Typechecker.model_name := mangle model_name
+  else
+    (* model name was a file-like thing, so we add _model to match existing behavior *)
+    Typechecker.model_name := mangle (model_name_munged ^ "_model")
 
 let reset_mutable_states model_name (flags : Flags.t) =
   Common.Gensym.reset_danger_use_cautiously ();
   Include_files.include_provider := flags.include_source;
-  if String.equal !Typechecker.model_name "" then
-    Typechecker.model_name :=
-      mangle
-        (Flags.remove_dotstan
-           List.(hd_exn (rev (String.split model_name ~on:'/'))))
-      ^ "_model"
-  else Typechecker.model_name := mangle !Typechecker.model_name;
+  set_model_name model_name;
   Typechecker.check_that_all_functions_have_definition :=
     not flags.allow_undefined;
   Transform_Mir.use_opencl := flags.use_opencl;

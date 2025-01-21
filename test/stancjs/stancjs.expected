@@ -352,9 +352,7 @@ $ node info.js
 $ node math_sigs.js
 
 $ node model_name.js
-Assertion failed: Error: namespace not in C++ code
-Assertion failed: Error: namespace not in C++ code
-Assertion failed: Error: namespace not in C++ code
+
 $ node optimization.js
 Semantic error in 'string', line 3, column 8 to column 11:
    -------------------------------------------------
