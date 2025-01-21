@@ -49,7 +49,6 @@ let main () =
     | Compile settings -> settings in
   Debugging.lexer_logging := debug_lex;
   Debugging.grammar_logging := debug_parse;
-  Typechecker.model_name := Option.value ~default:"" name;
   Driver.Flags.set_backend_args_list
     (* remove executable itself from list before passing *)
     (Sys.get_argv () |> Array.to_list |> List.tl_exn);
@@ -65,7 +64,9 @@ let main () =
       , Option.first_some flags.filename_in_msg (Some "stdin") )
     else (model_file, `File model_file, flags.filename_in_msg) in
   match
-    Driver.Entry.stan2cpp model_file_name model_source flags
+    Driver.Entry.stan2cpp
+      (Option.value ~default:model_file_name name)
+      model_source flags
       (output_callback output_file printed_filename)
   with
   | Ok cpp_str ->
