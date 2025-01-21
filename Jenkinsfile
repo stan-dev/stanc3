@@ -160,7 +160,10 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            anyOf {
+                                !skipRebuildingBinaries
+                                !skipRemainingStages
+                            }
                         }
                     }
                     agent {
