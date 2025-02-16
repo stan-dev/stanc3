@@ -160,7 +160,10 @@ pipeline {
                     when {
                         beforeAgent true
                         expression {
-                            !skipRemainingStages
+                            anyOf {
+                                !skipRebuildingBinaries
+                                !skipRemainingStages
+                            }
                         }
                     }
                     agent {
@@ -1067,6 +1070,24 @@ pipeline {
                             gh release delete ${tagName()} --cleanup-tag -y || true
                             gh release create ${tagName()} --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
                         """)
+
+                        // Update stanc.js in StanHeaders
+                        withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                            sh """#!/bin/bash
+                                set -e
+
+                                git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/rstan.git
+                                git config user.email "mc.stanislaw@gmail.com"
+                                git config user.name "Stan Jenkins"
+                                git config auth.token ${GITHUB_TOKEN}
+
+                                rm rstan/StanHeaders/inst/stanc.js
+                                cp ./bin/stanc.js rstan/StanHeaders/inst/stanc.js
+                                git -C rstan add StanHeaders/inst/stanc.js
+                                git -C rstan commit -m "Update stanc.js to ${tagName()}"
+                                git -C rstan push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/rstan.git develop
+                            """
+                        }
                     }
                 }
             }
