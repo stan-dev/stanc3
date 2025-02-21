@@ -21,8 +21,15 @@ let fn_renames =
     ; ("std_normal_qf", "stan::math::inv_Phi")
     ; ("integrate_ode", "stan::math::integrate_ode_rk45")
       (* constraints -- originally internal functions, may be worth renaming now *)
+    ; ("simplex_jacobian", "stan::math::simplex_constrain")
+    ; ("unit_vector_jacobian", "stan::math::unit_vector_constrain")
+    ; ("ordered_jacobian", "stan::math::ordered_constrain")
+    ; ("positive_ordered_jacobian", "stan::math::positive_ordered_constrain")
+    ; ("sum_to_zero_jacobian", "stan::math::sum_to_zero_constrain")
     ; ("lower_bound_jacobian", "stan::math::lb_constrain")
-    ; ("upper_bound_jacobian", "stan::math::ub_constrain") ]
+    ; ("upper_bound_jacobian", "stan::math::ub_constrain")
+    ; ("lower_bound_constrain", "stan::math::lb_constrain")
+    ; ("upper_bound_constrain", "stan::math::ub_constrain") ]
   |> String.Map.of_alist_exn
 
 let constraint_to_string = function

@@ -5696,8 +5696,8 @@ static constexpr std::array<const char*, 22> locations_array__ =
   " (in 'jacobian_pe.stan', line 19, column 2 to column 13)",
   " (in 'jacobian_pe.stan', line 20, column 2 to column 22)",
   " (in 'jacobian_pe.stan', line 21, column 2 to column 20)",
-  " (in 'jacobian_pe.stan', line 24, column 2 to column 43)",
-  " (in 'jacobian_pe.stan', line 25, column 2 to column 55)",
+  " (in 'jacobian_pe.stan', line 24, column 2 to column 46)",
+  " (in 'jacobian_pe.stan', line 25, column 2 to column 58)",
   " (in 'jacobian_pe.stan', line 28, column 2 to column 41)",
   " (in 'jacobian_pe.stan', line 27, column 2 to column 27)",
   " (in 'jacobian_pe.stan', line 15, column 2 to column 10)",
@@ -5706,14 +5706,14 @@ static constexpr std::array<const char*, 22> locations_array__ =
   " (in 'jacobian_pe.stan', line 25, column 9 to column 10)",
   " (in 'jacobian_pe.stan', line 3, column 4 to column 18)",
   " (in 'jacobian_pe.stan', line 4, column 4 to column 23)",
-  " (in 'jacobian_pe.stan', line 2, column 45 to line 5, column 3)",
+  " (in 'jacobian_pe.stan', line 2, column 48 to line 5, column 3)",
   " (in 'jacobian_pe.stan', line 7, column 11 to column 18)",
   " (in 'jacobian_pe.stan', line 7, column 4 to column 27)",
-  " (in 'jacobian_pe.stan', line 9, column 6 to column 49)",
+  " (in 'jacobian_pe.stan', line 9, column 6 to column 52)",
   " (in 'jacobian_pe.stan', line 8, column 25 to line 10, column 5)",
   " (in 'jacobian_pe.stan', line 8, column 4 to line 10, column 5)",
   " (in 'jacobian_pe.stan', line 11, column 4 to column 18)",
-  " (in 'jacobian_pe.stan', line 6, column 49 to line 12, column 3)"};
+  " (in 'jacobian_pe.stan', line 6, column 52 to line 12, column 3)"};
 template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -5721,8 +5721,8 @@ template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<T1__>>>* = nullptr>
 stan::promote_args_t<T0__, T1__>
-upper_bound_jacobian(const T0__& x, const T1__& ub, T_lp__& lp__,
-                     T_lp_accum__& lp_accum__, std::ostream* pstream__);
+my_upper_bound_jacobian(const T0__& x, const T1__& ub, T_lp__& lp__,
+                        T_lp_accum__& lp_accum__, std::ostream* pstream__);
 template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::is_col_vector<T0__>,
@@ -5730,9 +5730,9 @@ template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<T1__>>>* = nullptr>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__>,-1,1>
-upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
-                     T_lp_accum__& lp_accum__, std::ostream* pstream__);
-// real upper_bound_jacobian(real, real)
+my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
+                        T_lp_accum__& lp_accum__, std::ostream* pstream__);
+// real my_upper_bound_jacobian(real, real)
 template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
@@ -5740,8 +5740,8 @@ template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<T1__>>>*>
 stan::promote_args_t<T0__, T1__>
-upper_bound_jacobian(const T0__& x, const T1__& ub, T_lp__& lp__,
-                     T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+my_upper_bound_jacobian(const T0__& x, const T1__& ub, T_lp__& lp__,
+                        T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   int current_statement__ = 0;
   // suppress unused var warning
@@ -5760,7 +5760,7 @@ upper_bound_jacobian(const T0__& x, const T1__& ub, T_lp__& lp__,
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
   }
 }
-// vector upper_bound_jacobian(vector, real)
+// vector my_upper_bound_jacobian(vector, real)
 template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
           typename T_lp_accum__,
           stan::require_all_t<stan::is_col_vector<T0__>,
@@ -5768,8 +5768,8 @@ template <bool jacobian__, typename T0__, typename T1__, typename T_lp__,
                               stan::math::disjunction<stan::is_autodiff<T1__>,
                                                       std::is_floating_point<T1__>>>*>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__>,-1,1>
-upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
-                     T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
+                        T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
                              T1__>;
   int current_statement__ = 0;
@@ -5790,7 +5790,7 @@ upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
     for (int n = 1; n <= stan::math::size(x); ++n) {
       current_statement__ = 17;
       stan::model::assign(result,
-        upper_bound_jacobian<jacobian__>(
+        my_upper_bound_jacobian<jacobian__>(
           stan::math::eval(
             stan::model::rvalue(x, "x", stan::model::index_uni(n))), ub,
           lp__, lp_accum__, pstream__), "assigning variable result",
@@ -5887,13 +5887,13 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       auto b_direct_raw = in__.template read<local_scalar_t__>();
       local_scalar_t__ b = DUMMY_VAR__;
       current_statement__ = 4;
-      b = upper_bound_jacobian<jacobian__>(b_raw, ub, lp__, lp_accum__,
+      b = my_upper_bound_jacobian<jacobian__>(b_raw, ub, lp__, lp_accum__,
             pstream__);
       Eigen::Matrix<local_scalar_t__,-1,1> bvec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 5;
       stan::model::assign(bvec,
-        upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
+        my_upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
           pstream__), "assigning variable bvec");
       current_statement__ = 7;
       if (jacobian__) {
@@ -5941,13 +5941,13 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       auto b_direct_raw = in__.template read<local_scalar_t__>();
       local_scalar_t__ b = DUMMY_VAR__;
       current_statement__ = 4;
-      b = upper_bound_jacobian<jacobian__>(b_raw, ub, lp__, lp_accum__,
+      b = my_upper_bound_jacobian<jacobian__>(b_raw, ub, lp__, lp_accum__,
             pstream__);
       Eigen::Matrix<local_scalar_t__,-1,1> bvec =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
       current_statement__ = 5;
       stan::model::assign(bvec,
-        upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
+        my_upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
           pstream__), "assigning variable bvec");
       current_statement__ = 7;
       if (jacobian__) {
@@ -6018,11 +6018,11 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
         return ;
       }
       current_statement__ = 4;
-      b = upper_bound_jacobian<jacobian__>(b_raw, ub, lp__, lp_accum__,
+      b = my_upper_bound_jacobian<jacobian__>(b_raw, ub, lp__, lp_accum__,
             pstream__);
       current_statement__ = 5;
       stan::model::assign(bvec,
-        upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
+        my_upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
           pstream__), "assigning variable bvec");
       current_statement__ = 7;
       if (jacobian__) {

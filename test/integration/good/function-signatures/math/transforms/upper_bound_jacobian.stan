@@ -58,6 +58,7 @@ transformed parameters {
   array[d_int, 2] row_vector[d_int] transformed_param_row_vector_array_2d;
   array[d_int, 2, 3] row_vector[d_int] transformed_param_row_vector_array_3d;
 
+  transformed_real = upper_bound_jacobian(d_real, d_real);
   transformed_real = upper_bound_jacobian(d_real, p_real);
   transformed_real = upper_bound_jacobian(p_real, d_real);
   transformed_real = upper_bound_jacobian(p_real, p_real);
@@ -65,11 +66,14 @@ transformed parameters {
   transformed_param_array_2d = upper_bound_jacobian(p_real_array_2d, d_real);
   transformed_param_array_2d = upper_bound_jacobian(p_real_array_2d, p_real);
   transformed_param_array_2d = upper_bound_jacobian(d_real_array_2d, p_real);
+  transformed_param_array_2d = upper_bound_jacobian(d_real_array_2d, d_real);
+  transformed_param_array_3d = upper_bound_jacobian(d_real_array_3d, d_real);
   transformed_param_array_3d = upper_bound_jacobian(p_real_array_3d, d_real);
   transformed_param_array_3d = upper_bound_jacobian(p_real_array_3d, p_real);
   transformed_param_array_3d = upper_bound_jacobian(d_real_array_3d, p_real);
 
 
+  transformed_param_array = upper_bound_jacobian(d_real_array, d_real_array);
   transformed_param_array = upper_bound_jacobian(d_real_array, p_real_array);
   transformed_param_array = upper_bound_jacobian(p_real_array, d_real_array);
   transformed_param_array = upper_bound_jacobian(p_real_array, p_real_array);
