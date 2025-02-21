@@ -451,12 +451,25 @@ let verify_fn_target_plus_equals cf loc id =
     else if in_lp_function cf || cf.current_block = Model then ()
     else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
-let verify_fn_jacobian_plus_equals cf loc id =
+let verify_fn_jacobian_plus_equals cf loc id args =
   if
     String.is_suffix id.name ~suffix:"_jacobian"
-    && (not !Fun_kind.jacobian_compat_mode)
-    && not (in_jacobian_function cf || cf.current_block = TParam)
-  then Semantic_error.jacobian_plusequals_not_allowed loc |> error
+    && not !Fun_kind.jacobian_compat_mode
+  then (
+    if
+      not
+        (List.exists args ~f:(fun e ->
+             UnsizedType.is_autodifftype e.emeta.ad_level))
+    then
+      warnings :=
+        ( loc
+        , "Calling a _jacobian function without any parameter arguments still \
+           applies the Jacobian adjustments, ensure this is intentional! If \
+           not, and this is a built in transformation, consider using \
+           _constrain instead." )
+        :: !warnings;
+    if not (in_jacobian_function cf || cf.current_block = TParam) then
+      Semantic_error.jacobian_plusequals_not_allowed loc |> error)
 
 (** Rng functions cannot be used in Tp or Model and only
     in function defs with the right suffix
@@ -708,7 +721,7 @@ and check_funapp loc cf tenv ~is_cond_dist id (es : Ast.typed_expression list) =
   verify_identifier id;
   name_check loc id;
   verify_fn_target_plus_equals cf loc id;
-  verify_fn_jacobian_plus_equals cf loc id;
+  verify_fn_jacobian_plus_equals cf loc id es;
   verify_fn_rng cf loc id;
   verify_unnormalized cf loc id;
   res
@@ -955,7 +968,7 @@ let check_nr_fn_app loc cf tenv id es =
   let tes = List.map ~f:(check_expression cf tenv) es in
   verify_identifier id;
   verify_fn_target_plus_equals cf loc id;
-  verify_fn_jacobian_plus_equals cf loc id;
+  verify_fn_jacobian_plus_equals cf loc id tes;
   verify_fn_rng cf loc id;
   check_nrfn loc tenv id tes
 
