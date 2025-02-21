@@ -689,6 +689,44 @@ let add_binary_vec_int_int name supports_soa =
         , supports_soa ))
     (List.range 1 8)
 
+(* things like lower_bound require the second argument be a scalar or the same
+    - this is basically the general case above with the last nested loop removed
+*)
+let add_first_arg_vector_binary name supports_soa =
+  let vectors = [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] in
+  let scalars = [UnsizedType.UReal] in
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j -> add_unqualified (name, ReturnType i, [i; j], supports_soa))
+        scalars)
+    scalars;
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          add_unqualified
+            ( name
+            , ReturnType (bare_array_type (j, i))
+            , [bare_array_type (j, i); bare_array_type (j, i)]
+            , supports_soa ))
+        vectors)
+    (List.range 0 8);
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          List.iter
+            ~f:(fun k ->
+              add_unqualified
+                ( name
+                , ReturnType (bare_array_type (k, j))
+                , [bare_array_type (k, j); i]
+                , supports_soa ))
+            vectors)
+        (List.range 0 8))
+    scalars
+
 let add_ternary name supports_soa =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal], supports_soa)
 
@@ -1680,6 +1718,7 @@ let () =
   add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UComplex], SoA);
   add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UReal], SoA);
   add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UComplex], SoA);
+  add_first_arg_vector_binary "lower_bound_jacobian" SoA;
   add_nullary "machine_precision";
   add_qualified
     ( "map_rect"
@@ -2558,6 +2597,7 @@ let () =
     ("transpose", ReturnType UComplexVector, [UComplexRowVector], SoA);
   add_unqualified ("transpose", ReturnType UComplexMatrix, [UComplexMatrix], SoA);
   add_unqualified ("uniform_simplex", ReturnType UVector, [UInt], SoA);
+  add_first_arg_vector_binary "upper_bound_jacobian" SoA;
   add_unqualified ("variance", ReturnType UReal, [UArray UReal], SoA);
   add_unqualified ("variance", ReturnType UReal, [UVector], SoA);
   add_unqualified ("variance", ReturnType UReal, [URowVector], SoA);

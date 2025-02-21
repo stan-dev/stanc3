@@ -19,7 +19,10 @@ let fn_renames =
   @ [ ("lmultiply", "stan::math::multiply_log")
     ; ("lchoose", "stan::math::binomial_coefficient_log")
     ; ("std_normal_qf", "stan::math::inv_Phi")
-    ; ("integrate_ode", "stan::math::integrate_ode_rk45") ]
+    ; ("integrate_ode", "stan::math::integrate_ode_rk45")
+      (* constraints -- originally internal functions, may be worth renaming now *)
+    ; ("lower_bound_jacobian", "stan::math::lb_constrain")
+    ; ("upper_bound_jacobian", "stan::math::ub_constrain") ]
   |> String.Map.of_alist_exn
 
 let constraint_to_string = function
@@ -103,9 +106,11 @@ let promote_adtype =
       | _ -> accum)
     ~init:UnsizedType.DataOnly
 
-let suffix_args = function
+let suffix_args udf = function
   | Fun_kind.FnRng -> ["base_rng__"]
-  | FnTarget | FnJacobian -> ["lp__"; "lp_accum__"]
+  | FnTarget -> ["lp__"; "lp_accum__"]
+  | FnJacobian when udf -> ["lp__"; "lp_accum__"]
+  | FnJacobian -> ["lp__"]
   | FnPlain | FnLpdf _ | FnLpmf _ -> []
 
 let rec stantype_prim = function
@@ -118,7 +123,7 @@ let templates udf suffix =
   | Fun_kind.FnLpdf true | FnLpmf true -> [TemplateType "propto__"]
   | FnLpdf false | FnLpmf false -> [TemplateType "false"]
   | FnTarget when udf -> [TemplateType "propto__"]
-  | FnJacobian when udf -> [TemplateType "jacobian__"]
+  | FnJacobian -> [TemplateType "jacobian__"]
   | _ -> []
 
 let deserializer = Var "in__"
@@ -406,12 +411,12 @@ and lower_fun_app suffix fname es mem_pattern
   | None ->
       let fname = stan_namespace_qualify fname in
       let templates = templates false suffix in
-      let extras = suffix_args suffix |> List.map ~f:Exprs.to_var in
+      let extras = suffix_args false suffix |> List.map ~f:Exprs.to_var in
       Exprs.templated_fun_call fname templates (lower_exprs es @ extras)
 
 and lower_user_defined_fun f suffix es =
   let extra_args =
-    suffix_args suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
+    suffix_args true suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
   Exprs.templated_fun_call f (templates true suffix)
     ((lower_exprs ~promote_reals:true) es @ extra_args)
 
