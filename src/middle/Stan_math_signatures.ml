@@ -1010,8 +1010,30 @@ let () =
     , ReturnType UComplexRowVector
     , [UComplexRowVector; UComplex]
     , AoS );
+  List.iter
+    ~f:(fun i ->
+      let rt = bare_array_type (UMatrix, i) in
+      let t = bare_array_type (UVector, i) in
+      add_unqualified ("corr_matrix_constrain", ReturnType rt, [t; UInt], SoA);
+      add_unqualified ("corr_matrix_jacobian", ReturnType rt, [t; UInt], SoA);
+      add_unqualified ("cov_matrix_constrain", ReturnType rt, [t; UInt], SoA);
+      add_unqualified ("cov_matrix_jacobian", ReturnType rt, [t; UInt], SoA))
+    (List.range 0 8);
   add_unqualified ("chol2inv", ReturnType UMatrix, [UMatrix], AoS);
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix], SoA);
+  List.iter
+    ~f:(fun i ->
+      let rt = bare_array_type (UMatrix, i) in
+      let t = bare_array_type (UVector, i) in
+      add_unqualified
+        ("cholesky_factor_corr_constrain", ReturnType rt, [t; UInt], SoA);
+      add_unqualified
+        ("cholesky_factor_corr_jacobian", ReturnType rt, [t; UInt], SoA);
+      add_unqualified
+        ("cholesky_factor_cov_constrain", ReturnType rt, [t; UInt; UInt], SoA);
+      add_unqualified
+        ("cholesky_factor_cov_jacobian", ReturnType rt, [t; UInt; UInt], SoA))
+    (List.range 0 8);
   add_binary_vec_int_int "choose" AoS;
   add_unqualified ("col", ReturnType UVector, [UMatrix; UInt], AoS);
   add_unqualified ("col", ReturnType UComplexVector, [UComplexMatrix; UInt], SoA);

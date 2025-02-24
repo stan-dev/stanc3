@@ -21,14 +21,10 @@ let fn_renames =
     ; ("std_normal_qf", "stan::math::inv_Phi")
     ; ("integrate_ode", "stan::math::integrate_ode_rk45")
       (* constraints -- originally internal functions, may be worth renaming now *)
-    ; ("simplex_jacobian", "stan::math::simplex_constrain")
-    ; ("unit_vector_jacobian", "stan::math::unit_vector_constrain")
-    ; ("ordered_jacobian", "stan::math::ordered_constrain")
-    ; ("positive_ordered_jacobian", "stan::math::positive_ordered_constrain")
-    ; ("sum_to_zero_jacobian", "stan::math::sum_to_zero_constrain")
-    ; ("stochastic_row_jacobian", "stan::math::stochastic_row_constrain")
-    ; ("stochastic_column_jacobian", "stan::math::stochastic_column_constrain")
-    ; ("offset_multiplier_jacobian", "stan::math::offset_multiplier_constrain")
+    ; ("cholesky_factor_corr_jacobian", "stan::math::cholesky_corr_constrain")
+    ; ("cholesky_factor_cov_jacobian", "stan::math::cholesky_factor_constrain")
+    ; ("cholesky_factor_corr_constrain", "stan::math::cholesky_corr_constrain")
+    ; ("cholesky_factor_cov_constrain", "stan::math::cholesky_factor_constrain")
     ; ("lower_bound_jacobian", "stan::math::lb_constrain")
     ; ("upper_bound_jacobian", "stan::math::ub_constrain")
     ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
@@ -413,6 +409,10 @@ and lower_functionals fname suffix es mem_pattern =
 and lower_fun_app suffix fname es mem_pattern
     (ret_type : UnsizedType.returntype option) =
   let fname = Option.value (Map.find fn_renames fname) ~default:fname in
+  let fname =
+    match String.chop_suffix fname ~suffix:"_jacobian" with
+    | Some f -> f ^ "_constrain"
+    | None -> fname in
   let special_options =
     [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
     ; lower_misc_special_math_app fname mem_pattern ret_type
