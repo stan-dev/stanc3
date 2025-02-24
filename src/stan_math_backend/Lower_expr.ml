@@ -26,6 +26,8 @@ let fn_renames =
     ; ("ordered_jacobian", "stan::math::ordered_constrain")
     ; ("positive_ordered_jacobian", "stan::math::positive_ordered_constrain")
     ; ("sum_to_zero_jacobian", "stan::math::sum_to_zero_constrain")
+    ; ("stochastic_row_jacobian", "stan::math::stochastic_row_constrain")
+    ; ("stochastic_column_jacobian", "stan::math::stochastic_column_constrain")
     ; ("offset_multiplier_jacobian", "stan::math::offset_multiplier_constrain")
     ; ("lower_bound_jacobian", "stan::math::lb_constrain")
     ; ("upper_bound_jacobian", "stan::math::ub_constrain")

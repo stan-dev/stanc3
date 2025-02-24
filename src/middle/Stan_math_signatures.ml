@@ -2363,6 +2363,14 @@ let () =
   add_unqualified ("sort_indices_desc", ReturnType (UArray UInt), [UVector], AoS);
   add_unqualified
     ("sort_indices_desc", ReturnType (UArray UInt), [URowVector], AoS);
+  List.iter
+    ~f:(fun i ->
+      let t = bare_array_type (UMatrix, i) in
+      add_unqualified ("stochastic_column_jacobian", ReturnType t, [t], SoA);
+      add_unqualified ("stochastic_column_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("stochastic_row_jacobian", ReturnType t, [t], SoA);
+      add_unqualified ("stochastic_row_constrain", ReturnType t, [t], SoA))
+    (List.range 0 8);
   add_unqualified ("squared_distance", ReturnType UReal, [UReal; UReal], SoA);
   add_unqualified ("squared_distance", ReturnType UReal, [UVector; UVector], SoA);
   add_unqualified
