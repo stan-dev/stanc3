@@ -31,7 +31,7 @@ parameters {
 }
 
 transformed parameters {
-  vector[d_in+1] transformed_param_vector;
+  vector[d_int+1] transformed_param_vector;
   array[d_int] vector[d_int+1] transformed_param_vector_array_1d;
   array[d_int, 2] vector[d_int+1] transformed_param_vector_array_2d;
   array[d_int, 2, 3] vector[d_int+1] transformed_param_vector_array_3d;
