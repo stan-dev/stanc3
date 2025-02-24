@@ -694,38 +694,30 @@ let add_binary_vec_int_int name supports_soa =
 *)
 let add_first_arg_vector_binary name supports_soa =
   let vectors = [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] in
-  let scalars = [UnsizedType.UReal] in
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun j -> add_unqualified (name, ReturnType i, [i; j], supports_soa))
-        scalars)
-    scalars;
+  add_unqualified (name, ReturnType UReal, [UReal; UReal], supports_soa);
   List.iter
     ~f:(fun i ->
       List.iter
         ~f:(fun j ->
-          add_unqualified
-            ( name
-            , ReturnType (bare_array_type (j, i))
-            , [bare_array_type (j, i); bare_array_type (j, i)]
-            , supports_soa ))
+          let ty = bare_array_type (j, i) in
+          add_unqualified (name, ReturnType ty, [ty; ty], supports_soa);
+          add_unqualified (name, ReturnType ty, [ty; UReal], supports_soa))
         vectors)
-    (List.range 0 8);
+    (List.range 0 8)
+
+let add_first_arg_vector_ternary name supports_soa =
+  let vectors = [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] in
+  add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal], supports_soa);
   List.iter
     ~f:(fun i ->
       List.iter
         ~f:(fun j ->
-          List.iter
-            ~f:(fun k ->
-              add_unqualified
-                ( name
-                , ReturnType (bare_array_type (k, j))
-                , [bare_array_type (k, j); i]
-                , supports_soa ))
-            vectors)
-        (List.range 0 8))
-    scalars
+          let ty = bare_array_type (j, i) in
+          add_unqualified (name, ReturnType ty, [ty; ty; ty], supports_soa);
+          add_unqualified (name, ReturnType ty, [ty; ty; UReal], supports_soa);
+          add_unqualified (name, ReturnType ty, [ty; UReal; ty], supports_soa))
+        vectors)
+    (List.range 0 8)
 
 let add_ternary name supports_soa =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal], supports_soa)
@@ -1720,6 +1712,8 @@ let () =
   add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UComplex], SoA);
   add_first_arg_vector_binary "lower_bound_jacobian" SoA;
   add_first_arg_vector_binary "lower_bound_constrain" SoA;
+  add_first_arg_vector_ternary "lower_upper_bound_jacobian" SoA;
+  add_first_arg_vector_ternary "lower_upper_bound_constrain" SoA;
   add_nullary "machine_precision";
   add_qualified
     ( "map_rect"
@@ -2012,6 +2006,8 @@ let () =
             ("num_elements", ReturnType UInt, [bare_array_type (t, i)], SoA))
         bare_types)
     (List.range 1 10);
+  add_first_arg_vector_ternary "offset_multiplier_jacobian" SoA;
+  add_first_arg_vector_ternary "offset_multiplier_constrain" SoA;
   add_unqualified
     ("one_hot_int_array", ReturnType (UArray UInt), [UInt; UInt], SoA);
   add_unqualified ("one_hot_array", ReturnType (UArray UReal), [UInt; UInt], SoA);
@@ -2622,6 +2618,12 @@ let () =
     ("transpose", ReturnType UComplexVector, [UComplexRowVector], SoA);
   add_unqualified ("transpose", ReturnType UComplexMatrix, [UComplexMatrix], SoA);
   add_unqualified ("uniform_simplex", ReturnType UVector, [UInt], SoA);
+  List.iter
+    ~f:(fun i ->
+      let t = bare_array_type (UVector, i) in
+      add_unqualified ("unit_vector_jacobian", ReturnType t, [t], SoA);
+      add_unqualified ("unit_vector_constrain", ReturnType t, [t], SoA))
+    (List.range 0 8);
   add_first_arg_vector_binary "upper_bound_jacobian" SoA;
   add_first_arg_vector_binary "upper_bound_constrain" SoA;
   add_unqualified ("variance", ReturnType UReal, [UArray UReal], SoA);

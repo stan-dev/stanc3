@@ -26,10 +26,13 @@ let fn_renames =
     ; ("ordered_jacobian", "stan::math::ordered_constrain")
     ; ("positive_ordered_jacobian", "stan::math::positive_ordered_constrain")
     ; ("sum_to_zero_jacobian", "stan::math::sum_to_zero_constrain")
+    ; ("offset_multiplier_jacobian", "stan::math::offset_multiplier_constrain")
     ; ("lower_bound_jacobian", "stan::math::lb_constrain")
     ; ("upper_bound_jacobian", "stan::math::ub_constrain")
+    ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
     ; ("lower_bound_constrain", "stan::math::lb_constrain")
-    ; ("upper_bound_constrain", "stan::math::ub_constrain") ]
+    ; ("upper_bound_constrain", "stan::math::ub_constrain")
+    ; ("lower_upper_bound_constrain", "stan::math::lub_constrain") ]
   |> String.Map.of_alist_exn
 
 let constraint_to_string = function
