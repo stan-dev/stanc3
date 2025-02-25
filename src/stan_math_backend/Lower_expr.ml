@@ -30,6 +30,7 @@ let fn_renames =
     ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
     ; ("lower_bound_constrain", "stan::math::lb_constrain")
     ; ("upper_bound_constrain", "stan::math::ub_constrain")
+    ; ("upper_bound_unconstrain", "stan::math::ub_free")
     ; ("lower_upper_bound_constrain", "stan::math::lub_constrain") ]
   |> String.Map.of_alist_exn
 
@@ -412,6 +413,10 @@ and lower_fun_app suffix fname es mem_pattern
   let fname =
     match String.chop_suffix fname ~suffix:"_jacobian" with
     | Some f -> f ^ "_constrain"
+    | None -> fname in
+  let fname =
+    match String.chop_suffix fname ~suffix:"_unconstrain" with
+    | Some f -> f ^ "_free"
     | None -> fname in
   let special_options =
     [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)

@@ -28,3 +28,10 @@ transformed parameters {
   real b_direct = ub - exp(b_direct_raw);
 }
 
+generated quantities {
+  real b_raw_recovered = upper_bound_unconstrain(b, ub);
+  if (b_raw_recovered != b_raw) {
+    fatal_error("b_raw_recovered does not match b_raw");
+  }
+}
+

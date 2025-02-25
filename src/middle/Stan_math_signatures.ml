@@ -1734,8 +1734,10 @@ let () =
   add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UComplex], SoA);
   add_first_arg_vector_binary "lower_bound_jacobian" SoA;
   add_first_arg_vector_binary "lower_bound_constrain" SoA;
+  add_first_arg_vector_binary "lower_bound_unconstrain" AoS;
   add_first_arg_vector_ternary "lower_upper_bound_jacobian" SoA;
   add_first_arg_vector_ternary "lower_upper_bound_constrain" SoA;
+  add_first_arg_vector_ternary "lower_upper_bound_unconstrain" AoS;
   add_nullary "machine_precision";
   add_qualified
     ( "map_rect"
@@ -2030,6 +2032,7 @@ let () =
     (List.range 1 10);
   add_first_arg_vector_ternary "offset_multiplier_jacobian" SoA;
   add_first_arg_vector_ternary "offset_multiplier_constrain" SoA;
+  add_first_arg_vector_ternary "offset_multiplier_unconstrain" AoS;
   add_unqualified
     ("one_hot_int_array", ReturnType (UArray UInt), [UInt; UInt], SoA);
   add_unqualified ("one_hot_array", ReturnType (UArray UReal), [UInt; UInt], SoA);
@@ -2656,6 +2659,7 @@ let () =
     (List.range 0 8);
   add_first_arg_vector_binary "upper_bound_jacobian" SoA;
   add_first_arg_vector_binary "upper_bound_constrain" SoA;
+  add_first_arg_vector_binary "upper_bound_unconstrain" AoS;
   add_unqualified ("variance", ReturnType UReal, [UArray UReal], SoA);
   add_unqualified ("variance", ReturnType UReal, [UVector], SoA);
   add_unqualified ("variance", ReturnType UReal, [URowVector], SoA);

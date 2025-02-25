@@ -5691,7 +5691,7 @@ namespace jacobian_pe_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 22> locations_array__ =
+static constexpr std::array<const char*, 26> locations_array__ =
   {" (found before start of program)",
   " (in 'jacobian_pe.stan', line 19, column 2 to column 13)",
   " (in 'jacobian_pe.stan', line 20, column 2 to column 22)",
@@ -5699,7 +5699,11 @@ static constexpr std::array<const char*, 22> locations_array__ =
   " (in 'jacobian_pe.stan', line 24, column 2 to column 46)",
   " (in 'jacobian_pe.stan', line 25, column 2 to column 58)",
   " (in 'jacobian_pe.stan', line 28, column 2 to column 41)",
+  " (in 'jacobian_pe.stan', line 32, column 2 to column 56)",
   " (in 'jacobian_pe.stan', line 27, column 2 to column 27)",
+  " (in 'jacobian_pe.stan', line 34, column 4 to column 56)",
+  " (in 'jacobian_pe.stan', line 33, column 32 to line 35, column 3)",
+  " (in 'jacobian_pe.stan', line 33, column 2 to line 35, column 3)",
   " (in 'jacobian_pe.stan', line 15, column 2 to column 10)",
   " (in 'jacobian_pe.stan', line 16, column 2 to column 8)",
   " (in 'jacobian_pe.stan', line 20, column 9 to column 10)",
@@ -5750,11 +5754,11 @@ my_upper_bound_jacobian(const T0__& x, const T1__& ub, T_lp__& lp__,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 12;
+    current_statement__ = 16;
     if (jacobian__) {
       lp_accum__.add(x);
     }
-    current_statement__ = 13;
+    current_statement__ = 17;
     return (ub - stan::math::exp(x));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5780,15 +5784,15 @@ my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 15;
+    current_statement__ = 19;
     stan::math::validate_non_negative_index("result", "size(x)",
       stan::math::size(x));
     Eigen::Matrix<local_scalar_t__,-1,1> result =
       Eigen::Matrix<local_scalar_t__,-1,1>::Constant(stan::math::size(x),
         DUMMY_VAR__);
-    current_statement__ = 19;
+    current_statement__ = 23;
     for (int n = 1; n <= stan::math::size(x); ++n) {
-      current_statement__ = 17;
+      current_statement__ = 21;
       stan::model::assign(result,
         my_upper_bound_jacobian<jacobian__>(
           stan::math::eval(
@@ -5796,7 +5800,7 @@ my_upper_bound_jacobian(const T0__& x_arg__, const T1__& ub, T_lp__& lp__,
           lp__, lp_accum__, pstream__), "assigning variable result",
         stan::model::index_uni(n));
     }
-    current_statement__ = 20;
+    current_statement__ = 24;
     return result;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5826,21 +5830,21 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      current_statement__ = 8;
+      current_statement__ = 12;
       context__.validate_dims("data initialization", "ub", "double",
         std::vector<size_t>{});
       ub = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 8;
+      current_statement__ = 12;
       ub = context__.vals_r("ub")[(1 - 1)];
-      current_statement__ = 9;
+      current_statement__ = 13;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 9;
+      current_statement__ = 13;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 10;
+      current_statement__ = 14;
       stan::math::validate_non_negative_index("b_vec_raw", "N", N);
-      current_statement__ = 11;
+      current_statement__ = 15;
       stan::math::validate_non_negative_index("bvec", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -5895,7 +5899,7 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       stan::model::assign(bvec,
         my_upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
           pstream__), "assigning variable bvec");
-      current_statement__ = 7;
+      current_statement__ = 8;
       if (jacobian__) {
         lp_accum__.add(b_direct_raw);
       }
@@ -5949,7 +5953,7 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       stan::model::assign(bvec,
         my_upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
           pstream__), "assigning variable bvec");
-      current_statement__ = 7;
+      current_statement__ = 8;
       if (jacobian__) {
         lp_accum__.add(b_direct_raw);
       }
@@ -6024,7 +6028,7 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       stan::model::assign(bvec,
         my_upper_bound_jacobian<jacobian__>(b_vec_raw, ub, lp__, lp_accum__,
           pstream__), "assigning variable bvec");
-      current_statement__ = 7;
+      current_statement__ = 8;
       if (jacobian__) {
         lp_accum__.add(b_direct_raw);
       }
@@ -6038,6 +6042,20 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       }
+      double b_raw_recovered = std::numeric_limits<double>::quiet_NaN();
+      current_statement__ = 7;
+      b_raw_recovered = stan::math::ub_free(b, ub);
+      current_statement__ = 11;
+      if (stan::math::logical_neq(b_raw_recovered, b_raw)) {
+        current_statement__ = 9;
+        {
+          std::stringstream errmsg_stream__;
+          stan::math::stan_print(&errmsg_stream__,
+            "b_raw_recovered does not match b_raw");
+          throw std::runtime_error(errmsg_stream__.str());
+        }
+      }
+      out__.write(b_raw_recovered);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -6137,7 +6155,11 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
-    if (emit_generated_quantities__) {}
+    if (emit_generated_quantities__) {
+      std::vector<std::string> temp{"b_raw_recovered"};
+      names__.reserve(names__.size() + temp.size());
+      names__.insert(names__.end(), temp.begin(), temp.end());
+    }
   }
   inline void
   get_dims(std::vector<std::vector<size_t>>& dimss__, const bool
@@ -6154,7 +6176,11 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
-    if (emit_generated_quantities__) {}
+    if (emit_generated_quantities__) {
+      std::vector<std::vector<size_t>> temp{std::vector<size_t>{}};
+      dimss__.reserve(dimss__.size() + temp.size());
+      dimss__.insert(dimss__.end(), temp.begin(), temp.end());
+    }
   }
   inline void
   constrained_param_names(std::vector<std::string>& param_names__, bool
@@ -6174,7 +6200,9 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       }
       param_names__.emplace_back(std::string() + "b_direct");
     }
-    if (emit_generated_quantities__) {}
+    if (emit_generated_quantities__) {
+      param_names__.emplace_back(std::string() + "b_raw_recovered");
+    }
   }
   inline void
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
@@ -6194,13 +6222,15 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
       }
       param_names__.emplace_back(std::string() + "b_direct");
     }
-    if (emit_generated_quantities__) {}
+    if (emit_generated_quantities__) {
+      param_names__.emplace_back(std::string() + "b_raw_recovered");
+    }
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"b_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_vec_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b_direct_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"bvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"b_direct\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"b_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_vec_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b_direct_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"bvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"b_direct\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"b_raw_recovered\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"b_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_vec_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b_direct_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"bvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"b_direct\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"b_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_vec_raw\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b_direct_raw\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"bvec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"b_direct\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"b_raw_recovered\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -6212,7 +6242,7 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
     const size_t num_params__ = ((1 + N) + 1);
     const size_t num_transformed = emit_transformed_parameters * (((1 + N) +
       1));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -6230,7 +6260,7 @@ class jacobian_pe_model final : public model_base_crtp<jacobian_pe_model> {
     const size_t num_params__ = ((1 + N) + 1);
     const size_t num_transformed = emit_transformed_parameters * (((1 + N) +
       1));
-    const size_t num_gen_quantities = emit_generated_quantities * (0);
+    const size_t num_gen_quantities = emit_generated_quantities * (1);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,
