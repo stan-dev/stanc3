@@ -86,10 +86,13 @@ pipeline {
     agent none
     parameters {
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
+        booleanParam(name:"run_slow_perf_tests", defaultValue: false, description:"Run additional 'slow' performance tests")
         booleanParam(name:"skip_compile_O1", defaultValue: false, description:"Skip compile tests that run with STANCFLAGS = --O1")
         booleanParam(name:"skip_compile", defaultValue: false, description:"Skip compile tests")
         booleanParam(name:"skip_math_func_expr", defaultValue: false, description:"Skip math functions expressions test")
         booleanParam(name:"skip_ocaml_tests", defaultValue: false, description:"Skip ocaml tests")
+        booleanParam(name:"build_multiarch", defaultValue: false, description:"Build multiarch images even when not on 'master'")
+
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
@@ -98,13 +101,10 @@ pipeline {
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
-        booleanParam(name:"run_slow_perf_tests", defaultValue: false, description:"Run additional 'slow' performance tests")
-        string(defaultValue: '', name: 'build_multiarch_docker_tag', description: "Docker tag for the multiarch image")
-        booleanParam(name:"build_multiarch", defaultValue: false, description:"Build multiarch images even when not on 'master'")
 
     }
     options {
-        parallelsAlwaysFailFast()
+        // parallelsAlwaysFailFast()
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30'))
         disableConcurrentBuilds(abortPrevious: true)
     }
@@ -115,7 +115,6 @@ pipeline {
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'
         GIT_COMMITTER_EMAIL = 'mc.stanislaw@gmail.com'
-        MULTIARCH_DOCKER_TAG = 'multiarch-ocaml-4.14-v2-and-cmdliner'
     }
     stages {
         stage('Verify changes') {
@@ -168,7 +167,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
+                            filename 'scripts/docker/multiarch/Dockerfile'
                             dir '.'
                             label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
@@ -189,488 +188,443 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
                 }
-                stage("Code formatting") {
-                    when {
-                        beforeAgent true
-                        expression {
-                            !skipRemainingStages
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/debian/Dockerfile'
-                            dir '.'
-                            label 'linux'
-                            args '--entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        unstash "Stanc3Setup"
-                        sh """
-                            eval \$(opam env)
-                            make format  ||
-                            (
-                                set +x &&
-                                echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
-                                echo "Please consider installing the pre-commit git hook for formatting with the above command." &&
-                                echo "Our hook can be installed with bash ./scripts/hooks/install_hooks.sh" &&
-                                exit 1;
-                            )
-                        """
-                    }
-                    post { always { runShell("rm -rf ./*") }}
-                }
+                // stage("Code formatting") {
+                //     when {
+                //         beforeAgent true
+                //         expression {
+                //             !skipRemainingStages
+                //         }
+                //     }
+                //     agent {
+                //         dockerfile {
+                //             filename 'scripts/docker/debian/Dockerfile'
+                //             dir '.'
+                //             label 'linux'
+                //             args '--entrypoint=\'\''
+                //             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                //         }
+                //     }
+                //     steps {
+                //         unstash "Stanc3Setup"
+                //         sh """
+                //             eval \$(opam env)
+                //             make format  ||
+                //             (
+                //                 set +x &&
+                //                 echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
+                //                 echo "Please consider installing the pre-commit git hook for formatting with the above command." &&
+                //                 echo "Our hook can be installed with bash ./scripts/hooks/install_hooks.sh" &&
+                //                 exit 1;
+                //             )
+                //         """
+                //     }
+                //     post { always { runShell("rm -rf ./*") }}
+                // }
 
-                stage("Dune tests") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression {
-                                !skipRemainingStages
-                            }
-                            expression {
-                                !params.skip_ocaml_tests
-                            }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/debian/Dockerfile'
-                            dir '.'
-                            label 'linux'
-                            args '--entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/dune-tests"){
-                            unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
-                            """)
+                // stage("Dune tests") {
+                //     when {
+                //         beforeAgent true
+                //         allOf {
+                //             expression {
+                //                 !skipRemainingStages
+                //             }
+                //             expression {
+                //                 !params.skip_ocaml_tests
+                //             }
+                //         }
+                //     }
+                //     agent {
+                //         dockerfile {
+                //             filename 'scripts/docker/debian/Dockerfile'
+                //             dir '.'
+                //             label 'linux'
+                //             args '--entrypoint=\'\''
+                //             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                //         }
+                //     }
+                //     steps {
+                //         dir("${env.WORKSPACE}/dune-tests"){
+                //             unstash "Stanc3Setup"
+                //             runShell("""
+                //                 eval \$(opam env)
+                //                 BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
+                //             """)
 
-                            sh """
-                                eval \$(opam env)
-                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/
-                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/
-                            """
+                //             sh """
+                //                 eval \$(opam env)
+                //                 bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/
+                //                 bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/
+                //             """
 
-                            withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
-                                sh """
-                                    curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
+                //             withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
+                //                 sh """
+                //                     curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
 
-                                    chmod +x codecov
-                                    ./codecov -v -C \$(git rev-parse HEAD)
-                                """
-                            }
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
-                }
-                stage("stancjs tests") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression {
-                                !skipRemainingStages
-                            }
-                            expression {
-                                !params.skip_ocaml_tests
-                            }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/debian/Dockerfile'
-                            dir '.'
-                            label 'linux'
-                            args '--entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/stancjs-tests"){
-                            unstash "Stanc3Setup"
-                            runShell("""
-                                node --version
-                                eval \$(opam env)
-                                dune build @runjstest --root=.
-                            """)
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/stancjs-tests/*") }}
-                }
+                //                     chmod +x codecov
+                //                     ./codecov -v -C \$(git rev-parse HEAD)
+                //                 """
+                //             }
+                //         }
+                //     }
+                //     post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
+                // }
+                // stage("stancjs tests") {
+                //     when {
+                //         beforeAgent true
+                //         allOf {
+                //             expression {
+                //                 !skipRemainingStages
+                //             }
+                //             expression {
+                //                 !params.skip_ocaml_tests
+                //             }
+                //         }
+                //     }
+                //     agent {
+                //         dockerfile {
+                //             filename 'scripts/docker/debian/Dockerfile'
+                //             dir '.'
+                //             label 'linux'
+                //             args '--entrypoint=\'\''
+                //             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                //         }
+                //     }
+                //     steps {
+                //         dir("${env.WORKSPACE}/stancjs-tests"){
+                //             unstash "Stanc3Setup"
+                //             runShell("""
+                //                 node --version
+                //                 eval \$(opam env)
+                //                 dune build @runjstest --root=.
+                //             """)
+                //         }
+                //     }
+                //     post { always { runShell("rm -rf ${env.WORKSPACE}/stancjs-tests/*") }}
+                // }
             }
         }
 
-        stage("CmdStan & Math tests") {
-            parallel {
+        // stage("CmdStan & Math tests") {
+        //     parallel {
 
-                stage("Compile tests - good") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                          expression {
-                            !skipCompileTests
-                          }
-                          expression {
-                            !params.skip_compile
-                          }
-                        }
-                    }
-                    agent {
-                        docker {
-                            image 'stanorg/ci:gpu'
-                            label 'linux'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/compile-tests-good"){
-                            unstash "Stanc3Setup"
-                            script {
-                                runPerformanceTests("../test/integration/good", params.stanc_flags)
-                            }
+        //         stage("Compile tests - good") {
+        //             when {
+        //                 beforeAgent true
+        //                 allOf {
+        //                   expression {
+        //                     !skipCompileTests
+        //                   }
+        //                   expression {
+        //                     !params.skip_compile
+        //                   }
+        //                 }
+        //             }
+        //             agent {
+        //                 docker {
+        //                     image 'stanorg/ci:gpu'
+        //                     label 'linux'
+        //                 }
+        //             }
+        //             steps {
+        //                 dir("${env.WORKSPACE}/compile-tests-good"){
+        //                     unstash "Stanc3Setup"
+        //                     script {
+        //                         runPerformanceTests("../test/integration/good", params.stanc_flags)
+        //                     }
 
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-good/*") }}
-                }
+        //                     xunit([GoogleTest(
+        //                         deleteOutputFiles: false,
+        //                         failIfNotNew: true,
+        //                         pattern: 'performance-tests-cmdstan/performance.xml',
+        //                         skipNoTestFiles: false,
+        //                         stopProcessingIfError: false)
+        //                     ])
+        //                 }
+        //             }
+        //             post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-good/*") }}
+        //         }
 
-                stage("Compile tests - example-models") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                          expression {
-                            !skipCompileTests
-                          }
-                          expression {
-                            !params.skip_compile
-                          }
-                        }
-                    }
-                    agent {
-                        docker {
-                            image 'stanorg/ci:gpu'
-                            label 'linux'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/compile-tests-example"){
-                            script {
-                                unstash "Stanc3Setup"
-                                runPerformanceTests("example-models", params.stanc_flags)
-                            }
+        //         stage("Compile tests - example-models") {
+        //             when {
+        //                 beforeAgent true
+        //                 allOf {
+        //                   expression {
+        //                     !skipCompileTests
+        //                   }
+        //                   expression {
+        //                     !params.skip_compile
+        //                   }
+        //                 }
+        //             }
+        //             agent {
+        //                 docker {
+        //                     image 'stanorg/ci:gpu'
+        //                     label 'linux'
+        //                 }
+        //             }
+        //             steps {
+        //                 dir("${env.WORKSPACE}/compile-tests-example"){
+        //                     script {
+        //                         unstash "Stanc3Setup"
+        //                         runPerformanceTests("example-models", params.stanc_flags)
+        //                     }
 
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-example/*") }}
-                }
+        //                     xunit([GoogleTest(
+        //                         deleteOutputFiles: false,
+        //                         failIfNotNew: true,
+        //                         pattern: 'performance-tests-cmdstan/performance.xml',
+        //                         skipNoTestFiles: false,
+        //                         stopProcessingIfError: false)
+        //                     ])
+        //                 }
+        //             }
+        //             post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-example/*") }}
+        //         }
 
-                stage("Compile tests - good at O=1") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                          expression {
-                            !skipCompileTestsAtO1
-                          }
-                          expression {
-                            !params.skip_compile_O1
-                          }
-                        }
-                    }
-                    agent {
-                        docker {
-                            image 'stanorg/ci:gpu'
-                            label 'linux'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/compile-good-O1"){
-                            unstash "Stanc3Setup"
-                            script {
-                                runPerformanceTests("../test/integration/good", "--O1")
-                            }
+        //         stage("Compile tests - good at O=1") {
+        //             when {
+        //                 beforeAgent true
+        //                 allOf {
+        //                   expression {
+        //                     !skipCompileTestsAtO1
+        //                   }
+        //                   expression {
+        //                     !params.skip_compile_O1
+        //                   }
+        //                 }
+        //             }
+        //             agent {
+        //                 docker {
+        //                     image 'stanorg/ci:gpu'
+        //                     label 'linux'
+        //                 }
+        //             }
+        //             steps {
+        //                 dir("${env.WORKSPACE}/compile-good-O1"){
+        //                     unstash "Stanc3Setup"
+        //                     script {
+        //                         runPerformanceTests("../test/integration/good", "--O1")
+        //                     }
 
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-good-O1/*") }}
-                }
+        //                     xunit([GoogleTest(
+        //                         deleteOutputFiles: false,
+        //                         failIfNotNew: true,
+        //                         pattern: 'performance-tests-cmdstan/performance.xml',
+        //                         skipNoTestFiles: false,
+        //                         stopProcessingIfError: false)
+        //                     ])
+        //                 }
+        //             }
+        //             post { always { runShell("rm -rf ${env.WORKSPACE}/compile-good-O1/*") }}
+        //         }
 
-                stage("Compile tests - example-models at O=1") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                          expression {
-                            !skipCompileTestsAtO1
-                          }
-                          expression {
-                            !params.skip_compile_O1
-                          }
-                        }
-                    }
-                    agent {
-                        docker {
-                            image 'stanorg/ci:gpu'
-                            label 'linux'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/compile-example-O1"){
-                            script {
-                                unstash "Stanc3Setup"
-                                runPerformanceTests("example-models", "--O1")
-                            }
+        //         stage("Compile tests - example-models at O=1") {
+        //             when {
+        //                 beforeAgent true
+        //                 allOf {
+        //                   expression {
+        //                     !skipCompileTestsAtO1
+        //                   }
+        //                   expression {
+        //                     !params.skip_compile_O1
+        //                   }
+        //                 }
+        //             }
+        //             agent {
+        //                 docker {
+        //                     image 'stanorg/ci:gpu'
+        //                     label 'linux'
+        //                 }
+        //             }
+        //             steps {
+        //                 dir("${env.WORKSPACE}/compile-example-O1"){
+        //                     script {
+        //                         unstash "Stanc3Setup"
+        //                         runPerformanceTests("example-models", "--O1")
+        //                     }
 
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-example-O1/*") }}
-                }
+        //                     xunit([GoogleTest(
+        //                         deleteOutputFiles: false,
+        //                         failIfNotNew: true,
+        //                         pattern: 'performance-tests-cmdstan/performance.xml',
+        //                         skipNoTestFiles: false,
+        //                         stopProcessingIfError: false)
+        //                     ])
+        //                 }
+        //             }
+        //             post { always { runShell("rm -rf ${env.WORKSPACE}/compile-example-O1/*") }}
+        //         }
 
-                stage("Model end-to-end tests") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                         expression {
-                            !skipCompileTests
-                         }
-                         expression {
-                            !params.skip_end_to_end
-                         }
-                        }
-                    }
-                    agent {
-                        docker {
-                            image 'stanorg/ci:gpu'
-                            label 'linux'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/compile-end-to-end"){
-                            script {
-                                unstash "Stanc3Setup"
-                                unstash 'linux-exe'
-                                sh """
-                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                                """
-                                utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-                                utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
-                                utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-                                sh """
-                                    cd performance-tests-cmdstan
-                                    git show HEAD --stat
-                                    echo "example-models/regression_tests/mother.stan" > all.tests
-                                    cat known_good_perf_all.tests >> all.tests
-                                    echo "" >> all.tests
-                                    cat shotgun_perf_all.tests >> all.tests
-                                    cat all.tests
-                                    echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                                    echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                                    cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "\$(readlink -f ../bin/linux-stanc)"
-                                """
-                            }
+        //         stage("Model end-to-end tests") {
+        //             when {
+        //                 beforeAgent true
+        //                 allOf {
+        //                  expression {
+        //                     !skipCompileTests
+        //                  }
+        //                  expression {
+        //                     !params.skip_end_to_end
+        //                  }
+        //                 }
+        //             }
+        //             agent {
+        //                 docker {
+        //                     image 'stanorg/ci:gpu'
+        //                     label 'linux'
+        //                 }
+        //             }
+        //             steps {
+        //                 dir("${env.WORKSPACE}/compile-end-to-end"){
+        //                     script {
+        //                         unstash "Stanc3Setup"
+        //                         unstash 'linux-exe'
+        //                         sh """
+        //                             git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+        //                         """
+        //                         utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+        //                         utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+        //                         utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+        //                         sh """
+        //                             cd performance-tests-cmdstan
+        //                             git show HEAD --stat
+        //                             echo "example-models/regression_tests/mother.stan" > all.tests
+        //                             cat known_good_perf_all.tests >> all.tests
+        //                             echo "" >> all.tests
+        //                             cat shotgun_perf_all.tests >> all.tests
+        //                             cat all.tests
+        //                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+        //                             echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+        //                             cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+        //                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "\$(readlink -f ../bin/linux-stanc)"
+        //                         """
+        //                     }
 
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
+        //                     xunit([GoogleTest(
+        //                         deleteOutputFiles: false,
+        //                         failIfNotNew: true,
+        //                         pattern: 'performance-tests-cmdstan/performance.xml',
+        //                         skipNoTestFiles: false,
+        //                         stopProcessingIfError: false)
+        //                     ])
 
-                            archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+        //                     archiveArtifacts 'performance-tests-cmdstan/performance.xml'
 
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
-                }
+        //                 }
+        //             }
+        //             post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
+        //         }
 
-                stage("Model end-to-end tests at O=1") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                         expression {
-                            !params.skip_end_to_end
-                         }
-                         expression {
-                            !skipCompileTestsAtO1
-                         }
-                        }
-                    }
-                    agent {
-                        docker {
-                            image 'stanorg/ci:gpu'
-                            label 'linux'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/compile-end-to-end-O=1"){
-                            script {
-                                unstash "Stanc3Setup"
-                                unstash 'linux-exe'
-                                sh """
-                                    git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                                """
-                                utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
-                                utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
-                                utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-                                sh """
-                                    cd performance-tests-cmdstan
-                                    git show HEAD --stat
-                                    echo "example-models/regression_tests/mother.stan" > all.tests
-                                    cat optimizer.tests >> all.tests
-                                    echo "" >> all.tests
-                                    cat known_good_perf_all.tests >> all.tests
-                                    echo "" >> all.tests
-                                    cat shotgun_perf_all.tests >> all.tests
-                                    cat all.tests
-                                    echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                                    echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                                    cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "--O1" "\$(readlink -f ../bin/linux-stanc)"
-                                """
-                            }
+        //         stage("Model end-to-end tests at O=1") {
+        //             when {
+        //                 beforeAgent true
+        //                 allOf {
+        //                  expression {
+        //                     !params.skip_end_to_end
+        //                  }
+        //                  expression {
+        //                     !skipCompileTestsAtO1
+        //                  }
+        //                 }
+        //             }
+        //             agent {
+        //                 docker {
+        //                     image 'stanorg/ci:gpu'
+        //                     label 'linux'
+        //                 }
+        //             }
+        //             steps {
+        //                 dir("${env.WORKSPACE}/compile-end-to-end-O=1"){
+        //                     script {
+        //                         unstash "Stanc3Setup"
+        //                         unstash 'linux-exe'
+        //                         sh """
+        //                             git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+        //                         """
+        //                         utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
+        //                         utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
+        //                         utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
+        //                         sh """
+        //                             cd performance-tests-cmdstan
+        //                             git show HEAD --stat
+        //                             echo "example-models/regression_tests/mother.stan" > all.tests
+        //                             cat optimizer.tests >> all.tests
+        //                             echo "" >> all.tests
+        //                             cat known_good_perf_all.tests >> all.tests
+        //                             echo "" >> all.tests
+        //                             cat shotgun_perf_all.tests >> all.tests
+        //                             cat all.tests
+        //                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+        //                             echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+        //                             cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+        //                             CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "--O1" "\$(readlink -f ../bin/linux-stanc)"
+        //                         """
+        //                     }
 
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
+        //                     xunit([GoogleTest(
+        //                         deleteOutputFiles: false,
+        //                         failIfNotNew: true,
+        //                         pattern: 'performance-tests-cmdstan/performance.xml',
+        //                         skipNoTestFiles: false,
+        //                         stopProcessingIfError: false)
+        //                     ])
 
-                            archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}
-                }
+        //                     archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+        //                 }
+        //             }
+        //             post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}
+        //         }
 
-                stage('Math functions expressions test') {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression {
-                                !skipRemainingStages
-                            }
-                            expression {
-                                !skipExpressionTests
-                            }
-                            expression {
-                                !params.skip_math_func_expr
-                            }
-                        }
-                    }
-                    agent {
-                        docker {
-                            image 'stanorg/ci:gpu'
-                            label 'linux'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/compile-expressions"){
-                            unstash "Stanc3Setup"
-                            unstash 'linux-exe'
-                            script {
-                                sh """
-                                    git clone --recursive https://github.com/stan-dev/math.git
-                                """
-                                utils.checkout_pr("math", "math", params.math_pr)
-                                sh """
-                                    cp bin/linux-stanc math/test/expressions/stanc
-                                """
+        //         stage('Math functions expressions test') {
+        //             when {
+        //                 beforeAgent true
+        //                 allOf {
+        //                     expression {
+        //                         !skipRemainingStages
+        //                     }
+        //                     expression {
+        //                         !skipExpressionTests
+        //                     }
+        //                     expression {
+        //                         !params.skip_math_func_expr
+        //                     }
+        //                 }
+        //             }
+        //             agent {
+        //                 docker {
+        //                     image 'stanorg/ci:gpu'
+        //                     label 'linux'
+        //                 }
+        //             }
+        //             steps {
+        //                 dir("${env.WORKSPACE}/compile-expressions"){
+        //                     unstash "Stanc3Setup"
+        //                     unstash 'linux-exe'
+        //                     script {
+        //                         sh """
+        //                             git clone --recursive https://github.com/stan-dev/math.git
+        //                         """
+        //                         utils.checkout_pr("math", "math", params.math_pr)
+        //                         sh """
+        //                             cp bin/linux-stanc math/test/expressions/stanc
+        //                         """
 
-                                dir("math") {
-                                    sh """
-                                        echo O=0 >> make/local
-                                        echo "CXX=${env.CXX} -Werror " >> make/local
-                                    """
-                                    withEnv(['PATH+TBB=./lib/tbb']) {
-                                        try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
-                                        finally { junit 'test/**/*.xml' }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-expressions/*") }}
-                }
-            }
-        }
-
-        stage('Build and push multiarch docker image') {
-            when {
-                beforeAgent true
-                expression {
-                    params.build_multiarch_docker_tag != ""
-                }
-            }
-            agent {
-                dockerfile {
-                    filename 'scripts/docker/builder/Dockerfile'
-                    dir '.'
-                    label 'linux && triqs'
-                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                }
-            }
-            environment { DOCKER_TOKEN = credentials('aada4f7b-baa9-49cf-ac97-5490620fce8a') }
-            steps {
-                script {
-                    retry(3) { checkout scm }
-                    sh '''
-                        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-
-                        docker buildx create --name stanc3_builder
-                        docker buildx use stanc3_builder
-
-                        docker login --username stanorg --password "${DOCKER_TOKEN}"
-
-                        cd scripts/docker/multiarch
-
-                        docker buildx build -t stanorg/stanc3:$build_multiarch_docker_tag \
-                        --platform linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/mips64le,linux/s390x \
-                        --build-arg PUID=$(id -u) \
-                        --build-arg PGID=$(id -g) \
-                        --progress=plain --push .
-                    '''
-                }
-            }
-            post {
-                always {
-                    deleteDir()
-                }
-            }
-        }
+        //                         dir("math") {
+        //                             sh """
+        //                                 echo O=0 >> make/local
+        //                                 echo "CXX=${env.CXX} -Werror " >> make/local
+        //                             """
+        //                             withEnv(['PATH+TBB=./lib/tbb']) {
+        //                                 try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
+        //                                 finally { junit 'test/**/*.xml' }
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //             post { always { runShell("rm -rf ${env.WORKSPACE}/compile-expressions/*") }}
+        //         }
+        //     }
+        // }
 
 
         stage('Build binaries') {
@@ -781,39 +735,39 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/stancjs/*")}}
                 }
 
-                stage("Build & test a static Linux mips64el binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-mips64el"){
-                            cleanCheckout()
+                // stage("Build & test a static Linux mips64el binary") {
+                //     when {
+                //         beforeAgent true
+                //         allOf {
+                //             expression { !skipRebuildingBinaries }
+                //             anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
+                //         }
+                //     }
+                //     agent {
+                //         dockerfile {
+                //             filename 'scripts/docker/static/Dockerfile'
+                //             dir '.'
+                //             label 'linux && triqs'
+                //             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                //             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                //         }
+                //     }
+                //     steps {
+                //         dir("${env.WORKSPACE}/linux-mips64el"){
+                //             cleanCheckout()
 
-                            sh """
-                                eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh mips64el ${MULTIARCH_DOCKER_TAG}
-                            """
+                //             sh """
+                //                 eval \$(opam env)
+                //                 bash -x scripts/build_multiarch_stanc3.sh mips64el ${MULTIARCH_DOCKER_TAG}
+                //             """
 
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
+                //             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
 
-                            stash name:'linux-mips64el-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-mips64el/*")}}
-                }
+                //             stash name:'linux-mips64el-exe', includes:'bin/*'
+                //         }
+                //     }
+                //     post {always { runShell("rm -rf ${env.WORKSPACE}/linux-mips64el/*")}}
+                // }
 
                 stage("Build & test a static Linux ppc64el binary") {
                     when {
@@ -825,20 +779,21 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
+                            filename 'scripts/docker/multiarch/Dockerfile'
                             dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            label 'linux && emulation'
+                            args '--platform=linux/ppc64le --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/ppc64le --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-ppc64el"){
                             cleanCheckout()
-                            sh """
+                            runShell("""
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh ppc64el ${MULTIARCH_DOCKER_TAG}
-                            """
+                                dune subst
+                                dune build @install --profile static --root=.
+                            """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
                         }
@@ -856,20 +811,21 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
+                            filename 'scripts/docker/multiarch/Dockerfile'
                             dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            label 'linux && emulation'
+                            args '--platform=linux/s390x --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/s390x --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-s390x"){
                             cleanCheckout()
-                            sh """
+                            runShell("""
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh s390x ${MULTIARCH_DOCKER_TAG}
-                            """
+                                dune subst
+                                dune build @install --profile static --root=.
+                            """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             stash name:'linux-s390x-exe', includes:'bin/*'
                         }
@@ -887,20 +843,21 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
+                            filename 'scripts/docker/multiarch/Dockerfile'
                             dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            label 'linux && emulation'
+                            args '--platform=linux/arm64 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/arm64 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-arm64"){
                             cleanCheckout()
-                            sh """
+                            runShell("""
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh arm64 ${MULTIARCH_DOCKER_TAG}
-                            """
+                                dune subst
+                                dune build @install --profile static --root=.
+                            """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             stash name:'linux-arm64-exe', includes:'bin/*'
                         }
@@ -918,20 +875,21 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
+                            filename 'scripts/docker/multiarch/Dockerfile'
                             dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            label 'linux && emulation'
+                            args '--platform=linux/arm/v7 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/arm/v7 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armhf"){
                             cleanCheckout()
-                            sh """
+                            runShell("""
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh armhf ${MULTIARCH_DOCKER_TAG}
-                            """
+                                dune subst
+                                dune build @install --profile static --root=.
+                            """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             stash name:'linux-armhf-exe', includes:'bin/*'
                         }
@@ -949,20 +907,21 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/static/Dockerfile'
+                            filename 'scripts/docker/multiarch/Dockerfile'
                             dir '.'
                             label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            args '--platform=linux/arm/v6 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/arm/v6 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux-armel"){
                             cleanCheckout()
-                            sh """
+                            runShell("""
                                 eval \$(opam env)
-                                bash -x scripts/build_multiarch_stanc3.sh armel ${MULTIARCH_DOCKER_TAG}
-                            """
+                                dune subst
+                                dune build @install --profile static --root=.
+                            """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             stash name:'linux-armel-exe', includes:'bin/*'
                         }
@@ -1105,7 +1064,7 @@ pipeline {
             }
             agent {
                 dockerfile {
-                    filename 'scripts/docker/static/Dockerfile'
+                    filename 'scripts/docker/multiarch/Dockerfile'
                     dir '.'
                     label 'linux'
                     args '--entrypoint=\'\''
