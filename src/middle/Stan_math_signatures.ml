@@ -1012,27 +1012,32 @@ let () =
     , AoS );
   List.iter
     ~f:(fun i ->
-      let rt = bare_array_type (UMatrix, i) in
-      let t = bare_array_type (UVector, i) in
-      add_unqualified ("corr_matrix_constrain", ReturnType rt, [t; UInt], SoA);
-      add_unqualified ("corr_matrix_jacobian", ReturnType rt, [t; UInt], SoA);
-      add_unqualified ("cov_matrix_constrain", ReturnType rt, [t; UInt], SoA);
-      add_unqualified ("cov_matrix_jacobian", ReturnType rt, [t; UInt], SoA))
+      let m = bare_array_type (UMatrix, i) in
+      let v = bare_array_type (UVector, i) in
+      add_unqualified ("corr_matrix_constrain", ReturnType m, [v; UInt], SoA);
+      add_unqualified ("corr_matrix_unconstrain", ReturnType v, [m], AoS);
+      add_unqualified ("corr_matrix_jacobian", ReturnType m, [v; UInt], SoA);
+      add_unqualified ("cov_matrix_constrain", ReturnType m, [v; UInt], SoA);
+      add_unqualified ("cov_matrix_unconstrain", ReturnType v, [m], AoS);
+      add_unqualified ("cov_matrix_jacobian", ReturnType m, [v; UInt], SoA))
     (List.range 0 8);
   add_unqualified ("chol2inv", ReturnType UMatrix, [UMatrix], AoS);
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix], SoA);
   List.iter
     ~f:(fun i ->
-      let rt = bare_array_type (UMatrix, i) in
-      let t = bare_array_type (UVector, i) in
+      let m = bare_array_type (UMatrix, i) in
+      let v = bare_array_type (UVector, i) in
       add_unqualified
-        ("cholesky_factor_corr_constrain", ReturnType rt, [t; UInt], SoA);
+        ("cholesky_factor_corr_constrain", ReturnType m, [v; UInt], SoA);
       add_unqualified
-        ("cholesky_factor_corr_jacobian", ReturnType rt, [t; UInt], SoA);
+        ("cholesky_factor_corr_unconstrain", ReturnType v, [m], AoS);
       add_unqualified
-        ("cholesky_factor_cov_constrain", ReturnType rt, [t; UInt; UInt], SoA);
+        ("cholesky_factor_corr_jacobian", ReturnType m, [v; UInt], SoA);
       add_unqualified
-        ("cholesky_factor_cov_jacobian", ReturnType rt, [t; UInt; UInt], SoA))
+        ("cholesky_factor_cov_constrain", ReturnType m, [v; UInt; UInt], SoA);
+      add_unqualified ("cholesky_factor_cov_unconstrain", ReturnType v, [m], AoS);
+      add_unqualified
+        ("cholesky_factor_cov_jacobian", ReturnType m, [v; UInt; UInt], SoA))
     (List.range 0 8);
   add_binary_vec_int_int "choose" AoS;
   add_unqualified ("col", ReturnType UVector, [UMatrix; UInt], AoS);
@@ -2396,8 +2401,10 @@ let () =
       let t = bare_array_type (UMatrix, i) in
       add_unqualified ("stochastic_column_jacobian", ReturnType t, [t], SoA);
       add_unqualified ("stochastic_column_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("stochastic_column_unconstrain", ReturnType t, [t], AoS);
       add_unqualified ("stochastic_row_jacobian", ReturnType t, [t], SoA);
-      add_unqualified ("stochastic_row_constrain", ReturnType t, [t], SoA))
+      add_unqualified ("stochastic_row_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("stochastic_row_unconstrain", ReturnType t, [t], AoS))
     (List.range 0 8);
   add_unqualified ("squared_distance", ReturnType UReal, [UReal; UReal], SoA);
   add_unqualified ("squared_distance", ReturnType UReal, [UVector; UVector], SoA);

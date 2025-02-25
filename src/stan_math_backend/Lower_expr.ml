@@ -25,13 +25,17 @@ let fn_renames =
     ; ("cholesky_factor_cov_jacobian", "stan::math::cholesky_factor_constrain")
     ; ("cholesky_factor_corr_constrain", "stan::math::cholesky_corr_constrain")
     ; ("cholesky_factor_cov_constrain", "stan::math::cholesky_factor_constrain")
+    ; ("cholesky_factor_corr_unconstrain", "stan::math::cholesky_corr_free")
+    ; ("cholesky_factor_cov_unconstrain", "stan::math::cholesky_factor_free")
     ; ("lower_bound_jacobian", "stan::math::lb_constrain")
     ; ("upper_bound_jacobian", "stan::math::ub_constrain")
     ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
     ; ("lower_bound_constrain", "stan::math::lb_constrain")
+    ; ("lower_bound_unconstrain", "stan::math::lb_free")
     ; ("upper_bound_constrain", "stan::math::ub_constrain")
     ; ("upper_bound_unconstrain", "stan::math::ub_free")
-    ; ("lower_upper_bound_constrain", "stan::math::lub_constrain") ]
+    ; ("lower_upper_bound_constrain", "stan::math::lub_constrain")
+    ; ("lower_upper_bound_unconstrain", "stan::math::lub_free") ]
   |> String.Map.of_alist_exn
 
 let constraint_to_string = function
@@ -411,13 +415,11 @@ and lower_fun_app suffix fname es mem_pattern
     (ret_type : UnsizedType.returntype option) =
   let fname = Option.value (Map.find fn_renames fname) ~default:fname in
   let fname =
-    match String.chop_suffix fname ~suffix:"_jacobian" with
-    | Some f -> f ^ "_constrain"
-    | None -> fname in
-  let fname =
-    match String.chop_suffix fname ~suffix:"_unconstrain" with
-    | Some f -> f ^ "_free"
-    | None -> fname in
+    (* Handle systematic renaming of math's constrain and free functions *)
+    match String.rsplit2 fname ~on:'_' with
+    | Some (f, "jacobian") -> f ^ "_constrain"
+    | Some (f, "unconstrain") -> f ^ "_free"
+    | _ -> fname in
   let special_options =
     [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
     ; lower_misc_special_math_app fname mem_pattern ret_type

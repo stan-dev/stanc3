@@ -104,7 +104,7 @@ pipeline {
 
     }
     options {
-        parallelsAlwaysFailFast()
+        // parallelsAlwaysFailFast()
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30'))
         disableConcurrentBuilds(abortPrevious: true)
     }
@@ -306,8 +306,8 @@ pipeline {
         }
 
         stage("CmdStan & Math tests") {
+            failFast false // TESTING
             parallel {
-
                 stage("Compile tests - good") {
                     when {
                         beforeAgent true
