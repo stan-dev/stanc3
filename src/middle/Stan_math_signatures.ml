@@ -2047,7 +2047,8 @@ let () =
     ~f:(fun i ->
       let t = bare_array_type (UVector, i) in
       add_unqualified ("ordered_jacobian", ReturnType t, [t], SoA);
-      add_unqualified ("ordered_constrain", ReturnType t, [t], SoA))
+      add_unqualified ("ordered_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("ordered_unconstrain", ReturnType t, [t], AoS))
     (List.range 0 8);
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
@@ -2123,7 +2124,8 @@ let () =
     ~f:(fun i ->
       let t = bare_array_type (UVector, i) in
       add_unqualified ("positive_ordered_jacobian", ReturnType t, [t], SoA);
-      add_unqualified ("positive_ordered_constrain", ReturnType t, [t], SoA))
+      add_unqualified ("positive_ordered_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("positive_ordered_unconstrain", ReturnType t, [t], AoS))
     (List.range 0 8);
   add_binary_vec "pow" AoS;
   add_binary_vec_complex_complex "pow" AoS;
@@ -2348,7 +2350,8 @@ let () =
     ~f:(fun i ->
       let t = bare_array_type (UVector, i) in
       add_unqualified ("simplex_jacobian", ReturnType t, [t], SoA);
-      add_unqualified ("simplex_constrain", ReturnType t, [t], SoA))
+      add_unqualified ("simplex_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("simplex_unconstrain", ReturnType t, [t], AoS))
     (List.range 0 8);
   add_unqualified ("sin", ReturnType UComplex, [UComplex], AoS);
   add_unqualified ("sinh", ReturnType UComplex, [UComplex], AoS);
@@ -2460,7 +2463,8 @@ let () =
     ~f:(fun i ->
       let t = bare_array_type (UVector, i) in
       add_unqualified ("sum_to_zero_jacobian", ReturnType t, [t], SoA);
-      add_unqualified ("sum_to_zero_constrain", ReturnType t, [t], SoA))
+      add_unqualified ("sum_to_zero_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("sum_to_zero_unconstrain", ReturnType t, [t], AoS))
     (List.range 0 8);
   (* TODO (future): SoA inside of tuples, update following signatures *)
   add_unqualified
@@ -2655,7 +2659,8 @@ let () =
     ~f:(fun i ->
       let t = bare_array_type (UVector, i) in
       add_unqualified ("unit_vector_jacobian", ReturnType t, [t], SoA);
-      add_unqualified ("unit_vector_constrain", ReturnType t, [t], SoA))
+      add_unqualified ("unit_vector_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("unit_vector_unconstrain", ReturnType t, [t], AoS))
     (List.range 0 8);
   add_first_arg_vector_binary "upper_bound_jacobian" SoA;
   add_first_arg_vector_binary "upper_bound_constrain" SoA;
