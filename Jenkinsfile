@@ -86,10 +86,13 @@ pipeline {
     agent none
     parameters {
         booleanParam(name:"skip_end_to_end", defaultValue: false, description:"Skip end-to-end tests ")
+        booleanParam(name:"run_slow_perf_tests", defaultValue: false, description:"Run additional 'slow' performance tests")
         booleanParam(name:"skip_compile_O1", defaultValue: false, description:"Skip compile tests that run with STANCFLAGS = --O1")
         booleanParam(name:"skip_compile", defaultValue: false, description:"Skip compile tests")
         booleanParam(name:"skip_math_func_expr", defaultValue: false, description:"Skip math functions expressions test")
         booleanParam(name:"skip_ocaml_tests", defaultValue: false, description:"Skip ocaml tests")
+        booleanParam(name:"build_multiarch", defaultValue: false, description:"Build multiarch images even when not on 'master'")
+
         string(defaultValue: 'develop', name: 'cmdstan_pr',
                description: "CmdStan PR to test against. Will check out this PR in the downstream Stan repo.")
         string(defaultValue: 'develop', name: 'stan_pr',
@@ -98,8 +101,6 @@ pipeline {
                description: "Math PR to test against. Will check out this PR in the downstream Math repo.")
         string(defaultValue: '', name: 'stanc_flags',
                description: "Pass STANCFLAGS to make/local, default none")
-        booleanParam(name:"run_slow_perf_tests", defaultValue: false, description:"Run additional 'slow' performance tests")
-        booleanParam(name:"build_multiarch", defaultValue: false, description:"Build multiarch images even when not on 'master'")
 
     }
     options {
