@@ -46,7 +46,7 @@ functions {
     return a;
   }
   
-  vector upper_bound_jacobian(vector x, real ub) {
+  vector my_upper_bound_jacobian(vector x, real ub) {
     jacobian += x;
     return ub - exp(x);
   }
