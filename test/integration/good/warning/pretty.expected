@@ -1,16 +1,26 @@
   $ ../../../../../install/default/bin/stanc --auto-format data_jacobian.stan
+functions {
+  real my_upper_bound_jacobian(real x, real ub) {
+    jacobian += x;
+    return ub - exp(x);
+  }
+}
 data {
   real beta_raw;
   real ub;
 }
 transformed parameters {
   real beta = upper_bound_jacobian(beta_raw, ub);
+  real beta2 = my_upper_bound_jacobian(beta_raw, ub);
 }
 
-Warning in 'data_jacobian.stan', line 7, column 14: Calling a _jacobian
+Warning in 'data_jacobian.stan', line 14, column 14: Calling a _jacobian
     function without any parameter arguments still applies the Jacobian
-    adjustments, ensure this is intentional! If not, and this is a built in
-    transformation, consider using _constrain instead.
+    adjustments, ensure this is intentional! Consider using
+    upper_bound_constrain instead.
+Warning in 'data_jacobian.stan', line 15, column 15: Calling a _jacobian
+    function without any parameter arguments still applies the Jacobian
+    adjustments, ensure this is intentional!
 [exit 0]
   $ ../../../../../install/default/bin/stanc --auto-format deprecated_syntax.stan
 functions {
