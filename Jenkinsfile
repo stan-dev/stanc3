@@ -155,7 +155,7 @@ pipeline {
 
         stage("OCaml build & tests") {
             parallel {
-                stage("Build") {
+                stage("Build static Linux x86_64 binary") {
                     when {
                         beforeAgent true
                         expression {
@@ -636,7 +636,7 @@ pipeline {
                         expression { !skipRebuildingBinaries }
                     }
                     stages {
-                        stage("Build & test MacOS x86 binary") {
+                        stage("Build MacOS x86 binary") {
                             agent { label 'osx && intel' }
                             steps {
                                 dir("${env.WORKSPACE}/osx-x86"){
@@ -658,7 +658,7 @@ pipeline {
                             post { always { runShell("rm -rf ${env.WORKSPACE}/osx-x86/*") }}
                         }
 
-                        stage("Build & test MacOS arm64 binary") {
+                        stage("Build MacOS arm64 binary") {
                             agent { label 'osx && m1' }
                             steps {
                                 dir("${env.WORKSPACE}/osx-arm64"){
@@ -735,7 +735,7 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/stancjs/*")}}
                 }
 
-                // stage("Build & test a static Linux mips64el binary") {
+                // stage("Build static Linux mips64el binary") {
                 //     when {
                 //         beforeAgent true
                 //         allOf {
@@ -769,7 +769,7 @@ pipeline {
                 //     post {always { runShell("rm -rf ${env.WORKSPACE}/linux-mips64el/*")}}
                 // }
 
-                stage("Build & test a static Linux ppc64el binary") {
+                stage("Build static Linux ppc64el binary") {
                     when {
                         beforeAgent true
                         allOf {
@@ -801,7 +801,7 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/linux-ppc64el/*")}}
                 }
 
-                stage("Build & test a static Linux s390x binary") {
+                stage("Build static Linux s390x binary") {
                     when {
                         beforeAgent true
                         allOf {
@@ -833,7 +833,7 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/linux-s390x/*")}}
                 }
 
-                stage("Build & test a static Linux arm64 binary") {
+                stage("Build static Linux arm64 binary") {
                     when {
                         beforeAgent true
                         allOf {
@@ -865,7 +865,7 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/linux-arm64/*")}}
                 }
 
-                stage("Build & test a static Linux armhf binary") {
+                stage("Build static Linux armhf binary") {
                     when {
                         beforeAgent true
                         allOf {
@@ -897,7 +897,7 @@ pipeline {
                     post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armhf/*")}}
                 }
 
-                stage("Build & test a static Linux armel binary") {
+                stage("Build static Linux armel binary") {
                     when {
                         beforeAgent true
                         allOf {
@@ -930,7 +930,7 @@ pipeline {
                 }
 
                 // Cross compiling for windows on debian
-                stage("Build & test static Windows binary") {
+                stage("Build Windows binary") {
                     when {
                         beforeAgent true
                         expression {
