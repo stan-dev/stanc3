@@ -3,18 +3,17 @@ opam-version: "2.0"
 synopsis: "The Stan compiler and utilities"
 depends: [
   "dune" {>= "3.5"}
-  "ocaml" {= "4.14.1"}
-  "core" {= "v0.16.1"}
-  "menhir" {= "20230608"}
-  "ppx_deriving" {= "5.2.1"}
+  "ocaml" {= "5.4.0"}
+  "core" {= "v0.17.1"}
+  "menhir" {= "20240715"}
+  "ppx_deriving" {= "6.0.3"}
   "fmt" {= "0.11.0"}
-  "yojson" {= "2.1.0"}
+  "yojson" {= "2.2.2"}
   "cmdliner" {= "2.1.0"}
   "ocamlformat" {with-test & = "0.28.1"}
   "bisect_ppx" {with-test}
   "merlin" {with-test}
   "utop" {with-test}
-  "ocp-indent" {with-test}
   "patdiff" {with-test}
   "odoc" {with-doc}
 ]

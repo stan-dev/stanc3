@@ -15,17 +15,17 @@
  (synopsis "The Stan compiler and utilities")
  (depends
   (ocaml
-   (= 4.14.1))
+   (= 5.4.0))
   (core
-   (= v0.16.1))
+   (= v0.17.1))
   (menhir
-   (= 20230608))
+   (= 20240715))
   (ppx_deriving
-   (= 5.2.1))
+   (= 6.0.3))
   (fmt
    (= 0.11.0))
   (yojson
-   (= 2.1.0))
+   (= 2.2.2))
   (cmdliner
    (= 2.1.0))
   (ocamlformat
@@ -35,5 +35,4 @@
   (bisect_ppx :with-test)
   (merlin :with-test)
   (utop :with-test)
-  (ocp-indent :with-test)
   (patdiff :with-test)))

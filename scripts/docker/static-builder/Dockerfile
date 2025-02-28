@@ -14,10 +14,10 @@ RUN apk update && apk add --no-cache opam build-base bzip2 git tar curl ca-certi
 # Switch back to the normal user
 USER jenkins
 
-# Init opam, create and switch to 4.14.0, update shell environment
+# Init opam, create and switch to 5.4.0, update shell environment
 RUN opam init --disable-sandboxing --bare -y
-RUN opam switch create 4.14.1
-RUN opam switch 4.14.1
+RUN opam switch create 5.4.0 ocaml-variants.5.4.0+options ocaml-option-flambda -y
+RUN opam switch 5.4.0
 RUN eval $(opam env)
 
 COPY ./scripts/install_build_deps.sh ./

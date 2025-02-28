@@ -1,5 +1,5 @@
 version=0.28.1
-ocaml-version=4.14
+ocaml-version=5.4
 # loosely re-creates the now-removed "compact" profile
 break-separators=before
 break-before-in=auto

@@ -45,7 +45,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '100', artifactDaysToKeepStr: '100'))
     }
     environment {
-        MACOS_SWITCH = 'stanc3-cmdliner2.1.0'
+        MACOS_SWITCH = 'stanc3-ocaml5.4'
     }
     stages {
 

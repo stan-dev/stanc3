@@ -115,7 +115,7 @@ pipeline {
     }
     environment {
         CXX = 'clang++-6.0'
-        MACOS_SWITCH = 'stanc3-cmdliner2.1.0'
+        MACOS_SWITCH = 'stanc3-ocaml5.4'
         GIT_AUTHOR_NAME = 'Stan Jenkins'
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
         GIT_COMMITTER_NAME = 'Stan Jenkins'

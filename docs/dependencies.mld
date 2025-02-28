@@ -10,19 +10,19 @@ for {!xcomp}, these versions are exactly pinned.
 These are automatically installed through the [scripts/install_ocaml.sh] and
 [scripts/install_build_deps.sh] scripts provided in the stanc3 repository.
 
-- OCaml 4.14.1
+- OCaml 5.4.0
 - Dune 3.5+
-- {{:https://v3.ocaml.org/p/core/latest/doc/index.html}Core} v0.16.1 (a standard library replacement)
-- {{:http://gallium.inria.fr/~fpottier/menhir/manual.html}Menhir} 20230608 (a parser generator and parsing library)
-- {{:https://github.com/ocaml-ppx/ppx_deriving}ppx_deriving} 5.2.1 (a tool for generating boilerplate code)
+- {{:https://v3.ocaml.org/p/core/latest/doc/index.html}Core} v0.17.1 (a standard library replacement)
+- {{:http://gallium.inria.fr/~fpottier/menhir/manual.html}Menhir} 20240715 (a parser generator and parsing library)
+- {{:https://github.com/ocaml-ppx/ppx_deriving}ppx_deriving} 6.0.3 (a tool for generating boilerplate code)
 - {{:https://erratique.ch/software/fmt}fmt} 0.11.0 (a library for pretty-printing of formatted text)
 - {{:https://erratique.ch/software/cmdliner}cmdliner} 2.1.0 (a library for command line parsing)
-- yojson 2.1.0 (a library for producing JSON files)
+- yojson 2.2.0 (a library for producing JSON files)
 
 
 For the JavaScript interface to stanc3 we also use the following, installed
 via [scripts/install_js_deps.sh]
-- js_of_ocaml 5.9.1
+- js_of_ocaml 6.0.3
 
 The [stancjs] executable can be built with
 
