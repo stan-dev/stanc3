@@ -909,7 +909,7 @@ pipeline {
                         dockerfile {
                             filename 'scripts/docker/multiarch/Dockerfile'
                             dir '.'
-                            label 'linux && emulated'
+                            label 'linux && emulation'
                             args '--platform=linux/arm/v6 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
                             additionalBuildArgs  '--platform=linux/arm/v6 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
