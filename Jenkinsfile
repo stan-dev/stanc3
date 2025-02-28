@@ -902,35 +902,31 @@ pipeline {
                         beforeAgent true
                         allOf {
                             expression { !skipRebuildingBinaries }
-                            // anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
+                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
                         }
                     }
                     agent {
-                        label 'linux && triqs'
+                        dockerfile {
+                            filename 'scripts/docker/multiarch/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--platform=linux/arm/v6 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/arm/v6 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
                     }
-                    // {
-                    //     dockerfile {
-                    //         filename 'scripts/docker/multiarch/Dockerfile'
-                    //         dir '.'
-                    //         label 'linux && triqs'
-                    //         args '--platform=linux/arm/v6 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                    //         additionalBuildArgs  '--platform=linux/arm/v6 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                    //     }
-                    // }
                     steps {
-                        // dir("${env.WORKSPACE}/linux-armel"){
-                        //     cleanCheckout()
-                        //     runShell("""
-                        //         eval \$(opam env)
-                        //         dune subst
-                        //         dune build @install --profile static --root=.
-                        //     """)
-                            // sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
-                            sh "docker buildx ls"
-                        //     stash name:'linux-armel-exe', includes:'bin/*'
-                        // }
+                        dir("${env.WORKSPACE}/linux-armel"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build @install --profile static --root=.
+                            """)
+                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
+                            stash name:'linux-armel-exe', includes:'bin/*'
+                        }
                     }
-                    // post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armel/*")}}
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armel/*")}}
                 }
 
                 // Cross compiling for windows on debian
