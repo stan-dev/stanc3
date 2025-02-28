@@ -120,7 +120,7 @@ pipeline {
         stage('Verify changes') {
             agent {
                 dockerfile {
-                    filename 'scripts/docker/debian/Dockerfile'
+                    filename 'scripts/docker/ci/Dockerfile'
                     dir '.'
                     label 'linux'
                     args '--entrypoint=\'\''
@@ -197,7 +197,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/debian/Dockerfile'
+                            filename 'scripts/docker/ci/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
@@ -235,7 +235,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/debian/Dockerfile'
+                            filename 'scripts/docker/ci/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
@@ -282,7 +282,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/debian/Dockerfile'
+                            filename 'scripts/docker/ci/Dockerfile'
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
@@ -707,7 +707,7 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/debian/Dockerfile'
+                            filename 'scripts/docker/ci/Dockerfile'
                             dir '.'
                             label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
@@ -905,9 +905,9 @@ pipeline {
                     }
                     agent {
                         dockerfile {
-                            filename 'scripts/docker/debian-windows/Dockerfile'
+                            filename 'scripts/docker/ci/Dockerfile'
                             dir '.'
-                            label 'linux && triqs'
+                            label 'linux'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
                             additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                         }
@@ -937,7 +937,7 @@ pipeline {
             }
             agent {
                 dockerfile {
-                    filename 'scripts/docker/publish/Dockerfile'
+                    filename 'scripts/docker/ci/Dockerfile'
                     dir '.'
                     label 'linux'
                     args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
@@ -965,7 +965,7 @@ pipeline {
             }
             agent {
                 dockerfile {
-                    filename 'scripts/docker/publish/Dockerfile'
+                    filename 'scripts/docker/ci/Dockerfile'
                     dir '.'
                     label 'linux'
                     args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
@@ -1031,7 +1031,7 @@ pipeline {
                 dockerfile {
                     filename 'scripts/docker/static-builder/Dockerfile'
                     dir '.'
-                    label 'linux'
+                    label 'linux && triqs'
                     args '--entrypoint=\'\''
                     additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
                 }
