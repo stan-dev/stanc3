@@ -2,7 +2,6 @@
 open Core
 
 open Frontend
-module Stan_math_signatures = Middle.Stan_math_signatures
 
 let write filename data =
   try Out_channel.write_all filename ~data

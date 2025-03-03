@@ -1,7 +1,7 @@
 (library
  (name analysis_and_optimization)
  (public_name stanc.analysis)
- (libraries core middle yojson frontend)
+ (libraries core middle yojson frontend stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
  (inline_tests)

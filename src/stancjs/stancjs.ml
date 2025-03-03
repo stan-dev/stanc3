@@ -1,7 +1,6 @@
 open Core
 open Frontend
 open Analysis_and_optimization
-open Middle
 open Js_of_ocaml
 
 let invoke_driver model_name model flags =

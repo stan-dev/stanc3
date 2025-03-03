@@ -1,0 +1,33 @@
+(library
+ (name stan_math_signatures)
+ (public_name stanc.stan_math_signatures)
+ (libraries core fmt common middle)
+ (instrumentation
+  (backend bisect_ppx))
+ (instrumentation
+  (backend landmarks --auto))
+ (wrapped false)
+ (modules stan_math_signatures)
+ (inline_tests)
+ (preprocess
+  (pps ppx_blob ppx_jane ppx_deriving.show))
+ (preprocessor_deps
+  (file stan_math_signatures.bin)
+  (file stan_math_variadic_signatures.bin)
+  (file stan_math_distributions.bin)))
+
+(executable
+ (name generate)
+ (public_name gen_sigs)
+ (modules generate)
+ (preprocess
+  (pps ppx_jane ppx_deriving.create ppx_deriving.show))
+ (libraries core common middle))
+
+(rule
+ (targets
+  stan_math_signatures.bin
+  stan_math_variadic_signatures.bin
+  stan_math_distributions.bin)
+ (action
+  (run %{bin:gen_sigs})))
