@@ -381,8 +381,14 @@ let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
 
-let is_stan_math_variadic_function_name name =
-  Hashtbl.mem stan_math_variadic_signatures name
+let lookup_stan_math_function = Hashtbl.find_multi stan_math_signatures
+let get_stan_math_signatures_alist () = Hashtbl.to_alist stan_math_signatures
+
+let is_stan_math_variadic_function_name =
+  Hashtbl.mem stan_math_variadic_signatures
+
+let lookup_stan_math_variadic_function =
+  Hashtbl.find stan_math_variadic_signatures
 
 let operator_to_stan_math_fns op =
   match op with

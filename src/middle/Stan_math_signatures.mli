@@ -3,8 +3,6 @@
     functions for dealing with those signatures.
 *)
 
-open Core
-
 (** Function arguments are represented by their type an autodiff
    type. This is [AutoDiffable] for everything except arguments
    marked with the data keyword *)
@@ -14,11 +12,14 @@ type fun_arg = UnsizedType.autodifftype * UnsizedType.t
     for whether or not those arguments can be Struct of Arrays objects *)
 type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
 
-val stan_math_signatures : (string, signature list) Hashtbl.t
-(** Mapping from names to signature(s) of functions *)
-
 val is_stan_math_function_name : string -> bool
-(** Equivalent to [Hashtbl.mem stan_math_signatures s]*)
+(** Check if a string names a Stan Math library function *)
+
+val lookup_stan_math_function : string -> signature list
+(** Look up the signature of a Stan Math library function. If it is not found, this returns [[]] *)
+
+val get_stan_math_signatures_alist : unit -> (string * signature list) list
+(** Get all the signatures in the Stan Math library *)
 
 type variadic_signature =
   { return_type: UnsizedType.t
@@ -26,15 +27,15 @@ type variadic_signature =
   ; required_fn_rt: UnsizedType.t
   ; required_fn_args: fun_arg list }
 
-val stan_math_variadic_signatures : (string, variadic_signature) Hashtbl.t
-(** Mapping from names to description of a variadic function.
+val is_stan_math_variadic_function_name : string -> bool
+(** Test if a string names a built-in variadic function
 
   Note that these function names cannot be overloaded, and usually require
   customized code-gen in the backend.
 *)
 
-val is_stan_math_variadic_function_name : string -> bool
-(** Equivalent to [Hashtbl.mem stan_math_variadic_signatures s]*)
+val lookup_stan_math_variadic_function : string -> variadic_signature option
+(** Look up the signature of a built-in variadic function *)
 
 (** Pretty printers *)
 

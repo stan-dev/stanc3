@@ -26,7 +26,7 @@ type t = info list String.Map.t
 
 let stan_math_environment =
   let functions =
-    Hashtbl.to_alist Stan_math_signatures.stan_math_signatures
+    Stan_math_signatures.get_stan_math_signatures_alist ()
     |> List.map ~f:(fun (key, values) ->
            ( key
            , List.map values ~f:(fun (rt, args, mem) ->
