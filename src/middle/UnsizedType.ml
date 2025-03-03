@@ -27,6 +27,14 @@ and argumentlist = (autodifftype * t) list
 and returntype = Void | ReturnType of t
 [@@deriving compare, hash, sexp, equal]
 
+type math_signature = returntype * argumentlist * Mem_pattern.t
+
+type variadic_signature =
+  { return_type: t
+  ; control_args: argumentlist
+  ; required_fn_rt: t
+  ; required_fn_args: argumentlist }
+
 let rec pp_tuple_autodifftype ppf = function
   | DataOnly -> Fmt.string ppf "data"
   | AutoDiffable -> Fmt.string ppf "var"
@@ -93,6 +101,9 @@ and pp_fun_arg ppf (ad_ty, unsized_ty) =
 and pp_returntype ppf = function
   | Void -> Fmt.string ppf "void"
   | ReturnType ut -> pp ppf ut
+
+let pp_math_sig ppf (rt, args, mem_pattern) =
+  pp ppf (UFun (args, rt, FnPlain, mem_pattern))
 
 (* -- Type conversion -- *)
 let rec autodifftype_can_convert at1 at2 =
