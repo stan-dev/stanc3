@@ -198,9 +198,7 @@ let match_to_rt_option = function
   | _ -> None
 
 let stan_math_return_type name arg_tys =
-  match
-    Hashtbl.find Stan_math_signatures.stan_math_variadic_signatures name
-  with
+  match Stan_math_signatures.lookup_stan_math_variadic_function name with
   | Some {return_type; _} -> Some (UnsizedType.ReturnType return_type)
   | None when Stan_math_signatures.is_reduce_sum_fn name ->
       Some (UnsizedType.ReturnType UReal)
@@ -667,8 +665,8 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
 and check_variadic ~is_cond_dist loc cf tenv id tes =
   let Stan_math_signatures.
         {control_args; required_fn_args; required_fn_rt; return_type} =
-    Hashtbl.find_exn Stan_math_signatures.stan_math_variadic_signatures id.name
-  in
+    Stan_math_signatures.lookup_stan_math_variadic_function id.name
+    |> Option.value_exn in
   let matching remaining_es Env.{type_= ftype; _} =
     let arg_types =
       (calculate_autodifftype cf Functions ftype, ftype)
