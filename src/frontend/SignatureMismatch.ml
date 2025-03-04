@@ -424,7 +424,7 @@ let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
       Stan_math_signatures.make_assignmentoperator_stan_math_signatures op in
     let errors =
       List.filter
-        ~f:(fun (_, args, _) ->
+        ~f:(fun (args, _, _, _) ->
           Result.is_ok (check_same_type 0 lt (snd (List.hd_exn args))))
         errors in
     match List.split_n errors max_n_errors with

@@ -501,10 +501,9 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
   | [] ->
       (match Utils.split_distribution_suffix id.name with
       | Some (prefix, suffix) -> (
-          let known_families =
-            List.map ~f:fst Stan_math_signatures.distributions in
           let is_known_family s =
-            List.mem known_families s ~equal:String.equal in
+            List.Assoc.mem Stan_math_signatures.distributions s
+              ~equal:String.equal in
           match suffix with
           | ("lpmf" | "lupmf") when Env.mem tenv (prefix ^ "_lpdf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc

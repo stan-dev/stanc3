@@ -99,8 +99,7 @@ let is_primitive = function
   | _ -> false
 
 (** The signatures hash table *)
-let (stan_math_signatures : (string, UnsizedType.math_signature list) Hashtbl.t)
-    =
+let (stan_math_signatures : (string, UnsizedType.signature list) Hashtbl.t) =
   String.Table.create ()
 
 (** The variadic signatures hash table
@@ -126,8 +125,9 @@ let rng_return_type t lt =
 let add_unqualified (name, rt, uqargts, mem_pattern) =
   Hashtbl.add_multi stan_math_signatures ~key:name
     ~data:
-      ( rt
-      , List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) uqargts
+      ( List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) uqargts
+      , rt
+      , Fun_kind.suffix_from_name name
       , mem_pattern )
 
 let rec ints_to_real unsized =
@@ -369,7 +369,7 @@ let declarative_fnsigs =
 
 let add_qualified (name, rt, argts, supports_soa) =
   Hashtbl.add_multi stan_math_signatures ~key:name
-    ~data:(rt, argts, supports_soa)
+    ~data:(argts, rt, Fun_kind.suffix_from_name name, supports_soa)
 
 let add_nullary name =
   add_unqualified (name, UnsizedType.ReturnType UReal, [], AoS)
@@ -608,7 +608,8 @@ let for_vector_types s = List.iter ~f:s vector_types
 (* -- Start populating stan_math_signaturess -- *)
 let () =
   List.iter declarative_fnsigs ~f:(fun (key, rt, args, mem_pattern) ->
-      Hashtbl.add_multi stan_math_signatures ~key ~data:(rt, args, mem_pattern));
+      Hashtbl.add_multi stan_math_signatures ~key
+        ~data:(args, rt, Fun_kind.suffix_from_name key, mem_pattern));
   add_unqualified ("acos", ReturnType UComplex, [UComplex], AoS);
   add_unqualified ("acosh", ReturnType UComplex, [UComplex], AoS);
   List.iter
@@ -2568,7 +2569,7 @@ let generate_module file =
       Printf.fprintf ch
         {|
 let stan_math_signatures :
-    Middle.UnsizedType.math_signature list Core.String.Table.t =
+    Middle.UnsizedType.signature list Core.String.Table.t =
   Marshal.from_string %S 0 |> Core.String.Table.of_alist_exn
 
 let stan_math_variadic_signatures :

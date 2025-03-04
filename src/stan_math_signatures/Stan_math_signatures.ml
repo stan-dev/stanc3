@@ -59,8 +59,9 @@ let operator_to_stan_math_fns op =
 
 let int_divide_type =
   UnsizedType.
-    ( ReturnType UInt
-    , [(AutoDiffable, UInt); (AutoDiffable, UInt)]
+    ( [(AutoDiffable, UInt); (AutoDiffable, UInt)]
+    , ReturnType UInt
+    , Fun_kind.FnPlain
     , Mem_pattern.AoS )
 
 let get_sigs name =
@@ -73,15 +74,18 @@ let make_assignmentoperator_stan_math_signatures assop =
   | assop -> operator_to_stan_math_fns assop)
   |> List.concat_map ~f:get_sigs
   |> List.concat_map ~f:(function
-       | ReturnType rtype, [(ad1, lhs); (ad2, rhs)], _
+       | [(ad1, lhs); (ad2, rhs)], ReturnType rtype, _, _
          when rtype = lhs
               && not
                    ((assop = Operator.EltTimes || assop = Operator.EltDivide)
                    && UnsizedType.is_scalar_type rtype) ->
            if rhs = UReal then
-             [ (UnsizedType.Void, [(ad1, lhs); (ad2, UInt)], Mem_pattern.SoA)
-             ; (Void, [(ad1, lhs); (ad2, UReal)], SoA) ]
-           else [(Void, [(ad1, lhs); (ad2, rhs)], SoA)]
+             [ ( [(ad1, lhs); (ad2, UInt)]
+               , UnsizedType.Void
+               , Fun_kind.FnPlain
+               , Mem_pattern.SoA )
+             ; ([(ad1, lhs); (ad2, UReal)], Void, FnPlain, SoA) ]
+           else [([(ad1, lhs); (ad2, rhs)], Void, FnPlain, SoA)]
        | _ -> [])
 
 let pp_math_sigs ppf name =
@@ -119,7 +123,7 @@ let string_operator_to_stan_math_fns str =
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
   Format.pp_set_margin ppf 180;
-  let pp_sig ppf (name, (rt, args, _)) =
+  let pp_sig ppf (name, (args, rt, _, _)) =
     pf ppf "%s(@[<h>%a@]) => %a" name
       (list ~sep:comma UnsizedType.pp)
       (List.map ~f:snd args) UnsizedType.pp_returntype rt in

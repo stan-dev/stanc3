@@ -15,19 +15,15 @@ type t =
   | UComplexMatrix
   | UArray of t
   | UTuple of t list
-  | UFun of argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
+  | UFun of signature
   | UMathLibraryFunction
-[@@deriving compare, hash, sexp]
 
 and autodifftype = DataOnly | AutoDiffable | TupleAD of autodifftype list
-[@@deriving compare, hash, sexp]
-
 and argumentlist = (autodifftype * t) list
-
 and returntype = Void | ReturnType of t
-[@@deriving compare, hash, sexp, equal]
 
-type math_signature = returntype * argumentlist * Mem_pattern.t
+and signature = argumentlist * returntype * bool Fun_kind.suffix * Mem_pattern.t
+[@@deriving compare, hash, sexp, equal]
 
 type variadic_signature =
   { return_type: t
@@ -102,8 +98,7 @@ and pp_returntype ppf = function
   | Void -> Fmt.string ppf "void"
   | ReturnType ut -> pp ppf ut
 
-let pp_math_sig ppf (rt, args, mem_pattern) =
-  pp ppf (UFun (args, rt, FnPlain, mem_pattern))
+let pp_math_sig ppf s = pp ppf (UFun s)
 
 (* -- Type conversion -- *)
 let rec autodifftype_can_convert at1 at2 =
