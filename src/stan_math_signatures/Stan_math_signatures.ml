@@ -66,7 +66,8 @@ let int_divide_type =
 
 let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
-  Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
+  Hashtbl.find_multi stan_math_signatures name
+  |> List.sort ~compare:UnsizedType.compare_signature
 
 let make_assignmentoperator_stan_math_signatures assop =
   (match assop with
@@ -132,7 +133,7 @@ let pretty_print_all_math_sigs ppf () =
       (List.map ~f:(fun t -> (name, t)) (get_sigs name)) in
   pf ppf "@[<v>%a@]"
     (list ~sep:cut pp_sigs_for_name)
-    (List.sort ~compare (Hashtbl.keys stan_math_signatures))
+    (List.sort ~compare:String.compare (Hashtbl.keys stan_math_signatures))
 
 let pretty_print_all_math_distributions ppf () =
   let open Fmt in
