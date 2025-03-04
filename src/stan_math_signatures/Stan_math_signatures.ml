@@ -4,14 +4,19 @@ open Core
 open Core.Poly
 open Middle
 
-(** The following module is produced by the Gen_sigs binary
-   in this folder. This is an optimization, one can proceed as-if the
-   hashtables here were built at runtime by the code in that module
+(** The [Generated_signatures] module is produced by the [Generate.ml]
+   executable in this folder.
 
-   It defines the variables [stan_math_signatures], [stan_math_variadic_signatures]
-   and [distributions].
-   *)
-include Generated_signatures
+   **This is an optimization**, one can proceed as-if the
+   hashtables here were built at runtime by the code in that module
+   (i.e., by [include Generate]) *)
+
+let stan_math_signatures = Generated_signatures.stan_math_signatures
+
+let stan_math_variadic_signatures =
+  Generated_signatures.stan_math_variadic_signatures
+
+let distributions = Generated_signatures.distributions
 
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
