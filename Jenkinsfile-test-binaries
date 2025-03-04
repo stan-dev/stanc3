@@ -1,45 +1,20 @@
-@Library('StanUtils')
-import org.stan.Utils
-
-def utils = new org.stan.Utils()
-
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
     return "${output}"
 }
 
-def tagName() {
-    if (env.TAG_NAME) {
-        env.TAG_NAME
-    } else if (env.BRANCH_NAME == 'master') {
-        'nightly'
-    } else {
-        'unknown-tag'
+def cleanCheckout() {
+    retry(3) {
+        checkout([
+            $class: 'GitSCM',
+            branches: scm.branches,
+            extensions: [[$class: 'CloneOption', noTags: false]],
+            userRemoteConfigs: scm.userRemoteConfigs,
+        ])
     }
-}
 
-def checkoutRepository(os_type) {
-    if(params.git_branch.contains("PR-")){
-        pr_number = params.git_branch.split("-")[1]
-
-        if(os_type == "sh"){
-            sh "git fetch origin pull/${pr_number}/head:pr/${pr_number}"
-            sh "git checkout pr/${pr_number}"
-        }
-        else if(os_type == "bat"){
-            bat "git fetch origin pull/${pr_number}/head:pr/${pr_number}"
-            bat "git checkout pr/${pr_number}"
-        }
-    }
-    else{
-        if(os_type == "sh"){
-            sh "git checkout master && git pull && git checkout ${params.git_branch} && git pull origin ${params.git_branch}"
-        }
-        else if(os_type == "bat"){
-            bat "git checkout master && git pull && git checkout ${params.git_branch} && git pull origin ${params.git_branch}"
-        }
-    }
+    sh 'git clean -xffd'
 }
 
 pipeline {
@@ -48,139 +23,287 @@ pipeline {
         string(defaultValue: 'master', name: 'git_branch',
                description: "Please specify a git branch ( develop ), git hash ( aace72b6ccecbb750431c46f418879b325416c7d ), pull request ( PR-123 ), pull request from fork ( PR-123 )")
     }
-    environment {
-        GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681')
+    options {
+        parallelsAlwaysFailFast()
+        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30'))
     }
-    options {parallelsAlwaysFailFast()}
     stages {
 
-        stage("Dune tests") {
-            agent {
-                docker {
-                    image 'stanorg/stanc3:debian-ocaml-4.14'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
-                }
-            }
-            steps {
-                runShell("""
-                    eval \$(opam env)
-                    dune runtest --verbose
-                """)
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }
+        stage('Build binaries') {
+            parallel {
 
-        stage("Build") {
-            agent {
-                docker {
-                    image 'stanorg/stanc3:debian-ocaml-4.14'
-                    args "--entrypoint=\'\'"
+                stage("Build static Linux x86_64 binary") {
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/static-builder/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/linux"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build --profile static --root=.
+                            """)
+                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
+                            archiveArtifacts 'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
                 }
-            }
-            steps {
-                script {
-                    checkoutRepository("sh")
-                }
-                runShell("""
-                    eval \$(opam env)
-                    dune build @install
-                """)
-                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
-                archiveArtifacts 'bin/*'
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }
 
-        stage("Build & test Mac OS X binary") {
-            agent { label 'osx' }
-            steps {
-                script {
-                    checkoutRepository("sh")
-                }
-                runShell("""
-                    export PATH=/Users/jenkins/brew/bin:\$PATH
-                    eval \$(opam env)
-                    opam update || true
-                    bash -x scripts/install_build_deps.sh
-                    dune subst
-                    dune build @install
-                """)
-                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                archiveArtifacts 'bin/*'
-            }
-            post { always { runShell("rm -rf ./*") }}
-        }
+                stage("Build MacOS binaries") {
+                    agent none
+                    stages {
+                        stage("Build MacOS x86 binary") {
+                            agent { label 'osx && intel' }
+                            steps {
+                                dir("${env.WORKSPACE}/osx-x86"){
+                                    cleanCheckout()
+                                    withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
+                                        runShell("""
+                                            export PATH=/Users/jenkins/brew/bin:\$PATH
+                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
+                                            opam update || true
+                                            bash -x scripts/install_build_deps.sh
+                                            dune subst
+                                            dune build --root=. --profile release
+                                        """)
+                                    }
+                                    sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-x86-stanc"
+                                    archiveArtifacts 'bin/*'
+                                }
+                            }
+                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-x86/*") }}
+                        }
 
-        stage("Build stanc.js") {
-            agent {
-                docker {
-                    image 'stanorg/stanc3:debian-ocaml-4.14'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
-                }
-            }
-            steps {
-                script {
-                    checkoutRepository("sh")
-                }
-                runShell("""
-                    eval \$(opam env)
-                    dune subst
-                    dune build --profile release src/stancjs
-                """)
-                sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
-                sh "mv `find _build -name index.html` bin/load_stanc.html"
-                archiveArtifacts 'bin/*'
-            }
-            post {always { runShell("rm -rf ./*")}}
-        }
+                        stage("Build MacOS arm64 binary") {
+                            agent { label 'osx && m1' }
+                            steps {
+                                dir("${env.WORKSPACE}/osx-arm64"){
+                                    cleanCheckout()
+                                    withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
+                                        runShell("""
+                                            export PATH=/Users/jenkins/brew/bin:\$PATH
+                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
+                                            opam update || true
+                                            bash -x scripts/install_build_deps.sh
+                                            dune subst
+                                            dune build --root=. --profile release
+                                        """)
+                                    }
+                                    sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-arm64-stanc"
+                                    archiveArtifacts 'bin/*'
+                                }
+                            }
+                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-arm64/*") }}
+                        }
 
-        stage("Build & test a static Linux binary") {
-            agent {
-                docker {
-                    image 'stanorg/stanc3:static-ocaml-4.14'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                        stage('Build MacOS fat binary') {
+                            agent { label 'osx && m1' }
+                            steps {
+                                dir("${env.WORKSPACE}/osx-universal"){
+                                    unarchiveArtifacts 'bin/*'
+                                    unarchiveArtifacts 'bin/*'
+                                    withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
+                                        sh "lipo -create bin/mac-x86-stanc bin/mac-arm64-stanc -output bin/mac-stanc"
+                                    }
+                                    sh "lipo -archs bin/mac-stanc"
+                                    archiveArtifacts 'bin/*'
+                                }
+                            }
+                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-universal/*") }}
+                        }
+                    }
                 }
-            }
-            steps {
-                script {
-                    checkoutRepository("sh")
-                }
-                runShell("""
-                    eval \$(opam env)
-                    dune subst
-                    dune build @install --profile static
-                """)
-                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                archiveArtifacts 'bin/*'
-            }
-            post {always { runShell("rm -rf ./*")}}
-        }
 
-        stage("Build & test static Windows binary") {
-            agent {
-                docker {
-                    image 'stanorg/stanc3:debian-windows-ocaml-4.14'
-                    //Forces image to ignore entrypoint
-                    args "--entrypoint=\'\'"
+                stage("Build stanc.js") {
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/ci/Dockerfile'
+                            dir '.'
+                            label 'linux && triqs'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/stancjs"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build --root=. --profile release src/stancjs
+                            """)
+                            sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
+                            sh "mv `find _build -name index.html` bin/load_stanc.html"
+                            runShell("""
+                                eval \$(opam env)
+                                dune build --force --profile=dev --root=. src/stancjs
+                            """)
+                            sh "mv `find _build -name stancjs.bc.js` bin/stanc-pretty.js"
+                            archiveArtifacts 'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/stancjs/*")}}
+                }
+
+                stage("Build static Linux ppc64el binary") {
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/static-builder/Dockerfile'
+                            dir '.'
+                            label 'linux && emulation'
+                            args '--platform=linux/ppc64le --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/ppc64le --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/linux-ppc64el"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build --profile static --root=.
+                            """)
+                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
+                            archiveArtifacts 'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-ppc64el/*")}}
+                }
+
+                stage("Build static Linux s390x binary") {
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/static-builder/Dockerfile'
+                            dir '.'
+                            label 'linux && emulation'
+                            args '--platform=linux/s390x --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/s390x --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/linux-s390x"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build --profile static --root=.
+                            """)
+                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
+                            archiveArtifacts 'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-s390x/*")}}
+                }
+
+                stage("Build static Linux arm64 binary") {
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/static-builder/Dockerfile'
+                            dir '.'
+                            label 'linux && emulation'
+                            args '--platform=linux/arm64 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/arm64 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/linux-arm64"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build --profile static --root=.
+                            """)
+                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
+                            archiveArtifacts 'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-arm64/*")}}
+                }
+
+                stage("Build static Linux armhf binary") {
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/static-builder/Dockerfile'
+                            dir '.'
+                            label 'linux && emulation'
+                            args '--platform=linux/arm/v7 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/arm/v7 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/linux-armhf"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build --profile static --root=.
+                            """)
+                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
+                            archiveArtifacts 'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armhf/*")}}
+                }
+
+                stage("Build static Linux armel binary") {
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/static-builder/Dockerfile'
+                            dir '.'
+                            label 'linux && emulation'
+                            args '--platform=linux/arm/v6 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
+                            additionalBuildArgs  '--platform=linux/arm/v6 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/linux-armel"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build --profile static --root=.
+                            """)
+                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
+                            archiveArtifacts 'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armel/*")}}
+                }
+
+                // Cross compiling for windows on debian
+                stage("Build Windows binary") {
+                    agent {
+                        dockerfile {
+                            filename 'scripts/docker/ci/Dockerfile'
+                            dir '.'
+                            label 'linux'
+                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
+                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                        }
+                    }
+                    steps {
+                        dir("${env.WORKSPACE}/windows"){
+                            cleanCheckout()
+                            runShell("""
+                                eval \$(opam env)
+                                dune subst
+                                dune build -x windows --root=. --profile release
+                            """)
+                            sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
+                            archiveArtifacts 'bin/*'
+                        }
+                    }
+                    post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
                 }
             }
-            steps {
-                script {
-                    checkoutRepository("sh")
-                }
-                runShell("""
-                    eval \$(opam env)
-                    dune subst
-                    dune build -x windows
-                """)
-                sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
-                stash name:'windows-exe', includes:'bin/*'
-                archiveArtifacts 'bin/*'
-            }
-            post {always { runShell("rm -rf ./*")}}
         }
     }
 }
