@@ -2567,18 +2567,15 @@ let generate_module file =
   Out_channel.with_file file ~f:(fun ch ->
       Printf.fprintf ch
         {|
-  let stan_math_signatures : Middle.UnsizedType.math_signature list Core.String.Table.t =
-  Marshal.from_string %S 0
-  |> Core.String.Table.of_alist_exn
+let stan_math_signatures :
+    Middle.UnsizedType.math_signature list Core.String.Table.t =
+  Marshal.from_string %S 0 |> Core.String.Table.of_alist_exn
 
 let stan_math_variadic_signatures :
     Middle.UnsizedType.variadic_signature Core.String.Table.t =
-  Marshal.from_string %S 0
-  |> Core.String.Table.of_alist_exn
+  Marshal.from_string %S 0 |> Core.String.Table.of_alist_exn
 
-let distributions : (string * string list) list =
-  Marshal.from_string %S 0
-  |}
+let distributions : (string * string list) list = Marshal.from_string %S 0 |}
         signatures_marshalled var_signatures_marshalled distributions_marshalled)
 
 let () = generate_module (Sys.get_argv ()).(1)
