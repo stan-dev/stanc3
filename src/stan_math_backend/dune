@@ -14,4 +14,4 @@
   numbering)
  (inline_tests)
  (preprocess
-  (pps ppx_jane ppx_deriving.map ppx_deriving.fold ppx_deriving.make)))
+  (pps ppx_jane ppx_deriving.make)))

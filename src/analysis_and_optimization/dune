@@ -8,4 +8,4 @@
  ;; TODO: Not sure what's going on but it's throwing an error that this module has no implementation
  (modules_without_implementation monotone_framework_sigs)
  (preprocess
-  (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))
+  (pps ppx_jane)))

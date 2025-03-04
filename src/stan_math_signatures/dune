@@ -8,13 +8,13 @@
  (modules :standard \ generate)
  (inline_tests)
  (preprocess
-  (pps ppx_jane ppx_deriving.show)))
+  (pps ppx_jane)))
 
 (executable
  (name generate)
  (modules generate)
  (preprocess
-  (pps ppx_jane ppx_deriving.create ppx_deriving.show))
+  (pps ppx_jane ppx_deriving.show))
  (libraries core common middle))
 
 (rule
