@@ -4,21 +4,14 @@ open Core
 open Core.Poly
 open Middle
 
-(* The following .bin files are produced by the Gen_sigs binary
+(** The following module is produced by the Gen_sigs binary
    in this folder. This is an optimization, one can proceed as-if the
-   hashtables here were built at runtime by the code in that module *)
+   hashtables here were built at runtime by the code in that module
 
-let stan_math_signatures : UnsizedType.math_signature list String.Table.t =
-  Marshal.from_string [%blob "stan_math_signatures.bin"] 0
-  |> String.Table.of_alist_exn
-
-let stan_math_variadic_signatures :
-    UnsizedType.variadic_signature String.Table.t =
-  Marshal.from_string [%blob "stan_math_variadic_signatures.bin"] 0
-  |> String.Table.of_alist_exn
-
-let distributions : (string * string list) list =
-  Marshal.from_string [%blob "stan_math_distributions.bin"] 0
+   It defines the variables [stan_math_signatures], [stan_math_variadic_signatures]
+   and [distributions].
+   *)
+include Generated_signatures
 
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in

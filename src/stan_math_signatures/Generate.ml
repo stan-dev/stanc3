@@ -2550,17 +2550,35 @@ let () =
     ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
     ()
 
-let () =
-  Out_channel.write_all "stan_math_signatures.bin"
-    ~data:(Marshal.to_string (Hashtbl.to_alist stan_math_signatures) []);
-  Out_channel.write_all "stan_math_variadic_signatures.bin"
-    ~data:
-      (Marshal.to_string (Hashtbl.to_alist stan_math_variadic_signatures) []);
-  Out_channel.write_all "stan_math_distributions.bin"
-    ~data:
-      (Marshal.to_string
-         (List.map
-            ~f:(fun (kind, name, _, _) ->
-              (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
-            distributions)
-         [])
+let generate_module file =
+  (* Core's Hashtbl cannot be safely Marshal'd, so we
+     round trip through an associative list *)
+  let signatures_marshalled =
+    Marshal.to_string (Hashtbl.to_alist stan_math_signatures) [] in
+  let var_signatures_marshalled =
+    Marshal.to_string (Hashtbl.to_alist stan_math_variadic_signatures) [] in
+  let distributions_marshalled =
+    Marshal.to_string
+      (List.map
+         ~f:(fun (kind, name, _, _) ->
+           (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
+         distributions)
+      [] in
+  Out_channel.with_file file ~f:(fun ch ->
+      Printf.fprintf ch
+        {|
+  let stan_math_signatures : Middle.UnsizedType.math_signature list Core.String.Table.t =
+  Marshal.from_string %S 0
+  |> Core.String.Table.of_alist_exn
+
+let stan_math_variadic_signatures :
+    Middle.UnsizedType.variadic_signature Core.String.Table.t =
+  Marshal.from_string %S 0
+  |> Core.String.Table.of_alist_exn
+
+let distributions : (string * string list) list =
+  Marshal.from_string %S 0
+  |}
+        signatures_marshalled var_signatures_marshalled distributions_marshalled)
+
+let () = generate_module (Sys.get_argv ()).(1)
