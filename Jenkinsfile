@@ -183,7 +183,7 @@ pipeline {
                                 dune build --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                            sh "strip bin/linux-stanc"
+                            sh "chmod +w bin/linux-stanc && strip bin/linux-stanc"
                             stash name:'linux-exe', includes:'bin/*'
                         }
                     }
@@ -691,7 +691,7 @@ pipeline {
                                         sh "lipo -create bin/mac-x86-stanc bin/mac-arm64-stanc -output bin/mac-stanc"
                                     }
                                     sh "lipo -archs bin/mac-stanc"
-                                    sh "strip bin/mac-stanc"
+                                    sh "chmod +w bin/mac-stanc && strip bin/mac-stanc"
                                     stash name:'mac-exe', includes:'bin/mac-stanc'
                                 }
                             }
@@ -763,7 +763,7 @@ pipeline {
                                 dune build --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
-                            sh "strip bin/linux-ppc64el-stanc"
+                            sh "chmod +w bin/linux-ppc64el-stanc && strip bin/linux-ppc64el-stanc"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
                         }
                     }
@@ -796,7 +796,7 @@ pipeline {
                                 dune build --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
-                            sh "strip bin/linux-s390x-stanc"
+                            sh "chmod +w bin/linux-s390x-stanc && strip bin/linux-s390x-stanc"
                             stash name:'linux-s390x-exe', includes:'bin/*'
                         }
                     }
@@ -829,7 +829,7 @@ pipeline {
                                 dune build --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
-                            sh "strip bin/linux-arm64-stanc"
+                            sh "chmod +w bin/linux-arm64-stanc && strip bin/linux-arm64-stanc"
                             stash name:'linux-arm64-exe', includes:'bin/*'
                         }
                     }
@@ -862,7 +862,7 @@ pipeline {
                                 dune build --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
-                            sh "strip bin/linux-armhf-stanc"
+                            sh "chmod +w bin/linux-armhf-stanc && strip bin/linux-armhf-stanc"
                             stash name:'linux-armhf-exe', includes:'bin/*'
                         }
                     }
@@ -895,7 +895,7 @@ pipeline {
                                 dune build --profile static --root=.
                             """)
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
-                            sh "strip bin/linux-armel-stanc"
+                            sh "chmod +w bin/linux-armel-stanc && strip bin/linux-armel-stanc"
                             stash name:'linux-armel-exe', includes:'bin/*'
                         }
                     }
@@ -928,7 +928,7 @@ pipeline {
                                 dune build -x windows --root=. --profile=release
                             """)
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
-                            sh "strip bin/windows-stanc"
+                            sh "chmod +w bin/windows-stanc && strip bin/windows-stanc"
                             stash name:'windows-exe', includes:'bin/*'
                         }
                     }
