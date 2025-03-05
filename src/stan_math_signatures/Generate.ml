@@ -2551,32 +2551,40 @@ let () =
     ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
     ()
 
+(** Print a module definition to [file]
+  that contains the signatures computed above *)
 let generate_module file =
+  let marshal e = Marshal.to_string e [] in
   (* Core's Hashtbl cannot be safely Marshal'd, so we
      round trip through an associative list *)
-  let signatures_marshalled =
-    Marshal.to_string (Hashtbl.to_alist stan_math_signatures) [] in
-  let var_signatures_marshalled =
-    Marshal.to_string (Hashtbl.to_alist stan_math_variadic_signatures) [] in
-  let distributions_marshalled =
-    Marshal.to_string
-      (List.map
-         ~f:(fun (kind, name, _, _) ->
-           (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
-         distributions)
-      [] in
+  let marshal_hashtbl (type value) (t : value String.Table.t) =
+    marshal (Hashtbl.to_alist t) in
+  let distributions_simplified =
+    List.map
+      ~f:(fun (kind, name, _, _) ->
+        (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
+      distributions in
   Out_channel.with_file file ~f:(fun ch ->
       Printf.fprintf ch
         {|
-let stan_math_signatures :
+let unmarshal s = Marshal.from_string s 0
+let unmarshal_hashtbl s : 'a Core.String.Table.t =
+  unmarshal s |> Core.String.Table.of_alist_exn |};
+      Printf.fprintf ch
+        {|
+let _stan_math_signatures :
     Middle.UnsizedType.signature list Core.String.Table.t =
-  Marshal.from_string %S 0 |> Core.String.Table.of_alist_exn
-
-let stan_math_variadic_signatures :
+  unmarshal_hashtbl %S |}
+        (marshal_hashtbl stan_math_signatures);
+      Printf.fprintf ch
+        {|
+let _stan_math_variadic_signatures :
     Middle.UnsizedType.variadic_signature Core.String.Table.t =
-  Marshal.from_string %S 0 |> Core.String.Table.of_alist_exn
-
-let distributions : (string * string list) list = Marshal.from_string %S 0 |}
-        signatures_marshalled var_signatures_marshalled distributions_marshalled)
+  unmarshal_hashtbl %S |}
+        (marshal_hashtbl stan_math_variadic_signatures);
+      Printf.fprintf ch
+        {|
+let _distributions : (string * string list) list = unmarshal %S |}
+        (marshal distributions_simplified))
 
 let () = generate_module (Sys.get_argv ()).(1)
