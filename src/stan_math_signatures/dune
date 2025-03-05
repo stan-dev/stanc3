@@ -4,8 +4,8 @@
  (libraries core fmt common middle)
  (instrumentation
   (backend bisect_ppx))
- (wrapped false)
  (modules :standard \ generate)
+ (private_modules generated_signatures)
  (inline_tests)
  (preprocess
   (pps ppx_jane)))

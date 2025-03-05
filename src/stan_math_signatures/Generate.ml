@@ -2572,19 +2572,19 @@ let unmarshal_hashtbl s : 'a Core.String.Table.t =
   unmarshal s |> Core.String.Table.of_alist_exn |};
       Printf.fprintf ch
         {|
-let _stan_math_signatures :
+let stan_math_signatures :
     Middle.UnsizedType.signature list Core.String.Table.t =
   unmarshal_hashtbl %S |}
         (marshal_hashtbl stan_math_signatures);
       Printf.fprintf ch
         {|
-let _stan_math_variadic_signatures :
+let stan_math_variadic_signatures :
     Middle.UnsizedType.variadic_signature Core.String.Table.t =
   unmarshal_hashtbl %S |}
         (marshal_hashtbl stan_math_variadic_signatures);
       Printf.fprintf ch
         {|
-let _distributions : (string * string list) list = unmarshal %S |}
+let distributions : (string * string list) list = unmarshal %S |}
         (marshal distributions_simplified))
 
 let () = generate_module (Sys.get_argv ()).(1)
