@@ -19,6 +19,10 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 RUN curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 RUN apt-get update -qq && apt-get install -y --no-install-recommends nodejs
 
+# Codecov uploader
+RUN wget https://uploader.codecov.io/v0.8.0/linux/codecov -O /bin/codecov
+RUN chmod +x /bin/codecov
+
 # Github CLI
 RUN sudo mkdir -p -m 755 /etc/apt/keyrings && wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
     && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \

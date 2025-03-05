@@ -258,12 +258,7 @@ pipeline {
                             """
 
                             withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
-                                sh """
-                                    curl -Os https://uploader.codecov.io/v0.3.2/linux/codecov
-
-                                    chmod +x codecov
-                                    ./codecov -v -C \$(git rev-parse HEAD)
-                                """
+                                sh "codecov -v -C \$(git rev-parse HEAD)"
                             }
                         }
                     }
@@ -725,7 +720,6 @@ pipeline {
                                 dune build --root=. --profile release src/stancjs
                             """)
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
-                            sh "mv `find _build -name index.html` bin/load_stanc.html"
                             runShell("""
                                 eval \$(opam env)
                                 dune build --force --profile=dev --root=. src/stancjs
@@ -1045,54 +1039,28 @@ pipeline {
                 }
             }
             steps {
-                retry(3) {
-                    checkout([$class: 'GitSCM',
-                        branches: [[name: '*/master'], [name: '*/gh-pages']],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[url: "https://github.com/stan-dev/stanc3.git", credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b']]]
-                    )
+                dir("${env.WORKSPACE}/documentation"){
+                    cleanCheckout()
+                    // Build docs
+                    runShell("""
+                        eval \$(opam env)
+                        dune build @doc
+                    """)
+                    // Commit and push
+                    withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        runShell("""
+                            set -e
+                            cd ./_build/default/_doc/_html/
+                            git init -b gh-pages
+                            git add .
+                            git commit -m "auto generated docs from Jenkins"
+                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages --force
+                        """)
+                    }
                 }
-
-                // Checkout gh-pages as a test so we build docs from this branch
-                runShell("""
-                    git remote set-branches --add origin gh-pages || true
-                    git checkout --track origin/gh-pages || true
-                    git remote set-branches --add origin master || true
-                    git checkout origin/master || true
-                """)
-
-                // Build docs
-                runShell("""
-                     eval \$(opam env)
-                     dune build @doc
-                """)
-
-                // Copy static assets to doc
-                runShell("""
-                    mkdir -p doc
-                    cp -r ./_build/default/_doc/_html/* doc/
-                """)
-
-                // Commit changes to the repository gh-pages branch
-                withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                    sh """#!/bin/bash
-                        set -e
-
-                        git checkout --detach
-                        git branch -D gh-pages
-                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git :gh-pages
-
-                        git checkout --orphan gh-pages
-                        git add -f doc
-                        git commit -m "auto generated docs from Jenkins"
-                        git subtree push --prefix doc/ https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages
-                        ls -A1 | xargs rm -rf
-                    """
-                }
-
             }
+            post { always { runShell("rm -rf ${env.WORKSPACE}/documentation/*")} }
+
         }
 
     }

@@ -25,4 +25,4 @@
 
 (alias
  (name default)
- (deps stancjs.bc.js index.html))
+ (deps stancjs.bc.js))
