@@ -1044,7 +1044,7 @@ pipeline {
                     // Build docs
                     runShell("""
                         eval \$(opam env)
-                        dune build @doc
+                        dune build @doc --root=.
                     """)
                     // Commit and push
                     withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
