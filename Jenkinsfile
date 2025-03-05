@@ -1047,14 +1047,16 @@ pipeline {
                         dune build @doc
                     """)
                     // Commit and push
-                    runShell("""
-                        set -e
-                        cd ./_build/default/_doc/_html/
-                        git init -b gh-pages
-                        git add .
-                        git commit -m "auto generated docs from Jenkins"
-                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages --force
-                    """)
+                    withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        runShell("""
+                            set -e
+                            cd ./_build/default/_doc/_html/
+                            git init -b gh-pages
+                            git add .
+                            git commit -m "auto generated docs from Jenkins"
+                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages --force
+                        """)
+                    }
                 }
             }
             post { always { runShell("rm -rf ${env.WORKSPACE}/documentation/*")} }
