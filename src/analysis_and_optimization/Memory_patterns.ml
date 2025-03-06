@@ -94,7 +94,7 @@ let query_stan_math_mem_pattern_support (name : string)
       let name =
         string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
       in
-      let namematches = Hashtbl.find_multi stan_math_signatures name in
+      let namematches = lookup_stan_math_function name in
       let filteredmatches =
         List.filter
           ~f:(fun x ->

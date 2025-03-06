@@ -1,3 +1,16 @@
 (alias
  (name default)
  (deps src/stanc/stanc.exe))
+
+(env
+ (static
+  (flags
+   (:standard -ccopt -static))
+  (ocamlopt_flags
+   (:standard -O3)))
+ (release
+  (ocamlopt_flags
+   (:standard -O3)))
+ (dev
+  (flags
+   (:standard -g))))

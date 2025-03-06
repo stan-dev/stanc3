@@ -6,6 +6,10 @@
  (modes js))
 
 (env
+ (release
+  (js_of_ocaml
+   (flags
+    (:standard "--opt" "3"))))
  (dev
   (js_of_ocaml
    (flags
@@ -21,4 +25,4 @@
 
 (alias
  (name default)
- (deps stancjs.bc.js index.html))
+ (deps stancjs.bc.js))

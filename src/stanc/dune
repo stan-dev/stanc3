@@ -10,11 +10,3 @@
  (public_name stanc)
  (preprocess
   (pps ppx_jane)))
-
-(env
- (static
-  (flags
-   (-ccopt -static)))
- (dev
-  (flags
-   (:standard -g))))
