@@ -253,8 +253,8 @@ pipeline {
 
                             sh """
                                 eval \$(opam env)
-                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/
-                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/
+                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
+                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
                             """
 
                             withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
