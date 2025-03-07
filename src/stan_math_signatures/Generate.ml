@@ -2560,10 +2560,13 @@ let generate_module file =
   let marshal_hashtbl (type value) (t : value String.Table.t) =
     marshal (Hashtbl.to_alist t) in
   let distributions_simplified =
-    List.map
-      ~f:(fun (kind, name, _, _) ->
-        (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
-      distributions in
+    distributions
+    |> List.map ~f:(fun (kind, name, _, _) ->
+           (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
+       (* combine any common keys *)
+    |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
+           v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
+    |> Map.to_alist in
   Out_channel.with_file file ~f:(fun ch ->
       Printf.fprintf ch
         {|

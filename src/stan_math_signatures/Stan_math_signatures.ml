@@ -137,10 +137,6 @@ let pretty_print_all_math_sigs ppf () =
 
 let pretty_print_all_math_distributions ppf () =
   let open Fmt in
-  let distributions =
-    String.Map.of_alist_reduce distributions ~f:(fun v1 v2 ->
-        v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
-    |> Map.to_alist in
   let pp_dist ppf (name, kinds) =
     pf ppf "@[%s: %a@]" name (list ~sep:comma Fmt.string) kinds in
   pf ppf "@[<v>%a@]" (list ~sep:cut pp_dist) distributions
