@@ -1,7 +1,7 @@
 (library
  (name frontend)
  (public_name stanc.frontend)
- (libraries core menhirLib yojson fmt middle)
+ (libraries core menhirLib yojson fmt middle stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
  (inline_tests)

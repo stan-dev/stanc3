@@ -29,11 +29,8 @@ let stan_math_environment =
     Stan_math_signatures.get_stan_math_signatures_alist ()
     |> List.map ~f:(fun (key, values) ->
            ( key
-           , List.map values ~f:(fun (rt, args, mem) ->
-                 let type_ =
-                   UnsizedType.UFun
-                     (args, rt, Fun_kind.suffix_from_name key, mem) in
-                 {type_; kind= `StanMath}) ))
+           , List.map values ~f:(fun s ->
+                 {type_= UnsizedType.UFun s; kind= `StanMath}) ))
     |> String.Map.of_alist_exn in
   functions
 

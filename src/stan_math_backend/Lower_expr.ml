@@ -375,7 +375,7 @@ and lower_functionals fname suffix es mem_pattern =
             , grainsize :: container :: msgs :: tl )
         | _, _
           when Stan_math_signatures.is_stan_math_variadic_function_name fname ->
-            let Stan_math_signatures.{control_args; _} =
+            let UnsizedType.{control_args; _} =
               Stan_math_signatures.lookup_stan_math_variadic_function fname
               |> Option.value_exn in
             let hd, tl =

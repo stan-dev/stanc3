@@ -10,8 +10,8 @@ testcoverage:
 	@find . -name '*.coverage' | xargs rm -f
 	dune clean
 	BISECT_FILE=`pwd`/bisect dune runtest --instrument-with bisect_ppx --force
-	bisect-ppx-report html --expect src/ --do-not-expect src/stancjs/
-	bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/
+	bisect-ppx-report html --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
+	bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
 	@rm *.coverage
 
 format:

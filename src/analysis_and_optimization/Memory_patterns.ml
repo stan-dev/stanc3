@@ -97,13 +97,12 @@ let query_stan_math_mem_pattern_support (name : string)
       let namematches = lookup_stan_math_function name in
       let filteredmatches =
         List.filter
-          ~f:(fun x ->
-            Frontend.SignatureMismatch.check_compatible_arguments_mod_conv
-              (snd3 x) args
+          ~f:(fun (x, _, _, _) ->
+            Frontend.SignatureMismatch.check_compatible_arguments_mod_conv x
+              args
             |> Result.is_ok)
           namematches in
-      let is_soa ((_ : UnsizedType.returntype), _, mem) =
-        mem = Mem_pattern.SoA in
+      let is_soa = function _, _, _, Mem_pattern.SoA -> true | _ -> false in
       List.exists ~f:is_soa filteredmatches
 
 (*Validate whether a function can support SoA matrices*)
