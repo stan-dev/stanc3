@@ -21,11 +21,11 @@ def tagName() {
 
 def qemuArchFlag(String arch) {
     switch (arch) {
-        case 'armel':   return '--platform/linux/arm/v6'
-        case 'armhf':   return '--platform/linux/arm/v7'
-        case 'arm64':   return '--platform/linux/arm64'
-        case 'ppc64el': return '--platform/linux/ppc64le'
-        case 's390x':   return '--platform/linux/s390x'
+        case 'armel':   return '--platform=linux/arm/v6'
+        case 'armhf':   return '--platform=linux/arm/v7'
+        case 'arm64':   return '--platform=linux/arm64'
+        case 'ppc64el': return '--platform=linux/ppc64le'
+        case 's390x':   return '--platform=linux/s390x'
         default:        return ''
     }
 }
