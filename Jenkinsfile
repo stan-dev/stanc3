@@ -19,6 +19,17 @@ def tagName() {
     }
 }
 
+def qemuArchFlag(String arch) {
+    switch (arch) {
+        case 'armel':   return '--platform/linux/arm/v6'
+        case 'armhf':   return '--platform/linux/arm/v7'
+        case 'arm64':   return '--platform/linux/arm64'
+        case 'ppc64el': return '--platform/linux/ppc64le'
+        case 's390x':   return '--platform/linux/s390x'
+        default:        return ''
+    }
+}
+
 def runPerformanceTests(String testsPath, String stancFlags = ""){
     unstash 'linux-exe'
 
@@ -733,176 +744,6 @@ pipeline {
                     post {always { sh "rm -rf ${env.WORKSPACE}/stancjs/*"}}
                 }
 
-                stage("Build static Linux ppc64el binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/ppc64le --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/ppc64le --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-ppc64el"){
-                            cleanCheckout()
-                            sh '''
-                                eval $(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            '''
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
-                            sh "chmod +w bin/linux-ppc64el-stanc && strip bin/linux-ppc64el-stanc"
-                            sh "./bin/linux-ppc64el-stanc --version"
-                            stash name:'linux-ppc64el-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-ppc64el/*"}}
-                }
-
-                stage("Build static Linux s390x binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/s390x --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/s390x --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-s390x"){
-                            cleanCheckout()
-                            sh '''
-                                eval $(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            '''
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
-                            sh "chmod +w bin/linux-s390x-stanc && strip bin/linux-s390x-stanc"
-                            sh "./bin/linux-s390x-stanc --version"
-                            stash name:'linux-s390x-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-s390x/*"}}
-                }
-
-                stage("Build static Linux arm64 binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/arm64 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/arm64 --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-arm64"){
-                            cleanCheckout()
-                            sh '''
-                                eval $(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            '''
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
-                            sh "chmod +w bin/linux-arm64-stanc && strip bin/linux-arm64-stanc"
-                            sh "./bin/linux-arm64-stanc --version"
-                            stash name:'linux-arm64-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-arm64/*"}}
-                }
-
-                stage("Build static Linux armhf binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/arm/v7 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/arm/v7 --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-armhf"){
-                            cleanCheckout()
-                            sh '''
-                                eval $(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            '''
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
-                            sh "chmod +w bin/linux-armhf-stanc && strip bin/linux-armhf-stanc"
-                            sh "./bin/linux-armhf-stanc --version"
-                            stash name:'linux-armhf-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-armhf/*"}}
-                }
-
-                stage("Build static Linux armel binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/arm/v6 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/arm/v6 --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-armel"){
-                            cleanCheckout()
-                            sh '''
-                                eval $(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            '''
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
-                            sh "chmod +w bin/linux-armel-stanc && strip bin/linux-armel-stanc"
-                            sh "./bin/linux-armel-stanc --version"
-                            stash name:'linux-armel-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-armel/*"}}
-                }
-
                 // Cross compiling for windows on debian
                 stage("Build Windows binary") {
                     when {
@@ -936,6 +777,53 @@ pipeline {
                     post {always { sh "rm -rf ${env.WORKSPACE}/windows/*"}}
                 }
 
+            }
+        }
+
+        stage('Build other architectures') {
+            when {
+                beforeAgent true
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
+                }
+            }
+            matrix {
+                axes {
+                    axis {
+                        name 'ARCHITECTURE'
+                        values 'arm64', 'ppc64el', 's390x', 'armhf', 'armel'
+                    }
+                }
+                stages {
+                    stage("Build static binary") {
+                        environment { PLATFORM_FLAG = qemuArchFlag(ARCHITECTURE) }
+                        agent {
+                            dockerfile {
+                                filename 'scripts/docker/static-builder/Dockerfile'
+                                dir '.'
+                                label 'linux && emulation'
+                                args "${PLATFORM_FLAG} --group-add=987 --group-add=980 --group-add=988 --entrypoint='' -v /var/run/docker.sock:/var/run/docker.sock"
+                                additionalBuildArgs  "${PLATFORM_FLAG} --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)"
+                            }
+                        }
+                        steps {
+                            dir("${env.WORKSPACE}/linux-${ARCHITECTURE}"){
+                                cleanCheckout()
+                                sh '''
+                                    eval $(opam env)
+                                    dune subst
+                                    dune build --profile static --root=.
+                                '''
+                                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-${ARCHITECTURE}-stanc"
+                                sh "chmod +w bin/linux-${ARCHITECTURE}-stanc && strip bin/linux-${ARCHITECTURE}-stanc"
+                                sh "./bin/linux-${ARCHITECTURE}-stanc --version"
+                                stash name:"linux-${ARCHITECTURE}-exe", includes:'bin/*'
+                            }
+                        }
+                        post {always { sh "rm -rf ${env.WORKSPACE}/linux-${ARCHITECTURE}/*"}}
+                    }
+                }
             }
         }
 
