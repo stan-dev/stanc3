@@ -74,6 +74,7 @@ pipeline {
                                             bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
                                             eval \$(opam env --switch="$MACOS_SWITCH" --set-switch)
                                             opam update -y || true
+                                            opam pin -y dune 3.6.0 --no-action
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile release
