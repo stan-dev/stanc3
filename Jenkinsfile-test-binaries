@@ -27,6 +27,9 @@ pipeline {
         parallelsAlwaysFailFast()
         buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30'))
     }
+    environment {
+        MACOS_SWITCH = 'stanc3-4.14'
+    }
     stages {
 
         stage('Build binaries') {
@@ -68,8 +71,11 @@ pipeline {
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
                                         runShell("""
                                             export PATH=/Users/jenkins/brew/bin:\$PATH
-                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                            opam update || true
+                                            bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
+                                            eval \$(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            opam switch list
+                                            opam update -y || true
+                                            opam pin -y dune 3.6.0 --no-action
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile release
@@ -90,8 +96,10 @@ pipeline {
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
                                         runShell("""
                                             export PATH=/Users/jenkins/brew/bin:\$PATH
-                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                            opam update || true
+                                            bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
+                                            eval \$(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            opam switch list
+                                            opam update -y || true
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile release
