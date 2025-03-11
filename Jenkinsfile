@@ -179,6 +179,7 @@ pipeline {
                             '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                             sh "chmod +w bin/linux-stanc && strip bin/linux-stanc"
+                            sh "./bin/linux-stanc --version"
                             stash name:'linux-exe', includes:'bin/*'
                         }
                     }
@@ -687,6 +688,7 @@ pipeline {
                                     }
                                     sh "lipo -archs bin/mac-stanc"
                                     sh "chmod +w bin/mac-stanc && strip bin/mac-stanc"
+                                    sh "./bin/mac-stanc --version"
                                     stash name:'mac-exe', includes:'bin/mac-stanc'
                                 }
                             }
@@ -758,6 +760,7 @@ pipeline {
                             '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             sh "chmod +w bin/linux-ppc64el-stanc && strip bin/linux-ppc64el-stanc"
+                            sh "./bin/linux-ppc64el-stanc --version"
                             stash name:'linux-ppc64el-exe', includes:'bin/*'
                         }
                     }
@@ -791,6 +794,7 @@ pipeline {
                             '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             sh "chmod +w bin/linux-s390x-stanc && strip bin/linux-s390x-stanc"
+                            sh "./bin/linux-s390x-stanc --version"
                             stash name:'linux-s390x-exe', includes:'bin/*'
                         }
                     }
@@ -824,6 +828,7 @@ pipeline {
                             '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             sh "chmod +w bin/linux-arm64-stanc && strip bin/linux-arm64-stanc"
+                            sh "./bin/linux-arm64-stanc --version"
                             stash name:'linux-arm64-exe', includes:'bin/*'
                         }
                     }
@@ -857,6 +862,7 @@ pipeline {
                             '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             sh "chmod +w bin/linux-armhf-stanc && strip bin/linux-armhf-stanc"
+                            sh "./bin/linux-armhf-stanc --version"
                             stash name:'linux-armhf-exe', includes:'bin/*'
                         }
                     }
@@ -890,6 +896,7 @@ pipeline {
                             '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             sh "chmod +w bin/linux-armel-stanc && strip bin/linux-armel-stanc"
+                            sh "./bin/linux-armel-stanc --version"
                             stash name:'linux-armel-exe', includes:'bin/*'
                         }
                     }
@@ -929,30 +936,6 @@ pipeline {
                     post {always { sh "rm -rf ${env.WORKSPACE}/windows/*"}}
                 }
 
-            }
-        }
-
-        stage('Check binary version'){
-            when {
-                beforeAgent true
-                expression { !skipRebuildingBinaries }
-            }
-            agent {
-                dockerfile {
-                    filename 'scripts/docker/ci/Dockerfile'
-                    dir '.'
-                    label 'linux'
-                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
-                }
-            }
-            steps {
-                sh "rm -r bin/ || true"
-
-                dir("bin"){
-                    unstash 'linux-exe'
-                    sh "bin/linux-stanc --version"
-                }
             }
         }
 
