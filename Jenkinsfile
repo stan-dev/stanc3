@@ -797,14 +797,13 @@ pipeline {
                 }
                 stages {
                     stage("Build static binary") {
-                        environment { PLATFORM_FLAG = qemuArchFlag(ARCHITECTURE) }
                         agent {
                             dockerfile {
                                 filename 'scripts/docker/static-builder/Dockerfile'
                                 dir '.'
                                 label 'linux && emulation'
-                                args "${PLATFORM_FLAG} --group-add=987 --group-add=980 --group-add=988 --entrypoint='' -v /var/run/docker.sock:/var/run/docker.sock"
-                                additionalBuildArgs  "${PLATFORM_FLAG} --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)"
+                                args "${qemuArchFlag(ARCHITECTURE)} --group-add=987 --group-add=980 --group-add=988 --entrypoint='' -v /var/run/docker.sock:/var/run/docker.sock"
+                                additionalBuildArgs  "${qemuArchFlag(ARCHITECTURE)} --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)"
                             }
                         }
                         steps {
