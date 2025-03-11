@@ -110,6 +110,7 @@ pipeline {
     }
     environment {
         CXX = 'clang++-6.0'
+        MACOS_SWITCH = 'stanc3-4.14'
         PARALLEL = 4
         GIT_AUTHOR_NAME = 'Stan Jenkins'
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
@@ -640,8 +641,9 @@ pipeline {
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
                                         runShell("""
                                             export PATH=/Users/jenkins/brew/bin:\$PATH
-                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                            opam update || true
+                                            bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
+                                            eval \$(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            opam update -y || true
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile=release
@@ -662,8 +664,9 @@ pipeline {
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
                                         runShell("""
                                             export PATH=/Users/jenkins/brew/bin:\$PATH
-                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                            opam update || true
+                                            bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
+                                            eval \$(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            opam update -y || true
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile=release
@@ -1002,7 +1005,7 @@ pipeline {
                             sh """#!/bin/bash
                                 set -e
 
-                                git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/rstan.git
+                                git clone "https://$GIT_USERNAME:$GIT_PASSWORD@github.com/stan-dev/rstan.git"
                                 git config user.email "mc.stanislaw@gmail.com"
                                 git config user.name "Stan Jenkins"
                                 git config auth.token ${GITHUB_TOKEN}
@@ -1011,7 +1014,7 @@ pipeline {
                                 cp ./bin/stanc.js rstan/StanHeaders/inst/stanc.js
                                 git -C rstan add StanHeaders/inst/stanc.js
                                 git -C rstan commit -m "Update stanc.js to ${tagName()}"
-                                git -C rstan push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/rstan.git develop
+                                git -C rstan push "https://$GIT_USERNAME:$GIT_PASSWORD@github.com/stan-dev/rstan.git" develop
                             """
                         }
                     }
@@ -1054,7 +1057,7 @@ pipeline {
                             git init -b gh-pages
                             git add .
                             git commit -m "auto generated docs from Jenkins"
-                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages --force
+                            git push "https://$GIT_USERNAME:$GIT_PASSWORD@github.com/stan-dev/stanc3.git" gh-pages --force
                         """)
                     }
                 }
