@@ -119,7 +119,7 @@ pipeline {
                     dir '.'
                     label 'linux'
                     args '--entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                    additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                 }
             }
             steps {
@@ -166,7 +166,7 @@ pipeline {
                             dir '.'
                             label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -197,7 +197,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -235,7 +235,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -277,7 +277,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -708,7 +708,7 @@ pipeline {
                             dir '.'
                             label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -745,7 +745,7 @@ pipeline {
                             dir '.'
                             label 'linux && emulation'
                             args '--platform=linux/ppc64le --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/ppc64le --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--platform=linux/ppc64le --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -778,7 +778,7 @@ pipeline {
                             dir '.'
                             label 'linux && emulation'
                             args '--platform=linux/s390x --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/s390x --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--platform=linux/s390x --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -811,7 +811,7 @@ pipeline {
                             dir '.'
                             label 'linux && emulation'
                             args '--platform=linux/arm64 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/arm64 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--platform=linux/arm64 --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -844,7 +844,7 @@ pipeline {
                             dir '.'
                             label 'linux && emulation'
                             args '--platform=linux/arm/v7 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/arm/v7 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--platform=linux/arm/v7 --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -877,7 +877,7 @@ pipeline {
                             dir '.'
                             label 'linux && emulation'
                             args '--platform=linux/arm/v6 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/arm/v6 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--platform=linux/arm/v6 --build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -910,7 +910,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -943,7 +943,7 @@ pipeline {
                     dir '.'
                     label 'linux'
                     args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                    additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                 }
             }
             steps {
@@ -971,7 +971,7 @@ pipeline {
                     dir '.'
                     label 'linux'
                     args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                    additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                 }
             }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
@@ -1034,7 +1034,7 @@ pipeline {
                     dir '.'
                     label 'linux && triqs'
                     args '--entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                    additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                 }
             }
             steps {
