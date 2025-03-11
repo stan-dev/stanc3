@@ -1,8 +1,3 @@
-/* Functions that runs a sh command and returns the stdout */
-def runShell(String command){
-    def output = sh (returnStdout: true, script: "${command}").trim()
-    return "${output}"
-}
 
 def cleanCheckout() {
     retry(3) {
@@ -48,16 +43,16 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build --profile static --root=.
-                            """)
+                            '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                             archiveArtifacts 'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/linux/*"}}
                 }
 
                 stage("Build MacOS binaries") {
@@ -69,23 +64,23 @@ pipeline {
                                 dir("${env.WORKSPACE}/osx-x86"){
                                     cleanCheckout()
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
-                                        runShell("""
-                                            export PATH=/Users/jenkins/brew/bin:\$PATH
+                                        sh '''
+                                            export PATH=/Users/jenkins/brew/bin:$PATH
                                             bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
-                                            eval \$(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
                                             opam switch list
                                             opam update -y || true
                                             opam pin -y dune 3.6.0 --no-action
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile release
-                                        """)
+                                        '''
                                     }
                                     sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-x86-stanc"
                                     archiveArtifacts 'bin/*'
                                 }
                             }
-                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-x86/*") }}
+                            post { always { sh "rm -rf ${env.WORKSPACE}/osx-x86/*" }}
                         }
 
                         stage("Build MacOS arm64 binary") {
@@ -94,22 +89,22 @@ pipeline {
                                 dir("${env.WORKSPACE}/osx-arm64"){
                                     cleanCheckout()
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
-                                        runShell("""
-                                            export PATH=/Users/jenkins/brew/bin:\$PATH
+                                        sh '''
+                                            export PATH=/Users/jenkins/brew/bin:$PATH
                                             bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
-                                            eval \$(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
                                             opam switch list
                                             opam update -y || true
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile release
-                                        """)
+                                        '''
                                     }
                                     sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-arm64-stanc"
                                     archiveArtifacts 'bin/*'
                                 }
                             }
-                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-arm64/*") }}
+                            post { always { sh "rm -rf ${env.WORKSPACE}/osx-arm64/*" }}
                         }
 
                         stage('Build MacOS fat binary') {
@@ -125,7 +120,7 @@ pipeline {
                                     archiveArtifacts 'bin/*'
                                 }
                             }
-                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-universal/*") }}
+                            post { always { sh "rm -rf ${env.WORKSPACE}/osx-universal/*" }}
                         }
                     }
                 }
@@ -143,21 +138,21 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/stancjs"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build --root=. --profile release src/stancjs
-                            """)
+                            '''
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune build --force --profile=dev --root=. src/stancjs
-                            """)
+                            '''
                             sh "mv `find _build -name stancjs.bc.js` bin/stanc-pretty.js"
                             archiveArtifacts 'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/stancjs/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/stancjs/*"}}
                 }
 
                 stage("Build static Linux ppc64el binary") {
@@ -173,16 +168,16 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-ppc64el"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build --profile static --root=.
-                            """)
+                            '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                             archiveArtifacts 'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-ppc64el/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-ppc64el/*"}}
                 }
 
                 stage("Build static Linux s390x binary") {
@@ -198,16 +193,16 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-s390x"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build --profile static --root=.
-                            """)
+                            '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                             archiveArtifacts 'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-s390x/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-s390x/*"}}
                 }
 
                 stage("Build static Linux arm64 binary") {
@@ -223,16 +218,16 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-arm64"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build --profile static --root=.
-                            """)
+                            '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                             archiveArtifacts 'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-arm64/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-arm64/*"}}
                 }
 
                 stage("Build static Linux armhf binary") {
@@ -248,16 +243,16 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-armhf"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build --profile static --root=.
-                            """)
+                            '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                             archiveArtifacts 'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armhf/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-armhf/*"}}
                 }
 
                 stage("Build static Linux armel binary") {
@@ -273,16 +268,16 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/linux-armel"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build --profile static --root=.
-                            """)
+                            '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                             archiveArtifacts 'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armel/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/linux-armel/*"}}
                 }
 
                 // Cross compiling for windows on debian
@@ -299,16 +294,16 @@ pipeline {
                     steps {
                         dir("${env.WORKSPACE}/windows"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build -x windows --root=. --profile release
-                            """)
+                            '''
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
                             archiveArtifacts 'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/windows/*"}}
                 }
             }
         }
