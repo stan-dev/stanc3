@@ -1074,11 +1074,11 @@ Semantic error in 'err-jacobian-plusequals-scope2.stan', line 3, column 4 to col
 The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
 [exit 1]
   $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope3.stan
-Semantic error in 'err-jacobian-plusequals-scope3.stan', line 14, column 11 to column 42:
+Semantic error in 'err-jacobian-plusequals-scope3.stan', line 14, column 11 to column 45:
    -------------------------------------------------
     12:  
     13:  model {
-    14:    real b = upper_bound_jacobian(b_raw, ub);
+    14:    real b = my_upper_bound_jacobian(b_raw, ub);
                     ^
     15:  }
    -------------------------------------------------
@@ -1092,6 +1092,18 @@ Semantic error in 'err-jacobian-plusequals-scope4.stan', line 8, column 2 to col
      7:  transformed data {
      8:    foo_jacobian();
            ^
+     9:  }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+[exit 1]
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope5.stan
+Semantic error in 'err-jacobian-plusequals-scope5.stan', line 8, column 11 to column 42:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:    real b = upper_bound_jacobian(b_raw, ub);
+                    ^
      9:  }
    -------------------------------------------------
 
