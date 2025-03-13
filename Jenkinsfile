@@ -869,10 +869,10 @@ pipeline {
 
                         // Update stanc.js in StanHeaders
                         withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                            sh '''#!/bin/bash
+                            sh """#!/bin/bash
                                 set -e
 
-                                git clone "https://$GIT_USERNAME:$GIT_PASSWORD@github.com/stan-dev/rstan.git"
+                                git clone "https://\$GIT_USERNAME:\$GIT_PASSWORD@github.com/stan-dev/rstan.git"
                                 git config user.email "mc.stanislaw@gmail.com"
                                 git config user.name "Stan Jenkins"
 
@@ -880,8 +880,8 @@ pipeline {
                                 cp ./bin/stanc.js rstan/StanHeaders/inst/stanc.js
                                 git -C rstan add StanHeaders/inst/stanc.js
                                 git -C rstan commit -m "Update stanc.js to ${tagName()}"
-                                git -C rstan push "https://$GIT_USERNAME:$GIT_PASSWORD@github.com/stan-dev/rstan.git" develop
-                            '''
+                                git -C rstan push "https://\$GIT_USERNAME:\$GIT_PASSWORD@github.com/stan-dev/rstan.git" develop
+                            """
                         }
                     }
                 }
