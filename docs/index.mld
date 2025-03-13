@@ -54,6 +54,7 @@ Frontend
 Middle
 Common
 Analysis_and_optimization
+Stan_math_signatures
 Stan_math_backend
 }
 

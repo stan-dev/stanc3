@@ -516,12 +516,9 @@ let check_normal_fn ~is_cond_dist loc tenv id es =
   | [] ->
       (match Utils.split_distribution_suffix id.name with
       | Some (prefix, suffix) -> (
-          let known_families =
-            List.map
-              ~f:(fun (_, y, _, _) -> y)
-              Stan_math_signatures.distributions in
           let is_known_family s =
-            List.mem known_families s ~equal:String.equal in
+            List.Assoc.mem Stan_math_signatures.distributions s
+              ~equal:String.equal in
           match suffix with
           | ("lpmf" | "lupmf") when Env.mem tenv (prefix ^ "_lpdf") ->
               Semantic_error.returning_fn_expected_wrong_dist_suffix_found loc
@@ -678,8 +675,8 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
       |> error
 
 and check_variadic ~is_cond_dist loc cf tenv id tes =
-  let Stan_math_signatures.
-        {control_args; required_fn_args; required_fn_rt; return_type} =
+  let UnsizedType.{control_args; required_fn_args; required_fn_rt; return_type}
+      =
     Stan_math_signatures.lookup_stan_math_variadic_function id.name
     |> Option.value_exn in
   let matching remaining_es Env.{type_= ftype; _} =

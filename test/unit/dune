@@ -9,4 +9,4 @@
   analysis_and_optimization)
  (inline_tests)
  (preprocess
-  (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))
+  (pps ppx_jane)))

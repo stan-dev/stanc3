@@ -9,12 +9,6 @@ def skipCompileTests = false
 def skipRebuildingBinaries = false
 def skipCompileTestsAtO1 = false
 
-/* Functions that runs a sh command and returns the stdout */
-def runShell(String command){
-    def output = sh (returnStdout: true, script: "${command}").trim()
-    return "${output}"
-}
-
 def tagName() {
     if (env.TAG_NAME) {
         env.TAG_NAME
@@ -22,6 +16,17 @@ def tagName() {
         'nightly'
     } else {
         'unknown-tag'
+    }
+}
+
+def qemuArchFlag(String arch) {
+    switch (arch) {
+        case 'armel':   return '--platform=linux/arm/v6'
+        case 'armhf':   return '--platform=linux/arm/v7'
+        case 'arm64':   return '--platform=linux/arm64'
+        case 'ppc64el': return '--platform=linux/ppc64le'
+        case 's390x':   return '--platform=linux/s390x'
+        default:        return ''
     }
 }
 
@@ -110,6 +115,7 @@ pipeline {
     }
     environment {
         CXX = 'clang++-6.0'
+        MACOS_SWITCH = 'stanc3-4.14'
         PARALLEL = 4
         GIT_AUTHOR_NAME = 'Stan Jenkins'
         GIT_AUTHOR_EMAIL = 'mc.stanislaw@gmail.com'
@@ -124,7 +130,7 @@ pipeline {
                     dir '.'
                     label 'linux'
                     args '--entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                    additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                 }
             }
             steps {
@@ -149,7 +155,7 @@ pipeline {
                     skipRebuildingBinaries = utils.verifyChanges(sourceCodePaths, "master")
                 }
             }
-            post { always { runShell("rm -rf ./*") }}
+            post { always { sh "rm -rf ./*" }}
         }
 
 
@@ -171,23 +177,24 @@ pipeline {
                             dir '.'
                             label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/linux"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build --profile static --root=.
-                            """)
+                            '''
                             sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                             sh "chmod +w bin/linux-stanc && strip bin/linux-stanc"
+                            sh "./bin/linux-stanc --version"
                             stash name:'linux-exe', includes:'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/linux/*"}}
                 }
                 stage("Code formatting") {
                     when {
@@ -202,7 +209,7 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
@@ -219,7 +226,7 @@ pipeline {
                             )
                         """
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { sh "rm -rf ./*" }}
                 }
 
                 stage("Dune tests") {
@@ -240,29 +247,29 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/dune-tests"){
                             unstash "Stanc3Setup"
-                            runShell("""
-                                eval \$(opam env)
-                                BISECT_FILE=\$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
-                            """)
+                            sh '''
+                                eval $(opam env)
+                                BISECT_FILE=$(pwd)/bisect dune runtest --instrument-with bisect_ppx --force --root=.
+                            '''
 
-                            sh """
-                                eval \$(opam env)
-                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/
-                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/
-                            """
+                            sh '''
+                                eval $(opam env)
+                                bisect-ppx-report summary --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
+                                bisect-ppx-report coveralls coverage.json --service-name jenkins --service-job-id $BUILD_ID --expect src/ --do-not-expect src/stancjs/ --do-not-expect src/stan_math_signatures/Generate.ml
+                            '''
 
                             withCredentials([usernamePassword(credentialsId: 'stan-stanc3-codecov-token', usernameVariable: 'DUMMY_USERNAME', passwordVariable: 'CODECOV_TOKEN')]) {
                                 sh "codecov -v -C \$(git rev-parse HEAD)"
                             }
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/dune-tests/*") }}
+                    post { always { sh "rm -rf ${env.WORKSPACE}/dune-tests/*" }}
                 }
                 stage("stancjs tests") {
                     when {
@@ -282,20 +289,20 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/stancjs-tests"){
                             unstash "Stanc3Setup"
-                            runShell("""
+                            sh '''
                                 node --version
-                                eval \$(opam env)
+                                eval $(opam env)
                                 dune build @runjstest --root=.
-                            """)
+                            '''
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/stancjs-tests/*") }}
+                    post { always { sh "rm -rf ${env.WORKSPACE}/stancjs-tests/*" }}
                 }
             }
         }
@@ -337,7 +344,7 @@ pipeline {
                             ])
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-good/*") }}
+                    post { always { sh "rm -rf ${env.WORKSPACE}/compile-tests-good/*" }}
                 }
 
                 stage("Compile tests - example-models") {
@@ -374,7 +381,7 @@ pipeline {
                             ])
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-tests-example/*") }}
+                    post { always { sh "rm -rf ${env.WORKSPACE}/compile-tests-example/*" }}
                 }
 
                 stage("Compile tests - good at O=1") {
@@ -411,7 +418,7 @@ pipeline {
                             ])
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-good-O1/*") }}
+                    post { always { sh "rm -rf ${env.WORKSPACE}/compile-good-O1/*" }}
                 }
 
                 stage("Compile tests - example-models at O=1") {
@@ -448,7 +455,7 @@ pipeline {
                             ])
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-example-O1/*") }}
+                    post { always { sh "rm -rf ${env.WORKSPACE}/compile-example-O1/*" }}
                 }
 
                 stage("Model end-to-end tests") {
@@ -480,7 +487,7 @@ pipeline {
                                 utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                                 utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
                                 utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-                                sh """
+                                sh '''
                                     cd performance-tests-cmdstan
                                     git show HEAD --stat
                                     echo "example-models/regression_tests/mother.stan" > all.tests
@@ -491,8 +498,8 @@ pipeline {
                                     echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
                                     echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                     cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "\$(readlink -f ../bin/linux-stanc)"
-                                """
+                                    CXX="$CXX" ./compare-compilers.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "$(readlink -f ../bin/linux-stanc)"
+                                '''
                             }
 
                             xunit([GoogleTest(
@@ -507,7 +514,7 @@ pipeline {
 
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end/*") }}
+                    post { always { sh "rm -rf ${env.WORKSPACE}/compile-end-to-end/*" }}
                 }
 
                 stage("Model end-to-end tests at O=1") {
@@ -539,7 +546,7 @@ pipeline {
                                 utils.checkout_pr("cmdstan", "performance-tests-cmdstan/cmdstan", params.cmdstan_pr)
                                 utils.checkout_pr("stan", "performance-tests-cmdstan/cmdstan/stan", params.stan_pr)
                                 utils.checkout_pr("math", "performance-tests-cmdstan/cmdstan/stan/lib/stan_math", params.math_pr)
-                                sh """
+                                sh '''
                                     cd performance-tests-cmdstan
                                     git show HEAD --stat
                                     echo "example-models/regression_tests/mother.stan" > all.tests
@@ -552,8 +559,8 @@ pipeline {
                                     echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
                                     echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                                     cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                                    CXX="${CXX}" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j${env.PARALLEL}" "--O1" "\$(readlink -f ../bin/linux-stanc)"
-                                """
+                                    CXX="$CXX" ./compare-optimizer.sh "--tests-file all.tests --num-samples=10 -j$PARALLEL" "--O1" "$(readlink -f ../bin/linux-stanc)"
+                                '''
                             }
 
                             xunit([GoogleTest(
@@ -567,7 +574,7 @@ pipeline {
                             archiveArtifacts 'performance-tests-cmdstan/performance.xml'
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*") }}
+                    post { always { sh "rm -rf ${env.WORKSPACE}/compile-end-to-end-O=1/*" }}
                 }
 
                 stage('Math functions expressions test') {
@@ -617,7 +624,7 @@ pipeline {
                             }
                         }
                     }
-                    post { always { runShell("rm -rf ${env.WORKSPACE}/compile-expressions/*") }}
+                    post { always { sh "rm -rf ${env.WORKSPACE}/compile-expressions/*" }}
                 }
             }
         }
@@ -638,20 +645,23 @@ pipeline {
                                 dir("${env.WORKSPACE}/osx-x86"){
                                     cleanCheckout()
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
-                                        runShell("""
-                                            export PATH=/Users/jenkins/brew/bin:\$PATH
-                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                            opam update || true
+                                        sh '''
+                                            export PATH=/Users/jenkins/brew/bin:$PATH
+                                            bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
+                                            eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            opam switch list
+                                            opam update -y || true
+                                            opam pin -y dune 3.6.0 --no-action
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile=release
-                                        """)
+                                        '''
                                     }
                                     sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-x86-stanc"
                                     stash name:'mac-x86-exe', includes:'bin/*'
                                 }
                             }
-                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-x86/*") }}
+                            post { always { sh "rm -rf ${env.WORKSPACE}/osx-x86/*" }}
                         }
 
                         stage("Build MacOS arm64 binary") {
@@ -660,20 +670,22 @@ pipeline {
                                 dir("${env.WORKSPACE}/osx-arm64"){
                                     cleanCheckout()
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
-                                        runShell("""
-                                            export PATH=/Users/jenkins/brew/bin:\$PATH
-                                            eval \$(opam env --switch=stanc-4.14.1 --set-switch)
-                                            opam update || true
+                                        sh '''
+                                            export PATH=/Users/jenkins/brew/bin:$PATH
+                                            bash -x scripts/install_ocaml.sh "$MACOS_SWITCH"
+                                            eval $(opam env --switch="$MACOS_SWITCH" --set-switch)
+                                            opam switch list
+                                            opam update -y || true
                                             bash -x scripts/install_build_deps.sh
                                             dune subst
                                             dune build --root=. --profile=release
-                                        """)
+                                        '''
                                     }
                                     sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-arm64-stanc"
                                     stash name:'mac-arm64-exe', includes:'bin/*'
                                 }
                             }
-                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-arm64/*") }}
+                            post { always { sh "rm -rf ${env.WORKSPACE}/osx-arm64/*" }}
                         }
 
                         stage('Build MacOS fat binary') {
@@ -687,10 +699,11 @@ pipeline {
                                     }
                                     sh "lipo -archs bin/mac-stanc"
                                     sh "chmod +w bin/mac-stanc && strip bin/mac-stanc"
+                                    sh "./bin/mac-stanc --version"
                                     stash name:'mac-exe', includes:'bin/mac-stanc'
                                 }
                             }
-                            post { always { runShell("rm -rf ${env.WORKSPACE}/osx-universal/*") }}
+                            post { always { sh "rm -rf ${env.WORKSPACE}/osx-universal/*" }}
                         }
                     }
                 }
@@ -708,192 +721,27 @@ pipeline {
                             dir '.'
                             label 'linux && triqs'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/stancjs"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build --root=. --profile release src/stancjs
-                            """)
+                            '''
                             sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune build --force --profile=dev --root=. src/stancjs
-                            """)
+                            '''
                             sh "mv `find _build -name stancjs.bc.js` bin/stanc-pretty.js"
                             stash name:'js-exe', includes:'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/stancjs/*")}}
-                }
-
-                stage("Build static Linux ppc64el binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/ppc64le --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/ppc64le --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-ppc64el"){
-                            cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
-                            sh "chmod +w bin/linux-ppc64el-stanc && strip bin/linux-ppc64el-stanc"
-                            stash name:'linux-ppc64el-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-ppc64el/*")}}
-                }
-
-                stage("Build static Linux s390x binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/s390x --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/s390x --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-s390x"){
-                            cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
-                            sh "chmod +w bin/linux-s390x-stanc && strip bin/linux-s390x-stanc"
-                            stash name:'linux-s390x-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-s390x/*")}}
-                }
-
-                stage("Build static Linux arm64 binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/arm64 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/arm64 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-arm64"){
-                            cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
-                            sh "chmod +w bin/linux-arm64-stanc && strip bin/linux-arm64-stanc"
-                            stash name:'linux-arm64-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-arm64/*")}}
-                }
-
-                stage("Build static Linux armhf binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/arm/v7 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/arm/v7 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-armhf"){
-                            cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
-                            sh "chmod +w bin/linux-armhf-stanc && strip bin/linux-armhf-stanc"
-                            stash name:'linux-armhf-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armhf/*")}}
-                }
-
-                stage("Build static Linux armel binary") {
-                    when {
-                        beforeAgent true
-                        allOf {
-                            expression { !skipRebuildingBinaries }
-                            anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                        }
-                    }
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && emulation'
-                            args '--platform=linux/arm/v6 --group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock'
-                            additionalBuildArgs  '--platform=linux/arm/v6 --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux-armel"){
-                            cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            """)
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
-                            sh "chmod +w bin/linux-armel-stanc && strip bin/linux-armel-stanc"
-                            stash name:'linux-armel-exe', includes:'bin/*'
-                        }
-                    }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/linux-armel/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/stancjs/*"}}
                 }
 
                 // Cross compiling for windows on debian
@@ -910,48 +758,70 @@ pipeline {
                             dir '.'
                             label 'linux'
                             args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                         }
                     }
                     steps {
                         dir("${env.WORKSPACE}/windows"){
                             cleanCheckout()
-                            runShell("""
-                                eval \$(opam env)
+                            sh '''
+                                eval $(opam env)
                                 dune subst
                                 dune build -x windows --root=. --profile=release
-                            """)
+                            '''
                             sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
                             sh "chmod +w bin/windows-stanc && strip bin/windows-stanc"
                             stash name:'windows-exe', includes:'bin/*'
                         }
                     }
-                    post {always { runShell("rm -rf ${env.WORKSPACE}/windows/*")}}
+                    post {always { sh "rm -rf ${env.WORKSPACE}/windows/*"}}
                 }
 
             }
         }
 
-        stage('Check binary version'){
+        stage('Build other architectures') {
             when {
                 beforeAgent true
-                expression { !skipRebuildingBinaries }
-            }
-            agent {
-                dockerfile {
-                    filename 'scripts/docker/ci/Dockerfile'
-                    dir '.'
-                    label 'linux'
-                    args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                allOf {
+                    expression { !skipRebuildingBinaries }
+                    anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
                 }
             }
-            steps {
-                sh "rm -r bin/ || true"
-
-                dir("bin"){
-                    unstash 'linux-exe'
-                    sh "bin/linux-stanc --version"
+            matrix {
+                axes {
+                    axis {
+                        name 'ARCHITECTURE'
+                        values 'arm64', 'ppc64el', 's390x', 'armhf', 'armel'
+                    }
+                }
+                stages {
+                    stage("Build static binary") {
+                        agent {
+                            dockerfile {
+                                filename 'scripts/docker/static-builder/Dockerfile'
+                                dir '.'
+                                label 'linux && emulation'
+                                args "${qemuArchFlag(ARCHITECTURE)} --group-add=987 --group-add=980 --group-add=988 --entrypoint='' -v /var/run/docker.sock:/var/run/docker.sock"
+                                additionalBuildArgs  "${qemuArchFlag(ARCHITECTURE)} --build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)"
+                            }
+                        }
+                        steps {
+                            dir("${env.WORKSPACE}/linux-${ARCHITECTURE}"){
+                                cleanCheckout()
+                                sh '''
+                                    eval $(opam env)
+                                    dune subst
+                                    dune build --profile static --root=.
+                                '''
+                                sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-${ARCHITECTURE}-stanc"
+                                sh "chmod +w bin/linux-${ARCHITECTURE}-stanc && strip bin/linux-${ARCHITECTURE}-stanc"
+                                sh "./bin/linux-${ARCHITECTURE}-stanc --version"
+                                stash name:"linux-${ARCHITECTURE}-exe", includes:'bin/*'
+                            }
+                        }
+                        post {always { sh "rm -rf ${env.WORKSPACE}/linux-${ARCHITECTURE}/*"}}
+                    }
                 }
             }
         }
@@ -971,7 +841,7 @@ pipeline {
                     dir '.'
                     label 'linux'
                     args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                    additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                 }
             }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
@@ -992,26 +862,25 @@ pipeline {
                         unstash 'linux-armel-exe'
                         unstash 'js-exe'
 
-                        runShell("""
+                        sh """
                             gh release delete ${tagName()} --cleanup-tag -y || true
                             gh release create ${tagName()} --latest --target master --notes "\$(git log --pretty=format:'nightly: %h %s' -n 1)" ./bin/*
-                        """)
+                        """
 
                         // Update stanc.js in StanHeaders
                         withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                             sh """#!/bin/bash
                                 set -e
 
-                                git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/rstan.git
+                                git clone "https://\$GIT_USERNAME:\$GIT_PASSWORD@github.com/stan-dev/rstan.git"
                                 git config user.email "mc.stanislaw@gmail.com"
                                 git config user.name "Stan Jenkins"
-                                git config auth.token ${GITHUB_TOKEN}
 
                                 rm rstan/StanHeaders/inst/stanc.js
                                 cp ./bin/stanc.js rstan/StanHeaders/inst/stanc.js
                                 git -C rstan add StanHeaders/inst/stanc.js
                                 git -C rstan commit -m "Update stanc.js to ${tagName()}"
-                                git -C rstan push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/rstan.git develop
+                                git -C rstan push "https://\$GIT_USERNAME:\$GIT_PASSWORD@github.com/stan-dev/rstan.git" develop
                             """
                         }
                     }
@@ -1035,31 +904,31 @@ pipeline {
                     dir '.'
                     label 'linux && triqs'
                     args '--entrypoint=\'\''
-                    additionalBuildArgs  '--build-arg PUID=\$(id -u) --build-arg PGID=\$(id -g)'
+                    additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
                 }
             }
             steps {
                 dir("${env.WORKSPACE}/documentation"){
                     cleanCheckout()
                     // Build docs
-                    runShell("""
-                        eval \$(opam env)
+                    sh '''
+                        eval $(opam env)
                         dune build @doc --root=.
-                    """)
+                    '''
                     // Commit and push
                     withCredentials([usernamePassword(credentialsId: 'a630aebc-6861-4e69-b497-fd7f496ec46b', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                        runShell("""
+                        sh '''
                             set -e
                             cd ./_build/default/_doc/_html/
                             git init -b gh-pages
                             git add .
                             git commit -m "auto generated docs from Jenkins"
-                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/stan-dev/stanc3.git gh-pages --force
-                        """)
+                            git push "https://$GIT_USERNAME:$GIT_PASSWORD@github.com/stan-dev/stanc3.git" gh-pages --force
+                        '''
                     }
                 }
             }
-            post { always { runShell("rm -rf ${env.WORKSPACE}/documentation/*")} }
+            post { always { sh "rm -rf ${env.WORKSPACE}/documentation/*"} }
 
         }
 
