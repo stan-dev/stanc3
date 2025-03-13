@@ -21604,9 +21604,9 @@
            (meta
             ((type_
               (UFun
-               ((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
-                (AutoDiffable (UTuple (UReal (UArray UInt)))))
-               (ReturnType UReal) FnPlain AoS))
+               (((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
+                 (AutoDiffable (UTuple (UReal (UArray UInt)))))
+                (ReturnType UReal) FnPlain AoS)))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var data_y))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
@@ -21656,9 +21656,9 @@
            (meta
             ((type_
               (UFun
-               ((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
-                (AutoDiffable (UTuple (UReal (UArray UInt)))))
-               (ReturnType UReal) FnPlain AoS))
+               (((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
+                 (AutoDiffable (UTuple (UReal (UArray UInt)))))
+                (ReturnType UReal) FnPlain AoS)))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var param_y))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -21701,9 +21701,9 @@
            (meta
             ((type_
               (UFun
-               ((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
-                (AutoDiffable (UTuple (UReal (UArray UInt)))))
-               (ReturnType UReal) FnPlain AoS))
+               (((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
+                 (AutoDiffable (UTuple (UReal (UArray UInt)))))
+                (ReturnType UReal) FnPlain AoS)))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var param_y))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -21769,9 +21769,9 @@
            (meta
             ((type_
               (UFun
-               ((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
-                (AutoDiffable (UTuple (UReal (UArray UInt)))))
-               (ReturnType UReal) FnPlain AoS))
+               (((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
+                 (AutoDiffable (UTuple (UReal (UArray UInt)))))
+                (ReturnType UReal) FnPlain AoS)))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var param_y))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))

@@ -1,7 +1,14 @@
-(** The signatures of the Stan Math library, which are used for type checking *)
-open Core
+(** This is an executable program that dumps out a list
+  of all the functions defined in the Stan math library and their type.
 
-open Core.Poly
+  This used to just be done at runtime, but it was actually an appreciable percentage
+  of the total time spent by the compiler just to generate all the combinations,
+  so now it is done by the build system and just stored in the binary using
+  the [Marshal] library.
+*)
+
+open Core
+open Middle
 
 (** The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when
@@ -86,35 +93,21 @@ type fkind =
   | UnaryVectorized of return_behavior
 [@@deriving show {with_path= false}]
 
-type fun_arg = UnsizedType.autodifftype * UnsizedType.t
-type signature = UnsizedType.returntype * fun_arg list * Mem_pattern.t
-
-type variadic_signature =
-  { return_type: UnsizedType.t
-  ; control_args: fun_arg list
-  ; required_fn_rt: UnsizedType.t
-  ; required_fn_args: fun_arg list }
-[@@deriving create]
-
 let is_primitive = function
   | UnsizedType.UReal -> true
   | UInt -> true
   | _ -> false
 
 (** The signatures hash table *)
-let (stan_math_signatures : (string, signature list) Hashtbl.t) =
-  String.Table.create ()
-
-(** All of the signatures that are added by hand, rather than the ones
-    added "declaratively" *)
-let (manual_stan_math_signatures : (string, signature list) Hashtbl.t) =
+let (stan_math_signatures : (string, UnsizedType.signature list) Hashtbl.t) =
   String.Table.create ()
 
 (** The variadic signatures hash table
 
     These functions cannot be overloaded.
 *)
-let (stan_math_variadic_signatures : (string, variadic_signature) Hashtbl.t) =
+let (stan_math_variadic_signatures :
+      (string, UnsizedType.variadic_signature) Hashtbl.t) =
   String.Table.create ()
 
 (* XXX The correct word here isn't combination - what is it? *)
@@ -123,12 +116,6 @@ let all_combinations xx =
       List.concat_map accum ~f:(fun acc ->
           List.map ~f:(fun arg -> arg :: acc) x))
 
-let%expect_test "combinations " =
-  let a = all_combinations [[1; 2]; [3; 4]; [5; 6]] in
-  [%sexp (a : int list list)] |> Sexp.to_string_hum |> print_endline;
-  [%expect
-    {| ((1 3 5) (2 3 5) (1 4 5) (2 4 5) (1 3 6) (2 3 6) (1 4 6) (2 4 6)) |}]
-
 let missing_math_functions =
   String.Set.of_list ["beta_proportion_cdf"; "loglogistic_lcdf"]
 
@@ -136,10 +123,11 @@ let rng_return_type t lt =
   if List.for_all ~f:is_primitive lt then t else UnsizedType.UArray t
 
 let add_unqualified (name, rt, uqargts, mem_pattern) =
-  Hashtbl.add_multi manual_stan_math_signatures ~key:name
+  Hashtbl.add_multi stan_math_signatures ~key:name
     ~data:
-      ( rt
-      , List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) uqargts
+      ( List.map ~f:(fun x -> (UnsizedType.AutoDiffable, x)) uqargts
+      , rt
+      , Fun_kind.suffix_from_name name
       , mem_pattern )
 
 let rec ints_to_real unsized =
@@ -377,144 +365,11 @@ let all_declarative_sigs = distributions @ math_sigs
 let declarative_fnsigs =
   List.concat_map ~f:mk_declarative_sig all_declarative_sigs
 
-let is_stan_math_function_name name =
-  let name = Utils.stdlib_distribution_name name in
-  Hashtbl.mem stan_math_signatures name
-
-let lookup_stan_math_function = Hashtbl.find_multi stan_math_signatures
-let get_stan_math_signatures_alist () = Hashtbl.to_alist stan_math_signatures
-
-let is_stan_math_variadic_function_name =
-  Hashtbl.mem stan_math_variadic_signatures
-
-let lookup_stan_math_variadic_function =
-  Hashtbl.find stan_math_variadic_signatures
-
-let operator_to_stan_math_fns op =
-  match op with
-  | Operator.Plus -> ["add"]
-  | PPlus -> ["plus"]
-  | Minus -> ["subtract"]
-  | PMinus -> ["minus"]
-  | Times -> ["multiply"]
-  | Divide -> ["mdivide_right"; "divide"]
-  | Modulo -> ["modulus"]
-  | IntDivide -> []
-  | LDivide -> ["mdivide_left"]
-  | EltTimes -> ["elt_multiply"]
-  | EltDivide -> ["elt_divide"]
-  | Pow -> ["pow"]
-  | EltPow -> ["pow"]
-  | Or -> ["logical_or"]
-  | And -> ["logical_and"]
-  | Equals -> ["logical_eq"]
-  | NEquals -> ["logical_neq"]
-  | Less -> ["logical_lt"]
-  | Leq -> ["logical_lte"]
-  | Greater -> ["logical_gt"]
-  | Geq -> ["logical_gte"]
-  | PNot -> ["logical_negation"]
-  | Transpose -> ["transpose"]
-
-let int_divide_type =
-  UnsizedType.
-    ( ReturnType UInt
-    , [(AutoDiffable, UInt); (AutoDiffable, UInt)]
-    , Mem_pattern.AoS )
-
-let get_sigs name =
-  let name = Utils.stdlib_distribution_name name in
-  Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
-
-let make_assignmentoperator_stan_math_signatures assop =
-  (match assop with
-  | Operator.Divide -> ["divide"]
-  | assop -> operator_to_stan_math_fns assop)
-  |> List.concat_map ~f:get_sigs
-  |> List.concat_map ~f:(function
-       | ReturnType rtype, [(ad1, lhs); (ad2, rhs)], _
-         when rtype = lhs
-              && not
-                   ((assop = Operator.EltTimes || assop = Operator.EltDivide)
-                   && UnsizedType.is_scalar_type rtype) ->
-           if rhs = UReal then
-             [ (UnsizedType.Void, [(ad1, lhs); (ad2, UInt)], Mem_pattern.SoA)
-             ; (Void, [(ad1, lhs); (ad2, UReal)], SoA) ]
-           else [(Void, [(ad1, lhs); (ad2, rhs)], SoA)]
-       | _ -> [])
-
-let pp_math_sig ppf (rt, args, mem_pattern) =
-  UnsizedType.pp ppf (UFun (args, rt, FnPlain, mem_pattern))
-
-let pp_math_sigs ppf name =
-  (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
-
-let pretty_print_math_sigs = Fmt.str "@[<v>@,%a@]" pp_math_sigs
-
-let string_operator_to_stan_math_fns str =
-  match str with
-  | "Plus__" -> "add"
-  | "PPlus__" -> "plus"
-  | "Minus__" -> "subtract"
-  | "PMinus__" -> "minus"
-  | "Times__" -> "multiply"
-  | "Divide__" -> "divide"
-  | "Modulo__" -> "modulus"
-  | "IntDivide__" -> "divide"
-  | "LDivide__" -> "mdivide_left"
-  | "EltTimes__" -> "elt_multiply"
-  | "EltDivide__" -> "elt_divide"
-  | "Pow__" -> "pow"
-  | "EltPow__" -> "pow"
-  | "Or__" -> "logical_or"
-  | "And__" -> "logical_and"
-  | "Equals__" -> "logical_eq"
-  | "NEquals__" -> "logical_neq"
-  | "Less__" -> "logical_lt"
-  | "Leq__" -> "logical_lte"
-  | "Greater__" -> "logical_gt"
-  | "Geq__" -> "logical_gte"
-  | "PNot__" -> "logical_negation"
-  | "Transpose__" -> "transpose"
-  | _ -> str
-
-let pretty_print_all_math_sigs ppf () =
-  let open Fmt in
-  Format.pp_set_margin ppf 180;
-  let pp_sig ppf (name, (rt, args, _)) =
-    pf ppf "%s(@[<h>%a@]) => %a" name
-      (list ~sep:comma UnsizedType.pp)
-      (List.map ~f:snd args) UnsizedType.pp_returntype rt in
-  let pp_sigs_for_name ppf name =
-    (list ~sep:cut pp_sig) ppf
-      (List.map ~f:(fun t -> (name, t)) (get_sigs name)) in
-  pf ppf "@[<v>%a@]"
-    (list ~sep:cut pp_sigs_for_name)
-    (List.sort ~compare (Hashtbl.keys stan_math_signatures))
-
-let pretty_print_all_math_distributions ppf () =
-  let open Fmt in
-  let distributions =
-    String.Map.of_alist_reduce
-      (List.map ~f:(fun (kinds, name, _, _) -> (name, kinds)) distributions)
-      ~f:(fun v1 v2 -> v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
-    |> Map.to_alist in
-  let pp_dist ppf (name, kinds) =
-    pf ppf "@[%s: %a@]" name
-      (list ~sep:comma Fmt.string)
-      (List.map ~f:(Fn.compose String.lowercase show_fkind) kinds) in
-  pf ppf "@[<v>%a@]" (list ~sep:cut pp_dist) distributions
-
-let pretty_print_math_lib_operator_sigs op =
-  if op = Operator.IntDivide then
-    [Fmt.str "@[<v>@,%a@]" pp_math_sig int_divide_type]
-  else operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
-
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 
 let add_qualified (name, rt, argts, supports_soa) =
   Hashtbl.add_multi stan_math_signatures ~key:name
-    ~data:(rt, argts, supports_soa)
+    ~data:(argts, rt, Fun_kind.suffix_from_name name, supports_soa)
 
 let add_nullary name =
   add_unqualified (name, UnsizedType.ReturnType UReal, [], AoS)
@@ -753,7 +608,8 @@ let for_vector_types s = List.iter ~f:s vector_types
 (* -- Start populating stan_math_signaturess -- *)
 let () =
   List.iter declarative_fnsigs ~f:(fun (key, rt, args, mem_pattern) ->
-      Hashtbl.add_multi stan_math_signatures ~key ~data:(rt, args, mem_pattern));
+      Hashtbl.add_multi stan_math_signatures ~key
+        ~data:(args, rt, Fun_kind.suffix_from_name key, mem_pattern));
   add_unqualified ("acos", ReturnType UComplex, [UComplex], AoS);
   add_unqualified ("acosh", ReturnType UComplex, [UComplex], AoS);
   List.iter
@@ -2574,17 +2430,9 @@ let () =
   add_unqualified ("zeros_int_array", ReturnType (UArray UInt), [UInt], SoA);
   add_unqualified ("zeros_array", ReturnType (UArray UReal), [UInt], SoA);
   add_unqualified ("zeros_row_vector", ReturnType URowVector, [UInt], SoA);
-  add_unqualified ("zeros_vector", ReturnType UVector, [UInt], SoA);
-  (* Now add all the manually added stuff to the main hashtable used
-     for type-checking *)
-  Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
-      List.iter data ~f:(fun data ->
-          Hashtbl.add_multi stan_math_signatures ~key ~data))
+  add_unqualified ("zeros_vector", ReturnType UVector, [UInt], SoA)
 
 (* variadics *)
-
-let reduce_sum_slice_types =
-  UnsizedType.[UReal; UInt; UMatrix; UVector; URowVector]
 
 (* Variadic ODE *)
 let variadic_ode_adjoint_ctl_tol_arg_types =
@@ -2630,7 +2478,6 @@ let variadic_dae_mandatory_fun_args =
   ; (UnsizedType.AutoDiffable, UnsizedType.UVector)
   ; (UnsizedType.AutoDiffable, UnsizedType.UVector) ]
 
-let reduce_sum_functions = String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
 let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
 
 let variadic_ode_nonadjoint_fns =
@@ -2639,16 +2486,16 @@ let variadic_ode_nonadjoint_fns =
     ; "ode_adams"; "ode_ckrk"; "ode_ckrk_tol" ]
 
 let ode_tolerances_suffix = "_tol"
-let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
 let variadic_dae_fun_return_type = UnsizedType.UVector
 let variadic_dae_return_type = UnsizedType.UArray UnsizedType.UVector
 
 let add_variadic_fn name ~return_type ?control_args ~required_fn_rt
     ?required_fn_args () =
+  let control_args = Option.value control_args ~default:[] in
+  let required_fn_args = Option.value required_fn_args ~default:[] in
   Hashtbl.add_exn stan_math_variadic_signatures ~key:name
     ~data:
-      (create_variadic_signature ~return_type ?control_args ?required_fn_args
-         ~required_fn_rt ())
+      UnsizedType.{return_type; control_args; required_fn_rt; required_fn_args}
 
 let () =
   (* DAEs *)
@@ -2703,3 +2550,44 @@ let () =
     ~required_fn_rt:UnsizedType.UVector
     ~required_fn_args:[UnsizedType.(AutoDiffable, UVector)]
     ()
+
+(** Print a module definition to [file]
+  that contains the signatures computed above *)
+let generate_module file =
+  let marshal e = Marshal.to_string e [] in
+  (* Core's Hashtbl cannot be safely Marshal'd, so we
+     round trip through an associative list *)
+  let marshal_hashtbl (type value) (t : value String.Table.t) =
+    marshal (Hashtbl.to_alist t) in
+  let distributions_simplified =
+    distributions
+    |> List.map ~f:(fun (kind, name, _, _) ->
+           (name, List.map ~f:(Fn.compose String.lowercase show_fkind) kind))
+       (* combine any common keys *)
+    |> String.Map.of_alist_reduce ~f:(fun v1 v2 ->
+           v1 @ v2 |> Set.Poly.of_list |> Set.to_list)
+    |> Map.to_alist in
+  Out_channel.with_file file ~f:(fun ch ->
+      Printf.fprintf ch
+        {|
+let unmarshal s = Marshal.from_string s 0
+let unmarshal_hashtbl s : 'a Core.String.Table.t =
+  unmarshal s |> Core.String.Table.of_alist_exn |};
+      Printf.fprintf ch
+        {|
+let stan_math_signatures :
+    Middle.UnsizedType.signature list Core.String.Table.t =
+  unmarshal_hashtbl %S |}
+        (marshal_hashtbl stan_math_signatures);
+      Printf.fprintf ch
+        {|
+let stan_math_variadic_signatures :
+    Middle.UnsizedType.variadic_signature Core.String.Table.t =
+  unmarshal_hashtbl %S |}
+        (marshal_hashtbl stan_math_variadic_signatures);
+      Printf.fprintf ch
+        {|
+let distributions : (string * string list) list = unmarshal %S |}
+        (marshal distributions_simplified))
+
+let () = generate_module (Sys.get_argv ()).(1)
