@@ -9,6 +9,7 @@ type t =
   ; standalone_functions: bool
   ; use_opencl: bool
   ; include_source: Frontend.Include_files.t
+  ; allow_unicode: bool
         (* ------------------------- *)
         (* flags which switch compiler "modes" *)
   ; info: bool

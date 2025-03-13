@@ -7,6 +7,7 @@ type t =
   ; standalone_functions: bool
   ; use_opencl: bool
   ; include_source: Frontend.Include_files.t
+  ; allow_unicode: bool
   ; info: bool
   ; version: bool
   ; auto_format: bool
@@ -49,6 +50,7 @@ let default =
   ; standalone_functions= false
   ; use_opencl= false
   ; include_source= Frontend.Include_files.FileSystemPaths []
+  ; allow_unicode= false
   ; info= false
   ; version= false
   ; auto_format= false

@@ -4,7 +4,7 @@ open Core
 
 (** Our type of syntax error information *)
 type syntax_error =
-  | Lexing of Middle.Location.t
+  | Lexing of string * Middle.Location.t
   | UnexpectedEOF of Middle.Location.t
   | Include of string * Middle.Location.t
   | Parsing of string * Middle.Location_span.t
@@ -57,12 +57,12 @@ let pp_syntax_error ?printed_filename ?code ppf = function
         (Middle.Location_span.to_string ?printed_filename loc_span)
         (pp_context_with_message ?code)
         (message, loc_span.begin_loc)
-  | Lexing loc ->
+  | Lexing (message, loc) ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename
            {loc with col_num= loc.col_num - 1})
         (pp_context_with_message ?code)
-        ("Invalid character found.", loc)
+        (message, loc)
   | UnexpectedEOF loc ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a@."
         (Middle.Location.to_string ?printed_filename

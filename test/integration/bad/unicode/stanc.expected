@@ -1,0 +1,90 @@
+  $ ../../../../../install/default/bin/stanc --allow-unicode invalid-character.stan
+Syntax error in 'invalid-character.stan', line 3, column 6, lexing error:
+   -------------------------------------------------
+     1:  data {
+     2:    // not in XID data
+     3:    real â„§;
+                ^
+     4:  }
+   -------------------------------------------------
+
+Invalid character: 'U+2127'
+[exit 1]
+  $ ../../../../../install/default/bin/stanc --allow-unicode invalid-utf8-1.stan
+Syntax error in 'invalid-utf8-1.stan', line 2, column 5, lexing error:
+   -------------------------------------------------
+     1:  data {
+     2:    int Ã(;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Invalid character found.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc --allow-unicode invalid-utf8-2.stan
+Syntax error in 'invalid-utf8-2.stan', line 2, column 5, lexing error:
+   -------------------------------------------------
+     1:  data {
+     2:    int ð(Œ(;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Invalid character found.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc --allow-unicode invalid-utf8-3.stan
+Syntax error in 'invalid-utf8-3.stan', line 2, column 5, lexing error:
+   -------------------------------------------------
+     1:  data {
+     2:    int ß¿;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Invalid character: 'U+07FF'
+[exit 1]
+  $ ../../../../../install/default/bin/stanc --allow-unicode invalid-utf8-4.stan
+Syntax error in 'invalid-utf8-4.stan', line 2, column 5, lexing error:
+   -------------------------------------------------
+     1:  data {
+     2:    int Ã±ß¿;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Invalid character in identifier at offset 2: 'U+07FF'
+[exit 1]
+  $ ../../../../../install/default/bin/stanc --allow-unicode invalid-utf8-5.stan
+Syntax error in 'invalid-utf8-5.stan', line 2, column 5, lexing error:
+   -------------------------------------------------
+     1:  data {
+     2:    int _Ã±;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Invalid character: '_'
+[exit 1]
+  $ ../../../../../install/default/bin/stanc --allow-unicode invalid-utf8.stan
+Syntax error in 'invalid-utf8.stan', line 2, column 5, lexing error:
+   -------------------------------------------------
+     1:  data {
+     2:    int í¾¿;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Identifier is not valid UTF-8 string
+[exit 1]
+  $ ../../../../../install/default/bin/stanc --allow-unicode unicode_normalization.stan
+Semantic error in 'unicode_normalization.stan', line 4, column 7 to column 13:
+   -------------------------------------------------
+     2:    real Ã±abc;
+     3:    // this is a different encoding than above, should be prevented still!
+     4:    real nÌƒabc;
+                ^
+     5:  }
+   -------------------------------------------------
+
+Identifier 'Ã±abc' is already in use.
+[exit 1]

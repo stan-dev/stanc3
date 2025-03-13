@@ -35,6 +35,10 @@ Show help
              usually means the definition will be provided later as a C++
              function.
   
+         --allow-unicode
+             (Experimental) Allow unicode characters in the names of functions
+             and variables
+  
          --auto-format
              Output a formatted version of the Stan program. The output can be
              tweaked using --max-line-length and --canonicalize.
@@ -201,6 +205,7 @@ Show help
 
 
 
+
 Qmark alias
   $ stanc -? plain | head
   NAME
@@ -224,7 +229,6 @@ Error when no file passed
   Usage: %%NAME%% [OPTION]… [MODEL_FILE]
   Try '%%NAME%% --help' for more information.
   [124]
-
 Error when multiple files passed
   $ stanc foo.stan foo2.stan
   %%NAME%%: too many arguments, don't know what to do with 'foo2.stan'
@@ -264,6 +268,7 @@ Can read from stdin
     real y;
   }
   
+
 
 
 
