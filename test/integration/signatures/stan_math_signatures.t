@@ -7851,7 +7851,17 @@ Display all Stan math signatures exposed in the language
   hmm_hidden_state_prob(matrix, matrix, vector) => matrix
   hmm_latent_rng(matrix, matrix, vector) => array[] int
   hmm_marginal(matrix, matrix, vector) => real
+  hypergeometric_1F0(real, real) => real
+  hypergeometric_2F1(real, real, real, real) => real
+  hypergeometric_3F2(vector, vector, real) => real
+  hypergeometric_3F2(vector, array[] real, real) => real
+  hypergeometric_3F2(array[] real, vector, real) => real
+  hypergeometric_3F2(array[] real, array[] real, real) => real
   hypergeometric_lpmf(int, int, int, int) => real
+  hypergeometric_pFq(vector, vector, real) => real
+  hypergeometric_pFq(vector, row_vector, real) => real
+  hypergeometric_pFq(row_vector, vector, real) => real
+  hypergeometric_pFq(row_vector, row_vector, real) => real
   hypergeometric_rng(int, int, int) => int
   hypot(int, int) => real
   hypot(int, real) => real
