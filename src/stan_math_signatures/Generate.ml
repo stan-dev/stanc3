@@ -1382,6 +1382,20 @@ let () =
     , ReturnType UMatrix
     , [(DataOnly, UMatrix); (DataOnly, UMatrix); (DataOnly, UVector)]
     , AoS );
+  add_unqualified ("hypergeometric_1F0", ReturnType UReal, [UReal; UReal], AoS);
+  add_unqualified
+    ("hypergeometric_2F1", ReturnType UReal, [UReal; UReal; UReal; UReal], AoS);
+  let vectors = [UnsizedType.UVector; URowVector; UArray UReal] in
+  List.iter
+    ~f:(fun t1 ->
+      List.iter
+        ~f:(fun t2 ->
+          add_unqualified
+            ("hypergeometric_3F2", ReturnType UReal, [t1; t2; UReal], AoS);
+          add_unqualified
+            ("hypergeometric_pFq", ReturnType UReal, [t1; t2; UReal], AoS))
+        vectors)
+    vectors;
   add_binary_vec "hypot" AoS;
   add_unqualified ("identity_matrix", ReturnType UMatrix, [UInt], SoA);
   add_unqualified ("inc_beta", ReturnType UReal, [UReal; UReal; UReal], SoA);
