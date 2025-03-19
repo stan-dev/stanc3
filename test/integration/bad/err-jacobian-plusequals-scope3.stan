@@ -1,5 +1,5 @@
 functions {
-  real upper_bound_jacobian(real x, real ub) {
+  real my_upper_bound_jacobian(real x, real ub) {
     jacobian += x;
     return ub - exp(x);
   }
@@ -11,5 +11,5 @@ parameters {
 }
 
 model {
-  real b = upper_bound_jacobian(b_raw, ub);
+  real b = my_upper_bound_jacobian(b_raw, ub);
 }

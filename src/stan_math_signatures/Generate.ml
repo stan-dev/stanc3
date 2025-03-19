@@ -550,6 +550,44 @@ let add_binary_vec_int_int name supports_soa =
         , supports_soa ))
     (List.range 1 8)
 
+(* things like lower_bound require the second argument be a scalar or the same
+    - this is basically the general case above with the last nested loop removed
+*)
+let add_first_arg_vector_binary name supports_soa =
+  let vectors = [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] in
+  add_unqualified (name, ReturnType UReal, [UReal; UReal], supports_soa);
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          let ty = bare_array_type (j, i) in
+          add_unqualified (name, ReturnType ty, [ty; ty], supports_soa);
+          add_unqualified (name, ReturnType ty, [ty; UReal], supports_soa))
+        vectors)
+    (List.range 0 8)
+
+let add_first_arg_vector_ternary name supports_soa =
+  let vectors = [UnsizedType.UArray UReal; UVector; URowVector; UMatrix] in
+  add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal], supports_soa);
+  List.iter
+    ~f:(fun i ->
+      List.iter
+        ~f:(fun j ->
+          let ty = bare_array_type (j, i) in
+          add_unqualified (name, ReturnType ty, [ty; ty; ty], supports_soa);
+          add_unqualified (name, ReturnType ty, [ty; ty; UReal], supports_soa);
+          add_unqualified (name, ReturnType ty, [ty; UReal; ty], supports_soa))
+        vectors)
+    (List.range 0 8)
+
+(** For functions that accept and return (arrays of...) vectors*)
+let add_nested_vector_unary name supports_soa =
+  List.iter
+    ~f:(fun i ->
+      let t = bare_array_type (UVector, i) in
+      add_unqualified (name, ReturnType t, [t], supports_soa))
+    (List.range 0 8)
+
 let add_ternary name supports_soa =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal], supports_soa)
 
@@ -842,8 +880,35 @@ let () =
     , ReturnType UComplexRowVector
     , [UComplexRowVector; UComplex]
     , AoS );
+  List.iter
+    ~f:(fun i ->
+      let m = bare_array_type (UMatrix, i) in
+      let v = bare_array_type (UVector, i) in
+      add_unqualified ("corr_matrix_constrain", ReturnType m, [v; UInt], SoA);
+      add_unqualified ("corr_matrix_unconstrain", ReturnType v, [m], AoS);
+      add_unqualified ("corr_matrix_jacobian", ReturnType m, [v; UInt], SoA);
+      add_unqualified ("cov_matrix_constrain", ReturnType m, [v; UInt], SoA);
+      add_unqualified ("cov_matrix_unconstrain", ReturnType v, [m], AoS);
+      add_unqualified ("cov_matrix_jacobian", ReturnType m, [v; UInt], SoA))
+    (List.range 0 8);
   add_unqualified ("chol2inv", ReturnType UMatrix, [UMatrix], AoS);
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix], SoA);
+  List.iter
+    ~f:(fun i ->
+      let m = bare_array_type (UMatrix, i) in
+      let v = bare_array_type (UVector, i) in
+      add_unqualified
+        ("cholesky_factor_corr_constrain", ReturnType m, [v; UInt], SoA);
+      add_unqualified
+        ("cholesky_factor_corr_unconstrain", ReturnType v, [m], AoS);
+      add_unqualified
+        ("cholesky_factor_corr_jacobian", ReturnType m, [v; UInt], SoA);
+      add_unqualified
+        ("cholesky_factor_cov_constrain", ReturnType m, [v; UInt; UInt], SoA);
+      add_unqualified ("cholesky_factor_cov_unconstrain", ReturnType v, [m], AoS);
+      add_unqualified
+        ("cholesky_factor_cov_jacobian", ReturnType m, [v; UInt; UInt], SoA))
+    (List.range 0 8);
   add_binary_vec_int_int "choose" AoS;
   add_unqualified ("col", ReturnType UVector, [UMatrix; UInt], AoS);
   add_unqualified ("col", ReturnType UComplexVector, [UComplexMatrix; UInt], SoA);
@@ -1542,6 +1607,12 @@ let () =
   add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UComplex], SoA);
   add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UReal], SoA);
   add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UComplex], SoA);
+  add_first_arg_vector_binary "lower_bound_jacobian" SoA;
+  add_first_arg_vector_binary "lower_bound_constrain" SoA;
+  add_first_arg_vector_binary "lower_bound_unconstrain" AoS;
+  add_first_arg_vector_ternary "lower_upper_bound_jacobian" SoA;
+  add_first_arg_vector_ternary "lower_upper_bound_constrain" SoA;
+  add_first_arg_vector_ternary "lower_upper_bound_unconstrain" AoS;
   add_nullary "machine_precision";
   add_qualified
     ( "map_rect"
@@ -1834,6 +1905,9 @@ let () =
             ("num_elements", ReturnType UInt, [bare_array_type (t, i)], SoA))
         bare_types)
     (List.range 1 10);
+  add_first_arg_vector_ternary "offset_multiplier_jacobian" SoA;
+  add_first_arg_vector_ternary "offset_multiplier_constrain" SoA;
+  add_first_arg_vector_ternary "offset_multiplier_unconstrain" AoS;
   add_unqualified
     ("one_hot_int_array", ReturnType (UArray UInt), [UInt; UInt], SoA);
   add_unqualified ("one_hot_array", ReturnType (UArray UReal), [UInt; UInt], SoA);
@@ -1844,6 +1918,9 @@ let () =
   add_unqualified ("ones_array", ReturnType (UArray UReal), [UInt], SoA);
   add_unqualified ("ones_row_vector", ReturnType URowVector, [UInt], SoA);
   add_unqualified ("ones_vector", ReturnType UVector, [UInt], SoA);
+  add_nested_vector_unary "ordered_jacobian" SoA;
+  add_nested_vector_unary "ordered_constrain" SoA;
+  add_nested_vector_unary "ordered_unconstrain" AoS;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
@@ -1914,6 +1991,9 @@ let () =
     , SoA );
   add_unqualified ("polar", ReturnType UComplex, [UReal; UReal], AoS);
   add_nullary "positive_infinity";
+  add_nested_vector_unary "positive_ordered_jacobian" SoA;
+  add_nested_vector_unary "positive_ordered_constrain" SoA;
+  add_nested_vector_unary "positive_ordered_unconstrain" AoS;
   add_binary_vec "pow" AoS;
   add_binary_vec_complex_complex "pow" AoS;
   add_unqualified ("prod", ReturnType UInt, [UArray UInt], AoS);
@@ -2133,6 +2213,9 @@ let () =
             , SoA ))
         (List.range 1 4))
     bare_types;
+  add_nested_vector_unary "simplex_jacobian" SoA;
+  add_nested_vector_unary "simplex_constrain" SoA;
+  add_nested_vector_unary "simplex_unconstrain" AoS;
   add_unqualified ("sin", ReturnType UComplex, [UComplex], AoS);
   add_unqualified ("sinh", ReturnType UComplex, [UComplex], AoS);
   add_unqualified ("singular_values", ReturnType UVector, [UMatrix], SoA);
@@ -2171,6 +2254,16 @@ let () =
   add_unqualified ("sort_indices_desc", ReturnType (UArray UInt), [UVector], AoS);
   add_unqualified
     ("sort_indices_desc", ReturnType (UArray UInt), [URowVector], AoS);
+  List.iter
+    ~f:(fun i ->
+      let t = bare_array_type (UMatrix, i) in
+      add_unqualified ("stochastic_column_jacobian", ReturnType t, [t], SoA);
+      add_unqualified ("stochastic_column_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("stochastic_column_unconstrain", ReturnType t, [t], AoS);
+      add_unqualified ("stochastic_row_jacobian", ReturnType t, [t], SoA);
+      add_unqualified ("stochastic_row_constrain", ReturnType t, [t], SoA);
+      add_unqualified ("stochastic_row_unconstrain", ReturnType t, [t], AoS))
+    (List.range 0 8);
   add_unqualified ("squared_distance", ReturnType UReal, [UReal; UReal], SoA);
   add_unqualified ("squared_distance", ReturnType UReal, [UVector; UVector], SoA);
   add_unqualified
@@ -2231,6 +2324,9 @@ let () =
   add_unqualified ("sum", ReturnType UComplex, [UComplexVector], SoA);
   add_unqualified ("sum", ReturnType UComplex, [UComplexRowVector], SoA);
   add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA);
+  add_nested_vector_unary "sum_to_zero_jacobian" SoA;
+  add_nested_vector_unary "sum_to_zero_constrain" SoA;
+  add_nested_vector_unary "sum_to_zero_unconstrain" AoS;
   (* TODO (future): SoA inside of tuples, update following signatures *)
   add_unqualified
     ("svd", ReturnType (UTuple [UMatrix; UVector; UMatrix]), [UMatrix], AoS);
@@ -2420,6 +2516,12 @@ let () =
     ("transpose", ReturnType UComplexVector, [UComplexRowVector], SoA);
   add_unqualified ("transpose", ReturnType UComplexMatrix, [UComplexMatrix], SoA);
   add_unqualified ("uniform_simplex", ReturnType UVector, [UInt], SoA);
+  add_nested_vector_unary "unit_vector_jacobian" SoA;
+  add_nested_vector_unary "unit_vector_constrain" SoA;
+  add_nested_vector_unary "unit_vector_unconstrain" AoS;
+  add_first_arg_vector_binary "upper_bound_jacobian" SoA;
+  add_first_arg_vector_binary "upper_bound_constrain" SoA;
+  add_first_arg_vector_binary "upper_bound_unconstrain" AoS;
   add_unqualified ("variance", ReturnType UReal, [UArray UReal], SoA);
   add_unqualified ("variance", ReturnType UReal, [UVector], SoA);
   add_unqualified ("variance", ReturnType UReal, [URowVector], SoA);

@@ -19,7 +19,23 @@ let fn_renames =
   @ [ ("lmultiply", "stan::math::multiply_log")
     ; ("lchoose", "stan::math::binomial_coefficient_log")
     ; ("std_normal_qf", "stan::math::inv_Phi")
-    ; ("integrate_ode", "stan::math::integrate_ode_rk45") ]
+    ; ("integrate_ode", "stan::math::integrate_ode_rk45")
+      (* constraints -- originally internal functions, may be worth renaming now *)
+    ; ("cholesky_factor_corr_jacobian", "stan::math::cholesky_corr_constrain")
+    ; ("cholesky_factor_corr_constrain", "stan::math::cholesky_corr_constrain")
+    ; ("cholesky_factor_corr_unconstrain", "stan::math::cholesky_corr_free")
+    ; ("cholesky_factor_cov_jacobian", "stan::math::cholesky_factor_constrain")
+    ; ("cholesky_factor_cov_constrain", "stan::math::cholesky_factor_constrain")
+    ; ("cholesky_factor_cov_unconstrain", "stan::math::cholesky_factor_free")
+    ; ("lower_bound_jacobian", "stan::math::lb_constrain")
+    ; ("lower_bound_constrain", "stan::math::lb_constrain")
+    ; ("lower_bound_unconstrain", "stan::math::lb_free")
+    ; ("upper_bound_jacobian", "stan::math::ub_constrain")
+    ; ("upper_bound_constrain", "stan::math::ub_constrain")
+    ; ("upper_bound_unconstrain", "stan::math::ub_free")
+    ; ("lower_upper_bound_jacobian", "stan::math::lub_constrain")
+    ; ("lower_upper_bound_constrain", "stan::math::lub_constrain")
+    ; ("lower_upper_bound_unconstrain", "stan::math::lub_free") ]
   |> String.Map.of_alist_exn
 
 let constraint_to_string = function
@@ -103,9 +119,11 @@ let promote_adtype =
       | _ -> accum)
     ~init:UnsizedType.DataOnly
 
-let suffix_args = function
+let suffix_args udf = function
   | Fun_kind.FnRng -> ["base_rng__"]
-  | FnTarget | FnJacobian -> ["lp__"; "lp_accum__"]
+  | FnTarget -> ["lp__"; "lp_accum__"]
+  | FnJacobian when udf -> ["lp__"; "lp_accum__"]
+  | FnJacobian -> ["lp__"]
   | FnPlain | FnLpdf _ | FnLpmf _ -> []
 
 let rec stantype_prim = function
@@ -118,7 +136,7 @@ let templates udf suffix =
   | Fun_kind.FnLpdf true | FnLpmf true -> [TemplateType "propto__"]
   | FnLpdf false | FnLpmf false -> [TemplateType "false"]
   | FnTarget when udf -> [TemplateType "propto__"]
-  | FnJacobian when udf -> [TemplateType "jacobian__"]
+  | FnJacobian -> [TemplateType "jacobian__"]
   | _ -> []
 
 let deserializer = Var "in__"
@@ -396,6 +414,12 @@ and lower_functionals fname suffix es mem_pattern =
 and lower_fun_app suffix fname es mem_pattern
     (ret_type : UnsizedType.returntype option) =
   let fname = Option.value (Map.find fn_renames fname) ~default:fname in
+  let fname =
+    (* Handle systematic renaming of math's constrain and free functions *)
+    match String.rsplit2 fname ~on:'_' with
+    | Some (f, "jacobian") -> f ^ "_constrain"
+    | Some (f, "unconstrain") -> f ^ "_free"
+    | _ -> fname in
   let special_options =
     [ Option.map ~f:lower_operator_app (Operator.of_string_opt fname)
     ; lower_misc_special_math_app fname mem_pattern ret_type
@@ -406,12 +430,12 @@ and lower_fun_app suffix fname es mem_pattern
   | None ->
       let fname = stan_namespace_qualify fname in
       let templates = templates false suffix in
-      let extras = suffix_args suffix |> List.map ~f:Exprs.to_var in
+      let extras = suffix_args false suffix |> List.map ~f:Exprs.to_var in
       Exprs.templated_fun_call fname templates (lower_exprs es @ extras)
 
 and lower_user_defined_fun f suffix es =
   let extra_args =
-    suffix_args suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
+    suffix_args true suffix @ ["pstream__"] |> List.map ~f:Exprs.to_var in
   Exprs.templated_fun_call f (templates true suffix)
     ((lower_exprs ~promote_reals:true) es @ extra_args)
 

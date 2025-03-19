@@ -2061,6 +2061,7 @@ vector[Nr] err: SoA
 vector[Nr] h_i_mean: SoA
 vector[Nr] h_i_sigma: SoA
 vector[Nr] h_sigma: SoA
+vector[N] means_ordered: SoA
 ((functions_block ())
  (input_vars
   ((N
@@ -2891,6 +2892,13 @@ vector[Nr] h_sigma: SoA
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str means_ordered))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
  (log_prob
   (((pattern
@@ -3860,6 +3868,22 @@ vector[Nr] h_sigma: SoA
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Real 0.000001))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id means_ordered)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable means_ordered) ()) UVector
+      ((pattern
+        (FunApp (StanLib ordered_jacobian FnJacobian AoS)
+         (((pattern (Var mean_price))
+           (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -5058,6 +5082,22 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id means_ordered)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment ((LVariable means_ordered) ()) UVector
+      ((pattern
+        (FunApp (StanLib ordered_jacobian FnJacobian SoA)
+         (((pattern (Var mean_price))
+           (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnCheck
@@ -5892,6 +5932,14 @@ vector[Nr] h_sigma: SoA
       (initialize Default)))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id means_ordered)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize Default)))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnWriteParam (unconstrain_opt ())
@@ -6460,6 +6508,14 @@ vector[Nr] h_sigma: SoA
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
+     (Assignment ((LVariable means_ordered) ()) UVector
+      ((pattern
+        (FunApp (StanLib ordered_jacobian FnJacobian AoS)
+         (((pattern (Var mean_price))
+           (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp
       (CompilerInternal
        (FnCheck
@@ -6600,6 +6656,15 @@ vector[Nr] h_sigma: SoA
               (FnWriteParam (unconstrain_opt ())
                (var
                 ((pattern (Var h_sigma))
+                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern (Var means_ordered))
                  (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
              ()))
            (meta <opaque>)))))
@@ -9169,6 +9234,18 @@ vector[Nr] h_sigma: SoA
      (out_constrained_st
       (SVector AoS
        ((pattern (Var Nr)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity)))
+   (means_ordered
+    ((begin_loc
+      ((filename constraints.stan) (line_num 69) (col_num 2) (included_from ())))
+     (end_loc
+      ((filename constraints.stan) (line_num 69) (col_num 57) (included_from ()))))
+    ((out_unconstrained_st
+      (SVector AoS
+       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SVector AoS
+       ((pattern (Var N)) (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
  (prog_name constraints_model) (prog_path constraints.stan))
 [exit 0]
