@@ -300,9 +300,9 @@ let extract_transform_args var = function
       []
 
 let rec param_size transform sizedtype =
-  let rec shrink_eigen f st =
+  let rec shrink_eigen_vec f st =
     match st with
-    | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
+    | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_vec f t, d)
     | SVector (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
         SVector (mem_pattern, f d)
     | SInt | SReal | SComplex | SRowVector _ | STuple _ | SComplexRowVector _
@@ -320,8 +320,17 @@ let rec param_size transform sizedtype =
         Common.ICE.internal_compiler_error
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
-  let k_choose_2 k =
-    Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
+  let rec shrink_eigen f st =
+    match st with
+    | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
+    | SVector (mem_pattern, d) -> SVector (mem_pattern, f d)
+    | SRowVector (mem_pattern, d) -> SRowVector (mem_pattern, f d)
+    | SMatrix (mem_pattern, d1, d2) -> SMatrix (mem_pattern, f d1, f d2)
+    | SInt | SReal | SComplex | STuple _ | SComplexRowVector _
+     |SComplexVector _ | SComplexMatrix _ ->
+        Common.ICE.internal_compiler_error
+          [%message
+            "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
   let rec stoch_size f1 f2 st =
     match st with
@@ -333,7 +342,10 @@ let rec param_size transform sizedtype =
         Common.ICE.internal_compiler_error
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
-  let min_one d = Expr.Helpers.(binop d Minus (int 1)) in
+  let minus_one d = Expr.Helpers.(binop d Minus (int 1)) in
+  let k_choose_2 k =
+    Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
+  in
   match transform with
   | Transformation.Identity | Lower _ | Upper _
    |LowerUpper (_, _)
@@ -349,11 +361,10 @@ let rec param_size transform sizedtype =
         (SizedType.STuple
            (List.map subtypes_transforms ~f:(fun (st, trans) ->
                 param_size trans st)))
-  | Simplex | SumToZero ->
-      shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
-  | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
-  | StochasticRow -> stoch_size Fn.id min_one sizedtype
-  | StochasticColumn -> stoch_size min_one Fn.id sizedtype
+  | Simplex | SumToZero -> shrink_eigen minus_one sizedtype
+  | CholeskyCorr | Correlation -> shrink_eigen_vec k_choose_2 sizedtype
+  | StochasticRow -> stoch_size Fn.id minus_one sizedtype
+  | StochasticColumn -> stoch_size minus_one Fn.id sizedtype
   | CholeskyCov ->
       (* (N * (N + 1)) / 2 + (M - N) * N *)
       shrink_eigen_mat
@@ -365,7 +376,7 @@ let rec param_size transform sizedtype =
               (binop (binop m Minus n) Times n)))
         sizedtype
   | Covariance ->
-      shrink_eigen
+      shrink_eigen_vec
         (fun k -> Expr.Helpers.(binop k Plus (k_choose_2 k)))
         sizedtype
 

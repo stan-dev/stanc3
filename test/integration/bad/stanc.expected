@@ -23,7 +23,8 @@ Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  row_stochastic_matrix, column_stochastic_matrix, tuple(...)
+  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
+  tuple(...)
 optionally preceded by a single array[...]
 [exit 1]
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
@@ -39,7 +40,8 @@ Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  row_stochastic_matrix, column_stochastic_matrix, tuple(...)
+  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
+  tuple(...)
 optionally preceded by a single array[...]
 [exit 1]
   $ ../../../../install/default/bin/stanc array-read-write-assign.stan
@@ -843,7 +845,8 @@ Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  row_stochastic_matrix, column_stochastic_matrix, tuple(...)
+  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
+  tuple(...)
 optionally preceded by a single array[...]
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan
