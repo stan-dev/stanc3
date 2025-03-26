@@ -45241,26 +45241,42 @@ namespace sum_to_zero_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 11> locations_array__ =
+static constexpr std::array<const char*, 21> locations_array__ =
   {" (found before start of program)",
-  " (in 'sum_to_zero.stan', line 11, column 3 to column 32)",
-  " (in 'sum_to_zero.stan', line 12, column 3 to column 45)",
-  " (in 'sum_to_zero.stan', line 16, column 3 to column 41)",
-  " (in 'sum_to_zero.stan', line 17, column 3 to column 55)",
-  " (in 'sum_to_zero.stan', line 21, column 3 to column 42)",
-  " (in 'sum_to_zero.stan', line 22, column 3 to column 56)",
-  " (in 'sum_to_zero.stan', line 2, column 3 to column 32)",
-  " (in 'sum_to_zero.stan', line 3, column 3 to column 45)",
-  " (in 'sum_to_zero.stan', line 7, column 3 to column 41)",
-  " (in 'sum_to_zero.stan', line 8, column 3 to column 46)"};
+  " (in 'sum_to_zero.stan', line 15, column 3 to column 33)",
+  " (in 'sum_to_zero.stan', line 16, column 3 to column 46)",
+  " (in 'sum_to_zero.stan', line 17, column 3 to column 34)",
+  " (in 'sum_to_zero.stan', line 18, column 3 to column 47)",
+  " (in 'sum_to_zero.stan', line 22, column 3 to column 43)",
+  " (in 'sum_to_zero.stan', line 23, column 3 to column 57)",
+  " (in 'sum_to_zero.stan', line 24, column 3 to column 44)",
+  " (in 'sum_to_zero.stan', line 25, column 3 to column 58)",
+  " (in 'sum_to_zero.stan', line 29, column 3 to column 44)",
+  " (in 'sum_to_zero.stan', line 30, column 3 to column 58)",
+  " (in 'sum_to_zero.stan', line 31, column 3 to column 45)",
+  " (in 'sum_to_zero.stan', line 32, column 3 to column 59)",
+  " (in 'sum_to_zero.stan', line 2, column 3 to column 33)",
+  " (in 'sum_to_zero.stan', line 3, column 3 to column 46)",
+  " (in 'sum_to_zero.stan', line 4, column 3 to column 34)",
+  " (in 'sum_to_zero.stan', line 5, column 3 to column 47)",
+  " (in 'sum_to_zero.stan', line 9, column 3 to column 43)",
+  " (in 'sum_to_zero.stan', line 10, column 3 to column 47)",
+  " (in 'sum_to_zero.stan', line 11, column 3 to column 44)",
+  " (in 'sum_to_zero.stan', line 12, column 3 to column 48)"};
 class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
  private:
-  Eigen::Matrix<double,-1,1> d_stz_data__;
-  std::vector<std::vector<Eigen::Matrix<double,-1,1>>> d_astz;
-  Eigen::Matrix<double,-1,1> td_stz_data__;
-  std::vector<std::vector<Eigen::Matrix<double,-1,1>>> td_astz;
-  Eigen::Map<Eigen::Matrix<double,-1,1>> d_stz{nullptr, 0};
-  Eigen::Map<Eigen::Matrix<double,-1,1>> td_stz{nullptr, 0};
+  Eigen::Matrix<double,-1,1> d_stzv_data__;
+  std::vector<std::vector<Eigen::Matrix<double,-1,1>>> d_astzv;
+  Eigen::Matrix<double,-1,-1> d_stzm_data__;
+  std::vector<std::vector<Eigen::Matrix<double,-1,-1>>> d_astzm;
+  Eigen::Matrix<double,-1,1> td_stzv_data__;
+  std::vector<std::vector<Eigen::Matrix<double,-1,1>>> td_astzv;
+  Eigen::Matrix<double,-1,-1> td_stzm_data__;
+  std::vector<std::vector<Eigen::Matrix<double,-1,-1>>> td_astzm;
+  Eigen::Map<Eigen::Matrix<double,-1,1>> d_stzv{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double,-1,-1>> d_stzm{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double,-1,1>> td_stzv{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double,-1,-1>> td_stzm{nullptr, 0, 0};
  public:
   ~sum_to_zero_model() {}
   sum_to_zero_model(stan::io::var_context& context__, unsigned int
@@ -45283,44 +45299,44 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 7;
-      context__.validate_dims("data initialization", "d_stz", "double",
+      current_statement__ = 13;
+      context__.validate_dims("data initialization", "d_stzv", "double",
         std::vector<size_t>{static_cast<size_t>(10)});
-      d_stz_data__ = Eigen::Matrix<double,-1,1>::Constant(10,
-                       std::numeric_limits<double>::quiet_NaN());
-      new (&d_stz)
-        Eigen::Map<Eigen::Matrix<double,-1,1>>(d_stz_data__.data(), 10);
+      d_stzv_data__ = Eigen::Matrix<double,-1,1>::Constant(10,
+                        std::numeric_limits<double>::quiet_NaN());
+      new (&d_stzv)
+        Eigen::Map<Eigen::Matrix<double,-1,1>>(d_stzv_data__.data(), 10);
       {
-        std::vector<local_scalar_t__> d_stz_flat__;
-        current_statement__ = 7;
-        d_stz_flat__ = context__.vals_r("d_stz");
+        std::vector<local_scalar_t__> d_stzv_flat__;
+        current_statement__ = 13;
+        d_stzv_flat__ = context__.vals_r("d_stzv");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          stan::model::assign(d_stz, d_stz_flat__[(pos__ - 1)],
-            "assigning variable d_stz", stan::model::index_uni(sym1__));
+          stan::model::assign(d_stzv, d_stzv_flat__[(pos__ - 1)],
+            "assigning variable d_stzv", stan::model::index_uni(sym1__));
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 7;
-      stan::math::check_sum_to_zero(function__, "d_stz", d_stz);
-      current_statement__ = 8;
-      context__.validate_dims("data initialization", "d_astz", "double",
+      current_statement__ = 13;
+      stan::math::check_sum_to_zero(function__, "d_stzv", d_stzv);
+      current_statement__ = 14;
+      context__.validate_dims("data initialization", "d_astzv", "double",
         std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(3),
           static_cast<size_t>(10)});
-      d_astz = std::vector<std::vector<Eigen::Matrix<double,-1,1>>>(2,
-                 std::vector<Eigen::Matrix<double,-1,1>>(3,
-                   Eigen::Matrix<double,-1,1>::Constant(10,
-                     std::numeric_limits<double>::quiet_NaN())));
+      d_astzv = std::vector<std::vector<Eigen::Matrix<double,-1,1>>>(2,
+                  std::vector<Eigen::Matrix<double,-1,1>>(3,
+                    Eigen::Matrix<double,-1,1>::Constant(10,
+                      std::numeric_limits<double>::quiet_NaN())));
       {
-        std::vector<local_scalar_t__> d_astz_flat__;
-        current_statement__ = 8;
-        d_astz_flat__ = context__.vals_r("d_astz");
+        std::vector<local_scalar_t__> d_astzv_flat__;
+        current_statement__ = 14;
+        d_astzv_flat__ = context__.vals_r("d_astzv");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
             for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-              stan::model::assign(d_astz, d_astz_flat__[(pos__ - 1)],
-                "assigning variable d_astz", stan::model::index_uni(sym3__),
+              stan::model::assign(d_astzv, d_astzv_flat__[(pos__ - 1)],
+                "assigning variable d_astzv", stan::model::index_uni(sym3__),
                 stan::model::index_uni(sym2__),
                 stan::model::index_uni(sym1__));
               pos__ = (pos__ + 1);
@@ -45328,28 +45344,99 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
           }
         }
       }
-      current_statement__ = 8;
-      stan::math::check_sum_to_zero(function__, "d_astz", d_astz);
-      current_statement__ = 9;
-      td_stz_data__ = Eigen::Matrix<double,-1,1>::Constant(10,
+      current_statement__ = 14;
+      stan::math::check_sum_to_zero(function__, "d_astzv", d_astzv);
+      current_statement__ = 15;
+      context__.validate_dims("data initialization", "d_stzm", "double",
+        std::vector<size_t>{static_cast<size_t>(4), static_cast<size_t>(5)});
+      d_stzm_data__ = Eigen::Matrix<double,-1,-1>::Constant(4, 5,
                         std::numeric_limits<double>::quiet_NaN());
-      new (&td_stz)
-        Eigen::Map<Eigen::Matrix<double,-1,1>>(td_stz_data__.data(), 10);
-      current_statement__ = 9;
-      stan::model::assign(td_stz, d_stz, "assigning variable td_stz");
-      current_statement__ = 10;
-      td_astz = std::vector<std::vector<Eigen::Matrix<double,-1,1>>>(2,
-                  std::vector<Eigen::Matrix<double,-1,1>>(3,
-                    Eigen::Matrix<double,-1,1>::Constant(10,
+      new (&d_stzm)
+        Eigen::Map<Eigen::Matrix<double,-1,-1>>(d_stzm_data__.data(), 4, 5);
+      {
+        std::vector<local_scalar_t__> d_stzm_flat__;
+        current_statement__ = 15;
+        d_stzm_flat__ = context__.vals_r("d_stzm");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+            stan::model::assign(d_stzm, d_stzm_flat__[(pos__ - 1)],
+              "assigning variable d_stzm", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
+      current_statement__ = 15;
+      stan::math::check_sum_to_zero(function__, "d_stzm", d_stzm);
+      current_statement__ = 16;
+      context__.validate_dims("data initialization", "d_astzm", "double",
+        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(3),
+          static_cast<size_t>(4), static_cast<size_t>(5)});
+      d_astzm = std::vector<std::vector<Eigen::Matrix<double,-1,-1>>>(2,
+                  std::vector<Eigen::Matrix<double,-1,-1>>(3,
+                    Eigen::Matrix<double,-1,-1>::Constant(4, 5,
                       std::numeric_limits<double>::quiet_NaN())));
-      current_statement__ = 9;
-      stan::math::check_sum_to_zero(function__, "td_stz", td_stz);
-      current_statement__ = 10;
-      stan::math::check_sum_to_zero(function__, "td_astz", td_astz);
+      {
+        std::vector<local_scalar_t__> d_astzm_flat__;
+        current_statement__ = 16;
+        d_astzm_flat__ = context__.vals_r("d_astzm");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+              for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+                stan::model::assign(d_astzm, d_astzm_flat__[(pos__ - 1)],
+                  "assigning variable d_astzm",
+                  stan::model::index_uni(sym4__),
+                  stan::model::index_uni(sym3__),
+                  stan::model::index_uni(sym2__),
+                  stan::model::index_uni(sym1__));
+                pos__ = (pos__ + 1);
+              }
+            }
+          }
+        }
+      }
+      current_statement__ = 16;
+      stan::math::check_sum_to_zero(function__, "d_astzm", d_astzm);
+      current_statement__ = 17;
+      td_stzv_data__ = Eigen::Matrix<double,-1,1>::Constant(10,
+                         std::numeric_limits<double>::quiet_NaN());
+      new (&td_stzv)
+        Eigen::Map<Eigen::Matrix<double,-1,1>>(td_stzv_data__.data(), 10);
+      current_statement__ = 17;
+      stan::model::assign(td_stzv, d_stzv, "assigning variable td_stzv");
+      current_statement__ = 18;
+      td_astzv = std::vector<std::vector<Eigen::Matrix<double,-1,1>>>(2,
+                   std::vector<Eigen::Matrix<double,-1,1>>(3,
+                     Eigen::Matrix<double,-1,1>::Constant(10,
+                       std::numeric_limits<double>::quiet_NaN())));
+      current_statement__ = 19;
+      td_stzm_data__ = Eigen::Matrix<double,-1,-1>::Constant(4, 5,
+                         std::numeric_limits<double>::quiet_NaN());
+      new (&td_stzm)
+        Eigen::Map<Eigen::Matrix<double,-1,-1>>(td_stzm_data__.data(), 4, 5);
+      current_statement__ = 19;
+      stan::model::assign(td_stzm, d_stzm, "assigning variable td_stzm");
+      current_statement__ = 20;
+      td_astzm = std::vector<std::vector<Eigen::Matrix<double,-1,-1>>>(2,
+                   std::vector<Eigen::Matrix<double,-1,-1>>(3,
+                     Eigen::Matrix<double,-1,-1>::Constant(4, 5,
+                       std::numeric_limits<double>::quiet_NaN())));
+      current_statement__ = 17;
+      stan::math::check_sum_to_zero(function__, "td_stzv", td_stzv);
+      current_statement__ = 18;
+      stan::math::check_sum_to_zero(function__, "td_astzv", td_astzv);
+      current_statement__ = 19;
+      stan::math::check_sum_to_zero(function__, "td_stzm", td_stzm);
+      current_statement__ = 20;
+      stan::math::check_sum_to_zero(function__, "td_astzm", td_astzm);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
-    num_params_r__ = (10 - 1) + (2 * (3 * (10 - 1)));
+    num_params_r__ = (10 - 1) + (2 * (3 * (10 - 1))) + ((4 - 1) * (5 - 1)) +
+      (2 * (3 * ((4 - 1) * (5 - 1))));
   }
   inline std::string model_name() const final {
     return "sum_to_zero_model";
@@ -45383,29 +45470,54 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      auto p_stz =
+      auto p_stzv =
         in__.template read_constrain_sum_to_zero<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 10);
       current_statement__ = 2;
-      auto p_astz =
+      auto p_astzv =
         in__.template read_constrain_sum_to_zero<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>,
           jacobian__>(lp__, 2, 3, 10);
-      Eigen::Matrix<local_scalar_t__,-1,1> tp_stz =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__);
       current_statement__ = 3;
-      stan::model::assign(tp_stz, p_stz, "assigning variable tp_stz");
+      auto p_stzm =
+        in__.template read_constrain_sum_to_zero<
+          Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 4, 5);
+      current_statement__ = 4;
+      auto p_astzm =
+        in__.template read_constrain_sum_to_zero<
+          std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>,
+          jacobian__>(lp__, 2, 3, 4, 5);
+      Eigen::Matrix<local_scalar_t__,-1,1> tp_stzv =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__);
+      current_statement__ = 5;
+      stan::model::assign(tp_stzv, p_stzv, "assigning variable tp_stzv");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>
-        tp_astz =
+        tp_astzv =
         std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(2,
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(3,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__)));
-      current_statement__ = 4;
-      stan::model::assign(tp_astz, p_astz, "assigning variable tp_astz");
-      current_statement__ = 3;
-      stan::math::check_sum_to_zero(function__, "tp_stz", tp_stz);
-      current_statement__ = 4;
-      stan::math::check_sum_to_zero(function__, "tp_astz", tp_astz);
+      current_statement__ = 6;
+      stan::model::assign(tp_astzv, p_astzv, "assigning variable tp_astzv");
+      Eigen::Matrix<local_scalar_t__,-1,-1> tp_stzm =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(4, 5, DUMMY_VAR__);
+      current_statement__ = 7;
+      stan::model::assign(tp_stzm, p_stzm, "assigning variable tp_stzm");
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>
+        tp_astzm =
+        std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(2,
+          std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(3,
+            Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(4, 5,
+              DUMMY_VAR__)));
+      current_statement__ = 8;
+      stan::model::assign(tp_astzm, p_astzm, "assigning variable tp_astzm");
+      current_statement__ = 5;
+      stan::math::check_sum_to_zero(function__, "tp_stzv", tp_stzv);
+      current_statement__ = 6;
+      stan::math::check_sum_to_zero(function__, "tp_astzv", tp_astzv);
+      current_statement__ = 7;
+      stan::math::check_sum_to_zero(function__, "tp_stzm", tp_stzm);
+      current_statement__ = 8;
+      stan::math::check_sum_to_zero(function__, "tp_astzm", tp_astzm);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -45437,29 +45549,54 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      auto p_stz =
+      auto p_stzv =
         in__.template read_constrain_sum_to_zero<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 10);
       current_statement__ = 2;
-      auto p_astz =
+      auto p_astzv =
         in__.template read_constrain_sum_to_zero<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>,
           jacobian__>(lp__, 2, 3, 10);
-      Eigen::Matrix<local_scalar_t__,-1,1> tp_stz =
-        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__);
       current_statement__ = 3;
-      stan::model::assign(tp_stz, p_stz, "assigning variable tp_stz");
+      auto p_stzm =
+        in__.template read_constrain_sum_to_zero<
+          Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 4, 5);
+      current_statement__ = 4;
+      auto p_astzm =
+        in__.template read_constrain_sum_to_zero<
+          std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>,
+          jacobian__>(lp__, 2, 3, 4, 5);
+      Eigen::Matrix<local_scalar_t__,-1,1> tp_stzv =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__);
+      current_statement__ = 5;
+      stan::model::assign(tp_stzv, p_stzv, "assigning variable tp_stzv");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>
-        tp_astz =
+        tp_astzv =
         std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(2,
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(3,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__)));
-      current_statement__ = 4;
-      stan::model::assign(tp_astz, p_astz, "assigning variable tp_astz");
-      current_statement__ = 3;
-      stan::math::check_sum_to_zero(function__, "tp_stz", tp_stz);
-      current_statement__ = 4;
-      stan::math::check_sum_to_zero(function__, "tp_astz", tp_astz);
+      current_statement__ = 6;
+      stan::model::assign(tp_astzv, p_astzv, "assigning variable tp_astzv");
+      Eigen::Matrix<local_scalar_t__,-1,-1> tp_stzm =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(4, 5, DUMMY_VAR__);
+      current_statement__ = 7;
+      stan::model::assign(tp_stzm, p_stzm, "assigning variable tp_stzm");
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>
+        tp_astzm =
+        std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(2,
+          std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(3,
+            Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(4, 5,
+              DUMMY_VAR__)));
+      current_statement__ = 8;
+      stan::model::assign(tp_astzm, p_astzm, "assigning variable tp_astzm");
+      current_statement__ = 5;
+      stan::math::check_sum_to_zero(function__, "tp_stzv", tp_stzv);
+      current_statement__ = 6;
+      stan::math::check_sum_to_zero(function__, "tp_astzv", tp_astzv);
+      current_statement__ = 7;
+      stan::math::check_sum_to_zero(function__, "tp_stzm", tp_stzm);
+      current_statement__ = 8;
+      stan::math::check_sum_to_zero(function__, "tp_astzm", tp_astzm);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -45502,28 +45639,60 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
     (void) function__;
     try {
       current_statement__ = 1;
-      auto p_stz =
+      auto p_stzv =
         in__.template read_constrain_sum_to_zero<
           Eigen::Matrix<local_scalar_t__,-1,1>, jacobian__>(lp__, 10);
       current_statement__ = 2;
-      auto p_astz =
+      auto p_astzv =
         in__.template read_constrain_sum_to_zero<
           std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>,
           jacobian__>(lp__, 2, 3, 10);
-      Eigen::Matrix<double,-1,1> tp_stz =
+      current_statement__ = 3;
+      auto p_stzm =
+        in__.template read_constrain_sum_to_zero<
+          Eigen::Matrix<local_scalar_t__,-1,-1>, jacobian__>(lp__, 4, 5);
+      current_statement__ = 4;
+      auto p_astzm =
+        in__.template read_constrain_sum_to_zero<
+          std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>,
+          jacobian__>(lp__, 2, 3, 4, 5);
+      Eigen::Matrix<double,-1,1> tp_stzv =
         Eigen::Matrix<double,-1,1>::Constant(10,
           std::numeric_limits<double>::quiet_NaN());
-      std::vector<std::vector<Eigen::Matrix<double,-1,1>>> tp_astz =
+      std::vector<std::vector<Eigen::Matrix<double,-1,1>>> tp_astzv =
         std::vector<std::vector<Eigen::Matrix<double,-1,1>>>(2,
           std::vector<Eigen::Matrix<double,-1,1>>(3,
             Eigen::Matrix<double,-1,1>::Constant(10,
               std::numeric_limits<double>::quiet_NaN())));
-      out__.write(p_stz);
+      Eigen::Matrix<double,-1,-1> tp_stzm =
+        Eigen::Matrix<double,-1,-1>::Constant(4, 5,
+          std::numeric_limits<double>::quiet_NaN());
+      std::vector<std::vector<Eigen::Matrix<double,-1,-1>>> tp_astzm =
+        std::vector<std::vector<Eigen::Matrix<double,-1,-1>>>(2,
+          std::vector<Eigen::Matrix<double,-1,-1>>(3,
+            Eigen::Matrix<double,-1,-1>::Constant(4, 5,
+              std::numeric_limits<double>::quiet_NaN())));
+      out__.write(p_stzv);
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            out__.write(p_astz[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+            out__.write(p_astzv[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      }
+      out__.write(p_stzm);
+      current_statement__ = 4;
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+              out__.write(stan::model::rvalue(p_astzm, "p_astzm",
+                            stan::model::index_uni(sym4__),
+                            stan::model::index_uni(sym3__),
+                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(sym1__)));
+            }
           }
         }
       }
@@ -45532,21 +45701,44 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
             stan::math::primitive_value(emit_generated_quantities__)))) {
         return ;
       }
-      current_statement__ = 3;
-      stan::model::assign(tp_stz, p_stz, "assigning variable tp_stz");
-      current_statement__ = 4;
-      stan::model::assign(tp_astz, p_astz, "assigning variable tp_astz");
-      current_statement__ = 3;
-      stan::math::check_sum_to_zero(function__, "tp_stz", tp_stz);
-      current_statement__ = 4;
-      stan::math::check_sum_to_zero(function__, "tp_astz", tp_astz);
+      current_statement__ = 5;
+      stan::model::assign(tp_stzv, p_stzv, "assigning variable tp_stzv");
+      current_statement__ = 6;
+      stan::model::assign(tp_astzv, p_astzv, "assigning variable tp_astzv");
+      current_statement__ = 7;
+      stan::model::assign(tp_stzm, p_stzm, "assigning variable tp_stzm");
+      current_statement__ = 8;
+      stan::model::assign(tp_astzm, p_astzm, "assigning variable tp_astzm");
+      current_statement__ = 5;
+      stan::math::check_sum_to_zero(function__, "tp_stzv", tp_stzv);
+      current_statement__ = 6;
+      stan::math::check_sum_to_zero(function__, "tp_astzv", tp_astzv);
+      current_statement__ = 7;
+      stan::math::check_sum_to_zero(function__, "tp_stzm", tp_stzm);
+      current_statement__ = 8;
+      stan::math::check_sum_to_zero(function__, "tp_astzm", tp_astzm);
       if (emit_transformed_parameters__) {
-        out__.write(tp_stz);
-        current_statement__ = 4;
+        out__.write(tp_stzv);
+        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
             for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-              out__.write(tp_astz[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+              out__.write(tp_astzv[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+            }
+          }
+        }
+        out__.write(tp_stzm);
+        current_statement__ = 8;
+        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+              for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+                out__.write(stan::model::rvalue(tp_astzm, "tp_astzm",
+                              stan::model::index_uni(sym4__),
+                              stan::model::index_uni(sym3__),
+                              stan::model::index_uni(sym2__),
+                              stan::model::index_uni(sym1__)));
+              }
             }
           }
         }
@@ -45554,28 +45746,59 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
       }
-      Eigen::Matrix<double,-1,1> gq_stz =
+      Eigen::Matrix<double,-1,1> gq_stzv =
         Eigen::Matrix<double,-1,1>::Constant(10,
           std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 5;
-      stan::model::assign(gq_stz, tp_stz, "assigning variable gq_stz");
-      std::vector<std::vector<Eigen::Matrix<double,-1,1>>> gq_astz =
+      current_statement__ = 9;
+      stan::model::assign(gq_stzv, tp_stzv, "assigning variable gq_stzv");
+      std::vector<std::vector<Eigen::Matrix<double,-1,1>>> gq_astzv =
         std::vector<std::vector<Eigen::Matrix<double,-1,1>>>(2,
           std::vector<Eigen::Matrix<double,-1,1>>(3,
             Eigen::Matrix<double,-1,1>::Constant(10,
               std::numeric_limits<double>::quiet_NaN())));
-      current_statement__ = 6;
-      stan::model::assign(gq_astz, tp_astz, "assigning variable gq_astz");
-      current_statement__ = 5;
-      stan::math::check_sum_to_zero(function__, "gq_stz", gq_stz);
-      current_statement__ = 6;
-      stan::math::check_sum_to_zero(function__, "gq_astz", gq_astz);
-      out__.write(gq_stz);
-      current_statement__ = 6;
+      current_statement__ = 10;
+      stan::model::assign(gq_astzv, tp_astzv, "assigning variable gq_astzv");
+      Eigen::Matrix<double,-1,-1> gq_stzm =
+        Eigen::Matrix<double,-1,-1>::Constant(4, 5,
+          std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 11;
+      stan::model::assign(gq_stzm, tp_stzm, "assigning variable gq_stzm");
+      std::vector<std::vector<Eigen::Matrix<double,-1,-1>>> gq_astzm =
+        std::vector<std::vector<Eigen::Matrix<double,-1,-1>>>(2,
+          std::vector<Eigen::Matrix<double,-1,-1>>(3,
+            Eigen::Matrix<double,-1,-1>::Constant(4, 5,
+              std::numeric_limits<double>::quiet_NaN())));
+      current_statement__ = 12;
+      stan::model::assign(gq_astzm, tp_astzm, "assigning variable gq_astzm");
+      current_statement__ = 9;
+      stan::math::check_sum_to_zero(function__, "gq_stzv", gq_stzv);
+      current_statement__ = 10;
+      stan::math::check_sum_to_zero(function__, "gq_astzv", gq_astzv);
+      current_statement__ = 11;
+      stan::math::check_sum_to_zero(function__, "gq_stzm", gq_stzm);
+      current_statement__ = 12;
+      stan::math::check_sum_to_zero(function__, "gq_astzm", gq_astzm);
+      out__.write(gq_stzv);
+      current_statement__ = 10;
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            out__.write(gq_astz[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+            out__.write(gq_astzv[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      }
+      out__.write(gq_stzm);
+      current_statement__ = 12;
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+              out__.write(stan::model::rvalue(gq_astzm, "gq_astzm",
+                            stan::model::index_uni(sym4__),
+                            stan::model::index_uni(sym3__),
+                            stan::model::index_uni(sym2__),
+                            stan::model::index_uni(sym1__)));
+            }
           }
         }
       }
@@ -45599,14 +45822,15 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
     // suppress unused var warning
     (void) DUMMY_VAR__;
     try {
-      Eigen::Matrix<local_scalar_t__,-1,1> p_stz =
+      Eigen::Matrix<local_scalar_t__,-1,1> p_stzv =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__);
       current_statement__ = 1;
-      stan::model::assign(p_stz,
+      stan::model::assign(p_stzv,
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(10),
-        "assigning variable p_stz");
-      out__.write_free_sum_to_zero(p_stz);
-      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>> p_astz =
+        "assigning variable p_stzv");
+      out__.write_free_sum_to_zero(p_stzv);
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>
+        p_astzv =
         std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(2,
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(3,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__)));
@@ -45615,13 +45839,42 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
             current_statement__ = 2;
-            stan::model::assign(p_astz, in__.read<local_scalar_t__>(),
-              "assigning variable p_astz", stan::model::index_uni(sym3__),
+            stan::model::assign(p_astzv, in__.read<local_scalar_t__>(),
+              "assigning variable p_astzv", stan::model::index_uni(sym3__),
               stan::model::index_uni(sym2__), stan::model::index_uni(sym1__));
           }
         }
       }
-      out__.write_free_sum_to_zero(p_astz);
+      out__.write_free_sum_to_zero(p_astzv);
+      Eigen::Matrix<local_scalar_t__,-1,-1> p_stzm =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(4, 5, DUMMY_VAR__);
+      current_statement__ = 3;
+      stan::model::assign(p_stzm,
+        in__.read<Eigen::Matrix<local_scalar_t__,-1,-1>>(4, 5),
+        "assigning variable p_stzm");
+      out__.write_free_sum_to_zero(p_stzm);
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>
+        p_astzm =
+        std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(2,
+          std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(3,
+            Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(4, 5,
+              DUMMY_VAR__)));
+      current_statement__ = 4;
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+              current_statement__ = 4;
+              stan::model::assign(p_astzm, in__.read<local_scalar_t__>(),
+                "assigning variable p_astzm", stan::model::index_uni(sym4__),
+                stan::model::index_uni(sym3__),
+                stan::model::index_uni(sym2__),
+                stan::model::index_uni(sym1__));
+            }
+          }
+        }
+      }
+      out__.write_free_sum_to_zero(p_astzm);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -45640,42 +45893,52 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
     (void) DUMMY_VAR__;
     try {
       current_statement__ = 1;
-      context__.validate_dims("parameter initialization", "p_stz", "double",
+      context__.validate_dims("parameter initialization", "p_stzv", "double",
         std::vector<size_t>{static_cast<size_t>(10)});
       current_statement__ = 2;
-      context__.validate_dims("parameter initialization", "p_astz", "double",
+      context__.validate_dims("parameter initialization", "p_astzv",
+        "double",
         std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(3),
           static_cast<size_t>(10)});
+      current_statement__ = 3;
+      context__.validate_dims("parameter initialization", "p_stzm", "double",
+        std::vector<size_t>{static_cast<size_t>(4), static_cast<size_t>(5)});
+      current_statement__ = 4;
+      context__.validate_dims("parameter initialization", "p_astzm",
+        "double",
+        std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(3),
+          static_cast<size_t>(4), static_cast<size_t>(5)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      Eigen::Matrix<local_scalar_t__,-1,1> p_stz =
+      Eigen::Matrix<local_scalar_t__,-1,1> p_stzv =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__);
       {
-        std::vector<local_scalar_t__> p_stz_flat__;
+        std::vector<local_scalar_t__> p_stzv_flat__;
         current_statement__ = 1;
-        p_stz_flat__ = context__.vals_r("p_stz");
+        p_stzv_flat__ = context__.vals_r("p_stzv");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-          stan::model::assign(p_stz, p_stz_flat__[(pos__ - 1)],
-            "assigning variable p_stz", stan::model::index_uni(sym1__));
+          stan::model::assign(p_stzv, p_stzv_flat__[(pos__ - 1)],
+            "assigning variable p_stzv", stan::model::index_uni(sym1__));
           pos__ = (pos__ + 1);
         }
       }
-      out__.write_free_sum_to_zero(p_stz);
-      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>> p_astz =
+      out__.write_free_sum_to_zero(p_stzv);
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>
+        p_astzv =
         std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>>(2,
           std::vector<Eigen::Matrix<local_scalar_t__,-1,1>>(3,
             Eigen::Matrix<local_scalar_t__,-1,1>::Constant(10, DUMMY_VAR__)));
       {
-        std::vector<local_scalar_t__> p_astz_flat__;
+        std::vector<local_scalar_t__> p_astzv_flat__;
         current_statement__ = 2;
-        p_astz_flat__ = context__.vals_r("p_astz");
+        p_astzv_flat__ = context__.vals_r("p_astzv");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
             for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-              stan::model::assign(p_astz, p_astz_flat__[(pos__ - 1)],
-                "assigning variable p_astz", stan::model::index_uni(sym3__),
+              stan::model::assign(p_astzv, p_astzv_flat__[(pos__ - 1)],
+                "assigning variable p_astzv", stan::model::index_uni(sym3__),
                 stan::model::index_uni(sym2__),
                 stan::model::index_uni(sym1__));
               pos__ = (pos__ + 1);
@@ -45683,7 +45946,52 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
           }
         }
       }
-      out__.write_free_sum_to_zero(p_astz);
+      out__.write_free_sum_to_zero(p_astzv);
+      Eigen::Matrix<local_scalar_t__,-1,-1> p_stzm =
+        Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(4, 5, DUMMY_VAR__);
+      {
+        std::vector<local_scalar_t__> p_stzm_flat__;
+        current_statement__ = 3;
+        p_stzm_flat__ = context__.vals_r("p_stzm");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+            stan::model::assign(p_stzm, p_stzm_flat__[(pos__ - 1)],
+              "assigning variable p_stzm", stan::model::index_uni(sym2__),
+              stan::model::index_uni(sym1__));
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
+      out__.write_free_sum_to_zero(p_stzm);
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>
+        p_astzm =
+        std::vector<std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>>(2,
+          std::vector<Eigen::Matrix<local_scalar_t__,-1,-1>>(3,
+            Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(4, 5,
+              DUMMY_VAR__)));
+      {
+        std::vector<local_scalar_t__> p_astzm_flat__;
+        current_statement__ = 4;
+        p_astzm_flat__ = context__.vals_r("p_astzm");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+              for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+                stan::model::assign(p_astzm, p_astzm_flat__[(pos__ - 1)],
+                  "assigning variable p_astzm",
+                  stan::model::index_uni(sym4__),
+                  stan::model::index_uni(sym3__),
+                  stan::model::index_uni(sym2__),
+                  stan::model::index_uni(sym1__));
+                pos__ = (pos__ + 1);
+              }
+            }
+          }
+        }
+      }
+      out__.write_free_sum_to_zero(p_astzm);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -45692,14 +46000,17 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"p_stz", "p_astz"};
+    names__ = std::vector<std::string>{"p_stzv", "p_astzv", "p_stzm",
+                "p_astzm"};
     if (emit_transformed_parameters__) {
-      std::vector<std::string> temp{"tp_stz", "tp_astz"};
+      std::vector<std::string>
+        temp{"tp_stzv", "tp_astzv", "tp_stzm", "tp_astzm"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
     if (emit_generated_quantities__) {
-      std::vector<std::string> temp{"gq_stz", "gq_astz"};
+      std::vector<std::string>
+        temp{"gq_stzv", "gq_astzv", "gq_stzm", "gq_astzm"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
@@ -45712,12 +46023,22 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
                                                                     size_t>(
                                                                     10)},
                 std::vector<size_t>{static_cast<size_t>(2),
-                  static_cast<size_t>(3), static_cast<size_t>(10)}};
+                  static_cast<size_t>(3), static_cast<size_t>(10)},
+                std::vector<size_t>{static_cast<size_t>(4),
+                  static_cast<size_t>(5)},
+                std::vector<size_t>{static_cast<size_t>(2),
+                  static_cast<size_t>(3), static_cast<size_t>(4),
+                  static_cast<size_t>(5)}};
     if (emit_transformed_parameters__) {
       std::vector<std::vector<size_t>>
         temp{std::vector<size_t>{static_cast<size_t>(10)},
              std::vector<size_t>{static_cast<size_t>(2),
-               static_cast<size_t>(3), static_cast<size_t>(10)}};
+               static_cast<size_t>(3), static_cast<size_t>(10)},
+             std::vector<size_t>{static_cast<size_t>(4),
+               static_cast<size_t>(5)},
+             std::vector<size_t>{static_cast<size_t>(2),
+               static_cast<size_t>(3), static_cast<size_t>(4),
+               static_cast<size_t>(5)}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
@@ -45725,7 +46046,12 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
       std::vector<std::vector<size_t>>
         temp{std::vector<size_t>{static_cast<size_t>(10)},
              std::vector<size_t>{static_cast<size_t>(2),
-               static_cast<size_t>(3), static_cast<size_t>(10)}};
+               static_cast<size_t>(3), static_cast<size_t>(10)},
+             std::vector<size_t>{static_cast<size_t>(4),
+               static_cast<size_t>(5)},
+             std::vector<size_t>{static_cast<size_t>(2),
+               static_cast<size_t>(3), static_cast<size_t>(4),
+               static_cast<size_t>(5)}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
@@ -45735,44 +46061,95 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
     for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-      param_names__.emplace_back(std::string() + "p_stz" + '.' +
+      param_names__.emplace_back(std::string() + "p_stzv" + '.' +
         std::to_string(sym1__));
     }
     for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
       for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
         for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-          param_names__.emplace_back(std::string() + "p_astz" + '.' +
+          param_names__.emplace_back(std::string() + "p_astzv" + '.' +
             std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
             std::to_string(sym1__));
         }
       }
     }
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        param_names__.emplace_back(std::string() + "p_stzm" + '.' +
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+      }
+    }
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+          for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+            param_names__.emplace_back(std::string() + "p_astzm" + '.' +
+              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }
+        }
+      }
+    }
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        param_names__.emplace_back(std::string() + "tp_stz" + '.' +
+        param_names__.emplace_back(std::string() + "tp_stzv" + '.' +
           std::to_string(sym1__));
       }
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            param_names__.emplace_back(std::string() + "tp_astz" + '.' +
+            param_names__.emplace_back(std::string() + "tp_astzv" + '.' +
               std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
               std::to_string(sym1__));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_stzm" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+              param_names__.emplace_back(std::string() + "tp_astzm" + '.' +
+                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
+                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }
           }
         }
       }
     }
     if (emit_generated_quantities__) {
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
-        param_names__.emplace_back(std::string() + "gq_stz" + '.' +
+        param_names__.emplace_back(std::string() + "gq_stzv" + '.' +
           std::to_string(sym1__));
       }
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            param_names__.emplace_back(std::string() + "gq_astz" + '.' +
+            param_names__.emplace_back(std::string() + "gq_astzv" + '.' +
               std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
               std::to_string(sym1__));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          param_names__.emplace_back(std::string() + "gq_stzm" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+              param_names__.emplace_back(std::string() + "gq_astzm" + '.' +
+                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
+                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }
           }
         }
       }
@@ -45783,54 +46160,105 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
     for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
-      param_names__.emplace_back(std::string() + "p_stz" + '.' +
+      param_names__.emplace_back(std::string() + "p_stzv" + '.' +
         std::to_string(sym1__));
     }
     for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
       for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
         for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-          param_names__.emplace_back(std::string() + "p_astz" + '.' +
+          param_names__.emplace_back(std::string() + "p_astzv" + '.' +
             std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
             std::to_string(sym1__));
         }
       }
     }
+    for (int sym1__ = 1; sym1__ <= (5 - 1); ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= (4 - 1); ++sym2__) {
+        param_names__.emplace_back(std::string() + "p_stzm" + '.' +
+          std::to_string(sym2__) + '.' + std::to_string(sym1__));
+      }
+    }
+    for (int sym1__ = 1; sym1__ <= (5 - 1); ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= (4 - 1); ++sym2__) {
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+          for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+            param_names__.emplace_back(std::string() + "p_astzm" + '.' +
+              std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
+              std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }
+        }
+      }
+    }
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
-        param_names__.emplace_back(std::string() + "tp_stz" + '.' +
+        param_names__.emplace_back(std::string() + "tp_stzv" + '.' +
           std::to_string(sym1__));
       }
       for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            param_names__.emplace_back(std::string() + "tp_astz" + '.' +
+            param_names__.emplace_back(std::string() + "tp_astzv" + '.' +
               std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
               std::to_string(sym1__));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= (5 - 1); ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= (4 - 1); ++sym2__) {
+          param_names__.emplace_back(std::string() + "tp_stzm" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= (5 - 1); ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= (4 - 1); ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+              param_names__.emplace_back(std::string() + "tp_astzm" + '.' +
+                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
+                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }
           }
         }
       }
     }
     if (emit_generated_quantities__) {
       for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
-        param_names__.emplace_back(std::string() + "gq_stz" + '.' +
+        param_names__.emplace_back(std::string() + "gq_stzv" + '.' +
           std::to_string(sym1__));
       }
       for (int sym1__ = 1; sym1__ <= (10 - 1); ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            param_names__.emplace_back(std::string() + "gq_astz" + '.' +
+            param_names__.emplace_back(std::string() + "gq_astzv" + '.' +
               std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
               std::to_string(sym1__));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= (5 - 1); ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= (4 - 1); ++sym2__) {
+          param_names__.emplace_back(std::string() + "gq_stzm" + '.' +
+            std::to_string(sym2__) + '.' + std::to_string(sym1__));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= (5 - 1); ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= (4 - 1); ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+              param_names__.emplace_back(std::string() + "gq_astzm" + '.' +
+                std::to_string(sym4__) + '.' + std::to_string(sym3__) + '.' +
+                std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            }
           }
         }
       }
     }
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"p_stz\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"p_astz\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "}}},\"block\":\"parameters\"},{\"name\":\"tp_stz\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astz\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_stz\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astz\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "}}},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"p_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"parameters\"},{\"name\":\"p_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "}}},\"block\":\"parameters\"},{\"name\":\"p_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(4) + ",\"cols\":" + std::to_string(5) + "},\"block\":\"parameters\"},{\"name\":\"p_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(4) + ",\"cols\":" + std::to_string(5) + "}}},\"block\":\"parameters\"},{\"name\":\"tp_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(4) + ",\"cols\":" + std::to_string(5) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(4) + ",\"cols\":" + std::to_string(5) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(10) + "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(4) + ",\"cols\":" + std::to_string(5) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(4) + ",\"cols\":" + std::to_string(5) + "}}},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"p_stz\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_astz\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"tp_stz\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astz\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_stz\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astz\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"p_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"p_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "},\"block\":\"parameters\"},{\"name\":\"p_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "}}},\"block\":\"parameters\"},{\"name\":\"tp_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_stzv\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astzv\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string((10 -1)) + "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_stzm\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "},\"block\":\"generated_quantities\"},{\"name\":\"gq_astzm\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"matrix\",\"rows\":" + std::to_string((4 -1)) + ",\"cols\":" + std::to_string((5 -1)) + "}}},\"block\":\"generated_quantities\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -45839,11 +46267,12 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (10 + (2 * (3 * 10)));
-    const size_t num_transformed = emit_transformed_parameters * ((10 + (2 *
-      (3 * 10))));
-    const size_t num_gen_quantities = emit_generated_quantities * ((10 + (2 *
-      (3 * 10))));
+    const size_t num_params__ = (((10 + (2 * (3 * 10))) + (4 * 5)) + (2 * (3
+      * (4 * 5))));
+    const size_t num_transformed = emit_transformed_parameters * ((((10 + (2
+      * (3 * 10))) + (4 * 5)) + (2 * (3 * (4 * 5)))));
+    const size_t num_gen_quantities = emit_generated_quantities * ((((10 + (2
+      * (3 * 10))) + (4 * 5)) + (2 * (3 * (4 * 5)))));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -45858,11 +46287,12 @@ class sum_to_zero_model final : public model_base_crtp<sum_to_zero_model> {
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = (10 + (2 * (3 * 10)));
-    const size_t num_transformed = emit_transformed_parameters * ((10 + (2 *
-      (3 * 10))));
-    const size_t num_gen_quantities = emit_generated_quantities * ((10 + (2 *
-      (3 * 10))));
+    const size_t num_params__ = (((10 + (2 * (3 * 10))) + (4 * 5)) + (2 * (3
+      * (4 * 5))));
+    const size_t num_transformed = emit_transformed_parameters * ((((10 + (2
+      * (3 * 10))) + (4 * 5)) + (2 * (3 * (4 * 5)))));
+    const size_t num_gen_quantities = emit_generated_quantities * ((((10 + (2
+      * (3 * 10))) + (4 * 5)) + (2 * (3 * (4 * 5)))));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,

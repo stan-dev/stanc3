@@ -83,10 +83,10 @@ let nest_unsized_array basic_type n =
        ROWVECTOR "row_vector" ARRAY "array" TUPLE "tuple" MATRIX "matrix" ORDERED "ordered"
        COMPLEXVECTOR "complex_vector" COMPLEXROWVECTOR "complex_row_vector"
        POSITIVEORDERED "positive_ordered" SIMPLEX "simplex" UNITVECTOR "unit_vector"
-       SUMTOZERO "sum_to_zero_vector" CHOLESKYFACTORCORR "cholesky_factor_corr"
+       SUMTOZEROVEC "sum_to_zero_vector" CHOLESKYFACTORCORR "cholesky_factor_corr"
        CHOLESKYFACTORCOV "cholesky_factor_cov" CORRMATRIX "corr_matrix" COVMATRIX "cov_matrix"
        COMPLEXMATRIX "complex_matrix" STOCHASTICCOLUMNMATRIX "column_stochastic_matrix"
-       STOCHASTICROWMATRIX "row_stochastic_matrix"
+       STOCHASTICROWMATRIX "row_stochastic_matrix" SUMTOZEROMAT "sum_to_zero_matrix"
 %token LOWER "lower" UPPER "upper" OFFSET "offset" MULTIPLIER "multiplier"
 %token JACOBIAN "jacobian"
 %token <string> INTNUMERAL "24"
@@ -255,7 +255,8 @@ reserved_word:
   | POSITIVEORDERED { "positive_ordered", $loc, true }
   | SIMPLEX { "simplex", $loc, true }
   | UNITVECTOR { "unit_vector", $loc, true }
-  | SUMTOZERO  { "sum_to_zero_vector", $loc, true }
+  | SUMTOZEROVEC { "sum_to_zero_vector", $loc, true }
+  | SUMTOZEROMAT { "sum_to_zero_matrix", $loc, true }
   | CHOLESKYFACTORCORR { "cholesky_factor_corr", $loc, true }
   | CHOLESKYFACTORCOV { "cholesky_factor_cov", $loc, true }
   | CORRMATRIX { "corr_matrix", $loc, true }
@@ -522,8 +523,8 @@ top_var_type:
     { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex) }
   | UNITVECTOR LBRACK e=expression RBRACK
     { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector) }
-  | SUMTOZERO LBRACK e=expression RBRACK
-    { grammar_logger "SUMTOZERO_top_var_type" ; (SVector (AoS, e), SumToZero) }
+  | SUMTOZEROVEC LBRACK e=expression RBRACK
+    { grammar_logger "SUMTOZEROVEC_top_var_type" ; (SVector (AoS, e), SumToZero) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
@@ -540,6 +541,8 @@ top_var_type:
     { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
     { grammar_logger "COVMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e, e), Transformation.Covariance) }
+  | SUMTOZEROMAT LBRACK e1=expression COMMA e2=expression RBRACK
+    { grammar_logger "SUMTOZEROMAT_top_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Transformation.SumToZero) }
   | STOCHASTICCOLUMNMATRIX LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "STOCHASTICCOLUMNMATRIX_top_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Transformation.StochasticColumn) }
   | STOCHASTICROWMATRIX LBRACK e1=expression COMMA e2=expression RBRACK

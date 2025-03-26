@@ -581,10 +581,10 @@ let add_first_arg_vector_ternary name supports_soa =
     (List.range 0 8)
 
 (** For functions that accept and return (arrays of...) vectors*)
-let add_nested_vector_unary name supports_soa =
+let add_nested_unary base name supports_soa =
   List.iter
     ~f:(fun i ->
-      let t = bare_array_type (UVector, i) in
+      let t = bare_array_type (base, i) in
       add_unqualified (name, ReturnType t, [t], supports_soa))
     (List.range 0 8)
 
@@ -1932,9 +1932,9 @@ let () =
   add_unqualified ("ones_array", ReturnType (UArray UReal), [UInt], SoA);
   add_unqualified ("ones_row_vector", ReturnType URowVector, [UInt], SoA);
   add_unqualified ("ones_vector", ReturnType UVector, [UInt], SoA);
-  add_nested_vector_unary "ordered_jacobian" SoA;
-  add_nested_vector_unary "ordered_constrain" SoA;
-  add_nested_vector_unary "ordered_unconstrain" AoS;
+  add_nested_unary UVector "ordered_jacobian" SoA;
+  add_nested_unary UVector "ordered_constrain" SoA;
+  add_nested_unary UVector "ordered_unconstrain" AoS;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
@@ -2005,9 +2005,9 @@ let () =
     , SoA );
   add_unqualified ("polar", ReturnType UComplex, [UReal; UReal], AoS);
   add_nullary "positive_infinity";
-  add_nested_vector_unary "positive_ordered_jacobian" SoA;
-  add_nested_vector_unary "positive_ordered_constrain" SoA;
-  add_nested_vector_unary "positive_ordered_unconstrain" AoS;
+  add_nested_unary UVector "positive_ordered_jacobian" SoA;
+  add_nested_unary UVector "positive_ordered_constrain" SoA;
+  add_nested_unary UVector "positive_ordered_unconstrain" AoS;
   add_binary_vec "pow" AoS;
   add_binary_vec_complex_complex "pow" AoS;
   add_unqualified ("prod", ReturnType UInt, [UArray UInt], AoS);
@@ -2227,9 +2227,9 @@ let () =
             , SoA ))
         (List.range 1 4))
     bare_types;
-  add_nested_vector_unary "simplex_jacobian" SoA;
-  add_nested_vector_unary "simplex_constrain" SoA;
-  add_nested_vector_unary "simplex_unconstrain" AoS;
+  add_nested_unary UVector "simplex_jacobian" SoA;
+  add_nested_unary UVector "simplex_constrain" SoA;
+  add_nested_unary UVector "simplex_unconstrain" AoS;
   add_unqualified ("sin", ReturnType UComplex, [UComplex], AoS);
   add_unqualified ("sinh", ReturnType UComplex, [UComplex], AoS);
   add_unqualified ("singular_values", ReturnType UVector, [UMatrix], SoA);
@@ -2338,9 +2338,12 @@ let () =
   add_unqualified ("sum", ReturnType UComplex, [UComplexVector], SoA);
   add_unqualified ("sum", ReturnType UComplex, [UComplexRowVector], SoA);
   add_unqualified ("sum", ReturnType UComplex, [UComplexMatrix], SoA);
-  add_nested_vector_unary "sum_to_zero_jacobian" SoA;
-  add_nested_vector_unary "sum_to_zero_constrain" SoA;
-  add_nested_vector_unary "sum_to_zero_unconstrain" AoS;
+  add_nested_unary UVector "sum_to_zero_jacobian" SoA;
+  add_nested_unary UMatrix "sum_to_zero_jacobian" SoA;
+  add_nested_unary UVector "sum_to_zero_constrain" SoA;
+  add_nested_unary UMatrix "sum_to_zero_constrain" SoA;
+  add_nested_unary UVector "sum_to_zero_unconstrain" AoS;
+  add_nested_unary UMatrix "sum_to_zero_unconstrain" AoS;
   (* TODO (future): SoA inside of tuples, update following signatures *)
   add_unqualified
     ("svd", ReturnType (UTuple [UMatrix; UVector; UMatrix]), [UMatrix], AoS);
@@ -2530,9 +2533,9 @@ let () =
     ("transpose", ReturnType UComplexVector, [UComplexRowVector], SoA);
   add_unqualified ("transpose", ReturnType UComplexMatrix, [UComplexMatrix], SoA);
   add_unqualified ("uniform_simplex", ReturnType UVector, [UInt], SoA);
-  add_nested_vector_unary "unit_vector_jacobian" SoA;
-  add_nested_vector_unary "unit_vector_constrain" SoA;
-  add_nested_vector_unary "unit_vector_unconstrain" AoS;
+  add_nested_unary UVector "unit_vector_jacobian" SoA;
+  add_nested_unary UVector "unit_vector_constrain" SoA;
+  add_nested_unary UVector "unit_vector_unconstrain" AoS;
   add_first_arg_vector_binary "upper_bound_jacobian" SoA;
   add_first_arg_vector_binary "upper_bound_constrain" SoA;
   add_first_arg_vector_binary "upper_bound_unconstrain" AoS;
