@@ -2355,7 +2355,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "array[] real\
     \n sho(real, array[] real, array[] real, data array[] real, data array[] int)")
@@ -2448,7 +2448,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_bar0()")
    (FunDef
     ((templates_init ((()) false)) (inline false) (return_type Double) 
@@ -2477,7 +2477,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_bar1(real)")
    (FunDef
     ((templates_init
@@ -2514,7 +2514,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_bar2(real, real)")
    (FunDef
     ((templates_init
@@ -2556,7 +2556,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_lpmf(int, real)")
    (FunDef
     ((templates_init
@@ -2590,7 +2590,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_lcdf(int, real)")
    (FunDef
     ((templates_init
@@ -2628,7 +2628,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_lccdf(int, real)")
    (FunDef
     ((templates_init
@@ -2666,7 +2666,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_rng(real, real)")
    (FunDef
     ((templates_init
@@ -2710,7 +2710,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "void unit_normal_lp(real)")
    (FunDef
     ((templates_init
@@ -2751,7 +2751,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "int foo_1(int)")
    (FunDef
     ((templates_init
@@ -2853,7 +2853,8 @@
                 (Expression
                  (FunCall stan::model::assign ()
                   ((Var v)
-                   (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
+                   (Subscript (Var vs)
+                    (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
                    (Literal "\"assigning variable v\""))))
                 (Expression (Assign (Var current_statement__) (Literal 649)))
                 (Expression (Assign (Var z) (Literal 0))) Break)))
@@ -2871,7 +2872,8 @@
                 (Expression
                  (FunCall stan::model::assign ()
                   ((Var v)
-                   (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
+                   (Subscript (Var vs)
+                    (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
                    (Literal "\"assigning variable v\""))))
                 (Expression (Assign (Var current_statement__) (Literal 652)))
                 (Expression (Assign (Var z) (Literal 0))) Continue)))
@@ -2889,7 +2891,8 @@
                 (Expression
                  (FunCall stan::model::assign ()
                   ((Var v)
-                   (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
+                   (Subscript (Var vs)
+                    (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
                    (Literal "\"assigning variable v\""))))
                 (Expression (Assign (Var current_statement__) (Literal 655)))
                 (For
@@ -2904,7 +2907,8 @@
                    (Expression (Assign (Var current_statement__) (Literal 655)))
                    (Expression
                     (Assign (Var vv)
-                     (Index (Var v) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
+                     (Subscript (Var v)
+                      (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                    (Expression (Assign (Var current_statement__) (Literal 656)))
                    (Expression (Assign (Var z) (Literal 0))) Break)))
                 (Expression (Assign (Var current_statement__) (Literal 658)))
@@ -3012,7 +3016,7 @@
                 (Expression (Assign (Var current_statement__) (Literal 673)))
                 (Expression
                  (Assign (Var v)
-                  (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
+                  (Subscript (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 674)))
                 (Expression (Assign (Var z) (Literal 0))) Break)))
              (Expression (Assign (Var current_statement__) (Literal 676)))
@@ -3028,7 +3032,7 @@
                 (Expression (Assign (Var current_statement__) (Literal 676)))
                 (Expression
                  (Assign (Var v)
-                  (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
+                  (Subscript (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 677)))
                 (Expression (Assign (Var z) (Literal 3.2))) Continue))))))
           (Expression (Assign (Var current_statement__) (Literal 690)))
@@ -3058,7 +3062,7 @@
                 (Expression (Assign (Var current_statement__) (Literal 683)))
                 (Expression
                  (Assign (Var v)
-                  (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
+                  (Subscript (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 684)))
                 (Expression (Assign (Var z) (Literal 0))) Break)))
              (Expression (Assign (Var current_statement__) (Literal 686)))
@@ -3074,7 +3078,7 @@
                 (Expression (Assign (Var current_statement__) (Literal 686)))
                 (Expression
                  (Assign (Var v)
-                  (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
+                  (Subscript (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 687)))
                 (Expression (Assign (Var z) (Literal 3.3))) Continue))))))
           (Expression (Assign (Var current_statement__) (Literal 698)))
@@ -3096,7 +3100,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "int foo_2(int)")
    (FunDef
     ((templates_init
@@ -3149,7 +3153,7 @@
              (Expression (Assign (Var current_statement__) (Literal 703)))
              (Expression
               (Assign (Var v)
-               (Index (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
+               (Subscript (Var vs) (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
              (Expression (Assign (Var current_statement__) (Literal 704)))
              (Expression (Assign (Var y) (Var v))))))
           (Expression (Assign (Var current_statement__) (Literal 705)))
@@ -3157,7 +3161,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "array[] real foo_3(real, int)")
    (FunDef
     ((templates_init
@@ -3196,7 +3200,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_lp(real)")
    (FunDef
     ((templates_init
@@ -3233,7 +3237,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "void foo_4(array[] real)")
    (FunDef
     ((templates_init
@@ -3292,7 +3296,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real relative_diff(real, real, real, real)")
    (FunDef
     ((templates_init
@@ -3421,7 +3425,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "vector foo_5(vector, vector, data array[] real, data array[] int)")
    (FunDef
     ((templates_init
@@ -3485,7 +3489,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_five_args(real, real, real, real, real)")
    (FunDef
     ((templates_init
@@ -3540,7 +3544,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "real foo_five_args_lp(real, real, real, real, real, real)")
    (FunDef
     ((templates_init
@@ -3596,7 +3600,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "matrix covsqrt2corsqrt(matrix, int)")
    (FunDef
     ((templates_init
@@ -3690,7 +3694,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "void\
     \n f0(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -3811,7 +3815,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "int\
     \n f1(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -3927,7 +3931,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "array[] int\
     \n f2(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -4043,7 +4047,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "array[,] int\
     \n f3(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -4159,7 +4163,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "real\
     \n f4(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -4287,7 +4291,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "array[] real\
     \n f5(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -4416,7 +4420,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "array[,] real\
     \n f6(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -4546,7 +4550,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "vector\
     \n f7(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -4676,7 +4680,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "array[] vector\
     \n f8(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -4807,7 +4811,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "array[,] vector\
     \n f9(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -4939,7 +4943,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "matrix\
     \n f10(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -5069,7 +5073,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "array[] matrix\
     \n f11(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -5200,7 +5204,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
      "array[,] matrix\
     \n f12(int, array[] int, array[,] int, real, array[] real, array[,] real,\
@@ -5332,7 +5336,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "void foo_6()")
    (FunDef
     ((templates_init ((()) false)) (inline false) (return_type Void) 
@@ -5398,7 +5402,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "matrix matfoo()")
    (FunDef
     ((templates_init ((()) false)) (inline false) (return_type (Matrix Double -1 -1 AoS))
@@ -5454,7 +5458,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "vector vecfoo()")
    (FunDef
     ((templates_init ((()) false)) (inline false) (return_type (Matrix Double -1 1 AoS))
@@ -5490,7 +5494,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "vector vecmufoo(real)")
    (FunDef
     ((templates_init
@@ -5544,7 +5548,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "vector vecmubar(real)")
    (FunDef
     ((templates_init
@@ -5609,7 +5613,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment "vector algebra_system(vector, vector, array[] real, array[] int)")
    (FunDef
     ((templates_init
@@ -5712,7 +5716,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (GlobalComment
     "vector binomialf(vector, vector, data array[] real, data array[] int)")
    (FunDef
@@ -5784,7 +5788,7 @@
          ((Const (Ref (TypeLiteral std::exception))) e)
          ((Expression
            (FunCall stan::lang::rethrow_located ()
-            ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+            ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
    (Class
     ((class_name mother_model) (final true)
      (public_base (TypeTrait model_base_crtp ((TypeLiteral mother_model))))
@@ -7070,7 +7074,7 @@
              ((Const (Ref (TypeLiteral std::exception))) e)
              ((Expression
                (FunCall stan::lang::rethrow_located ()
-                ((Var e) (Index (Var locations_array__) (Var current_statement__)))))))
+                ((Var e) (Subscript (Var locations_array__) (Var current_statement__)))))))
             (Expression (MethodCall (Var lp_accum__) add () ((Var lp__))))
             (Return ((MethodCall (Var lp_accum__) sum () ()))))))))
        (GlobalComment "Reverse mode autodiff log prob")
@@ -8027,7 +8031,7 @@
              ((Const (Ref (TypeLiteral std::exception))) e)
              ((Expression
                (FunCall stan::lang::rethrow_located ()
-                ((Var e) (Index (Var locations_array__) (Var current_statement__)))))))
+                ((Var e) (Subscript (Var locations_array__) (Var current_statement__)))))))
             (Expression (MethodCall (Var lp_accum__) add () ((Var lp__))))
             (Return ((MethodCall (Var lp_accum__) sum () ()))))))))
        (FunDef
@@ -8494,9 +8498,9 @@
                      (Block
                       ((Expression
                         (MethodCall (Var out__) write ()
-                         ((Index
-                           (Index
-                            (Index (Var p_real_3d_ar)
+                         ((Subscript
+                           (Subscript
+                            (Subscript (Var p_real_3d_ar)
                              (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                             (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))))))))))))
@@ -8514,8 +8518,8 @@
                   (Block
                    ((Expression
                      (MethodCall (Var out__) write ()
-                      ((Index
-                        (Index (Var p_1d_vec)
+                      ((Subscript
+                        (Subscript (Var p_1d_vec)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 11)))
@@ -8541,10 +8545,10 @@
                         (Block
                          ((Expression
                            (MethodCall (Var out__) write ()
-                            ((Index
-                              (Index
-                               (Index
-                                (Index (Var p_3d_vec)
+                            ((Subscript
+                              (Subscript
+                               (Subscript
+                                (Subscript (Var p_3d_vec)
                                  (Parens (BinOp (Var sym4__) Subtract (Literal 1))))
                                 (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
@@ -8563,8 +8567,8 @@
                   (Block
                    ((Expression
                      (MethodCall (Var out__) write ()
-                      ((Index
-                        (Index (Var p_1d_row_vec)
+                      ((Subscript
+                        (Subscript (Var p_1d_row_vec)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 14)))
@@ -8590,10 +8594,10 @@
                         (Block
                          ((Expression
                            (MethodCall (Var out__) write ()
-                            ((Index
-                              (Index
-                               (Index
-                                (Index (Var p_3d_row_vec)
+                            ((Subscript
+                              (Subscript
+                               (Subscript
+                                (Subscript (Var p_3d_row_vec)
                                  (Parens (BinOp (Var sym4__) Subtract (Literal 1))))
                                 (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
@@ -8642,8 +8646,8 @@
                   (Block
                    ((Expression
                      (MethodCall (Var out__) write ()
-                      ((Index
-                        (Index (Var p_1d_simplex)
+                      ((Subscript
+                        (Subscript (Var p_1d_simplex)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 19)))
@@ -8669,10 +8673,10 @@
                         (Block
                          ((Expression
                            (MethodCall (Var out__) write ()
-                            ((Index
-                              (Index
-                               (Index
-                                (Index (Var p_3d_simplex)
+                            ((Subscript
+                              (Subscript
+                               (Subscript
+                                (Subscript (Var p_3d_simplex)
                                  (Parens (BinOp (Var sym4__) Subtract (Literal 1))))
                                 (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
@@ -8979,9 +8983,9 @@
                         (Block
                          ((Expression
                            (MethodCall (Var out__) write ()
-                            ((Index
-                              (Index
-                               (Index (Var tp_real_3d_ar)
+                            ((Subscript
+                              (Subscript
+                               (Subscript (Var tp_real_3d_ar)
                                 (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                               (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))))))))))))
@@ -8999,8 +9003,8 @@
                      (Block
                       ((Expression
                         (MethodCall (Var out__) write ()
-                         ((Index
-                           (Index (Var tp_1d_vec)
+                         ((Subscript
+                           (Subscript (Var tp_1d_vec)
                             (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
                  (Expression (Assign (Var current_statement__) (Literal 29)))
@@ -9026,10 +9030,10 @@
                            (Block
                             ((Expression
                               (MethodCall (Var out__) write ()
-                               ((Index
-                                 (Index
-                                  (Index
-                                   (Index (Var tp_3d_vec)
+                               ((Subscript
+                                 (Subscript
+                                  (Subscript
+                                   (Subscript (Var tp_3d_vec)
                                     (Parens (BinOp (Var sym4__) Subtract (Literal 1))))
                                    (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                   (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
@@ -9048,8 +9052,8 @@
                      (Block
                       ((Expression
                         (MethodCall (Var out__) write ()
-                         ((Index
-                           (Index (Var tp_1d_row_vec)
+                         ((Subscript
+                           (Subscript (Var tp_1d_row_vec)
                             (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
                  (Expression (Assign (Var current_statement__) (Literal 32)))
@@ -9075,10 +9079,10 @@
                            (Block
                             ((Expression
                               (MethodCall (Var out__) write ()
-                               ((Index
-                                 (Index
-                                  (Index
-                                   (Index (Var tp_3d_row_vec)
+                               ((Subscript
+                                 (Subscript
+                                  (Subscript
+                                   (Subscript (Var tp_3d_row_vec)
                                     (Parens (BinOp (Var sym4__) Subtract (Literal 1))))
                                    (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                   (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
@@ -9127,8 +9131,8 @@
                      (Block
                       ((Expression
                         (MethodCall (Var out__) write ()
-                         ((Index
-                           (Index (Var tp_1d_simplex)
+                         ((Subscript
+                           (Subscript (Var tp_1d_simplex)
                             (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
                  (Expression (Assign (Var current_statement__) (Literal 37)))
@@ -9154,10 +9158,10 @@
                            (Block
                             ((Expression
                               (MethodCall (Var out__) write ()
-                               ((Index
-                                 (Index
-                                  (Index
-                                   (Index (Var tp_3d_simplex)
+                               ((Subscript
+                                 (Subscript
+                                  (Subscript
+                                   (Subscript (Var tp_3d_simplex)
                                     (Parens (BinOp (Var sym4__) Subtract (Literal 1))))
                                    (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                   (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
@@ -9916,9 +9920,9 @@
                      (Block
                       ((Expression
                         (MethodCall (Var out__) write ()
-                         ((Index
-                           (Index
-                            (Index (Var gq_real_3d_ar)
+                         ((Subscript
+                           (Subscript
+                            (Subscript (Var gq_real_3d_ar)
                              (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                             (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))))))))))))
@@ -9936,8 +9940,8 @@
                   (Block
                    ((Expression
                      (MethodCall (Var out__) write ()
-                      ((Index
-                        (Index (Var gq_1d_vec)
+                      ((Subscript
+                        (Subscript (Var gq_1d_vec)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 49)))
@@ -9963,10 +9967,10 @@
                         (Block
                          ((Expression
                            (MethodCall (Var out__) write ()
-                            ((Index
-                              (Index
-                               (Index
-                                (Index (Var gq_3d_vec)
+                            ((Subscript
+                              (Subscript
+                               (Subscript
+                                (Subscript (Var gq_3d_vec)
                                  (Parens (BinOp (Var sym4__) Subtract (Literal 1))))
                                 (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
@@ -9985,8 +9989,8 @@
                   (Block
                    ((Expression
                      (MethodCall (Var out__) write ()
-                      ((Index
-                        (Index (Var gq_1d_row_vec)
+                      ((Subscript
+                        (Subscript (Var gq_1d_row_vec)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 52)))
@@ -10012,10 +10016,10 @@
                         (Block
                          ((Expression
                            (MethodCall (Var out__) write ()
-                            ((Index
-                              (Index
-                               (Index
-                                (Index (Var gq_3d_row_vec)
+                            ((Subscript
+                              (Subscript
+                               (Subscript
+                                (Subscript (Var gq_3d_row_vec)
                                  (Parens (BinOp (Var sym4__) Subtract (Literal 1))))
                                 (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
@@ -10063,8 +10067,8 @@
                   (Block
                    ((Expression
                      (MethodCall (Var out__) write ()
-                      ((Index
-                        (Index (Var gq_1d_simplex)
+                      ((Subscript
+                        (Subscript (Var gq_1d_simplex)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 56)))
@@ -10090,10 +10094,10 @@
                         (Block
                          ((Expression
                            (MethodCall (Var out__) write ()
-                            ((Index
-                              (Index
-                               (Index
-                                (Index (Var gq_3d_simplex)
+                            ((Subscript
+                              (Subscript
+                               (Subscript
+                                (Subscript (Var gq_3d_simplex)
                                  (Parens (BinOp (Var sym4__) Subtract (Literal 1))))
                                 (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                                (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
@@ -10298,8 +10302,8 @@
                   (Block
                    ((Expression
                      (MethodCall (Var out__) write ()
-                      ((Index
-                        (Index (Var idx_res4)
+                      ((Subscript
+                        (Subscript (Var idx_res4)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1)))))))))))))
               (Expression (Assign (Var current_statement__) (Literal 69)))
@@ -10315,14 +10319,14 @@
                   (Block
                    ((Expression
                      (MethodCall (Var out__) write ()
-                      ((Index
-                        (Index (Var idx_res5)
+                      ((Subscript
+                        (Subscript (Var idx_res5)
                          (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                         (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))))))))))
              ((Const (Ref (TypeLiteral std::exception))) e)
              ((Expression
                (FunCall stan::lang::rethrow_located ()
-                ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+                ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
        (FunDef
         ((templates_init
           ((((Typename VecVar) (Typename VecI) (Require stan::require_vector_t (VecVar))
@@ -10487,9 +10491,9 @@
                       ((Expression (Assign (Var current_statement__) (Literal 8)))
                        (Expression
                         (Assign
-                         (Index
-                          (Index
-                           (Index (Var p_real_3d_ar)
+                         (Subscript
+                          (Subscript
+                           (Subscript (Var p_real_3d_ar)
                             (Parens (BinOp (Var sym3__) Subtract (Literal 1))))
                            (Parens (BinOp (Var sym2__) Subtract (Literal 1))))
                           (Parens (BinOp (Var sym1__) Subtract (Literal 1))))
@@ -10999,7 +11003,7 @@
              ((Const (Ref (TypeLiteral std::exception))) e)
              ((Expression
                (FunCall stan::lang::rethrow_located ()
-                ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+                ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
        (FunDef
         ((templates_init
           ((((Typename VecVar) (Require stan::require_vector_t (VecVar)))) true))
@@ -11225,7 +11229,8 @@
               (Expression (Assign (Var current_statement__) (Literal 1)))
               (Expression
                (Assign (Var p_real)
-                (Index (MethodCall (Var context__) vals_r () ((Literal "\"p_real\"")))
+                (Subscript
+                 (MethodCall (Var context__) vals_r () ((Literal "\"p_real\"")))
                  (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
               (Expression (MethodCall (Var out__) write () ((Var p_real))))
               (VariableDefn
@@ -11234,7 +11239,8 @@
               (Expression (Assign (Var current_statement__) (Literal 2)))
               (Expression
                (Assign (Var p_upper)
-                (Index (MethodCall (Var context__) vals_r () ((Literal "\"p_upper\"")))
+                (Subscript
+                 (MethodCall (Var context__) vals_r () ((Literal "\"p_upper\"")))
                  (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
               (Expression
                (MethodCall (Var out__) write_free_lb () ((Var p_real) (Var p_upper))))
@@ -11244,7 +11250,8 @@
               (Expression (Assign (Var current_statement__) (Literal 3)))
               (Expression
                (Assign (Var p_lower)
-                (Index (MethodCall (Var context__) vals_r () ((Literal "\"p_lower\"")))
+                (Subscript
+                 (MethodCall (Var context__) vals_r () ((Literal "\"p_lower\"")))
                  (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
               (Expression
                (MethodCall (Var out__) write_free_ub () ((Var p_upper) (Var p_lower))))
@@ -11351,7 +11358,7 @@
                         ((Expression
                           (FunCall stan::model::assign ()
                            ((Var p_real_3d_ar)
-                            (Index (Var p_real_3d_ar_flat__)
+                            (Subscript (Var p_real_3d_ar_flat__)
                              (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                             (Literal "\"assigning variable p_real_3d_ar\"")
                             (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -11388,7 +11395,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var p_vec)
-                      (Index (Var p_vec_flat__)
+                      (Subscript (Var p_vec_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable p_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -11430,7 +11437,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var p_1d_vec)
-                         (Index (Var p_1d_vec_flat__)
+                         (Subscript (Var p_1d_vec_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable p_1d_vec\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -11495,7 +11502,7 @@
                            ((Expression
                              (FunCall stan::model::assign ()
                               ((Var p_3d_vec)
-                               (Index (Var p_3d_vec_flat__)
+                               (Subscript (Var p_3d_vec_flat__)
                                 (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                                (Literal "\"assigning variable p_3d_vec\"")
                                (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -11532,7 +11539,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var p_row_vec)
-                      (Index (Var p_row_vec_flat__)
+                      (Subscript (Var p_row_vec_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable p_row_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -11573,7 +11580,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var p_1d_row_vec)
-                         (Index (Var p_1d_row_vec_flat__)
+                         (Subscript (Var p_1d_row_vec_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable p_1d_row_vec\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -11638,7 +11645,7 @@
                            ((Expression
                              (FunCall stan::model::assign ()
                               ((Var p_3d_row_vec)
-                               (Index (Var p_3d_row_vec_flat__)
+                               (Subscript (Var p_3d_row_vec_flat__)
                                 (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                                (Literal "\"assigning variable p_3d_row_vec\"")
                                (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -11680,7 +11687,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var p_mat)
-                         (Index (Var p_mat_flat__)
+                         (Subscript (Var p_mat_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable p_mat\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -11738,7 +11745,7 @@
                            ((Expression
                              (FunCall stan::model::assign ()
                               ((Var p_ar_mat)
-                               (Index (Var p_ar_mat_flat__)
+                               (Subscript (Var p_ar_mat_flat__)
                                 (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                                (Literal "\"assigning variable p_ar_mat\"")
                                (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -11777,7 +11784,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var p_simplex)
-                      (Index (Var p_simplex_flat__)
+                      (Subscript (Var p_simplex_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable p_simplex\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -11819,7 +11826,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var p_1d_simplex)
-                         (Index (Var p_1d_simplex_flat__)
+                         (Subscript (Var p_1d_simplex_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable p_1d_simplex\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -11885,7 +11892,7 @@
                            ((Expression
                              (FunCall stan::model::assign ()
                               ((Var p_3d_simplex)
-                               (Index (Var p_3d_simplex_flat__)
+                               (Subscript (Var p_3d_simplex_flat__)
                                 (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                                (Literal "\"assigning variable p_3d_simplex\"")
                                (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -11928,7 +11935,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var p_cfcov_54)
-                         (Index (Var p_cfcov_54_flat__)
+                         (Subscript (Var p_cfcov_54_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable p_cfcov_54\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -11969,7 +11976,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var p_cfcov_33)
-                         (Index (Var p_cfcov_33_flat__)
+                         (Subscript (Var p_cfcov_33_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable p_cfcov_33\"")
                          (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -12018,7 +12025,7 @@
                         ((Expression
                           (FunCall stan::model::assign ()
                            ((Var p_cfcov_33_ar)
-                            (Index (Var p_cfcov_33_ar_flat__)
+                            (Subscript (Var p_cfcov_33_ar_flat__)
                              (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                             (Literal "\"assigning variable p_cfcov_33_ar\"")
                             (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -12056,7 +12063,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var x_p)
-                      (Index (Var x_p_flat__)
+                      (Subscript (Var x_p_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable x_p\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -12089,7 +12096,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var y_p)
-                      (Index (Var y_p_flat__)
+                      (Subscript (Var y_p_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable y_p\"")
                       (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -12099,7 +12106,7 @@
              ((Const (Ref (TypeLiteral std::exception))) e)
              ((Expression
                (FunCall stan::lang::rethrow_located ()
-                ((Var e) (Index (Var locations_array__) (Var current_statement__))))))))))))
+                ((Var e) (Subscript (Var locations_array__) (Var current_statement__))))))))))))
        (FunDef
         ((templates_init ((()) false)) (inline true) (return_type Void)
          (name get_param_names)
@@ -16282,7 +16289,7 @@
            (Expression (Assign (Var current_statement__) (Literal 190)))
            (Expression
             (Assign (Var N)
-             (Index (MethodCall (Var context__) vals_i () ((Literal "\"N\"")))
+             (Subscript (MethodCall (Var context__) vals_i () ((Literal "\"N\"")))
               (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 190)))
            (Expression
@@ -16297,7 +16304,7 @@
            (Expression (Assign (Var current_statement__) (Literal 191)))
            (Expression
             (Assign (Var M)
-             (Index (MethodCall (Var context__) vals_i () ((Literal "\"M\"")))
+             (Subscript (MethodCall (Var context__) vals_i () ((Literal "\"M\"")))
               (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 191)))
            (Expression
@@ -16312,7 +16319,7 @@
            (Expression (Assign (Var current_statement__) (Literal 192)))
            (Expression
             (Assign (Var K)
-             (Index (MethodCall (Var context__) vals_i () ((Literal "\"K\"")))
+             (Subscript (MethodCall (Var context__) vals_i () ((Literal "\"K\"")))
               (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 192)))
            (Expression
@@ -16402,7 +16409,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var d_int_3d_ar)
-                         (Index (Var d_int_3d_ar_flat__)
+                         (Subscript (Var d_int_3d_ar_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable d_int_3d_ar\"")
                          (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -16425,7 +16432,7 @@
            (Expression (Assign (Var current_statement__) (Literal 199)))
            (Expression
             (Assign (Var J)
-             (Index (MethodCall (Var context__) vals_r () ((Literal "\"J\"")))
+             (Subscript (MethodCall (Var context__) vals_r () ((Literal "\"J\"")))
               (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 199)))
            (Expression
@@ -16511,7 +16518,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var d_real_3d_ar)
-                         (Index (Var d_real_3d_ar_flat__)
+                         (Subscript (Var d_real_3d_ar_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable d_real_3d_ar\"")
                          (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -16555,7 +16562,7 @@
                ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_vec)
-                   (Index (Var d_vec_flat__)
+                   (Subscript (Var d_vec_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_vec\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -16606,7 +16613,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_1d_vec)
-                      (Index (Var d_1d_vec_flat__)
+                      (Subscript (Var d_1d_vec_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_1d_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -16682,7 +16689,7 @@
                         ((Expression
                           (FunCall stan::model::assign ()
                            ((Var d_3d_vec)
-                            (Index (Var d_3d_vec_flat__)
+                            (Subscript (Var d_3d_vec_flat__)
                              (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                             (Literal "\"assigning variable d_3d_vec\"")
                             (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -16728,7 +16735,7 @@
                ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_row_vec)
-                   (Index (Var d_row_vec_flat__)
+                   (Subscript (Var d_row_vec_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_row_vec\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -16779,7 +16786,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_1d_row_vec)
-                      (Index (Var d_1d_row_vec_flat__)
+                      (Subscript (Var d_1d_row_vec_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_1d_row_vec\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -16855,7 +16862,7 @@
                         ((Expression
                           (FunCall stan::model::assign ()
                            ((Var d_3d_row_vec)
-                            (Index (Var d_3d_row_vec_flat__)
+                            (Subscript (Var d_3d_row_vec_flat__)
                              (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                             (Literal "\"assigning variable d_3d_row_vec\"")
                             (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -16917,7 +16924,7 @@
                         ((Expression
                           (FunCall stan::model::assign ()
                            ((Var d_ar_mat)
-                            (Index (Var d_ar_mat_flat__)
+                            (Subscript (Var d_ar_mat_flat__)
                              (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                             (Literal "\"assigning variable d_ar_mat\"")
                             (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -16971,7 +16978,7 @@
                ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_simplex)
-                   (Index (Var d_simplex_flat__)
+                   (Subscript (Var d_simplex_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_simplex\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -17026,7 +17033,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_1d_simplex)
-                      (Index (Var d_1d_simplex_flat__)
+                      (Subscript (Var d_1d_simplex_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_1d_simplex\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -17106,7 +17113,7 @@
                         ((Expression
                           (FunCall stan::model::assign ()
                            ((Var d_3d_simplex)
-                            (Index (Var d_3d_simplex_flat__)
+                            (Subscript (Var d_3d_simplex_flat__)
                              (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                             (Literal "\"assigning variable d_3d_simplex\"")
                             (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -17159,7 +17166,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_cfcov_54)
-                      (Index (Var d_cfcov_54_flat__)
+                      (Subscript (Var d_cfcov_54_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_cfcov_54\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -17209,7 +17216,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_cfcov_33)
-                      (Index (Var d_cfcov_33_flat__)
+                      (Subscript (Var d_cfcov_33_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_cfcov_33\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -17268,7 +17275,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var d_cfcov_33_ar)
-                         (Index (Var d_cfcov_33_ar_flat__)
+                         (Subscript (Var d_cfcov_33_ar_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable d_cfcov_33_ar\"")
                          (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -17290,7 +17297,7 @@
            (Expression (Assign (Var current_statement__) (Literal 241)))
            (Expression
             (Assign (Var d_int)
-             (Index (MethodCall (Var context__) vals_i () ((Literal "\"d_int\"")))
+             (Subscript (MethodCall (Var context__) vals_i () ((Literal "\"d_int\"")))
               (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 242)))
            (Expression
@@ -17351,7 +17358,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_int_array_2d)
-                      (Index (Var d_int_array_2d_flat__)
+                      (Subscript (Var d_int_array_2d_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_int_array_2d\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -17406,7 +17413,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var d_int_array_3d)
-                         (Index (Var d_int_array_3d_flat__)
+                         (Subscript (Var d_int_array_3d_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable d_int_array_3d\"")
                          (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -17425,7 +17432,7 @@
            (Expression (Assign (Var current_statement__) (Literal 248)))
            (Expression
             (Assign (Var d_real)
-             (Index (MethodCall (Var context__) vals_r () ((Literal "\"d_real\"")))
+             (Subscript (MethodCall (Var context__) vals_r () ((Literal "\"d_real\"")))
               (Parens (BinOp (Literal 1) Subtract (Literal 1))))))
            (Expression (Assign (Var current_statement__) (Literal 249)))
            (Expression
@@ -17487,7 +17494,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_real_array_2d)
-                      (Index (Var d_real_array_2d_flat__)
+                      (Subscript (Var d_real_array_2d_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_real_array_2d\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -17543,7 +17550,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var d_real_array_3d)
-                         (Index (Var d_real_array_3d_flat__)
+                         (Subscript (Var d_real_array_3d_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable d_real_array_3d\"")
                          (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -17598,7 +17605,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_matrix)
-                      (Index (Var d_matrix_flat__)
+                      (Subscript (Var d_matrix_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_matrix\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -17661,7 +17668,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var d_matrix_array)
-                         (Index (Var d_matrix_array_flat__)
+                         (Subscript (Var d_matrix_array_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable d_matrix_array\"")
                          (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -17733,7 +17740,7 @@
                         ((Expression
                           (FunCall stan::model::assign ()
                            ((Var d_matrix_array_2d)
-                            (Index (Var d_matrix_array_2d_flat__)
+                            (Subscript (Var d_matrix_array_2d_flat__)
                              (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                             (Literal "\"assigning variable d_matrix_array_2d\"")
                             (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -17815,7 +17822,7 @@
                            ((Expression
                              (FunCall stan::model::assign ()
                               ((Var d_matrix_array_3d)
-                               (Index (Var d_matrix_array_3d_flat__)
+                               (Subscript (Var d_matrix_array_3d_flat__)
                                 (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                                (Literal "\"assigning variable d_matrix_array_3d\"")
                                (FunCall stan::model::index_uni () ((Var sym5__)))
@@ -17862,7 +17869,7 @@
                ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_vector)
-                   (Index (Var d_vector_flat__)
+                   (Subscript (Var d_vector_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_vector\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -17913,7 +17920,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_vector_array)
-                      (Index (Var d_vector_array_flat__)
+                      (Subscript (Var d_vector_array_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_vector_array\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -17973,7 +17980,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var d_vector_array_2d)
-                         (Index (Var d_vector_array_2d_flat__)
+                         (Subscript (Var d_vector_array_2d_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable d_vector_array_2d\"")
                          (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -18042,7 +18049,7 @@
                         ((Expression
                           (FunCall stan::model::assign ()
                            ((Var d_vector_array_3d)
-                            (Index (Var d_vector_array_3d_flat__)
+                            (Subscript (Var d_vector_array_3d_flat__)
                              (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                             (Literal "\"assigning variable d_vector_array_3d\"")
                             (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -18088,7 +18095,7 @@
                ((Expression
                  (FunCall stan::model::assign ()
                   ((Var d_row_vector)
-                   (Index (Var d_row_vector_flat__)
+                   (Subscript (Var d_row_vector_flat__)
                     (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                    (Literal "\"assigning variable d_row_vector\"")
                    (FunCall stan::model::index_uni () ((Var sym1__))))))
@@ -18140,7 +18147,7 @@
                   ((Expression
                     (FunCall stan::model::assign ()
                      ((Var d_row_vector_array)
-                      (Index (Var d_row_vector_array_flat__)
+                      (Subscript (Var d_row_vector_array_flat__)
                        (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                       (Literal "\"assigning variable d_row_vector_array\"")
                       (FunCall stan::model::index_uni () ((Var sym2__)))
@@ -18201,7 +18208,7 @@
                      ((Expression
                        (FunCall stan::model::assign ()
                         ((Var d_row_vector_array_2d)
-                         (Index (Var d_row_vector_array_2d_flat__)
+                         (Subscript (Var d_row_vector_array_2d_flat__)
                           (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                          (Literal "\"assigning variable d_row_vector_array_2d\"")
                          (FunCall stan::model::index_uni () ((Var sym3__)))
@@ -18271,7 +18278,7 @@
                         ((Expression
                           (FunCall stan::model::assign ()
                            ((Var d_row_vector_array_3d)
-                            (Index (Var d_row_vector_array_3d_flat__)
+                            (Subscript (Var d_row_vector_array_3d_flat__)
                              (Parens (BinOp (Var pos__) Subtract (Literal 1))))
                             (Literal "\"assigning variable d_row_vector_array_3d\"")
                             (FunCall stan::model::index_uni () ((Var sym4__)))
@@ -18627,7 +18634,7 @@
                 (Expression (Assign (Var current_statement__) (Literal 351)))
                 (Expression
                  (Assign (Var v)
-                  (Index (Var blocked_tdata_vs)
+                  (Subscript (Var blocked_tdata_vs)
                    (Parens (BinOp (Var sym1__) Subtract (Literal 1))))))
                 (Expression (Assign (Var current_statement__) (Literal 352)))
                 (Expression (Assign (Var z) (Literal 0))))))
@@ -18670,7 +18677,7 @@
                   (Expression (Assign (Var current_statement__) (Literal 355)))
                   (Expression
                    (Assign (Var i)
-                    (Index (Var sym1__)
+                    (Subscript (Var sym1__)
                      (Parens (BinOp (Var sym3__) Subtract (Literal 1))))))
                   (Expression (Assign (Var current_statement__) (Literal 356)))
                   (Expression (Assign (Var z) (Var i))))))))))
@@ -19985,7 +19992,7 @@
           ((Const (Ref (TypeLiteral std::exception))) e)
           ((Expression
             (FunCall stan::lang::rethrow_located ()
-             ((Var e) (Index (Var locations_array__) (Var current_statement__)))))))
+             ((Var e) (Subscript (Var locations_array__) (Var current_statement__)))))))
          (Expression
           (Assign (Var num_params_r__)
            (BinOp

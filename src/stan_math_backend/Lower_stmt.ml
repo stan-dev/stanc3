@@ -45,46 +45,50 @@ let rec initialize_value st adtype =
   | UnsizedType.(DataOnly | AutoDiffable), SizedType.SInt -> Exprs.int_min
   | (DataOnly | AutoDiffable), SReal -> init_nan
   | (DataOnly | AutoDiffable), SComplex ->
-      let scalar = local_scalar (SizedType.to_unsized st) adtype in
-      Constructor (Types.complex scalar, [init_nan; init_nan])
+      let complex =
+        Types.complex (local_scalar (SizedType.to_unsized st) adtype) in
+      complex.:(init_nan; init_nan)
   | (DataOnly | AutoDiffable), SComplexVector size
    |(DataOnly | AutoDiffable), SComplexRowVector size ->
-      let typ = lower_st st adtype in
-      typ |::? ("Constant", [lower_expr size; initialize_value SComplex adtype])
+      let vec = lower_st st adtype in
+      vec |::? ("Constant", [lower_expr size; initialize_value SComplex adtype])
   | DataOnly, SVector (_, size)
    |DataOnly, SRowVector (_, size)
    |AutoDiffable, SVector (AoS, size)
    |AutoDiffable, SRowVector (AoS, size) ->
-      let typ = lower_st st adtype in
-      typ |::? ("Constant", [lower_expr size; init_nan])
+      let vec = lower_st st adtype in
+      vec |::? ("Constant", [lower_expr size; init_nan])
   | DataOnly, SMatrix (_, d1, d2) | AutoDiffable, SMatrix (AoS, d1, d2) ->
-      let typ = lower_st st adtype in
-      typ |::? ("Constant", [lower_expr d1; lower_expr d2; init_nan])
+      let mat = lower_st st adtype in
+      mat |::? ("Constant", [lower_expr d1; lower_expr d2; init_nan])
   | (DataOnly | AutoDiffable), SComplexMatrix (d1, d2) ->
-      let typ = lower_st st adtype in
-      typ
+      let mat = lower_st st adtype in
+      mat
       |::? ( "Constant"
            , [lower_expr d1; lower_expr d2; initialize_value SComplex adtype] )
   | AutoDiffable, SVector (SoA, size) ->
-      let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
-      Constructor (typ, [initialize_value (SVector (AoS, size)) DataOnly])
+      let var_vec =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
+      var_vec.:(initialize_value (SVector (AoS, size)) DataOnly)
   | AutoDiffable, SRowVector (SoA, size) ->
-      let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
-      Constructor (typ, [initialize_value (SRowVector (AoS, size)) DataOnly])
+      let var_row_vec =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
+      var_row_vec.:(initialize_value (SRowVector (AoS, size)) DataOnly)
   | AutoDiffable, SMatrix (SoA, d1, d2) ->
-      let typ = lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
-      Constructor (typ, [initialize_value (SMatrix (AoS, d1, d2)) DataOnly])
+      let var_mat =
+        lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
+      var_mat.:(initialize_value (SMatrix (AoS, d1, d2)) DataOnly)
   | DataOnly, SArray (t, d) ->
-      let typ = lower_st st adtype in
-      Constructor (typ, [lower_expr d; initialize_value t adtype])
+      let arr = lower_st st adtype in
+      arr.:(lower_expr d; initialize_value t adtype)
   | (AutoDiffable | TupleAD _), SArray (t, d) ->
-      let typ =
+      let var_arr =
         lower_possibly_var_decl adtype (SizedType.to_unsized st)
           (SizedType.get_mem_pattern t) in
-      Constructor (typ, [lower_expr d; initialize_value t adtype])
+      var_arr.:(lower_expr d; initialize_value t adtype)
   | TupleAD ads, STuple subts ->
-      let typ = lower_st st adtype in
-      InitializerExpr (typ, List.map2_exn ~f:initialize_value subts ads)
+      let tupl = lower_st st adtype in
+      InitializerExpr (tupl, List.map2_exn ~f:initialize_value subts ads)
   | _, STuple _ | TupleAD _, _ ->
       Common.ICE.internal_compiler_error
         [%message

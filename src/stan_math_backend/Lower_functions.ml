@@ -403,7 +403,7 @@ let lower_standalone_fun_def namespace_fun
     args
     @ mk_extra_args extra_templates extra
     @ [(Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr")] in
-  let mark_function_comment = GlobalComment "[[stan::function]]" in
+  let mark_function_comment = !//"[[stan::function]]" in
   let return_type, return_stmt =
     match fdrt with
     | Void -> (Void, fun e -> Expression e)
