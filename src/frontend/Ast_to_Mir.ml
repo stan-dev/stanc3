@@ -299,11 +299,11 @@ let extract_transform_args var = function
    |TupleTransformation _ | StochasticRow | StochasticColumn ->
       []
 
-(** Serves as a witness for the [shrink_helper] polymorphic function *)
-type _ dimension_reduction =
-  | Univariate : (Expr.Typed.t -> Expr.Typed.t) dimension_reduction
-  | Multivariate
-      : (Expr.Typed.t -> Expr.Typed.t -> Expr.Typed.t) dimension_reduction
+(** Allows [shrink_helper] to operate either on each dimension independently
+   or on both matrix dimensions at once *)
+type size_change =
+  | Univariate of (Expr.Typed.t -> Expr.Typed.t)
+  | Multivariate of (Expr.Typed.t -> Expr.Typed.t -> Expr.Typed.t)
 
 (** We need to compute somewhat arbitrary new sizes for the unconstrained
     parameters. This function handles the primary cases:
@@ -312,32 +312,26 @@ type _ dimension_reduction =
   - A matrix of size N x M is transformed to a vector of size (f N) x (f_d2 M)
   - A matrix of size N x N is transformed to a vector of size (f N M)
   - Arrays of the above are handled recursively
-
-  The final case is the reason for the GADT and type polymorphism.
-  It lets us express the overall structure once even though the type of f might
-  change
 *)
-let rec shrink_helper : type t. t dimension_reduction -> t -> _ -> _ -> _ =
- fun f_kind f f_d2 st ->
+let rec shrink_helper (f : size_change) f_d2 st =
   let f_assert_univariate d =
-    match f_kind with
-    | Univariate -> f d
-    | Multivariate ->
+    match f with
+    | Univariate f -> f d
+    | Multivariate _ ->
         Common.ICE.internal_compiler_error
           [%message
             "To shrink a vector, the first argument must be a univariate \
              function "
               (st : Expr.Typed.t SizedType.t)] in
   match st with
-  | SizedType.SArray (t, d) ->
-      SizedType.SArray (shrink_helper f_kind f f_d2 t, d)
+  | SizedType.SArray (t, d) -> SizedType.SArray (shrink_helper f f_d2 t, d)
   | SVector (mem_pattern, d) -> SVector (mem_pattern, f_assert_univariate d)
   | SRowVector (mem_pattern, d) ->
       SRowVector (mem_pattern, f_assert_univariate d)
   | SMatrix (mem_pattern, d1, d2) -> (
-      match f_kind with
-      | Univariate -> SMatrix (mem_pattern, f d1, f_d2 d2)
-      | Multivariate -> SVector (mem_pattern, f d1 d2))
+      match f with
+      | Univariate f_d1 -> SMatrix (mem_pattern, f_d1 d1, f_d2 d2)
+      | Multivariate f -> SVector (mem_pattern, f d1 d2))
   | SInt | SReal | SComplex | STuple _ | SComplexRowVector _
    |SComplexVector _ | SComplexMatrix _ ->
       Common.ICE.internal_compiler_error
@@ -348,13 +342,13 @@ let rec param_size transform sizedtype =
   (* Functions for computing the new sizetype after some transformation *)
   let shrink_eigen_mat f st =
     (* Matrices become vectors, with size computed by [f] *)
-    shrink_helper Multivariate f Fn.id st in
+    shrink_helper (Multivariate f) Fn.id st in
   let shrink_eigen_vec f st =
     (* Matrices are mapped to vectors, only depending on their first dimension for sizing *)
     shrink_eigen_mat (fun x _ -> f x) st in
   let shrink_eigen f1 f2 st =
     (* Types don't change, just sizes *)
-    shrink_helper Univariate f1 f2 st in
+    shrink_helper (Univariate f1) f2 st in
   (* Helper functions for computing the new sizes *)
   let minus_one d = Expr.Helpers.(binop d Minus (int 1)) in
   let k_choose_2 k =
