@@ -136,6 +136,8 @@ module Exprs = struct
   let static_cast type_ expr = FunCall ("static_cast", [type_], [expr])
 end
 
+(**/**)
+
 module Expression_syntax = struct
   (** Some operators to make streams and method calls look more
       like the resultant C++ *)
@@ -199,6 +201,8 @@ module Expression_syntax = struct
   let ( .:() ) typ arg = Constructor (typ, [arg])
   let ( .:(;..) ) typ args = Constructor (typ, List.of_array args)
 end
+
+(**/**)
 
 type init =
   | Assignment of expr
@@ -273,12 +277,16 @@ module Stmts = struct
     [Comment "suppress unused var warning"; Expression (Cast (Void, Var s))]
 end
 
+(**/**)
+
 module Statement_syntax = struct
   include Stmts
 
   (** Shorthand for assignment *)
   let ( := ) a b = Expression (Assign (Var a, b))
 end
+
+(**/**)
 
 module Decls = struct
   (** Declarations which get re-used often in the generated model *)
@@ -393,14 +401,16 @@ let make_class_defn ~name ~public_base ?(final = true) ~private_members
 
 let make_struct_defn ~param ~name ~body () = {param; struct_name= name; body}
 
-(** Shorthand for a C++ comment. This one is rather harmless, so it isn't in its own module *)
-let ( !// ) s = GlobalComment s
-
-(** Re-export of earlier defined helpers  *)
+(** A set of operators and helpers to make the OCaml code look more like the resultant C++ *)
 module DSL = struct
+  (* defined this way so that the expression helpers could be used
+     by the statement code, but still importable under one name *)
   include Expression_syntax
   include Statement_syntax
 end
+
+(** Shorthand for a C++ comment. This one is rather harmless, so it isn't in its own module *)
+let ( !// ) s = GlobalComment s
 
 (** Much like in C++, we define a translation unit as a list of definitions *)
 type program = defn list [@@deriving sexp]
