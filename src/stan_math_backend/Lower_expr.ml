@@ -154,11 +154,11 @@ let rec local_scalar ut ad =
             (ad : UnsizedType.autodifftype)]
 
 let minus_one e =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   Parens (e - Literal "1")
 
 let plus_one e =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   Parens (e + Literal "1")
 
 let rec lower_type ?(mem_pattern = Mem_pattern.AoS) (t : UnsizedType.t)
@@ -222,7 +222,7 @@ let rec lower_logical_op op e1 e2 =
 and lower_binary_fun f es = Exprs.fun_call f (lower_exprs es)
 
 and vector_literal ?(column = false) scalar es =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let vec = if column then Types.vector scalar else Types.row_vector scalar in
   let make_vector size = vec.:(Literal (string_of_int size)) in
   if List.is_empty es then make_vector 0
@@ -242,7 +242,7 @@ and read_data ut es =
      |UMathLibraryFunction ->
         Common.ICE.internal_compiler_error
           [%message "Can't ReadData of " (ut : UnsizedType.t)] in
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let data_context = Var "context__" in
   data_context.@?(val_method, [lower_expr (List.hd_exn es)])
 
@@ -439,7 +439,7 @@ and lower_user_defined_fun f suffix es =
     ((lower_exprs ~promote_reals:true) es @ extra_args)
 
 and lower_compiler_internal ad ut f es =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let gen_tuple_literal (es : Expr.Typed.t list) : expr =
     (* we make full copies of tuples
        due to a lack of templating sophistication
@@ -561,9 +561,7 @@ and lower_indexed_simple (e : expr) idcs =
               (e : expr)
               (idcs : Expr.Typed.t Index.t list)] in
   List.fold idcs ~init:e
-    ~f:
-      Expression_syntax.(
-        fun e id -> e.*[idx_minus_one (Index.map lower_expr id)])
+    ~f:Cpp.DSL.(fun e id -> e.*[idx_minus_one (Index.map lower_expr id)])
 
 and lower_expr ?(promote_reals = false)
     (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =

@@ -79,7 +79,7 @@ let gen_globals ?printed_filename location_list =
 
 let assign_loc location_num =
   let open Cpp in
-  let open Statement_syntax in
+  let open Cpp.DSL in
   if location_num = no_span_num then []
   else ["current_statement__" := Literal (string_of_int location_num)]
 

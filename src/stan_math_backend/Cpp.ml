@@ -274,6 +274,8 @@ module Stmts = struct
 end
 
 module Statement_syntax = struct
+  include Stmts
+
   (** Shorthand for assignment *)
   let ( := ) a b = Expression (Assign (Var a, b))
 end
@@ -393,6 +395,12 @@ let make_struct_defn ~param ~name ~body () = {param; struct_name= name; body}
 
 (** Shorthand for a C++ comment. This one is rather harmless, so it isn't in its own module *)
 let ( !// ) s = GlobalComment s
+
+(** Re-export of earlier defined helpers  *)
+module DSL = struct
+  include Expression_syntax
+  include Statement_syntax
+end
 
 (** Much like in C++, we define a translation unit as a list of definitions *)
 type program = defn list [@@deriving sexp]
@@ -767,7 +775,7 @@ module Tests = struct
   (* This shows off some of the fancy syntax OCaml lets us use,
       like [<<] or [.@()]*)
   let%expect_test "eigen init" =
-    let open Expression_syntax in
+    let open DSL in
     let open Types in
     let vector = (row_vector Double).:(Literal "3") in
     let values = [Literal "1"; Var "a"; Literal "3"] in

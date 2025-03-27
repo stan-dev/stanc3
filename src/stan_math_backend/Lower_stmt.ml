@@ -36,7 +36,7 @@ let trans_math_fn f =
    For scalar types this sets the value to NaN and for containers initializes the memory.
 *)
 let rec initialize_value st adtype =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let init_nan =
     (* NB: Never used by TupleAD directly *)
     if adtype = UnsizedType.DataOnly then Exprs.quiet_NaN else Var "DUMMY_VAR__"
@@ -193,7 +193,7 @@ let expr_overlaps_lhs_ref (lhs_base_ref : 'e Stmt.Fixed.Pattern.lvalue)
       expr_base_ref = lhs_base_ref)
 
 let throw_exn exn_type args =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let err_strm_name = "errmsg_stream__" in
   let stream_decl =
     VariableDefn
@@ -221,7 +221,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
         []
     | _ -> Numbering.assign_loc meta in
   let wrap_e e = [Expression e] in
-  let open Expression_syntax in
+  let open Cpp.DSL in
   location
   @
   match pattern with
@@ -281,7 +281,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       [ Stmts.if_block (Var "jacobian__")
           (accum.@?("add", [lower_expr e]) |> wrap_e) ]
   | NRFunApp (CompilerInternal FnPrint, args) ->
-      let open Expression_syntax in
+      let open Cpp.DSL in
       let pstream = Var "pstream__" in
       let print a =
         Expression

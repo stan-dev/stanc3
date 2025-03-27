@@ -97,7 +97,7 @@ let rec validate_dims ~stage name st =
     let subtypes = SizedType.flatten_tuple_io st in
     List.map2_exn ~f:(validate_dims ~stage) names subtypes |> List.concat
   else
-    let open Expression_syntax in
+    let open Cpp.DSL in
     let vector args =
       let cast x = Exprs.static_cast Types.size_t (lower_expr x) in
       let vec = Types.std_vector Types.size_t in
@@ -115,7 +115,7 @@ let rec validate_dims ~stage name st =
 
 let gen_assign_data decl_id st =
   let lower_placement_new decl_id st =
-    let open Expression_syntax in
+    let open Cpp.DSL in
     match st with
     | SizedType.SVector (_, d)
      |SRowVector (_, d)
@@ -141,7 +141,7 @@ let gen_assign_data decl_id st =
      |SComplexRowVector _ | SComplexMatrix _ ->
         decl_id ^ "_data__"
     | SInt | SReal | SComplex | SArray _ | STuple _ -> decl_id in
-  Statement_syntax.(
+  Cpp.DSL.(
     underlying_variable decl_id st
     := initialize_value st
          (UnsizedType.fill_adtype_for_type UnsizedType.DataOnly
@@ -185,12 +185,10 @@ let lower_constructor
   let data =
     Stmts.rethrow_located (List.concat_map ~f:lower_data prepare_data) in
   let set_num_params =
-    let open Statement_syntax in
+    let open Cpp.DSL in
     let output_params =
       List.filter_map ~f:get_unconstrained_param_st output_vars in
-    match
-      lower_exprs output_params |> List.reduce ~f:Expression_syntax.( + )
-    with
+    match lower_exprs output_params |> List.reduce ~f:( + ) with
     | None -> "num_params_r__" := Literal "0U"
     | Some pars -> "num_params_r__" := pars in
   make_constructor ~args
@@ -221,7 +219,7 @@ let gen_log_prob Program.{prog_name; log_prob; reverse_mode_log_prob; _} =
     @ Decls.current_statement @ Decls.dummy_var
     @ gen_function__ prog_name "log_prob" in
   let outro =
-    let open Expression_syntax in
+    let open Cpp.DSL in
     let lp_accum__ = Var "lp_accum__" in
     [ Expression lp_accum__.@?("add", [Var "lp__"])
     ; Return (Some lp_accum__.@!("sum")) ] in
@@ -339,7 +337,7 @@ let gen_unconstrain_array_impl {Program.unconstrain_array; _} =
        ~cv_qualifiers:[Const] ())
 
 let gen_extend_vector name type_ elts =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let var = Var name in
   if List.is_empty elts then []
   else
@@ -369,7 +367,7 @@ let gen_get_param_names {Program.output_vars; _} =
     [ (Ref (Types.std_vector Types.string), names)
     ; (Const Types.bool, "emit_transformed_parameters__ = true")
     ; (Const Types.bool, "emit_generated_quantities__ = true") ] in
-  let open Statement_syntax in
+  let open Cpp.DSL in
   let body =
     [names := Exprs.std_vector_init_expr Types.string (List.concat params)]
     @ [ IfElse
@@ -417,7 +415,7 @@ let gen_get_dims {Program.output_vars; _} =
       | _, _, {out_block= GeneratedQuantities; Program.out_constrained_st= st; _}
         ->
           `Trd (pack st)) in
-  let open Statement_syntax in
+  let open Cpp.DSL in
   let dimss = "dimss__" in
   let args =
     [ (Ref (Types.std_vector (Types.std_vector Types.size_t)), dimss)
@@ -468,7 +466,7 @@ let emplace_name_stmt name idcs =
   let sep = function `Array -> Literal "'.'" | `Tuple -> Literal "':'" in
   let to_string e =
     match e with Literal _ -> e | _ -> Exprs.fun_call "std::to_string" [e] in
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let param_names__ = Var "param_names__" in
   Expression
     param_names__.@?(( "emplace_back"
@@ -559,7 +557,7 @@ let gen_unconstrained_param_names {Program.output_vars; _} =
  @param outvars The parameters to gather the sizes for.
  *)
 let gen_outvar_metadata name outvars =
-  let open Expression_syntax in
+  let open Cpp.DSL in
   let json_str = Cpp_Json.out_var_interpolated_json_str outvars in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Types.string ~name
@@ -584,9 +582,8 @@ let gen_constrained_types {Program.output_vars; _} =
 (** The generic method overloads needed in the model class. *)
 let gen_overloads {Program.output_vars; _} =
   let pstream = (Pointer (TypeLiteral "std::ostream"), "pstream = nullptr") in
-  let open Statement_syntax in
+  let open Cpp.DSL in
   let write_arrays =
-    let open Expression_syntax in
     let templates_init = ([[Typename "RNG"]], false) in
     let emit_flags const =
       let t : type_ = if const then Const Types.bool else Types.bool in
@@ -699,7 +696,7 @@ let gen_overloads {Program.output_vars; _} =
              ; (Ref (Types.std_vector Int), "params_i"); pstream ]
            ~body:[call_impl] ~cv_qualifiers:[Const] ()) ] in
   let transform_inits =
-    let open Expression_syntax in
+    let open Cpp.DSL in
     let params_r_vec = Var "params_r_vec" in
     let eigen_map_double = Types.eigen_map (Types.vector Double) in
     [ FunDef
@@ -731,7 +728,7 @@ let gen_overloads {Program.output_vars; _} =
          ; (Ref (Types.std_vector Double), "vars")
          ; (Pointer (TypeLiteral "std::ostream"), "pstream__ = nullptr") ] in
        let body =
-         let open Expression_syntax in
+         let open Cpp.DSL in
          [ Expression (Var "vars").@?("resize", [Var "num_params_r__"])
          ; Expression
              (Exprs.fun_call "transform_inits_impl"
@@ -740,7 +737,7 @@ let gen_overloads {Program.output_vars; _} =
          (make_fun_defn ~inline:true ~return_type:Void ~name:"transform_inits"
             ~args ~body ~cv_qualifiers:[Const] ())) ] in
   let unconstrain_array =
-    let open Expression_syntax in
+    let open Cpp.DSL in
     let call_impl =
       Expression
         (Exprs.fun_call "unconstrain_array_impl"
