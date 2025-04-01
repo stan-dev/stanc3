@@ -263,6 +263,11 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       let rhs = maybe_deep_copy (remove_promotions rhs) in
       (* Split up the top-level lvalue to fit in the assign call *)
       let lhs_base, lhs_idcs = lhs in
+      let lhs_idcs =
+        (* If the only indexes are omnis, we can just skip them *)
+        if List.for_all ~f:(function Index.All -> true | _ -> false) lhs_idcs
+        then []
+        else lhs_idcs in
       Exprs.fun_call "stan::model::assign"
         ([ lower_nonrange_lbase lhs_base; lower_expr rhs
          ; Exprs.literal_string

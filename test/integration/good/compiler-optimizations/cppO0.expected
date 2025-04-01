@@ -27925,8 +27925,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
         Eigen::Matrix<local_scalar_t__,-1,1> x =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
         current_statement__ = 3;
-        stan::model::assign(x, y, "assigning variable x",
-          stan::model::index_omni());
+        stan::model::assign(x, y, "assigning variable x");
         current_statement__ = 4;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
         current_statement__ = 5;
@@ -27974,8 +27973,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
         Eigen::Matrix<local_scalar_t__,-1,1> x =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
         current_statement__ = 3;
-        stan::model::assign(x, y, "assigning variable x",
-          stan::model::index_omni());
+        stan::model::assign(x, y, "assigning variable x");
         current_statement__ = 4;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
         current_statement__ = 5;
