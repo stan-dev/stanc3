@@ -265,9 +265,7 @@ let rec lower_statement Stmt.Fixed.{pattern; meta} : stmt list =
       let lhs_base, lhs_idcs = lhs in
       let lhs_idcs =
         (* If the only indexes are omnis, we can just skip them *)
-        if List.for_all ~f:(function Index.All -> true | _ -> false) lhs_idcs
-        then []
-        else lhs_idcs in
+        if Index.every_index_is_all lhs_idcs then [] else lhs_idcs in
       Exprs.fun_call "stan::model::assign"
         ([ lower_nonrange_lbase lhs_base; lower_expr rhs
          ; Exprs.literal_string

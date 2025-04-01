@@ -27855,14 +27855,25 @@ namespace unenforce_initialize_omni_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 7> locations_array__ =
+static constexpr std::array<const char*, 18> locations_array__ =
   {" (found before start of program)",
   " (in 'unenforce-initialize-omni.stan', line 2, column 2 to column 14)",
-  " (in 'unenforce-initialize-omni.stan', line 6, column 2 to column 14)",
-  " (in 'unenforce-initialize-omni.stan', line 7, column 2 to column 11)",
-  " (in 'unenforce-initialize-omni.stan', line 9, column 2 to column 19)",
-  " (in 'unenforce-initialize-omni.stan', line 11, column 2 to column 11)",
-  " (in 'unenforce-initialize-omni.stan', line 12, column 2 to column 11)"};
+  " (in 'unenforce-initialize-omni.stan', line 4, column 2 to column 26)",
+  " (in 'unenforce-initialize-omni.stan', line 7, column 2 to column 14)",
+  " (in 'unenforce-initialize-omni.stan', line 8, column 2 to column 13)",
+  " (in 'unenforce-initialize-omni.stan', line 10, column 2 to column 27)",
+  " (in 'unenforce-initialize-omni.stan', line 11, column 2 to column 28)",
+  " (in 'unenforce-initialize-omni.stan', line 13, column 2 to column 19)",
+  " (in 'unenforce-initialize-omni.stan', line 18, column 8 to column 36)",
+  " (in 'unenforce-initialize-omni.stan', line 17, column 23 to line 19, column 7)",
+  " (in 'unenforce-initialize-omni.stan', line 17, column 6 to line 19, column 7)",
+  " (in 'unenforce-initialize-omni.stan', line 16, column 21 to line 20, column 5)",
+  " (in 'unenforce-initialize-omni.stan', line 16, column 4 to line 20, column 5)",
+  " (in 'unenforce-initialize-omni.stan', line 15, column 19 to line 21, column 3)",
+  " (in 'unenforce-initialize-omni.stan', line 15, column 2 to line 21, column 3)",
+  " (in 'unenforce-initialize-omni.stan', line 23, column 2 to column 11)",
+  " (in 'unenforce-initialize-omni.stan', line 24, column 2 to column 20)",
+  " (in 'unenforce-initialize-omni.stan', line 25, column 2 to column 29)"};
 class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_initialize_omni_model> {
  private:
   
@@ -27886,7 +27897,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    num_params_r__ = 2;
+    num_params_r__ = 2 + (3 * (4 * 5));
   }
   inline std::string model_name() const final {
     return "unenforce_initialize_omni_model";
@@ -27921,19 +27932,52 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     try {
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 2;
+      auto arr =
+        in__.template read<
+          std::vector<std::vector<std::vector<local_scalar_t__>>>>(3, 4, 5);
       {
         Eigen::Matrix<local_scalar_t__,-1,1> x =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-        current_statement__ = 3;
-        stan::model::assign(x, y, "assigning variable x");
         current_statement__ = 4;
+        stan::model::assign(x, y, "assigning variable x");
+        std::vector<std::vector<std::vector<local_scalar_t__>>> arr2 =
+          std::vector<std::vector<std::vector<local_scalar_t__>>>(3,
+            std::vector<std::vector<local_scalar_t__>>(4,
+              std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
+        current_statement__ = 6;
+        stan::model::assign(arr2, arr, "assigning variable arr2");
+        current_statement__ = 7;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
-        current_statement__ = 5;
+        current_statement__ = 14;
+        for (int i = 1; i <= 3; ++i) {
+          current_statement__ = 12;
+          for (int j = 1; j <= 4; ++j) {
+            current_statement__ = 10;
+            for (int k = 1; k <= 5; ++k) {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(i),
+                                 stan::model::index_uni(j),
+                                 stan::model::index_uni(k))));
+            }
+          }
+        }
+        current_statement__ = 15;
         stan::model::assign(x, 0, "assigning variable x",
           stan::model::index_uni(1));
-        current_statement__ = 6;
+        current_statement__ = 16;
+        stan::model::assign(arr2, 0, "assigning variable arr2",
+          stan::model::index_uni(1), stan::model::index_uni(1),
+          stan::model::index_uni(1));
+        current_statement__ = 17;
         if (pstream__) {
-          stan::math::stan_print(pstream__, x);
+          stan::math::stan_print(pstream__,
+            stan::model::rvalue(x, "x", stan::model::index_uni(2)));
+          stan::math::stan_print(pstream__,
+            stan::model::rvalue(arr2, "arr2", stan::model::index_uni(2),
+              stan::model::index_uni(2), stan::model::index_uni(2)));
           *(pstream__) << std::endl;
         }
       }
@@ -27969,19 +28013,52 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     try {
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 2;
+      auto arr =
+        in__.template read<
+          std::vector<std::vector<std::vector<local_scalar_t__>>>>(3, 4, 5);
       {
         Eigen::Matrix<local_scalar_t__,-1,1> x =
           Eigen::Matrix<local_scalar_t__,-1,1>::Constant(2, DUMMY_VAR__);
-        current_statement__ = 3;
-        stan::model::assign(x, y, "assigning variable x");
         current_statement__ = 4;
+        stan::model::assign(x, y, "assigning variable x");
+        std::vector<std::vector<std::vector<local_scalar_t__>>> arr2 =
+          std::vector<std::vector<std::vector<local_scalar_t__>>>(3,
+            std::vector<std::vector<local_scalar_t__>>(4,
+              std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
+        current_statement__ = 6;
+        stan::model::assign(arr2, arr, "assigning variable arr2");
+        current_statement__ = 7;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
-        current_statement__ = 5;
+        current_statement__ = 14;
+        for (int i = 1; i <= 3; ++i) {
+          current_statement__ = 12;
+          for (int j = 1; j <= 4; ++j) {
+            current_statement__ = 10;
+            for (int k = 1; k <= 5; ++k) {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(i),
+                                 stan::model::index_uni(j),
+                                 stan::model::index_uni(k))));
+            }
+          }
+        }
+        current_statement__ = 15;
         stan::model::assign(x, 0, "assigning variable x",
           stan::model::index_uni(1));
-        current_statement__ = 6;
+        current_statement__ = 16;
+        stan::model::assign(arr2, 0, "assigning variable arr2",
+          stan::model::index_uni(1), stan::model::index_uni(1),
+          stan::model::index_uni(1));
+        current_statement__ = 17;
         if (pstream__) {
-          stan::math::stan_print(pstream__, x);
+          stan::math::stan_print(pstream__,
+            stan::model::rvalue(x, "x", stan::model::index_uni(2)));
+          stan::math::stan_print(pstream__,
+            stan::model::rvalue(arr2, "arr2", stan::model::index_uni(2),
+              stan::model::index_uni(2), stan::model::index_uni(2)));
           *(pstream__) << std::endl;
         }
       }
@@ -28028,7 +28105,19 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     try {
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 2;
+      auto arr =
+        in__.template read<
+          std::vector<std::vector<std::vector<local_scalar_t__>>>>(3, 4, 5);
       out__.write(y);
+      current_statement__ = 2;
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            out__.write(arr[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      }
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {
@@ -28064,6 +28153,21 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
         "assigning variable y");
       out__.write(y);
+      std::vector<std::vector<std::vector<local_scalar_t__>>> arr =
+        std::vector<std::vector<std::vector<local_scalar_t__>>>(3,
+          std::vector<std::vector<local_scalar_t__>>(4,
+            std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
+      current_statement__ = 2;
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            current_statement__ = 2;
+            arr[(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
+              1)] = in__.read<local_scalar_t__>();
+          }
+        }
+      }
+      out__.write(arr);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -28084,6 +28188,10 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "y", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "arr", "double",
+        std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(4),
+          static_cast<size_t>(5)});
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__,-1,1> y =
@@ -28100,6 +28208,28 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
         }
       }
       out__.write(y);
+      std::vector<std::vector<std::vector<local_scalar_t__>>> arr =
+        std::vector<std::vector<std::vector<local_scalar_t__>>>(3,
+          std::vector<std::vector<local_scalar_t__>>(4,
+            std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
+      {
+        std::vector<local_scalar_t__> arr_flat__;
+        current_statement__ = 2;
+        arr_flat__ = context__.vals_r("arr");
+        pos__ = 1;
+        for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+            for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(sym3__),
+                stan::model::index_uni(sym2__),
+                stan::model::index_uni(sym1__));
+              pos__ = (pos__ + 1);
+            }
+          }
+        }
+      }
+      out__.write(arr);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -28108,7 +28238,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"y"};
+    names__ = std::vector<std::string>{"y", "arr"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -28117,7 +28247,9 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
-                                                                    size_t>(2)}};
+                                                                    size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(3),
+                  static_cast<size_t>(4), static_cast<size_t>(5)}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -28128,6 +28260,15 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
         std::to_string(sym1__));
+    }
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+          param_names__.emplace_back(std::string() + "arr" + '.' +
+            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+            std::to_string(sym1__));
+        }
+      }
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -28140,14 +28281,23 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
       param_names__.emplace_back(std::string() + "y" + '.' +
         std::to_string(sym1__));
     }
+    for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+      for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+        for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+          param_names__.emplace_back(std::string() + "arr" + '.' +
+            std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' +
+            std::to_string(sym1__));
+        }
+      }
+    }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -28156,7 +28306,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 2;
+    const size_t num_params__ = (2 + (3 * (4 * 5)));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -28173,7 +28323,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 2;
+    const size_t num_params__ = (2 + (3 * (4 * 5)));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +

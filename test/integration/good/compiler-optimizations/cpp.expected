@@ -44814,14 +44814,21 @@ namespace unenforce_initialize_omni_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 7> locations_array__ =
+static constexpr std::array<const char*, 14> locations_array__ =
   {" (found before start of program)",
   " (in 'unenforce-initialize-omni.stan', line 2, column 2 to column 14)",
-  " (in 'unenforce-initialize-omni.stan', line 6, column 2 to column 14)",
-  " (in 'unenforce-initialize-omni.stan', line 7, column 2 to column 11)",
-  " (in 'unenforce-initialize-omni.stan', line 9, column 2 to column 19)",
-  " (in 'unenforce-initialize-omni.stan', line 11, column 2 to column 11)",
-  " (in 'unenforce-initialize-omni.stan', line 12, column 2 to column 11)"};
+  " (in 'unenforce-initialize-omni.stan', line 4, column 2 to column 26)",
+  " (in 'unenforce-initialize-omni.stan', line 7, column 2 to column 14)",
+  " (in 'unenforce-initialize-omni.stan', line 8, column 2 to column 13)",
+  " (in 'unenforce-initialize-omni.stan', line 10, column 2 to column 27)",
+  " (in 'unenforce-initialize-omni.stan', line 11, column 2 to column 28)",
+  " (in 'unenforce-initialize-omni.stan', line 13, column 2 to column 19)",
+  " (in 'unenforce-initialize-omni.stan', line 18, column 8 to column 36)",
+  " (in 'unenforce-initialize-omni.stan', line 17, column 6 to line 19, column 7)",
+  " (in 'unenforce-initialize-omni.stan', line 16, column 4 to line 20, column 5)",
+  " (in 'unenforce-initialize-omni.stan', line 15, column 2 to line 21, column 3)",
+  " (in 'unenforce-initialize-omni.stan', line 24, column 2 to column 20)",
+  " (in 'unenforce-initialize-omni.stan', line 25, column 2 to column 29)"};
 class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_initialize_omni_model> {
  private:
   
@@ -44845,7 +44852,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     // suppress unused var warning
     (void) DUMMY_VAR__;
-    num_params_r__ = 2;
+    num_params_r__ = 2 + (3 * (4 * 5));
   }
   inline std::string model_name() const final {
     return "unenforce_initialize_omni_model";
@@ -44878,22 +44885,534 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym9__;
-      double lcm_sym8__;
+      double lcm_sym39__;
+      double lcm_sym38__;
+      double lcm_sym37__;
+      double lcm_sym36__;
+      double lcm_sym35__;
+      double lcm_sym34__;
+      double lcm_sym33__;
+      double lcm_sym32__;
+      double lcm_sym31__;
+      double lcm_sym30__;
+      double lcm_sym29__;
+      double lcm_sym28__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 2;
+      auto arr =
+        in__.template read<
+          std::vector<std::vector<std::vector<local_scalar_t__>>>>(3, 4, 5);
       {
         Eigen::Matrix<local_scalar_t__,-1,1> x;
-        current_statement__ = 3;
-        stan::model::assign(x, y, "assigning variable x");
         current_statement__ = 4;
+        stan::model::assign(x, y, "assigning variable x");
+        std::vector<std::vector<std::vector<local_scalar_t__>>> arr2;
+        current_statement__ = 6;
+        stan::model::assign(arr2, arr, "assigning variable arr2");
+        current_statement__ = 7;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
-        current_statement__ = 5;
+        {
+          {
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(4),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(5))));
+              }
+            }
+          }
+          {
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(4),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(5))));
+              }
+            }
+          }
+          {
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(4),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(5))));
+              }
+            }
+          }
+        }
         stan::model::assign(x, 0, "assigning variable x",
           stan::model::index_uni(1));
-        current_statement__ = 6;
+        current_statement__ = 12;
+        stan::model::assign(arr2, 0, "assigning variable arr2",
+          stan::model::index_uni(1), stan::model::index_uni(1),
+          stan::model::index_uni(1));
+        current_statement__ = 13;
         if (pstream__) {
-          stan::math::stan_print(pstream__, x);
+          stan::math::stan_print(pstream__,
+            stan::model::rvalue(x, "x", stan::model::index_uni(2)));
+          stan::math::stan_print(pstream__,
+            stan::model::rvalue(arr2, "arr2", stan::model::index_uni(2),
+              stan::model::index_uni(2), stan::model::index_uni(2)));
           *(pstream__) << std::endl;
         }
       }
@@ -44927,24 +45446,536 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     // suppress unused var warning
     (void) function__;
     try {
-      double lcm_sym7__;
-      double lcm_sym6__;
+      double lcm_sym27__;
+      double lcm_sym26__;
+      double lcm_sym25__;
+      double lcm_sym24__;
+      double lcm_sym23__;
+      double lcm_sym22__;
+      double lcm_sym21__;
+      double lcm_sym20__;
+      double lcm_sym19__;
+      double lcm_sym18__;
+      double lcm_sym17__;
+      double lcm_sym16__;
       current_statement__ = 1;
       auto y =
         in__.template read<
           stan::math::var_value<Eigen::Matrix<double,-1,1>>>(2);
+      current_statement__ = 2;
+      auto arr =
+        in__.template read<
+          std::vector<std::vector<std::vector<local_scalar_t__>>>>(3, 4, 5);
       {
         stan::math::var_value<Eigen::Matrix<double,-1,1>> x;
-        current_statement__ = 3;
-        stan::model::assign(x, y, "assigning variable x");
         current_statement__ = 4;
+        stan::model::assign(x, y, "assigning variable x");
+        std::vector<std::vector<std::vector<local_scalar_t__>>> arr2;
+        current_statement__ = 6;
+        stan::model::assign(arr2, arr, "assigning variable arr2");
+        current_statement__ = 7;
         lp_accum__.add(stan::math::std_normal_lpdf<propto__>(y));
-        current_statement__ = 5;
+        {
+          {
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(4),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(5))));
+              }
+            }
+          }
+          {
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(4),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(5))));
+              }
+            }
+          }
+          {
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(1),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(1),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(2),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(5))));
+              }
+            }
+            {
+              current_statement__ = 8;
+              lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                               stan::model::rvalue(arr, "arr",
+                                 stan::model::index_uni(3),
+                                 stan::model::index_uni(4),
+                                 stan::model::index_uni(1))));
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(2))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(3))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(4))));
+              }
+              {
+                current_statement__ = 8;
+                lp_accum__.add(stan::math::std_normal_lpdf<propto__>(
+                                 stan::model::rvalue(arr, "arr",
+                                   stan::model::index_uni(3),
+                                   stan::model::index_uni(4),
+                                   stan::model::index_uni(5))));
+              }
+            }
+          }
+        }
         stan::model::assign(x, 0, "assigning variable x",
           stan::model::index_uni(1));
-        current_statement__ = 6;
+        current_statement__ = 12;
+        stan::model::assign(arr2, 0, "assigning variable arr2",
+          stan::model::index_uni(1), stan::model::index_uni(1),
+          stan::model::index_uni(1));
+        current_statement__ = 13;
         if (pstream__) {
-          stan::math::stan_print(pstream__, x);
+          stan::math::stan_print(pstream__,
+            stan::model::rvalue(x, "x", stan::model::index_uni(2)));
+          stan::math::stan_print(pstream__,
+            stan::model::rvalue(arr2, "arr2", stan::model::index_uni(2),
+              stan::model::index_uni(2), stan::model::index_uni(2)));
           *(pstream__) << std::endl;
         }
       }
@@ -44989,11 +46020,395 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
     // suppress unused var warning
     (void) function__;
     try {
-      int lcm_sym5__;
-      int lcm_sym4__;
+      double lcm_sym15__;
+      double lcm_sym14__;
+      double lcm_sym13__;
+      double lcm_sym12__;
+      double lcm_sym11__;
+      double lcm_sym10__;
+      double lcm_sym9__;
+      double lcm_sym8__;
+      int lcm_sym7__;
+      int lcm_sym6__;
       current_statement__ = 1;
       auto y = in__.template read<Eigen::Matrix<local_scalar_t__,-1,1>>(2);
+      current_statement__ = 2;
+      auto arr =
+        in__.template read<
+          std::vector<std::vector<std::vector<local_scalar_t__>>>>(3, 4, 5);
       out__.write(y);
+      {
+        {
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(1)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(1)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(1)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(2),
+                          stan::model::index_uni(1)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(1)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(1)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(3),
+                          stan::model::index_uni(1)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(1)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(1)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(4),
+                          stan::model::index_uni(1)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(1)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(1)));
+            }
+          }
+        }
+        {
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(2)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(2)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(2)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(2),
+                          stan::model::index_uni(2)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(2)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(2)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(3),
+                          stan::model::index_uni(2)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(2)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(2)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(4),
+                          stan::model::index_uni(2)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(2)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(2)));
+            }
+          }
+        }
+        {
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(3)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(3)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(3)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(2),
+                          stan::model::index_uni(3)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(3)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(3)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(3),
+                          stan::model::index_uni(3)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(3)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(3)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(4),
+                          stan::model::index_uni(3)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(3)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(3)));
+            }
+          }
+        }
+        {
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(4)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(4)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(4)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(2),
+                          stan::model::index_uni(4)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(4)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(4)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(3),
+                          stan::model::index_uni(4)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(4)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(4)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(4),
+                          stan::model::index_uni(4)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(4)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(4)));
+            }
+          }
+        }
+        {
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(5)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(5)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(1),
+                            stan::model::index_uni(5)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(2),
+                          stan::model::index_uni(5)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(5)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(5)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(3),
+                          stan::model::index_uni(5)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(5)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(5)));
+            }
+          }
+          {
+            out__.write(stan::model::rvalue(arr, "arr",
+                          stan::model::index_uni(1),
+                          stan::model::index_uni(4),
+                          stan::model::index_uni(5)));
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(2),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(5)));
+            }
+            {
+              out__.write(stan::model::rvalue(arr, "arr",
+                            stan::model::index_uni(3),
+                            stan::model::index_uni(4),
+                            stan::model::index_uni(5)));
+            }
+          }
+        }
+      }
       if (stan::math::logical_negation(
             (stan::math::primitive_value(emit_transformed_parameters__) ||
             stan::math::primitive_value(emit_generated_quantities__)))) {
@@ -45028,6 +46443,21 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
         in__.read<Eigen::Matrix<local_scalar_t__,-1,1>>(2),
         "assigning variable y");
       out__.write(y);
+      std::vector<std::vector<std::vector<local_scalar_t__>>> arr =
+        std::vector<std::vector<std::vector<local_scalar_t__>>>(3,
+          std::vector<std::vector<local_scalar_t__>>(4,
+            std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
+      current_statement__ = 2;
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            current_statement__ = 2;
+            arr[(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
+              1)] = in__.read<local_scalar_t__>();
+          }
+        }
+      }
+      out__.write(arr);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -45048,6 +46478,12 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
       current_statement__ = 1;
       context__.validate_dims("parameter initialization", "y", "double",
         std::vector<size_t>{static_cast<size_t>(2)});
+      current_statement__ = 2;
+      context__.validate_dims("parameter initialization", "arr", "double",
+        std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(4),
+          static_cast<size_t>(5)});
+      double lcm_sym5__;
+      double lcm_sym4__;
       double lcm_sym3__;
       double lcm_sym2__;
       int lcm_sym1__;
@@ -45071,6 +46507,389 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
         }
       }
       out__.write(y);
+      std::vector<std::vector<std::vector<local_scalar_t__>>> arr =
+        std::vector<std::vector<std::vector<local_scalar_t__>>>(3,
+          std::vector<std::vector<local_scalar_t__>>(4,
+            std::vector<local_scalar_t__>(5, DUMMY_VAR__)));
+      {
+        std::vector<double> arr_flat__;
+        current_statement__ = 2;
+        arr_flat__ = context__.vals_r("arr");
+        {
+          {
+            {
+              stan::model::assign(arr,
+                stan::model::rvalue(arr_flat__, "arr_flat__",
+                  stan::model::index_uni(1)), "assigning variable arr",
+                stan::model::index_uni(1), stan::model::index_uni(1),
+                stan::model::index_uni(1));
+              pos__ = 2;
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(1), stan::model::index_uni(1));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(1), stan::model::index_uni(1));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(2), stan::model::index_uni(1));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(2), stan::model::index_uni(1));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(2), stan::model::index_uni(1));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(3), stan::model::index_uni(1));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(3), stan::model::index_uni(1));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(3), stan::model::index_uni(1));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(4), stan::model::index_uni(1));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(4), stan::model::index_uni(1));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(4), stan::model::index_uni(1));
+                pos__ = (pos__ + 1);
+              }
+            }
+          }
+          {
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(1), stan::model::index_uni(2));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(1), stan::model::index_uni(2));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(1), stan::model::index_uni(2));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(2), stan::model::index_uni(2));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(2), stan::model::index_uni(2));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(2), stan::model::index_uni(2));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(3), stan::model::index_uni(2));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(3), stan::model::index_uni(2));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(3), stan::model::index_uni(2));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(4), stan::model::index_uni(2));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(4), stan::model::index_uni(2));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(4), stan::model::index_uni(2));
+                pos__ = (pos__ + 1);
+              }
+            }
+          }
+          {
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(1), stan::model::index_uni(3));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(1), stan::model::index_uni(3));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(1), stan::model::index_uni(3));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(2), stan::model::index_uni(3));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(2), stan::model::index_uni(3));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(2), stan::model::index_uni(3));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(3), stan::model::index_uni(3));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(3), stan::model::index_uni(3));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(3), stan::model::index_uni(3));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(4), stan::model::index_uni(3));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(4), stan::model::index_uni(3));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(4), stan::model::index_uni(3));
+                pos__ = (pos__ + 1);
+              }
+            }
+          }
+          {
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(1), stan::model::index_uni(4));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(1), stan::model::index_uni(4));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(1), stan::model::index_uni(4));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(2), stan::model::index_uni(4));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(2), stan::model::index_uni(4));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(2), stan::model::index_uni(4));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(3), stan::model::index_uni(4));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(3), stan::model::index_uni(4));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(3), stan::model::index_uni(4));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(4), stan::model::index_uni(4));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(4), stan::model::index_uni(4));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(4), stan::model::index_uni(4));
+                pos__ = (pos__ + 1);
+              }
+            }
+          }
+          {
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(1), stan::model::index_uni(5));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(1), stan::model::index_uni(5));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(1), stan::model::index_uni(5));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(2), stan::model::index_uni(5));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(2), stan::model::index_uni(5));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(2), stan::model::index_uni(5));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(3), stan::model::index_uni(5));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(3), stan::model::index_uni(5));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(3), stan::model::index_uni(5));
+                pos__ = (pos__ + 1);
+              }
+            }
+            {
+              stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                "assigning variable arr", stan::model::index_uni(1),
+                stan::model::index_uni(4), stan::model::index_uni(5));
+              pos__ = (pos__ + 1);
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(2),
+                  stan::model::index_uni(4), stan::model::index_uni(5));
+                pos__ = (pos__ + 1);
+              }
+              {
+                stan::model::assign(arr, arr_flat__[(pos__ - 1)],
+                  "assigning variable arr", stan::model::index_uni(3),
+                  stan::model::index_uni(4), stan::model::index_uni(5));
+              }
+            }
+          }
+        }
+      }
+      out__.write(arr);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -45079,7 +46898,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   get_param_names(std::vector<std::string>& names__, const bool
                   emit_transformed_parameters__ = true, const bool
                   emit_generated_quantities__ = true) const {
-    names__ = std::vector<std::string>{"y"};
+    names__ = std::vector<std::string>{"y", "arr"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -45088,7 +46907,9 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
            emit_transformed_parameters__ = true, const bool
            emit_generated_quantities__ = true) const {
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{static_cast<
-                                                                    size_t>(2)}};
+                                                                    size_t>(2)},
+                std::vector<size_t>{static_cast<size_t>(3),
+                  static_cast<size_t>(4), static_cast<size_t>(5)}};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
@@ -45096,9 +46917,18 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   constrained_param_names(std::vector<std::string>& param_names__, bool
                           emit_transformed_parameters__ = true, bool
                           emit_generated_quantities__ = true) const final {
-    for (int sym10__ = 1; sym10__ <= 2; ++sym10__) {
+    for (int sym40__ = 1; sym40__ <= 2; ++sym40__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym10__));
+        std::to_string(sym40__));
+    }
+    for (int sym40__ = 1; sym40__ <= 5; ++sym40__) {
+      for (int sym41__ = 1; sym41__ <= 4; ++sym41__) {
+        for (int sym42__ = 1; sym42__ <= 3; ++sym42__) {
+          param_names__.emplace_back(std::string() + "arr" + '.' +
+            std::to_string(sym42__) + '.' + std::to_string(sym41__) + '.' +
+            std::to_string(sym40__));
+        }
+      }
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
@@ -45107,18 +46937,27 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
   unconstrained_param_names(std::vector<std::string>& param_names__, bool
                             emit_transformed_parameters__ = true, bool
                             emit_generated_quantities__ = true) const final {
-    for (int sym10__ = 1; sym10__ <= 2; ++sym10__) {
+    for (int sym40__ = 1; sym40__ <= 2; ++sym40__) {
       param_names__.emplace_back(std::string() + "y" + '.' +
-        std::to_string(sym10__));
+        std::to_string(sym40__));
+    }
+    for (int sym40__ = 1; sym40__ <= 5; ++sym40__) {
+      for (int sym41__ = 1; sym41__ <= 4; ++sym41__) {
+        for (int sym42__ = 1; sym42__ <= 3; ++sym42__) {
+          param_names__.emplace_back(std::string() + "arr" + '.' +
+            std::to_string(sym42__) + '.' + std::to_string(sym41__) + '.' +
+            std::to_string(sym40__));
+        }
+      }
     }
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"}]");
+    return std::string("[{\"name\":\"y\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(4) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(5) + ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -45127,7 +46966,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
               emit_transformed_parameters = true, const bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 2;
+    const size_t num_params__ = (2 + (3 * (4 * 5)));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
@@ -45144,7 +46983,7 @@ class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_i
               emit_transformed_parameters = true, bool
               emit_generated_quantities = true, std::ostream*
               pstream = nullptr) const {
-    const size_t num_params__ = 2;
+    const size_t num_params__ = (2 + (3 * (4 * 5)));
     const size_t num_transformed = emit_transformed_parameters * (0);
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
