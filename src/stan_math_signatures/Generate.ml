@@ -265,6 +265,7 @@ let distributions =
   ; (full_lpdf, "pareto", [DVReal; DVReal; DVReal], SoA)
   ; (full_lpdf, "pareto_type_2", [DVReal; DVReal; DVReal; DVReal], SoA)
   ; (full_lpmf, "poisson", [DVInt; DVReal], SoA)
+  ; (full_lpmf, "poisson_binomial", [DVInt; DVReal], SoA)
   ; ([Lpmf; Rng], "poisson_log", [DVInt; DVReal], SoA)
   ; ([Lpmf], "poisson_log_glm", [DVInt; DMatrix; DReal; DVector], SoA)
   ; (full_lpdf, "rayleigh", [DVReal; DVReal], SoA)
