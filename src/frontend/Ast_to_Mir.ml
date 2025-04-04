@@ -378,7 +378,7 @@ let rec param_size transform sizedtype =
         (fun k -> Expr.Helpers.(binop k Plus (k_choose_2 k)))
         sizedtype
   | CholeskyCov ->
-      (* (N * choose(N, 2) + (M - N) * N *)
+      (* choose(N, 2) + (M - N) * N *)
       shrink_eigen_mat
         (fun m n ->
           Expr.Helpers.(
