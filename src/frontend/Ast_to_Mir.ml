@@ -338,7 +338,7 @@ let rec shrink_helper (f : size_change) f_d2 st =
         [%message
           "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
 
-let rec param_size transform sizedtype =
+let rec transform_sizedtype transformation sizedtype =
   (* Functions for computing the new sizetype after some transformation *)
   let shrink_eigen_mat f st =
     (* Matrices become vectors, with size computed by [f] *)
@@ -354,7 +354,7 @@ let rec param_size transform sizedtype =
   let k_choose_2 k =
     Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
-  match transform with
+  match transformation with
   | Transformation.Identity | Lower _ | Upper _
    |LowerUpper (_, _)
    |Offset _ | Multiplier _
@@ -368,7 +368,7 @@ let rec param_size transform sizedtype =
       SizedType.build_sarray dims
         (SizedType.STuple
            (List.map subtypes_transforms ~f:(fun (st, trans) ->
-                param_size trans st)))
+                transform_sizedtype trans st)))
   | SumToZero -> shrink_eigen minus_one minus_one sizedtype
   | Simplex | StochasticColumn -> shrink_eigen minus_one Fn.id sizedtype
   | StochasticRow -> shrink_eigen Fn.id minus_one sizedtype
@@ -874,7 +874,8 @@ let trans_block ud_dists declc block prog =
                    , smeta.Ast.loc
                    , Program.
                        { out_constrained_st= type_
-                       ; out_unconstrained_st= param_size transform type_
+                       ; out_unconstrained_st=
+                           transform_sizedtype transform type_
                        ; out_block= block
                        ; out_trans= transform } ) in
                  let stmts =
