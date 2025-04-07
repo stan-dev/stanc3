@@ -27871,9 +27871,9 @@ static constexpr std::array<const char*, 18> locations_array__ =
   " (in 'unenforce-initialize-omni.stan', line 16, column 4 to line 20, column 5)",
   " (in 'unenforce-initialize-omni.stan', line 15, column 19 to line 21, column 3)",
   " (in 'unenforce-initialize-omni.stan', line 15, column 2 to line 21, column 3)",
-  " (in 'unenforce-initialize-omni.stan', line 23, column 2 to column 11)",
-  " (in 'unenforce-initialize-omni.stan', line 24, column 2 to column 20)",
-  " (in 'unenforce-initialize-omni.stan', line 25, column 2 to column 29)"};
+  " (in 'unenforce-initialize-omni.stan', line 25, column 2 to column 11)",
+  " (in 'unenforce-initialize-omni.stan', line 26, column 2 to column 20)",
+  " (in 'unenforce-initialize-omni.stan', line 27, column 2 to column 29)"};
 class unenforce_initialize_omni_model final : public model_base_crtp<unenforce_initialize_omni_model> {
  private:
   
