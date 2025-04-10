@@ -561,7 +561,7 @@ let gen_outvar_metadata name outvars =
   let json_str = Cpp_Json.out_var_interpolated_json_str outvars in
   FunDef
     (make_fun_defn ~inline:true ~return_type:Types.string ~name
-       ~body:[Return (Some Types.string.:(Literal json_str))]
+       ~body:[Return (Some Types.string.:{Literal json_str})]
        ~cv_qualifiers:[Const] ())
 
 (** Print the [get_unconstrained_sizedtypes] method of the model class *)
@@ -667,8 +667,8 @@ let gen_overloads {Program.output_vars; _} =
            ~body:
              (sizes
              @ [ "vars" :=
-                   (Types.std_vector Double).:(Var "num_to_write";
-                   Exprs.quiet_NaN); call_impl ])
+                   (Types.std_vector Double).:{Var "num_to_write";
+                   Exprs.quiet_NaN}; call_impl ])
            ~cv_qualifiers:[Const] ()) ] in
   let log_probs =
     let templates_init =
@@ -719,8 +719,8 @@ let gen_overloads {Program.output_vars; _} =
                  (Exprs.fun_call "transform_inits"
                     [Var "context"; Var "params_i"; params_r_vec; Var "pstream"])
              ; "params_r" :=
-                 eigen_map_double.:(params_r_vec.@!("data");
-                 params_r_vec.@!("size")) ]
+                 eigen_map_double.:{params_r_vec.@!("data");
+                 params_r_vec.@!("size")} ]
            ~cv_qualifiers:[Const; Final] ())
     ; (let args =
          [ (Types.const_ref (TypeLiteral "stan::io::var_context"), "context")
@@ -755,7 +755,7 @@ let gen_overloads {Program.output_vars; _} =
                     ~type_:Types.(Const (std_vector Int))
                     ~name:"params_i" ())
              ; "params_unconstrained" :=
-                 (Types.std_vector Double).:(Var "num_params_r__"; quiet_NaN)
+                 (Types.std_vector Double).:{Var "num_params_r__"; quiet_NaN}
              ; call_impl ]
            ~cv_qualifiers:[Const (*; Final*)] ())
     ; FunDef

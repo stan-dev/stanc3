@@ -194,12 +194,9 @@ module Expression_syntax = struct
   (** Pun for C++ [operator*(a,b)] *)
   let ( * ) a b = BinOp (a, Multiply, b)
 
-  (** Pun for C++ [operator[](i)] *)
-  let ( .*[] ) e i = Subscript (e, i)
-
   (* we use : in operators for assignment/creation *)
-  let ( .:() ) typ arg = Constructor (typ, [arg])
-  let ( .:(;..) ) typ args = Constructor (typ, List.of_array args)
+  let ( .:{} ) typ arg = Constructor (typ, [arg])
+  let ( .:{;..} ) typ args = Constructor (typ, List.of_array args)
 end
 
 (**/**)
@@ -260,7 +257,7 @@ module Stmts = struct
             , (Types.const_ref (TypeLiteral "std::exception"), "e")
             , [ Expression
                   (fun_call "stan::lang::rethrow_located"
-                     [e; locations_array.*[current_statement]]) ] ) ]
+                     [e; Subscript (locations_array, current_statement)]) ] ) ]
 
   let fori loopvar lower upper body =
     let init =
@@ -787,7 +784,7 @@ module Tests = struct
   let%expect_test "eigen init" =
     let open DSL in
     let open Types in
-    let vector = (row_vector Double).:(Literal "3") in
+    let vector = (row_vector Double).:{Literal "3"} in
     let values = [Literal "1"; Var "a"; Literal "3"] in
     let e = (vector << values).@!("finished") in
     print_s [%sexp (e : expr)];

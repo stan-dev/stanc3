@@ -224,7 +224,7 @@ and lower_binary_fun f es = Exprs.fun_call f (lower_exprs es)
 and vector_literal ?(column = false) scalar es =
   let open Cpp.DSL in
   let vec = if column then Types.vector scalar else Types.row_vector scalar in
-  let make_vector size = vec.:(Literal (string_of_int size)) in
+  let make_vector size = vec.:{Literal (string_of_int size)} in
   if List.is_empty es then make_vector 0
   else
     let vector = make_vector (List.length es) in
@@ -560,8 +560,8 @@ and lower_indexed_simple (e : expr) idcs =
             "No non-Single indices allowed"
               (e : expr)
               (idcs : Expr.Typed.t Index.t list)] in
-  List.fold idcs ~init:e
-    ~f:Cpp.DSL.(fun e id -> e.*[idx_minus_one (Index.map lower_expr id)])
+  List.fold idcs ~init:e ~f:(fun e id ->
+      Subscript (e, idx_minus_one (Index.map lower_expr id)))
 
 and lower_expr ?(promote_reals = false)
     (Expr.Fixed.{pattern; meta} : Expr.Typed.t) : Cpp.expr =

@@ -37,7 +37,7 @@ Or, using the DSL constructs, the same expression could be written
 {[
 let open Cpp.DSL in
 let open Types in
-let vector = (row_vector Double).:(Literal "3") in
+let vector = (row_vector Double).:{Literal "3"} in
 let values = [Literal "1"; Var "a"; Literal "3"] in
 (vector << values).@!("finished")
 ]}

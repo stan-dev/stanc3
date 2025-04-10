@@ -47,7 +47,7 @@ let rec initialize_value st adtype =
   | (DataOnly | AutoDiffable), SComplex ->
       let complex =
         Types.complex (local_scalar (SizedType.to_unsized st) adtype) in
-      complex.:(init_nan; init_nan)
+      complex.:{init_nan; init_nan}
   | (DataOnly | AutoDiffable), SComplexVector size
    |(DataOnly | AutoDiffable), SComplexRowVector size ->
       let vec = lower_st st adtype in
@@ -69,23 +69,23 @@ let rec initialize_value st adtype =
   | AutoDiffable, SVector (SoA, size) ->
       let var_vec =
         lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
-      var_vec.:(initialize_value (SVector (AoS, size)) DataOnly)
+      var_vec.:{initialize_value (SVector (AoS, size)) DataOnly}
   | AutoDiffable, SRowVector (SoA, size) ->
       let var_row_vec =
         lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
-      var_row_vec.:(initialize_value (SRowVector (AoS, size)) DataOnly)
+      var_row_vec.:{initialize_value (SRowVector (AoS, size)) DataOnly}
   | AutoDiffable, SMatrix (SoA, d1, d2) ->
       let var_mat =
         lower_possibly_var_decl adtype (SizedType.to_unsized st) SoA in
-      var_mat.:(initialize_value (SMatrix (AoS, d1, d2)) DataOnly)
+      var_mat.:{initialize_value (SMatrix (AoS, d1, d2)) DataOnly}
   | DataOnly, SArray (t, d) ->
       let arr = lower_st st adtype in
-      arr.:(lower_expr d; initialize_value t adtype)
+      arr.:{lower_expr d; initialize_value t adtype}
   | (AutoDiffable | TupleAD _), SArray (t, d) ->
       let var_arr =
         lower_possibly_var_decl adtype (SizedType.to_unsized st)
           (SizedType.get_mem_pattern t) in
-      var_arr.:(lower_expr d; initialize_value t adtype)
+      var_arr.:{lower_expr d; initialize_value t adtype}
   | TupleAD ads, STuple subts ->
       let tupl = lower_st st adtype in
       InitializerExpr (tupl, List.map2_exn ~f:initialize_value subts ads)
