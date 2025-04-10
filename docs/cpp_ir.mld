@@ -6,7 +6,7 @@ We represent C++ code with a data types and functions found in
 
 We also define a sort of miniature embedded domain specific language (DSL)
 for using these types. These helper functions and operators are all in sub-modules
-of {!module-Stan_math_backend.Cpp}, for example {!module-Stan_math_backend.Cpp.Expression_syntax}.
+of {!module-Stan_math_backend.Cpp}, for example {!module-Stan_math_backend.Cpp.DSL}.
 
 These allow writing OCaml code which looks or feels more like the C++ it will generate. These
 constructs should be used when they improve clarity, and avoided when they make the code harder to
@@ -35,9 +35,9 @@ This could be written down as the literal OCaml type it is:
 Or, using the DSL constructs, the same expression could be written
 
 {[
-let open Expression_syntax in
+let open Cpp.DSL in
 let open Types in
-let vector = Constructor (row_vector Double, [Literal "3"]) in
+let vector = (row_vector Double).:{Literal "3"} in
 let values = [Literal "1"; Var "a"; Literal "3"] in
 (vector << values).@!("finished")
 ]}

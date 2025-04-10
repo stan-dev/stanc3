@@ -92,7 +92,7 @@ type expr =
   | ArrayLiteral of expr list
   | TernaryIf of expr * expr * expr
   | Cast of type_ * expr
-  | Index of expr * expr
+  | Subscript of expr * expr
   | Deref of expr
   | AllocNew of type_ * expr list
   | OperatorNew of identifier * type_ * expr list
@@ -135,6 +135,8 @@ module Exprs = struct
 
   let static_cast type_ expr = FunCall ("static_cast", [type_], [expr])
 end
+
+(**/**)
 
 module Expression_syntax = struct
   (** Some operators to make streams and method calls look more
@@ -191,7 +193,13 @@ module Expression_syntax = struct
 
   (** Pun for C++ [operator*(a,b)] *)
   let ( * ) a b = BinOp (a, Multiply, b)
+
+  (* we use : in operators for assignment/creation *)
+  let ( .:{} ) typ arg = Constructor (typ, [arg])
+  let ( .:{;..} ) typ args = Constructor (typ, List.of_array args)
 end
+
+(**/**)
 
 type init =
   | Assignment of expr
@@ -236,21 +244,20 @@ module Stmts = struct
   (** Set up the try/catch logic for throwing an exception with
       its location set to the Stan program location. *)
   let rethrow_located stmts =
+    let open Expression_syntax in
     let stmts = unblock stmts in
     match stmts with
     | [] -> []
     | _ ->
+        let e = Var "e" in
+        let locations_array = Var "locations_array__" in
+        let current_statement = Var "current_statement__" in
         [ TryCatch
             ( stmts
             , (Types.const_ref (TypeLiteral "std::exception"), "e")
             , [ Expression
-                  (FunCall
-                     ( "stan::lang::rethrow_located"
-                     , []
-                     , [ Var "e"
-                       ; Index
-                           (Var "locations_array__", Var "current_statement__")
-                       ] )) ] ) ]
+                  (fun_call "stan::lang::rethrow_located"
+                     [e; Subscript (locations_array, current_statement)]) ] ) ]
 
   let fori loopvar lower upper body =
     let init =
@@ -266,6 +273,17 @@ module Stmts = struct
   let unused s =
     [Comment "suppress unused var warning"; Expression (Cast (Void, Var s))]
 end
+
+(**/**)
+
+module Statement_syntax = struct
+  include Stmts
+
+  (** Shorthand for assignment *)
+  let ( := ) a b = Expression (Assign (Var a, b))
+end
+
+(**/**)
 
 module Decls = struct
   (** Declarations which get re-used often in the generated model *)
@@ -379,6 +397,17 @@ let make_class_defn ~name ~public_base ?(final = true) ~private_members
   ; destructor_body }
 
 let make_struct_defn ~param ~name ~body () = {param; struct_name= name; body}
+
+(** A set of operators and helpers to make the OCaml code look more like the resultant C++ *)
+module DSL = struct
+  (* defined this way so that the expression helpers could be used
+     by the statement code, but still importable under one name *)
+  include Expression_syntax
+  include Statement_syntax
+end
+
+(** Shorthand for a C++ comment. This one is rather harmless, so it isn't in its own module *)
+let ( !// ) s = GlobalComment s
 
 (** Much like in C++, we define a translation unit as a list of definitions *)
 type program = defn list [@@deriving sexp]
@@ -501,7 +530,7 @@ module Printing = struct
           (list ~sep:comma pp_expr) es
     | TernaryIf (e1, e2, e3) ->
         pf ppf "%a ? %a : %a" pp_expr e1 pp_expr e2 pp_expr e3
-    | Index (e1, e2) -> pf ppf "%a[%a]" pp_expr e1 pp_expr e2
+    | Subscript (e1, e2) -> pf ppf "%a[%a]" pp_expr e1 pp_expr e2
     | Deref e -> pf ppf "*(%a)" pp_expr e
     | Assign (e1, e2) -> pf ppf "%a = %a" pp_expr e1 pp_expr e2
     | PMinus e -> pf ppf "-(%a)" pp_expr e
@@ -753,9 +782,9 @@ module Tests = struct
   (* This shows off some of the fancy syntax OCaml lets us use,
       like [<<] or [.@()]*)
   let%expect_test "eigen init" =
-    let open Expression_syntax in
+    let open DSL in
     let open Types in
-    let vector = Constructor (row_vector Double, [Literal "3"]) in
+    let vector = (row_vector Double).:{Literal "3"} in
     let values = [Literal "1"; Var "a"; Literal "3"] in
     let e = (vector << values).@!("finished") in
     print_s [%sexp (e : expr)];
