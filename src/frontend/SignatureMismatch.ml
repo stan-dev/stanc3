@@ -75,6 +75,7 @@ and details =
 and function_mismatch =
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
+[@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
@@ -216,6 +217,10 @@ and check_compatible_arguments depth typs args2 :
 
 let check_of_same_type_mod_conv = check_same_type 0
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
+
+let check_of_same_type_no_promotion t1 t2 =
+  check_same_type 1 t1 t2 |> Result.map ~f:(fun _ -> ())
+
 let max_n_errors = 5
 
 let extract_function_types f =

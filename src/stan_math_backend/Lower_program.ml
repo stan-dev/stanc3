@@ -873,7 +873,9 @@ let lower_program ?printed_filename (p : Program.Typed.t) : Cpp.program =
       new_model_boilerplate p.prog_name
       @ Numbering.register_map_rect_functors model_namespace_str map_rect_calls
   in
-  [version; includes; model_namespace] @ global_fns
+  [ version; Preprocessor (Include "stan/math/mix.hpp") (* TODO *); includes
+  ; model_namespace ]
+  @ global_fns
 
 module Testing = struct
   open Fmt

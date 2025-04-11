@@ -10,6 +10,8 @@ module TypeError = struct
     | InvalidMatrixTypes of UnsizedType.t
     | IntExpected of string * UnsizedType.t
     | IntOrRealExpected of string * UnsizedType.t
+    | TupleExpected of string * UnsizedType.t
+    | VectorExpected of string * UnsizedType.t
     | TypeExpected of string * UnsizedType.t * UnsizedType.t
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
@@ -79,6 +81,12 @@ module TypeError = struct
           UnsizedType.pp ut
     | IntOrRealExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int or real. Instead found type %a." name
+          UnsizedType.pp ut
+    | TupleExpected (name, ut) ->
+        Fmt.pf ppf "%s must be a tuple. Instead found type %a." name
+          UnsizedType.pp ut
+    | VectorExpected (name, ut) ->
+        Fmt.pf ppf "%s must be a vector. Instead found type %a." name
           UnsizedType.pp ut
     | TypeExpected (name, (UInt | UReal | UComplex), ut) ->
         Fmt.pf ppf "%s must be a scalar. Instead found type %a." name
@@ -572,6 +580,12 @@ let int_expected loc name ut = TypeError (loc, TypeError.IntExpected (name, ut))
 
 let int_or_real_expected loc name ut =
   TypeError (loc, TypeError.IntOrRealExpected (name, ut))
+
+let tuple_expected loc name ut =
+  TypeError (loc, TypeError.TupleExpected (name, ut))
+
+let vector_expected loc name ut =
+  TypeError (loc, TypeError.VectorExpected (name, ut))
 
 let scalar_or_type_expected loc name et ut =
   TypeError (loc, TypeError.TypeExpected (name, et, ut))

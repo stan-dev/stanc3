@@ -317,6 +317,11 @@ let get_consistent_types type_ es =
              ~f:(Promotion.get_type_promotion_exn (ad, ty)) in
          (ad, ty, promotions))
 
+let check_texpression_is_tuple te name =
+  match (te.emeta.type_, te.emeta.ad_level) with
+  | UTuple ts, TupleAD ads -> List.zip_exn ads ts
+  | _ -> Semantic_error.tuple_expected te.emeta.loc name te.emeta.type_ |> error
+
 let check_array_expr loc es =
   match es with
   | [] ->
@@ -606,12 +611,22 @@ let make_function_variable cf loc id = function
           "Attempting to create function variable out of "
             (type_ : UnsizedType.t)]
 
+type fn_failed_check =
+  [ `FunctionMismatch of SignatureMismatch.function_mismatch
+  | `ReturnTypeMismatch of UnsizedType.t * SignatureMismatch.type_mismatch
+  | `SuffixMismatch of unit Fun_kind.suffix * unit Fun_kind.suffix ]
+[@@deriving sexp]
+
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
   if Stan_math_signatures.is_stan_math_variadic_function_name id.name then
     check_variadic ~is_cond_dist loc cf tenv id tes
   else if Stan_math_signatures.is_reduce_sum_fn id.name then
     check_reduce_sum ~is_cond_dist loc cf tenv id tes
+  else if
+    String.equal "laplace_marginal_lpdf" (* TODO generalize *) id.name
+    || String.equal "laplace_marginal_tol_lpdf" id.name
+  then check_laplace_marginal ~is_cond_dist loc cf tenv id tes
   else check_normal_fn ~is_cond_dist loc tenv id tes
 
 (** Reduce sum is a special case, even compared to the other
@@ -673,6 +688,77 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
         (List.map ~f:type_of_expr_typed tes)
         expected_args err
       |> error
+
+and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
+  let check_function_call_with_tuple_args fname arg_tupl
+      ?(required_arg_tys = []) required_fn_rt =
+    let arg_types =
+      check_texpression_is_tuple arg_tupl
+        ("Forwarded arguments to " ^ fname.name) in
+    let required = required_arg_tys @ arg_types in
+    let matches = function
+      | Env.
+          { type_= UnsizedType.UFun (args, ReturnType rt, FnPlain, _) as fn_type
+          ; _ } ->
+          let open SignatureMismatch in
+          check_of_same_type_no_promotion rt required_fn_rt
+          |> Result.map_error ~f:(fun x -> `ReturnTypeMismatch (fn_type, x))
+          |> Result.bind ~f:(fun () ->
+                 check_compatible_arguments_mod_conv args required
+                 |> Result.map ~f:(fun x -> (fn_type, x))
+                 |> Result.map_error ~f:(fun x -> `FunctionMismatch x))
+      | _ -> failwith "TODO mismatch error" in
+    match find_matching_first_order_fn tenv matches fname with
+    | SignatureMismatch.UniqueMatch (ftype, promotions) ->
+        let fn = make_function_variable cf loc fname ftype in
+        let args =
+          Promotion.promote arg_tupl
+            (Promotion.TuplePromotion
+               (snd @@ List.(split_n promotions (length required_arg_tys))))
+        in
+        (fn, args)
+    | AmbiguousMatch ps ->
+        Semantic_error.ambiguous_function_promotion loc fname.name None ps
+        |> error
+    | SignatureErrors x -> raise_s [%message "TODO" (x : fn_failed_check)] in
+  match tes with
+  | {expr= Variable lik_fun; _}
+    :: lik_tupl :: theta_init
+    :: {expr= Variable cov_fun; _}
+    :: cov_tupl :: control_args ->
+      let lik_fun, lik_tupl =
+        check_function_call_with_tuple_args lik_fun lik_tupl
+          ~required_arg_tys:[(AutoDiffable, UVector)]
+          UReal in
+      if theta_init.emeta.type_ <> UnsizedType.UVector then
+        Semantic_error.vector_expected loc "Initial convariance"
+          theta_init.emeta.type_
+        |> error;
+      let cov_fun, cov_tupl =
+        check_function_call_with_tuple_args cov_fun cov_tupl UMatrix in
+      let () =
+        match
+          ( String.is_substring ~substring:"_tol" id.name
+          , List.map ~f:arg_type control_args )
+        with
+        | false, [] -> ()
+        | ( true
+          , [ (DataOnly, UReal) (* tolerance *)
+            ; (DataOnly, UInt) (* max_num_steps *)
+            ; (DataOnly, UInt) (* hessian_block_size *)
+            ; (DataOnly, UInt) (* solver *)
+            ; (DataOnly, UInt) (* max_steps_line_search *) ] ) ->
+            ()
+        | _ ->
+            failwith
+              "TODO: error path -- wrong number of arguments or types for \
+               control args " in
+      let args =
+        lik_fun :: lik_tupl :: theta_init :: cov_fun :: cov_tupl :: control_args
+      in
+      mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id args
+        ~type_:UnsizedType.UReal
+  | _ -> failwith "TODO error path -- wrong number of args or not variables"
 
 and check_variadic ~is_cond_dist loc cf tenv id tes =
   let UnsizedType.{control_args; required_fn_args; required_fn_rt; return_type}

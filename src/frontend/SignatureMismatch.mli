@@ -13,6 +13,7 @@ and details = private
 and function_mismatch = private
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
+[@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
@@ -35,6 +36,9 @@ type match_result =
 
 val check_of_same_type_mod_conv :
   UnsizedType.t -> UnsizedType.t -> (Promotion.t, type_mismatch) result
+
+val check_of_same_type_no_promotion :
+  UnsizedType.t -> UnsizedType.t -> (unit, type_mismatch) result
 
 val check_compatible_arguments_mod_conv :
      (UnsizedType.autodifftype * UnsizedType.t) list
