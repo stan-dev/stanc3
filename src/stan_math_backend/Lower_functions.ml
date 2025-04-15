@@ -356,10 +356,15 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let functor_required = get_functor_requirements p in
   (* overloaded functions generate only one functor struct per name *)
   let structs = String.Table.create () in
-  let matching_argtypes Program.{fdargs; _} arg_types =
-    List.equal UnsizedType.equal
-      (List.map ~f:(fun (_, _, t) -> t) fdargs)
-      arg_types in
+  let matching_argtypes _ _ =
+    (* TODO: laplace: if rng is accepting different types of tuples for test, train
+         then we can't only generate the type of the exact one required, but rather have to generate all overloads
+       (could do this with a new enum branch of `variadic`, maybe)
+
+       I think this is almost certainly fine to do, the extra code generated is rare and tiny.
+       If so, a bunch of this code can be simplified
+    *)
+    true in
   let register_functors (d : _ Program.fun_def) =
     let functors =
       Map.find_multi functor_required d.fdname

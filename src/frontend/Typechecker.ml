@@ -742,7 +742,7 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
 and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
   (* checks _lpdf, _tol_lpdf
      Checking rng is ?easy?, just add a second check_function_callable_with_tuple
-        ( may need some massaging if a different overload is selected, tbd )
+        ( may need some massaging in [Lower_program] if a different overload is selected, tbd )
 
       Checking the "menu" specializations is also easy, replace the first
       check_function_callable_with_tuple with a check against a menu-specific
