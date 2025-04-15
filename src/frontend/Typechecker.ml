@@ -137,9 +137,10 @@ let verify_name_fresh_var loc tenv name =
 (** verify that the variable being declared is previous unused. *)
 let verify_name_fresh_udf loc tenv name =
   if
-    (* variadic functions are currently not in math sigs and aren't
-       overloadable due to their separate typechecking *)
+    (* variadic functions aren't overloadable due to
+        their separate typechecking *)
     Stan_math_signatures.is_reduce_sum_fn name
+    || Stan_math_signatures.is_laplace_marginal_fn name
     || Stan_math_signatures.is_stan_math_variadic_function_name name
   then Semantic_error.ident_is_stanmath_name loc name |> error
   else if Utils.is_unnormalized_distribution name then
@@ -613,6 +614,7 @@ let make_function_variable cf loc id = function
 
 let verify_laplace_control_args loc id args =
   match
+    (* TODO: are we dropping _tol? Letting any of these go? *)
     (String.is_substring ~substring:"_tol" id.name, List.map ~f:arg_type args)
   with
   | false, [] -> ()
@@ -627,45 +629,176 @@ let verify_laplace_control_args loc id args =
         "TODO: error path -- wrong number of arguments or types for control \
          args "
 
-(* TEMPORARY *)
-type fn_failed_check =
-  [ `FunctionMismatch of SignatureMismatch.function_mismatch
-  | `ReturnTypeMismatch of UnsizedType.t * SignatureMismatch.type_mismatch
-  | `SuffixMismatch of unit Fun_kind.suffix * unit Fun_kind.suffix ]
-[@@deriving sexp]
-
-let check_function_callable_with_tuple loc cf tenv fname
-    ?(required_arg_tys = []) arg_tupl required_fn_rt =
+let check_function_callable_with_tuple cf tenv fname ?(required_arg_tys = [])
+    arg_tupl required_fn_rt =
   let arg_types =
     check_texpression_is_tuple arg_tupl ("Forwarded arguments to " ^ fname.name)
   in
   let required = required_arg_tys @ arg_types in
   let matches = function
-    | Env.
-        {type_= UnsizedType.UFun (args, ReturnType rt, FnPlain, _) as fn_type; _}
-      ->
+    | Env.{type_= UnsizedType.UFun (args, rt, FnPlain, _) as fn_type; _} ->
         let open SignatureMismatch in
-        check_of_same_type_no_promotion rt required_fn_rt
-        |> Result.map_error ~f:(fun x -> `ReturnTypeMismatch (fn_type, x))
-        |> Result.bind ~f:(fun () ->
-               (* TODO maybe split into required, normal?
-                  Combine logic with SignatureMismatch.check_variadic_args? *)
-               check_compatible_arguments_mod_conv args required
-               |> Result.map ~f:(fun x -> (fn_type, x))
-               |> Result.map_error ~f:(fun x -> `FunctionMismatch x))
-    | _ -> failwith "TODO mismatch error" in
+        let open Common.Let_syntax.Result in
+        if rt <> required_fn_rt then
+          Error (`FnTypeMismatch (ReturnTypeMismatch (required_fn_rt, rt)))
+        else
+          let no_prom_args, _ = List.split_n args (List.length required) in
+          let arg_check =
+            let* () =
+              check_compatible_arguments_no_promotion no_prom_args required
+            in
+            let+ promotions =
+              check_compatible_arguments_mod_conv args required in
+            (fn_type, promotions) in
+          Result.map_error arg_check ~f:(fun x ->
+              `FnTypeMismatch (InputMismatch x))
+    | _ -> Error `NonFunction in
   match find_matching_first_order_fn tenv matches fname with
   | SignatureMismatch.UniqueMatch (ftype, promotions) ->
-      let fn = make_function_variable cf loc fname ftype in
+      let fn = make_function_variable cf fname.id_loc fname ftype in
       let args =
         Promotion.promote arg_tupl
           (Promotion.TuplePromotion
              (snd @@ List.(split_n promotions (length required_arg_tys)))) in
       (fn, args)
   | AmbiguousMatch ps ->
-      Semantic_error.ambiguous_function_promotion loc fname.name None ps
+      Semantic_error.ambiguous_function_promotion fname.id_loc fname.name None
+        ps
       |> error
-  | SignatureErrors x -> raise_s [%message "TODO" (x : fn_failed_check)]
+  | SignatureErrors `NonFunction ->
+      Semantic_error.returning_fn_expected_nonfn_found fname.id_loc fname.name
+      |> error
+  | SignatureErrors (`FnTypeMismatch details) ->
+      raise_s [%message "TODO" (details : SignatureMismatch.details)]
+
+let laplace_helper_args =
+  (* TODO verify that these are actually what we want? Based on C++ as of 04/15/2025 *)
+  [ ( "bernoulli_logit"
+    , [UnsizedType.(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)] )
+  ; ( "neg_binomial_2_log"
+    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector) ] )
+  ; ("poisson_log", [(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)])
+  ; ( "poisson_2_log"
+    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector) ] ) ]
+
+(** The "trunk" of a laplace check is everything after the likihood,
+  e.g. covariance function and control args *)
+let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
+    prefixed_args tes =
+  match tes with
+  | theta_init
+    :: {expr= Variable cov_fun; _}
+    :: cov_tupl :: train_and_control_args ->
+      if theta_init.emeta.type_ <> UnsizedType.UVector then
+        Semantic_error.vector_expected theta_init.emeta.loc
+          "Initial convariance" theta_init.emeta.type_
+        |> error;
+      let cov_fun_type, cov_tupl =
+        check_function_callable_with_tuple cf tenv cov_fun cov_tupl
+          (UnsizedType.ReturnType UMatrix) in
+      (* handle optionality of the cov_tupl_test arg *)
+      let maybe_cov_test, control_args =
+        if not can_have_test then ([], train_and_control_args)
+        else
+          match List.split_n train_and_control_args 1 with
+          | ( [({emeta= {type_= UnsizedType.UTuple _; _}; _} as cov_tupl_train)]
+            , control_args ) ->
+              let _, cov_tupl_train =
+                check_function_callable_with_tuple cf tenv cov_fun
+                  cov_tupl_train (UnsizedType.ReturnType UMatrix) in
+              ([cov_tupl_train], control_args)
+          | _ -> ([], train_and_control_args) in
+      verify_laplace_control_args loc id control_args;
+      let args =
+        prefixed_args
+        @ (theta_init :: cov_fun_type :: cov_tupl :: maybe_cov_test)
+        @ control_args in
+      Some (mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id args ~type_:rt)
+  | _ -> None
+
+let rec check_laplace_fn ~is_cond_dist loc cf tenv id tes =
+  if
+    String.equal "laplace_marginal_lpdf" id.name
+    || String.equal "laplace_marginal_tol_lpdf" id.name
+  then check_laplace_marginal ~is_cond_dist loc cf tenv id tes
+  else if
+    String.equal "laplace_marginal_rng" id.name
+    || String.equal "laplace_marginal_tol_rng" id.name
+  then check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes
+  else if String.is_suffix id.name ~suffix:"_rng" then
+    check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes
+  else check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes
+
+and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
+  match tes with
+  | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
+      let lik_fun, lik_tupl =
+        check_function_callable_with_tuple cf tenv lik_fun lik_tupl
+          ~required_arg_tys:[(AutoDiffable, UVector)]
+          (UnsizedType.ReturnType UReal) in
+      check_laplace_trunk ~is_cond_dist loc cf tenv id UReal [lik_fun; lik_tupl]
+        tes
+      |> Option.value_or_thunk ~default:(fun () ->
+             failwith "TODO error path -- wrong number of args after lik check")
+  | _ -> failwith "TODO error path -- wrong number of args or not variables"
+
+and check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes =
+  match tes with
+  | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
+      let lik_fun, lik_tupl =
+        check_function_callable_with_tuple cf tenv lik_fun lik_tupl
+          ~required_arg_tys:[(AutoDiffable, UVector)]
+          (UnsizedType.ReturnType UReal) in
+      check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id
+        UVector [lik_fun; lik_tupl] tes
+      |> Option.value_or_thunk ~default:(fun () ->
+             failwith "TODO error path -- wrong number of args after lik check")
+  | _ -> failwith "TODO error path -- wrong number of args or not variables"
+
+and check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes =
+  let variant =
+    String.chop_prefix_exn id.name ~prefix:"laplace_marginal_"
+    |> String.chop_prefix_if_exists ~prefix:"tol_"
+    |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
+  let prob_args =
+    List.Assoc.find_exn laplace_helper_args ~equal:String.equal variant in
+  let for_prob, tes = List.split_n tes (List.length prob_args) in
+  let for_prob =
+    match
+      SignatureMismatch.check_compatible_arguments_mod_conv prob_args
+        (get_arg_types for_prob)
+    with
+    | Ok promotions -> Promotion.promote_list for_prob promotions
+    | Error x ->
+        raise_s [%message "TODO" (x : SignatureMismatch.function_mismatch)]
+  in
+  check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id UVector
+    for_prob tes
+  |> Option.value_or_thunk ~default:(fun () ->
+         failwith "TODO error path -- wrong number of args or not variables")
+
+and check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes =
+  let variant =
+    String.chop_prefix_exn id.name ~prefix:"laplace_marginal_"
+    |> String.chop_prefix_if_exists ~prefix:"tol_"
+    |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
+  let prob_args =
+    List.Assoc.find_exn laplace_helper_args ~equal:String.equal variant in
+  let for_prob, tes = List.split_n tes (List.length prob_args) in
+  let for_prob =
+    match
+      SignatureMismatch.check_compatible_arguments_mod_conv prob_args
+        (get_arg_types for_prob)
+    with
+    | Ok promotions -> Promotion.promote_list for_prob promotions
+    | Error x ->
+        raise_s [%message "TODO" (x : SignatureMismatch.function_mismatch)]
+  in
+  check_laplace_trunk ~is_cond_dist loc cf tenv id UReal for_prob tes
+  |> Option.value_or_thunk ~default:(fun () ->
+         failwith "TODO error path -- wrong number of args or not variables")
 
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
@@ -673,10 +806,8 @@ let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     check_variadic ~is_cond_dist loc cf tenv id tes
   else if Stan_math_signatures.is_reduce_sum_fn id.name then
     check_reduce_sum ~is_cond_dist loc cf tenv id tes
-  else if
-    String.equal "laplace_marginal_lpdf" (* TODO generalize *) id.name
-    || String.equal "laplace_marginal_tol_lpdf" id.name
-  then check_laplace_marginal ~is_cond_dist loc cf tenv id tes
+  else if Stan_math_signatures.is_laplace_marginal_fn id.name then
+    check_laplace_fn ~is_cond_dist loc cf tenv id tes
   else check_normal_fn ~is_cond_dist loc tenv id tes
 
 (** Reduce sum is a special case, even compared to the other
@@ -738,39 +869,6 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
         (List.map ~f:type_of_expr_typed tes)
         expected_args err
       |> error
-
-and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
-  (* checks _lpdf, _tol_lpdf
-     Checking rng is ?easy?, just add a second check_function_callable_with_tuple
-        ( may need some massaging in [Lower_program] if a different overload is selected, tbd )
-
-      Checking the "menu" specializations is also easy, replace the first
-      check_function_callable_with_tuple with a check against a menu-specific
-      list of types
-  *)
-  match tes with
-  | {expr= Variable lik_fun; _}
-    :: lik_tupl :: theta_init
-    :: {expr= Variable cov_fun; _}
-    :: cov_tupl :: control_args ->
-      let lik_fun, lik_tupl =
-        check_function_callable_with_tuple loc cf tenv lik_fun lik_tupl
-          ~required_arg_tys:[(AutoDiffable, UVector)]
-          UReal in
-      if theta_init.emeta.type_ <> UnsizedType.UVector then
-        Semantic_error.vector_expected loc "Initial convariance"
-          theta_init.emeta.type_
-        |> error;
-      let cov_fun, cov_tupl =
-        check_function_callable_with_tuple loc cf tenv cov_fun cov_tupl UMatrix
-      in
-      verify_laplace_control_args loc id control_args;
-      let args =
-        lik_fun :: lik_tupl :: theta_init :: cov_fun :: cov_tupl :: control_args
-      in
-      mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id args
-        ~type_:UnsizedType.UReal
-  | _ -> failwith "TODO error path -- wrong number of args or not variables"
 
 and check_variadic ~is_cond_dist loc cf tenv id tes =
   let UnsizedType.{control_args; required_fn_args; required_fn_rt; return_type}

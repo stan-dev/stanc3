@@ -48,3 +48,4 @@ val make_assignmentoperator_stan_math_signatures :
 (* reduce_sum helpers *)
 val is_reduce_sum_fn : string -> bool
 val reduce_sum_slice_types : UnsizedType.t list
+val is_laplace_marginal_fn : string -> bool
