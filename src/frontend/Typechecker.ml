@@ -613,21 +613,26 @@ let make_function_variable cf loc id = function
             (type_ : UnsizedType.t)]
 
 let verify_laplace_control_args loc id args =
-  match
-    (* TODO: are we dropping _tol? Letting any of these go? *)
-    (String.is_substring ~substring:"_tol" id.name, List.map ~f:arg_type args)
-  with
+  let args = List.map ~f:arg_type args in
+  match (String.is_substring ~substring:"_tol" id.name, args) with
   | false, [] -> ()
   | ( true
     , [ (DataOnly, UReal) (* tolerance *); (DataOnly, UInt) (* max_num_steps *)
       ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
       ; (DataOnly, UInt) (* max_steps_line_search *) ] ) ->
       ()
+  | false, _ ->
+      raise_s
+        [%message
+          "TODO error path -- unexpected args after input"
+            (args : UnsizedType.argumentlist)
+            (loc : Location_span.t)]
   | _ ->
-      ignore (loc, id);
-      failwith
-        "TODO: error path -- wrong number of arguments or types for control \
-         args "
+      raise_s
+        [%message
+          "TODO error path -- incorrect control arguments for tol"
+            (args : UnsizedType.argumentlist)
+            (loc : Location_span.t)]
 
 let check_function_callable_with_tuple cf tenv fname ?(required_arg_tys = [])
     arg_tupl required_fn_rt =
@@ -671,22 +676,10 @@ let check_function_callable_with_tuple cf tenv fname ?(required_arg_tys = [])
   | SignatureErrors (`FnTypeMismatch details) ->
       raise_s [%message "TODO" (details : SignatureMismatch.details)]
 
-let laplace_helper_args =
-  (* TODO verify that these are actually what we want? Based on C++ as of 04/15/2025 *)
-  [ ( "bernoulli_logit"
-    , [UnsizedType.(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)] )
-  ; ( "neg_binomial_2_log"
-    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
-      ; (AutoDiffable, UVector) ] )
-  ; ("poisson_log", [(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)])
-  ; ( "poisson_2_log"
-    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
-      ; (AutoDiffable, UVector) ] ) ]
-
 (** The "trunk" of a laplace check is everything after the likihood,
   e.g. covariance function and control args *)
 let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
-    prefixed_args tes =
+    lik_args tes =
   match tes with
   | theta_init
     :: {expr= Variable cov_fun; _}
@@ -712,11 +705,42 @@ let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
           | _ -> ([], train_and_control_args) in
       verify_laplace_control_args loc id control_args;
       let args =
-        prefixed_args
+        lik_args
         @ (theta_init :: cov_fun_type :: cov_tupl :: maybe_cov_test)
         @ control_args in
       Some (mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id args ~type_:rt)
   | _ -> None
+
+let laplace_helper_lik_args =
+  [ ( "bernoulli_logit"
+    , [UnsizedType.(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)] )
+  ; ( "neg_binomial_2_log"
+    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector) ] )
+  ; ("poisson_log", [(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)])
+  ; ( "poisson_2_log"
+    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector) ] ) ]
+  |> String.Map.of_alist_exn
+
+let check_laplace_helper_lik_args loc id tes =
+  let variant =
+    String.chop_prefix_exn id.name ~prefix:"laplace_marginal_"
+    |> String.chop_prefix_if_exists ~prefix:"tol_"
+    |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
+  let prob_args = Map.find_exn laplace_helper_lik_args variant in
+  let for_prob, rest = List.split_n tes (List.length prob_args) in
+  match
+    SignatureMismatch.check_compatible_arguments_mod_conv prob_args
+      (get_arg_types for_prob)
+  with
+  | Ok promotions -> (Promotion.promote_list for_prob promotions, rest)
+  | Error x ->
+      raise_s
+        [%message
+          "TODO"
+            (x : SignatureMismatch.function_mismatch)
+            (loc : Location_span.t)]
 
 let rec check_laplace_fn ~is_cond_dist loc cf tenv id tes =
   if
@@ -732,6 +756,7 @@ let rec check_laplace_fn ~is_cond_dist loc cf tenv id tes =
   else check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes
 
 and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
+  let fail () = failwith ("TODO error path -- generic usage for " ^ id.name) in
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
@@ -740,11 +765,11 @@ and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
           (UnsizedType.ReturnType UReal) in
       check_laplace_trunk ~is_cond_dist loc cf tenv id UReal [lik_fun; lik_tupl]
         tes
-      |> Option.value_or_thunk ~default:(fun () ->
-             failwith "TODO error path -- wrong number of args after lik check")
-  | _ -> failwith "TODO error path -- wrong number of args or not variables"
+      |> Option.value_or_thunk ~default:fail
+  | _ -> fail ()
 
 and check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes =
+  let fail () = failwith ("TODO error path -- generic usage for " ^ id.name) in
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
@@ -753,52 +778,21 @@ and check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes =
           (UnsizedType.ReturnType UReal) in
       check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id
         UVector [lik_fun; lik_tupl] tes
-      |> Option.value_or_thunk ~default:(fun () ->
-             failwith "TODO error path -- wrong number of args after lik check")
-  | _ -> failwith "TODO error path -- wrong number of args or not variables"
+      |> Option.value_or_thunk ~default:fail
+  | _ -> fail ()
 
 and check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes =
-  let variant =
-    String.chop_prefix_exn id.name ~prefix:"laplace_marginal_"
-    |> String.chop_prefix_if_exists ~prefix:"tol_"
-    |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
-  let prob_args =
-    List.Assoc.find_exn laplace_helper_args ~equal:String.equal variant in
-  let for_prob, tes = List.split_n tes (List.length prob_args) in
-  let for_prob =
-    match
-      SignatureMismatch.check_compatible_arguments_mod_conv prob_args
-        (get_arg_types for_prob)
-    with
-    | Ok promotions -> Promotion.promote_list for_prob promotions
-    | Error x ->
-        raise_s [%message "TODO" (x : SignatureMismatch.function_mismatch)]
-  in
+  let lik_args, tes = check_laplace_helper_lik_args loc id tes in
   check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id UVector
-    for_prob tes
+    lik_args tes
   |> Option.value_or_thunk ~default:(fun () ->
-         failwith "TODO error path -- wrong number of args or not variables")
+         failwith ("TODO error path -- generic usage for " ^ id.name))
 
 and check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes =
-  let variant =
-    String.chop_prefix_exn id.name ~prefix:"laplace_marginal_"
-    |> String.chop_prefix_if_exists ~prefix:"tol_"
-    |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
-  let prob_args =
-    List.Assoc.find_exn laplace_helper_args ~equal:String.equal variant in
-  let for_prob, tes = List.split_n tes (List.length prob_args) in
-  let for_prob =
-    match
-      SignatureMismatch.check_compatible_arguments_mod_conv prob_args
-        (get_arg_types for_prob)
-    with
-    | Ok promotions -> Promotion.promote_list for_prob promotions
-    | Error x ->
-        raise_s [%message "TODO" (x : SignatureMismatch.function_mismatch)]
-  in
-  check_laplace_trunk ~is_cond_dist loc cf tenv id UReal for_prob tes
+  let lik_args, tes = check_laplace_helper_lik_args loc id tes in
+  check_laplace_trunk ~is_cond_dist loc cf tenv id UReal lik_args tes
   |> Option.value_or_thunk ~default:(fun () ->
-         failwith "TODO error path -- wrong number of args or not variables")
+         failwith ("TODO error path -- generic usage for " ^ id.name))
 
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
