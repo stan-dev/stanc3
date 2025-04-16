@@ -49,6 +49,7 @@ val make_assignmentoperator_stan_math_signatures :
 val is_reduce_sum_fn : string -> bool
 val reduce_sum_slice_types : UnsizedType.t list
 val is_laplace_marginal_fn : string -> bool
+val laplace_helper_param_types : string -> UnsizedType.argumentlist
 
 val lacks_higher_order_autodiff : string -> bool
 (** Check if a function is in the Stan Math library and does not have higher order autodiff *)

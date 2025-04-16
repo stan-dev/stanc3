@@ -773,24 +773,8 @@ let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
       Some (mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id args ~type_:rt)
   | _ -> None
 
-let laplace_helper_lik_args =
-  [ ( "bernoulli_logit"
-    , [UnsizedType.(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)] )
-  ; ( "neg_binomial_2_log"
-    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
-      ; (AutoDiffable, UVector) ] )
-  ; ("poisson_log", [(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)])
-  ; ( "poisson_2_log"
-    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
-      ; (AutoDiffable, UVector) ] ) ]
-  |> String.Map.of_alist_exn
-
 let check_laplace_helper_lik_args loc id tes =
-  let variant =
-    String.chop_prefix_exn id.name ~prefix:"laplace_marginal_"
-    |> String.chop_prefix_if_exists ~prefix:"tol_"
-    |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
-  let prob_args = Map.find_exn laplace_helper_lik_args variant in
+  let prob_args = Stan_math_signatures.laplace_helper_param_types id.name in
   let for_prob, rest = List.split_n tes (List.length prob_args) in
   match
     SignatureMismatch.check_compatible_arguments_mod_conv prob_args
@@ -817,8 +801,7 @@ let rec check_laplace_fn ~is_cond_dist loc cf tenv id tes =
 
 and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
   let fail ~early () =
-    let is_tol = String.is_substring id.name ~substring:"tol" in
-    Semantic_error.illtyped_laplace_marginal loc ~is_tol ~is_rng:false ~early
+    Semantic_error.illtyped_laplace_marginal loc id.name early
       (List.map ~f:arg_type tes)
     |> error in
   match tes with
@@ -835,8 +818,7 @@ and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
 
 and check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes =
   let fail ~early () =
-    let is_tol = String.is_substring id.name ~substring:"tol" in
-    Semantic_error.illtyped_laplace_marginal loc ~is_tol ~is_rng:true ~early
+    Semantic_error.illtyped_laplace_marginal loc id.name early
       (List.map ~f:arg_type tes)
     |> error in
   match tes with
@@ -856,13 +838,17 @@ and check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes =
   check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id UVector
     lik_args tes
   |> Option.value_or_thunk ~default:(fun () ->
-         failwith ("TODO(lap) error path -- generic usage for " ^ id.name))
+         Semantic_error.illtyped_laplace_helper_generic loc id.name
+           (List.map ~f:arg_type tes)
+         |> error)
 
 and check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes =
   let lik_args, tes = check_laplace_helper_lik_args loc id tes in
   check_laplace_trunk ~is_cond_dist loc cf tenv id UReal lik_args tes
   |> Option.value_or_thunk ~default:(fun () ->
-         failwith ("TODO(lap) error path -- generic usage for " ^ id.name))
+         Semantic_error.illtyped_laplace_helper_generic loc id.name
+           (List.map ~f:arg_type tes)
+         |> error)
 
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =

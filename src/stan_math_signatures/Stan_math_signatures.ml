@@ -175,14 +175,34 @@ let laplace_marginal_fns =
 
 let is_laplace_marginal_fn = Set.mem laplace_marginal_fns
 
+let laplace_helper_lik_args =
+  [ ( "bernoulli_logit"
+    , [UnsizedType.(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)] )
+  ; ( "neg_binomial_2_log"
+    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector) ] )
+  ; ("poisson_log", [(AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)])
+  ; ( "poisson_2_log"
+    , [ (AutoDiffable, UArray UInt); (AutoDiffable, UArray UInt)
+      ; (AutoDiffable, UVector) ] ) ]
+  |> String.Map.of_alist_exn
+
+let laplace_helper_param_types name =
+  let variant =
+    String.chop_prefix_exn name ~prefix:"laplace_marginal_"
+    |> String.chop_prefix_if_exists ~prefix:"tol_"
+    |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
+  Map.find_exn laplace_helper_lik_args variant
+
 let disallowed_second_order =
   (* TODO(lap): any others? *)
   [ "algebra_solver"; "algebra_solver_newton"; "integrate_1d"; "integrate_ode"
   ; "integrate_ode_adams"; "integrate_ode_bdf"; "integrate_ode_rk45"; "map_rect"
   ; "hmm_marginal"; "hmm_hidden_state_prob" ]
+  |> String.Set.of_list
 
 let lacks_higher_order_autodiff name =
   is_laplace_marginal_fn name
   || is_reduce_sum_fn name
   || is_stan_math_variadic_function_name name
-  || List.mem ~equal:String.equal disallowed_second_order name
+  || Set.mem disallowed_second_order name

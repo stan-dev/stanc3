@@ -35,11 +35,8 @@ module TypeError = struct
         string * string * SignatureMismatch.details
     | IllTypedLaplaceCallback of string * string * SignatureMismatch.details
     | IllTypedLaplaceHelperArgs of string * SignatureMismatch.details
-    | IllTypedLaplaceMarginal of
-        { early: bool
-        ; is_tol: bool
-        ; is_rng: bool
-        ; supplied: UnsizedType.argumentlist }
+    | IllTypedLaplaceMarginal of string * bool * UnsizedType.argumentlist
+    | IllTypedLaplaceHelperGeneric of string * UnsizedType.argumentlist
     | LaplaceCompatibilityIssue of string
     | AmbiguousFunctionPromotion of
         string
@@ -174,17 +171,14 @@ module TypeError = struct
     | IllTypedLaplaceHelperArgs (name, details) ->
         Fmt.pf ppf "@[<v>Ill-typed arguments supplied to function '%s':@ %a@]"
           name SignatureMismatch.pp_mismatch_details details
-    | IllTypedLaplaceMarginal {is_tol; is_rng; early; supplied} ->
-        let name =
-          match (is_rng, is_tol) with
-          | true, true -> "laplace_marginal_tol_rng"
-          | true, false -> "laplace_marginal_rng"
-          | false, true -> "laplace_marginal_tol"
-          | false, false -> "laplace_marginal_rng" in
+    | IllTypedLaplaceMarginal (name, early, supplied) ->
         let extra_args =
-          let rngs = if is_rng then ", tuple(T2...)" else "" in
+          let rngs =
+            if String.is_suffix ~suffix:"_rng" name then ", tuple(T2...)"
+            else "" in
           let tols =
-            if is_tol then ", data real, data int, data int, data int, data int"
+            if String.is_substring ~substring:"_tol" name then
+              ", data real, data int, data int, data int, data int"
             else "" in
           rngs ^ tols in
         let info =
@@ -205,6 +199,32 @@ module TypeError = struct
           name name Fmt.text extra_args
           (Fmt.list ~sep:Fmt.comma UnsizedType.pp_fun_arg)
           supplied Fmt.text info
+    | IllTypedLaplaceHelperGeneric (name, supplied) ->
+        let req =
+          Stan_math_signatures.laplace_helper_param_types name
+          |> List.map ~f:snd in
+        let extra_args =
+          let rngs =
+            if String.is_suffix ~suffix:"_rng" name then ", tuple(...)" else ""
+          in
+          let tols =
+            if String.is_substring ~substring:"_tol" name then
+              ", data real, data int, data int, data int, data int"
+            else "" in
+          rngs ^ tols in
+        let n = List.length req in
+        Fmt.pf ppf
+          "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \
+           signature of this function is@ @[<hov 2>%s(%a,@ vector,@ (...) => \
+           matrix,@ tuple(...)%a)@]@ However, we recieved the types:@ @[<hov \
+           2>(%a)@]@ Typechecking failed after checking the first %d \
+           arguments.@ Please ensure you are passing enough arguments and that \
+           the %dth is a function.@]"
+          name name
+          Fmt.(list ~sep:comma UnsizedType.pp)
+          req Fmt.text extra_args
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+          supplied n (n + 2)
     | LaplaceCompatibilityIssue banned_function ->
         Fmt.pf ppf
           "The likelihood function passed to the laplace_marginal family of \
@@ -685,9 +705,11 @@ let illtyped_laplace_callback loc caller name details =
 let illtyped_laplace_helper_args loc name details =
   TypeError (loc, TypeError.IllTypedLaplaceHelperArgs (name, details))
 
-let illtyped_laplace_marginal loc ~is_tol ~is_rng ~early supplied =
-  TypeError
-    (loc, TypeError.IllTypedLaplaceMarginal {early; is_tol; is_rng; supplied})
+let illtyped_laplace_marginal loc name early supplied =
+  TypeError (loc, TypeError.IllTypedLaplaceMarginal (name, early, supplied))
+
+let illtyped_laplace_helper_generic loc name supplied =
+  TypeError (loc, TypeError.IllTypedLaplaceHelperGeneric (name, supplied))
 
 let laplace_compatibility loc banned_function =
   TypeError (loc, TypeError.LaplaceCompatibilityIssue banned_function)
