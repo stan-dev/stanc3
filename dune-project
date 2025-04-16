@@ -21,7 +21,7 @@
   (ppx_deriving
    (= 5.2.1))
   (fmt
-   (= 0.9.0))
+   (= 0.10.0))
   (yojson
    (= 2.1.0))
   (cmdliner

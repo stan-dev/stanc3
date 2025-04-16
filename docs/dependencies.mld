@@ -15,7 +15,7 @@ These are automatically installed through the [scripts/install_ocaml.sh] and
 - {{:https://v3.ocaml.org/p/core/latest/doc/index.html}Core} v0.16.1 (a standard library replacement)
 - {{:http://gallium.inria.fr/~fpottier/menhir/manual.html}Menhir} 20230608 (a parser generator and parsing library)
 - {{:https://github.com/ocaml-ppx/ppx_deriving}ppx_deriving} 5.2.1 (a tool for generating boilerplate code)
-- {{:https://erratique.ch/software/fmt}fmt} 0.9.0 (a library for pretty-printing of formatted text)
+- {{:https://erratique.ch/software/fmt}fmt} 0.10.0 (a library for pretty-printing of formatted text)
 - {{:https://erratique.ch/software/cmdliner}cmdliner} 1.3.0 (a library for command line parsing)
 - yojson 2.1.0 (a library for producing JSON files)
 

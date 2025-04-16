@@ -645,13 +645,13 @@ module Printing = struct
 
   let pp_constructor ppf (name, {args; init_list; body}) =
     let pp_init ppf (id, es) = pf ppf "%s(%a)" id (list ~sep:comma pp_expr) es in
-    let pp_inits =
-      if List.length init_list = 0 then Fmt.nop
-      else fun ppf inits -> pf ppf ": @[%a@] " (list ~sep:comma pp_init) inits
-    in
+    let pp_inits ppf inits =
+      pf ppf ": @[%a@] " (list ~sep:comma pp_init) inits in
     pf ppf "@[<v 2>@[<hov 4>%s(@[%a@])@ %a@]{@,%a@]@,}" name
       (list ~sep:comma (pair ~sep:sp pp_type_ pp_identifier))
-      args pp_inits init_list (list ~sep:cut pp_stmt) body
+      args
+      (if' (not (List.is_empty init_list)) pp_inits)
+      init_list (list ~sep:cut pp_stmt) body
 
   let rec pp_directive ppf direct =
     match direct with
