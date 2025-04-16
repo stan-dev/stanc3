@@ -174,3 +174,15 @@ let laplace_marginal_fns =
   |> String.Set.of_list
 
 let is_laplace_marginal_fn = Set.mem laplace_marginal_fns
+
+let disallowed_second_order =
+  (* TODO(lap): any others? *)
+  [ "algebra_solver"; "algebra_solver_newton"; "integrate_1d"; "integrate_ode"
+  ; "integrate_ode_adams"; "integrate_ode_bdf"; "integrate_ode_rk45"; "map_rect"
+  ; "hmm_marginal"; "hmm_hidden_state_prob" ]
+
+let lacks_higher_order_autodiff name =
+  is_laplace_marginal_fn name
+  || is_reduce_sum_fn name
+  || is_stan_math_variadic_function_name name
+  || List.mem ~equal:String.equal disallowed_second_order name

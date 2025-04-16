@@ -29,6 +29,8 @@ let add_warning (span : Location_span.t) (message : string) =
   warnings := (span, message) :: !warnings
 
 let attach_warnings x = (x, List.rev !warnings)
+let require_2nd_derivs = ref []
+let mark_needs_2nd_derivs fn = require_2nd_derivs := fn :: !require_2nd_derivs
 
 (* model name - don't love this here *)
 let model_name = ref ""
@@ -621,20 +623,20 @@ let verify_laplace_control_args loc id args =
       ; (DataOnly, UInt) (* max_num_steps *)
       ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
       ; (DataOnly, UInt) (* max_steps_line_search *) ] ) ->
-      (* TODO use SignatureMismatch for better DataOnlyError? *)
+      (* TODO(lap) use SignatureMismatch for better DataOnlyError? *)
       if tol_adlevel = AutoDiffable then
         failwith
-          "TODO error path -- tolerance control argument must be data only"
+          "TODO(lap) error path -- tolerance control argument must be data only"
   | false, _ ->
       raise_s
         [%message
-          "TODO error path -- unexpected args after input"
+          "TODO(lap) error path -- unexpected args after input"
             (args : UnsizedType.argumentlist)
             (loc : Location_span.t)]
   | _ ->
       raise_s
         [%message
-          "TODO error path -- incorrect control arguments for tol"
+          "TODO(lap) error path -- incorrect control arguments for tol"
             (args : UnsizedType.argumentlist)
             (loc : Location_span.t)]
 
@@ -780,7 +782,7 @@ and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
-        (* TODO also need to verify lik_fun is not using any second-order AD unfriendly functions? *)
+        mark_needs_2nd_derivs lik_fun;
         check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
           ~required_arg_tys:[(AutoDiffable, UVector)]
           (UnsizedType.ReturnType UReal) in
@@ -798,7 +800,7 @@ and check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes =
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
-        (* TODO also need to verify lik_fun is not using any second-order AD unfriendly functions? *)
+        mark_needs_2nd_derivs lik_fun;
         check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
           ~required_arg_tys:[(AutoDiffable, UVector)]
           (UnsizedType.ReturnType UReal) in
@@ -812,13 +814,13 @@ and check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes =
   check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id UVector
     lik_args tes
   |> Option.value_or_thunk ~default:(fun () ->
-         failwith ("TODO error path -- generic usage for " ^ id.name))
+         failwith ("TODO(lap) error path -- generic usage for " ^ id.name))
 
 and check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes =
   let lik_args, tes = check_laplace_helper_lik_args loc id tes in
   check_laplace_trunk ~is_cond_dist loc cf tenv id UReal lik_args tes
   |> Option.value_or_thunk ~default:(fun () ->
-         failwith ("TODO error path -- generic usage for " ^ id.name))
+         failwith ("TODO(lap) error path -- generic usage for " ^ id.name))
 
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
@@ -2157,6 +2159,48 @@ let verify_correctness_invariant (ast : untyped_program)
           (detyped : untyped_program)
           (ast : untyped_program)]
 
+(** Check that the functions in the list cannot
+  (**transitively**) call stan math functions that
+  don't have second derivative support *)
+let verify_second_order_derivative_compatibility (ast : typed_program) =
+  let functions = Ast.get_stmts ast.functionblock in
+  let to_check = Queue.of_list (List.rev !require_2nd_derivs) in
+  let rec check_expr ~loc () = function
+    | {expr= FunApp (StanLib _, {name; _}, _); _}
+      when Stan_math_signatures.lacks_higher_order_autodiff name ->
+        Semantic_error.laplace_compatibility loc name |> error
+    | {expr= FunApp (UserDefined _, name, es); _} ->
+        (* we want the location to be the use-site no matter what *)
+        Queue.enqueue to_check {name with id_loc= loc};
+        List.iter es ~f:(check_expr ~loc ())
+    | {expr= Variable name; emeta= {type_= UFun _; _}} ->
+        Queue.enqueue to_check {name with id_loc= loc}
+    | e -> Ast.fold_expression (check_expr ~loc) (fun l _ -> l) () e.expr in
+  let rec check_stmt ~loc () s =
+    match s.stmt with
+    | NRFunApp (UserDefined _, name, es) ->
+        Queue.enqueue to_check {name with id_loc= loc};
+        List.iter es ~f:(check_expr ~loc ())
+    | stmt ->
+        Ast.fold_statement (check_expr ~loc) (check_stmt ~loc)
+          (fun l _ -> l)
+          (fun l _ -> l)
+          () stmt in
+  let rec loop () =
+    match Queue.dequeue to_check with
+    | None -> ()
+    | Some fn ->
+        let bodies =
+          List.concat_map functions ~f:(fun s ->
+              match s.stmt with
+              | FunDef {funname= {name; _}; body= {stmt= Block b; _}; _}
+                when String.equal name fn.name ->
+                  b
+              | _ -> []) in
+        List.iter bodies ~f:(check_stmt ~loc:fn.id_loc ());
+        loop () in
+  loop ()
+
 let check_program_exn
     ({ functionblock= fb
      ; datablock= db
@@ -2167,6 +2211,7 @@ let check_program_exn
      ; generatedquantitiesblock= gqb
      ; comments } as ast) =
   warnings := [];
+  require_2nd_derivs := [];
   (* create a new type environment which has only stan-math functions *)
   let tenv = Env.stan_math_environment in
   let tenv = add_userdefined_functions tenv fb in
@@ -2188,6 +2233,7 @@ let check_program_exn
     ; generatedquantitiesblock= typed_gqb
     ; comments } in
   verify_correctness_invariant ast prog;
+  verify_second_order_derivative_compatibility prog;
   attach_warnings prog
 
 let check_program ast =

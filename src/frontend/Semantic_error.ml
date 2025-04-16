@@ -40,6 +40,7 @@ module TypeError = struct
         ; is_tol: bool
         ; is_rng: bool
         ; supplied: UnsizedType.argumentlist }
+    | LaplaceCompatibilityIssue of string
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
@@ -204,6 +205,13 @@ module TypeError = struct
           name name Fmt.text extra_args
           (Fmt.list ~sep:Fmt.comma UnsizedType.pp_fun_arg)
           supplied Fmt.text info
+    | LaplaceCompatibilityIssue banned_function ->
+        Fmt.pf ppf
+          "The likelihood function passed to the laplace_marginal family of \
+           functions@ requires the ability to compute@ higher-order \
+           derivatives.@ The function '%s', called by this function, is \
+           currently unsupported."
+          banned_function
     | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
         let pp_sig ppf (rt, args) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -680,6 +688,9 @@ let illtyped_laplace_helper_args loc name details =
 let illtyped_laplace_marginal loc ~is_tol ~is_rng ~early supplied =
   TypeError
     (loc, TypeError.IllTypedLaplaceMarginal {early; is_tol; is_rng; supplied})
+
+let laplace_compatibility loc banned_function =
+  TypeError (loc, TypeError.LaplaceCompatibilityIssue banned_function)
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError

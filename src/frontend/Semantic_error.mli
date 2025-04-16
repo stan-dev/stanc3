@@ -89,6 +89,7 @@ val illtyped_laplace_marginal :
        or that the function arguments are misplaced, both of which prevent us
        from giving a better message *)
 
+val laplace_compatibility : Location_span.t -> string -> t
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 
