@@ -641,8 +641,9 @@ let verify_laplace_control_args loc id args =
 let check_function_callable_with_tuple cf tenv caller_id fname
     ?(required_arg_tys = []) arg_tupl required_fn_rt =
   let arg_types =
-    check_texpression_is_tuple arg_tupl ("Forwarded arguments to " ^ fname.name)
-  in
+    check_texpression_is_tuple arg_tupl
+      (Printf.sprintf "Forwarded arguments to '%s' in call to '%s'" fname.name
+         caller_id.name) in
   let required = required_arg_tys @ arg_types in
   let matches = function
     | Env.{type_= UnsizedType.UFun (args, rt, sfx, _) as fn_type; _} ->
@@ -771,30 +772,40 @@ let rec check_laplace_fn ~is_cond_dist loc cf tenv id tes =
   else check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes
 
 and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
-  let fail () = failwith ("TODO error path -- generic usage for " ^ id.name) in
+  let fail ~early () =
+    let is_tol = String.is_substring id.name ~substring:"tol" in
+    Semantic_error.illtyped_laplace_marginal loc ~is_tol ~is_rng:false ~early
+      (List.map ~f:arg_type tes)
+    |> error in
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
+        (* TODO also need to verify lik_fun is not using any second-order AD unfriendly functions? *)
         check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
           ~required_arg_tys:[(AutoDiffable, UVector)]
           (UnsizedType.ReturnType UReal) in
       check_laplace_trunk ~is_cond_dist loc cf tenv id UReal [lik_fun; lik_tupl]
         tes
-      |> Option.value_or_thunk ~default:fail
-  | _ -> fail ()
+      |> Option.value_or_thunk ~default:(fail ~early:false)
+  | _ -> fail ~early:true ()
 
 and check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes =
-  let fail () = failwith ("TODO error path -- generic usage for " ^ id.name) in
+  let fail ~early () =
+    let is_tol = String.is_substring id.name ~substring:"tol" in
+    Semantic_error.illtyped_laplace_marginal loc ~is_tol ~is_rng:true ~early
+      (List.map ~f:arg_type tes)
+    |> error in
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
+        (* TODO also need to verify lik_fun is not using any second-order AD unfriendly functions? *)
         check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
           ~required_arg_tys:[(AutoDiffable, UVector)]
           (UnsizedType.ReturnType UReal) in
       check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id
         UVector [lik_fun; lik_tupl] tes
-      |> Option.value_or_thunk ~default:fail
-  | _ -> fail ()
+      |> Option.value_or_thunk ~default:(fail ~early:false)
+  | _ -> fail ~early:true ()
 
 and check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes =
   let lik_args, tes = check_laplace_helper_lik_args loc id tes in

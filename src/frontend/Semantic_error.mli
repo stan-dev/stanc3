@@ -79,6 +79,17 @@ val illtyped_laplace_callback :
 val illtyped_laplace_helper_args :
   Location_span.t -> string -> SignatureMismatch.details -> t
 
+val illtyped_laplace_marginal :
+     Location_span.t
+  -> is_tol:bool
+  -> is_rng:bool
+  -> early:bool
+  -> UnsizedType.argumentlist
+  -> t
+(** Generic failure. This means too few arguments were supplied,
+       or that the function arguments are misplaced, both of which prevent us
+       from giving a better message *)
+
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 

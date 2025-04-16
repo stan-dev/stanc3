@@ -35,6 +35,11 @@ module TypeError = struct
         string * string * SignatureMismatch.details
     | IllTypedLaplaceCallback of string * string * SignatureMismatch.details
     | IllTypedLaplaceHelperArgs of string * SignatureMismatch.details
+    | IllTypedLaplaceMarginal of
+        { early: bool
+        ; is_tol: bool
+        ; is_rng: bool
+        ; supplied: UnsizedType.argumentlist }
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
@@ -87,10 +92,10 @@ module TypeError = struct
         Fmt.pf ppf "%s must be of type int or real. Instead found type %a." name
           UnsizedType.pp ut
     | TupleExpected (name, ut) ->
-        Fmt.pf ppf "%s must be a tuple. Instead found type %a." name
+        Fmt.pf ppf "%s must be a tuple.@ Instead found type %a." name
           UnsizedType.pp ut
     | VectorExpected (name, ut) ->
-        Fmt.pf ppf "%s must be a vector. Instead found type %a." name
+        Fmt.pf ppf "%s must be a vector.@ Instead found type %a." name
           UnsizedType.pp ut
     | TypeExpected (name, (UInt | UReal | UComplex), ut) ->
         Fmt.pf ppf "%s must be a scalar. Instead found type %a." name
@@ -170,6 +175,37 @@ module TypeError = struct
     | IllTypedLaplaceHelperArgs (name, details) ->
         Fmt.pf ppf "@[<v>Ill-typed arguments supplied to function '%s':@ %a@]"
           name SignatureMismatch.pp_mismatch_details details
+    | IllTypedLaplaceMarginal {is_tol; is_rng; early; supplied} ->
+        let name =
+          match (is_rng, is_tol) with
+          | true, true -> "laplace_marginal_tol_rng"
+          | true, false -> "laplace_marginal_rng"
+          | false, true -> "laplace_marginal_tol"
+          | false, false -> "laplace_marginal_rng" in
+        let extra_args =
+          let rngs = if is_rng then ", tuple(T2...)" else "" in
+          let tols =
+            if is_tol then ", data real, data int, data int, data int, data int"
+            else "" in
+          rngs ^ tols in
+        let info =
+          if early then
+            "We were unable to start more in-depth checking. Please ensure you \
+             are passing enough arguments and and that the first argument is a \
+             function."
+          else
+            "Typechecking failed after checking the first two arguments. \
+             Please ensure you are passing enough arguments and that the \
+             fourth is a function." in
+        Fmt.pf ppf
+          "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \
+           signature of this function is@ @[<hov 2>%s((vector, T1...) => \
+           real,@ tuple(T1...),@ vector,@ (T2...) => matrix,@ \
+           tuple(T2...)%a)@]@ However, we recieved the types:@ @[<hov \
+           2>(%a)@]@ @[%a@]@]"
+          name name Fmt.text extra_args
+          (Fmt.list ~sep:Fmt.comma UnsizedType.pp_fun_arg)
+          supplied Fmt.text info
     | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
         let pp_sig ppf (rt, args) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -643,6 +679,10 @@ let illtyped_laplace_callback loc caller name details =
 
 let illtyped_laplace_helper_args loc name details =
   TypeError (loc, TypeError.IllTypedLaplaceHelperArgs (name, details))
+
+let illtyped_laplace_marginal loc ~is_tol ~is_rng ~early supplied =
+  TypeError
+    (loc, TypeError.IllTypedLaplaceMarginal {early; is_tol; is_rng; supplied})
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError
