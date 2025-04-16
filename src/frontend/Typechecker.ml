@@ -614,31 +614,47 @@ let make_function_variable cf loc id = function
           "Attempting to create function variable out of "
             (type_ : UnsizedType.t)]
 
-let verify_laplace_control_args loc id args =
-  let args = List.map ~f:arg_type args in
-  match (String.is_prefix ~prefix:"laplace_marginal_tol" id.name, args) with
-  | false, [] -> ()
-  | ( true
-    , [ (tol_adlevel, UReal) (* tolerance *)
-      ; (DataOnly, UInt) (* max_num_steps *)
-      ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
-      ; (DataOnly, UInt) (* max_steps_line_search *) ] ) ->
-      (* TODO(lap) use SignatureMismatch for better DataOnlyError? *)
-      if tol_adlevel = AutoDiffable then
-        failwith
-          "TODO(lap) error path -- tolerance control argument must be data only"
-  | false, _ ->
-      raise_s
-        [%message
-          "TODO(lap) error path -- unexpected args after input"
-            (args : UnsizedType.argumentlist)
-            (loc : Location_span.t)]
-  | _ ->
-      raise_s
-        [%message
-          "TODO(lap) error path -- incorrect control arguments for tol"
-            (args : UnsizedType.argumentlist)
-            (loc : Location_span.t)]
+(** Check that the functions in the list cannot
+  (**transitively**) call stan math functions that
+  don't have second derivative support *)
+let verify_second_order_derivative_compatibility (ast : typed_program) =
+  let functions = Ast.get_stmts ast.functionblock in
+  let to_check = Queue.of_list (List.rev !require_2nd_derivs) in
+  let rec check_expr ~loc () = function
+    | {expr= FunApp (StanLib _, {name; _}, _); _}
+      when Stan_math_signatures.lacks_higher_order_autodiff name ->
+        Semantic_error.laplace_compatibility loc name |> error
+    | {expr= FunApp (UserDefined _, name, es); _} ->
+        (* we want the location to be the use-site no matter what *)
+        Queue.enqueue to_check {name with id_loc= loc};
+        List.iter es ~f:(check_expr ~loc ())
+    | {expr= Variable name; emeta= {type_= UFun _; _}} ->
+        Queue.enqueue to_check {name with id_loc= loc}
+    | e -> Ast.fold_expression (check_expr ~loc) (fun l _ -> l) () e.expr in
+  let rec check_stmt ~loc () s =
+    match s.stmt with
+    | NRFunApp (UserDefined _, name, es) ->
+        Queue.enqueue to_check {name with id_loc= loc};
+        List.iter es ~f:(check_expr ~loc ())
+    | stmt ->
+        Ast.fold_statement (check_expr ~loc) (check_stmt ~loc)
+          (fun l _ -> l)
+          (fun l _ -> l)
+          () stmt in
+  let rec loop () =
+    match Queue.dequeue to_check with
+    | None -> ()
+    | Some fn ->
+        let bodies =
+          List.concat_map functions ~f:(fun s ->
+              match s.stmt with
+              | FunDef {funname= {name; _}; body= {stmt= Block b; _}; _}
+                when String.equal name fn.name ->
+                  b
+              | _ -> []) in
+        List.iter bodies ~f:(check_stmt ~loc:fn.id_loc ());
+        loop () in
+  loop ()
 
 let check_function_callable_with_tuple cf tenv caller_id fname
     ?(required_arg_tys = []) arg_tupl required_fn_rt =
@@ -694,6 +710,32 @@ let check_function_callable_with_tuple cf tenv caller_id fname
       Semantic_error.forwarded_function_error arg_tupl.emeta.loc caller_id.name
         fname.name details
       |> error
+
+let verify_laplace_control_args loc id args =
+  let args = List.map ~f:arg_type args in
+  match (String.is_prefix ~prefix:"laplace_marginal_tol" id.name, args) with
+  | false, [] -> ()
+  | ( true
+    , [ (tol_adlevel, UReal) (* tolerance *)
+      ; (DataOnly, UInt) (* max_num_steps *)
+      ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
+      ; (DataOnly, UInt) (* max_steps_line_search *) ] ) ->
+      (* TODO(lap) use SignatureMismatch for better DataOnlyError? *)
+      if tol_adlevel = AutoDiffable then
+        failwith
+          "TODO(lap) error path -- tolerance control argument must be data only"
+  | false, _ ->
+      raise_s
+        [%message
+          "TODO(lap) error path -- unexpected args after input"
+            (args : UnsizedType.argumentlist)
+            (loc : Location_span.t)]
+  | _ ->
+      raise_s
+        [%message
+          "TODO(lap) error path -- incorrect control arguments for tol"
+            (args : UnsizedType.argumentlist)
+            (loc : Location_span.t)]
 
 (** The "trunk" of a laplace check is everything after the likihood,
   e.g. covariance function and control args *)
@@ -2158,48 +2200,6 @@ let verify_correctness_invariant (ast : untyped_program)
         "Type checked AST does not match original AST. "
           (detyped : untyped_program)
           (ast : untyped_program)]
-
-(** Check that the functions in the list cannot
-  (**transitively**) call stan math functions that
-  don't have second derivative support *)
-let verify_second_order_derivative_compatibility (ast : typed_program) =
-  let functions = Ast.get_stmts ast.functionblock in
-  let to_check = Queue.of_list (List.rev !require_2nd_derivs) in
-  let rec check_expr ~loc () = function
-    | {expr= FunApp (StanLib _, {name; _}, _); _}
-      when Stan_math_signatures.lacks_higher_order_autodiff name ->
-        Semantic_error.laplace_compatibility loc name |> error
-    | {expr= FunApp (UserDefined _, name, es); _} ->
-        (* we want the location to be the use-site no matter what *)
-        Queue.enqueue to_check {name with id_loc= loc};
-        List.iter es ~f:(check_expr ~loc ())
-    | {expr= Variable name; emeta= {type_= UFun _; _}} ->
-        Queue.enqueue to_check {name with id_loc= loc}
-    | e -> Ast.fold_expression (check_expr ~loc) (fun l _ -> l) () e.expr in
-  let rec check_stmt ~loc () s =
-    match s.stmt with
-    | NRFunApp (UserDefined _, name, es) ->
-        Queue.enqueue to_check {name with id_loc= loc};
-        List.iter es ~f:(check_expr ~loc ())
-    | stmt ->
-        Ast.fold_statement (check_expr ~loc) (check_stmt ~loc)
-          (fun l _ -> l)
-          (fun l _ -> l)
-          () stmt in
-  let rec loop () =
-    match Queue.dequeue to_check with
-    | None -> ()
-    | Some fn ->
-        let bodies =
-          List.concat_map functions ~f:(fun s ->
-              match s.stmt with
-              | FunDef {funname= {name; _}; body= {stmt= Block b; _}; _}
-                when String.equal name fn.name ->
-                  b
-              | _ -> []) in
-        List.iter bodies ~f:(check_stmt ~loc:fn.id_loc ());
-        loop () in
-  loop ()
 
 let check_program_exn
     ({ functionblock= fb
