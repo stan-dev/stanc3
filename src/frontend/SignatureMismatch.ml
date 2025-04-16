@@ -327,22 +327,54 @@ let check_variadic_args ~allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   | (_, x) :: _ -> TypeMismatch (minimal_func_type, x, None) |> wrap_err
   | [] -> Error ([], ArgNumMismatch (List.length mandatory_arg_tys, 0))
 
+let suffix_str = function
+  | Fun_kind.FnPlain -> "a pure function"
+  | FnRng -> "an rng function"
+  | FnLpdf () -> "a probability density function"
+  | FnLpmf () -> "a probability mass function"
+  | FnTarget -> "an _lp function"
+  | FnJacobian -> "a _jacobian function"
+
+let index_str = function
+  | 1 -> "first"
+  | 2 -> "second"
+  | 3 -> "third"
+  | 4 -> "fourth"
+  | n -> Fmt.str "%dth" n
+
+let pp_mismatch_details ppf details =
+  let open Fmt in
+  let ctx = ref TypeMap.empty in
+  match details with
+  | SuffixMismatch (expected, found) ->
+      pf ppf "@[<hov>Expected %s but got %s.@]" (suffix_str expected)
+        (suffix_str found)
+  | ReturnTypeMismatch (expected, found) ->
+      pf ppf
+        "@[<hov>Expected function returning %a but got function returning %a.@]"
+        UnsizedType.pp_returntype expected UnsizedType.pp_returntype found
+  | InputMismatch (ArgNumMismatch (expected, found)) ->
+      pf ppf "@[<hov>Expected %d arguments but got %d arguments.@]" expected
+        found
+  | InputMismatch (ArgError (n, DataOnlyError)) ->
+      pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
+        " must be data-only. (Local variables are assumed to depend on \
+         parameters; same goes for function inputs unless they are marked with \
+         the keyword 'data'.)"
+  | InputMismatch
+      (ArgError
+        ( n
+        , TypeMismatch
+            ( expected
+            , found
+            , (* NB: these usages are always for first-order mismatches, so no recursion here! *)
+              _ ) )) ->
+      pf ppf "@[<hov>The %s argument must be %a but got %a.@]" (index_str n)
+        (pp_unsized_type ctx) expected (pp_unsized_type ctx) found
+
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
   let ctx = ref TypeMap.empty in
-  let suffix_str = function
-    | Fun_kind.FnPlain -> "a pure function"
-    | FnRng -> "an rng function"
-    | FnLpdf () -> "a probability density function"
-    | FnLpmf () -> "a probability mass function"
-    | FnTarget -> "an _lp function"
-    | FnJacobian -> "a _jacobian function" in
-  let index_str = function
-    | 1 -> "first"
-    | 2 -> "second"
-    | 3 -> "third"
-    | 4 -> "fourth"
-    | n -> Fmt.str "%dth" n in
   let rec pp_explain_rec ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text

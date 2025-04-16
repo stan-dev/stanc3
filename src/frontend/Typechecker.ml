@@ -620,6 +620,7 @@ let verify_laplace_control_args loc id args =
     , [ (DataOnly, UReal) (* tolerance *); (DataOnly, UInt) (* max_num_steps *)
       ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
       ; (DataOnly, UInt) (* max_steps_line_search *) ] ) ->
+      (* TODO use SignatureMismatch for better DataOnlyError? *)
       ()
   | false, _ ->
       raise_s
@@ -634,29 +635,35 @@ let verify_laplace_control_args loc id args =
             (args : UnsizedType.argumentlist)
             (loc : Location_span.t)]
 
-let check_function_callable_with_tuple cf tenv fname ?(required_arg_tys = [])
-    arg_tupl required_fn_rt =
+let check_function_callable_with_tuple cf tenv caller_id fname
+    ?(required_arg_tys = []) arg_tupl required_fn_rt =
   let arg_types =
     check_texpression_is_tuple arg_tupl ("Forwarded arguments to " ^ fname.name)
   in
   let required = required_arg_tys @ arg_types in
   let matches = function
-    | Env.{type_= UnsizedType.UFun (args, rt, FnPlain, _) as fn_type; _} ->
+    | Env.{type_= UnsizedType.UFun (args, rt, sfx, _) as fn_type; _} ->
         let open SignatureMismatch in
         let open Common.Let_syntax.Result in
         if rt <> required_fn_rt then
-          Error (`FnTypeMismatch (ReturnTypeMismatch (required_fn_rt, rt)))
+          Error (`FnRequirementsError (ReturnTypeMismatch (required_fn_rt, rt)))
+        else if sfx <> FnPlain then
+          Error
+            (`FnRequirementsError
+              (SuffixMismatch (FnPlain, Fun_kind.forget_normalization sfx)))
         else
-          let no_prom_args, _ = List.split_n args (List.length required) in
-          let arg_check =
-            let* () =
-              check_compatible_arguments_no_promotion no_prom_args required
-            in
-            let+ promotions =
-              check_compatible_arguments_mod_conv args required in
-            (fn_type, promotions) in
-          Result.map_error arg_check ~f:(fun x ->
-              `FnTypeMismatch (InputMismatch x))
+          let no_prom_args, _ =
+            List.split_n args (List.length required_arg_tys) in
+          let* () =
+            check_compatible_arguments_no_promotion required_arg_tys
+              no_prom_args
+            |> Result.map_error ~f:(fun x ->
+                   `FnRequirementsError (InputMismatch x)) in
+          let+ promotions =
+            check_compatible_arguments_mod_conv args required
+            |> Result.map_error ~f:(fun x ->
+                   `SuppliedArgsMismatch (InputMismatch x)) in
+          (fn_type, promotions)
     | _ -> Error `NonFunction in
   match find_matching_first_order_fn tenv matches fname with
   | SignatureMismatch.UniqueMatch (ftype, promotions) ->
@@ -673,8 +680,14 @@ let check_function_callable_with_tuple cf tenv fname ?(required_arg_tys = [])
   | SignatureErrors `NonFunction ->
       Semantic_error.returning_fn_expected_nonfn_found fname.id_loc fname.name
       |> error
-  | SignatureErrors (`FnTypeMismatch details) ->
-      raise_s [%message "TODO" (details : SignatureMismatch.details)]
+  | SignatureErrors (`FnRequirementsError details) ->
+      Semantic_error.illtyped_laplace_callback fname.id_loc caller_id.name
+        fname.name details
+      |> error
+  | SignatureErrors (`SuppliedArgsMismatch details) ->
+      Semantic_error.forwarded_function_error arg_tupl.emeta.loc caller_id.name
+        fname.name details
+      |> error
 
 (** The "trunk" of a laplace check is everything after the likihood,
   e.g. covariance function and control args *)
@@ -686,10 +699,11 @@ let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
     :: cov_tupl :: train_and_control_args ->
       if theta_init.emeta.type_ <> UnsizedType.UVector then
         Semantic_error.vector_expected theta_init.emeta.loc
-          "Initial convariance" theta_init.emeta.type_
+          ("Initial convariance for " ^ id.name)
+          theta_init.emeta.type_
         |> error;
       let cov_fun_type, cov_tupl =
-        check_function_callable_with_tuple cf tenv cov_fun cov_tupl
+        check_function_callable_with_tuple cf tenv id cov_fun cov_tupl
           (UnsizedType.ReturnType UMatrix) in
       (* handle optionality of the cov_tupl_test arg *)
       let maybe_cov_test, control_args =
@@ -699,7 +713,7 @@ let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
           | ( [({emeta= {type_= UnsizedType.UTuple _; _}; _} as cov_tupl_train)]
             , control_args ) ->
               let _, cov_tupl_train =
-                check_function_callable_with_tuple cf tenv cov_fun
+                check_function_callable_with_tuple cf tenv id cov_fun
                   cov_tupl_train (UnsizedType.ReturnType UMatrix) in
               ([cov_tupl_train], control_args)
           | _ -> ([], train_and_control_args) in
@@ -760,7 +774,7 @@ and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
-        check_function_callable_with_tuple cf tenv lik_fun lik_tupl
+        check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
           ~required_arg_tys:[(AutoDiffable, UVector)]
           (UnsizedType.ReturnType UReal) in
       check_laplace_trunk ~is_cond_dist loc cf tenv id UReal [lik_fun; lik_tupl]
@@ -773,7 +787,7 @@ and check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes =
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
-        check_function_callable_with_tuple cf tenv lik_fun lik_tupl
+        check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
           ~required_arg_tys:[(AutoDiffable, UVector)]
           (UnsizedType.ReturnType UReal) in
       check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id

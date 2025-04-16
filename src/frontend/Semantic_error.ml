@@ -31,6 +31,9 @@ module TypeError = struct
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * SignatureMismatch.function_mismatch
         * UnsizedType.t
+    | IllTypedForwardedFunctionApp of
+        string * string * SignatureMismatch.details
+    | IllTypedLaplaceCallback of string * string * SignatureMismatch.details
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
@@ -155,6 +158,14 @@ module TypeError = struct
           ( name
           , arg_tys
           , ([((UnsizedType.ReturnType return_type, args), error)], false) )
+    | IllTypedForwardedFunctionApp (caller, name, details) ->
+        Fmt.pf ppf
+          "Cannot call '%s'@ with arguments forwarded from call to@ '%s':@ %a"
+          name caller SignatureMismatch.pp_mismatch_details details
+    | IllTypedLaplaceCallback (caller, name, details) ->
+        Fmt.pf ppf
+          "Function '%s' does not meet criteria for this argument to '%s':@ %a"
+          name caller SignatureMismatch.pp_mismatch_details details
     | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
         let pp_sig ppf (rt, args) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -619,6 +630,12 @@ let illtyped_reduce_sum loc name arg_tys args error =
 
 let illtyped_variadic loc name arg_tys args fn_rt error =
   TypeError (loc, TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
+
+let forwarded_function_error loc caller name details =
+  TypeError (loc, TypeError.IllTypedForwardedFunctionApp (caller, name, details))
+
+let illtyped_laplace_callback loc caller name details =
+  TypeError (loc, TypeError.IllTypedLaplaceCallback (caller, name, details))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError
