@@ -369,8 +369,11 @@ let pp_mismatch_details ppf details =
             , found
             , (* NB: these usages are always for first-order mismatches, so no recursion here! *)
               _ ) )) ->
-      pf ppf "@[<hov>The %s argument must be %a but got %a.@]" (index_str n)
-        (pp_unsized_type ctx) expected (pp_unsized_type ctx) found
+      pp_with_where ctx
+        (fun ppf () ->
+          pf ppf "@[<hov>The %s argument must be %a but got %a.@]" (index_str n)
+            (pp_unsized_type ctx) expected (pp_unsized_type ctx) found)
+        ppf ()
 
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in

@@ -614,14 +614,17 @@ let make_function_variable cf loc id = function
 
 let verify_laplace_control_args loc id args =
   let args = List.map ~f:arg_type args in
-  match (String.is_substring ~substring:"_tol" id.name, args) with
+  match (String.is_prefix ~prefix:"laplace_marginal_tol" id.name, args) with
   | false, [] -> ()
   | ( true
-    , [ (DataOnly, UReal) (* tolerance *); (DataOnly, UInt) (* max_num_steps *)
+    , [ (tol_adlevel, UReal) (* tolerance *)
+      ; (DataOnly, UInt) (* max_num_steps *)
       ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
       ; (DataOnly, UInt) (* max_steps_line_search *) ] ) ->
       (* TODO use SignatureMismatch for better DataOnlyError? *)
-      ()
+      if tol_adlevel = AutoDiffable then
+        failwith
+          "TODO error path -- tolerance control argument must be data only"
   | false, _ ->
       raise_s
         [%message
@@ -750,11 +753,9 @@ let check_laplace_helper_lik_args loc id tes =
   with
   | Ok promotions -> (Promotion.promote_list for_prob promotions, rest)
   | Error x ->
-      raise_s
-        [%message
-          "TODO"
-            (x : SignatureMismatch.function_mismatch)
-            (loc : Location_span.t)]
+      Semantic_error.illtyped_laplace_helper_args loc id.name
+        (SignatureMismatch.InputMismatch x)
+      |> error
 
 let rec check_laplace_fn ~is_cond_dist loc cf tenv id tes =
   if

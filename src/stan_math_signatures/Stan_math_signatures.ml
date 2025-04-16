@@ -160,14 +160,14 @@ let laplace_marginal_fns =
     "laplace_marginal_bernoulli_logit_lpmf"
   ; "laplace_marginal_tol_bernoulli_logit_lpmf"
   ; "laplace_marginal_neg_binomial_2_log_lpmf"
-  ; "laplace_marginal_neg_binomial_2_log_tol_lpmf"
+  ; "laplace_marginal_tol_neg_binomial_2_log_lpmf"
   ; "laplace_marginal_poisson_log_lpmf"; "laplace_marginal_tol_poisson_log_lpmf"
   ; "laplace_marginal_poisson_2_log_lpmf"
   ; "laplace_marginal_poisson_2_log_tol_lpmf"; (* rngs *)
     "laplace_marginal_bernoulli_logit_rng"
   ; "laplace_marginal_tol_bernoulli_logit_rng"
   ; "laplace_marginal_neg_binomial_2_log_rng"
-  ; "laplace_marginal_neg_binomial_2_log_tol_rng"
+  ; "laplace_marginal_tol_neg_binomial_2_log_rng"
   ; "laplace_marginal_poisson_log_rng"; "laplace_marginal_tol_poisson_log_rng"
   ; "laplace_marginal_poisson_2_log_rng"
   ; "laplace_marginal_poisson_2_log_tol_rng" ]

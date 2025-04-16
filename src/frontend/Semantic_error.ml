@@ -34,6 +34,7 @@ module TypeError = struct
     | IllTypedForwardedFunctionApp of
         string * string * SignatureMismatch.details
     | IllTypedLaplaceCallback of string * string * SignatureMismatch.details
+    | IllTypedLaplaceHelperArgs of string * SignatureMismatch.details
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
@@ -166,6 +167,9 @@ module TypeError = struct
         Fmt.pf ppf
           "Function '%s' does not meet criteria for this argument to '%s':@ %a"
           name caller SignatureMismatch.pp_mismatch_details details
+    | IllTypedLaplaceHelperArgs (name, details) ->
+        Fmt.pf ppf "@[<v>Ill-typed arguments supplied to function '%s':@ %a@]"
+          name SignatureMismatch.pp_mismatch_details details
     | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
         let pp_sig ppf (rt, args) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -636,6 +640,9 @@ let forwarded_function_error loc caller name details =
 
 let illtyped_laplace_callback loc caller name details =
   TypeError (loc, TypeError.IllTypedLaplaceCallback (caller, name, details))
+
+let illtyped_laplace_helper_args loc name details =
+  TypeError (loc, TypeError.IllTypedLaplaceHelperArgs (name, details))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError

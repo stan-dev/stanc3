@@ -76,6 +76,9 @@ val forwarded_function_error :
 val illtyped_laplace_callback :
   Location_span.t -> string -> string -> SignatureMismatch.details -> t
 
+val illtyped_laplace_helper_args :
+  Location_span.t -> string -> SignatureMismatch.details -> t
+
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 
