@@ -85,7 +85,7 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
       | _ -> false)
 
 let query_stan_math_mem_pattern_support (name : string)
-    (args : (UnsizedType.autodifftype * UnsizedType.t) list) =
+    (args : UnsizedType.argumentlist) =
   let open Stan_math_signatures in
   match name with
   | x when is_stan_math_variadic_function_name x -> false
@@ -253,7 +253,7 @@ and extract_nonderived_admatrix_types_fun (kind : 'a Fun_kind.t)
 
 (**Checks if a list of types contains at least on ad matrix or if everything is derived from data*)
 let contains_at_least_one_ad_matrix_or_all_data
-    (fun_args : (UnsizedType.autodifftype * UnsizedType.t) list) =
+    (fun_args : UnsizedType.argumentlist) =
   List.is_empty fun_args
   || List.exists
        ~f:(fun x ->

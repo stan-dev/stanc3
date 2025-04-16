@@ -13,7 +13,6 @@ and details =
 and function_mismatch = private
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
-[@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * UnsizedType.argumentlist) * function_mismatch

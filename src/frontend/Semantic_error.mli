@@ -49,7 +49,7 @@ val illtyped_reduce_sum :
      Location_span.t
   -> string
   -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> UnsizedType.argumentlist
   -> SignatureMismatch.function_mismatch
   -> t
 
@@ -57,15 +57,14 @@ val ambiguous_function_promotion :
      Location_span.t
   -> string
   -> UnsizedType.t list option
-  -> (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
-     list
+  -> (UnsizedType.returntype * UnsizedType.argumentlist) list
   -> t
 
 val illtyped_variadic :
      Location_span.t
   -> string
   -> UnsizedType.t list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> UnsizedType.argumentlist
   -> UnsizedType.t
   -> SignatureMismatch.function_mismatch
   -> t
@@ -143,7 +142,7 @@ val target_plusequals_outside_model_or_logprob : Location_span.t -> t
 val jacobian_plusequals_not_allowed : Location_span.t -> t
 
 val invalid_truncation_cdf_or_ccdf :
-  Location_span.t -> (UnsizedType.autodifftype * UnsizedType.t) list -> t
+  Location_span.t -> UnsizedType.argumentlist -> t
 
 val break_outside_loop : Location_span.t -> t
 val continue_outside_loop : Location_span.t -> t

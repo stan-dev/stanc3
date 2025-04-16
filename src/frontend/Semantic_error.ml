@@ -23,12 +23,12 @@ module TypeError = struct
     | IllTypedReduceSum of
         string
         * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
+        * UnsizedType.argumentlist
         * SignatureMismatch.function_mismatch
     | IllTypedVariadic of
         string
         * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
+        * UnsizedType.argumentlist
         * SignatureMismatch.function_mismatch
         * UnsizedType.t
     | IllTypedForwardedFunctionApp of
@@ -43,9 +43,7 @@ module TypeError = struct
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
-        * (UnsizedType.returntype
-          * (UnsizedType.autodifftype * UnsizedType.t) list)
-          list
+        * (UnsizedType.returntype * UnsizedType.argumentlist) list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string * string option
@@ -433,8 +431,7 @@ module StatementError = struct
     | InvalidTildeNoSuchDistribution of string * bool
     | TargetPlusEqualsOutsideModelOrLogProb
     | JacobianPlusEqualsNotAllowed
-    | InvalidTruncationCDForCCDF of
-        (UnsizedType.autodifftype * UnsizedType.t) list
+    | InvalidTruncationCDForCCDF of UnsizedType.argumentlist
     | BreakOutsideLoop
     | ContinueOutsideLoop
     | ExpressionReturnOutsideReturningFn

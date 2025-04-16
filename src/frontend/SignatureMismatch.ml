@@ -75,17 +75,13 @@ and details =
 and function_mismatch =
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
-[@@deriving sexp]
 
 type signature_error =
-  (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
-  * function_mismatch
+  (UnsizedType.returntype * UnsizedType.argumentlist) * function_mismatch
 
 type ('unique, 'error) generic_match_result =
   | UniqueMatch of 'unique
-  | AmbiguousMatch of
-      (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
-      list
+  | AmbiguousMatch of (UnsizedType.returntype * UnsizedType.argumentlist) list
   | SignatureErrors of 'error
 [@@deriving sexp]
 
