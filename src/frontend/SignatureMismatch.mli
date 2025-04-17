@@ -76,7 +76,8 @@ val check_variadic_args :
       If none is found, returns [Error] of the list of args and a function_mismatch.
      *)
 
-val pp_mismatch_details : Format.formatter -> details -> unit
+val pp_mismatch_details :
+  ?skipped:string list -> Format.formatter -> details -> unit
 
 val pp_signature_mismatch :
      Format.formatter

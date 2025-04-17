@@ -32,7 +32,7 @@ module TypeError = struct
         * SignatureMismatch.function_mismatch
         * UnsizedType.t
     | IllTypedForwardedFunctionApp of
-        string * string * SignatureMismatch.details
+        string * string * string list * SignatureMismatch.details
     | IllTypedLaplaceCallback of string * string * SignatureMismatch.details
     | IllTypedLaplaceHelperArgs of
         string * UnsizedType.argumentlist * SignatureMismatch.details
@@ -162,19 +162,25 @@ module TypeError = struct
           ( name
           , arg_tys
           , ([((UnsizedType.ReturnType return_type, args), error)], false) )
-    | IllTypedForwardedFunctionApp (caller, name, details) ->
+    | IllTypedForwardedFunctionApp (caller, name, skipped, details) ->
         Fmt.pf ppf
           "Cannot call '%s'@ with arguments forwarded from call to@ '%s':@ %a"
-          name caller SignatureMismatch.pp_mismatch_details details
+          name caller
+          (SignatureMismatch.pp_mismatch_details ~skipped)
+          details
     | IllTypedLaplaceCallback (caller, name, details) ->
         Fmt.pf ppf
           "Function '%s' does not have a valid signature for use in '%s':@ %a"
-          name caller SignatureMismatch.pp_mismatch_details details
+          name caller
+          (SignatureMismatch.pp_mismatch_details ~skipped:[])
+          details
     | IllTypedLaplaceHelperArgs (name, expected, details) ->
         Fmt.pf ppf
           "@[<v>Ill-typed arguments supplied to function '%s'@ for the \
            likelihood:@ %a@ Expected the arguments to start with:@ @[(%a)@]@]"
-          name SignatureMismatch.pp_mismatch_details details
+          name
+          (SignatureMismatch.pp_mismatch_details ~skipped:[])
+          details
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           expected
     | IllTypedLaplaceMarginal (name, early, supplied) ->
@@ -720,8 +726,11 @@ let illtyped_reduce_sum loc name arg_tys args error =
 let illtyped_variadic loc name arg_tys args fn_rt error =
   TypeError (loc, TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
 
-let forwarded_function_error loc caller name details =
-  TypeError (loc, TypeError.IllTypedForwardedFunctionApp (caller, name, details))
+let forwarded_function_error loc caller name required_args details =
+  TypeError
+    ( loc
+    , TypeError.IllTypedForwardedFunctionApp
+        (caller, name, required_args, details) )
 
 let illtyped_laplace_callback loc caller name details =
   TypeError (loc, TypeError.IllTypedLaplaceCallback (caller, name, details))

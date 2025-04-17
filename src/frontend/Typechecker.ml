@@ -656,11 +656,12 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
   loop ()
 
 let check_function_callable_with_tuple cf tenv caller_id fname
-    ?(required_arg_tys = []) arg_tupl required_fn_rt =
+    ?(required_args = []) arg_tupl required_fn_rt =
   let arg_types =
     check_texpression_is_tuple arg_tupl
       (Printf.sprintf "Forwarded arguments to '%s' in call to '%s'" fname.name
          caller_id.name) in
+  let required_arg_names, required_arg_tys = List.unzip required_args in
   let required = required_arg_tys @ arg_types in
   let matches = function
     | Env.{type_= UnsizedType.UFun (args, rt, sfx, _) as fn_type; _} ->
@@ -714,7 +715,7 @@ let check_function_callable_with_tuple cf tenv caller_id fname
       |> error
   | SignatureErrors (`SuppliedArgsMismatch details) ->
       Semantic_error.forwarded_function_error arg_tupl.emeta.loc caller_id.name
-        fname.name details
+        fname.name required_arg_names details
       |> error
 
 let verify_laplace_control_args loc id (args : typed_expression list) =
@@ -816,7 +817,7 @@ and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
       let lik_fun, lik_tupl =
         mark_needs_2nd_derivs lik_fun;
         check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
-          ~required_arg_tys:[(AutoDiffable, UVector)]
+          ~required_args:[("latent gaussian vector", (AutoDiffable, UVector))]
           (UnsizedType.ReturnType UReal) in
       check_laplace_trunk ~is_cond_dist loc cf tenv id UReal [lik_fun; lik_tupl]
         tes
@@ -833,7 +834,7 @@ and check_laplace_latent_rng ~is_cond_dist loc cf tenv id tes =
       let lik_fun, lik_tupl =
         mark_needs_2nd_derivs lik_fun;
         check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
-          ~required_arg_tys:[(AutoDiffable, UVector)]
+          ~required_args:[("latent gaussian vector", (AutoDiffable, UVector))]
           (UnsizedType.ReturnType UReal) in
       check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id
         UVector [lik_fun; lik_tupl] tes

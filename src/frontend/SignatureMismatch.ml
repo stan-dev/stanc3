@@ -338,9 +338,18 @@ let index_str = function
   | 4 -> "fourth"
   | n -> Fmt.str "%dth" n
 
-let pp_mismatch_details ppf details =
+let pp_mismatch_details ?(skipped = []) ppf details =
   let open Fmt in
   let ctx = ref TypeMap.empty in
+  let n_skipped = List.length skipped in
+  let pp_skipped_index_str ppf n =
+    if n_skipped = 0 then Fmt.pf ppf "%s argument" (index_str n)
+    else
+      Fmt.pf ppf "%s argument (excluding the %a argument%s)"
+        (index_str (n - n_skipped))
+        Fmt.(list ~sep:comma string)
+        skipped
+        (if n_skipped = 1 then "" else "s") in
   match details with
   | SuffixMismatch (expected, found) ->
       pf ppf "@[<hov>Expected %s but got %s.@]" (suffix_str expected)
@@ -350,10 +359,17 @@ let pp_mismatch_details ppf details =
         "@[<hov>Expected function returning %a but got function returning %a.@]"
         UnsizedType.pp_returntype expected UnsizedType.pp_returntype found
   | InputMismatch (ArgNumMismatch (expected, found)) ->
-      pf ppf "@[<hov>Expected %d arguments but got %d arguments.@]" expected
-        found
+      pf ppf "@[<hov>Expected %d arguments%a@ but got %d arguments.@]"
+        (expected - n_skipped)
+        (if n_skipped = 0 then Fmt.nop
+         else fun ppf () ->
+           pf ppf " (excluding the %a argument%s)"
+             Fmt.(list ~sep:comma string)
+             skipped
+             (if n_skipped = 1 then "" else "s"))
+        () (found - n_skipped)
   | InputMismatch (ArgError (n, DataOnlyError)) ->
-      pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
+      pf ppf "@[<hov>The@ %a%a@]" pp_skipped_index_str n text
         " is marked data-only. (Local variables are assumed to depend on \
          parameters; same goes for function inputs unless they are marked with \
          the keyword 'data'.)"
@@ -367,8 +383,8 @@ let pp_mismatch_details ppf details =
               _ ) )) ->
       pp_with_where ctx
         (fun ppf () ->
-          pf ppf "@[<hov>The %s argument must be %a but got %a.@]" (index_str n)
-            (pp_unsized_type ctx) expected (pp_unsized_type ctx) found)
+          pf ppf "@[<hov>The %a must be@ %a but got@ %a.@]" pp_skipped_index_str
+            n (pp_unsized_type ctx) expected (pp_unsized_type ctx) found)
         ppf ()
 
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =

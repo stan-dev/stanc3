@@ -126,7 +126,8 @@ Semantic error in 'bad_forward2.stan', line 49, column 42 to column 58:
 
 Cannot call 'll_function' with arguments forwarded from call to
 'laplace_marginal':
-The third argument must be vector but got array[] int.
+The second argument (excluding the latent gaussian vector argument) must be
+vector but got array[] int.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward3.stan
 Semantic error in 'bad_forward3.stan', line 49, column 42 to column 50:
@@ -141,7 +142,8 @@ Semantic error in 'bad_forward3.stan', line 49, column 42 to column 50:
 
 Cannot call 'll_function' with arguments forwarded from call to
 'laplace_marginal':
-Expected 4 arguments but got 3 arguments.
+Expected 3 arguments (excluding the latent gaussian vector argument)
+but got 2 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward4.stan
 Semantic error in 'bad_forward4.stan', line 51, column 46 to column 71:

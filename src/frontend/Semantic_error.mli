@@ -70,7 +70,12 @@ val illtyped_variadic :
   -> t
 
 val forwarded_function_error :
-  Location_span.t -> string -> string -> SignatureMismatch.details -> t
+     Location_span.t
+  -> string
+  -> string
+  -> string list
+  -> SignatureMismatch.details
+  -> t
 
 val illtyped_laplace_callback :
   Location_span.t -> string -> string -> SignatureMismatch.details -> t
