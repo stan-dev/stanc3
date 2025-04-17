@@ -64,6 +64,19 @@ model {
                                  tolerance, max_num_steps,
                                  hessian_block_size, solver,
                                  max_steps_line_search);
+
+  y ~ laplace_marginal_neg_binomial_2_log(y, log_ye, theta_0, K_function,
+                                          (x, n_obs, alpha, rho));
+
+  target += laplace_marginal_neg_binomial_2_log_lpmf(y | y, log_ye, theta_0, K_function, (x,
+                                                                    n_obs,
+                                                                    alpha,
+                                                                    rho));
+
+  target += laplace_marginal_neg_binomial_2_log_lupmf(y | y, log_ye, theta_0, K_function, (x,
+                                                                    n_obs,
+                                                                    alpha,
+                                                                    rho));
 }
 generated quantities {
   vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),

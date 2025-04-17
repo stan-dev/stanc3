@@ -1533,7 +1533,7 @@ let verify_valid_distribution_pos loc cf =
   if in_lp_function cf || cf.current_block = Model then ()
   else Semantic_error.target_plusequals_outside_model_or_logprob loc |> error
 
-let check_tilde_distribution loc tenv id arguments =
+let check_tilde_distribution loc cf tenv id arguments =
   let name = id.name in
   let argumenttypes = List.map ~f:arg_type arguments in
   let name_w_suffix_dist suffix =
@@ -1551,10 +1551,25 @@ let check_tilde_distribution loc tenv id arguments =
       (Promotion.promote_list arguments p, f suffix)
       (* real return type is enforced by [verify_fundef_dist_rt] *)
   | None | Some (SignatureErrors ([], _), _) ->
-      (* Function is non existent *)
-      Semantic_error.invalid_tilde_no_such_dist loc name
-        (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
-      |> error
+      (* The laplace_marginal helpers are not in the
+         environment lookup, so we patch them back here *)
+      if Stan_math_signatures.is_embedded_laplace_fn (id.name ^ "_lupmf") then
+        let id = {id with name= id.name ^ "_lupmf"} in
+        let fn_expr =
+          check_laplace_helper_prob ~is_cond_dist:true loc cf tenv id arguments
+        in
+        match fn_expr.expr with
+        | CondDistApp (kind, _, args) -> (args, kind)
+        | _ ->
+            Common.ICE.internal_compiler_error
+              [%message
+                "Typechecking a laplace marginal did not return a distribution "
+                  (fn_expr : Ast.typed_expression)]
+      else
+        (* Otherwise, the function is non existent *)
+        Semantic_error.invalid_tilde_no_such_dist loc name
+          (List.hd_exn argumenttypes |> snd |> UnsizedType.is_int_type)
+        |> error
   | Some (AmbiguousMatch sigs, _) ->
       Semantic_error.ambiguous_function_promotion loc id.name
         (Some (List.map ~f:type_of_expr_typed arguments))
@@ -1608,7 +1623,7 @@ let check_tilde loc cf tenv distribution truncation arg args =
   verify_valid_distribution_pos loc cf;
   verify_distribution_cdf_ccdf loc distribution;
   let promoted_args, kind =
-    check_tilde_distribution loc tenv distribution (te :: tes) in
+    check_tilde_distribution loc cf tenv distribution (te :: tes) in
   let te, tes = (List.hd_exn promoted_args, List.tl_exn promoted_args) in
   verify_distribution_cdf_defined loc tenv distribution ttrunc tes;
   let stmt =

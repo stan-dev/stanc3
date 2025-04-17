@@ -173,7 +173,8 @@ let embedded_laplace_functions =
   ]
   |> String.Set.of_list
 
-let is_embedded_laplace_fn = Set.mem embedded_laplace_functions
+let is_embedded_laplace_fn name =
+  Set.mem embedded_laplace_functions (Utils.stdlib_distribution_name name)
 
 let laplace_helper_lik_args =
   [ ( "bernoulli_logit"
