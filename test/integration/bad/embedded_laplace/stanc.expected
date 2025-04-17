@@ -160,12 +160,12 @@ Cannot call 'K_function' with arguments forwarded from call to
 Expected 4 arguments but got 5 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward5.stan
-Semantic error in 'bad_forward5.stan', line 40, column 56 to column 80:
+Semantic error in 'bad_forward5.stan', line 40, column 32 to column 56:
    -------------------------------------------------
     38:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
     39:                      theta_0,
-    40:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, {rho}));
-                                                                 ^
+    40:                      K_function, (x, n_obs, alpha, {rho}));
+                                         ^
     41:  }
    -------------------------------------------------
 
@@ -235,12 +235,12 @@ Recieved 1 extra argument at the end of the call to 'laplace_latent_rng'.
 Did you mean to call the _tol version?
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol2.stan
-Semantic error in 'bad_tol2.stan', line 40, column 80 to column 81:
+Semantic error in 'bad_tol2.stan', line 40, column 56 to column 57:
    -------------------------------------------------
     38:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
     39:                      theta_0,
-    40:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4,5);
-                                                                                         ^
+    40:                      K_function, (x, n_obs, alpha, rho), 1,2,3,4,5);
+                                                                 ^
     41:  }
    -------------------------------------------------
 
@@ -248,12 +248,12 @@ Recieved 5 extra arguments at the end of the call to 'laplace_latent_rng'.
 Did you mean to call the _tol version?
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol3.stan
-Semantic error in 'bad_tol3.stan', line 40, column 80 to column 81:
+Semantic error in 'bad_tol3.stan', line 40, column 56 to column 57:
    -------------------------------------------------
     38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
     39:                      theta_0,
-    40:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4);
-                                                                                         ^
+    40:                      K_function, (x, n_obs, alpha, rho), 1,2,3,4);
+                                                                 ^
     41:  }
    -------------------------------------------------
 
@@ -277,12 +277,12 @@ assumed to depend on parameters; same goes for function inputs unless they
 are marked with the keyword 'data'.)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol5.stan
-Semantic error in 'bad_tol5.stan', line 40, column 80 to column 81:
+Semantic error in 'bad_tol5.stan', line 40, column 56 to column 57:
    -------------------------------------------------
     38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
     39:                      theta_0,
-    40:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4,5.5);
-                                                                                         ^
+    40:                      K_function, (x, n_obs, alpha, rho), 1,2,3,4,5.5);
+                                                                 ^
     41:  }
    -------------------------------------------------
 
@@ -375,7 +375,7 @@ Semantic error in 'missing_args5.stan', line 3, column 20 to column 40:
 Ill-typed arguments supplied to function 'laplace_latent_rng'.
 The valid signature of this function is
 laplace_latent_rng((vector, T1...) => real, tuple(T1...), vector,
-  (T2...) => matrix, tuple(T2...), tuple(T2...))
+  (T2...) => matrix, tuple(T2...))
 However, we recieved the types:
 ()
 We were unable to start more in-depth checking. Please ensure you are passing
@@ -395,7 +395,7 @@ Semantic error in 'missing_args6.stan', line 40, column 22 to line 41, column 14
 Ill-typed arguments supplied to function 'laplace_latent_rng'.
 The valid signature of this function is
 laplace_latent_rng((vector, T1...) => real, tuple(T1...), vector,
-  (T2...) => matrix, tuple(T2...), tuple(T2...))
+  (T2...) => matrix, tuple(T2...))
 However, we recieved the types:
 (data (vector, real, vector, array[] int) => real,
   tuple(real, vector, array[] int), data vector)
@@ -416,7 +416,7 @@ Semantic error in 'missing_args7.stan', line 18, column 24 to line 19, column 30
 Ill-typed arguments supplied to function 'laplace_latent_neg_binomial_2_log_rng'.
 The valid signature of this function is
 laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector,
-  vector, (...) => matrix, tuple(...), tuple(...))
+  vector, (...) => matrix, tuple(...))
 However, we recieved the types:
 (data array[] int, data array[] int, data vector, data vector)
 Typechecking failed after checking the first 3 arguments.

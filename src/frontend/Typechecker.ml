@@ -742,12 +742,9 @@ let verify_laplace_control_args loc id (args : typed_expression list) =
 
 (** The "trunk" of a laplace check is everything after the likihood,
   e.g. covariance function and control args *)
-let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
-    lik_args tes =
+let check_laplace_trunk ~is_cond_dist loc cf tenv id rt lik_args tes =
   match tes with
-  | theta_init
-    :: {expr= Variable cov_fun; _}
-    :: cov_tupl :: train_and_control_args ->
+  | theta_init :: {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
       if theta_init.emeta.type_ <> UnsizedType.UVector then
         Semantic_error.vector_expected theta_init.emeta.loc
           ("Initial guess argument to '" ^ id.name ^ "'")
@@ -756,23 +753,10 @@ let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
       let cov_fun_type, cov_tupl =
         check_function_callable_with_tuple cf tenv id cov_fun cov_tupl
           (UnsizedType.ReturnType UMatrix) in
-      (* handle optionality of the cov_tupl_test arg *)
-      let maybe_cov_test, control_args =
-        if not can_have_test then ([], train_and_control_args)
-        else
-          match List.split_n train_and_control_args 1 with
-          | ( [({emeta= {type_= UnsizedType.UTuple _; _}; _} as cov_tupl_train)]
-            , control_args ) ->
-              let _, cov_tupl_train =
-                check_function_callable_with_tuple cf tenv id cov_fun
-                  cov_tupl_train (UnsizedType.ReturnType UMatrix) in
-              ([cov_tupl_train], control_args)
-          | _ -> ([], train_and_control_args) in
       verify_laplace_control_args loc id control_args;
       let args =
-        lik_args
-        @ (theta_init :: cov_fun_type :: cov_tupl :: maybe_cov_test)
-        @ control_args in
+        lik_args @ (theta_init :: cov_fun_type :: cov_tupl :: control_args)
+      in
       Some
         (mk_fun_app ~is_cond_dist ~loc
            (StanLib (Fun_kind.suffix_from_name id.name))
@@ -834,15 +818,14 @@ and check_laplace_latent_rng ~is_cond_dist loc cf tenv id tes =
         check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
           ~required_args:[("latent gaussian vector", (AutoDiffable, UVector))]
           (UnsizedType.ReturnType UReal) in
-      check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id
-        UVector [lik_fun; lik_tupl] tes
+      check_laplace_trunk ~is_cond_dist loc cf tenv id UVector
+        [lik_fun; lik_tupl] tes
       |> Option.value_or_thunk ~default:(fail ~early:false)
   | _ -> fail ~early:true ()
 
 and check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes =
   let lik_args, rest = check_laplace_helper_lik_args loc id tes in
-  check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id UVector
-    lik_args rest
+  check_laplace_trunk ~is_cond_dist loc cf tenv id UVector lik_args rest
   |> Option.value_or_thunk ~default:(fun () ->
          Semantic_error.illtyped_laplace_helper_generic loc id.name
            (List.map ~f:arg_type tes)

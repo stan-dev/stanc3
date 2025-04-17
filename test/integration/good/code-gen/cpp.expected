@@ -6849,49 +6849,45 @@ namespace laplace_functionals_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 58> locations_array__ =
+static constexpr std::array<const char*, 47> locations_array__ =
   {" (found before start of program)",
-  " (in 'laplace_functionals.stan', line 50, column 2 to column 22)",
-  " (in 'laplace_functionals.stan', line 51, column 2 to column 20)",
-  " (in 'laplace_functionals.stan', line 52, column 2 to column 20)",
-  " (in 'laplace_functionals.stan', line 82, column 2 to line 84, column 67)",
-  " (in 'laplace_functionals.stan', line 86, column 2 to line 89, column 68)",
-  " (in 'laplace_functionals.stan', line 91, column 2 to line 97, column 71)",
-  " (in 'laplace_functionals.stan', line 99, column 2 to line 106, column 71)",
-  " (in 'laplace_functionals.stan', line 55, column 2 to column 55)",
-  " (in 'laplace_functionals.stan', line 56, column 2 to column 61)",
-  " (in 'laplace_functionals.stan', line 57, column 2 to column 21)",
-  " (in 'laplace_functionals.stan', line 59, column 2 to line 60, column 65)",
-  " (in 'laplace_functionals.stan', line 62, column 2 to line 66, column 56)",
-  " (in 'laplace_functionals.stan', line 68, column 2 to line 69, column 66)",
-  " (in 'laplace_functionals.stan', line 71, column 2 to line 74, column 74)",
-  " (in 'laplace_functionals.stan', line 76, column 2 to line 79, column 74)",
-  " (in 'laplace_functionals.stan', line 27, column 2 to column 12)",
-  " (in 'laplace_functionals.stan', line 28, column 2 to column 20)",
-  " (in 'laplace_functionals.stan', line 29, column 8 to column 13)",
-  " (in 'laplace_functionals.stan', line 29, column 2 to column 21)",
+  " (in 'laplace_functionals.stan', line 42, column 2 to column 22)",
+  " (in 'laplace_functionals.stan', line 43, column 2 to column 20)",
+  " (in 'laplace_functionals.stan', line 44, column 2 to column 20)",
+  " (in 'laplace_functionals.stan', line 74, column 2 to line 76, column 67)",
+  " (in 'laplace_functionals.stan', line 78, column 2 to line 84, column 71)",
+  " (in 'laplace_functionals.stan', line 47, column 2 to column 55)",
+  " (in 'laplace_functionals.stan', line 48, column 2 to column 61)",
+  " (in 'laplace_functionals.stan', line 49, column 2 to column 21)",
+  " (in 'laplace_functionals.stan', line 51, column 2 to line 52, column 65)",
+  " (in 'laplace_functionals.stan', line 54, column 2 to line 58, column 56)",
+  " (in 'laplace_functionals.stan', line 60, column 2 to line 61, column 66)",
+  " (in 'laplace_functionals.stan', line 63, column 2 to line 66, column 74)",
+  " (in 'laplace_functionals.stan', line 68, column 2 to line 71, column 74)",
+  " (in 'laplace_functionals.stan', line 19, column 2 to column 12)",
+  " (in 'laplace_functionals.stan', line 20, column 2 to column 20)",
+  " (in 'laplace_functionals.stan', line 21, column 8 to column 13)",
+  " (in 'laplace_functionals.stan', line 21, column 2 to column 21)",
+  " (in 'laplace_functionals.stan', line 22, column 9 to column 14)",
+  " (in 'laplace_functionals.stan', line 22, column 2 to column 19)",
+  " (in 'laplace_functionals.stan', line 23, column 8 to column 13)",
+  " (in 'laplace_functionals.stan', line 23, column 22 to column 35)",
+  " (in 'laplace_functionals.stan', line 23, column 2 to column 39)",
+  " (in 'laplace_functionals.stan', line 24, column 2 to column 26)",
+  " (in 'laplace_functionals.stan', line 25, column 2 to column 23)",
+  " (in 'laplace_functionals.stan', line 26, column 2 to column 28)",
+  " (in 'laplace_functionals.stan', line 27, column 2 to column 25)",
   " (in 'laplace_functionals.stan', line 30, column 9 to column 14)",
-  " (in 'laplace_functionals.stan', line 30, column 2 to column 19)",
-  " (in 'laplace_functionals.stan', line 31, column 8 to column 13)",
-  " (in 'laplace_functionals.stan', line 31, column 22 to column 35)",
-  " (in 'laplace_functionals.stan', line 31, column 2 to column 39)",
-  " (in 'laplace_functionals.stan', line 32, column 2 to column 26)",
-  " (in 'laplace_functionals.stan', line 33, column 2 to column 23)",
-  " (in 'laplace_functionals.stan', line 34, column 2 to column 28)",
-  " (in 'laplace_functionals.stan', line 35, column 2 to column 25)",
-  " (in 'laplace_functionals.stan', line 38, column 9 to column 14)",
-  " (in 'laplace_functionals.stan', line 38, column 2 to column 33)",
-  " (in 'laplace_functionals.stan', line 40, column 9 to column 14)",
-  " (in 'laplace_functionals.stan', line 40, column 2 to column 49)",
-  " (in 'laplace_functionals.stan', line 43, column 2 to column 24)",
-  " (in 'laplace_functionals.stan', line 44, column 2 to column 26)",
-  " (in 'laplace_functionals.stan', line 45, column 2 to column 29)",
-  " (in 'laplace_functionals.stan', line 46, column 2 to column 17)",
-  " (in 'laplace_functionals.stan', line 47, column 2 to column 32)",
-  " (in 'laplace_functionals.stan', line 82, column 9 to column 14)",
-  " (in 'laplace_functionals.stan', line 86, column 9 to column 14)",
-  " (in 'laplace_functionals.stan', line 91, column 9 to column 14)",
-  " (in 'laplace_functionals.stan', line 99, column 9 to column 14)",
+  " (in 'laplace_functionals.stan', line 30, column 2 to column 33)",
+  " (in 'laplace_functionals.stan', line 32, column 9 to column 14)",
+  " (in 'laplace_functionals.stan', line 32, column 2 to column 49)",
+  " (in 'laplace_functionals.stan', line 35, column 2 to column 24)",
+  " (in 'laplace_functionals.stan', line 36, column 2 to column 26)",
+  " (in 'laplace_functionals.stan', line 37, column 2 to column 29)",
+  " (in 'laplace_functionals.stan', line 38, column 2 to column 17)",
+  " (in 'laplace_functionals.stan', line 39, column 2 to column 32)",
+  " (in 'laplace_functionals.stan', line 74, column 9 to column 14)",
+  " (in 'laplace_functionals.stan', line 78, column 9 to column 14)",
   " (in 'laplace_functionals.stan', line 7, column 4 to column 61)",
   " (in 'laplace_functionals.stan', line 5, column 34 to line 8, column 3)",
   " (in 'laplace_functionals.stan', line 12, column 11 to column 16)",
@@ -6900,14 +6896,7 @@ static constexpr std::array<const char*, 58> locations_array__ =
   " (in 'laplace_functionals.stan', line 14, column 6 to column 22)",
   " (in 'laplace_functionals.stan', line 13, column 4 to line 14, column 22)",
   " (in 'laplace_functionals.stan', line 15, column 4 to column 13)",
-  " (in 'laplace_functionals.stan', line 11, column 71 to line 16, column 3)",
-  " (in 'laplace_functionals.stan', line 20, column 11 to column 16)",
-  " (in 'laplace_functionals.stan', line 20, column 18 to column 23)",
-  " (in 'laplace_functionals.stan', line 20, column 4 to column 60)",
-  " (in 'laplace_functionals.stan', line 22, column 6 to column 22)",
-  " (in 'laplace_functionals.stan', line 21, column 4 to line 22, column 22)",
-  " (in 'laplace_functionals.stan', line 23, column 4 to column 13)",
-  " (in 'laplace_functionals.stan', line 19, column 71 to line 24, column 3)"};
+  " (in 'laplace_functionals.stan', line 11, column 71 to line 16, column 3)"};
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_col_vector<T0__>,
                               stan::is_vt_not_complex<T0__>,
@@ -6931,18 +6920,6 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
                                                       std::is_floating_point<T3__>>>* = nullptr>
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T2__, T3__>,-1,-1>
 K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
-           rho, std::ostream* pstream__);
-template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_all_t<std::is_integral<T0__>,
-                              stan::is_std_vector<T1__>,
-                              stan::is_col_vector<stan::value_type_t<T1__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T1__>>,
-                              stan::math::disjunction<stan::is_autodiff<T2__>,
-                                                      std::is_floating_point<T2__>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__>,
-                                                      std::is_floating_point<T3__>>>* = nullptr>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T1__>, T2__, T3__>,-1,-1>
-K_function(const T0__& n_obs, const T1__& x, const T2__& alpha, const T3__&
            rho, std::ostream* pstream__);
 struct ll_function_functor__ {
   template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -6976,20 +6953,6 @@ struct K_function_functor__ {
              rho, std::ostream* pstream__) const {
     return K_function(x, n_obs, alpha, rho, pstream__);
   }
-  template <typename T0__, typename T1__, typename T2__, typename T3__,
-            stan::require_all_t<std::is_integral<T0__>,
-                                stan::is_std_vector<T1__>,
-                                stan::is_col_vector<stan::value_type_t<T1__>>,
-                                stan::is_vt_not_complex<stan::value_type_t<T1__>>,
-                                stan::math::disjunction<stan::is_autodiff<T2__>,
-                                                        std::is_floating_point<T2__>>,
-                                stan::math::disjunction<stan::is_autodiff<T3__>,
-                                                        std::is_floating_point<T3__>>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T1__>, T2__, T3__>,-1,-1>
-  operator()(const T0__& n_obs, const T1__& x, const T2__& alpha, const T3__&
-             rho, std::ostream* pstream__) const {
-    return K_function(n_obs, x, alpha, rho, pstream__);
-  }
 };
 // real ll_function(vector, real, vector, array[] int)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
@@ -7018,7 +6981,7 @@ ll_function(const T0__& theta_arg__, const T1__& eta, const T2__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 42;
+    current_statement__ = 38;
     return stan::math::neg_binomial_2_lpmf<false>(y,
              stan::math::exp(stan::math::add(log_ye, theta)), eta);
   } catch (const std::exception& e) {
@@ -7050,74 +7013,25 @@ K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
+    current_statement__ = 40;
+    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
+    current_statement__ = 41;
+    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
+    Eigen::Matrix<local_scalar_t__,-1,-1> K =
+      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_obs, n_obs,
+        DUMMY_VAR__);
+    current_statement__ = 42;
+    stan::model::assign(K, stan::math::gp_exp_quad_cov(x, alpha, rho),
+      "assigning variable K");
     current_statement__ = 44;
-    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
+    for (int i = 1; i <= n_obs; ++i) {
+      current_statement__ = 43;
+      stan::model::assign(K,
+        (stan::model::rvalue(K, "K", stan::model::index_uni(i),
+           stan::model::index_uni(i)) + 1e-8), "assigning variable K",
+        stan::model::index_uni(i), stan::model::index_uni(i));
+    }
     current_statement__ = 45;
-    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
-    Eigen::Matrix<local_scalar_t__,-1,-1> K =
-      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_obs, n_obs,
-        DUMMY_VAR__);
-    current_statement__ = 46;
-    stan::model::assign(K, stan::math::gp_exp_quad_cov(x, alpha, rho),
-      "assigning variable K");
-    current_statement__ = 48;
-    for (int i = 1; i <= n_obs; ++i) {
-      current_statement__ = 47;
-      stan::model::assign(K,
-        (stan::model::rvalue(K, "K", stan::model::index_uni(i),
-           stan::model::index_uni(i)) + 1e-8), "assigning variable K",
-        stan::model::index_uni(i), stan::model::index_uni(i));
-    }
-    current_statement__ = 49;
-    return K;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-  }
-}
-// matrix K_function(int, array[] vector, real, real)
-template <typename T0__, typename T1__, typename T2__, typename T3__,
-          stan::require_all_t<std::is_integral<T0__>,
-                              stan::is_std_vector<T1__>,
-                              stan::is_col_vector<stan::value_type_t<T1__>>,
-                              stan::is_vt_not_complex<stan::value_type_t<T1__>>,
-                              stan::math::disjunction<stan::is_autodiff<T2__>,
-                                                      std::is_floating_point<T2__>>,
-                              stan::math::disjunction<stan::is_autodiff<T3__>,
-                                                      std::is_floating_point<T3__>>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T1__>, T2__, T3__>,-1,-1>
-K_function(const T0__& n_obs, const T1__& x, const T2__& alpha, const T3__&
-           rho, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T1__>,
-                             T2__, T3__>;
-  int current_statement__ = 0;
-  // suppress unused var warning
-  (void) current_statement__;
-  static constexpr bool propto__ = true;
-  // suppress unused var warning
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  // suppress unused var warning
-  (void) DUMMY_VAR__;
-  try {
-    current_statement__ = 51;
-    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
-    current_statement__ = 52;
-    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
-    Eigen::Matrix<local_scalar_t__,-1,-1> K =
-      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_obs, n_obs,
-        DUMMY_VAR__);
-    current_statement__ = 53;
-    stan::model::assign(K, stan::math::gp_exp_quad_cov(x, alpha, rho),
-      "assigning variable K");
-    current_statement__ = 55;
-    for (int i = 1; i <= n_obs; ++i) {
-      current_statement__ = 54;
-      stan::model::assign(K,
-        (stan::model::rvalue(K, "K", stan::model::index_uni(i),
-           stan::model::index_uni(i)) + 1e-8), "assigning variable K",
-        stan::model::index_uni(i), stan::model::index_uni(i));
-    }
-    current_statement__ = 56;
     return K;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7166,29 +7080,29 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 16;
+      current_statement__ = 14;
       context__.validate_dims("data initialization", "n_obs", "int",
         std::vector<size_t>{});
       n_obs = std::numeric_limits<int>::min();
-      current_statement__ = 16;
+      current_statement__ = 14;
       n_obs = context__.vals_i("n_obs")[(1 - 1)];
-      current_statement__ = 17;
+      current_statement__ = 15;
       context__.validate_dims("data initialization", "n_coordinates", "int",
         std::vector<size_t>{});
       n_coordinates = std::numeric_limits<int>::min();
-      current_statement__ = 17;
+      current_statement__ = 15;
       n_coordinates = context__.vals_i("n_coordinates")[(1 - 1)];
-      current_statement__ = 18;
+      current_statement__ = 16;
       stan::math::validate_non_negative_index("y", "n_obs", n_obs);
-      current_statement__ = 19;
+      current_statement__ = 17;
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{static_cast<size_t>(n_obs)});
       y = std::vector<int>(n_obs, std::numeric_limits<int>::min());
-      current_statement__ = 19;
+      current_statement__ = 17;
       y = context__.vals_i("y");
-      current_statement__ = 20;
+      current_statement__ = 18;
       stan::math::validate_non_negative_index("ye", "n_obs", n_obs);
-      current_statement__ = 21;
+      current_statement__ = 19;
       context__.validate_dims("data initialization", "ye", "double",
         std::vector<size_t>{static_cast<size_t>(n_obs)});
       ye_data__ = Eigen::Matrix<double,-1,1>::Constant(n_obs,
@@ -7197,7 +7111,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         n_obs);
       {
         std::vector<local_scalar_t__> ye_flat__;
-        current_statement__ = 21;
+        current_statement__ = 19;
         ye_flat__ = context__.vals_r("ye");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
@@ -7206,12 +7120,12 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 22;
+      current_statement__ = 20;
       stan::math::validate_non_negative_index("x", "n_obs", n_obs);
-      current_statement__ = 23;
+      current_statement__ = 21;
       stan::math::validate_non_negative_index("x", "n_coordinates",
         n_coordinates);
-      current_statement__ = 24;
+      current_statement__ = 22;
       context__.validate_dims("data initialization", "x", "double",
         std::vector<size_t>{static_cast<size_t>(n_obs),
           static_cast<size_t>(n_coordinates)});
@@ -7220,7 +7134,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
               std::numeric_limits<double>::quiet_NaN()));
       {
         std::vector<local_scalar_t__> x_flat__;
-        current_statement__ = 24;
+        current_statement__ = 22;
         x_flat__ = context__.vals_r("x");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= n_coordinates; ++sym1__) {
@@ -7232,79 +7146,75 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
           }
         }
       }
-      current_statement__ = 25;
+      current_statement__ = 23;
       context__.validate_dims("data initialization", "rho_location_prior",
         "double", std::vector<size_t>{});
       rho_location_prior = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 25;
+      current_statement__ = 23;
       rho_location_prior = context__.vals_r("rho_location_prior")[(1 - 1)];
-      current_statement__ = 26;
+      current_statement__ = 24;
       context__.validate_dims("data initialization", "rho_scale_prior",
         "double", std::vector<size_t>{});
       rho_scale_prior = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 26;
+      current_statement__ = 24;
       rho_scale_prior = context__.vals_r("rho_scale_prior")[(1 - 1)];
-      current_statement__ = 27;
+      current_statement__ = 25;
       context__.validate_dims("data initialization", "alpha_location_prior",
         "double", std::vector<size_t>{});
       alpha_location_prior = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 27;
+      current_statement__ = 25;
       alpha_location_prior = context__.vals_r("alpha_location_prior")[(1 -
         1)];
-      current_statement__ = 28;
+      current_statement__ = 26;
       context__.validate_dims("data initialization", "alpha_scale_prior",
         "double", std::vector<size_t>{});
       alpha_scale_prior = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 28;
+      current_statement__ = 26;
       alpha_scale_prior = context__.vals_r("alpha_scale_prior")[(1 - 1)];
-      current_statement__ = 29;
+      current_statement__ = 27;
       stan::math::validate_non_negative_index("log_ye", "n_obs", n_obs);
-      current_statement__ = 30;
+      current_statement__ = 28;
       log_ye_data__ = Eigen::Matrix<double,-1,1>::Constant(n_obs,
                         std::numeric_limits<double>::quiet_NaN());
       new (&log_ye)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(log_ye_data__.data(), n_obs);
-      current_statement__ = 30;
+      current_statement__ = 28;
       stan::model::assign(log_ye, stan::math::log(ye),
         "assigning variable log_ye");
-      current_statement__ = 31;
+      current_statement__ = 29;
       stan::math::validate_non_negative_index("theta_0", "n_obs", n_obs);
-      current_statement__ = 32;
+      current_statement__ = 30;
       theta_0_data__ = Eigen::Matrix<double,-1,1>::Constant(n_obs,
                          std::numeric_limits<double>::quiet_NaN());
       new (&theta_0)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(theta_0_data__.data(), n_obs);
-      current_statement__ = 32;
+      current_statement__ = 30;
       stan::model::assign(theta_0, stan::math::rep_vector(0.0, n_obs),
         "assigning variable theta_0");
-      current_statement__ = 33;
+      current_statement__ = 31;
       tolerance = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 33;
+      current_statement__ = 31;
       tolerance = 1e-6;
-      current_statement__ = 34;
+      current_statement__ = 32;
       max_num_steps = std::numeric_limits<int>::min();
-      current_statement__ = 34;
+      current_statement__ = 32;
       max_num_steps = 100;
-      current_statement__ = 35;
+      current_statement__ = 33;
       hessian_block_size = std::numeric_limits<int>::min();
-      current_statement__ = 35;
+      current_statement__ = 33;
       hessian_block_size = 1;
-      current_statement__ = 36;
+      current_statement__ = 34;
       solver = std::numeric_limits<int>::min();
-      current_statement__ = 36;
+      current_statement__ = 34;
       solver = 1;
-      current_statement__ = 37;
+      current_statement__ = 35;
       max_steps_line_search = std::numeric_limits<int>::min();
-      current_statement__ = 37;
+      current_statement__ = 35;
       max_steps_line_search = 0;
-      current_statement__ = 38;
+      current_statement__ = 36;
       stan::math::validate_non_negative_index("theta", "n_obs", n_obs);
-      current_statement__ = 39;
+      current_statement__ = 37;
       stan::math::validate_non_negative_index("theta2", "n_obs", n_obs);
-      current_statement__ = 40;
-      stan::math::validate_non_negative_index("theta3", "n_obs", n_obs);
-      current_statement__ = 41;
-      stan::math::validate_non_negative_index("theta4", "n_obs", n_obs);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7354,15 +7264,15 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       {
-        current_statement__ = 8;
+        current_statement__ = 6;
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(rho,
                          rho_location_prior, rho_scale_prior));
-        current_statement__ = 9;
+        current_statement__ = 7;
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
-        current_statement__ = 10;
+        current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
-        current_statement__ = 11;
+        current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal(ll_function_functor__(),
                          std::tuple<local_scalar_t__,
                            Eigen::Matrix<double,-1,1>,
@@ -7372,7 +7282,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            const std::vector<Eigen::Matrix<double,-1,1>>&,
                            int, local_scalar_t__, local_scalar_t__>(x, n_obs,
                            alpha, rho), pstream__));
-        current_statement__ = 12;
+        current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_tol(
                          ll_function_functor__(),
                          std::tuple<local_scalar_t__,
@@ -7385,7 +7295,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            alpha, rho), tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
-        current_statement__ = 13;
+        current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, theta_0,
                          K_function_functor__(),
@@ -7393,7 +7303,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            const std::vector<Eigen::Matrix<double,-1,1>>&,
                            int, local_scalar_t__, local_scalar_t__>(x, n_obs,
                            alpha, rho), pstream__));
-        current_statement__ = 14;
+        current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          false>(y, y, log_ye, theta_0,
                          K_function_functor__(),
@@ -7401,7 +7311,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            const std::vector<Eigen::Matrix<double,-1,1>>&,
                            int, local_scalar_t__, local_scalar_t__>(x, n_obs,
                            alpha, rho), pstream__));
-        current_statement__ = 15;
+        current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, theta_0,
                          K_function_functor__(),
@@ -7453,15 +7363,15 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
           lp__);
       {
-        current_statement__ = 8;
+        current_statement__ = 6;
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(rho,
                          rho_location_prior, rho_scale_prior));
-        current_statement__ = 9;
+        current_statement__ = 7;
         lp_accum__.add(stan::math::inv_gamma_lpdf<propto__>(alpha,
                          alpha_location_prior, alpha_scale_prior));
-        current_statement__ = 10;
+        current_statement__ = 8;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(eta, 0, 1));
-        current_statement__ = 11;
+        current_statement__ = 9;
         lp_accum__.add(stan::math::laplace_marginal(ll_function_functor__(),
                          std::tuple<local_scalar_t__,
                            Eigen::Matrix<double,-1,1>,
@@ -7471,7 +7381,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            const std::vector<Eigen::Matrix<double,-1,1>>&,
                            int, local_scalar_t__, local_scalar_t__>(x, n_obs,
                            alpha, rho), pstream__));
-        current_statement__ = 12;
+        current_statement__ = 10;
         lp_accum__.add(stan::math::laplace_marginal_tol(
                          ll_function_functor__(),
                          std::tuple<local_scalar_t__,
@@ -7484,7 +7394,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            alpha, rho), tolerance, max_num_steps,
                          hessian_block_size, solver, max_steps_line_search,
                          pstream__));
-        current_statement__ = 13;
+        current_statement__ = 11;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, theta_0,
                          K_function_functor__(),
@@ -7492,7 +7402,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            const std::vector<Eigen::Matrix<double,-1,1>>&,
                            int, local_scalar_t__, local_scalar_t__>(x, n_obs,
                            alpha, rho), pstream__));
-        current_statement__ = 14;
+        current_statement__ = 12;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          false>(y, y, log_ye, theta_0,
                          K_function_functor__(),
@@ -7500,7 +7410,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
                            const std::vector<Eigen::Matrix<double,-1,1>>&,
                            int, local_scalar_t__, local_scalar_t__>(x, n_obs,
                            alpha, rho), pstream__));
-        current_statement__ = 15;
+        current_statement__ = 13;
         lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
                          propto__>(y, y, log_ye, theta_0,
                          K_function_functor__(),
@@ -7590,20 +7500,6 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
           std::numeric_limits<double>::quiet_NaN());
       current_statement__ = 5;
       stan::model::assign(theta2,
-        stan::math::laplace_latent_rng(ll_function_functor__(),
-          std::tuple<double, Eigen::Matrix<double,-1,1>,
-            const std::vector<int>&>(eta, log_ye, y), theta_0,
-          K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho),
-          std::tuple<int, const std::vector<Eigen::Matrix<double,-1,1>>&,
-            double, double>(n_obs, x, alpha, rho), base_rng__, pstream__),
-        "assigning variable theta2");
-      Eigen::Matrix<double,-1,1> theta3 =
-        Eigen::Matrix<double,-1,1>::Constant(n_obs,
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 6;
-      stan::model::assign(theta3,
         stan::math::laplace_latent_tol_rng(ll_function_functor__(),
           std::tuple<double, Eigen::Matrix<double,-1,1>,
             const std::vector<int>&>(eta, log_ye, y), theta_0,
@@ -7611,26 +7507,9 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
           std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
             double, double>(x, n_obs, alpha, rho), tolerance, max_num_steps,
           hessian_block_size, solver, max_steps_line_search, base_rng__,
-          pstream__), "assigning variable theta3");
-      Eigen::Matrix<double,-1,1> theta4 =
-        Eigen::Matrix<double,-1,1>::Constant(n_obs,
-          std::numeric_limits<double>::quiet_NaN());
-      current_statement__ = 7;
-      stan::model::assign(theta4,
-        stan::math::laplace_latent_tol_rng(ll_function_functor__(),
-          std::tuple<double, Eigen::Matrix<double,-1,1>,
-            const std::vector<int>&>(eta, log_ye, y), theta_0,
-          K_function_functor__(),
-          std::tuple<const std::vector<Eigen::Matrix<double,-1,1>>&, int,
-            double, double>(x, n_obs, alpha, rho),
-          std::tuple<int, const std::vector<Eigen::Matrix<double,-1,1>>&,
-            double, double>(n_obs, x, alpha, rho), tolerance, max_num_steps,
-          hessian_block_size, solver, max_steps_line_search, base_rng__,
-          pstream__), "assigning variable theta4");
+          pstream__), "assigning variable theta2");
       out__.write(theta);
       out__.write(theta2);
-      out__.write(theta3);
-      out__.write(theta4);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -7712,7 +7591,7 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
     names__ = std::vector<std::string>{"alpha", "rho", "eta"};
     if (emit_transformed_parameters__) {}
     if (emit_generated_quantities__) {
-      std::vector<std::string> temp{"theta", "theta2", "theta3", "theta4"};
+      std::vector<std::string> temp{"theta", "theta2"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
@@ -7727,8 +7606,6 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
     if (emit_generated_quantities__) {
       std::vector<std::vector<size_t>>
         temp{std::vector<size_t>{static_cast<size_t>(n_obs)},
-             std::vector<size_t>{static_cast<size_t>(n_obs)},
-             std::vector<size_t>{static_cast<size_t>(n_obs)},
              std::vector<size_t>{static_cast<size_t>(n_obs)}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
@@ -7751,14 +7628,6 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         param_names__.emplace_back(std::string() + "theta2" + '.' +
           std::to_string(sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
-        param_names__.emplace_back(std::string() + "theta3" + '.' +
-          std::to_string(sym1__));
-      }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
-        param_names__.emplace_back(std::string() + "theta4" + '.' +
-          std::to_string(sym1__));
-      }
     }
   }
   inline void
@@ -7778,21 +7647,13 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
         param_names__.emplace_back(std::string() + "theta2" + '.' +
           std::to_string(sym1__));
       }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
-        param_names__.emplace_back(std::string() + "theta3" + '.' +
-          std::to_string(sym1__));
-      }
-      for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
-        param_names__.emplace_back(std::string() + "theta4" + '.' +
-          std::to_string(sym1__));
-      }
     }
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta3\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta4\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta3\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta4\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"},{\"name\":\"theta2\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(n_obs) + "},\"block\":\"generated_quantities\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -7803,8 +7664,8 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
               pstream = nullptr) const {
     const size_t num_params__ = ((1 + 1) + 1);
     const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * ((((n_obs +
-      n_obs) + n_obs) + n_obs));
+    const size_t num_gen_quantities = emit_generated_quantities * ((n_obs +
+      n_obs));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     std::vector<int> params_i;
@@ -7821,8 +7682,8 @@ class laplace_functionals_model final : public model_base_crtp<laplace_functiona
               pstream = nullptr) const {
     const size_t num_params__ = ((1 + 1) + 1);
     const size_t num_transformed = emit_transformed_parameters * (0);
-    const size_t num_gen_quantities = emit_generated_quantities * ((((n_obs +
-      n_obs) + n_obs) + n_obs));
+    const size_t num_gen_quantities = emit_generated_quantities * ((n_obs +
+      n_obs));
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
     vars = std::vector<double>(num_to_write,

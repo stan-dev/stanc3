@@ -199,14 +199,9 @@ module TypeError = struct
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           expected
     | IllTypedLaplaceMarginal (name, early, supplied) ->
-        let extra_args ppf () =
-          let rngs =
-            if String.is_suffix ~suffix:"_rng" name then ", tuple(T2...)"
-            else "" in
-          let tols =
-            if String.is_substring ~substring:"_tol" name then pp_laplace_tols
-            else Fmt.nop in
-          Fmt.pf ppf "%s%a" rngs tols () in
+        let extra_args =
+          if String.is_substring ~substring:"_tol" name then pp_laplace_tols
+          else Fmt.nop in
         let info =
           if early then
             "We were unable to start more in-depth checking. Please ensure you \
@@ -227,14 +222,9 @@ module TypeError = struct
           supplied Fmt.text info
     | IllTypedLaplaceHelperGeneric (name, supplied) ->
         let req = Stan_math_signatures.laplace_helper_param_types name in
-        let extra_args ppf () =
-          let rngs =
-            if String.is_suffix ~suffix:"_rng" name then ", tuple(...)" else ""
-          in
-          let tols =
-            if String.is_substring ~substring:"_tol" name then pp_laplace_tols
-            else Fmt.nop in
-          Fmt.pf ppf "%s%a" rngs tols () in
+        let extra_args =
+          if String.is_substring ~substring:"_tol" name then pp_laplace_tols
+          else Fmt.nop in
         let n = List.length req in
         Fmt.pf ppf
           "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \

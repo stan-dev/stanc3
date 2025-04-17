@@ -14,14 +14,6 @@ functions {
       K[i, i] += 1e-8;
     return K;
   }
-
-  // same as above but with swapped args
-  matrix K_function(int n_obs, array[] vector x, real alpha, real rho) {
-    matrix[n_obs, n_obs] K = gp_exp_quad_cov(x, alpha, rho);
-    for (i in 1 : n_obs)
-      K[i, i] += 1e-8;
-    return K;
-  }
 }
 data {
   int n_obs;
@@ -83,12 +75,7 @@ generated quantities {
                                            theta_0, K_function,
                                            (x, n_obs, alpha, rho));
 
-  vector[n_obs] theta2 = laplace_latent_rng(ll_function, (eta, log_ye, y),
-                                            theta_0, K_function,
-                                            (x, n_obs, alpha, rho),
-                                            (n_obs, x, alpha, rho));
-
-  vector[n_obs] theta3 = laplace_latent_tol_rng(ll_function,
+  vector[n_obs] theta2 = laplace_latent_tol_rng(ll_function,
                                                 (eta, log_ye, y), theta_0,
                                                 K_function,
                                                 (x, n_obs, alpha, rho),
@@ -96,12 +83,4 @@ generated quantities {
                                                 hessian_block_size, solver,
                                                 max_steps_line_search);
 
-  vector[n_obs] theta4 = laplace_latent_tol_rng(ll_function,
-                                                (eta, log_ye, y), theta_0,
-                                                K_function,
-                                                (x, n_obs, alpha, rho),
-                                                (n_obs, x, alpha, rho),
-                                                tolerance, max_num_steps,
-                                                hessian_block_size, solver,
-                                                max_steps_line_search);
 }
