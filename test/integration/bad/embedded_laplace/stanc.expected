@@ -1,12 +1,12 @@
   $ ../../../../../install/default/bin/stanc autodiff_incompatibility1.stan
-Semantic error in 'autodiff_incompatibility1.stan', line 67, column 29 to column 40:
+Semantic error in 'autodiff_incompatibility1.stan', line 57, column 29 to column 40:
    -------------------------------------------------
-    65:    eta ~ normal(0, 1);
-    66:  
-    67:    target += laplace_marginal(ll_function, (eta, log_ye, y),
+    55:  model {
+    56:  
+    57:    target += laplace_marginal(ll_function, (eta, log_ye, y),
                                       ^
-    68:                                    theta_0,
-    69:                                    K_function, (x, n_obs, alpha, rho));
+    58:                                    theta_0,
+    59:                                    K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 The function 'algebra_solver', called by this likelihood function,
@@ -14,14 +14,14 @@ does not currently support higher-order derivatives, and
 cannot be used in an embedded Laplace approximation.
 [exit 1]
   $ ../../../../../install/default/bin/stanc autodiff_incompatibility2.stan
-Semantic error in 'autodiff_incompatibility2.stan', line 75, column 43 to column 54:
+Semantic error in 'autodiff_incompatibility2.stan', line 60, column 43 to column 54:
    -------------------------------------------------
-    73:  
-    74:  generated quantities {
-    75:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    58:  
+    59:  generated quantities {
+    60:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
                                                     ^
-    76:                          theta_0,
-    77:                          K_function, (x, n_obs, alpha, rho));
+    61:                          theta_0,
+    62:                          K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 The function 'ode_rk45', called by this likelihood function,
@@ -29,55 +29,55 @@ does not currently support higher-order derivatives, and
 cannot be used in an embedded Laplace approximation.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_callback1.stan
-Semantic error in 'bad_callback1.stan', line 49, column 29 to column 40:
+Semantic error in 'bad_callback1.stan', line 37, column 29 to column 40:
    -------------------------------------------------
-    47:    eta ~ normal(0, 1);
-    48:  
-    49:    target += laplace_marginal(ll_function, (eta, log_ye, y),
+    35:  }
+    36:  model {
+    37:    target += laplace_marginal(ll_function, (eta, log_ye, y),
                                       ^
-    50:                                    theta_0,
-    51:                                    K_function, (x, n_obs, alpha, rho));
+    38:                                    theta_0,
+    39:                                    K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 Function 'll_function' does not have a valid signature for use in 'laplace_marginal':
 Expected function returning real but got function returning void.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_callback2.stan
-Semantic error in 'bad_callback2.stan', line 50, column 29 to column 49:
+Semantic error in 'bad_callback2.stan', line 39, column 29 to column 49:
    -------------------------------------------------
-    48:    eta ~ normal(0, 1);
-    49:  
-    50:    target += laplace_marginal(ll_function_jacobian, (eta, log_ye, y),
+    37:  }
+    38:  model {
+    39:    target += laplace_marginal(ll_function_jacobian, (eta, log_ye, y),
                                       ^
-    51:                                    theta_0,
-    52:                                    K_function, (x, n_obs, alpha, rho));
+    40:                                    theta_0,
+    41:                                    K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 Function 'll_function_jacobian' does not have a valid signature for use in 'laplace_marginal':
 Expected a pure function but got a _jacobian function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_callback3.stan
-Semantic error in 'bad_callback3.stan', line 41, column 29 to column 40:
+Semantic error in 'bad_callback3.stan', line 29, column 29 to column 40:
    -------------------------------------------------
-    39:  
-    40:    real ll_function;
-    41:    target += laplace_marginal(ll_function, (eta, log_ye, y),
+    27:  model {
+    28:    real ll_function;
+    29:    target += laplace_marginal(ll_function, (eta, log_ye, y),
                                       ^
-    42:                                    theta_0,
-    43:                                    K_function, (x, n_obs, alpha, rho));
+    30:                                    theta_0,
+    31:                                    K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 A returning function was expected but a non-function value 'll_function' was supplied.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_callback4.stan
-Semantic error in 'bad_callback4.stan', line 49, column 29 to column 40:
+Semantic error in 'bad_callback4.stan', line 38, column 29 to column 40:
    -------------------------------------------------
-    47:    eta ~ normal(0, 1);
-    48:  
-    49:    target += laplace_marginal(ll_function, (eta, log_ye, y),
+    36:  model {
+    37:  
+    38:    target += laplace_marginal(ll_function, (eta, log_ye, y),
                                       ^
-    50:                                    theta_0,
-    51:                                    K_function, (x, n_obs, alpha, rho));
+    39:                                    theta_0,
+    40:                                    K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 Function 'll_function' does not have a valid signature for use in 'laplace_marginal':
@@ -86,42 +86,42 @@ depend on parameters; same goes for function inputs unless they are marked
 with the keyword 'data'.)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_callback5.stan
-Semantic error in 'bad_callback5.stan', line 49, column 29 to column 40:
+Semantic error in 'bad_callback5.stan', line 38, column 29 to column 40:
    -------------------------------------------------
-    47:    eta ~ normal(0, 1);
-    48:  
-    49:    target += laplace_marginal(ll_function, (eta, log_ye, y),
+    36:  }
+    37:  model {
+    38:    target += laplace_marginal(ll_function, (eta, log_ye, y),
                                       ^
-    50:                                    theta_0,
-    51:                                    K_function, (x, n_obs, alpha, rho));
+    39:                                    theta_0,
+    40:                                    K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 Function 'll_function' does not have a valid signature for use in 'laplace_marginal':
 The first argument must be vector but got complex_vector.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward1.stan
-Semantic error in 'bad_forward1.stan', line 49, column 42 to column 47:
+Semantic error in 'bad_forward1.stan', line 38, column 42 to column 47:
    -------------------------------------------------
-    47:    eta ~ normal(0, 1);
-    48:  
-    49:    target += laplace_marginal(ll_function, {2.0},
+    36:  model {
+    37:  
+    38:    target += laplace_marginal(ll_function, {2.0},
                                                    ^
-    50:                                    theta_0,
-    51:                                    K_function, (x, n_obs, alpha, rho));
+    39:                                    theta_0,
+    40:                                    K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 Forwarded arguments to 'll_function' in call to 'laplace_marginal' must be a tuple.
 Instead found type array[] real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward2.stan
-Semantic error in 'bad_forward2.stan', line 49, column 42 to column 58:
+Semantic error in 'bad_forward2.stan', line 38, column 42 to column 58:
    -------------------------------------------------
-    47:    eta ~ normal(0, 1);
-    48:  
-    49:    target += laplace_marginal(ll_function, (eta, y, log_ye),
+    36:  model {
+    37:  
+    38:    target += laplace_marginal(ll_function, (eta, y, log_ye),
                                                    ^
-    50:                                    theta_0,
-    51:                                    K_function, (x, n_obs, alpha, rho));
+    39:                                    theta_0,
+    40:                                    K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 Cannot call 'll_function' with arguments forwarded from call to
@@ -130,14 +130,14 @@ The second argument (excluding the latent gaussian vector argument) must be
 vector but got array[] int.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward3.stan
-Semantic error in 'bad_forward3.stan', line 49, column 42 to column 50:
+Semantic error in 'bad_forward3.stan', line 37, column 42 to column 50:
    -------------------------------------------------
-    47:    eta ~ normal(0, 1);
-    48:  
-    49:    target += laplace_marginal(ll_function, (eta, y),
+    35:  }
+    36:  model {
+    37:    target += laplace_marginal(ll_function, (eta, y),
                                                    ^
-    50:                                    theta_0,
-    51:                                    K_function, (x, n_obs, alpha, rho));
+    38:                                    theta_0,
+    39:                                    K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 Cannot call 'll_function' with arguments forwarded from call to
@@ -146,13 +146,13 @@ Expected 3 arguments (excluding the latent gaussian vector argument)
 but got 2 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward4.stan
-Semantic error in 'bad_forward4.stan', line 51, column 46 to column 71:
+Semantic error in 'bad_forward4.stan', line 39, column 46 to column 71:
    -------------------------------------------------
-    49:    target += laplace_marginal(ll_function, (eta, log_ye, y),
-    50:                                    theta_0,
-    51:                                    K_function, (x, alpha, rho, rho, rho));
+    37:    target += laplace_marginal(ll_function, (eta, log_ye, y),
+    38:                                    theta_0,
+    39:                                    K_function, (x, alpha, rho, rho, rho));
                                                        ^
-    52:  }
+    40:  }
    -------------------------------------------------
 
 Cannot call 'K_function' with arguments forwarded from call to
@@ -160,13 +160,13 @@ Cannot call 'K_function' with arguments forwarded from call to
 Expected 4 arguments but got 5 arguments.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward5.stan
-Semantic error in 'bad_forward5.stan', line 54, column 56 to column 80:
+Semantic error in 'bad_forward5.stan', line 40, column 56 to column 80:
    -------------------------------------------------
-    52:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-    53:                      theta_0,
-    54:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, {rho}));
+    38:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    39:                      theta_0,
+    40:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, {rho}));
                                                                  ^
-    55:  }
+    41:  }
    -------------------------------------------------
 
 Cannot call 'K_function' with arguments forwarded from call to
@@ -174,14 +174,14 @@ Cannot call 'K_function' with arguments forwarded from call to
 The fourth argument must be real but got array[] real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_forward6.stan
-Semantic error in 'bad_forward6.stan', line 64, column 43 to column 54:
+Semantic error in 'bad_forward6.stan', line 50, column 43 to column 54:
    -------------------------------------------------
-    62:  
-    63:  generated quantities {
-    64:    vector[n_obs] theta = laplace_latent_rng(ll_function, (1,1, log_ye, y),
+    48:  
+    49:  generated quantities {
+    50:    vector[n_obs] theta = laplace_latent_rng(ll_function, (1,1, log_ye, y),
                                                     ^
-    65:                      theta_0,
-    66:                      K_function, (x, n_obs, alpha, rho));
+    51:                      theta_0,
+    52:                      K_function, (x, n_obs, alpha, rho));
    -------------------------------------------------
 
 No unique minimum promotion found for function 'll_function'.
@@ -192,8 +192,8 @@ This function has several:
 Consider defining a new signature for the exact types needed or
 re-thinking existing definitions.
 [exit 1]
-  $ ../../../../../install/default/bin/stanc bad_forward_7.stan
-Semantic error in 'bad_forward_7.stan', line 2, column 12 to column 65:
+  $ ../../../../../install/default/bin/stanc bad_forward7.stan
+Semantic error in 'bad_forward7.stan', line 2, column 12 to column 65:
    -------------------------------------------------
      1:  model {
      2:    target += laplace_marginal_tol_neg_binomial_2_log_lpmf(1, 1, 1);
@@ -208,67 +208,67 @@ Expected the arguments to start with:
 (array[] int, array[] int, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_theta0.stan
-Semantic error in 'bad_theta0.stan', line 50, column 34 to column 41:
+Semantic error in 'bad_theta0.stan', line 38, column 34 to column 41:
    -------------------------------------------------
-    48:  
-    49:    target += laplace_marginal(ll_function, (eta, log_ye, y),
-    50:                                    theta_0,
+    36:  model {
+    37:    target += laplace_marginal(ll_function, (eta, log_ye, y),
+    38:                                    theta_0,
                                            ^
-    51:                                    K_function, (x, n_obs, alpha, rho));
-    52:  }
+    39:                                    K_function, (x, n_obs, alpha, rho));
+    40:  }
    -------------------------------------------------
 
 Initial guess argument to 'laplace_marginal' must be a vector.
 Instead found type array[] real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol1.stan
-Semantic error in 'bad_tol1.stan', line 54, column 56 to column 57:
+Semantic error in 'bad_tol1.stan', line 41, column 56 to column 57:
    -------------------------------------------------
-    52:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-    53:                      theta_0,
-    54:                      K_function, (x, n_obs, alpha, rho), 1);
+    39:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    40:                      theta_0,
+    41:                      K_function, (x, n_obs, alpha, rho), 1);
                                                                  ^
-    55:  }
+    42:  }
    -------------------------------------------------
 
 Recieved 1 extra argument at the end of the call to 'laplace_latent_rng'.
 Did you mean to call the _tol version?
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol2.stan
-Semantic error in 'bad_tol2.stan', line 54, column 80 to column 81:
+Semantic error in 'bad_tol2.stan', line 40, column 80 to column 81:
    -------------------------------------------------
-    52:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
-    53:                      theta_0,
-    54:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4,5);
+    38:    vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    39:                      theta_0,
+    40:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4,5);
                                                                                          ^
-    55:  }
+    41:  }
    -------------------------------------------------
 
 Recieved 5 extra arguments at the end of the call to 'laplace_latent_rng'.
 Did you mean to call the _tol version?
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol3.stan
-Semantic error in 'bad_tol3.stan', line 54, column 80 to column 81:
+Semantic error in 'bad_tol3.stan', line 40, column 80 to column 81:
    -------------------------------------------------
-    52:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
-    53:                      theta_0,
-    54:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4);
+    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
+    39:                      theta_0,
+    40:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4);
                                                                                          ^
-    55:  }
+    41:  }
    -------------------------------------------------
 
 Recieved 4 arguments at the end of the call to 'laplace_latent_tol_rng'.
 Expected 5 arguments for the tolerances instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol4.stan
-Semantic error in 'bad_tol4.stan', line 58, column 32 to column 35:
+Semantic error in 'bad_tol4.stan', line 47, column 32 to column 35:
    -------------------------------------------------
-    56:                                  theta_0,
-    57:                                  K_function, (x, n_obs, alpha, rho),
-    58:                                  eta, max_num_steps, hessian_block_size,
+    45:                                  theta_0,
+    46:                                  K_function, (x, n_obs, alpha, rho),
+    47:                                  eta, max_num_steps, hessian_block_size,
                                          ^
-    59:                                  solver, max_steps_line_search);
-    60:  }
+    48:                                  solver, max_steps_line_search);
+    49:  }
    -------------------------------------------------
 
 The tolerance arguments to 'laplace_marginal_tol' must all be data-only,
@@ -277,13 +277,13 @@ are assumed to depend on parameters; same goes for function inputs unless
 they are marked with the keyword 'data'.)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol5.stan
-Semantic error in 'bad_tol5.stan', line 54, column 80 to column 81:
+Semantic error in 'bad_tol5.stan', line 40, column 80 to column 81:
    -------------------------------------------------
-    52:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
-    53:                      theta_0,
-    54:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4,5.5);
+    38:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
+    39:                      theta_0,
+    40:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4,5.5);
                                                                                          ^
-    55:  }
+    41:  }
    -------------------------------------------------
 
 The fifth tolerance argument (max_steps_line_search) to 'laplace_latent_tol_rng'
@@ -342,14 +342,14 @@ Expected the arguments to start with:
 (array[] int, array[] int, vector)
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args4.stan
-Semantic error in 'missing_args4.stan', line 42, column 12 to line 43, column 42:
+Semantic error in 'missing_args4.stan', line 30, column 12 to line 31, column 42:
    -------------------------------------------------
-    40:    eta ~ normal(0, 1);
-    41:  
-    42:    target += laplace_marginal(ll_function, (eta, log_ye, y),
+    28:  }
+    29:  model {
+    30:    target += laplace_marginal(ll_function, (eta, log_ye, y),
                      ^
-    43:                                    theta_0);
-    44:  
+    31:                                    theta_0);
+    32:  
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'laplace_marginal'.
@@ -363,14 +363,13 @@ Typechecking failed after checking the first two arguments. Please ensure you
 are passing enough arguments and that the fourth is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args5.stan
-Semantic error in 'missing_args5.stan', line 65, column 24 to column 44:
+Semantic error in 'missing_args5.stan', line 3, column 20 to column 40:
    -------------------------------------------------
-    63:  generated quantities {
-    64:  
-    65:    vector[n_obs] theta = laplace_latent_rng();
-                                 ^
-    66:  
-    67:  
+     1:  
+     2:  generated quantities {
+     3:    vector[2] theta = laplace_latent_rng();
+                             ^
+     4:  }
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'laplace_latent_rng'.
@@ -383,14 +382,14 @@ We were unable to start more in-depth checking. Please ensure you are passing
 enough arguments and and that the first argument is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args6.stan
-Semantic error in 'missing_args6.stan', line 65, column 22 to line 66, column 14:
+Semantic error in 'missing_args6.stan', line 40, column 22 to line 41, column 14:
    -------------------------------------------------
-    63:  generated quantities {
-    64:  
-    65:  vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
+    38:  generated quantities {
+    39:  
+    40:  vector[n_obs] theta = laplace_latent_rng(ll_function, (eta, log_ye, y),
                                ^
-    66:        theta_0);
-    67:  
+    41:        theta_0);
+    42:  
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'laplace_latent_rng'.
@@ -404,14 +403,14 @@ Typechecking failed after checking the first two arguments. Please ensure you
 are passing enough arguments and that the fourth is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args7.stan
-Semantic error in 'missing_args7.stan', line 65, column 24 to line 66, column 30:
+Semantic error in 'missing_args7.stan', line 18, column 24 to line 19, column 30:
    -------------------------------------------------
-    63:  generated quantities {
-    64:  
-    65:    vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]',
+    16:  generated quantities {
+    17:  
+    18:    vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]',
                                  ^
-    66:                        theta_0);
-    67:  
+    19:                        theta_0);
+    20:  
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'laplace_latent_neg_binomial_2_log_rng'.
@@ -443,14 +442,14 @@ Typechecking failed after checking the first 2 arguments.
 Please ensure you are passing enough arguments and that the 4th is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args9.stan
-Semantic error in 'missing_args9.stan', line 65, column 24 to line 66, column 67:
+Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 67:
    -------------------------------------------------
-    63:  generated quantities {
-    64:  
-    65:    vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]',
+    38:  generated quantities {
+    39:  
+    40:    vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]',
                                  ^
-    66:                        theta_0,  K_function, (x, n_obs, alpha, rho));
-    67:  
+    41:                        theta_0,  K_function, (x, n_obs, alpha, rho));
+    42:  
    -------------------------------------------------
 
 Recieved 0 argument at the end of the call to 'laplace_latent_tol_neg_binomial_2_log_rng'.
