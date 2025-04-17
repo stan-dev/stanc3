@@ -742,7 +742,7 @@ let verify_laplace_control_args loc id (args : typed_expression list) =
 
 (** The "trunk" of a laplace check is everything after the likihood,
   e.g. covariance function and control args *)
-let check_laplace_trunk ~is_cond_dist loc cf tenv id rt lik_args tes =
+let check_laplace_trunk ~is_cond_dist loc cf tenv id lik_args tes =
   match tes with
   | theta_init :: {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
       if theta_init.emeta.type_ <> UnsizedType.UVector then
@@ -757,87 +757,58 @@ let check_laplace_trunk ~is_cond_dist loc cf tenv id rt lik_args tes =
       let args =
         lik_args @ (theta_init :: cov_fun_type :: cov_tupl :: control_args)
       in
+      let return_type =
+        if String.is_suffix id.name ~suffix:"_rng" then UnsizedType.UVector
+        else UnsizedType.UReal in
       Some
         (mk_fun_app ~is_cond_dist ~loc
            (StanLib (Fun_kind.suffix_from_name id.name))
-           id args ~type_:rt)
+           id args ~type_:return_type)
   | _ -> None (* let the caller give a better error than we could hope to *)
 
-let check_laplace_helper_lik_args loc id tes =
-  let prob_args = Stan_math_signatures.laplace_helper_param_types id.name in
-  let for_prob, rest = List.split_n tes (List.length prob_args) in
-  match
-    SignatureMismatch.check_compatible_arguments_mod_conv prob_args
-      (get_arg_types for_prob)
-  with
-  | Ok promotions -> (Promotion.promote_list for_prob promotions, rest)
-  | Error x ->
-      Semantic_error.illtyped_laplace_helper_args loc id.name prob_args
-        (SignatureMismatch.InputMismatch x)
-      |> error
+let check_general_laplace ~is_cond_dist loc cf tenv id tes =
+  let fail ~early () =
+    Semantic_error.illtyped_laplace_generic loc id.name early
+      (List.map ~f:arg_type tes)
+    |> error in
+  match tes with
+  | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
+      let lik_fun, lik_tupl =
+        needs_higher_order_autodiff lik_fun;
+        check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
+          ~required_args:[("latent gaussian vector", (AutoDiffable, UVector))]
+          (UnsizedType.ReturnType UReal) in
+      check_laplace_trunk ~is_cond_dist loc cf tenv id [lik_fun; lik_tupl] tes
+      |> Option.value_or_thunk ~default:(fail ~early:false)
+  | _ -> fail ~early:true ()
 
-let rec check_laplace_fn ~is_cond_dist loc cf tenv id tes =
+let check_laplace_helpers ~is_cond_dist loc cf tenv id tes =
+  let lik_args, rest =
+    let prob_args = Stan_math_signatures.laplace_helper_param_types id.name in
+    let for_prob, rest = List.split_n tes (List.length prob_args) in
+    match
+      SignatureMismatch.check_compatible_arguments_mod_conv prob_args
+        (get_arg_types for_prob)
+    with
+    | Ok promotions -> (Promotion.promote_list for_prob promotions, rest)
+    | Error err ->
+        Semantic_error.illtyped_laplace_helper_args loc id.name prob_args
+          (SignatureMismatch.InputMismatch err)
+        |> error in
+  check_laplace_trunk ~is_cond_dist loc cf tenv id lik_args rest
+  |> Option.value_or_thunk ~default:(fun () ->
+         Semantic_error.illtyped_laplace_helper_generic loc id.name
+           (List.map ~f:arg_type tes)
+         |> error)
+
+let check_laplace_fn ~is_cond_dist loc cf tenv id tes =
   if
-    String.equal "laplace_marginal" id.name
-    || String.equal "laplace_marginal_tol" id.name
-  then check_laplace_marginal ~is_cond_dist loc cf tenv id tes
-  else if
     String.equal "laplace_latent_rng" id.name
     || String.equal "laplace_latent_tol_rng" id.name
-  then check_laplace_latent_rng ~is_cond_dist loc cf tenv id tes
-  else if String.is_suffix id.name ~suffix:"_rng" then
-    check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes
-  else check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes
-
-and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
-  let fail ~early () =
-    Semantic_error.illtyped_laplace_generic loc id.name early
-      (List.map ~f:arg_type tes)
-    |> error in
-  match tes with
-  | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
-      let lik_fun, lik_tupl =
-        needs_higher_order_autodiff lik_fun;
-        check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
-          ~required_args:[("latent gaussian vector", (AutoDiffable, UVector))]
-          (UnsizedType.ReturnType UReal) in
-      check_laplace_trunk ~is_cond_dist loc cf tenv id UReal [lik_fun; lik_tupl]
-        tes
-      |> Option.value_or_thunk ~default:(fail ~early:false)
-  | _ -> fail ~early:true ()
-
-and check_laplace_latent_rng ~is_cond_dist loc cf tenv id tes =
-  let fail ~early () =
-    Semantic_error.illtyped_laplace_generic loc id.name early
-      (List.map ~f:arg_type tes)
-    |> error in
-  match tes with
-  | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
-      let lik_fun, lik_tupl =
-        needs_higher_order_autodiff lik_fun;
-        check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
-          ~required_args:[("latent gaussian vector", (AutoDiffable, UVector))]
-          (UnsizedType.ReturnType UReal) in
-      check_laplace_trunk ~is_cond_dist loc cf tenv id UVector
-        [lik_fun; lik_tupl] tes
-      |> Option.value_or_thunk ~default:(fail ~early:false)
-  | _ -> fail ~early:true ()
-
-and check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes =
-  let lik_args, rest = check_laplace_helper_lik_args loc id tes in
-  check_laplace_trunk ~is_cond_dist loc cf tenv id UVector lik_args rest
-  |> Option.value_or_thunk ~default:(fun () ->
-         Semantic_error.illtyped_laplace_helper_generic loc id.name
-           (List.map ~f:arg_type tes)
-         |> error)
-
-and check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes =
-  let lik_args, rest = check_laplace_helper_lik_args loc id tes in
-  check_laplace_trunk ~is_cond_dist loc cf tenv id UReal lik_args rest
-  |> Option.value_or_thunk ~default:(fun () ->
-         Semantic_error.illtyped_laplace_helper_generic loc id.name
-           (List.map ~f:arg_type tes)
-         |> error)
+    || String.equal "laplace_marginal" id.name
+    || String.equal "laplace_marginal_tol" id.name
+  then check_general_laplace ~is_cond_dist loc cf tenv id tes
+  else check_laplace_helpers ~is_cond_dist loc cf tenv id tes
 
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
@@ -1539,8 +1510,7 @@ let check_tilde_distribution loc cf tenv id arguments =
       if Stan_math_signatures.is_embedded_laplace_fn (id.name ^ "_lupmf") then
         let id = {id with name= id.name ^ "_lupmf"} in
         let fn_expr =
-          check_laplace_helper_prob ~is_cond_dist:true loc cf tenv id arguments
-        in
+          check_laplace_fn ~is_cond_dist:true loc cf tenv id arguments in
         match fn_expr.expr with
         | CondDistApp (kind, _, args) -> (args, kind)
         | _ ->
