@@ -76,6 +76,8 @@ val check_variadic_args :
       If none is found, returns [Error] of the list of args and a function_mismatch.
      *)
 
+val data_only_msg : string
+
 val pp_mismatch_details :
   ?skipped:string list -> Format.formatter -> details -> unit
 

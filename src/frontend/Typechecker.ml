@@ -685,13 +685,11 @@ let check_function_callable_with_tuple cf tenv caller_id fname
              check_compatible_arguments_no_promotion no_prom_args
                required_arg_tys)
             |> Result.map_error ~f:(fun x ->
-                   `FnRequirementsError
-                     (InputMismatch x (* TODO(lap) MASSAGE NUMBERS *))) in
+                   `FnRequirementsError (InputMismatch x)) in
           let+ promotions =
             check_compatible_arguments_mod_conv args required
             |> Result.map_error ~f:(fun x ->
-                   `SuppliedArgsMismatch
-                     (InputMismatch x (* TODO(lap) MASSAGE NUMBERS *))) in
+                   `SuppliedArgsMismatch (InputMismatch x)) in
           (fn_type, promotions)
     | _ -> Error `NonFunction in
   match find_matching_first_order_fn tenv matches fname with
@@ -728,15 +726,13 @@ let verify_laplace_control_args loc id (args : typed_expression list) =
           Stan_math_signatures.laplace_tolerance_argument_types arg_tys
       with
       | Ok _ -> ()
-      | Error _ ->
+      | Error err ->
           let loc =
             List.hd args
-            |> Option.value_map ~f:(fun e -> e.emeta.loc) ~default:loc in
-          raise_s
-            [%message
-              "TODO(lap) error path -- incorrect control arguments for tol"
-                (arg_tys : UnsizedType.argumentlist)
-                (loc : Location_span.t)])
+            |> Option.value_map ~f:(fun expr -> expr.emeta.loc) ~default:loc
+          in
+          Semantic_error.illtyped_laplace_tolerance_args loc id.name err
+          |> error)
   | false, a :: _ ->
       Semantic_error.illtyped_laplace_extra_args a.emeta.loc id.name
         (List.length args)

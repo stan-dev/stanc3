@@ -40,6 +40,7 @@ module TypeError = struct
     | IllTypedLaplaceHelperGeneric of string * UnsizedType.argumentlist
     | LaplaceCompatibilityIssue of string
     | IlltypedLaplaceTooMany of string * int
+    | IlltypedLaplaceTolArgs of string * SignatureMismatch.function_mismatch
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
@@ -62,6 +63,19 @@ module TypeError = struct
     | TupleIndexInvalidIndex of int * int
     | TupleIndexNotTuple of UnsizedType.t
     | NotIndexable of UnsizedType.t * int
+
+  (* UnsizedType.
+     [ (DataOnly, UReal) (* tolerance *); (DataOnly, UInt) (* max_num_steps *)
+     ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
+     ; (DataOnly, UInt) (* max_steps_line_search *) ] *)
+  let laplace_tolerance_arg_name n =
+    match n with
+    | 1 -> "first tolerance argument (tolerance)"
+    | 2 -> "second tolerance argument (max_num_steps)"
+    | 3 -> "third tolerance argument (hessian_block_size)"
+    | 4 -> "fourth tolerance argument (solver)"
+    | 5 -> "fifth tolerance argument (max_steps_line_search)"
+    | n -> Printf.sprintf "%dth tolerance argument" n
 
   let pp ppf = function
     | IncorrectReturnType (t1, t2) ->
@@ -262,6 +276,29 @@ module TypeError = struct
           ()
           (if extra then Fmt.string else Fmt.nop)
           "Did you mean to call the _tol version?"
+        (* For tolerances, because these come at the end,
+           we want to update their accordingly, which is why these
+           sort-of reimplement some of the printing from [SignatureMismatch] *)
+    | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->
+        Fmt.pf ppf
+          "@[<v>Recieved %d argument%s at the end of the call to '%s'.@ \
+           Expected 5 arguments for the tolerances instead.@]"
+          found
+          (if found > 1 then "s" else "")
+          name
+    | IlltypedLaplaceTolArgs (name, ArgError (n, DataOnlyError)) ->
+        Fmt.pf ppf
+          "@[<hov>The tolerance arguments to '%s'@ must all be data-only,@ but \
+           the %a here is not.@ %a@]"
+          name Fmt.string
+          (laplace_tolerance_arg_name n)
+          Fmt.text SignatureMismatch.data_only_msg
+    | IlltypedLaplaceTolArgs
+        (name, ArgError (n, TypeMismatch (expected, found, _))) ->
+        Fmt.pf ppf "@[<hov>The %a to '%s'@ must be@ %a but got@ %a.@]"
+          Fmt.string
+          (laplace_tolerance_arg_name n)
+          name UnsizedType.pp expected UnsizedType.pp found
     | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
         let pp_sig ppf (rt, args) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -749,6 +786,9 @@ let laplace_compatibility loc banned_function =
 
 let illtyped_laplace_extra_args loc name args =
   TypeError (loc, TypeError.IlltypedLaplaceTooMany (name, args))
+
+let illtyped_laplace_tolerance_args loc name mismatch =
+  TypeError (loc, TypeError.IlltypedLaplaceTolArgs (name, mismatch))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError

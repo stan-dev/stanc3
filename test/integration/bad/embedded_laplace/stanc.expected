@@ -247,6 +247,48 @@ Semantic error in 'bad_tol2.stan', line 54, column 80 to column 81:
 Recieved 5 extra arguments at the end of the call to 'laplace_latent_rng'.
 Did you mean to call the _tol version?
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_tol3.stan
+Semantic error in 'bad_tol3.stan', line 54, column 80 to column 81:
+   -------------------------------------------------
+    52:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
+    53:                      theta_0,
+    54:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4);
+                                                                                         ^
+    55:  }
+   -------------------------------------------------
+
+Recieved 4 arguments at the end of the call to 'laplace_latent_tol_rng'.
+Expected 5 arguments for the tolerances instead.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_tol4.stan
+Semantic error in 'bad_tol4.stan', line 58, column 32 to column 35:
+   -------------------------------------------------
+    56:                                  theta_0,
+    57:                                  K_function, (x, n_obs, alpha, rho),
+    58:                                  eta, max_num_steps, hessian_block_size,
+                                         ^
+    59:                                  solver, max_steps_line_search);
+    60:  }
+   -------------------------------------------------
+
+The tolerance arguments to 'laplace_marginal_tol' must all be data-only,
+but the first tolerance argument (tolerance) here is not. (Local variables
+are assumed to depend on parameters; same goes for function inputs unless
+they are marked with the keyword 'data'.)
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_tol5.stan
+Semantic error in 'bad_tol5.stan', line 54, column 80 to column 81:
+   -------------------------------------------------
+    52:    vector[n_obs] theta = laplace_latent_tol_rng(ll_function, (eta, log_ye, y),
+    53:                      theta_0,
+    54:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4,5.5);
+                                                                                         ^
+    55:  }
+   -------------------------------------------------
+
+The fifth tolerance argument (max_steps_line_search) to 'laplace_latent_tol_rng'
+must be int but got real.
+[exit 1]
   $ ../../../../../install/default/bin/stanc missing_args1.stan
 Semantic error in 'missing_args1.stan', line 2, column 12 to column 30:
    -------------------------------------------------
@@ -399,4 +441,18 @@ However, we recieved the types:
 (data array[] int, data array[] int)
 Typechecking failed after checking the first 2 arguments.
 Please ensure you are passing enough arguments and that the 4th is a function.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc missing_args9.stan
+Semantic error in 'missing_args9.stan', line 65, column 24 to line 66, column 67:
+   -------------------------------------------------
+    63:  generated quantities {
+    64:  
+    65:    vector[n_obs] theta = laplace_latent_tol_neg_binomial_2_log_rng(y, {1}, [1.0]',
+                                 ^
+    66:                        theta_0,  K_function, (x, n_obs, alpha, rho));
+    67:  
+   -------------------------------------------------
+
+Recieved 0 argument at the end of the call to 'laplace_latent_tol_neg_binomial_2_log_rng'.
+Expected 5 arguments for the tolerances instead.
 [exit 1]

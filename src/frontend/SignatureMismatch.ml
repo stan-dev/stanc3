@@ -338,6 +338,10 @@ let index_str = function
   | 4 -> "fourth"
   | n -> Fmt.str "%dth" n
 
+let data_only_msg =
+  "(Local variables are assumed to depend on parameters; same goes for \
+   function inputs unless they are marked with the keyword 'data'.)"
+
 let pp_mismatch_details ?(skipped = []) ppf details =
   let open Fmt in
   let ctx = ref TypeMap.empty in
@@ -369,10 +373,8 @@ let pp_mismatch_details ?(skipped = []) ppf details =
              (if n_skipped = 1 then "" else "s"))
         () (found - n_skipped)
   | InputMismatch (ArgError (n, DataOnlyError)) ->
-      pf ppf "@[<hov>The@ %a%a@]" pp_skipped_index_str n text
-        " is marked data-only. (Local variables are assumed to depend on \
-         parameters; same goes for function inputs unless they are marked with \
-         the keyword 'data'.)"
+      pf ppf "@[<hov>The@ %a is marked data-only. %a@]" pp_skipped_index_str n
+        text data_only_msg
   | InputMismatch
       (ArgError
         ( n
@@ -425,10 +427,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           expected found in
   let pp_explain ppf = function
     | ArgError (n, DataOnlyError) ->
-        pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
-          " must be data-only. (Local variables are assumed to depend on \
-           parameters; same goes for function inputs unless they are marked \
-           with the keyword 'data'.)"
+        pf ppf "@[<hov>The@ %s@ argument must be data-only.@ %a@]" (index_str n)
+          text data_only_msg
     | ArgError (n, TypeMismatch (expected, found, None)) ->
         pf ppf "@[<hv>The %s argument must be@, %a@ but got@, %a@]"
           (index_str n) (pp_unsized_type ctx) expected (pp_unsized_type ctx)
