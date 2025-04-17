@@ -155,7 +155,7 @@ let is_reduce_sum_fn f =
   String.equal f "reduce_sum" || String.equal f "reduce_sum_static"
 
 let laplace_marginal_fns =
-  [ (* general fns  *) "laplace_marginal_lpdf"; "laplace_marginal_tol_lpdf"
+  [ (* general fns  *) "laplace_marginal"; "laplace_marginal_tol"
   ; "laplace_marginal_rng"; "laplace_marginal_tol_rng"; (* "helpers" *)
     "laplace_marginal_bernoulli_logit_lpmf"
   ; "laplace_marginal_tol_bernoulli_logit_lpmf"

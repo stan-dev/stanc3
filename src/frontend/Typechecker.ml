@@ -788,8 +788,8 @@ let check_laplace_helper_lik_args loc id tes =
 
 let rec check_laplace_fn ~is_cond_dist loc cf tenv id tes =
   if
-    String.equal "laplace_marginal_lpdf" id.name
-    || String.equal "laplace_marginal_tol_lpdf" id.name
+    String.equal "laplace_marginal" id.name
+    || String.equal "laplace_marginal_tol" id.name
   then check_laplace_marginal ~is_cond_dist loc cf tenv id tes
   else if
     String.equal "laplace_marginal_rng" id.name
