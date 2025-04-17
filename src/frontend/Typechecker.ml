@@ -620,6 +620,7 @@ let make_function_variable cf loc id = function
 let verify_second_order_derivative_compatibility (ast : typed_program) =
   let functions = Ast.get_stmts ast.functionblock in
   let to_check = Queue.of_list (List.rev !require_2nd_derivs) in
+  let ignore () _ = () in
   let rec check_expr ~loc () = function
     | {expr= FunApp (StanLib _, {name; _}, _); _}
       when Stan_math_signatures.lacks_higher_order_autodiff name ->
@@ -630,17 +631,15 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
         List.iter es ~f:(check_expr ~loc ())
     | {expr= Variable name; emeta= {type_= UFun _; _}} ->
         Queue.enqueue to_check {name with id_loc= loc}
-    | e -> Ast.fold_expression (check_expr ~loc) (fun l _ -> l) () e.expr in
+    | e -> Ast.fold_expression (check_expr ~loc) ignore () e.expr in
   let rec check_stmt ~loc () s =
     match s.stmt with
     | NRFunApp (UserDefined _, name, es) ->
         Queue.enqueue to_check {name with id_loc= loc};
         List.iter es ~f:(check_expr ~loc ())
     | stmt ->
-        Ast.fold_statement (check_expr ~loc) (check_stmt ~loc)
-          (fun l _ -> l)
-          (fun l _ -> l)
-          () stmt in
+        Ast.fold_statement (check_expr ~loc) (check_stmt ~loc) ignore ignore ()
+          stmt in
   let rec loop () =
     match Queue.dequeue to_check with
     | None -> ()
