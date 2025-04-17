@@ -76,7 +76,11 @@ val illtyped_laplace_callback :
   Location_span.t -> string -> string -> SignatureMismatch.details -> t
 
 val illtyped_laplace_helper_args :
-  Location_span.t -> string -> SignatureMismatch.details -> t
+     Location_span.t
+  -> string
+  -> UnsizedType.argumentlist
+  -> SignatureMismatch.details
+  -> t
 
 val illtyped_laplace_marginal :
   Location_span.t -> string -> bool -> UnsizedType.argumentlist -> t

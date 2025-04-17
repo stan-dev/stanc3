@@ -34,7 +34,8 @@ module TypeError = struct
     | IllTypedForwardedFunctionApp of
         string * string * SignatureMismatch.details
     | IllTypedLaplaceCallback of string * string * SignatureMismatch.details
-    | IllTypedLaplaceHelperArgs of string * SignatureMismatch.details
+    | IllTypedLaplaceHelperArgs of
+        string * UnsizedType.argumentlist * SignatureMismatch.details
     | IllTypedLaplaceMarginal of string * bool * UnsizedType.argumentlist
     | IllTypedLaplaceHelperGeneric of string * UnsizedType.argumentlist
     | LaplaceCompatibilityIssue of string
@@ -168,9 +169,13 @@ module TypeError = struct
         Fmt.pf ppf
           "Function '%s' does not meet criteria for this argument to '%s':@ %a"
           name caller SignatureMismatch.pp_mismatch_details details
-    | IllTypedLaplaceHelperArgs (name, details) ->
-        Fmt.pf ppf "@[<v>Ill-typed arguments supplied to function '%s':@ %a@]"
+    | IllTypedLaplaceHelperArgs (name, expected, details) ->
+        Fmt.pf ppf
+          "@[<v>Ill-typed arguments supplied to function '%s' for the \
+           likelihood:@ %a@ Expected the arguments to start with:@ @[(%a)@]@]"
           name SignatureMismatch.pp_mismatch_details details
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+          expected
     | IllTypedLaplaceMarginal (name, early, supplied) ->
         let extra_args =
           let rngs =
@@ -200,9 +205,7 @@ module TypeError = struct
           (Fmt.list ~sep:Fmt.comma UnsizedType.pp_fun_arg)
           supplied Fmt.text info
     | IllTypedLaplaceHelperGeneric (name, supplied) ->
-        let req =
-          Stan_math_signatures.laplace_helper_param_types name
-          |> List.map ~f:snd in
+        let req = Stan_math_signatures.laplace_helper_param_types name in
         let extra_args =
           let rngs =
             if String.is_suffix ~suffix:"_rng" name then ", tuple(...)" else ""
@@ -221,7 +224,7 @@ module TypeError = struct
            arguments.@ Please ensure you are passing enough arguments and that \
            the %dth is a function.@]"
           name name
-          Fmt.(list ~sep:comma UnsizedType.pp)
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           req Fmt.text extra_args
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           supplied n (n + 2)
@@ -702,8 +705,8 @@ let forwarded_function_error loc caller name details =
 let illtyped_laplace_callback loc caller name details =
   TypeError (loc, TypeError.IllTypedLaplaceCallback (caller, name, details))
 
-let illtyped_laplace_helper_args loc name details =
-  TypeError (loc, TypeError.IllTypedLaplaceHelperArgs (name, details))
+let illtyped_laplace_helper_args loc name lik_args details =
+  TypeError (loc, TypeError.IllTypedLaplaceHelperArgs (name, lik_args, details))
 
 let illtyped_laplace_marginal loc name early supplied =
   TypeError (loc, TypeError.IllTypedLaplaceMarginal (name, early, supplied))

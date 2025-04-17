@@ -32130,6 +32130,20 @@ Eigen::Matrix<stan::promote_args_t<T0__, stan::base_type_t<T1__>,
 foo(const T0__& x, const T1__& s_arg__, const T2__& y_arg__, std::ostream*
     pstream__);
 struct foo_variadic2_functor__ {
+  template <typename T0__,
+            stan::require_all_t<stan::is_eigen_matrix_dynamic<T0__>,
+                                stan::is_vt_not_complex<T0__>>* = nullptr>
+  stan::promote_args_t<stan::base_type_t<T0__>>
+  operator()(const T0__& a, std::ostream* pstream__) const {
+    return foo(a, pstream__);
+  }
+  template <typename T0__,
+            stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
+                                                        std::is_floating_point<T0__>>>* = nullptr>
+  stan::promote_args_t<T0__>
+  operator()(const T0__& b, std::ostream* pstream__) const {
+    return foo(b, pstream__);
+  }
   template <typename T0__, typename T1__, typename T2__,
             stan::require_all_t<stan::math::disjunction<stan::is_autodiff<T0__>,
                                                         std::is_floating_point<T0__>>,

@@ -746,6 +746,7 @@ let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
     :: {expr= Variable cov_fun; _}
     :: cov_tupl :: train_and_control_args ->
       if theta_init.emeta.type_ <> UnsizedType.UVector then
+        (* TODO(lap) does this need to be dataonly? *)
         Semantic_error.vector_expected theta_init.emeta.loc
           ("Initial convariance for " ^ id.name)
           theta_init.emeta.type_
@@ -782,7 +783,7 @@ let check_laplace_helper_lik_args loc id tes =
   with
   | Ok promotions -> (Promotion.promote_list for_prob promotions, rest)
   | Error x ->
-      Semantic_error.illtyped_laplace_helper_args loc id.name
+      Semantic_error.illtyped_laplace_helper_args loc id.name prob_args
         (SignatureMismatch.InputMismatch x)
       |> error
 
@@ -834,17 +835,17 @@ and check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes =
   | _ -> fail ~early:true ()
 
 and check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes =
-  let lik_args, tes = check_laplace_helper_lik_args loc id tes in
+  let lik_args, rest = check_laplace_helper_lik_args loc id tes in
   check_laplace_trunk ~is_cond_dist ~can_have_test:true loc cf tenv id UVector
-    lik_args tes
+    lik_args rest
   |> Option.value_or_thunk ~default:(fun () ->
          Semantic_error.illtyped_laplace_helper_generic loc id.name
            (List.map ~f:arg_type tes)
          |> error)
 
 and check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes =
-  let lik_args, tes = check_laplace_helper_lik_args loc id tes in
-  check_laplace_trunk ~is_cond_dist loc cf tenv id UReal lik_args tes
+  let lik_args, rest = check_laplace_helper_lik_args loc id tes in
+  check_laplace_trunk ~is_cond_dist loc cf tenv id UReal lik_args rest
   |> Option.value_or_thunk ~default:(fun () ->
          Semantic_error.illtyped_laplace_helper_generic loc id.name
            (List.map ~f:arg_type tes)
