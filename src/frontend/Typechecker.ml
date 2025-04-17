@@ -715,31 +715,29 @@ let check_function_callable_with_tuple cf tenv caller_id fname
         fname.name details
       |> error
 
-let verify_laplace_control_args loc id args =
-  let args = List.map ~f:arg_type args in
+let verify_laplace_control_args loc id (args : typed_expression list) =
   match (String.is_prefix ~prefix:"laplace_marginal_tol" id.name, args) with
   | false, [] -> ()
-  | ( true
-    , [ (tol_adlevel, UReal) (* tolerance *)
-      ; (DataOnly, UInt) (* max_num_steps *)
-      ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
-      ; (DataOnly, UInt) (* max_steps_line_search *) ] ) ->
-      (* TODO(lap) use SignatureMismatch for better DataOnlyError? *)
-      if tol_adlevel = AutoDiffable then
-        failwith
-          "TODO(lap) error path -- tolerance control argument must be data only"
-  | false, _ ->
-      raise_s
-        [%message
-          "TODO(lap) error path -- unexpected args after input"
-            (args : UnsizedType.argumentlist)
-            (loc : Location_span.t)]
-  | _ ->
-      raise_s
-        [%message
-          "TODO(lap) error path -- incorrect control arguments for tol"
-            (args : UnsizedType.argumentlist)
-            (loc : Location_span.t)]
+  | true, _ -> (
+      let arg_tys = List.map ~f:arg_type args in
+      match
+        SignatureMismatch.check_compatible_arguments_mod_conv
+          Stan_math_signatures.laplace_tolerance_argument_types arg_tys
+      with
+      | Ok _ -> ()
+      | Error _ ->
+          let loc =
+            List.hd args
+            |> Option.value_map ~f:(fun e -> e.emeta.loc) ~default:loc in
+          raise_s
+            [%message
+              "TODO(lap) error path -- incorrect control arguments for tol"
+                (arg_tys : UnsizedType.argumentlist)
+                (loc : Location_span.t)])
+  | false, a :: _ ->
+      Semantic_error.illtyped_laplace_extra_args a.emeta.loc id.name
+        (List.length args)
+      |> error
 
 (** The "trunk" of a laplace check is everything after the likihood,
   e.g. covariance function and control args *)

@@ -194,6 +194,12 @@ let laplace_helper_param_types name =
     |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
   Map.find_exn laplace_helper_lik_args variant
 
+let laplace_tolerance_argument_types =
+  UnsizedType.
+    [ (DataOnly, UReal) (* tolerance *); (DataOnly, UInt) (* max_num_steps *)
+    ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
+    ; (DataOnly, UInt) (* max_steps_line_search *) ]
+
 let disallowed_second_order =
   (* TODO(lap): any others? *)
   [ "algebra_solver"; "algebra_solver_newton"; "integrate_1d"; "integrate_ode"

@@ -92,6 +92,7 @@ val illtyped_laplace_helper_generic :
   Location_span.t -> string -> UnsizedType.argumentlist -> t
 
 val laplace_compatibility : Location_span.t -> string -> t
+val illtyped_laplace_extra_args : Location_span.t -> string -> int -> t
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
 val nonreturning_fn_expected_nonfn_found : Location_span.t -> string -> t
 

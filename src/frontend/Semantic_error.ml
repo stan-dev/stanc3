@@ -39,6 +39,7 @@ module TypeError = struct
     | IllTypedLaplaceMarginal of string * bool * UnsizedType.argumentlist
     | IllTypedLaplaceHelperGeneric of string * UnsizedType.argumentlist
     | LaplaceCompatibilityIssue of string
+    | IlltypedLaplaceTooMany of string * int
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
@@ -177,15 +178,17 @@ module TypeError = struct
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           expected
     | IllTypedLaplaceMarginal (name, early, supplied) ->
-        let extra_args =
+        let extra_args ppf () =
           let rngs =
             if String.is_suffix ~suffix:"_rng" name then ", tuple(T2...)"
             else "" in
           let tols =
-            if String.is_substring ~substring:"_tol" name then
-              ", data real, data int, data int, data int, data int"
-            else "" in
-          rngs ^ tols in
+            if String.is_substring ~substring:"_tol" name then fun ppf () ->
+              Fmt.pf ppf ", %a"
+                Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+                Stan_math_signatures.laplace_tolerance_argument_types
+            else Fmt.nop in
+          Fmt.pf ppf "%s%a" rngs tols () in
         let info =
           if early then
             "We were unable to start more in-depth checking. Please ensure you \
@@ -201,20 +204,22 @@ module TypeError = struct
            real,@ tuple(T1...),@ vector,@ (T2...) => matrix,@ \
            tuple(T2...)%a)@]@ However, we recieved the types:@ @[<hov \
            2>(%a)@]@ @[%a@]@]"
-          name name Fmt.text extra_args
+          name name extra_args ()
           (Fmt.list ~sep:Fmt.comma UnsizedType.pp_fun_arg)
           supplied Fmt.text info
     | IllTypedLaplaceHelperGeneric (name, supplied) ->
         let req = Stan_math_signatures.laplace_helper_param_types name in
-        let extra_args =
+        let extra_args ppf () =
           let rngs =
             if String.is_suffix ~suffix:"_rng" name then ", tuple(...)" else ""
           in
           let tols =
-            if String.is_substring ~substring:"_tol" name then
-              ", data real, data int, data int, data int, data int"
-            else "" in
-          rngs ^ tols in
+            if String.is_substring ~substring:"_tol" name then fun ppf () ->
+              Fmt.pf ppf ", %a"
+                Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+                Stan_math_signatures.laplace_tolerance_argument_types
+            else Fmt.nop in
+          Fmt.pf ppf "%s%a" rngs tols () in
         let n = List.length req in
         Fmt.pf ppf
           "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \
@@ -225,7 +230,7 @@ module TypeError = struct
            the %dth is a function.@]"
           name name
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
-          req Fmt.text extra_args
+          req extra_args ()
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           supplied n (n + 2)
     | LaplaceCompatibilityIssue banned_function ->
@@ -235,6 +240,18 @@ module TypeError = struct
            derivatives.@ The function '%s', called by this function, is \
            currently unsupported."
           banned_function
+    | IlltypedLaplaceTooMany (name, n_args) ->
+        let extra =
+          n_args = 5 && not (String.is_substring ~substring:"_tol" name) in
+        Fmt.pf ppf
+          "Recieved %d extra argument%s at the end of the call to '%s'.%a%a"
+          n_args
+          (if n_args > 1 then "s" else "")
+          name
+          (if extra then Fmt.cut else Fmt.nop)
+          ()
+          (if extra then Fmt.string else Fmt.nop)
+          "Did you mean to call the _tol version?"
     | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
         let pp_sig ppf (rt, args) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -716,6 +733,9 @@ let illtyped_laplace_helper_generic loc name supplied =
 
 let laplace_compatibility loc banned_function =
   TypeError (loc, TypeError.LaplaceCompatibilityIssue banned_function)
+
+let illtyped_laplace_extra_args loc name args =
+  TypeError (loc, TypeError.IlltypedLaplaceTooMany (name, args))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError

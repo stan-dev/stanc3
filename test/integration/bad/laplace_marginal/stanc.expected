@@ -204,6 +204,31 @@ Semantic error in 'bad_theta0.stan', line 50, column 34 to column 41:
 Initial convariance for laplace_marginal must be a vector.
 Instead found type array[] real.
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_tol1.stan
+Semantic error in 'bad_tol1.stan', line 54, column 56 to column 57:
+   -------------------------------------------------
+    52:    vector[n_obs] theta = laplace_marginal_rng(ll_function, (eta, log_ye, y),
+    53:                      theta_0,
+    54:                      K_function, (x, n_obs, alpha, rho), 1);
+                                                                 ^
+    55:  }
+   -------------------------------------------------
+
+Recieved 1 extra argument at the end of the call to 'laplace_marginal_rng'.
+[exit 1]
+  $ ../../../../../install/default/bin/stanc bad_tol2.stan
+Semantic error in 'bad_tol2.stan', line 54, column 80 to column 81:
+   -------------------------------------------------
+    52:    vector[n_obs] theta = laplace_marginal_rng(ll_function, (eta, log_ye, y),
+    53:                      theta_0,
+    54:                      K_function, (x, n_obs, alpha, rho), (x, n_obs, alpha, rho), 1,2,3,4,5);
+                                                                                         ^
+    55:  }
+   -------------------------------------------------
+
+Recieved 5 extra arguments at the end of the call to 'laplace_marginal_rng'.
+Did you mean to call the _tol version?
+[exit 1]
   $ ../../../../../install/default/bin/stanc missing_args1.stan
 Semantic error in 'missing_args1.stan', line 2, column 12 to column 30:
    -------------------------------------------------
@@ -349,8 +374,8 @@ Semantic error in 'missing_args8.stan', line 2, column 12 to column 59:
 Ill-typed arguments supplied to function 'laplace_marginal_tol_poisson_log_lpmf'.
 The valid signature of this function is
 laplace_marginal_tol_poisson_log_lpmf(array[] int, array[] int, vector,
-  (...) => matrix, tuple(...), data real, data int, data int, data int, data
-  int)
+  (...) => matrix, tuple(...), data real, data int, data int, data int,
+  data int)
 However, we recieved the types:
 (data array[] int, data array[] int)
 Typechecking failed after checking the first 2 arguments.
