@@ -354,7 +354,7 @@ let pp_mismatch_details ppf details =
         found
   | InputMismatch (ArgError (n, DataOnlyError)) ->
       pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
-        " must be data-only. (Local variables are assumed to depend on \
+        " is marked data-only. (Local variables are assumed to depend on \
          parameters; same goes for function inputs unless they are marked with \
          the keyword 'data'.)"
   | InputMismatch

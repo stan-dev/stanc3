@@ -677,8 +677,13 @@ let check_function_callable_with_tuple cf tenv caller_id fname
           let no_prom_args, _ =
             List.split_n args (List.length required_arg_tys) in
           let* () =
-            check_compatible_arguments_no_promotion required_arg_tys
-              no_prom_args
+            (let* () =
+               check_compatible_arguments_no_promotion required_arg_tys
+                 no_prom_args in
+             (* checking both ways around as this is the best way
+                to catch DataOnly misspecifications for these arguments *)
+             check_compatible_arguments_no_promotion no_prom_args
+               required_arg_tys)
             |> Result.map_error ~f:(fun x ->
                    `FnRequirementsError (InputMismatch x)) in
           let+ promotions =
