@@ -61,7 +61,7 @@ model {
 }
 
 generated quantities {
-  vector[n_obs] theta = laplace_marginal_rng(ll_function, (1,1, log_ye, y),
+  vector[n_obs] theta = laplace_latent_rng(ll_function, (1,1, log_ye, y),
                     theta_0,
                     K_function, (x, n_obs, alpha, rho));
 }

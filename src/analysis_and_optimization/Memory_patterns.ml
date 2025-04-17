@@ -90,7 +90,7 @@ let query_stan_math_mem_pattern_support (name : string)
   match name with
   | x when is_stan_math_variadic_function_name x -> false
   | x when is_reduce_sum_fn x -> false
-  | x when is_laplace_marginal_fn x -> false
+  | x when is_embedded_laplace_fn x -> false
   | _ ->
       let name =
         string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)

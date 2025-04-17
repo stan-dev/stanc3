@@ -82,7 +82,7 @@ val illtyped_laplace_helper_args :
   -> SignatureMismatch.details
   -> t
 
-val illtyped_laplace_marginal :
+val illtyped_laplace_generic :
   Location_span.t -> string -> bool -> UnsizedType.argumentlist -> t
 (** Generic failure. This means too few arguments were supplied,
        or that the function arguments are misplaced, both of which prevent us

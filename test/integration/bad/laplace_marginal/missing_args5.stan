@@ -62,7 +62,7 @@ model {
 }
 generated quantities {
 
-  vector[n_obs] theta = laplace_marginal_rng();
+  vector[n_obs] theta = laplace_latent_rng();
 
 
 

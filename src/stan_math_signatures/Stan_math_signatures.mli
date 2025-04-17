@@ -48,7 +48,7 @@ val make_assignmentoperator_stan_math_signatures :
 (* reduce_sum helpers *)
 val is_reduce_sum_fn : string -> bool
 val reduce_sum_slice_types : UnsizedType.t list
-val is_laplace_marginal_fn : string -> bool
+val is_embedded_laplace_fn : string -> bool
 val laplace_helper_param_types : string -> UnsizedType.argumentlist
 val laplace_tolerance_argument_types : UnsizedType.argumentlist
 

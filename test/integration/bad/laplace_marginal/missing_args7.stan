@@ -62,7 +62,7 @@ model {
 }
 generated quantities {
 
-  vector[n_obs] theta = laplace_marginal_neg_binomial_2_log_rng(y, {1}, [1.0]',
+  vector[n_obs] theta = laplace_latent_neg_binomial_2_log_rng(y, {1}, [1.0]',
                       theta_0);
 
 }

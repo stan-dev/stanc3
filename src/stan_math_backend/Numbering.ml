@@ -50,7 +50,7 @@ let prepare_prog (mir : Program.Typed.t) :
         {meta; pattern}
     | FunApp (StanLib (name, _, _), _)
       when (not !needs_mix_header)
-           && Stan_math_signatures.is_laplace_marginal_fn name ->
+           && Stan_math_signatures.is_embedded_laplace_fn name ->
         needs_mix_header := true;
         {meta; pattern}
     | _ -> {meta; pattern} in

@@ -154,9 +154,9 @@ let reduce_sum_slice_types =
 let is_reduce_sum_fn f =
   String.equal f "reduce_sum" || String.equal f "reduce_sum_static"
 
-let laplace_marginal_fns =
+let embedded_laplace_functions =
   [ (* general fns  *) "laplace_marginal"; "laplace_marginal_tol"
-  ; "laplace_marginal_rng"; "laplace_marginal_tol_rng"; (* "helpers" *)
+  ; "laplace_latent_rng"; "laplace_latent_tol_rng"; (* "helpers" *)
     "laplace_marginal_bernoulli_logit_lpmf"
   ; "laplace_marginal_tol_bernoulli_logit_lpmf"
   ; "laplace_marginal_neg_binomial_2_log_lpmf"
@@ -164,16 +164,16 @@ let laplace_marginal_fns =
   ; "laplace_marginal_poisson_log_lpmf"; "laplace_marginal_tol_poisson_log_lpmf"
   ; "laplace_marginal_poisson_2_log_lpmf"
   ; "laplace_marginal_poisson_2_log_tol_lpmf"; (* rngs *)
-    "laplace_marginal_bernoulli_logit_rng"
-  ; "laplace_marginal_tol_bernoulli_logit_rng"
-  ; "laplace_marginal_neg_binomial_2_log_rng"
-  ; "laplace_marginal_tol_neg_binomial_2_log_rng"
-  ; "laplace_marginal_poisson_log_rng"; "laplace_marginal_tol_poisson_log_rng"
-  ; "laplace_marginal_poisson_2_log_rng"
-  ; "laplace_marginal_poisson_2_log_tol_rng" ]
+    "laplace_latent_bernoulli_logit_rng"
+  ; "laplace_latent_tol_bernoulli_logit_rng"
+  ; "laplace_latent_neg_binomial_2_log_rng"
+  ; "laplace_latent_tol_neg_binomial_2_log_rng"
+  ; "laplace_latent_poisson_log_rng"; "laplace_latent_tol_poisson_log_rng"
+  ; "laplace_latent_poisson_2_log_rng"; "laplace_latent_poisson_2_log_tol_rng"
+  ]
   |> String.Set.of_list
 
-let is_laplace_marginal_fn = Set.mem laplace_marginal_fns
+let is_embedded_laplace_fn = Set.mem embedded_laplace_functions
 
 let laplace_helper_lik_args =
   [ ( "bernoulli_logit"
@@ -189,7 +189,9 @@ let laplace_helper_lik_args =
 
 let laplace_helper_param_types name =
   let variant =
-    String.chop_prefix_exn name ~prefix:"laplace_marginal_"
+    String.chop_prefix_exn name ~prefix:"laplace_"
+    |> String.chop_prefix_if_exists ~prefix:"marginal_"
+    |> String.chop_prefix_if_exists ~prefix:"latent_"
     |> String.chop_prefix_if_exists ~prefix:"tol_"
     |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
   Map.find_exn laplace_helper_lik_args variant
@@ -208,7 +210,7 @@ let disallowed_second_order =
   |> String.Set.of_list
 
 let lacks_higher_order_autodiff name =
-  is_laplace_marginal_fn name
+  is_embedded_laplace_fn name
   || is_reduce_sum_fn name
   || is_stan_math_variadic_function_name name
   || Set.mem disallowed_second_order name

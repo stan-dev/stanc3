@@ -867,7 +867,7 @@ let lower_program ?printed_filename (p : Program.Typed.t) : Cpp.program =
   let model_namespace = Namespace (model_namespace_str, model_contents) in
   let includes =
     if needs_mix_header then
-      [ !//"Including the mix header for laplace_marginal usage"
+      [ !//"Including the mix header for embedded laplace usage"
       ; math_mix_include; model_header_include ]
     else [model_header_include] in
   let global_fns =

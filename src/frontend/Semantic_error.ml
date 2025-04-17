@@ -168,11 +168,11 @@ module TypeError = struct
           name caller SignatureMismatch.pp_mismatch_details details
     | IllTypedLaplaceCallback (caller, name, details) ->
         Fmt.pf ppf
-          "Function '%s' does not meet criteria for this argument to '%s':@ %a"
+          "Function '%s' does not have a valid signature for use in '%s':@ %a"
           name caller SignatureMismatch.pp_mismatch_details details
     | IllTypedLaplaceHelperArgs (name, expected, details) ->
         Fmt.pf ppf
-          "@[<v>Ill-typed arguments supplied to function '%s' for the \
+          "@[<v>Ill-typed arguments supplied to function '%s'@ for the \
            likelihood:@ %a@ Expected the arguments to start with:@ @[(%a)@]@]"
           name SignatureMismatch.pp_mismatch_details details
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
@@ -234,15 +234,19 @@ module TypeError = struct
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           supplied n (n + 2)
     | LaplaceCompatibilityIssue banned_function ->
+        (* Fmt.pf ppf
+           "The likelihood function passed to the embedded laplace family of \
+            functions@ requires the ability to compute@ higher-order \
+            derivatives.@ The function '%s', called by this function, is \
+            currently unsupported."
+           banned_function *)
         Fmt.pf ppf
-          "The likelihood function passed to the laplace_marginal family of \
-           functions@ requires the ability to compute@ higher-order \
-           derivatives.@ The function '%s', called by this function, is \
-           currently unsupported."
+          "The function '%s', called by this likelihood function,@ does not \
+           currently support higher-order derivatives, and@ cannot be used in \
+           an embedded Laplace approximation."
           banned_function
     | IlltypedLaplaceTooMany (name, n_args) ->
-        let extra =
-          n_args = 5 && not (String.is_substring ~substring:"_tol" name) in
+        let extra = not (String.is_substring ~substring:"_tol" name) in
         Fmt.pf ppf
           "Recieved %d extra argument%s at the end of the call to '%s'.%a%a"
           n_args
@@ -725,7 +729,7 @@ let illtyped_laplace_callback loc caller name details =
 let illtyped_laplace_helper_args loc name lik_args details =
   TypeError (loc, TypeError.IllTypedLaplaceHelperArgs (name, lik_args, details))
 
-let illtyped_laplace_marginal loc name early supplied =
+let illtyped_laplace_generic loc name early supplied =
   TypeError (loc, TypeError.IllTypedLaplaceMarginal (name, early, supplied))
 
 let illtyped_laplace_helper_generic loc name supplied =

@@ -142,7 +142,7 @@ let verify_name_fresh_udf loc tenv name =
     (* variadic functions aren't overloadable due to
         their separate typechecking *)
     Stan_math_signatures.is_reduce_sum_fn name
-    || Stan_math_signatures.is_laplace_marginal_fn name
+    || Stan_math_signatures.is_embedded_laplace_fn name
     || Stan_math_signatures.is_stan_math_variadic_function_name name
   then Semantic_error.ident_is_stanmath_name loc name |> error
   else if Utils.is_unnormalized_distribution name then
@@ -684,11 +684,13 @@ let check_function_callable_with_tuple cf tenv caller_id fname
              check_compatible_arguments_no_promotion no_prom_args
                required_arg_tys)
             |> Result.map_error ~f:(fun x ->
-                   `FnRequirementsError (InputMismatch x)) in
+                   `FnRequirementsError
+                     (InputMismatch x (* TODO(lap) MASSAGE NUMBERS *))) in
           let+ promotions =
             check_compatible_arguments_mod_conv args required
             |> Result.map_error ~f:(fun x ->
-                   `SuppliedArgsMismatch (InputMismatch x)) in
+                   `SuppliedArgsMismatch
+                     (InputMismatch x (* TODO(lap) MASSAGE NUMBERS *))) in
           (fn_type, promotions)
     | _ -> Error `NonFunction in
   match find_matching_first_order_fn tenv matches fname with
@@ -716,7 +718,7 @@ let check_function_callable_with_tuple cf tenv caller_id fname
       |> error
 
 let verify_laplace_control_args loc id (args : typed_expression list) =
-  match (String.is_prefix ~prefix:"laplace_marginal_tol" id.name, args) with
+  match (String.is_substring ~substring:"_tol" id.name, args) with
   | false, [] -> ()
   | true, _ -> (
       let arg_tys = List.map ~f:arg_type args in
@@ -748,9 +750,8 @@ let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
     :: {expr= Variable cov_fun; _}
     :: cov_tupl :: train_and_control_args ->
       if theta_init.emeta.type_ <> UnsizedType.UVector then
-        (* TODO(lap) does this need to be dataonly? *)
         Semantic_error.vector_expected theta_init.emeta.loc
-          ("Initial convariance for " ^ id.name)
+          ("Initial guess argument to '" ^ id.name ^ "'")
           theta_init.emeta.type_
         |> error;
       let cov_fun_type, cov_tupl =
@@ -798,16 +799,16 @@ let rec check_laplace_fn ~is_cond_dist loc cf tenv id tes =
     || String.equal "laplace_marginal_tol" id.name
   then check_laplace_marginal ~is_cond_dist loc cf tenv id tes
   else if
-    String.equal "laplace_marginal_rng" id.name
-    || String.equal "laplace_marginal_tol_rng" id.name
-  then check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes
+    String.equal "laplace_latent_rng" id.name
+    || String.equal "laplace_latent_tol_rng" id.name
+  then check_laplace_latent_rng ~is_cond_dist loc cf tenv id tes
   else if String.is_suffix id.name ~suffix:"_rng" then
     check_laplace_helper_rng ~is_cond_dist loc cf tenv id tes
   else check_laplace_helper_prob ~is_cond_dist loc cf tenv id tes
 
 and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
   let fail ~early () =
-    Semantic_error.illtyped_laplace_marginal loc id.name early
+    Semantic_error.illtyped_laplace_generic loc id.name early
       (List.map ~f:arg_type tes)
     |> error in
   match tes with
@@ -822,9 +823,9 @@ and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
       |> Option.value_or_thunk ~default:(fail ~early:false)
   | _ -> fail ~early:true ()
 
-and check_laplace_marginal_rng ~is_cond_dist loc cf tenv id tes =
+and check_laplace_latent_rng ~is_cond_dist loc cf tenv id tes =
   let fail ~early () =
-    Semantic_error.illtyped_laplace_marginal loc id.name early
+    Semantic_error.illtyped_laplace_generic loc id.name early
       (List.map ~f:arg_type tes)
     |> error in
   match tes with
@@ -862,7 +863,7 @@ let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     check_variadic ~is_cond_dist loc cf tenv id tes
   else if Stan_math_signatures.is_reduce_sum_fn id.name then
     check_reduce_sum ~is_cond_dist loc cf tenv id tes
-  else if Stan_math_signatures.is_laplace_marginal_fn id.name then
+  else if Stan_math_signatures.is_embedded_laplace_fn id.name then
     check_laplace_fn ~is_cond_dist loc cf tenv id tes
   else check_normal_fn ~is_cond_dist loc tenv id tes
 
