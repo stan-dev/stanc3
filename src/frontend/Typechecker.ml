@@ -776,7 +776,10 @@ let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
         lik_args
         @ (theta_init :: cov_fun_type :: cov_tupl :: maybe_cov_test)
         @ control_args in
-      Some (mk_fun_app ~is_cond_dist ~loc (StanLib FnPlain) id args ~type_:rt)
+      Some
+        (mk_fun_app ~is_cond_dist ~loc
+           (StanLib (Fun_kind.suffix_from_name id.name))
+           id args ~type_:rt)
   | _ -> None
 
 let check_laplace_helper_lik_args loc id tes =
