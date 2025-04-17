@@ -214,9 +214,6 @@ and check_compatible_arguments depth typs args2 :
 let check_of_same_type_mod_conv = check_same_type 0
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 
-let check_of_same_type_no_promotion t1 t2 =
-  check_same_type 1 t1 t2 |> Result.map ~f:(fun _ -> ())
-
 let check_compatible_arguments_no_promotion t1 t2 =
   check_compatible_arguments 1 t1 t2 |> Result.map ~f:(fun _ -> ())
 

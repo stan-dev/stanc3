@@ -33,9 +33,6 @@ type match_result =
 val check_of_same_type_mod_conv :
   UnsizedType.t -> UnsizedType.t -> (Promotion.t, type_mismatch) result
 
-val check_of_same_type_no_promotion :
-  UnsizedType.t -> UnsizedType.t -> (unit, type_mismatch) result
-
 val check_compatible_arguments_mod_conv :
      UnsizedType.argumentlist
   -> UnsizedType.argumentlist

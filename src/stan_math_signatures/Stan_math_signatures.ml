@@ -203,8 +203,7 @@ let laplace_tolerance_argument_types =
     ; (DataOnly, UInt) (* max_steps_line_search *) ]
 
 let disallowed_second_order =
-  (* TODO(lap): any others? *)
-  [ "algebra_solver"; "algebra_solver_newton"; "integrate_1d"; "integrate_ode"
+  [ "algebra_solver"; "algebra_solver_newton"; "integrate_ode"
   ; "integrate_ode_adams"; "integrate_ode_bdf"; "integrate_ode_rk45"; "map_rect"
   ; "hmm_marginal"; "hmm_hidden_state_prob" ]
   |> String.Set.of_list

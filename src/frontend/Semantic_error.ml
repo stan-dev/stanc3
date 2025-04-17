@@ -64,10 +64,11 @@ module TypeError = struct
     | TupleIndexNotTuple of UnsizedType.t
     | NotIndexable of UnsizedType.t * int
 
-  (* UnsizedType.
-     [ (DataOnly, UReal) (* tolerance *); (DataOnly, UInt) (* max_num_steps *)
-     ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
-     ; (DataOnly, UInt) (* max_steps_line_search *) ] *)
+  let pp_laplace_tols ppf () =
+    Fmt.pf ppf ", %a"
+      Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+      Stan_math_signatures.laplace_tolerance_argument_types
+
   let laplace_tolerance_arg_name n =
     match n with
     | 1 -> "first tolerance argument (tolerance)"
@@ -203,10 +204,7 @@ module TypeError = struct
             if String.is_suffix ~suffix:"_rng" name then ", tuple(T2...)"
             else "" in
           let tols =
-            if String.is_substring ~substring:"_tol" name then fun ppf () ->
-              Fmt.pf ppf ", %a"
-                Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
-                Stan_math_signatures.laplace_tolerance_argument_types
+            if String.is_substring ~substring:"_tol" name then pp_laplace_tols
             else Fmt.nop in
           Fmt.pf ppf "%s%a" rngs tols () in
         let info =
@@ -234,10 +232,7 @@ module TypeError = struct
             if String.is_suffix ~suffix:"_rng" name then ", tuple(...)" else ""
           in
           let tols =
-            if String.is_substring ~substring:"_tol" name then fun ppf () ->
-              Fmt.pf ppf ", %a"
-                Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
-                Stan_math_signatures.laplace_tolerance_argument_types
+            if String.is_substring ~substring:"_tol" name then pp_laplace_tols
             else Fmt.nop in
           Fmt.pf ppf "%s%a" rngs tols () in
         let n = List.length req in
@@ -254,12 +249,6 @@ module TypeError = struct
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           supplied n (n + 2)
     | LaplaceCompatibilityIssue banned_function ->
-        (* Fmt.pf ppf
-           "The likelihood function passed to the embedded laplace family of \
-            functions@ requires the ability to compute@ higher-order \
-            derivatives.@ The function '%s', called by this function, is \
-            currently unsupported."
-           banned_function *)
         Fmt.pf ppf
           "The function '%s', called by this likelihood function,@ does not \
            currently support higher-order derivatives, and@ cannot be used in \

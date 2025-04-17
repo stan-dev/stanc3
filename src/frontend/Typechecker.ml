@@ -29,8 +29,10 @@ let add_warning (span : Location_span.t) (message : string) =
   warnings := (span, message) :: !warnings
 
 let attach_warnings x = (x, List.rev !warnings)
-let require_2nd_derivs = ref []
-let mark_needs_2nd_derivs fn = require_2nd_derivs := fn :: !require_2nd_derivs
+let requires_higher_order_autodiff = ref []
+
+let needs_higher_order_autodiff fn =
+  requires_higher_order_autodiff := fn :: !requires_higher_order_autodiff
 
 (* model name - don't love this here *)
 let model_name = ref ""
@@ -619,7 +621,7 @@ let make_function_variable cf loc id = function
   don't have second derivative support *)
 let verify_second_order_derivative_compatibility (ast : typed_program) =
   let functions = Ast.get_stmts ast.functionblock in
-  let to_check = Queue.of_list (List.rev !require_2nd_derivs) in
+  let to_check = Queue.of_list (List.rev !requires_higher_order_autodiff) in
   let ignore () _ = () in
   let rec check_expr ~loc () = function
     | {expr= FunApp (StanLib _, {name; _}, _); _}
@@ -775,7 +777,7 @@ let check_laplace_trunk ~is_cond_dist ?(can_have_test = false) loc cf tenv id rt
         (mk_fun_app ~is_cond_dist ~loc
            (StanLib (Fun_kind.suffix_from_name id.name))
            id args ~type_:rt)
-  | _ -> None
+  | _ -> None (* let the caller give a better error than we could hope to *)
 
 let check_laplace_helper_lik_args loc id tes =
   let prob_args = Stan_math_signatures.laplace_helper_param_types id.name in
@@ -811,7 +813,7 @@ and check_laplace_marginal ~is_cond_dist loc cf tenv id tes =
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
-        mark_needs_2nd_derivs lik_fun;
+        needs_higher_order_autodiff lik_fun;
         check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
           ~required_args:[("latent gaussian vector", (AutoDiffable, UVector))]
           (UnsizedType.ReturnType UReal) in
@@ -828,7 +830,7 @@ and check_laplace_latent_rng ~is_cond_dist loc cf tenv id tes =
   match tes with
   | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
       let lik_fun, lik_tupl =
-        mark_needs_2nd_derivs lik_fun;
+        needs_higher_order_autodiff lik_fun;
         check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
           ~required_args:[("latent gaussian vector", (AutoDiffable, UVector))]
           (UnsizedType.ReturnType UReal) in
@@ -2201,7 +2203,7 @@ let check_program_exn
      ; generatedquantitiesblock= gqb
      ; comments } as ast) =
   warnings := [];
-  require_2nd_derivs := [];
+  requires_higher_order_autodiff := [];
   (* create a new type environment which has only stan-math functions *)
   let tenv = Env.stan_math_environment in
   let tenv = add_userdefined_functions tenv fb in
