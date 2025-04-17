@@ -71,12 +71,12 @@ module TypeError = struct
 
   let laplace_tolerance_arg_name n =
     match n with
-    | 1 -> "first tolerance argument (tolerance)"
-    | 2 -> "second tolerance argument (max_num_steps)"
-    | 3 -> "third tolerance argument (hessian_block_size)"
-    | 4 -> "fourth tolerance argument (solver)"
-    | 5 -> "fifth tolerance argument (max_steps_line_search)"
-    | n -> Printf.sprintf "%dth tolerance argument" n
+    | 1 -> "first control parameter (tolerance)"
+    | 2 -> "second control parameter (max_num_steps)"
+    | 3 -> "third control parameter (hessian_block_size)"
+    | 4 -> "fourth control parameter (solver)"
+    | 5 -> "fifth control parameter (max_steps_line_search)"
+    | n -> Printf.sprintf "%dth control parameter" n
 
   let pp ppf = function
     | IncorrectReturnType (t1, t2) ->
@@ -271,13 +271,13 @@ module TypeError = struct
     | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->
         Fmt.pf ppf
           "@[<v>Recieved %d argument%s at the end of the call to '%s'.@ \
-           Expected 5 arguments for the tolerances instead.@]"
+           Expected 5 arguments for the control parameters instead.@]"
           found
           (if found > 1 then "s" else "")
           name
     | IlltypedLaplaceTolArgs (name, ArgError (n, DataOnlyError)) ->
         Fmt.pf ppf
-          "@[<hov>The tolerance arguments to '%s'@ must all be data-only,@ but \
+          "@[<hov>The control parameters to '%s'@ must all be data-only,@ but \
            the %a here is not.@ %a@]"
           name Fmt.string
           (laplace_tolerance_arg_name n)

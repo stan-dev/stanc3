@@ -258,7 +258,7 @@ Semantic error in 'bad_tol3.stan', line 40, column 80 to column 81:
    -------------------------------------------------
 
 Recieved 4 arguments at the end of the call to 'laplace_latent_tol_rng'.
-Expected 5 arguments for the tolerances instead.
+Expected 5 arguments for the control parameters instead.
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol4.stan
 Semantic error in 'bad_tol4.stan', line 47, column 32 to column 35:
@@ -271,10 +271,10 @@ Semantic error in 'bad_tol4.stan', line 47, column 32 to column 35:
     49:  }
    -------------------------------------------------
 
-The tolerance arguments to 'laplace_marginal_tol' must all be data-only,
-but the first tolerance argument (tolerance) here is not. (Local variables
-are assumed to depend on parameters; same goes for function inputs unless
-they are marked with the keyword 'data'.)
+The control parameters to 'laplace_marginal_tol' must all be data-only,
+but the first control parameter (tolerance) here is not. (Local variables are
+assumed to depend on parameters; same goes for function inputs unless they
+are marked with the keyword 'data'.)
 [exit 1]
   $ ../../../../../install/default/bin/stanc bad_tol5.stan
 Semantic error in 'bad_tol5.stan', line 40, column 80 to column 81:
@@ -286,7 +286,7 @@ Semantic error in 'bad_tol5.stan', line 40, column 80 to column 81:
     41:  }
    -------------------------------------------------
 
-The fifth tolerance argument (max_steps_line_search) to 'laplace_latent_tol_rng'
+The fifth control parameter (max_steps_line_search) to 'laplace_latent_tol_rng'
 must be int but got real.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args1.stan
@@ -453,5 +453,5 @@ Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 67
    -------------------------------------------------
 
 Recieved 0 argument at the end of the call to 'laplace_latent_tol_neg_binomial_2_log_rng'.
-Expected 5 arguments for the tolerances instead.
+Expected 5 arguments for the control parameters instead.
 [exit 1]
