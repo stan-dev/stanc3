@@ -10,6 +10,8 @@ module TypeError = struct
     | InvalidMatrixTypes of UnsizedType.t
     | IntExpected of string * UnsizedType.t
     | IntOrRealExpected of string * UnsizedType.t
+    | TupleExpected of string * UnsizedType.t
+    | VectorExpected of string * UnsizedType.t
     | TypeExpected of string * UnsizedType.t * UnsizedType.t
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
@@ -21,20 +23,28 @@ module TypeError = struct
     | IllTypedReduceSum of
         string
         * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
+        * UnsizedType.argumentlist
         * SignatureMismatch.function_mismatch
     | IllTypedVariadic of
         string
         * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
+        * UnsizedType.argumentlist
         * SignatureMismatch.function_mismatch
         * UnsizedType.t
+    | IllTypedForwardedFunctionApp of
+        string * string * string list * SignatureMismatch.details
+    | IllTypedLaplaceCallback of string * string * SignatureMismatch.details
+    | IllTypedLaplaceHelperArgs of
+        string * UnsizedType.argumentlist * SignatureMismatch.details
+    | IllTypedLaplaceMarginal of string * bool * UnsizedType.argumentlist
+    | IllTypedLaplaceHelperGeneric of string * UnsizedType.argumentlist
+    | LaplaceCompatibilityIssue of string
+    | IlltypedLaplaceTooMany of string * int
+    | IlltypedLaplaceTolArgs of string * SignatureMismatch.function_mismatch
     | AmbiguousFunctionPromotion of
         string
         * UnsizedType.t list option
-        * (UnsizedType.returntype
-          * (UnsizedType.autodifftype * UnsizedType.t) list)
-          list
+        * (UnsizedType.returntype * UnsizedType.argumentlist) list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string * string option
@@ -53,6 +63,20 @@ module TypeError = struct
     | TupleIndexInvalidIndex of int * int
     | TupleIndexNotTuple of UnsizedType.t
     | NotIndexable of UnsizedType.t * int
+
+  let pp_laplace_tols ppf () =
+    Fmt.pf ppf ", %a"
+      Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+      Stan_math_signatures.laplace_tolerance_argument_types
+
+  let laplace_tolerance_arg_name n =
+    match n with
+    | 1 -> "first control parameter (tolerance)"
+    | 2 -> "second control parameter (max_num_steps)"
+    | 3 -> "third control parameter (hessian_block_size)"
+    | 4 -> "fourth control parameter (solver)"
+    | 5 -> "fifth control parameter (max_steps_line_search)"
+    | n -> Printf.sprintf "%dth control parameter" n
 
   let pp ppf = function
     | IncorrectReturnType (t1, t2) ->
@@ -79,6 +103,12 @@ module TypeError = struct
           UnsizedType.pp ut
     | IntOrRealExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int or real. Instead found type %a." name
+          UnsizedType.pp ut
+    | TupleExpected (name, ut) ->
+        Fmt.pf ppf "%s must be a tuple.@ Instead found type %a." name
+          UnsizedType.pp ut
+    | VectorExpected (name, ut) ->
+        Fmt.pf ppf "%s must be a vector.@ Instead found type %a." name
           UnsizedType.pp ut
     | TypeExpected (name, (UInt | UReal | UComplex), ut) ->
         Fmt.pf ppf "%s must be a scalar. Instead found type %a." name
@@ -147,6 +177,107 @@ module TypeError = struct
           ( name
           , arg_tys
           , ([((UnsizedType.ReturnType return_type, args), error)], false) )
+    | IllTypedForwardedFunctionApp (caller, name, skipped, details) ->
+        Fmt.pf ppf
+          "Cannot call '%s'@ with arguments forwarded from call to@ '%s':@ %a"
+          name caller
+          (SignatureMismatch.pp_mismatch_details ~skipped)
+          details
+    | IllTypedLaplaceCallback (caller, name, details) ->
+        Fmt.pf ppf
+          "Function '%s' does not have a valid signature for use in '%s':@ %a"
+          name caller
+          (SignatureMismatch.pp_mismatch_details ~skipped:[])
+          details
+    | IllTypedLaplaceHelperArgs (name, expected, details) ->
+        Fmt.pf ppf
+          "@[<v>Ill-typed arguments supplied to function '%s'@ for the \
+           likelihood:@ %a@ Expected the arguments to start with:@ @[(%a)@]@]"
+          name
+          (SignatureMismatch.pp_mismatch_details ~skipped:[])
+          details
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+          expected
+    | IllTypedLaplaceMarginal (name, early, supplied) ->
+        let extra_args =
+          if String.is_substring ~substring:"_tol" name then pp_laplace_tols
+          else Fmt.nop in
+        let info =
+          if early then
+            "We were unable to start more in-depth checking. Please ensure you \
+             are passing enough arguments and and that the first argument is a \
+             function."
+          else
+            "Typechecking failed after checking the first two arguments. \
+             Please ensure you are passing enough arguments and that the \
+             fourth is a function." in
+        Fmt.pf ppf
+          "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \
+           signature of this function is@ @[<hov 2>%s((vector, T1...) => \
+           real,@ tuple(T1...),@ vector,@ (T2...) => matrix,@ \
+           tuple(T2...)%a)@]@ However, we recieved the types:@ @[<hov \
+           2>(%a)@]@ @[%a@]@]"
+          name name extra_args ()
+          (Fmt.list ~sep:Fmt.comma UnsizedType.pp_fun_arg)
+          supplied Fmt.text info
+    | IllTypedLaplaceHelperGeneric (name, supplied) ->
+        let req = Stan_math_signatures.laplace_helper_param_types name in
+        let extra_args =
+          if String.is_substring ~substring:"_tol" name then pp_laplace_tols
+          else Fmt.nop in
+        let n = List.length req in
+        Fmt.pf ppf
+          "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \
+           signature of this function is@ @[<hov 2>%s(%a,@ vector,@ (...) => \
+           matrix,@ tuple(...)%a)@]@ However, we recieved the types:@ @[<hov \
+           2>(%a)@]@ Typechecking failed after checking the first %d \
+           arguments.@ Please ensure you are passing enough arguments and that \
+           the %dth is a function.@]"
+          name name
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+          req extra_args ()
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
+          supplied n (n + 2)
+    | LaplaceCompatibilityIssue banned_function ->
+        Fmt.pf ppf
+          "The function '%s', called by this likelihood function,@ does not \
+           currently support higher-order derivatives, and@ cannot be used in \
+           an embedded Laplace approximation."
+          banned_function
+    | IlltypedLaplaceTooMany (name, n_args) ->
+        let extra = not (String.is_substring ~substring:"_tol" name) in
+        Fmt.pf ppf
+          "Recieved %d extra argument%s at the end of the call to '%s'.%a%a"
+          n_args
+          (if n_args > 1 then "s" else "")
+          name
+          (if extra then Fmt.cut else Fmt.nop)
+          ()
+          (if extra then Fmt.string else Fmt.nop)
+          "Did you mean to call the _tol version?"
+        (* For tolerances, because these come at the end,
+           we want to update their accordingly, which is why these
+           sort-of reimplement some of the printing from [SignatureMismatch] *)
+    | IlltypedLaplaceTolArgs (name, ArgNumMismatch (_, found)) ->
+        Fmt.pf ppf
+          "@[<v>Recieved %d argument%s at the end of the call to '%s'.@ \
+           Expected 5 arguments for the control parameters instead.@]"
+          found
+          (if found > 1 then "s" else "")
+          name
+    | IlltypedLaplaceTolArgs (name, ArgError (n, DataOnlyError)) ->
+        Fmt.pf ppf
+          "@[<hov>The control parameters to '%s'@ must all be data-only,@ but \
+           the %a here is not.@ %a@]"
+          name Fmt.string
+          (laplace_tolerance_arg_name n)
+          Fmt.text SignatureMismatch.data_only_msg
+    | IlltypedLaplaceTolArgs
+        (name, ArgError (n, TypeMismatch (expected, found, _))) ->
+        Fmt.pf ppf "@[<hov>The %a to '%s'@ must be@ %a but got@ %a.@]"
+          Fmt.string
+          (laplace_tolerance_arg_name n)
+          name UnsizedType.pp expected UnsizedType.pp found
     | AmbiguousFunctionPromotion (name, arg_tys, signatures) ->
         let pp_sig ppf (rt, args) =
           Fmt.pf ppf "@[<hov>(@[<hov>%a@]) => %a@]"
@@ -374,8 +505,7 @@ module StatementError = struct
     | InvalidTildeNoSuchDistribution of string * bool
     | TargetPlusEqualsOutsideModelOrLogProb
     | JacobianPlusEqualsNotAllowed
-    | InvalidTruncationCDForCCDF of
-        (UnsizedType.autodifftype * UnsizedType.t) list
+    | InvalidTruncationCDForCCDF of UnsizedType.argumentlist
     | BreakOutsideLoop
     | ContinueOutsideLoop
     | ExpressionReturnOutsideReturningFn
@@ -573,6 +703,12 @@ let int_expected loc name ut = TypeError (loc, TypeError.IntExpected (name, ut))
 let int_or_real_expected loc name ut =
   TypeError (loc, TypeError.IntOrRealExpected (name, ut))
 
+let tuple_expected loc name ut =
+  TypeError (loc, TypeError.TupleExpected (name, ut))
+
+let vector_expected loc name ut =
+  TypeError (loc, TypeError.VectorExpected (name, ut))
+
 let scalar_or_type_expected loc name et ut =
   TypeError (loc, TypeError.TypeExpected (name, et, ut))
 
@@ -605,6 +741,33 @@ let illtyped_reduce_sum loc name arg_tys args error =
 
 let illtyped_variadic loc name arg_tys args fn_rt error =
   TypeError (loc, TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
+
+let forwarded_function_error loc caller name required_args details =
+  TypeError
+    ( loc
+    , TypeError.IllTypedForwardedFunctionApp
+        (caller, name, required_args, details) )
+
+let illtyped_laplace_callback loc caller name details =
+  TypeError (loc, TypeError.IllTypedLaplaceCallback (caller, name, details))
+
+let illtyped_laplace_helper_args loc name lik_args details =
+  TypeError (loc, TypeError.IllTypedLaplaceHelperArgs (name, lik_args, details))
+
+let illtyped_laplace_generic loc name early supplied =
+  TypeError (loc, TypeError.IllTypedLaplaceMarginal (name, early, supplied))
+
+let illtyped_laplace_helper_generic loc name supplied =
+  TypeError (loc, TypeError.IllTypedLaplaceHelperGeneric (name, supplied))
+
+let laplace_compatibility loc banned_function =
+  TypeError (loc, TypeError.LaplaceCompatibilityIssue banned_function)
+
+let illtyped_laplace_extra_args loc name args =
+  TypeError (loc, TypeError.IlltypedLaplaceTooMany (name, args))
+
+let illtyped_laplace_tolerance_args loc name mismatch =
+  TypeError (loc, TypeError.IlltypedLaplaceTolArgs (name, mismatch))
 
 let ambiguous_function_promotion loc name arg_tys signatures =
   TypeError

@@ -338,11 +338,10 @@ let get_functor_requirements (p : Program.Numbered.t) =
     | {pattern= FunApp (StanLib (hof, FnPlain, _), args); _} ->
         let f accum = function
           | { pattern= Var name
-            ; meta= {Expr.Typed.Meta.type_= UnsizedType.UFun (args, _, _, _); _}
-            } ->
+            ; meta= {Expr.Typed.Meta.type_= UnsizedType.UFun _; _} } ->
               Map.add_multi accum
                 ~key:(Utils.stdlib_distribution_name name)
-                ~data:(Lower_expr.functor_type hof, List.map ~f:snd args)
+                ~data:(Lower_expr.functor_type hof)
           | e -> find_functors_expr accum e in
         List.fold ~init ~f args
     | {pattern; _} -> Pattern.fold find_functors_expr init pattern in
@@ -356,17 +355,10 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let functor_required = get_functor_requirements p in
   (* overloaded functions generate only one functor struct per name *)
   let structs = String.Table.create () in
-  let matching_argtypes Program.{fdargs; _} arg_types =
-    List.equal UnsizedType.equal
-      (List.map ~f:(fun (_, _, t) -> t) fdargs)
-      arg_types in
   let register_functors (d : _ Program.fun_def) =
     let functors =
       Map.find_multi functor_required d.fdname
-      |> Set.Poly.of_list
-      |> Set.Poly.filter_map ~f:(fun (hof, types) ->
-             if matching_argtypes d types then Some hof else None)
-      |> Set.to_list in
+      |> List.dedup_and_sort ~compare:compare_variadic in
     let fn, st = lower_fun_def functors d in
     List.iter st ~f:(fun s ->
         (* Side effecting, collates functor structs *)

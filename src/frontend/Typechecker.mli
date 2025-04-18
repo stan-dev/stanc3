@@ -32,12 +32,12 @@ val check_program :
 
 val operator_stan_math_return_type :
      Middle.Operator.t
-  -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
+  -> Middle.UnsizedType.argumentlist
   -> (Middle.UnsizedType.returntype * Promotion.t list) option
 
 val stan_math_return_type :
      string
-  -> (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t) list
+  -> Middle.UnsizedType.argumentlist
   -> Middle.UnsizedType.returntype option
 
 val model_name : string ref
