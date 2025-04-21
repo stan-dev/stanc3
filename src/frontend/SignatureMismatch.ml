@@ -487,7 +487,7 @@ let pp_math_lib_assignmentoperator_sigs ppf (lt, op) =
     Fmt.pf ppf "@[<v>%a%a@]"
       (Fmt.list ~sep:Fmt.cut UnsizedType.pp_math_sig)
       signatures
-      (if omitted then Fmt.pf else Fmt.nop)
+      Fmt.(if' omitted pf)
       "@ (Additional signatures omitted)" in
   Fmt.pf ppf "%a"
     (Fmt.option ~none:(Fmt.any "No matching signatures") pp_sigs)
