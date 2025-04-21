@@ -199,9 +199,6 @@ module TypeError = struct
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           expected
     | IllTypedLaplaceMarginal (name, early, supplied) ->
-        let extra_args =
-          if String.is_substring ~substring:"_tol" name then pp_laplace_tols
-          else Fmt.nop in
         let info =
           if early then
             "We were unable to start more in-depth checking. Please ensure you \
@@ -217,14 +214,13 @@ module TypeError = struct
            real,@ tuple(T1...),@ vector,@ (T2...) => matrix,@ \
            tuple(T2...)%a)@]@ However, we recieved the types:@ @[<hov \
            2>(%a)@]@ @[%a@]@]"
-          name name extra_args ()
-          (Fmt.list ~sep:Fmt.comma UnsizedType.pp_fun_arg)
+          name name
+          Fmt.(if' (String.is_substring ~substring:"_tol" name) pp_laplace_tols)
+          ()
+          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           supplied Fmt.text info
     | IllTypedLaplaceHelperGeneric (name, supplied) ->
         let req = Stan_math_signatures.laplace_helper_param_types name in
-        let extra_args =
-          if String.is_substring ~substring:"_tol" name then pp_laplace_tols
-          else Fmt.nop in
         let n = List.length req in
         Fmt.pf ppf
           "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \
@@ -235,7 +231,9 @@ module TypeError = struct
            the %dth is a function.@]"
           name name
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
-          req extra_args ()
+          req
+          Fmt.(if' (String.is_substring ~substring:"_tol" name) pp_laplace_tols)
+          ()
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           supplied n (n + 2)
     | LaplaceCompatibilityIssue banned_function ->
@@ -245,16 +243,11 @@ module TypeError = struct
            an embedded Laplace approximation."
           banned_function
     | IlltypedLaplaceTooMany (name, n_args) ->
-        let extra = not (String.is_substring ~substring:"_tol" name) in
         Fmt.pf ppf
-          "Recieved %d extra argument%s at the end of the call to '%s'.%a%a"
+          "Recieved %d extra argument%s at the end of the call to '%s'.@ %a"
           n_args
           (if n_args > 1 then "s" else "")
-          name
-          (if extra then Fmt.cut else Fmt.nop)
-          ()
-          (if extra then Fmt.string else Fmt.nop)
-          "Did you mean to call the _tol version?"
+          name Fmt.string "Did you mean to call the _tol version?"
         (* For tolerances, because these come at the end,
            we want to update their accordingly, which is why these
            sort-of reimplement some of the printing from [SignatureMismatch] *)

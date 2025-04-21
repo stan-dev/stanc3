@@ -344,12 +344,11 @@ let pp_mismatch_details ?(skipped = []) ppf details =
   let ctx = ref TypeMap.empty in
   let n_skipped = List.length skipped in
   let pp_skipped_index_str ppf n =
-    if n_skipped = 0 then Fmt.pf ppf "%s argument" (index_str n)
+    if n_skipped = 0 then pf ppf "%s argument" (index_str n)
     else
-      Fmt.pf ppf "%s argument (excluding the %a argument%s)"
+      pf ppf "%s argument (excluding the %a argument%s)"
         (index_str (n - n_skipped))
-        Fmt.(list ~sep:comma string)
-        skipped
+        (list ~sep:comma string) skipped
         (if n_skipped = 1 then "" else "s") in
   match details with
   | SuffixMismatch (expected, found) ->
@@ -362,12 +361,10 @@ let pp_mismatch_details ?(skipped = []) ppf details =
   | InputMismatch (ArgNumMismatch (expected, found)) ->
       pf ppf "@[<hov>Expected %d arguments%a@ but got %d arguments.@]"
         (expected - n_skipped)
-        (if n_skipped = 0 then Fmt.nop
-         else fun ppf () ->
-           pf ppf " (excluding the %a argument%s)"
-             Fmt.(list ~sep:comma string)
-             skipped
-             (if n_skipped = 1 then "" else "s"))
+        (if' (n_skipped > 0) (fun ppf () ->
+             pf ppf " (excluding the %a argument%s)" (list ~sep:comma string)
+               skipped
+               (if n_skipped = 1 then "" else "s")))
         () (found - n_skipped)
   | InputMismatch (ArgError (n, DataOnlyError)) ->
       pf ppf "@[<hov>The@ %a is marked data-only. %a@]" pp_skipped_index_str n
