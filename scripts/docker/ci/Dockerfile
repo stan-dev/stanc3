@@ -46,7 +46,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Copy our script and install ocaml + init
 COPY ./scripts/install_opam.sh ./
-RUN opam update; printf "\n" | bash -x install_opam.sh
+RUN printf "\n" | bash -x install_opam.sh
 
 # Install and initialize ocaml
 COPY ./scripts/install_ocaml.sh ./
