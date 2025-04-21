@@ -15936,8 +15936,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
           current_statement__ = 13;
           stan::model::assign(r, std::get<0>(sym1__), "assigning variable r");
           current_statement__ = 13;
-          stan::model::assign(z, std::get<1>(sym1__), "assigning variable z",
-            stan::model::index_omni());
+          stan::model::assign(z, std::get<1>(sym1__), "assigning variable z");
           current_statement__ = 13;
           stan::model::assign(v, std::get<2>(sym1__), "assigning variable v");
         }
@@ -16088,8 +16087,7 @@ class unpack_promote_model final : public model_base_crtp<unpack_promote_model> 
           current_statement__ = 13;
           stan::model::assign(r, std::get<0>(sym1__), "assigning variable r");
           current_statement__ = 13;
-          stan::model::assign(z, std::get<1>(sym1__), "assigning variable z",
-            stan::model::index_omni());
+          stan::model::assign(z, std::get<1>(sym1__), "assigning variable z");
           current_statement__ = 13;
           stan::model::assign(v, std::get<2>(sym1__), "assigning variable v");
         }

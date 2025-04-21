@@ -7,7 +7,7 @@ ARG PUID
 ARG PGID
 
 # Set the opam root
-ENV OPAMROOT /usr/local/opam
+ENV OPAMROOT=/usr/local/opam
 
 # Install OS dependencies
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
@@ -40,30 +40,29 @@ RUN chown -R jenkins:sudo /usr/local
 USER jenkins
 WORKDIR /home/jenkins
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # OCaml setup
 
 # Copy our script and install ocaml + init
 COPY ./scripts/install_opam.sh ./
 RUN printf "\n" | bash -x install_opam.sh
-RUN opam update
 
 # Install and initialize ocaml
 COPY ./scripts/install_ocaml.sh ./
-RUN printf "\n" | bash -x install_ocaml.sh "stanc"
+RUN opam update; printf "\n" | bash -x install_ocaml.sh "stanc"
 
 # Install build dependencies
 COPY ./scripts/install_build_deps_windows.sh ./
-RUN bash -x install_build_deps_windows.sh
+RUN opam update; bash -x install_build_deps_windows.sh
 
 # Install Javascript dev environment (js_of_ocaml 5.9.1)
 COPY ./scripts/install_js_deps.sh ./
-RUN bash -x install_js_deps.sh
+RUN opam update; bash -x install_js_deps.sh
 
 # Install dev dependencies
 COPY ./scripts/install_dev_deps.sh ./
-RUN bash -x install_dev_deps.sh
+RUN opam update; bash -x install_dev_deps.sh
 
 # Specify our entrypoint
-ENTRYPOINT [ "opam", "config", "exec", "--" ]
+ENTRYPOINT [ "opam", "exec", "--" ]

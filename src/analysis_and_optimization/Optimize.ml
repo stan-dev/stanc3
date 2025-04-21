@@ -852,7 +852,7 @@ and unenforce_initialize (lst : Stmt.Located.t list) =
         match List.hd sub_lst with
         | Some next_stmt -> (
             match find_assignment_idx decl_id next_stmt with
-            | Some ([] | [Index.All] | [Index.All; Index.All]) ->
+            | Some idxs when Index.every_index_is_all idxs ->
                 { stmt with
                   pattern=
                     Stmt.Fixed.Pattern.Decl {decl_pat with initialize= Uninit}

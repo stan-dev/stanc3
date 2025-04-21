@@ -299,42 +299,62 @@ let extract_transform_args var = function
    |TupleTransformation _ | StochasticRow | StochasticColumn ->
       []
 
-let rec param_size transform sizedtype =
-  let rec shrink_eigen f st =
-    match st with
-    | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
-    | SVector (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
-        SVector (mem_pattern, f d)
-    | SInt | SReal | SComplex | SRowVector _ | STuple _ | SComplexRowVector _
-     |SComplexVector _ | SComplexMatrix _ ->
+(** Allows [shrink_helper] to operate either on each dimension independently
+   or on both matrix dimensions at once *)
+type size_change =
+  | Univariate of (Expr.Typed.t -> Expr.Typed.t)
+  | Multivariate of (Expr.Typed.t -> Expr.Typed.t -> Expr.Typed.t)
+
+(** We need to compute somewhat arbitrary new sizes for the unconstrained
+    parameters. This function handles the primary cases:
+
+  - A vector of size N is transformed to a vector of size (f N)
+  - A matrix of size N x M is transformed to a vector of size (f N) x (f_d2 M)
+  - A matrix of size N x N is transformed to a vector of size (f N M)
+  - Arrays of the above are handled recursively
+*)
+let rec shrink_helper (f : size_change) f_d2 st =
+  let f_assert_univariate d =
+    match f with
+    | Univariate f -> f d
+    | Multivariate _ ->
         Common.ICE.internal_compiler_error
           [%message
-            "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
-  in
-  let rec shrink_eigen_mat f st =
-    match st with
-    | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
-    | SMatrix (mem_pattern, d1, d2) -> SVector (mem_pattern, f d1 d2)
-    | SInt | SReal | SComplex | SRowVector _ | SVector _ | STuple _
-     |SComplexRowVector _ | SComplexVector _ | SComplexMatrix _ ->
-        Common.ICE.internal_compiler_error
-          [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
-  in
+            "To shrink a vector, the first argument must be a univariate \
+             function "
+              (st : Expr.Typed.t SizedType.t)] in
+  match st with
+  | SizedType.SArray (t, d) -> SizedType.SArray (shrink_helper f f_d2 t, d)
+  | SVector (mem_pattern, d) -> SVector (mem_pattern, f_assert_univariate d)
+  | SRowVector (mem_pattern, d) ->
+      SRowVector (mem_pattern, f_assert_univariate d)
+  | SMatrix (mem_pattern, d1, d2) -> (
+      match f with
+      | Univariate f_d1 -> SMatrix (mem_pattern, f_d1 d1, f_d2 d2)
+      | Multivariate f -> SVector (mem_pattern, f d1 d2))
+  | SInt | SReal | SComplex | STuple _ | SComplexRowVector _
+   |SComplexVector _ | SComplexMatrix _ ->
+      Common.ICE.internal_compiler_error
+        [%message
+          "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
+
+let rec transform_sizedtype transformation sizedtype =
+  (* Functions for computing the new sizetype after some transformation *)
+  let shrink_eigen_mat f st =
+    (* Matrices become vectors, with size computed by [f] *)
+    shrink_helper (Multivariate f) Fn.id st in
+  let shrink_eigen_vec f st =
+    (* Matrices are mapped to vectors, only depending on their first dimension for sizing *)
+    shrink_eigen_mat (fun x _ -> f x) st in
+  let shrink_eigen f1 f2 st =
+    (* Types don't change, just sizes *)
+    shrink_helper (Univariate f1) f2 st in
+  (* Helper functions for computing the new sizes *)
+  let minus_one d = Expr.Helpers.(binop d Minus (int 1)) in
   let k_choose_2 k =
     Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
-  let rec stoch_size f1 f2 st =
-    match st with
-    | SizedType.SMatrix (mem_pattern, d1, d2) ->
-        SizedType.SMatrix (mem_pattern, f1 d1, f2 d2)
-    | SArray (t, d) -> SizedType.SArray (stoch_size f1 f2 t, d)
-    | SInt | SReal | SComplex | SRowVector _ | SVector _ | STuple _
-     |SComplexRowVector _ | SComplexVector _ | SComplexMatrix _ ->
-        Common.ICE.internal_compiler_error
-          [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
-  in
-  let min_one d = Expr.Helpers.(binop d Minus (int 1)) in
-  match transform with
+  match transformation with
   | Transformation.Identity | Lower _ | Upper _
    |LowerUpper (_, _)
    |Offset _ | Multiplier _
@@ -348,14 +368,17 @@ let rec param_size transform sizedtype =
       SizedType.build_sarray dims
         (SizedType.STuple
            (List.map subtypes_transforms ~f:(fun (st, trans) ->
-                param_size trans st)))
-  | Simplex | SumToZero ->
-      shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
-  | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
-  | StochasticRow -> stoch_size Fn.id min_one sizedtype
-  | StochasticColumn -> stoch_size min_one Fn.id sizedtype
+                transform_sizedtype trans st)))
+  | SumToZero -> shrink_eigen minus_one minus_one sizedtype
+  | Simplex | StochasticColumn -> shrink_eigen minus_one Fn.id sizedtype
+  | StochasticRow -> shrink_eigen Fn.id minus_one sizedtype
+  | CholeskyCorr | Correlation -> shrink_eigen_vec k_choose_2 sizedtype
+  | Covariance ->
+      shrink_eigen_vec
+        (fun k -> Expr.Helpers.(binop k Plus (k_choose_2 k)))
+        sizedtype
   | CholeskyCov ->
-      (* (N * (N + 1)) / 2 + (M - N) * N *)
+      (* choose(N, 2) + (M - N) * N *)
       shrink_eigen_mat
         (fun m n ->
           Expr.Helpers.(
@@ -363,10 +386,6 @@ let rec param_size transform sizedtype =
               (binop (k_choose_2 n) Plus n)
               Plus
               (binop (binop m Minus n) Times n)))
-        sizedtype
-  | Covariance ->
-      shrink_eigen
-        (fun k -> Expr.Helpers.(binop k Plus (k_choose_2 k)))
         sizedtype
 
 let rec check_decl var decl_type' decl_trans smeta adlevel =
@@ -855,7 +874,8 @@ let trans_block ud_dists declc block prog =
                    , smeta.Ast.loc
                    , Program.
                        { out_constrained_st= type_
-                       ; out_unconstrained_st= param_size transform type_
+                       ; out_unconstrained_st=
+                           transform_sizedtype transform type_
                        ; out_block= block
                        ; out_trans= transform } ) in
                  let stmts =
