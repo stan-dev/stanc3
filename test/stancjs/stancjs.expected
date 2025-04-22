@@ -292,7 +292,7 @@ Warning: stanc.js failed to parse included file mapping:
 Failed to convert stanc.js argument 'includes["baz"]'!
 It had type 'number' instead of 'string'.
 {
-  "inputs": { "a": { "type": "int", "dimensions": 0 } },
+  "inputs": { "a": { "type": "int", "dimensions": 0, "constraint": "none" } },
   "parameters": {},
   "transformed parameters": {},
   "generated quantities": {},
