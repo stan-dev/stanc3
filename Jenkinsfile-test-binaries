@@ -17,6 +17,12 @@ def binaryName(String arch) {
 }
 
 def checkoutRepository() {
+    checkout([
+        $class: 'GitSCM',
+        branches: scm.branches,
+        extensions: [[$class: 'CloneOption', noTags: false]],
+        userRemoteConfigs: scm.userRemoteConfigs,
+    ])
     if(params.git_branch.contains("PR-")){
         pr_number = params.git_branch.split("-")[1]
         sh "git fetch origin pull/${pr_number}/head:pr/${pr_number}"
@@ -36,7 +42,8 @@ pipeline {
     }
     options {
         parallelsAlwaysFailFast()
-        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30'))
+        buildDiscarder(logRotator(numToKeepStr: '20', daysToKeepStr: '30', artifactDaysToKeepStr: '100'))
+        skipDefaultCheckout()
     }
     environment {
         MACOS_SWITCH = 'stanc3-4.14'
