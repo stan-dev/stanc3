@@ -16,17 +16,16 @@ def binaryName(String arch) {
     return "linux-${arch}-stanc"
 }
 
-def cleanCheckout() {
-    retry(3) {
-        checkout([
-            $class: 'GitSCM',
-            branches: scm.branches,
-            extensions: [[$class: 'CloneOption', noTags: false]],
-            userRemoteConfigs: scm.userRemoteConfigs,
-        ])
-    }
+def checkoutRepository() {
+    if(params.git_branch.contains("PR-")){
+        pr_number = params.git_branch.split("-")[1]
+        sh "git fetch origin pull/${pr_number}/head:pr/${pr_number}"
+        sh "git checkout pr/${pr_number}"
 
-    sh 'git clean -xffd'
+    }
+    else{
+        sh "git checkout master && git pull && git checkout ${params.git_branch} && git pull origin ${params.git_branch}"
+    }
 }
 
 pipeline {
@@ -45,13 +44,6 @@ pipeline {
     stages {
 
         stage('Build (Linux)') {
-            when {
-                beforeAgent true
-                allOf {
-                    expression { !skipRebuildingBinaries }
-                    anyOf { buildingTag(); branch 'master'; expression { params.build_multiarch } }
-                }
-            }
             matrix {
                 axes {
                     axis {
@@ -72,7 +64,7 @@ pipeline {
                         }
                         steps {
                             dir("${env.WORKSPACE}/linux-${ARCHITECTURE}"){
-                                cleanCheckout()
+                                checkoutRepository()
                                 sh '''
                                     eval $(opam env)
                                     dune subst
@@ -90,30 +82,6 @@ pipeline {
 
         stage('Build (Other platforms)') {
             parallel {
-                stage("Build static Linux x86_64 binary") {
-                    agent {
-                        dockerfile {
-                            filename 'scripts/docker/static-builder/Dockerfile'
-                            dir '.'
-                            label 'linux && triqs'
-                            args '--group-add=987 --group-add=980 --group-add=988 --entrypoint=\'\''
-                            additionalBuildArgs  '--build-arg PUID=$(id -u) --build-arg PGID=$(id -g)'
-                        }
-                    }
-                    steps {
-                        dir("${env.WORKSPACE}/linux"){
-                            cleanCheckout()
-                            sh '''
-                                eval $(opam env)
-                                dune subst
-                                dune build --profile static --root=.
-                            '''
-                            sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                            archiveArtifacts 'bin/*'
-                        }
-                    }
-                    post {always { sh "rm -rf ${env.WORKSPACE}/linux/*"}}
-                }
 
                 stage("Build MacOS binaries") {
                     agent none
@@ -122,7 +90,7 @@ pipeline {
                             agent { label 'osx && intel' }
                             steps {
                                 dir("${env.WORKSPACE}/osx-x86"){
-                                    cleanCheckout()
+                                    checkoutRepository()
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX10.11.sdk', 'MACOSX_DEPLOYMENT_TARGET=10.11']) {
                                         sh '''
                                             export PATH=/Users/jenkins/brew/bin:$PATH
@@ -137,7 +105,7 @@ pipeline {
                                         '''
                                     }
                                     sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-x86-stanc"
-                                    stash 'bin/*'
+                                    stash name:'mac-x86-exe', includes:'bin/*'
                                 }
                             }
                             post { always { sh "rm -rf ${env.WORKSPACE}/osx-x86/*" }}
@@ -147,7 +115,7 @@ pipeline {
                             agent { label 'osx && m1' }
                             steps {
                                 dir("${env.WORKSPACE}/osx-arm64"){
-                                    cleanCheckout()
+                                    checkoutRepository()
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
                                         sh '''
                                             export PATH=/Users/jenkins/brew/bin:$PATH
@@ -161,7 +129,7 @@ pipeline {
                                         '''
                                     }
                                     sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-arm64-stanc"
-                                    stash 'bin/*'
+                                    stash name:'mac-arm64-exe', includes:'bin/*'
                                 }
                             }
                             post { always { sh "rm -rf ${env.WORKSPACE}/osx-arm64/*" }}
@@ -171,8 +139,8 @@ pipeline {
                             agent { label 'osx && m1' }
                             steps {
                                 dir("${env.WORKSPACE}/osx-universal"){
-                                    stash 'bin/*'
-                                    stash 'bin/*'
+                                    unstash 'mac-arm64-exe'
+                                    unstash 'mac-x86-exe'
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
                                         sh "lipo -create bin/mac-x86-stanc bin/mac-arm64-stanc -output bin/mac-stanc"
                                     }
@@ -197,7 +165,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/stancjs"){
-                            cleanCheckout()
+                            checkoutRepository()
                             sh '''
                                 eval $(opam env)
                                 dune subst
@@ -227,7 +195,7 @@ pipeline {
                     }
                     steps {
                         dir("${env.WORKSPACE}/windows"){
-                            cleanCheckout()
+                            checkoutRepository()
                             sh '''
                                 eval $(opam env)
                                 dune subst
