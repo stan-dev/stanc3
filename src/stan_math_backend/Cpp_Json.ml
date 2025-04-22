@@ -1,6 +1,5 @@
 open Core
 open Middle
-module Str = Re.Str
 
 let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
   let emit_cpp_expr e =
@@ -66,10 +65,10 @@ let%expect_test "outvar to json pretty" =
   unslash the ones near a plus*)
 let replace_cpp_expr s =
   s
-  |> Str.global_replace (Str.regexp {|"|}) {|\"|}
-  |> Str.global_replace (Str.regexp {|\\"\+|}) {|" +|}
-  |> Str.global_replace (Str.regexp {|\+\\"|}) {|+ "|}
-  |> Str.global_replace (Str.regexp {|\\n|}) {||}
+  |> String.substr_replace_all ~pattern:{|"|} ~with_:{|\"|}
+  |> String.substr_replace_all ~pattern:{|\"+|} ~with_:{|" +|}
+  |> String.substr_replace_all ~pattern:{|+\"|} ~with_:{|+ "|}
+  |> String.substr_replace_all ~pattern:"\\n" ~with_:""
 
 let wrap_in_quotes s = "\"" ^ s ^ "\""
 

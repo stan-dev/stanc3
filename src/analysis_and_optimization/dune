@@ -1,11 +1,11 @@
 (library
  (name analysis_and_optimization)
  (public_name stanc.analysis)
- (libraries core str fmt common middle frontend)
+ (libraries core middle yojson frontend stan_math_signatures)
  (instrumentation
   (backend bisect_ppx))
  (inline_tests)
  ;; TODO: Not sure what's going on but it's throwing an error that this module has no implementation
  (modules_without_implementation monotone_framework_sigs)
  (preprocess
-  (pps ppx_jane ppx_deriving.map ppx_deriving.fold)))
+  (pps ppx_jane)))

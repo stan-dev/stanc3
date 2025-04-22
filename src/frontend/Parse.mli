@@ -14,3 +14,9 @@ val parse_string :
      (Lexing.position -> Ast.untyped_program Parser.MenhirInterpreter.checkpoint)
   -> string
   -> (Ast.untyped_program, Errors.t) result * Warnings.t list
+
+val parse :
+     (Lexing.position -> Ast.untyped_program Parser.MenhirInterpreter.checkpoint)
+  -> [< `Code of string | `File of string]
+  -> (Ast.untyped_program, Errors.t) result * Warnings.t list
+(** A helper function to take a parser and a code or a filename and produce an AST. *)

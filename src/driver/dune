@@ -1,0 +1,15 @@
+(library
+ (name driver)
+ (public_name stanc.driver)
+ (libraries
+  core
+  fmt
+  frontend
+  middle
+  stan_math_backend
+  analysis_and_optimization)
+ (instrumentation
+  (backend bisect_ppx))
+ (inline_tests)
+ (preprocess
+  (pps ppx_jane)))

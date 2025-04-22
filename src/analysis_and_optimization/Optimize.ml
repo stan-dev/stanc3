@@ -249,6 +249,19 @@ let inline_list f es =
   let es = List.map ~f:(function _, _, x -> x) dse_list in
   (d_list, s_list, es)
 
+let compute_suffix_and_name propto suffix fname =
+  let open Fun_kind in
+  match suffix with
+  | FnLpdf propto' when propto' && propto ->
+      ( FnLpdf true
+      , with_unnormalized_suffix fname |> Option.value ~default:fname )
+  | FnLpdf _ -> (FnLpdf false, fname)
+  | FnLpmf propto' when propto' && propto ->
+      ( FnLpmf true
+      , with_unnormalized_suffix fname |> Option.value ~default:fname )
+  | FnLpmf _ -> (FnLpmf false, fname)
+  | _ -> (suffix, fname)
+
 (* Triple is (declaration list, statement list, return expression) *)
 let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
     =
@@ -264,22 +277,21 @@ let rec inline_function_expression propto adt fim (Expr.Fixed.{pattern; _} as e)
       match kind with
       | CompilerInternal _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
-      | UserDefined (fname, suffix) | StanLib (fname, suffix, _) -> (
-          let suffix, fname' =
-            match suffix with
-            | FnLpdf propto' when propto' && propto ->
-                ( Fun_kind.FnLpdf true
-                , Fun_kind.with_unnormalized_suffix fname
-                  |> Option.value ~default:fname )
-            | FnLpdf _ -> (Fun_kind.FnLpdf false, fname)
-            | _ -> (suffix, fname) in
+      | StanLib (fname, suffix, mem) ->
+          let suffix, _ = compute_suffix_and_name propto suffix fname in
+          ( d_list
+          , s_list
+          , {e with pattern= FunApp (Fun_kind.StanLib (fname, suffix, mem), es)}
+          )
+      | UserDefined (fname, suffix) -> (
+          let suffix, fname' = compute_suffix_and_name propto suffix fname in
           match Map.find fim fname' with
           | None ->
-              let fun_kind =
-                match kind with
-                | Fun_kind.UserDefined _ -> Fun_kind.UserDefined (fname, suffix)
-                | _ -> StanLib (fname, suffix, AoS) in
-              (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
+              ( d_list
+              , s_list
+              , { e with
+                  pattern= FunApp (Fun_kind.UserDefined (fname, suffix), es) }
+              )
           | Some (rt, args, body) ->
               let inline_return_name = gen_inline_var fname "return" in
               let handle =
@@ -400,8 +412,8 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.{pattern; meta} =
             in
             slist_concat_no_loc (d_list @ s_list)
               (match kind with
-              | CompilerInternal _ -> NRFunApp (kind, es)
-              | UserDefined (s, _) | StanLib (s, _, _) -> (
+              | CompilerInternal _ | StanLib _ -> NRFunApp (kind, es)
+              | UserDefined (s, _) -> (
                   match Map.find fim s with
                   | None -> NRFunApp (kind, es)
                   | Some (_, args, b) ->
@@ -840,7 +852,7 @@ and unenforce_initialize (lst : Stmt.Located.t list) =
         match List.hd sub_lst with
         | Some next_stmt -> (
             match find_assignment_idx decl_id next_stmt with
-            | Some ([] | [Index.All] | [Index.All; Index.All]) ->
+            | Some idxs when Index.every_index_is_all idxs ->
                 { stmt with
                   pattern=
                     Stmt.Fixed.Pattern.Decl {decl_pat with initialize= Uninit}

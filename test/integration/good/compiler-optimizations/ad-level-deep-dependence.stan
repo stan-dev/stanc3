@@ -1,5 +1,5 @@
-/**
- * Test whether the monotone framework goes deep enough to see X_tp1 should not 
+/*
+ * Test whether the monotone framework goes deep enough to see X_tp1 should not
  *  be data
  */
 
@@ -19,4 +19,4 @@ transformed parameters {
     matrix[10, 10] X_tp6 = exp(X_tp5);
     matrix[10, 10] X_tp7 = exp(X_tp6);
     X_tp1 = X_p;
-} 
+}

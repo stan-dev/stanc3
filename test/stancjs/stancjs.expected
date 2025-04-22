@@ -34,6 +34,19 @@ model {
   y ~ std_normal();
 }
 
+$ node bad_inputs.js
+Failed to convert stanc.js argument 'code'!
+It had type 'object' instead of 'string'.
+Failed to convert stanc.js argument 'name'!
+It had type 'number' instead of 'string'.
+Failed to convert stanc.js argument 'flags'!
+Array.isArray returned false for value of type 'number'.
+Failed to convert stanc.js argument 'flags'!
+Array.isArray returned false for value of type 'object'.
+Failed to convert stanc.js argument 'flags'!
+Array.isArray returned false for value of type 'string'.
+Failed to convert stanc.js argument 'flags[1]'!
+It had type 'number' instead of 'string'.
 $ node basic.js
 Semantic error in 'string', line 6, column 4 to column 5:
    -------------------------------------------------
@@ -263,11 +276,36 @@ data {
   "distributions": [],
   "included_files": [ "foo.stan" ]
 }
-Warning: stanc.js failed to parse included file mapping!
-Failed to read property 'foo.stan' of included files map!
+model {
+  
+}
+
+model {
+  
+}
+
+model {
+  
+}
+
+Warning: stanc.js failed to parse included file mapping:
+Failed to convert stanc.js argument 'includes["baz"]'!
+It had type 'number' instead of 'string'.
+{
+  "inputs": { "a": { "type": "int", "dimensions": 0 } },
+  "parameters": {},
+  "transformed parameters": {},
+  "generated quantities": {},
+  "functions": [],
+  "distributions": [],
+  "included_files": [ "foo.stan" ]
+}
+Warning: stanc.js failed to parse included file mapping:
+Failed to convert stanc.js argument 'includes["foo.stan"]'!
 It had type 'object' instead of 'string'.
-Warning: stanc.js failed to parse included file mapping!
-Included files map was provided but was not of type 'object'
+Warning: stanc.js failed to parse included file mapping:
+Failed to convert stanc.js argument 'includes'!
+It had type 'number' instead of 'object'.
 Syntax error in 'include/b.stan', line 1, column 0, included from
 'include/a.stan', line 2, column 0, included from
 'include/b.stan', line 1, column 0, included from
@@ -316,6 +354,8 @@ $ node info.js
   "included_files": []
 }
 $ node math_sigs.js
+
+$ node model_name.js
 
 $ node optimization.js
 Semantic error in 'string', line 3, column 8 to column 11:
@@ -374,9 +414,9 @@ undefined
 $ node standalone-functions.js
 
 $ node version.js
-%%NAME%% %%VERSION%%
-%%NAME%% %%VERSION%%
-%%NAME%% %%VERSION%%
+%%NAME%%3 %%VERSION%%
+%%NAME%%3 %%VERSION%%
+%%NAME%%3 %%VERSION%%
 $ node warnings.js
 Warning in 'string', line 10, column 11: Found int division:
       x / w

@@ -147,6 +147,7 @@ type ('e, 's, 'l, 'f) statement =
   | Tilde of
       { arg: 'e
       ; distribution: identifier
+      ; kind: 'f
       ; args: 'e list
       ; truncation: 'e truncation }
   | Break

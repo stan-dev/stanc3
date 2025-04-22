@@ -23,7 +23,8 @@ Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  row_stochastic_matrix, column_stochastic_matrix, tuple(...)
+  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
+  tuple(...)
 optionally preceded by a single array[...]
 [exit 1]
   $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
@@ -39,7 +40,8 @@ Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  row_stochastic_matrix, column_stochastic_matrix, tuple(...)
+  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
+  tuple(...)
 optionally preceded by a single array[...]
 [exit 1]
   $ ../../../../install/default/bin/stanc array-read-write-assign.stan
@@ -843,7 +845,8 @@ Invalid type in declaration. Valid types:
   int, real, vector, row_vector, matrix,
   unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,
   corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,
-  row_stochastic_matrix, column_stochastic_matrix, tuple(...)
+  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,
+  tuple(...)
 optionally preceded by a single array[...]
 [exit 1]
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan
@@ -1074,13 +1077,37 @@ Semantic error in 'err-jacobian-plusequals-scope2.stan', line 3, column 4 to col
 The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
 [exit 1]
   $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope3.stan
-Semantic error in 'err-jacobian-plusequals-scope3.stan', line 14, column 11 to column 42:
+Semantic error in 'err-jacobian-plusequals-scope3.stan', line 14, column 11 to column 45:
    -------------------------------------------------
     12:  
     13:  model {
-    14:    real b = upper_bound_jacobian(b_raw, ub);
+    14:    real b = my_upper_bound_jacobian(b_raw, ub);
                     ^
     15:  }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+[exit 1]
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope4.stan
+Semantic error in 'err-jacobian-plusequals-scope4.stan', line 8, column 2 to column 17:
+   -------------------------------------------------
+     6:  }
+     7:  transformed data {
+     8:    foo_jacobian();
+           ^
+     9:  }
+   -------------------------------------------------
+
+The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
+[exit 1]
+  $ ../../../../install/default/bin/stanc err-jacobian-plusequals-scope5.stan
+Semantic error in 'err-jacobian-plusequals-scope5.stan', line 8, column 11 to column 42:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:    real b = upper_bound_jacobian(b_raw, ub);
+                    ^
+     9:  }
    -------------------------------------------------
 
 The jacobian adjustment can only be applied in the transformed parameters block or in functions ending with _jacobian
@@ -1100,22 +1127,22 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (int, int) => int
 (real, real) => real
 (real, vector) => vector
+(real, row_vector) => row_vector
+(real, matrix) => matrix
 (vector, real) => vector
 (vector, vector) => vector
 (complex, complex) => complex
-(real, row_vector) => row_vector
+(complex, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
-(real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
-(complex, complex_vector) => complex_vector
 (complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
-(complex, complex_row_vector) => complex_row_vector
 (complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
-(complex, complex_matrix) => complex_matrix
 (complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
@@ -1245,6 +1272,18 @@ Syntax error in 'err-transformed-params.stan', line 4, column 0 to column 11, pa
    -------------------------------------------------
 
 "transformed parameters {", "model {" or "generated quantities {" expected after end of parameters block.
+[exit 1]
+  $ ../../../../install/default/bin/stanc err_void_rng_check.stan
+Semantic error in 'err_void_rng_check.stan', line 8, column 4 to column 17:
+   -------------------------------------------------
+     6:  
+     7:  model {
+     8:      foo_rng(1.0);
+             ^
+     9:  }
+   -------------------------------------------------
+
+Random number generators are only allowed in transformed data block, generated quantities block or user-defined functions with names ending in _rng.
 [exit 1]
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace.stan
 Syntax error in 'expect_statement_seq_close_brace.stan', line 6, column 0 to column 0, parsing error:
@@ -2067,22 +2106,22 @@ Ill-typed arguments supplied to infix operator +. Available signatures:
 (int, int) => int
 (real, real) => real
 (real, vector) => vector
+(real, row_vector) => row_vector
+(real, matrix) => matrix
 (vector, real) => vector
 (vector, vector) => vector
 (complex, complex) => complex
-(real, row_vector) => row_vector
+(complex, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
-(real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
-(complex, complex_vector) => complex_vector
 (complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
-(complex, complex_row_vector) => complex_row_vector
 (complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
-(complex, complex_matrix) => complex_matrix
 (complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: matrix, vector.
@@ -2106,17 +2145,17 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (int, int) => int
 (real, real) => real
 (real, vector) => vector
+(real, row_vector) => row_vector
+(real, matrix) => matrix
 (vector, real) => vector
 (complex, complex) => complex
-(real, row_vector) => row_vector
-(row_vector, real) => row_vector
-(real, matrix) => matrix
-(matrix, real) => matrix
 (complex, complex_vector) => complex_vector
-(complex_vector, complex) => complex_vector
 (complex, complex_row_vector) => complex_row_vector
-(complex_row_vector, complex) => complex_row_vector
 (complex, complex_matrix) => complex_matrix
+(row_vector, real) => row_vector
+(matrix, real) => matrix
+(complex_vector, complex) => complex_vector
+(complex_row_vector, complex) => complex_row_vector
 (complex_matrix, complex) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
@@ -2139,17 +2178,17 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (int, int) => int
 (real, real) => real
 (real, vector) => vector
+(real, row_vector) => row_vector
+(real, matrix) => matrix
 (vector, real) => vector
 (complex, complex) => complex
-(real, row_vector) => row_vector
-(row_vector, real) => row_vector
-(real, matrix) => matrix
-(matrix, real) => matrix
 (complex, complex_vector) => complex_vector
-(complex_vector, complex) => complex_vector
 (complex, complex_row_vector) => complex_row_vector
-(complex_row_vector, complex) => complex_row_vector
 (complex, complex_matrix) => complex_matrix
+(row_vector, real) => row_vector
+(matrix, real) => matrix
+(complex_vector, complex) => complex_vector
+(complex_row_vector, complex) => complex_row_vector
 (complex_matrix, complex) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
@@ -2167,22 +2206,22 @@ Ill-typed arguments supplied to infix operator ./. Available signatures:
 (int, int) => int
 (real, real) => real
 (real, vector) => vector
+(real, row_vector) => row_vector
+(real, matrix) => matrix
 (vector, real) => vector
 (vector, vector) => vector
 (complex, complex) => complex
-(real, row_vector) => row_vector
+(complex, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
-(real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
-(complex, complex_vector) => complex_vector
 (complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
-(complex, complex_row_vector) => complex_row_vector
 (complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
-(complex, complex_matrix) => complex_matrix
 (complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
@@ -2201,22 +2240,22 @@ Ill-typed arguments supplied to infix operator .*. Available signatures:
 (int, int) => int
 (real, real) => real
 (real, vector) => vector
+(real, row_vector) => row_vector
+(real, matrix) => matrix
 (vector, real) => vector
 (vector, vector) => vector
 (complex, complex) => complex
-(real, row_vector) => row_vector
+(complex, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
-(real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
-(complex, complex_vector) => complex_vector
 (complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
-(complex, complex_row_vector) => complex_row_vector
 (complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
-(complex, complex_matrix) => complex_matrix
 (complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
@@ -2336,28 +2375,28 @@ Semantic error in 'op_multiplication_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator *. Available signatures: 
 (int, int) => int
 (real, real) => real
-(row_vector, vector) => real
 (real, vector) => vector
-(vector, real) => vector
-(matrix, vector) => vector
-(complex, complex) => complex
-(complex_row_vector, complex_vector) => complex
 (real, row_vector) => row_vector
-(row_vector, real) => row_vector
-(row_vector, matrix) => row_vector
 (real, matrix) => matrix
+(vector, real) => vector
 (vector, row_vector) => matrix
-(matrix, real) => matrix
-(matrix, matrix) => matrix
+(complex, complex) => complex
 (complex, complex_vector) => complex_vector
-(complex_vector, complex) => complex_vector
-(complex_matrix, complex_vector) => complex_vector
 (complex, complex_row_vector) => complex_row_vector
-(complex_row_vector, complex) => complex_row_vector
-(complex_row_vector, complex_matrix) => complex_row_vector
 (complex, complex_matrix) => complex_matrix
+(row_vector, real) => row_vector
+(row_vector, vector) => real
+(row_vector, matrix) => row_vector
+(matrix, real) => matrix
+(matrix, vector) => vector
+(matrix, matrix) => matrix
+(complex_vector, complex) => complex_vector
 (complex_vector, complex_row_vector) => complex_matrix
+(complex_row_vector, complex) => complex_row_vector
+(complex_row_vector, complex_vector) => complex
+(complex_row_vector, complex_matrix) => complex_row_vector
 (complex_matrix, complex) => complex_matrix
+(complex_matrix, complex_vector) => complex_vector
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
 [exit 1]
@@ -2375,22 +2414,22 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (int, int) => int
 (real, real) => real
 (real, vector) => vector
+(real, row_vector) => row_vector
+(real, matrix) => matrix
 (vector, real) => vector
 (vector, vector) => vector
 (complex, complex) => complex
-(real, row_vector) => row_vector
+(complex, complex_vector) => complex_vector
+(complex, complex_row_vector) => complex_row_vector
+(complex, complex_matrix) => complex_matrix
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
-(real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
-(complex, complex_vector) => complex_vector
 (complex_vector, complex) => complex_vector
 (complex_vector, complex_vector) => complex_vector
-(complex, complex_row_vector) => complex_row_vector
 (complex_row_vector, complex) => complex_row_vector
 (complex_row_vector, complex_row_vector) => complex_row_vector
-(complex, complex_matrix) => complex_matrix
 (complex_matrix, complex) => complex_matrix
 (complex_matrix, complex_matrix) => complex_matrix
 Instead supplied arguments of incompatible type: vector, matrix.
@@ -2406,11 +2445,11 @@ Semantic error in 'op_transpose_bad.stan', line 7, column 6 to column 8:
    -------------------------------------------------
 
 Ill-typed arguments supplied to postfix operator '. Available signatures: 
-(row_vector) => vector
 (vector) => row_vector
+(row_vector) => vector
 (matrix) => matrix
-(complex_row_vector) => complex_vector
 (complex_vector) => complex_row_vector
+(complex_row_vector) => complex_vector
 (complex_matrix) => complex_matrix
 Instead supplied argument of incompatible type: array[] int.
 [exit 1]

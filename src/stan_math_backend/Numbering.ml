@@ -79,11 +79,9 @@ let gen_globals ?printed_filename location_list =
 
 let assign_loc location_num =
   let open Cpp in
+  let open Cpp.DSL in
   if location_num = no_span_num then []
-  else
-    [ Expression
-        (Assign (Var "current_statement__", Literal (string_of_int location_num)))
-    ]
+  else ["current_statement__" := Literal (string_of_int location_num)]
 
 let register_map_rect_functors namespace map_rect_calls =
   let register_functor (i, f) =

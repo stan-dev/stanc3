@@ -1213,7 +1213,7 @@ namespace constraints_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 92> locations_array__ =
+static constexpr std::array<const char*, 94> locations_array__ =
   {" (found before start of program)",
   " (in 'constraints.stan', line 20, column 2 to column 66)",
   " (in 'constraints.stan', line 21, column 2 to column 14)",
@@ -1246,6 +1246,7 @@ static constexpr std::array<const char*, 92> locations_array__ =
   " (in 'constraints.stan', line 61, column 2 to column 22)",
   " (in 'constraints.stan', line 62, column 2 to column 32)",
   " (in 'constraints.stan', line 67, column 2 to column 70)",
+  " (in 'constraints.stan', line 69, column 2 to column 57)",
   " (in 'constraints.stan', line 56, column 2 to column 25)",
   " (in 'constraints.stan', line 57, column 2 to column 67)",
   " (in 'constraints.stan', line 58, column 2 to column 46)",
@@ -1254,17 +1255,17 @@ static constexpr std::array<const char*, 92> locations_array__ =
   " (in 'constraints.stan', line 64, column 2 to column 44)",
   " (in 'constraints.stan', line 65, column 2 to column 46)",
   " (in 'constraints.stan', line 66, column 2 to column 71)",
-  " (in 'constraints.stan', line 72, column 2 to column 34)",
-  " (in 'constraints.stan', line 73, column 2 to column 50)",
-  " (in 'constraints.stan', line 74, column 2 to column 44)",
-  " (in 'constraints.stan', line 75, column 2 to column 54)",
-  " (in 'constraints.stan', line 76, column 2 to column 21)",
-  " (in 'constraints.stan', line 77, column 2 to column 21)",
-  " (in 'constraints.stan', line 78, column 2 to column 34)",
-  " (in 'constraints.stan', line 79, column 2 to column 35)",
-  " (in 'constraints.stan', line 80, column 2 to column 54)",
-  " (in 'constraints.stan', line 81, column 2 to column 43)",
-  " (in 'constraints.stan', line 82, column 2 to column 36)",
+  " (in 'constraints.stan', line 74, column 2 to column 34)",
+  " (in 'constraints.stan', line 75, column 2 to column 50)",
+  " (in 'constraints.stan', line 76, column 2 to column 44)",
+  " (in 'constraints.stan', line 77, column 2 to column 54)",
+  " (in 'constraints.stan', line 78, column 2 to column 21)",
+  " (in 'constraints.stan', line 79, column 2 to column 21)",
+  " (in 'constraints.stan', line 80, column 2 to column 34)",
+  " (in 'constraints.stan', line 81, column 2 to column 35)",
+  " (in 'constraints.stan', line 82, column 2 to column 54)",
+  " (in 'constraints.stan', line 83, column 2 to column 43)",
+  " (in 'constraints.stan', line 84, column 2 to column 36)",
   " (in 'constraints.stan', line 3, column 2 to column 17)",
   " (in 'constraints.stan', line 4, column 2 to column 17)",
   " (in 'constraints.stan', line 5, column 9 to column 10)",
@@ -1305,7 +1306,8 @@ static constexpr std::array<const char*, 92> locations_array__ =
   " (in 'constraints.stan', line 54, column 9 to column 11)",
   " (in 'constraints.stan', line 61, column 9 to column 11)",
   " (in 'constraints.stan', line 62, column 18 to column 20)",
-  " (in 'constraints.stan', line 67, column 9 to column 11)"};
+  " (in 'constraints.stan', line 67, column 9 to column 11)",
+  " (in 'constraints.stan', line 69, column 9 to column 10)"};
 class constraints_model final : public model_base_crtp<constraints_model> {
  private:
   int N;
@@ -1347,25 +1349,25 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 51;
+      current_statement__ = 52;
       context__.validate_dims("data initialization", "N", "int",
         std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
-      current_statement__ = 51;
-      N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 51;
-      stan::math::check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 52;
+      N = context__.vals_i("N")[(1 - 1)];
+      current_statement__ = 52;
+      stan::math::check_greater_or_equal(function__, "N", N, 0);
+      current_statement__ = 53;
       context__.validate_dims("data initialization", "K", "int",
         std::vector<size_t>{});
       K = std::numeric_limits<int>::min();
-      current_statement__ = 52;
-      K = context__.vals_i("K")[(1 - 1)];
-      current_statement__ = 52;
-      stan::math::check_greater_or_equal(function__, "K", K, 1);
       current_statement__ = 53;
-      stan::math::validate_non_negative_index("diff_low_mid", "N", N);
+      K = context__.vals_i("K")[(1 - 1)];
+      current_statement__ = 53;
+      stan::math::check_greater_or_equal(function__, "K", K, 1);
       current_statement__ = 54;
+      stan::math::validate_non_negative_index("diff_low_mid", "N", N);
+      current_statement__ = 55;
       context__.validate_dims("data initialization", "diff_low_mid",
         "double", std::vector<size_t>{static_cast<size_t>(N)});
       diff_low_mid_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -1374,7 +1376,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         Eigen::Map<Eigen::Matrix<double,-1,1>>(diff_low_mid_data__.data(), N);
       {
         std::vector<local_scalar_t__> diff_low_mid_flat__;
-        current_statement__ = 54;
+        current_statement__ = 55;
         diff_low_mid_flat__ = context__.vals_r("diff_low_mid");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -1383,9 +1385,9 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 55;
-      stan::math::validate_non_negative_index("diff_high_mid", "N", N);
       current_statement__ = 56;
+      stan::math::validate_non_negative_index("diff_high_mid", "N", N);
+      current_statement__ = 57;
       context__.validate_dims("data initialization", "diff_high_mid",
         "double", std::vector<size_t>{static_cast<size_t>(N)});
       diff_high_mid_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -1395,7 +1397,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         N);
       {
         std::vector<local_scalar_t__> diff_high_mid_flat__;
-        current_statement__ = 56;
+        current_statement__ = 57;
         diff_high_mid_flat__ = context__.vals_r("diff_high_mid");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -1405,9 +1407,9 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 57;
-      stan::math::validate_non_negative_index("mid_price", "N", N);
       current_statement__ = 58;
+      stan::math::validate_non_negative_index("mid_price", "N", N);
+      current_statement__ = 59;
       context__.validate_dims("data initialization", "mid_price", "double",
         std::vector<size_t>{static_cast<size_t>(N)});
       mid_price_data__ = Eigen::Matrix<double,-1,1>::Constant(N,
@@ -1416,7 +1418,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         Eigen::Map<Eigen::Matrix<double,-1,1>>(mid_price_data__.data(), N);
       {
         std::vector<local_scalar_t__> mid_price_flat__;
-        current_statement__ = 58;
+        current_statement__ = 59;
         mid_price_flat__ = context__.vals_r("mid_price");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -1425,11 +1427,11 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 59;
-      stan::math::validate_non_negative_index("X_all", "N", N);
       current_statement__ = 60;
-      stan::math::validate_non_negative_index("X_all", "K", K);
+      stan::math::validate_non_negative_index("X_all", "N", N);
       current_statement__ = 61;
+      stan::math::validate_non_negative_index("X_all", "K", K);
+      current_statement__ = 62;
       context__.validate_dims("data initialization", "X_all", "double",
         std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(K)});
       X_all_data__ = Eigen::Matrix<double,-1,-1>::Constant(N, K,
@@ -1438,7 +1440,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         Eigen::Map<Eigen::Matrix<double,-1,-1>>(X_all_data__.data(), N, K);
       {
         std::vector<local_scalar_t__> X_all_flat__;
-        current_statement__ = 61;
+        current_statement__ = 62;
         X_all_flat__ = context__.vals_r("X_all");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -1450,120 +1452,122 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           }
         }
       }
-      current_statement__ = 62;
+      current_statement__ = 63;
       context__.validate_dims("data initialization", "phi_prior_a", "double",
         std::vector<size_t>{});
       phi_prior_a = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 62;
+      current_statement__ = 63;
       phi_prior_a = context__.vals_r("phi_prior_a")[(1 - 1)];
-      current_statement__ = 62;
+      current_statement__ = 63;
       stan::math::check_greater_or_equal(function__, "phi_prior_a",
         phi_prior_a, 0);
-      current_statement__ = 63;
+      current_statement__ = 64;
       context__.validate_dims("data initialization", "phi_prior_b", "double",
         std::vector<size_t>{});
       phi_prior_b = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 63;
+      current_statement__ = 64;
       phi_prior_b = context__.vals_r("phi_prior_b")[(1 - 1)];
-      current_statement__ = 63;
+      current_statement__ = 64;
       stan::math::check_greater_or_equal(function__, "phi_prior_b",
         phi_prior_b, 0);
-      current_statement__ = 64;
+      current_statement__ = 65;
       context__.validate_dims("data initialization", "mu_prior_mu", "double",
         std::vector<size_t>{});
       mu_prior_mu = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 64;
-      mu_prior_mu = context__.vals_r("mu_prior_mu")[(1 - 1)];
       current_statement__ = 65;
+      mu_prior_mu = context__.vals_r("mu_prior_mu")[(1 - 1)];
+      current_statement__ = 66;
       context__.validate_dims("data initialization", "mu_prior_sigma",
         "double", std::vector<size_t>{});
       mu_prior_sigma = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 65;
+      current_statement__ = 66;
       mu_prior_sigma = context__.vals_r("mu_prior_sigma")[(1 - 1)];
-      current_statement__ = 65;
+      current_statement__ = 66;
       stan::math::check_greater_or_equal(function__, "mu_prior_sigma",
         mu_prior_sigma, 0);
-      current_statement__ = 66;
+      current_statement__ = 67;
       context__.validate_dims("data initialization", "sigma_prior_shape",
         "double", std::vector<size_t>{});
       sigma_prior_shape = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 66;
+      current_statement__ = 67;
       sigma_prior_shape = context__.vals_r("sigma_prior_shape")[(1 - 1)];
-      current_statement__ = 66;
+      current_statement__ = 67;
       stan::math::check_greater_or_equal(function__, "sigma_prior_shape",
         sigma_prior_shape, 0);
-      current_statement__ = 67;
+      current_statement__ = 68;
       context__.validate_dims("data initialization", "sigma_prior_rate",
         "double", std::vector<size_t>{});
       sigma_prior_rate = std::numeric_limits<double>::quiet_NaN();
-      current_statement__ = 67;
+      current_statement__ = 68;
       sigma_prior_rate = context__.vals_r("sigma_prior_rate")[(1 - 1)];
-      current_statement__ = 67;
+      current_statement__ = 68;
       stan::math::check_greater_or_equal(function__, "sigma_prior_rate",
         sigma_prior_rate, 0);
-      current_statement__ = 68;
-      Nr = std::numeric_limits<int>::min();
-      current_statement__ = 68;
-      Nr = (N - 1);
       current_statement__ = 69;
-      stan::math::validate_non_negative_index("high_low_est", "N", N);
+      Nr = std::numeric_limits<int>::min();
+      current_statement__ = 69;
+      Nr = (N - 1);
       current_statement__ = 70;
-      stan::math::validate_non_negative_index("b", "K", K);
+      stan::math::validate_non_negative_index("high_low_est", "N", N);
       current_statement__ = 71;
-      stan::math::validate_non_negative_index("h", "Nr", Nr);
+      stan::math::validate_non_negative_index("b", "K", K);
       current_statement__ = 72;
-      stan::math::validate_non_negative_index("mean_price", "N", N);
+      stan::math::validate_non_negative_index("h", "Nr", Nr);
       current_statement__ = 73;
-      stan::math::validate_non_negative_index("sigma_price", "N", N);
+      stan::math::validate_non_negative_index("mean_price", "N", N);
       current_statement__ = 74;
-      stan::math::validate_non_negative_index("upper_test", "N", N);
+      stan::math::validate_non_negative_index("sigma_price", "N", N);
       current_statement__ = 75;
-      stan::math::validate_non_negative_index("lower_upper_test", "N", N);
+      stan::math::validate_non_negative_index("upper_test", "N", N);
       current_statement__ = 76;
+      stan::math::validate_non_negative_index("lower_upper_test", "N", N);
+      current_statement__ = 77;
       stan::math::validate_non_negative_index("row_vec_lower_upper_test",
         "N", N);
-      current_statement__ = 77;
-      stan::math::validate_non_negative_index("offset_mult_test", "N", N);
       current_statement__ = 78;
-      stan::math::validate_non_negative_index("ordered_test", "N", N);
+      stan::math::validate_non_negative_index("offset_mult_test", "N", N);
       current_statement__ = 79;
-      stan::math::validate_unit_vector_index("unit_vec_test", "N", N);
+      stan::math::validate_non_negative_index("ordered_test", "N", N);
       current_statement__ = 80;
+      stan::math::validate_unit_vector_index("unit_vec_test", "N", N);
+      current_statement__ = 81;
       stan::math::validate_non_negative_index("pos_ordered_test", "N", N);
-      current_statement__ = 81;
-      stan::math::validate_non_negative_index("corr_matrix_test", "N", N);
-      current_statement__ = 81;
+      current_statement__ = 82;
       stan::math::validate_non_negative_index("corr_matrix_test", "N", N);
       current_statement__ = 82;
+      stan::math::validate_non_negative_index("corr_matrix_test", "N", N);
+      current_statement__ = 83;
       stan::math::validate_non_negative_index("cov_matrix_test", "N", N);
-      current_statement__ = 82;
+      current_statement__ = 83;
       stan::math::validate_non_negative_index("cov_matrix_test", "N", N);
-      current_statement__ = 83;
+      current_statement__ = 84;
       stan::math::validate_non_negative_index("chol_fac_cov_test", "K", K);
-      current_statement__ = 83;
+      current_statement__ = 84;
       stan::math::validate_non_negative_index("chol_fac_cov_test", "K", K);
-      current_statement__ = 83;
+      current_statement__ = 84;
       stan::math::check_greater_or_equal(
         "cholesky_factor_cov chol_fac_cov_test",
         "num rows (must be greater or equal to num cols)", K, K);
-      current_statement__ = 84;
-      stan::math::validate_non_negative_index("chol_fac_corr_test", "K", K);
-      current_statement__ = 84;
+      current_statement__ = 85;
       stan::math::validate_non_negative_index("chol_fac_corr_test", "K", K);
       current_statement__ = 85;
-      stan::math::validate_non_negative_index("prices", "N", N);
+      stan::math::validate_non_negative_index("chol_fac_corr_test", "K", K);
       current_statement__ = 86;
-      stan::math::validate_non_negative_index("prices_diff", "Nr", Nr);
+      stan::math::validate_non_negative_index("prices", "N", N);
       current_statement__ = 87;
-      stan::math::validate_non_negative_index("mu", "Nr", Nr);
+      stan::math::validate_non_negative_index("prices_diff", "Nr", Nr);
       current_statement__ = 88;
-      stan::math::validate_non_negative_index("err", "Nr", Nr);
+      stan::math::validate_non_negative_index("mu", "Nr", Nr);
       current_statement__ = 89;
-      stan::math::validate_non_negative_index("h_i_mean", "Nr", Nr);
+      stan::math::validate_non_negative_index("err", "Nr", Nr);
       current_statement__ = 90;
-      stan::math::validate_non_negative_index("h_i_sigma", "Nr", Nr);
+      stan::math::validate_non_negative_index("h_i_mean", "Nr", Nr);
       current_statement__ = 91;
+      stan::math::validate_non_negative_index("h_i_sigma", "Nr", Nr);
+      current_statement__ = 92;
       stan::math::validate_non_negative_index("h_sigma", "Nr", Nr);
+      current_statement__ = 93;
+      stan::math::validate_non_negative_index("means_ordered", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -1737,10 +1741,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         "assigning variable mu");
       Eigen::Matrix<local_scalar_t__,-1,1> err =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(Nr, DUMMY_VAR__);
-      current_statement__ = 32;
+      current_statement__ = 33;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
-      current_statement__ = 33;
+      current_statement__ = 34;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -1754,7 +1758,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                 stan::model::index_min_max(1, (Nr - 1))),
               stan::model::rvalue(ar, "ar", stan::model::index_uni(1))))),
         "assigning variable mu", stan::model::index_min_max(2, Nr));
-      current_statement__ = 34;
+      current_statement__ = 35;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -1764,24 +1768,24 @@ class constraints_model final : public model_base_crtp<constraints_model> {
               stan::model::index_min_max(1, (Nr - 2))),
             stan::model::rvalue(ar, "ar", stan::model::index_uni(2)))),
         "assigning variable mu", stan::model::index_min_max(3, Nr));
-      current_statement__ = 35;
+      current_statement__ = 36;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
       Eigen::Matrix<local_scalar_t__,-1,1> h_i_mean =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(Nr, DUMMY_VAR__);
       Eigen::Matrix<local_scalar_t__,-1,1> h_i_sigma =
         Eigen::Matrix<local_scalar_t__,-1,1>::Constant(Nr, DUMMY_VAR__);
-      current_statement__ = 36;
+      current_statement__ = 37;
       stan::model::assign(h_i_mean, 0.0, "assigning variable h_i_mean",
         stan::model::index_uni(1));
-      current_statement__ = 37;
+      current_statement__ = 38;
       stan::model::assign(h_i_sigma,
         stan::math::pow((1 - stan::math::square(phi)), -(0.5)),
         "assigning variable h_i_sigma", stan::model::index_uni(1));
-      current_statement__ = 38;
+      current_statement__ = 39;
       stan::model::assign(h_i_sigma, stan::math::rep_vector(1.0, (Nr - 1)),
         "assigning variable h_i_sigma", stan::model::index_min_max(2, Nr));
-      current_statement__ = 39;
+      current_statement__ = 40;
       stan::model::assign(h_i_mean,
         stan::math::add(
           stan::math::multiply(phi,
@@ -1801,6 +1805,12 @@ class constraints_model final : public model_base_crtp<constraints_model> {
             stan::math::add(stan::math::multiply(h, (0.5 * sigma)),
               stan::math::multiply(0.5, mu))), 0.000001),
         "assigning variable h_sigma");
+      Eigen::Matrix<local_scalar_t__,-1,1> means_ordered =
+        Eigen::Matrix<local_scalar_t__,-1,1>::Constant(N, DUMMY_VAR__);
+      current_statement__ = 32;
+      stan::model::assign(means_ordered,
+        stan::math::ordered_constrain<jacobian__>(mean_price, lp__),
+        "assigning variable means_ordered");
       current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "phi", phi, -(1));
       current_statement__ = 23;
@@ -1811,35 +1821,35 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       stan::math::check_greater_or_equal(function__, "h_i_sigma", h_i_sigma,
         0);
       {
-        current_statement__ = 40;
+        current_statement__ = 41;
         lp_accum__.add(stan::math::multiply(-(2),
                          stan::math::log(sigma_price)));
-        current_statement__ = 41;
+        current_statement__ = 42;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(Intercept,
                          mu_prior_mu, mu_prior_sigma));
-        current_statement__ = 42;
+        current_statement__ = 43;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(phi_beta, phi_prior_a,
                          phi_prior_b));
-        current_statement__ = 43;
+        current_statement__ = 44;
         lp_accum__.add(stan::math::gamma_lpdf<propto__>(sigma2,
                          sigma_prior_shape, sigma_prior_rate));
-        current_statement__ = 44;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(ar, 0, .2));
         current_statement__ = 45;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(ma, 0, .2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(ar, 0, .2));
         current_statement__ = 46;
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(ma, 0, .2));
+        current_statement__ = 47;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(h, h_i_mean,
                          h_i_sigma));
-        current_statement__ = 47;
+        current_statement__ = 48;
         lp_accum__.add(stan::math::student_t_lpdf<propto__>(sigma_price, 3,
                          1, 1));
-        current_statement__ = 48;
+        current_statement__ = 49;
         lp_accum__.add(stan::math::uniform_lpdf<propto__>(high_low_est,
                          diff_low_mid, diff_high_mid));
-        current_statement__ = 49;
+        current_statement__ = 50;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(prices, mean_price,
                          sigma_price));
-        current_statement__ = 50;
+        current_statement__ = 51;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(prices_diff, mu,
                          h_sigma));
       }
@@ -2032,10 +2042,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(Nr,
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
-      current_statement__ = 32;
+      current_statement__ = 33;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
-      current_statement__ = 33;
+      current_statement__ = 34;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -2049,7 +2059,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                 stan::model::index_min_max(1, (Nr - 1))),
               stan::model::rvalue(ar, "ar", stan::model::index_uni(1))))),
         "assigning variable mu", stan::model::index_min_max(2, Nr));
-      current_statement__ = 34;
+      current_statement__ = 35;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -2059,7 +2069,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
               stan::model::index_min_max(1, (Nr - 2))),
             stan::model::rvalue(ar, "ar", stan::model::index_uni(2)))),
         "assigning variable mu", stan::model::index_min_max(3, Nr));
-      current_statement__ = 35;
+      current_statement__ = 36;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
       stan::math::var_value<Eigen::Matrix<double,-1,1>> h_i_mean =
@@ -2070,17 +2080,17 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(Nr,
                                                             std::numeric_limits<double>::quiet_NaN(
                                                               )));
-      current_statement__ = 36;
+      current_statement__ = 37;
       stan::model::assign(h_i_mean, 0.0, "assigning variable h_i_mean",
         stan::model::index_uni(1));
-      current_statement__ = 37;
+      current_statement__ = 38;
       stan::model::assign(h_i_sigma,
         stan::math::pow((1 - stan::math::square(phi)), -(0.5)),
         "assigning variable h_i_sigma", stan::model::index_uni(1));
-      current_statement__ = 38;
+      current_statement__ = 39;
       stan::model::assign(h_i_sigma, stan::math::rep_vector(1.0, (Nr - 1)),
         "assigning variable h_i_sigma", stan::model::index_min_max(2, Nr));
-      current_statement__ = 39;
+      current_statement__ = 40;
       stan::model::assign(h_i_mean,
         stan::math::add(
           stan::math::multiply(phi,
@@ -2102,6 +2112,14 @@ class constraints_model final : public model_base_crtp<constraints_model> {
             stan::math::add(stan::math::multiply(h, (0.5 * sigma)),
               stan::math::multiply(0.5, mu))), 0.000001),
         "assigning variable h_sigma");
+      stan::math::var_value<Eigen::Matrix<double,-1,1>> means_ordered =
+        stan::math::var_value<Eigen::Matrix<double,-1,1>>(Eigen::Matrix<double,-1,1>::Constant(N,
+                                                            std::numeric_limits<double>::quiet_NaN(
+                                                              )));
+      current_statement__ = 32;
+      stan::model::assign(means_ordered,
+        stan::math::ordered_constrain<jacobian__>(mean_price, lp__),
+        "assigning variable means_ordered");
       current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "phi", phi, -(1));
       current_statement__ = 23;
@@ -2112,35 +2130,35 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       stan::math::check_greater_or_equal(function__, "h_i_sigma", h_i_sigma,
         0);
       {
-        current_statement__ = 40;
+        current_statement__ = 41;
         lp_accum__.add(stan::math::multiply(-(2),
                          stan::math::log(sigma_price)));
-        current_statement__ = 41;
+        current_statement__ = 42;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(Intercept,
                          mu_prior_mu, mu_prior_sigma));
-        current_statement__ = 42;
+        current_statement__ = 43;
         lp_accum__.add(stan::math::beta_lpdf<propto__>(phi_beta, phi_prior_a,
                          phi_prior_b));
-        current_statement__ = 43;
+        current_statement__ = 44;
         lp_accum__.add(stan::math::gamma_lpdf<propto__>(sigma2,
                          sigma_prior_shape, sigma_prior_rate));
-        current_statement__ = 44;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(ar, 0, .2));
         current_statement__ = 45;
-        lp_accum__.add(stan::math::normal_lpdf<propto__>(ma, 0, .2));
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(ar, 0, .2));
         current_statement__ = 46;
+        lp_accum__.add(stan::math::normal_lpdf<propto__>(ma, 0, .2));
+        current_statement__ = 47;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(h, h_i_mean,
                          h_i_sigma));
-        current_statement__ = 47;
+        current_statement__ = 48;
         lp_accum__.add(stan::math::student_t_lpdf<propto__>(sigma_price, 3,
                          1, 1));
-        current_statement__ = 48;
+        current_statement__ = 49;
         lp_accum__.add(stan::math::uniform_lpdf<propto__>(high_low_est,
                          diff_low_mid, diff_high_mid));
-        current_statement__ = 49;
+        current_statement__ = 50;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(prices, mean_price,
                          sigma_price));
-        current_statement__ = 50;
+        current_statement__ = 51;
         lp_accum__.add(stan::math::normal_lpdf<propto__>(prices_diff, mu,
                          h_sigma));
       }
@@ -2314,6 +2332,9 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       Eigen::Matrix<double,-1,1> h_sigma =
         Eigen::Matrix<double,-1,1>::Constant(Nr,
           std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double,-1,1> means_ordered =
+        Eigen::Matrix<double,-1,1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       out__.write(high_low_est);
       out__.write(b);
       out__.write(h);
@@ -2360,10 +2381,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       stan::model::assign(mu,
         stan::math::add(Intercept, stan::math::multiply(X_all, b)),
         "assigning variable mu");
-      current_statement__ = 32;
+      current_statement__ = 33;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
-      current_statement__ = 33;
+      current_statement__ = 34;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -2377,7 +2398,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
                 stan::model::index_min_max(1, (Nr - 1))),
               stan::model::rvalue(ar, "ar", stan::model::index_uni(1))))),
         "assigning variable mu", stan::model::index_min_max(2, Nr));
-      current_statement__ = 34;
+      current_statement__ = 35;
       stan::model::assign(mu,
         stan::math::add(
           stan::model::deep_copy(
@@ -2387,20 +2408,20 @@ class constraints_model final : public model_base_crtp<constraints_model> {
               stan::model::index_min_max(1, (Nr - 2))),
             stan::model::rvalue(ar, "ar", stan::model::index_uni(2)))),
         "assigning variable mu", stan::model::index_min_max(3, Nr));
-      current_statement__ = 35;
+      current_statement__ = 36;
       stan::model::assign(err, stan::math::subtract(prices_diff, mu),
         "assigning variable err");
-      current_statement__ = 36;
+      current_statement__ = 37;
       stan::model::assign(h_i_mean, 0.0, "assigning variable h_i_mean",
         stan::model::index_uni(1));
-      current_statement__ = 37;
+      current_statement__ = 38;
       stan::model::assign(h_i_sigma,
         stan::math::pow((1 - stan::math::square(phi)), -(0.5)),
         "assigning variable h_i_sigma", stan::model::index_uni(1));
-      current_statement__ = 38;
+      current_statement__ = 39;
       stan::model::assign(h_i_sigma, stan::math::rep_vector(1.0, (Nr - 1)),
         "assigning variable h_i_sigma", stan::model::index_min_max(2, Nr));
-      current_statement__ = 39;
+      current_statement__ = 40;
       stan::model::assign(h_i_mean,
         stan::math::add(
           stan::math::multiply(phi,
@@ -2418,6 +2439,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
             stan::math::add(stan::math::multiply(h, (0.5 * sigma)),
               stan::math::multiply(0.5, mu))), 0.000001),
         "assigning variable h_sigma");
+      current_statement__ = 32;
+      stan::model::assign(means_ordered,
+        stan::math::ordered_constrain<jacobian__>(mean_price, lp__),
+        "assigning variable means_ordered");
       current_statement__ = 23;
       stan::math::check_greater_or_equal(function__, "phi", phi, -(1));
       current_statement__ = 23;
@@ -2437,6 +2462,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         out__.write(h_i_mean);
         out__.write(h_i_sigma);
         out__.write(h_sigma);
+        out__.write(means_ordered);
       }
       if (stan::math::logical_negation(emit_generated_quantities__)) {
         return ;
@@ -2995,7 +3021,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     if (emit_transformed_parameters__) {
       std::vector<std::string>
         temp{"phi", "sigma", "prices", "prices_diff", "mu", "err",
-             "h_i_mean", "h_i_sigma", "h_sigma"};
+             "h_i_mean", "h_i_sigma", "h_sigma", "means_ordered"};
       names__.reserve(names__.size() + temp.size());
       names__.insert(names__.end(), temp.begin(), temp.end());
     }
@@ -3039,7 +3065,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
              std::vector<size_t>{static_cast<size_t>(Nr)},
              std::vector<size_t>{static_cast<size_t>(Nr)},
              std::vector<size_t>{static_cast<size_t>(Nr)},
-             std::vector<size_t>{static_cast<size_t>(Nr)}};
+             std::vector<size_t>{static_cast<size_t>(Nr)},
+             std::vector<size_t>{static_cast<size_t>(N)}};
       dimss__.reserve(dimss__.size() + temp.size());
       dimss__.insert(dimss__.end(), temp.begin(), temp.end());
     }
@@ -3161,6 +3188,10 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         param_names__.emplace_back(std::string() + "h_sigma" + '.' +
           std::to_string(sym1__));
       }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "means_ordered" + '.' +
+          std::to_string(sym1__));
+      }
     }
     if (emit_generated_quantities__) {}
   }
@@ -3273,14 +3304,18 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         param_names__.emplace_back(std::string() + "h_sigma" + '.' +
           std::to_string(sym1__));
       }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        param_names__.emplace_back(std::string() + "means_ordered" + '.' +
+          std::to_string(sym1__));
+      }
     }
     if (emit_generated_quantities__) {}
   }
   inline std::string get_constrained_sizedtypes() const {
-    return std::string("[{\"name\":\"high_low_est\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"row_vec_lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"offset_mult_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"unit_vec_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"pos_ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"corr_matrix_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cov_matrix_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_cov_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(K) + ",\"cols\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_corr_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(K) + ",\"cols\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"high_low_est\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"row_vec_lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"offset_mult_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"unit_vec_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"pos_ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"corr_matrix_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"cov_matrix_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_cov_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(K) + ",\"cols\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_corr_test\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(K) + ",\"cols\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"means_ordered\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
   }
   inline std::string get_unconstrained_sizedtypes() const {
-    return std::string("[{\"name\":\"high_low_est\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"row_vec_lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"offset_mult_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"unit_vec_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"pos_ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"corr_matrix_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((N * (N - 1)) /2)) + "},\"block\":\"parameters\"},{\"name\":\"cov_matrix_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N + ((N * (N - 1)) /2))) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_cov_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((K * (K - 1)) / 2) + K) + ((K - K) *K))) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_corr_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((K * (K - 1)) /2)) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"high_low_est\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"sigma_price\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"row_vec_lower_upper_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"offset_mult_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"unit_vec_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"pos_ordered_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"corr_matrix_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((N * (N - 1)) /2)) + "},\"block\":\"parameters\"},{\"name\":\"cov_matrix_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string((N + ((N * (N - 1)) /2))) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_cov_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((((K * (K - 1)) / 2) + K) + ((K - K) *K))) + "},\"block\":\"parameters\"},{\"name\":\"chol_fac_corr_test\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(((K * (K - 1)) /2)) + "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"means_ordered\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"}]");
   }
   // Begin method overload boilerplate
   template <typename RNG> inline void
@@ -3292,8 +3327,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     const size_t num_params__ = (((((((((((((((((((((N + K) + Nr) + 2) + 1) +
       1) + 1) + 1) + N) + N) + 1) + N) + N) + N) + N) + N) + N) + N) + (N *
       N)) + (N * N)) + (K * K)) + (K * K));
-    const size_t num_transformed = emit_transformed_parameters * (((((((((1 +
-      1) + N) + Nr) + Nr) + Nr) + Nr) + Nr) + Nr));
+    const size_t num_transformed = emit_transformed_parameters * ((((((((((1
+      + 1) + N) + Nr) + Nr) + Nr) + Nr) + Nr) + Nr) + N));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;
@@ -3312,8 +3347,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     const size_t num_params__ = (((((((((((((((((((((N + K) + Nr) + 2) + 1) +
       1) + 1) + 1) + N) + N) + 1) + N) + N) + N) + N) + N) + N) + N) + (N *
       N)) + (N * N)) + (K * K)) + (K * K));
-    const size_t num_transformed = emit_transformed_parameters * (((((((((1 +
-      1) + N) + Nr) + Nr) + Nr) + Nr) + Nr) + Nr));
+    const size_t num_transformed = emit_transformed_parameters * ((((((((((1
+      + 1) + N) + Nr) + Nr) + Nr) + Nr) + Nr) + Nr) + N));
     const size_t num_gen_quantities = emit_generated_quantities * (0);
     const size_t num_to_write = num_params__ + num_transformed +
       num_gen_quantities;

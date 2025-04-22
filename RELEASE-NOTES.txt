@@ -1,6 +1,25 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.36.0 (10 December 2024)
+======================================================================
+
+ - Removed code following the last round of syntax deprecations that is currently scheduled. The final one (use of `real` values in conditionals) is now a type error and can no longer be automatically canonicalized. (#1420)
+ - Added the `jacobian +=` statement, an analogue of `target +=` but which can be conditionally disabled by Stan's algorithms when a unadjusted estimate is required. (#1435, #1437, #1471)
+ - Added `stochastic_row_matrix` and `stochastic_column_matrix` transforms for matrix types. (#1442)
+ - Added the `sum_to_zero_vector` transform for vector types. (#1443)
+ - Added distribution: beta_neg_binomial, with corresponding lpdf, cdf, lcdf, lccdf, and rng functions. (#1452, #1459, #1467)
+ - Added all-vector signatures to the newer versions of `wiener_lpdf`. (#1451)
+ - `stanc.js` can now accept models which contain `#include` statements. A fourth argument is available on the javascript stanc function which must be either `undefined` or a object mapping included file names to Stan source code as strings. (#1433)
+ - Enabled OpenCL support for the `binomial_logit` and `binomial_logit_glm` distributions. (#1368)
+ - Fixed an issue where certain overloads of distributions could lead to the `~` statement producing uncompilable C++. (#1466, #1474)
+ - Fixed an issue where `operator/` was not generating the correct C++ for complex linear algebra types. (#1421)
+ - Fixed an issue where certain variable names would end up conflicting with system-specific macros in the generated C++. (#1429)
+ - Fixed an issue where void functions were not given the same checks as returning functions, leading to uncompilable C++ in some cases. (#1471)
+ - Updated parameter code generation to use `auto` so that the parameter types for matrices can be Eigen maps. (#1441)
+ - Rolled back js_of_ocaml to 5.4.0 for compatibility with QuickJS. (#1427)
+ - Added builds of `stanc.js` with pretty-printing and debug info. (#1440)
+
 v2.35.0 (3 June 2024)
 ======================================================================
 

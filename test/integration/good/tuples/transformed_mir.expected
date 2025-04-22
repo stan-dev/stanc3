@@ -16184,7 +16184,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib bernoulli_lpmf (FnLpdf true) AoS)
+            (FunApp (StanLib bernoulli_lpmf (FnLpmf true) AoS)
              (((pattern
                 (TupleProjection
                  ((pattern (Var ds))
@@ -16313,7 +16313,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib bernoulli_lpmf (FnLpdf true) SoA)
+            (FunApp (StanLib bernoulli_lpmf (FnLpmf true) SoA)
              (((pattern
                 (TupleProjection
                  ((pattern (Var ds))
@@ -21604,9 +21604,9 @@
            (meta
             ((type_
               (UFun
-               ((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
-                (AutoDiffable (UTuple (UReal (UArray UInt)))))
-               (ReturnType UReal) FnPlain AoS))
+               (((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
+                 (AutoDiffable (UTuple (UReal (UArray UInt)))))
+                (ReturnType UReal) FnPlain AoS)))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var data_y))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
@@ -21656,9 +21656,9 @@
            (meta
             ((type_
               (UFun
-               ((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
-                (AutoDiffable (UTuple (UReal (UArray UInt)))))
-               (ReturnType UReal) FnPlain AoS))
+               (((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
+                 (AutoDiffable (UTuple (UReal (UArray UInt)))))
+                (ReturnType UReal) FnPlain AoS)))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var param_y))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -21701,9 +21701,9 @@
            (meta
             ((type_
               (UFun
-               ((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
-                (AutoDiffable (UTuple (UReal (UArray UInt)))))
-               (ReturnType UReal) FnPlain AoS))
+               (((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
+                 (AutoDiffable (UTuple (UReal (UArray UInt)))))
+                (ReturnType UReal) FnPlain AoS)))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var param_y))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -21769,9 +21769,9 @@
            (meta
             ((type_
               (UFun
-               ((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
-                (AutoDiffable (UTuple (UReal (UArray UInt)))))
-               (ReturnType UReal) FnPlain AoS))
+               (((AutoDiffable (UArray UReal)) (AutoDiffable UInt) (AutoDiffable UInt)
+                 (AutoDiffable (UTuple (UReal (UArray UInt)))))
+                (ReturnType UReal) FnPlain AoS)))
              (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var param_y))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -22080,7 +22080,7 @@
 [exit 0]
   $ ../../../../../install/default/bin/stanc -fsoa --debug-optimized-mir tuple_lpmf.stan
 ((functions_block
-  (((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpdf ()))
+  (((fdrt (ReturnType UReal)) (fdname foo_lpmf) (fdsuffix (FnLpmf ()))
     (fdargs ((AutoDiffable x (UTuple (UInt UInt))) (AutoDiffable y UReal)))
     (fdbody
      (((pattern
@@ -22129,7 +22129,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (UserDefined foo_lpmf (FnLpdf true))
+            (FunApp (UserDefined foo_lpmf (FnLpmf true))
              (((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Int 1))
@@ -22150,7 +22150,7 @@
       (((pattern
          (TargetPE
           ((pattern
-            (FunApp (UserDefined foo_lpmf (FnLpdf true))
+            (FunApp (UserDefined foo_lpmf (FnLpmf true))
              (((pattern
                 (FunApp (CompilerInternal FnMakeTuple)
                  (((pattern (Lit Int 1))
