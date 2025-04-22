@@ -58,7 +58,8 @@ functions {
     for (i in 1 : T) {
       Y[i] = cap[i]
              / (1
-                + exp(-(k + dot_product(A[i], delta))
+                + exp(
+                      -(k + dot_product(A[i], delta))
                       * (t[i] - (m + dot_product(A[i], gamma)))));
     }
     return Y;

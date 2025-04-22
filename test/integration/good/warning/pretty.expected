@@ -205,11 +205,11 @@ model {
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
   
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
-                              1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
-                              1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
-                              1e-10, 1e8);
+            1e-10, 1e8);
 }
 generated quantities {
   array[T, 2] real y_hat;
@@ -219,13 +219,13 @@ generated quantities {
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
   
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
-                              1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
-                              1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
-                              1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
-                              1e-10, 1e8);
+            1e-10, 1e8);
 }
 
 Warning in 'integrate_ode_adams.stan', line 25, column 10: integrate_ode_adams
@@ -316,13 +316,13 @@ model {
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
   
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
-                            1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
-                            1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
-                            1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
-                            1e-10, 1e8);
+            1e-10, 1e8);
 }
 generated quantities {
   array[T, 2] real y_hat;
@@ -332,13 +332,13 @@ generated quantities {
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
   
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
-                            1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
-                            1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
-                            1e-10, 1e8);
+            1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int, 1e-10,
-                            1e-10, 1e8);
+            1e-10, 1e8);
 }
 
 Warning in 'integrate_ode_bdf.stan', line 25, column 10: integrate_ode_bdf is

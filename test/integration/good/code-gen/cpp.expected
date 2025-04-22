@@ -7773,6 +7773,22 @@ template <typename T0__, typename T1__, typename T2__, typename T3__,
 Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T2__, T3__>,-1,-1>
 K_function(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
            rho, std::ostream* pstream__);
+struct K_function_functor__ {
+  template <typename T0__, typename T1__, typename T2__, typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__>,
+                                stan::is_col_vector<stan::value_type_t<T0__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T0__>>,
+                                std::is_integral<T1__>,
+                                stan::math::disjunction<stan::is_autodiff<T2__>,
+                                                        std::is_floating_point<T2__>>,
+                                stan::math::disjunction<stan::is_autodiff<T3__>,
+                                                        std::is_floating_point<T3__>>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T2__, T3__>,-1,-1>
+  operator()(const T0__& x, const T1__& n_obs, const T2__& alpha, const T3__&
+             rho, std::ostream* pstream__) const {
+    return K_function(x, n_obs, alpha, rho, pstream__);
+  }
+};
 // matrix K_function(array[] vector, int, real, real)
 template <typename T0__, typename T1__, typename T2__, typename T3__,
           stan::require_all_t<stan::is_std_vector<T0__>,

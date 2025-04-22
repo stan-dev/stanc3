@@ -549,9 +549,8 @@ model {
       vector[N] mu_z;
       mu = linkinv_beta(eta, link);
       mu_z = linkinv_beta_z(eta_z, link_phi);
-      target += beta_lpdf(y | rows_dot_product(mu, mu_z), rows_dot_product((
-                                                                    1 - mu),
-                                                                    mu_z));
+      target += beta_lpdf(y | rows_dot_product(mu, mu_z),
+                          rows_dot_product((1 - mu), mu_z));
     }
   } else if (prior_PD == 0) {
     // weighted log-likelihoods
@@ -1067,7 +1066,7 @@ transformed parameters {
                      a_ool, a_mix, rep_array(1.0, 0), 0, a_slab_scale,
                      a_caux);
   e_aux = make_basehaz_coef(e_aux_unscaled, e_prior_dist_for_aux,
-                            e_prior_mean_for_aux, e_prior_scale_for_aux);
+            e_prior_mean_for_aux, e_prior_scale_for_aux);
 }
 model {
   //---- Log likelihoods for longitudinal submodels
@@ -1474,9 +1473,10 @@ functions {
     else if (link == 3) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = gumbel_rng(eta, 1);
     else if (link == 4) 
-      while (!(ystar > lower_ && ystar < upper_)) ystar = log(-log1m(
-                                                              uniform_rng(
-                                                              0, 1)));
+      while (!(ystar > lower_ && ystar < upper_)) ystar = log(
+                                                              -log1m(
+                                                                    uniform_rng
+                                                                    (0, 1)));
     else if (link == 5) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = cauchy_rng(eta, 1);
     else 
@@ -1628,8 +1628,8 @@ generated quantities {
           ystar = draw_ystar_rng(negative_infinity(), cutpoints[1], eta[n],
                                  link);
         else if (y[n] == J) 
-          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(
-                                 ), eta[n], link);
+          ystar = draw_ystar_rng(cutpoints[J - 1], positive_infinity(),
+                                 eta[n], link);
         else 
           ystar = draw_ystar_rng(cutpoints[y[n] - 1], cutpoints[y[n]],
                                  eta[n], link);
