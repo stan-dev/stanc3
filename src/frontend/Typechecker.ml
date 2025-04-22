@@ -143,9 +143,7 @@ let verify_name_fresh_udf loc tenv name =
   if
     (* variadic functions aren't overloadable due to
         their separate typechecking *)
-    Stan_math_signatures.is_reduce_sum_fn name
-    || Stan_math_signatures.is_embedded_laplace_fn name
-    || Stan_math_signatures.is_stan_math_variadic_function_name name
+    Stan_math_signatures.is_special_function_name name
   then Semantic_error.ident_is_stanmath_name loc name |> error
   else if Utils.is_unnormalized_distribution name then
     Semantic_error.udf_is_unnormalized_fn loc name |> error

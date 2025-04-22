@@ -203,6 +203,11 @@ let laplace_tolerance_argument_types =
     ; (DataOnly, UInt) (* hessian_block_size *); (DataOnly, UInt) (* solver *)
     ; (DataOnly, UInt) (* max_steps_line_search *) ]
 
+let is_special_function_name name =
+  is_stan_math_variadic_function_name name
+  || is_reduce_sum_fn name
+  || is_embedded_laplace_fn name
+
 let disallowed_second_order =
   [ "algebra_solver"; "algebra_solver_newton"; "integrate_ode"
   ; "integrate_ode_adams"; "integrate_ode_bdf"; "integrate_ode_rk45"; "map_rect"
@@ -210,7 +215,4 @@ let disallowed_second_order =
   |> String.Set.of_list
 
 let lacks_higher_order_autodiff name =
-  is_embedded_laplace_fn name
-  || is_reduce_sum_fn name
-  || is_stan_math_variadic_function_name name
-  || Set.mem disallowed_second_order name
+  Set.mem disallowed_second_order name || is_special_function_name name

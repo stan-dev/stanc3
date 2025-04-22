@@ -87,24 +87,20 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
 let query_stan_math_mem_pattern_support (name : string)
     (args : UnsizedType.argumentlist) =
   let open Stan_math_signatures in
-  match name with
-  | x when is_stan_math_variadic_function_name x -> false
-  | x when is_reduce_sum_fn x -> false
-  | x when is_embedded_laplace_fn x -> false
-  | _ ->
-      let name =
-        string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
-      in
-      let namematches = lookup_stan_math_function name in
-      let filteredmatches =
-        List.filter
-          ~f:(fun (x, _, _, _) ->
-            Frontend.SignatureMismatch.check_compatible_arguments_mod_conv x
-              args
-            |> Result.is_ok)
-          namematches in
-      let is_soa = function _, _, _, Mem_pattern.SoA -> true | _ -> false in
-      List.exists ~f:is_soa filteredmatches
+  if is_special_function_name name then false
+  else
+    let name =
+      string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
+    in
+    let namematches = lookup_stan_math_function name in
+    let filteredmatches =
+      List.filter
+        ~f:(fun (x, _, _, _) ->
+          Frontend.SignatureMismatch.check_compatible_arguments_mod_conv x args
+          |> Result.is_ok)
+        namematches in
+    let is_soa = function _, _, _, Mem_pattern.SoA -> true | _ -> false in
+    List.exists ~f:is_soa filteredmatches
 
 (*Validate whether a function can support SoA matrices*)
 let is_fun_soa_supported name exprs =
