@@ -335,7 +335,7 @@ let lower_fun_def (functors : Lower_expr.variadic list)
 let get_functor_requirements (p : Program.Numbered.t) =
   let open Expr.Fixed in
   let rec find_functors_expr init = function
-    | {pattern= FunApp (StanLib (hof, FnPlain, _), args); _} ->
+    | {pattern= FunApp (StanLib (hof, _, _), args); _} ->
         let f accum = function
           | { pattern= Var name
             ; meta= {Expr.Typed.Meta.type_= UnsizedType.UFun _; _} } ->
