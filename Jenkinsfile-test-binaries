@@ -137,7 +137,7 @@ pipeline {
                                         '''
                                     }
                                     sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-x86-stanc"
-                                    archiveArtifacts 'bin/*'
+                                    stash 'bin/*'
                                 }
                             }
                             post { always { sh "rm -rf ${env.WORKSPACE}/osx-x86/*" }}
@@ -161,7 +161,7 @@ pipeline {
                                         '''
                                     }
                                     sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-arm64-stanc"
-                                    archiveArtifacts 'bin/*'
+                                    stash 'bin/*'
                                 }
                             }
                             post { always { sh "rm -rf ${env.WORKSPACE}/osx-arm64/*" }}
@@ -171,8 +171,8 @@ pipeline {
                             agent { label 'osx && m1' }
                             steps {
                                 dir("${env.WORKSPACE}/osx-universal"){
-                                    unarchiveArtifacts 'bin/*'
-                                    unarchiveArtifacts 'bin/*'
+                                    stash 'bin/*'
+                                    stash 'bin/*'
                                     withEnv(['SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX11.0.sdk', 'MACOSX_DEPLOYMENT_TARGET=11.0']) {
                                         sh "lipo -create bin/mac-x86-stanc bin/mac-arm64-stanc -output bin/mac-stanc"
                                     }
