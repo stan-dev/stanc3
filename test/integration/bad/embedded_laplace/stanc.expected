@@ -252,6 +252,22 @@ The first argument must be array[] int but got int.
 Expected the arguments to start with:
 (array[] int, array[] int, vector)
 [exit 1]
+  $ ../../../../../install/default/bin/stanc bad_forward9.stan
+Semantic error in 'bad_forward9.stan', line 39, column 32 to column 54:
+   -------------------------------------------------
+    37:    target += laplace_marginal(ll_function, (eta, log_ye, y),
+    38:                      theta_0,
+    39:                      K_function, (x, n_obs, alpha, rho));
+                                         ^
+    40:  }
+   -------------------------------------------------
+
+Cannot call 'K_function' with arguments forwarded from call to
+'laplace_marginal':
+The fourth argument is marked data-only. (Local variables are assumed to
+depend on parameters; same goes for function inputs unless they are marked
+with the keyword 'data'.)
+[exit 1]
   $ ../../../../../install/default/bin/stanc bad_overload.stan
 Semantic error in 'bad_overload.stan', line 2, column 7 to column 51:
    -------------------------------------------------

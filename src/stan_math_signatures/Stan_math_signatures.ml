@@ -163,13 +163,13 @@ let embedded_laplace_functions =
   ; "laplace_marginal_tol_neg_binomial_2_log_lpmf"
   ; "laplace_marginal_poisson_log_lpmf"; "laplace_marginal_tol_poisson_log_lpmf"
   ; "laplace_marginal_poisson_2_log_lpmf"
-  ; "laplace_marginal_poisson_2_log_tol_lpmf"; (* rngs *)
+  ; "laplace_marginal_tol_poisson_2_log_lpmf"; (* rngs *)
     "laplace_latent_bernoulli_logit_rng"
   ; "laplace_latent_tol_bernoulli_logit_rng"
   ; "laplace_latent_neg_binomial_2_log_rng"
   ; "laplace_latent_tol_neg_binomial_2_log_rng"
   ; "laplace_latent_poisson_log_rng"; "laplace_latent_tol_poisson_log_rng"
-  ; "laplace_latent_poisson_2_log_rng"; "laplace_latent_poisson_2_log_tol_rng"
+  ; "laplace_latent_poisson_2_log_rng"; "laplace_latent_tol_poisson_2_log_rng"
   ]
   |> String.Set.of_list
 
