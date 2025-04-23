@@ -339,7 +339,7 @@ let data_only_msg =
   "(Local variables are assumed to depend on parameters; same goes for \
    function inputs unless they are marked with the keyword 'data'.)"
 
-let pp_mismatch_details ?(skipped = []) ppf details =
+let pp_mismatch_details ~skipped ppf details =
   let open Fmt in
   let ctx = ref TypeMap.empty in
   let n_skipped = List.length skipped in

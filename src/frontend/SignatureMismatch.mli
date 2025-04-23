@@ -76,7 +76,7 @@ val check_variadic_args :
 val data_only_msg : string
 
 val pp_mismatch_details :
-  ?skipped:string list -> Format.formatter -> details -> unit
+  skipped:string list -> Format.formatter -> details -> unit
 
 val pp_signature_mismatch :
      Format.formatter
