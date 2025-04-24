@@ -9411,77 +9411,126 @@ namespace laplace_nested_tuple_model_namespace {
 using stan::model::model_base_crtp;
 using namespace stan::math;
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 23> locations_array__ =
+static constexpr std::array<const char*, 31> locations_array__ =
   {" (found before start of program)",
-  " (in 'laplace_nested_tuple.stan', line 20, column 2 to column 22)",
-  " (in 'laplace_nested_tuple.stan', line 21, column 2 to column 20)",
-  " (in 'laplace_nested_tuple.stan', line 22, column 2 to column 20)",
-  " (in 'laplace_nested_tuple.stan', line 25, column 2 to line 26, column 34)",
-  " (in 'laplace_nested_tuple.stan', line 10, column 2 to column 12)",
-  " (in 'laplace_nested_tuple.stan', line 11, column 2 to column 20)",
-  " (in 'laplace_nested_tuple.stan', line 12, column 8 to column 13)",
-  " (in 'laplace_nested_tuple.stan', line 12, column 2 to column 21)",
-  " (in 'laplace_nested_tuple.stan', line 13, column 9 to column 14)",
-  " (in 'laplace_nested_tuple.stan', line 13, column 2 to column 19)",
-  " (in 'laplace_nested_tuple.stan', line 14, column 8 to column 13)",
-  " (in 'laplace_nested_tuple.stan', line 14, column 22 to column 35)",
-  " (in 'laplace_nested_tuple.stan', line 14, column 2 to column 39)",
-  " (in 'laplace_nested_tuple.stan', line 17, column 9 to column 14)",
-  " (in 'laplace_nested_tuple.stan', line 17, column 2 to column 49)",
+  " (in 'laplace_nested_tuple.stan', line 27, column 2 to column 22)",
+  " (in 'laplace_nested_tuple.stan', line 28, column 2 to column 20)",
+  " (in 'laplace_nested_tuple.stan', line 29, column 2 to column 20)",
+  " (in 'laplace_nested_tuple.stan', line 32, column 2 to line 33, column 36)",
+  " (in 'laplace_nested_tuple.stan', line 35, column 2 to line 36, column 37)",
+  " (in 'laplace_nested_tuple.stan', line 17, column 2 to column 12)",
+  " (in 'laplace_nested_tuple.stan', line 18, column 2 to column 20)",
+  " (in 'laplace_nested_tuple.stan', line 19, column 8 to column 13)",
+  " (in 'laplace_nested_tuple.stan', line 19, column 2 to column 21)",
+  " (in 'laplace_nested_tuple.stan', line 20, column 9 to column 14)",
+  " (in 'laplace_nested_tuple.stan', line 20, column 2 to column 19)",
+  " (in 'laplace_nested_tuple.stan', line 21, column 8 to column 13)",
+  " (in 'laplace_nested_tuple.stan', line 21, column 22 to column 35)",
+  " (in 'laplace_nested_tuple.stan', line 21, column 2 to column 39)",
+  " (in 'laplace_nested_tuple.stan', line 24, column 9 to column 14)",
+  " (in 'laplace_nested_tuple.stan', line 24, column 2 to column 49)",
   " (in 'laplace_nested_tuple.stan', line 3, column 11 to column 14)",
   " (in 'laplace_nested_tuple.stan', line 3, column 16 to column 19)",
-  " (in 'laplace_nested_tuple.stan', line 3, column 4 to column 54)",
+  " (in 'laplace_nested_tuple.stan', line 3, column 4 to column 58)",
   " (in 'laplace_nested_tuple.stan', line 5, column 6 to column 22)",
   " (in 'laplace_nested_tuple.stan', line 4, column 4 to line 5, column 22)",
   " (in 'laplace_nested_tuple.stan', line 6, column 4 to column 13)",
-  " (in 'laplace_nested_tuple.stan', line 2, column 62 to line 7, column 3)"};
-template <typename T0__, typename T1__0__, typename T1__1__,
-          typename T1__2__,
+  " (in 'laplace_nested_tuple.stan', line 2, column 70 to line 7, column 3)",
+  " (in 'laplace_nested_tuple.stan', line 10, column 11 to column 16)",
+  " (in 'laplace_nested_tuple.stan', line 10, column 18 to column 23)",
+  " (in 'laplace_nested_tuple.stan', line 10, column 4 to column 62)",
+  " (in 'laplace_nested_tuple.stan', line 12, column 6 to column 22)",
+  " (in 'laplace_nested_tuple.stan', line 11, column 4 to line 12, column 22)",
+  " (in 'laplace_nested_tuple.stan', line 13, column 4 to column 13)",
+  " (in 'laplace_nested_tuple.stan', line 9, column 94 to line 14, column 3)"};
+template <typename T0__, typename T1__0__, typename T1__1__0__,
+          typename T1__1__1__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T0__>>,
                               std::is_integral<T1__0__>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__>,
-                                                      std::is_floating_point<T1__1__>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__2__>,
-                                                      std::is_floating_point<T1__2__>>>* = nullptr>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__1__, T1__2__>,-1,-1>
-K_function(const T0__& x, const std::tuple<T1__0__, T1__1__, T1__2__>& p,
+                              stan::math::disjunction<stan::is_autodiff<T1__1__0__>,
+                                                      std::is_floating_point<T1__1__0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__1__1__>,
+                                                      std::is_floating_point<T1__1__1__>>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__1__0__,
+                T1__1__1__>,-1,-1>
+K_function(const T0__& x,
+           const std::tuple<T1__0__, std::tuple<T1__1__0__, T1__1__1__>>& p,
            std::ostream* pstream__);
+template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
+          typename T3__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::is_col_vector<stan::value_type_t<T0__0__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
+                              stan::is_std_vector<T0__1__>,
+                              stan::is_col_vector<stan::value_type_t<T0__1__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__1__>>,
+                              std::is_integral<T1__>,
+                              stan::math::disjunction<stan::is_autodiff<T2__>,
+                                                      std::is_floating_point<T2__>>,
+                              stan::math::disjunction<stan::is_autodiff<T3__>,
+                                                      std::is_floating_point<T3__>>>* = nullptr>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__0__>,
+                stan::base_type_t<T0__1__>, T2__, T3__>,-1,-1>
+K_function(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
+           const T2__& alpha, const T3__& rho, std::ostream* pstream__);
 struct K_function_functor__ {
-  template <typename T0__, typename T1__0__, typename T1__1__,
-            typename T1__2__,
+  template <typename T0__, typename T1__0__, typename T1__1__0__,
+            typename T1__1__1__,
             stan::require_all_t<stan::is_std_vector<T0__>,
                                 stan::is_col_vector<stan::value_type_t<T0__>>,
                                 stan::is_vt_not_complex<stan::value_type_t<T0__>>,
                                 std::is_integral<T1__0__>,
-                                stan::math::disjunction<stan::is_autodiff<T1__1__>,
-                                                        std::is_floating_point<T1__1__>>,
-                                stan::math::disjunction<stan::is_autodiff<T1__2__>,
-                                                        std::is_floating_point<T1__2__>>>* = nullptr>
-  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__1__,
-                  T1__2__>,-1,-1>
-  operator()(const T0__& x, const std::tuple<T1__0__, T1__1__, T1__2__>& p,
-             std::ostream* pstream__) const {
+                                stan::math::disjunction<stan::is_autodiff<T1__1__0__>,
+                                                        std::is_floating_point<T1__1__0__>>,
+                                stan::math::disjunction<stan::is_autodiff<T1__1__1__>,
+                                                        std::is_floating_point<T1__1__1__>>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__1__0__,
+                  T1__1__1__>,-1,-1>
+  operator()(const T0__& x,
+             const std::tuple<T1__0__, std::tuple<T1__1__0__, T1__1__1__>>&
+             p, std::ostream* pstream__) const {
     return K_function(x, p, pstream__);
   }
+  template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
+            typename T3__,
+            stan::require_all_t<stan::is_std_vector<T0__0__>,
+                                stan::is_col_vector<stan::value_type_t<T0__0__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
+                                stan::is_std_vector<T0__1__>,
+                                stan::is_col_vector<stan::value_type_t<T0__1__>>,
+                                stan::is_vt_not_complex<stan::value_type_t<T0__1__>>,
+                                std::is_integral<T1__>,
+                                stan::math::disjunction<stan::is_autodiff<T2__>,
+                                                        std::is_floating_point<T2__>>,
+                                stan::math::disjunction<stan::is_autodiff<T3__>,
+                                                        std::is_floating_point<T3__>>>* = nullptr>
+  Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__0__>,
+                  stan::base_type_t<T0__1__>, T2__, T3__>,-1,-1>
+  operator()(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
+             const T2__& alpha, const T3__& rho, std::ostream* pstream__) const {
+    return K_function(x, n_obs, alpha, rho, pstream__);
+  }
 };
-// matrix K_function(array[] vector, tuple(int, real, real))
-template <typename T0__, typename T1__0__, typename T1__1__,
-          typename T1__2__,
+// matrix K_function(array[] vector, tuple(int, tuple(real, real)))
+template <typename T0__, typename T1__0__, typename T1__1__0__,
+          typename T1__1__1__,
           stan::require_all_t<stan::is_std_vector<T0__>,
                               stan::is_col_vector<stan::value_type_t<T0__>>,
                               stan::is_vt_not_complex<stan::value_type_t<T0__>>,
                               std::is_integral<T1__0__>,
-                              stan::math::disjunction<stan::is_autodiff<T1__1__>,
-                                                      std::is_floating_point<T1__1__>>,
-                              stan::math::disjunction<stan::is_autodiff<T1__2__>,
-                                                      std::is_floating_point<T1__2__>>>*>
-Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__1__, T1__2__>,-1,-1>
-K_function(const T0__& x, const std::tuple<T1__0__, T1__1__, T1__2__>& p,
+                              stan::math::disjunction<stan::is_autodiff<T1__1__0__>,
+                                                      std::is_floating_point<T1__1__0__>>,
+                              stan::math::disjunction<stan::is_autodiff<T1__1__1__>,
+                                                      std::is_floating_point<T1__1__1__>>>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>, T1__1__0__,
+                T1__1__1__>,-1,-1>
+K_function(const T0__& x,
+           const std::tuple<T1__0__, std::tuple<T1__1__0__, T1__1__1__>>& p,
            std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
-                             T1__1__, T1__2__>;
+                             T1__1__0__, T1__1__1__>;
   int current_statement__ = 0;
   // suppress unused var warning
   (void) current_statement__;
@@ -9492,26 +9541,81 @@ K_function(const T0__& x, const std::tuple<T1__0__, T1__1__, T1__2__>& p,
   // suppress unused var warning
   (void) DUMMY_VAR__;
   try {
-    current_statement__ = 16;
-    stan::math::validate_non_negative_index("K", "p.1", std::get<0>(p));
     current_statement__ = 17;
+    stan::math::validate_non_negative_index("K", "p.1", std::get<0>(p));
+    current_statement__ = 18;
     stan::math::validate_non_negative_index("K", "p.1", std::get<0>(p));
     Eigen::Matrix<local_scalar_t__,-1,-1> K =
       Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(std::get<0>(p),
         std::get<0>(p), DUMMY_VAR__);
-    current_statement__ = 18;
+    current_statement__ = 19;
     stan::model::assign(K,
-      stan::math::gp_exp_quad_cov(x, std::get<1>(p), std::get<2>(p)),
-      "assigning variable K");
-    current_statement__ = 20;
+      stan::math::gp_exp_quad_cov(x, std::get<0>(std::get<1>(p)),
+        std::get<1>(std::get<1>(p))), "assigning variable K");
+    current_statement__ = 21;
     for (int i = 1; i <= std::get<0>(p); ++i) {
-      current_statement__ = 19;
+      current_statement__ = 20;
       stan::model::assign(K,
         (stan::model::rvalue(K, "K", stan::model::index_uni(i),
            stan::model::index_uni(i)) + 1e-8), "assigning variable K",
         stan::model::index_uni(i), stan::model::index_uni(i));
     }
-    current_statement__ = 21;
+    current_statement__ = 22;
+    return K;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+  }
+}
+// matrix K_function(tuple(array[] vector, array[] vector), int, real, real)
+template <typename T0__0__, typename T0__1__, typename T1__, typename T2__,
+          typename T3__,
+          stan::require_all_t<stan::is_std_vector<T0__0__>,
+                              stan::is_col_vector<stan::value_type_t<T0__0__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__0__>>,
+                              stan::is_std_vector<T0__1__>,
+                              stan::is_col_vector<stan::value_type_t<T0__1__>>,
+                              stan::is_vt_not_complex<stan::value_type_t<T0__1__>>,
+                              std::is_integral<T1__>,
+                              stan::math::disjunction<stan::is_autodiff<T2__>,
+                                                      std::is_floating_point<T2__>>,
+                              stan::math::disjunction<stan::is_autodiff<T3__>,
+                                                      std::is_floating_point<T3__>>>*>
+Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__0__>,
+                stan::base_type_t<T0__1__>, T2__, T3__>,-1,-1>
+K_function(const std::tuple<T0__0__, T0__1__>& x, const T1__& n_obs,
+           const T2__& alpha, const T3__& rho, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__0__>,
+                             stan::base_type_t<T0__1__>, T2__, T3__>;
+  int current_statement__ = 0;
+  // suppress unused var warning
+  (void) current_statement__;
+  static constexpr bool propto__ = true;
+  // suppress unused var warning
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  // suppress unused var warning
+  (void) DUMMY_VAR__;
+  try {
+    current_statement__ = 24;
+    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
+    current_statement__ = 25;
+    stan::math::validate_non_negative_index("K", "n_obs", n_obs);
+    Eigen::Matrix<local_scalar_t__,-1,-1> K =
+      Eigen::Matrix<local_scalar_t__,-1,-1>::Constant(n_obs, n_obs,
+        DUMMY_VAR__);
+    current_statement__ = 26;
+    stan::model::assign(K,
+      stan::math::gp_exp_quad_cov(std::get<0>(x), alpha, rho),
+      "assigning variable K");
+    current_statement__ = 28;
+    for (int i = 1; i <= n_obs; ++i) {
+      current_statement__ = 27;
+      stan::model::assign(K,
+        (stan::model::rvalue(K, "K", stan::model::index_uni(i),
+           stan::model::index_uni(i)) + 1e-8), "assigning variable K",
+        stan::model::index_uni(i), stan::model::index_uni(i));
+    }
+    current_statement__ = 29;
     return K;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9549,29 +9653,29 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
     try {
       int pos__ = std::numeric_limits<int>::min();
       pos__ = 1;
-      current_statement__ = 5;
+      current_statement__ = 6;
       context__.validate_dims("data initialization", "n_obs", "int",
         std::vector<size_t>{});
       n_obs = std::numeric_limits<int>::min();
-      current_statement__ = 5;
-      n_obs = context__.vals_i("n_obs")[(1 - 1)];
       current_statement__ = 6;
+      n_obs = context__.vals_i("n_obs")[(1 - 1)];
+      current_statement__ = 7;
       context__.validate_dims("data initialization", "n_coordinates", "int",
         std::vector<size_t>{});
       n_coordinates = std::numeric_limits<int>::min();
-      current_statement__ = 6;
-      n_coordinates = context__.vals_i("n_coordinates")[(1 - 1)];
       current_statement__ = 7;
-      stan::math::validate_non_negative_index("y", "n_obs", n_obs);
+      n_coordinates = context__.vals_i("n_coordinates")[(1 - 1)];
       current_statement__ = 8;
+      stan::math::validate_non_negative_index("y", "n_obs", n_obs);
+      current_statement__ = 9;
       context__.validate_dims("data initialization", "y", "int",
         std::vector<size_t>{static_cast<size_t>(n_obs)});
       y = std::vector<int>(n_obs, std::numeric_limits<int>::min());
-      current_statement__ = 8;
-      y = context__.vals_i("y");
       current_statement__ = 9;
-      stan::math::validate_non_negative_index("ye", "n_obs", n_obs);
+      y = context__.vals_i("y");
       current_statement__ = 10;
+      stan::math::validate_non_negative_index("ye", "n_obs", n_obs);
+      current_statement__ = 11;
       context__.validate_dims("data initialization", "ye", "double",
         std::vector<size_t>{static_cast<size_t>(n_obs)});
       ye_data__ = Eigen::Matrix<double,-1,1>::Constant(n_obs,
@@ -9580,7 +9684,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
         n_obs);
       {
         std::vector<local_scalar_t__> ye_flat__;
-        current_statement__ = 10;
+        current_statement__ = 11;
         ye_flat__ = context__.vals_r("ye");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= n_obs; ++sym1__) {
@@ -9589,12 +9693,12 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 11;
-      stan::math::validate_non_negative_index("x", "n_obs", n_obs);
       current_statement__ = 12;
+      stan::math::validate_non_negative_index("x", "n_obs", n_obs);
+      current_statement__ = 13;
       stan::math::validate_non_negative_index("x", "n_coordinates",
         n_coordinates);
-      current_statement__ = 13;
+      current_statement__ = 14;
       context__.validate_dims("data initialization", "x", "double",
         std::vector<size_t>{static_cast<size_t>(n_obs),
           static_cast<size_t>(n_coordinates)});
@@ -9603,7 +9707,7 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
               std::numeric_limits<double>::quiet_NaN()));
       {
         std::vector<local_scalar_t__> x_flat__;
-        current_statement__ = 13;
+        current_statement__ = 14;
         x_flat__ = context__.vals_r("x");
         pos__ = 1;
         for (int sym1__ = 1; sym1__ <= n_coordinates; ++sym1__) {
@@ -9615,14 +9719,14 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
           }
         }
       }
-      current_statement__ = 14;
-      stan::math::validate_non_negative_index("theta_0", "n_obs", n_obs);
       current_statement__ = 15;
+      stan::math::validate_non_negative_index("theta_0", "n_obs", n_obs);
+      current_statement__ = 16;
       theta_0_data__ = Eigen::Matrix<double,-1,1>::Constant(n_obs,
                          std::numeric_limits<double>::quiet_NaN());
       new (&theta_0)
         Eigen::Map<Eigen::Matrix<double,-1,1>>(theta_0_data__.data(), n_obs);
-      current_statement__ = 15;
+      current_statement__ = 16;
       stan::model::assign(theta_0, stan::math::rep_vector(0.0, n_obs),
         "assigning variable theta_0");
     } catch (const std::exception& e) {
@@ -9679,10 +9783,28 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
                          propto__>(y, y, theta_0, K_function_functor__(),
                          std::tuple<
                            const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           std::tuple<int, local_scalar_t__,
-                             local_scalar_t__>>(x,
-                           std::tuple<int, local_scalar_t__,
-                             local_scalar_t__>(n_obs, alpha, rho)), pstream__));
+                           std::tuple<int,
+                             std::tuple<local_scalar_t__, local_scalar_t__>>>(x,
+                           std::tuple<int,
+                             std::tuple<local_scalar_t__, local_scalar_t__>>(n_obs,
+                             std::tuple<local_scalar_t__, local_scalar_t__>(alpha,
+                               rho))), pstream__));
+        current_statement__ = 5;
+        lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
+                         propto__>(y, y, ye, theta_0, K_function_functor__(),
+                         std::tuple<
+                           std::tuple<
+                             std::vector<Eigen::Matrix<double,-1,1>>,
+                             std::vector<Eigen::Matrix<double,-1,1>>>,
+                           int, local_scalar_t__, local_scalar_t__>(std::tuple<
+                                                                    const 
+                                                                    std::vector<
+                                                                    Eigen::Matrix<double,-1,1>>&,
+                                                                    const 
+                                                                    std::vector<
+                                                                    Eigen::Matrix<double,-1,1>>&>(x,
+                                                                    x),
+                           n_obs, alpha, rho), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -9732,10 +9854,28 @@ class laplace_nested_tuple_model final : public model_base_crtp<laplace_nested_t
                          propto__>(y, y, theta_0, K_function_functor__(),
                          std::tuple<
                            const std::vector<Eigen::Matrix<double,-1,1>>&,
-                           std::tuple<int, local_scalar_t__,
-                             local_scalar_t__>>(x,
-                           std::tuple<int, local_scalar_t__,
-                             local_scalar_t__>(n_obs, alpha, rho)), pstream__));
+                           std::tuple<int,
+                             std::tuple<local_scalar_t__, local_scalar_t__>>>(x,
+                           std::tuple<int,
+                             std::tuple<local_scalar_t__, local_scalar_t__>>(n_obs,
+                             std::tuple<local_scalar_t__, local_scalar_t__>(alpha,
+                               rho))), pstream__));
+        current_statement__ = 5;
+        lp_accum__.add(stan::math::laplace_marginal_neg_binomial_2_log_lpmf<
+                         propto__>(y, y, ye, theta_0, K_function_functor__(),
+                         std::tuple<
+                           std::tuple<
+                             std::vector<Eigen::Matrix<double,-1,1>>,
+                             std::vector<Eigen::Matrix<double,-1,1>>>,
+                           int, local_scalar_t__, local_scalar_t__>(std::tuple<
+                                                                    const 
+                                                                    std::vector<
+                                                                    Eigen::Matrix<double,-1,1>>&,
+                                                                    const 
+                                                                    std::vector<
+                                                                    Eigen::Matrix<double,-1,1>>&>(x,
+                                                                    x),
+                           n_obs, alpha, rho), pstream__));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
