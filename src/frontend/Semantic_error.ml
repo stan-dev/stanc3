@@ -37,7 +37,6 @@ module TypeError = struct
     | IllTypedLaplaceHelperArgs of
         string * UnsizedType.argumentlist * SignatureMismatch.details
     | IllTypedLaplaceMarginal of string * bool * UnsizedType.argumentlist
-    | IllTypedLaplaceHelperGeneric of string * UnsizedType.argumentlist
     | LaplaceCompatibilityIssue of string
     | IlltypedLaplaceTooMany of string * int
     | IlltypedLaplaceTolArgs of string * SignatureMismatch.function_mismatch
@@ -199,43 +198,33 @@ module TypeError = struct
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           expected
     | IllTypedLaplaceMarginal (name, early, supplied) ->
+        let req = Stan_math_signatures.laplace_helper_param_types name in
+        let is_helper = not @@ List.is_empty req in
         let info =
           if early then
             "We were unable to start more in-depth checking. Please ensure you \
-             are passing enough arguments and and that the first argument is a \
+             are passing enough arguments and that the first argument is a \
              function."
           else
-            "Typechecking failed after checking the first two arguments. \
-             Please ensure you are passing enough arguments and that the \
-             fourth is a function." in
+            let n = if is_helper then List.length req else 2 in
+            Fmt.str
+              "Typechecking failed after checking the first %d arguments. \
+               Please ensure you are passing enough arguments and that the \
+               %dth is a function."
+              n (n + 2) in
+        let pp_lik_args ppf () =
+          if is_helper then Fmt.(list ~sep:comma UnsizedType.pp_fun_arg) ppf req
+          else Fmt.pf ppf "(vector, T_l...) => real,@ tuple(T_l...)" in
         Fmt.pf ppf
           "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \
-           signature of this function is@ @[<hov 2>%s((vector, T1...) => \
-           real,@ tuple(T1...),@ vector,@ (T2...) => matrix,@ \
-           tuple(T2...)%a)@]@ However, we recieved the types:@ @[<hov \
-           2>(%a)@]@ @[%a@]@]"
-          name name
+           signature of this function is@ @[<hov 2>%s(%a,@ vector,@ (T_k...) \
+           => matrix,@ tuple(T_k...)%a)@]@ However, we recieved the types:@ \
+           @[<hov 2>(%a)@]@ @[%a@]@]"
+          name name pp_lik_args ()
           Fmt.(if' (String.is_substring ~substring:"_tol" name) pp_laplace_tols)
           ()
           Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
           supplied Fmt.text info
-    | IllTypedLaplaceHelperGeneric (name, supplied) ->
-        let req = Stan_math_signatures.laplace_helper_param_types name in
-        let n = List.length req in
-        Fmt.pf ppf
-          "@[<v>Ill-typed arguments supplied to function '%s'.@ The valid \
-           signature of this function is@ @[<hov 2>%s(%a,@ vector,@ (...) => \
-           matrix,@ tuple(...)%a)@]@ However, we recieved the types:@ @[<hov \
-           2>(%a)@]@ Typechecking failed after checking the first %d \
-           arguments.@ Please ensure you are passing enough arguments and that \
-           the %dth is a function.@]"
-          name name
-          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
-          req
-          Fmt.(if' (String.is_substring ~substring:"_tol" name) pp_laplace_tols)
-          ()
-          Fmt.(list ~sep:comma UnsizedType.pp_fun_arg)
-          supplied n (n + 2)
     | LaplaceCompatibilityIssue banned_function ->
         Fmt.pf ppf
           "The function '%s', called by this likelihood function,@ does not \
@@ -749,9 +738,6 @@ let illtyped_laplace_helper_args loc name lik_args details =
 
 let illtyped_laplace_generic loc name early supplied =
   TypeError (loc, TypeError.IllTypedLaplaceMarginal (name, early, supplied))
-
-let illtyped_laplace_helper_generic loc name supplied =
-  TypeError (loc, TypeError.IllTypedLaplaceHelperGeneric (name, supplied))
 
 let laplace_compatibility loc banned_function =
   TypeError (loc, TypeError.LaplaceCompatibilityIssue banned_function)

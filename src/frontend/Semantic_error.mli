@@ -93,9 +93,6 @@ val illtyped_laplace_generic :
        or that the function arguments are misplaced, both of which prevent us
        from giving a better message *)
 
-val illtyped_laplace_helper_generic :
-  Location_span.t -> string -> UnsizedType.argumentlist -> t
-
 val laplace_compatibility : Location_span.t -> string -> t
 val illtyped_laplace_extra_args : Location_span.t -> string -> int -> t
 

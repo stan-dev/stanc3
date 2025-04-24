@@ -425,12 +425,12 @@ Semantic error in 'missing_args1.stan', line 2, column 12 to column 30:
 
 Ill-typed arguments supplied to function 'laplace_marginal'.
 The valid signature of this function is
-laplace_marginal((vector, T1...) => real, tuple(T1...), vector,
-  (T2...) => matrix, tuple(T2...))
+laplace_marginal((vector, T_l...) => real, tuple(T_l...), vector,
+  (T_k...) => matrix, tuple(T_k...))
 However, we recieved the types:
 ()
 We were unable to start more in-depth checking. Please ensure you are passing
-enough arguments and and that the first argument is a function.
+enough arguments and that the first argument is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args2.stan
 Semantic error in 'missing_args2.stan', line 2, column 12 to column 34:
@@ -443,13 +443,13 @@ Semantic error in 'missing_args2.stan', line 2, column 12 to column 34:
 
 Ill-typed arguments supplied to function 'laplace_marginal_tol'.
 The valid signature of this function is
-laplace_marginal_tol((vector, T1...) => real, tuple(T1...), vector,
-  (T2...) => matrix, tuple(T2...), data real, data int, data int, data int,
+laplace_marginal_tol((vector, T_l...) => real, tuple(T_l...), vector,
+  (T_k...) => matrix, tuple(T_k...), data real, data int, data int, data int,
   data int)
 However, we recieved the types:
 ()
 We were unable to start more in-depth checking. Please ensure you are passing
-enough arguments and and that the first argument is a function.
+enough arguments and that the first argument is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args3.stan
 Semantic error in 'missing_args3.stan', line 2, column 12 to column 58:
@@ -479,13 +479,13 @@ Semantic error in 'missing_args4.stan', line 30, column 12 to line 31, column 42
 
 Ill-typed arguments supplied to function 'laplace_marginal'.
 The valid signature of this function is
-laplace_marginal((vector, T1...) => real, tuple(T1...), vector,
-  (T2...) => matrix, tuple(T2...))
+laplace_marginal((vector, T_l...) => real, tuple(T_l...), vector,
+  (T_k...) => matrix, tuple(T_k...))
 However, we recieved the types:
 ((vector, real, vector, array[] int) => real,
   tuple(real, vector, array[] int), data vector)
-Typechecking failed after checking the first two arguments. Please ensure you
-are passing enough arguments and that the fourth is a function.
+Typechecking failed after checking the first 2 arguments. Please ensure you
+are passing enough arguments and that the 4th is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args5.stan
 Semantic error in 'missing_args5.stan', line 3, column 20 to column 40:
@@ -499,12 +499,12 @@ Semantic error in 'missing_args5.stan', line 3, column 20 to column 40:
 
 Ill-typed arguments supplied to function 'laplace_latent_rng'.
 The valid signature of this function is
-laplace_latent_rng((vector, T1...) => real, tuple(T1...), vector,
-  (T2...) => matrix, tuple(T2...))
+laplace_latent_rng((vector, T_l...) => real, tuple(T_l...), vector,
+  (T_k...) => matrix, tuple(T_k...))
 However, we recieved the types:
 ()
 We were unable to start more in-depth checking. Please ensure you are passing
-enough arguments and and that the first argument is a function.
+enough arguments and that the first argument is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args6.stan
 Semantic error in 'missing_args6.stan', line 40, column 22 to line 41, column 14:
@@ -519,13 +519,13 @@ Semantic error in 'missing_args6.stan', line 40, column 22 to line 41, column 14
 
 Ill-typed arguments supplied to function 'laplace_latent_rng'.
 The valid signature of this function is
-laplace_latent_rng((vector, T1...) => real, tuple(T1...), vector,
-  (T2...) => matrix, tuple(T2...))
+laplace_latent_rng((vector, T_l...) => real, tuple(T_l...), vector,
+  (T_k...) => matrix, tuple(T_k...))
 However, we recieved the types:
 (data (vector, real, vector, array[] int) => real,
   tuple(real, vector, array[] int), data vector)
-Typechecking failed after checking the first two arguments. Please ensure you
-are passing enough arguments and that the fourth is a function.
+Typechecking failed after checking the first 2 arguments. Please ensure you
+are passing enough arguments and that the 4th is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args7.stan
 Semantic error in 'missing_args7.stan', line 18, column 24 to line 19, column 30:
@@ -541,11 +541,11 @@ Semantic error in 'missing_args7.stan', line 18, column 24 to line 19, column 30
 Ill-typed arguments supplied to function 'laplace_latent_neg_binomial_2_log_rng'.
 The valid signature of this function is
 laplace_latent_neg_binomial_2_log_rng(array[] int, array[] int, vector,
-  vector, (...) => matrix, tuple(...))
+  vector, (T_k...) => matrix, tuple(T_k...))
 However, we recieved the types:
 (data array[] int, data array[] int, data vector, data vector)
-Typechecking failed after checking the first 3 arguments.
-Please ensure you are passing enough arguments and that the 5th is a function.
+Typechecking failed after checking the first 3 arguments. Please ensure you
+are passing enough arguments and that the 5th is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args8.stan
 Semantic error in 'missing_args8.stan', line 2, column 12 to column 59:
@@ -559,12 +559,12 @@ Semantic error in 'missing_args8.stan', line 2, column 12 to column 59:
 Ill-typed arguments supplied to function 'laplace_marginal_tol_poisson_log_lpmf'.
 The valid signature of this function is
 laplace_marginal_tol_poisson_log_lpmf(array[] int, array[] int, vector,
-  (...) => matrix, tuple(...), data real, data int, data int, data int,
+  (T_k...) => matrix, tuple(T_k...), data real, data int, data int, data int,
   data int)
 However, we recieved the types:
 (data array[] int, data array[] int)
-Typechecking failed after checking the first 2 arguments.
-Please ensure you are passing enough arguments and that the 4th is a function.
+Typechecking failed after checking the first 2 arguments. Please ensure you
+are passing enough arguments and that the 4th is a function.
 [exit 1]
   $ ../../../../../install/default/bin/stanc missing_args9.stan
 Semantic error in 'missing_args9.stan', line 40, column 24 to line 41, column 67:

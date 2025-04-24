@@ -189,13 +189,15 @@ let laplace_helper_lik_args =
   |> String.Map.of_alist_exn
 
 let laplace_helper_param_types name =
-  let variant =
+  let without_prefix =
     String.chop_prefix_exn name ~prefix:"laplace_"
     |> String.chop_prefix_if_exists ~prefix:"marginal_"
     |> String.chop_prefix_if_exists ~prefix:"latent_"
-    |> String.chop_prefix_if_exists ~prefix:"tol_"
-    |> Utils.split_distribution_suffix |> Option.value_exn |> fst in
-  Map.find_exn laplace_helper_lik_args variant
+    |> String.chop_prefix_if_exists ~prefix:"tol_" in
+  let variant =
+    without_prefix |> Utils.split_distribution_suffix
+    |> Option.value_map ~f:fst ~default:without_prefix in
+  Map.find laplace_helper_lik_args variant |> Option.value ~default:[]
 
 let laplace_tolerance_argument_types =
   UnsizedType.
