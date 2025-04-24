@@ -194,7 +194,7 @@ let pp_operator = Middle.Operator.pp
   let the indent of the arguments be ragged
   under the name, otherwise we align it under the "("
   *)
-let pp_function_name_box ppf id =
+let pp_start_funapp ppf id =
   let long = String.length id.name > 16 in
   pf ppf "%a%a%a"
     (if' long Format.pp_open_box)
@@ -263,14 +263,14 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | RealNumeral r -> string ppf r
   | ImagNumeral z -> pf ppf "%si" z
   | FunApp (_, id, es) ->
-      pf ppf "%a(@,%a)@]" pp_function_name_box id pp_list_of_expression (es, loc)
+      pf ppf "%a(@,%a)@]" pp_start_funapp id pp_list_of_expression (es, loc)
   | CondDistApp (_, id, es) -> (
       match es with
       | [] ->
           Common.ICE.internal_compiler_error
             [%message "CondDistApp with no arguments: " id.name]
       | [e] ->
-          pf ppf "@[<h>%a(%a%a)@]" pp_identifier id pp_expression e
+          pf ppf "%a(@,%a%a)@]" pp_start_funapp id pp_expression e
             (pp_comments_spacing true get_comments)
             loc.end_loc
       | e :: es' ->
@@ -278,7 +278,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
             List.hd es'
             |> Option.map ~f:(fun e -> e.emeta.loc.begin_loc)
             |> Option.value ~default:loc.end_loc in
-          pf ppf "%a(%a%a |@ %a%a)@]" pp_function_name_box id pp_expression e
+          pf ppf "%a(@,%a%a |@ %a%a)@]" pp_start_funapp id pp_expression e
             (pp_comments_spacing true get_comments_until_separator)
             begin_loc
             (pp_comments_spacing false get_comments)
@@ -439,11 +439,11 @@ and pp_statement ppf ({stmt= s_content; smeta= {loc}} as ss : untyped_statement)
       pf ppf "@[<h>%a %a %a;@]" pp_lvalue l pp_assignmentoperator assop
         pp_expression e
   | NRFunApp (_, id, es) ->
-      pf ppf "%a(%a);@]" pp_function_name_box id pp_list_of_expression (es, loc)
+      pf ppf "%a(@,%a);@]" pp_start_funapp id pp_list_of_expression (es, loc)
   | TargetPE e -> pf ppf "target += %a;" pp_expression e
   | JacobianPE e -> pf ppf "jacobian += %a;" pp_expression e
   | Tilde {arg= e; distribution= id; args= es; truncation= t; kind= _} ->
-      pf ppf "%a ~ %a(%a)@]%a;" pp_expression e pp_function_name_box id
+      pf ppf "%a ~ %a(@,%a)@]%a;" pp_expression e pp_start_funapp id
         pp_list_of_expression (es, loc) pp_truncation t
   | Break -> pf ppf "break;"
   | Continue -> pf ppf "continue;"

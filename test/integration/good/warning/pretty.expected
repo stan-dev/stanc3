@@ -94,7 +94,7 @@ parameters {
 model {
   mu ~ n();
   target += n_lpdf(mu /*check*/// both instantiations
-            );
+                   );
 }
 
 Warning in 'fun_log_forward_decl.stan', line 6, column 7: Functions do not
