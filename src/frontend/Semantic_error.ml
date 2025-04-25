@@ -31,9 +31,10 @@ module TypeError = struct
         * UnsizedType.argumentlist
         * SignatureMismatch.function_mismatch
         * UnsizedType.t
+    | IllTypedForwardedFunctionSignature of
+        string * string * SignatureMismatch.details
     | IllTypedForwardedFunctionApp of
         string * string * string list * SignatureMismatch.details
-    | IllTypedLaplaceCallback of string * string * SignatureMismatch.details
     | IllTypedLaplaceHelperArgs of
         string * UnsizedType.argumentlist * SignatureMismatch.details
     | IllTypedLaplaceMarginal of string * bool * UnsizedType.argumentlist
@@ -182,7 +183,7 @@ module TypeError = struct
           name caller
           (SignatureMismatch.pp_mismatch_details ~skipped)
           details
-    | IllTypedLaplaceCallback (caller, name, details) ->
+    | IllTypedForwardedFunctionSignature (caller, name, details) ->
         Fmt.pf ppf
           "Function '%s' does not have a valid signature for use in '%s':@ %a"
           name caller
@@ -724,14 +725,15 @@ let illtyped_reduce_sum loc name arg_tys args error =
 let illtyped_variadic loc name arg_tys args fn_rt error =
   TypeError (loc, TypeError.IllTypedVariadic (name, arg_tys, args, error, fn_rt))
 
-let forwarded_function_error loc caller name required_args details =
+let forwarded_function_application_error loc caller name required_args details =
   TypeError
     ( loc
     , TypeError.IllTypedForwardedFunctionApp
         (caller, name, required_args, details) )
 
-let illtyped_laplace_callback loc caller name details =
-  TypeError (loc, TypeError.IllTypedLaplaceCallback (caller, name, details))
+let forwarded_function_signature_error loc caller name details =
+  TypeError
+    (loc, TypeError.IllTypedForwardedFunctionSignature (caller, name, details))
 
 let illtyped_laplace_helper_args loc name lik_args details =
   TypeError (loc, TypeError.IllTypedLaplaceHelperArgs (name, lik_args, details))

@@ -655,6 +655,9 @@ let verify_second_order_derivative_compatibility (ast : typed_program) =
         loop () in
   loop ()
 
+(** Currently only used by the laplace functions, this
+  checks that a function in [tenv] called [fname] can be invoked
+  with the arguments from [arg_tupl]. *)
 let check_function_callable_with_tuple cf tenv caller_id fname
     ?(required_args = []) arg_tupl required_fn_rt =
   let arg_types =
@@ -708,12 +711,12 @@ let check_function_callable_with_tuple cf tenv caller_id fname
       Semantic_error.returning_fn_expected_nonfn_found fname.id_loc fname.name
       |> error
   | SignatureErrors (`FnRequirementsError details) ->
-      Semantic_error.illtyped_laplace_callback fname.id_loc caller_id.name
-        fname.name details
+      Semantic_error.forwarded_function_signature_error fname.id_loc
+        caller_id.name fname.name details
       |> error
   | SignatureErrors (`SuppliedArgsMismatch details) ->
-      Semantic_error.forwarded_function_error arg_tupl.emeta.loc caller_id.name
-        fname.name required_arg_names details
+      Semantic_error.forwarded_function_application_error arg_tupl.emeta.loc
+        caller_id.name fname.name required_arg_names details
       |> error
 
 let verify_laplace_control_args loc id (args : typed_expression list) =
@@ -737,66 +740,6 @@ let verify_laplace_control_args loc id (args : typed_expression list) =
       Semantic_error.illtyped_laplace_extra_args a.emeta.loc id.name
         (List.length args)
       |> error
-
-let check_laplace_fn ~is_cond_dist loc cf tenv id tes =
-  let required_prob_args =
-    Stan_math_signatures.laplace_helper_param_types id.name in
-  let is_helper = not @@ List.is_empty required_prob_args in
-  let fail ?(early = false) () =
-    (* generic failure message for if the wrong number of argument is passed,
-       preventing us from pattern matching and doing a better job *)
-    Semantic_error.illtyped_laplace_generic loc id.name early
-      (List.map ~f:arg_type tes)
-    |> error in
-  let lik_args, rest =
-    (* Check the arguments for the likihood:
-       either a callback and args, or from the required_prob_args list *)
-    if is_helper then
-      let for_prob, rest = List.split_n tes (List.length required_prob_args) in
-      match
-        SignatureMismatch.check_compatible_arguments_mod_conv required_prob_args
-          (get_arg_types for_prob)
-      with
-      | Ok promotions -> (Promotion.promote_list for_prob promotions, rest)
-      | Error err ->
-          Semantic_error.illtyped_laplace_helper_args loc id.name
-            required_prob_args (SignatureMismatch.InputMismatch err)
-          |> error
-    else
-      (* we are not in one of the helper functions *)
-      match tes with
-      | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
-          let lik_fun, lik_tupl =
-            needs_higher_order_autodiff lik_fun;
-            check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
-              ~required_args:
-                [("latent gaussian vector", (AutoDiffable, UVector))]
-              (UnsizedType.ReturnType UReal) in
-          ([lik_fun; lik_tupl], tes)
-      | _ -> fail ~early:true () in
-  (* Check the remaining arguments: initial guess, covariance, and tolerances *)
-  match rest with
-  | theta_init :: {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
-      if theta_init.emeta.type_ <> UnsizedType.UVector then
-        Semantic_error.vector_expected theta_init.emeta.loc
-          ("Initial guess argument to '" ^ id.name ^ "'")
-          theta_init.emeta.type_
-        |> error;
-      let cov_fun_type, cov_tupl =
-        check_function_callable_with_tuple cf tenv id cov_fun cov_tupl
-          (UnsizedType.ReturnType UMatrix) in
-      (* note for future: pred_rng typechecking would need to look at second tuple here *)
-      verify_laplace_control_args loc id control_args;
-      let args =
-        lik_args @ (theta_init :: cov_fun_type :: cov_tupl :: control_args)
-      in
-      let return_type =
-        if String.is_suffix id.name ~suffix:"_rng" then UnsizedType.UVector
-        else UnsizedType.UReal in
-      mk_fun_app ~is_cond_dist ~loc
-        (StanLib (Fun_kind.suffix_from_name id.name))
-        id args ~type_:return_type
-  | _ -> fail ()
 
 let rec check_fn ~is_cond_dist loc cf tenv id (tes : Ast.typed_expression list)
     =
@@ -867,6 +810,70 @@ and check_reduce_sum ~is_cond_dist loc cf tenv id tes =
         (List.map ~f:type_of_expr_typed tes)
         expected_args err
       |> error
+
+(** Laplace functions are also special, in two ways:
+    1. The general forms accept two UDF callbacks, not just one
+    2. The callback arguments are passed as a tuple, not just as trailing arguments.
+        (this is a requirement of the first point, but worth noting separately). *)
+and check_laplace_fn ~is_cond_dist loc cf tenv id tes =
+  (* generic failure message for if the wrong number of argument is passed,
+     preventing us from pattern matching and doing a better job *)
+  let generic_failure ?(early = false) () =
+    Semantic_error.illtyped_laplace_generic loc id.name early
+      (List.map ~f:arg_type tes)
+    |> error in
+  let lik_args, rest =
+    (* Check the arguments for the likihood:
+       For helpers, this is required_prob_args, otherwise a callback and args *)
+    let required_prob_args =
+      Stan_math_signatures.laplace_helper_param_types id.name in
+    if not @@ List.is_empty required_prob_args then
+      (* helper argument check *)
+      let for_prob, rest = List.split_n tes (List.length required_prob_args) in
+      match
+        SignatureMismatch.check_compatible_arguments_mod_conv required_prob_args
+          (get_arg_types for_prob)
+      with
+      | Ok promotions -> (Promotion.promote_list for_prob promotions, rest)
+      | Error err ->
+          Semantic_error.illtyped_laplace_helper_args loc id.name
+            required_prob_args (SignatureMismatch.InputMismatch err)
+          |> error
+    else
+      (* likelihood callback check *)
+      match tes with
+      | {expr= Variable lik_fun; _} :: lik_tupl :: tes ->
+          let lik_fun, lik_tupl =
+            needs_higher_order_autodiff lik_fun;
+            check_function_callable_with_tuple cf tenv id lik_fun lik_tupl
+              ~required_args:
+                [("latent gaussian vector", (AutoDiffable, UVector))]
+              (UnsizedType.ReturnType UReal) in
+          ([lik_fun; lik_tupl], tes)
+      | _ -> generic_failure ~early:true () in
+  (* Check the remaining arguments: initial guess, covariance, and tolerances *)
+  match rest with
+  | theta_init :: {expr= Variable cov_fun; _} :: cov_tupl :: control_args ->
+      if theta_init.emeta.type_ <> UnsizedType.UVector then
+        Semantic_error.vector_expected theta_init.emeta.loc
+          ("Initial guess argument to '" ^ id.name ^ "'")
+          theta_init.emeta.type_
+        |> error;
+      let cov_fun_type, cov_tupl =
+        check_function_callable_with_tuple cf tenv id cov_fun cov_tupl
+          (UnsizedType.ReturnType UMatrix) in
+      (* note for future: pred_rng typechecking would need to look at second tuple here *)
+      verify_laplace_control_args loc id control_args;
+      let args =
+        lik_args @ (theta_init :: cov_fun_type :: cov_tupl :: control_args)
+      in
+      let return_type =
+        if String.is_suffix id.name ~suffix:"_rng" then UnsizedType.UVector
+        else UnsizedType.UReal in
+      mk_fun_app ~is_cond_dist ~loc
+        (StanLib (Fun_kind.suffix_from_name id.name))
+        id args ~type_:return_type
+  | _ -> generic_failure ()
 
 and check_variadic ~is_cond_dist loc cf tenv id tes =
   let UnsizedType.{control_args; required_fn_args; required_fn_rt; return_type}
