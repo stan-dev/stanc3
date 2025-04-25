@@ -165,11 +165,11 @@ generated quantities {
   array[3] real ts = {0.5, 1.0, 2.0};
   array[3, 2] real y_hat = integrate_ode(sho, y0, 0.0, ts, theta, x_r, x_i);
   array[3, 2] real y_hat_45 = integrate_ode_rk45(sho, y0, 0.0, ts, theta,
-                                                 x_r, x_i);
+                                x_r, x_i);
   array[3, 2] real y_hat_bdf = integrate_ode_bdf(sho, y0, 0.0, ts, theta,
-                                                 x_r, x_i);
+                                 x_r, x_i);
   array[3, 2] real y_hat_adams = integrate_ode_adams(sho, y0, 0.0, ts, theta,
-                                                     x_r, x_i);
+                                   x_r, x_i);
 }
 
 Warning in 'deprecated.stan', line 24, column 2: Assignment of variable to

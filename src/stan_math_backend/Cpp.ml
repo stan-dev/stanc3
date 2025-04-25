@@ -447,7 +447,12 @@ module Printing = struct
 
   let pp_requires ~default ppf requires =
     if not (List.is_empty requires) then
-      let pp_single_require t ppf trait = pf ppf "%s<%a>" trait pp_type_ t in
+      let pp_single_require t ppf trait =
+        let ty =
+          if String.is_prefix trait ~prefix:"std::" then
+            TypeTrait ("std::decay_t", [t])
+          else t in
+        pf ppf "%s<%a>" trait pp_type_ ty in
       let pp_require ppf (req, t) =
         match req with
         | `Exact trait -> pp_single_require t ppf trait

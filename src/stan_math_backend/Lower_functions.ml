@@ -176,7 +176,7 @@ let lower_promoted_scalar args =
         match args with
         | [] -> Double
         | hd :: list_tail ->
-            TypeTrait ("stan::promote_args_t", hd @ chunk_till_empty list_tail)
+            TypeTrait ("stan::return_type_t", hd @ chunk_till_empty list_tail)
       in
       promote_args_chunked
         List.(chunks_of ~length:5 (concat (return_optional_arg_types args)))
@@ -335,14 +335,13 @@ let lower_fun_def (functors : Lower_expr.variadic list)
 let get_functor_requirements (p : Program.Numbered.t) =
   let open Expr.Fixed in
   let rec find_functors_expr init = function
-    | {pattern= FunApp (StanLib (hof, FnPlain, _), args); _} ->
+    | {pattern= FunApp (StanLib (hof, _, _), args); _} ->
         let f accum = function
           | { pattern= Var name
-            ; meta= {Expr.Typed.Meta.type_= UnsizedType.UFun (args, _, _, _); _}
-            } ->
+            ; meta= {Expr.Typed.Meta.type_= UnsizedType.UFun _; _} } ->
               Map.add_multi accum
                 ~key:(Utils.stdlib_distribution_name name)
-                ~data:(Lower_expr.functor_type hof, List.map ~f:snd args)
+                ~data:(Lower_expr.functor_type hof)
           | e -> find_functors_expr accum e in
         List.fold ~init ~f args
     | {pattern; _} -> Pattern.fold find_functors_expr init pattern in
@@ -356,17 +355,10 @@ let collect_functors_functions (p : Program.Numbered.t) : defn list =
   let functor_required = get_functor_requirements p in
   (* overloaded functions generate only one functor struct per name *)
   let structs = String.Table.create () in
-  let matching_argtypes Program.{fdargs; _} arg_types =
-    List.equal UnsizedType.equal
-      (List.map ~f:(fun (_, _, t) -> t) fdargs)
-      arg_types in
   let register_functors (d : _ Program.fun_def) =
     let functors =
       Map.find_multi functor_required d.fdname
-      |> Set.Poly.of_list
-      |> Set.Poly.filter_map ~f:(fun (hof, types) ->
-             if matching_argtypes d types then Some hof else None)
-      |> Set.to_list in
+      |> List.dedup_and_sort ~compare:compare_variadic in
     let fn, st = lower_fun_def functors d in
     List.iter st ~f:(fun s ->
         (* Side effecting, collates functor structs *)
@@ -462,7 +454,7 @@ module Testing = struct
                                   stan::is_row_vector<T1__>,
                                   stan::is_vt_not_complex<T1__>>* = nullptr>
     void sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
+      using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
                                  stan::base_type_t<T1__>>;
       int current_statement__ = 0;
       // suppress unused var warning
@@ -528,12 +520,12 @@ module Testing = struct
                                   stan::is_std_vector<T3__>,
                                   stan::is_eigen_matrix_dynamic<stan::value_type_t<T3__>>,
                                   stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
-    Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+    Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                     stan::base_type_t<T1__>, stan::base_type_t<T2__>,
                     stan::base_type_t<T3__>>,-1,-1>
     sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
          const T3__& w, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::base_type_t<T0__>,
+      using local_scalar_t__ = stan::return_type_t<stan::base_type_t<T0__>,
                                  stan::base_type_t<T1__>,
                                  stan::base_type_t<T2__>,
                                  stan::base_type_t<T3__>>;
@@ -566,7 +558,7 @@ module Testing = struct
                                     stan::is_std_vector<T3__>,
                                     stan::is_eigen_matrix_dynamic<stan::value_type_t<T3__>>,
                                     stan::is_vt_not_complex<stan::value_type_t<T3__>>>* = nullptr>
-      Eigen::Matrix<stan::promote_args_t<stan::base_type_t<T0__>,
+      Eigen::Matrix<stan::return_type_t<stan::base_type_t<T0__>,
                       stan::base_type_t<T1__>, stan::base_type_t<T2__>,
                       stan::base_type_t<T3__>>,-1,-1>
       operator()(const T0__& x, const T1__& y, const T2__& z, const T3__& w,

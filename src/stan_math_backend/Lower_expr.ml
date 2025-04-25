@@ -403,7 +403,12 @@ and lower_functionals fname suffix es mem_pattern =
             :: {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
             :: tl ) ->
             (Fmt.str "%s<%s, %s>" fname id f, tl @ [msgs])
-        | _, args -> (fname, args @ [msgs]) in
+        | _, args ->
+            ( fname
+            , args
+              @ (suffix_args false suffix
+                |> List.map ~f:Middle.Expr.Helpers.variable)
+              @ [msgs] ) in
       let fname = stan_namespace_qualify fname in
       let templates = templates false suffix in
       Exprs.templated_fun_call fname templates
